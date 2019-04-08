@@ -8,22 +8,30 @@ import (
 	"fmt"
 	"testing"
 
-	irregularpb "google.golang.org/protobuf/internal/testprotos/irregular"
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
-	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/testing/prototest"
+
+	irregularpb "google.golang.org/protobuf/internal/testprotos/irregular"
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	_ "google.golang.org/protobuf/internal/testprotos/test/weak1"
+	_ "google.golang.org/protobuf/internal/testprotos/test/weak2"
+	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 )
 
 func Test(t *testing.T) {
-	for _, m := range []proto.Message{
+	ms := []proto.Message{
 		(*testpb.TestAllTypes)(nil),
 		(*test3pb.TestAllTypes)(nil),
 		(*testpb.TestRequired)(nil),
-		(*testpb.TestWeak)(nil),
 		(*irregularpb.Message)(nil),
 		(*testpb.TestAllExtensions)(nil),
-	} {
+	}
+	if flags.Proto1Legacy {
+		ms = append(ms, (*testpb.TestWeak)(nil))
+	}
+
+	for _, m := range ms {
 		t.Run(fmt.Sprintf("%T", m), func(t *testing.T) {
 			prototest.TestMessage(t, m, prototest.MessageOptions{})
 		})

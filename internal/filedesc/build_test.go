@@ -15,6 +15,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	_ "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
@@ -104,14 +105,28 @@ func visitFields(m protoreflect.Message, f func(protoreflect.FieldDescriptor)) {
 
 func TestWeakInit(t *testing.T) {
 	file := testpb.File_test_test_proto
-	fd := file.Messages().ByName("TestWeak").Fields().ByName("weak_message")
-	if want, got := fd.IsWeak(), true; got != want {
-		t.Errorf("field %v: IsWeak() = %v, want %v", fd.FullName(), want, got)
+
+	// We do not expect to get a placeholder since weak1 is imported.
+	fd1 := file.Messages().ByName("TestWeak").Fields().ByName("weak_message1")
+	if got, want := fd1.IsWeak(), true; got != want {
+		t.Errorf("field %v: IsWeak() = %v, want %v", fd1.FullName(), got, want)
 	}
-	if want, got := fd.Message().IsPlaceholder(), false; got != want {
-		t.Errorf("field %v: Message.IsPlaceholder() = %v, want %v", fd.FullName(), want, got)
+	if got, want := fd1.Message().IsPlaceholder(), false; got != want {
+		t.Errorf("field %v: Message.IsPlaceholder() = %v, want %v", fd1.FullName(), got, want)
 	}
-	if fd.Message().Fields().Len() == 0 {
-		t.Errorf("field %v: Message().Fields().Len() == 0, want >0", fd.FullName())
+	if got, want := fd1.Message().Fields().Len(), 1; got != want {
+		t.Errorf("field %v: Message().Fields().Len() == %d, want %d", fd1.FullName(), got, want)
+	}
+
+	// We do expect to get a placeholder since weak2 is not imported.
+	fd2 := file.Messages().ByName("TestWeak").Fields().ByName("weak_message2")
+	if got, want := fd2.IsWeak(), true; got != want {
+		t.Errorf("field %v: IsWeak() = %v, want %v", fd2.FullName(), got, want)
+	}
+	if got, want := fd2.Message().IsPlaceholder(), true; got != want {
+		t.Errorf("field %v: Message.IsPlaceholder() = %v, want %v", fd2.FullName(), got, want)
+	}
+	if got, want := fd2.Message().Fields().Len(), 0; got != want {
+		t.Errorf("field %v: Message().Fields().Len() == %d, want %d", fd2.FullName(), got, want)
 	}
 }

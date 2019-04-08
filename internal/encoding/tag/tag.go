@@ -170,9 +170,6 @@ func Marshal(fd pref.FieldDescriptor, enumName string) string {
 	if fd.IsPacked() {
 		tag = append(tag, "packed")
 	}
-	if fd.IsWeak() {
-		tag = append(tag, "weak="+string(fd.Message().FullName()))
-	}
 	name := string(fd.Name())
 	if fd.Kind() == pref.GroupKind {
 		// The name of the FieldDescriptor for a group field is
@@ -185,6 +182,9 @@ func Marshal(fd pref.FieldDescriptor, enumName string) string {
 		// NOTE: The jsonName != name condition is suspect, but it preserve
 		// the exact same semantics from the previous generator.
 		tag = append(tag, "json="+jsonName)
+	}
+	if fd.IsWeak() {
+		tag = append(tag, "weak="+string(fd.Message().FullName()))
 	}
 	// The previous implementation does not tag extension fields as proto3,
 	// even when the field is defined in a proto3 file. Match that behavior

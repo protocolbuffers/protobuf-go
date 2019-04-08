@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
@@ -767,7 +768,13 @@ func TestNewFile(t *testing.T) {
 				options: {message_set_wire_format:true}
 			}]}]
 		`),
-		wantErr: `message "M.M" is an invalid proto1 MessageSet`,
+		wantErr: func() string {
+			if flags.Proto1Legacy {
+				return `message "M.M" is an invalid proto1 MessageSet`
+			} else {
+				return `message "M.M" is a MessageSet, which is a legacy proto1 feature that is no longer supported`
+			}
+		}(),
 	}, {
 		label: "valid MessageSet",
 		inDesc: mustParseFile(`
@@ -779,6 +786,13 @@ func TestNewFile(t *testing.T) {
 				options:         {message_set_wire_format:true}
 			}]}]
 		`),
+		wantErr: func() string {
+			if flags.Proto1Legacy {
+				return ""
+			} else {
+				return `message "M.M" is a MessageSet, which is a legacy proto1 feature that is no longer supported`
+			}
+		}(),
 	}, {
 		label: "invalid extension ranges in proto3",
 		inDesc: mustParseFile(`

@@ -110,6 +110,7 @@ func (p pointer) StringPtr() **string                   { return (**string)(p.p)
 func (p pointer) StringSlice() *[]string                { return (*[]string)(p.p) }
 func (p pointer) Bytes() *[]byte                        { return (*[]byte)(p.p) }
 func (p pointer) BytesSlice() *[][]byte                 { return (*[][]byte)(p.p) }
+func (p pointer) WeakFields() *WeakFields               { return (*WeakFields)(p.p) }
 func (p pointer) Extensions() *map[int32]ExtensionField { return (*map[int32]ExtensionField)(p.p) }
 
 func (p pointer) Elem() pointer {

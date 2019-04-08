@@ -403,6 +403,7 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 		g.P("state ", protoimplPackage.Ident("MessageState"))
 		sf.append("state")
 	}
+	hasWeak := false
 	for _, field := range message.Fields {
 		if field.Oneof != nil {
 			// It would be a bit simpler to iterate over the oneofs below,
@@ -443,8 +444,14 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 				fmt.Sprintf("protobuf_val:%q", fieldProtobufTag(val)),
 			)
 		}
-		g.Annotate(message.GoIdent.GoName+"."+field.GoName, field.Location)
-		g.P(field.GoName, " ", goType, " `", strings.Join(tags, " "), "`",
+
+		name := field.GoName
+		if field.Desc.IsWeak() {
+			hasWeak = true
+			name = "XXX_weak_" + name
+		}
+		g.Annotate(message.GoIdent.GoName+"."+name, field.Location)
+		g.P(name, " ", goType, " `", strings.Join(tags, " "), "`",
 			deprecationComment(field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated()))
 		sf.append(field.GoName)
 	}
@@ -459,6 +466,10 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 	} else {
 		g.P("sizeCache", " ", protoimplPackage.Ident("SizeCache"))
 		sf.append("sizeCache")
+	}
+	if hasWeak {
+		g.P("XXX_weak", " ", protoimplPackage.Ident("WeakFields"), " `json:\"-\"`")
+		sf.append("XXX_weak")
 	}
 	if generateExportedUnknownFields {
 		g.P("XXX_unrecognized", " ", protoimplPackage.Ident("UnknownFields"), " `json:\"-\"`")
@@ -591,6 +602,19 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 			g.P(deprecationComment(true))
 		}
 		g.Annotate(message.GoIdent.GoName+".Get"+field.GoName, field.Location)
+		if field.Desc.IsWeak() {
+			g.P("func (x *", message.GoIdent, ") Get", field.GoName, "() ", protoifacePackage.Ident("MessageV1"), "{")
+			g.P("if x != nil {")
+			g.P("v := x.XXX_weak[", field.Desc.Number(), "]")
+			g.P("_ = x.XXX_weak_" + field.GoName) // for field tracking
+			g.P("if v != nil {")
+			g.P("return v")
+			g.P("}")
+			g.P("}")
+			g.P("return ", protoimplPackage.Ident("X"), ".WeakNil(", strconv.Quote(string(field.Message.Desc.FullName())), ")")
+			g.P("}")
+			continue
+		}
 		g.P("func (x *", message.GoIdent, ") Get", field.GoName, "() ", goType, " {")
 		if field.Oneof != nil {
 			g.P("if x, ok := x.Get", field.Oneof.GoName, "().(*", fieldOneofType(field), "); ok {")
@@ -614,6 +638,25 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 		g.P()
 	}
 
+	// Setter methods.
+	for _, field := range message.Fields {
+		if field.Desc.IsWeak() {
+			g.Annotate(message.GoIdent.GoName+".Set"+field.GoName, field.Location)
+			g.P("func (x *", message.GoIdent, ") Set", field.GoName, "(v ", protoifacePackage.Ident("MessageV1"), ") {")
+			g.P("if x.XXX_weak == nil {")
+			g.P("x.XXX_weak = make(", protoimplPackage.Ident("WeakFields"), ")")
+			g.P("}")
+			g.P("if v == nil {")
+			g.P("delete(x.XXX_weak, ", field.Desc.Number(), ")")
+			g.P("} else {")
+			g.P("x.XXX_weak[", field.Desc.Number(), "] = v")
+			g.P("x.XXX_weak_"+field.GoName, " = struct{}{}") // for field tracking
+			g.P("}")
+			g.P("}")
+			g.P()
+		}
+	}
+
 	// Oneof wrapper types.
 	if len(message.Oneofs) > 0 {
 		genOneofWrappers(gen, g, f, message)
@@ -624,6 +667,10 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 //
 // If it returns pointer=true, the struct field is a pointer to the type.
 func fieldGoType(g *protogen.GeneratedFile, field *protogen.Field) (goType string, pointer bool) {
+	if field.Desc.IsWeak() {
+		return "struct{}", false
+	}
+
 	pointer = true
 	switch field.Desc.Kind() {
 	case protoreflect.BoolKind:

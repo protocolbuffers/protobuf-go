@@ -11,6 +11,7 @@ import (
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
@@ -102,6 +103,9 @@ func validateMessageDeclarations(ms []filedesc.Message, mds []*descriptorpb.Desc
 				return errors.New("message %q has conflicting fields: %q with %q", m.FullName(), f1.Name(), f2.Name())
 			}
 		}
+		if isMessageSet && !flags.Proto1Legacy {
+			return errors.New("message %q is a MessageSet, which is a legacy proto1 feature that is no longer supported", m.FullName())
+		}
 		if isMessageSet && (m.Syntax() != protoreflect.Proto2 || m.Fields().Len() > 0 || m.ExtensionRanges().Len() == 0) {
 			return errors.New("message %q is an invalid proto1 MessageSet", m.FullName())
 		}
@@ -143,7 +147,10 @@ func validateMessageDeclarations(ms []filedesc.Message, mds []*descriptorpb.Desc
 			if fd.Extendee != nil {
 				return errors.New("message field %q may not have extendee: %q", f.FullName(), fd.GetExtendee())
 			}
-			if f.IsWeak() && (!isOptionalMessage(f) || f.ContainingOneof() != nil) {
+			if f.IsWeak() && !flags.Proto1Legacy {
+				return errors.New("message field %q is a weak field, which is a legacy proto1 feature that is no longer supported", f.FullName())
+			}
+			if f.IsWeak() && (f.Syntax() != protoreflect.Proto2 || !isOptionalMessage(f) || f.ContainingOneof() != nil) {
 				return errors.New("message field %q may only be weak for an optional message", f.FullName())
 			}
 			if f.IsPacked() && !isPackable(f) {

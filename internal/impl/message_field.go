@@ -9,8 +9,10 @@ import (
 	"math"
 	"reflect"
 
+	"google.golang.org/protobuf/internal/flags"
 	pvalue "google.golang.org/protobuf/internal/value"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	preg "google.golang.org/protobuf/reflect/protoregistry"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
@@ -285,6 +287,89 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x expor
 					rv.Set(nilBytes) // do not preserve presence in proto3
 				}
 			}
+		},
+	}
+}
+
+func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldInfo {
+	if !flags.Proto1Legacy {
+		panic("no support for proto1 weak fields")
+	}
+
+	messageName := fd.Message().FullName()
+	messageType, _ := preg.GlobalTypes.FindMessageByName(messageName)
+	if messageType == nil {
+		return fieldInfo{
+			fieldDesc: fd,
+			has:       func(p pointer) bool { return false },
+			clear:     func(p pointer) {},
+			get: func(p pointer) pref.Value {
+				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
+			},
+			set: func(p pointer, v pref.Value) {
+				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
+			},
+			mutable: func(p pointer) pref.Value {
+				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
+			},
+			newMessage: func() pref.Message {
+				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
+			},
+		}
+	}
+
+	num := int32(fd.Number())
+	frozenEmpty := pref.ValueOf(frozenMessage{messageType.New()})
+	return fieldInfo{
+		fieldDesc: fd,
+		has: func(p pointer) bool {
+			if p.IsNil() {
+				return false
+			}
+			fs := p.Apply(weakOffset).WeakFields()
+			_, ok := (*fs)[num]
+			return ok
+		},
+		clear: func(p pointer) {
+			fs := p.Apply(weakOffset).WeakFields()
+			delete(*fs, num)
+		},
+		get: func(p pointer) pref.Value {
+			if p.IsNil() {
+				return frozenEmpty
+			}
+			fs := p.Apply(weakOffset).WeakFields()
+			m, ok := (*fs)[num]
+			if !ok {
+				return frozenEmpty
+			}
+			return pref.ValueOf(m.(pref.ProtoMessage).ProtoReflect())
+		},
+		set: func(p pointer, v pref.Value) {
+			m := v.Message()
+			if m.Descriptor() != messageType.Descriptor() {
+				panic("mismatching message descriptor")
+			}
+			fs := p.Apply(weakOffset).WeakFields()
+			if *fs == nil {
+				*fs = make(WeakFields)
+			}
+			(*fs)[num] = m.Interface().(piface.MessageV1)
+		},
+		mutable: func(p pointer) pref.Value {
+			fs := p.Apply(weakOffset).WeakFields()
+			if *fs == nil {
+				*fs = make(WeakFields)
+			}
+			m, ok := (*fs)[num]
+			if !ok {
+				m = messageType.New().Interface().(piface.MessageV1)
+				(*fs)[num] = m
+			}
+			return pref.ValueOf(m.(pref.ProtoMessage).ProtoReflect())
+		},
+		newMessage: func() pref.Message {
+			return messageType.New()
 		},
 	}
 }

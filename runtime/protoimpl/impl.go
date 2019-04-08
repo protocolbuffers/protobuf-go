@@ -68,6 +68,7 @@ type (
 	MessageInfo      = impl.MessageInfo
 	MessageState     = impl.MessageState
 	SizeCache        = impl.SizeCache
+	WeakFields       = impl.WeakFields
 	UnknownFields    = impl.UnknownFields
 	ExtensionFields  = impl.ExtensionFields
 	ExtensionFieldV1 = impl.ExtensionField

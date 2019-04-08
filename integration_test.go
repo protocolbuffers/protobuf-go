@@ -48,8 +48,8 @@ func Test(t *testing.T) {
 
 	if *regenerate {
 		t.Run("Generate", func(t *testing.T) {
-			fmt.Print(mustRunCommand(t, ".", "go", "run", "./internal/cmd/generate-types", "-execute"))
-			fmt.Print(mustRunCommand(t, ".", "go", "run", "./internal/cmd/generate-protos", "-execute"))
+			fmt.Print(mustRunCommand(t, ".", "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-types", "-execute"))
+			fmt.Print(mustRunCommand(t, ".", "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-protos", "-execute"))
 			files := strings.Split(strings.TrimSpace(mustRunCommand(t, ".", "git", "ls-files", "*.go")), "\n")
 			mustRunCommand(t, ".", append([]string{"gofmt", "-w"}, files...)...)
 		})
@@ -94,11 +94,11 @@ func Test(t *testing.T) {
 		mustRunCommand(t, ".", runner, "--failure_list", failureList, "--enforce_recommended", driver)
 	})
 	t.Run("GeneratedGoFiles", func(t *testing.T) {
-		diff := mustRunCommand(t, ".", "go", "run", "./internal/cmd/generate-types")
+		diff := mustRunCommand(t, ".", "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-types")
 		if strings.TrimSpace(diff) != "" {
 			t.Fatalf("stale generated files:\n%v", diff)
 		}
-		diff = mustRunCommand(t, ".", "go", "run", "./internal/cmd/generate-protos")
+		diff = mustRunCommand(t, ".", "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-protos")
 		if strings.TrimSpace(diff) != "" {
 			t.Fatalf("stale generated files:\n%v", diff)
 		}

@@ -120,18 +120,21 @@ func (mi *MessageInfo) initOnce() {
 
 type (
 	SizeCache       = int32
+	WeakFields      = map[int32]piface.MessageV1
 	UnknownFields   = []byte
 	ExtensionFields = map[int32]ExtensionField
 )
 
 var (
 	sizecacheType       = reflect.TypeOf(SizeCache(0))
+	weakFieldsType      = reflect.TypeOf(WeakFields(nil))
 	unknownFieldsType   = reflect.TypeOf(UnknownFields(nil))
 	extensionFieldsType = reflect.TypeOf(ExtensionFields(nil))
 )
 
 type structInfo struct {
 	sizecacheOffset offset
+	weakOffset      offset
 	unknownOffset   offset
 	extensionOffset offset
 
@@ -144,6 +147,7 @@ type structInfo struct {
 func (mi *MessageInfo) makeStructInfo(t reflect.Type) structInfo {
 	si := structInfo{
 		sizecacheOffset: invalidOffset,
+		weakOffset:      invalidOffset,
 		unknownOffset:   invalidOffset,
 		extensionOffset: invalidOffset,
 
@@ -158,6 +162,9 @@ func (mi *MessageInfo) makeStructInfo(t reflect.Type) structInfo {
 	}
 	if f, _ := t.FieldByName("XXX_sizecache"); f.Type == sizecacheType {
 		si.sizecacheOffset = offsetOf(f, mi.Exporter)
+	}
+	if f, _ := t.FieldByName("XXX_weak"); f.Type == weakFieldsType {
+		si.weakOffset = offsetOf(f, mi.Exporter)
 	}
 	if f, _ := t.FieldByName("unknownFields"); f.Type == unknownFieldsType {
 		si.unknownOffset = offsetOf(f, mi.Exporter)
@@ -235,6 +242,8 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 			fi = fieldInfoForMap(fd, fs, mi.Exporter)
 		case fd.IsList():
 			fi = fieldInfoForList(fd, fs, mi.Exporter)
+		case fd.IsWeak():
+			fi = fieldInfoForWeakMessage(fd, si.weakOffset)
 		case fd.Kind() == pref.MessageKind || fd.Kind() == pref.GroupKind:
 			fi = fieldInfoForMessage(fd, fs, mi.Exporter)
 		default:
