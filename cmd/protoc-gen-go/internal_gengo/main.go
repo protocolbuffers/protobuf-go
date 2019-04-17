@@ -30,6 +30,10 @@ const (
 	// which provide a bi-directional mapping between enum numbers and names.
 	generateEnumMapVars = true
 
+	// generateEnumJSONMethods specifies whether to generate the UnmarshalJSON
+	// method for proto2 enums.
+	generateEnumJSONMethods = true
+
 	// generateRawDescMethods specifies whether to generate EnumDescriptor and
 	// Descriptor methods for enums and messages. These methods return the
 	// GZIP'd contents of the raw file descriptor and the path from the root
@@ -39,6 +43,10 @@ const (
 	// generateOneofWrapperMethods specifies whether to generate
 	// XXX_OneofWrappers methods on messages with oneofs.
 	generateOneofWrapperMethods = false
+
+	// generateExtensionRangeMethods specifies whether to generate the
+	// ExtensionRangeArray method for messages that support extensions.
+	generateExtensionRangeMethods = true
 
 	// generateWKTMarkerMethods specifes whether to generate
 	// XXX_WellKnownType methods on well-known types.
@@ -329,7 +337,7 @@ func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum 
 	genReflectEnum(gen, g, f, enum)
 
 	// UnmarshalJSON method.
-	if enum.Desc.Syntax() == protoreflect.Proto2 {
+	if generateEnumJSONMethods && enum.Desc.Syntax() == protoreflect.Proto2 {
 		g.P("// Deprecated: Do not use.")
 		g.P("func (x *", enum.GoIdent, ") UnmarshalJSON(b []byte) error {")
 		g.P("num, err := ", protoimplPackage.Ident("X"), ".UnmarshalJSONEnum(x.Descriptor(), b)")
@@ -493,21 +501,23 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 	}
 
 	// ExtensionRangeArray method.
-	if extranges := message.Desc.ExtensionRanges(); extranges.Len() > 0 {
-		protoExtRange := protoifacePackage.Ident("ExtensionRangeV1")
-		extRangeVar := "extRange_" + message.GoIdent.GoName
-		g.P("var ", extRangeVar, " = []", protoExtRange, " {")
-		for i := 0; i < extranges.Len(); i++ {
-			r := extranges.Get(i)
-			g.P("{Start:", r[0], ", End:", r[1]-1 /* inclusive */, "},")
+	if generateExtensionRangeMethods {
+		if extranges := message.Desc.ExtensionRanges(); extranges.Len() > 0 {
+			protoExtRange := protoifacePackage.Ident("ExtensionRangeV1")
+			extRangeVar := "extRange_" + message.GoIdent.GoName
+			g.P("var ", extRangeVar, " = []", protoExtRange, " {")
+			for i := 0; i < extranges.Len(); i++ {
+				r := extranges.Get(i)
+				g.P("{Start:", r[0], ", End:", r[1]-1 /* inclusive */, "},")
+			}
+			g.P("}")
+			g.P()
+			g.P("// Deprecated: Use ", message.GoIdent, ".ProtoReflect.Type.ExtensionRanges instead.")
+			g.P("func (*", message.GoIdent, ") ExtensionRangeArray() []", protoExtRange, " {")
+			g.P("return ", extRangeVar)
+			g.P("}")
+			g.P()
 		}
-		g.P("}")
-		g.P()
-		g.P("// Deprecated: Use ", message.GoIdent, ".ProtoReflect.Type.ExtensionRanges instead.")
-		g.P("func (*", message.GoIdent, ") ExtensionRangeArray() []", protoExtRange, " {")
-		g.P("return ", extRangeVar)
-		g.P("}")
-		g.P()
 	}
 
 	genWellKnownType(g, "*", message.GoIdent, message.Desc)
