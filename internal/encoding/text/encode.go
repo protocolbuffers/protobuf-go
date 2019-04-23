@@ -6,6 +6,7 @@ package text
 
 import (
 	"bytes"
+	"regexp"
 	"strings"
 
 	"google.golang.org/protobuf/internal/detrand"
@@ -141,6 +142,12 @@ func (p *encoder) marshalMessage(v Value, emitDelims bool) error {
 	}
 	return nil
 }
+
+// This expression is more liberal than ConsumeAnyTypeUrl in C++.
+// However, the C++ parser does not handle many legal URL strings.
+// The Go implementation is more liberal to be backwards compatible with
+// the historical Go implementation which was overly liberal (and buggy).
+var urlRegexp = regexp.MustCompile(`^[-_a-zA-Z0-9]+([./][-_a-zA-Z0-9]+)*`)
 
 func (p *encoder) marshalKey(v Value) error {
 	switch v.Type() {

@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"io"
 	"regexp"
+	"strconv"
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/internal/errors"
@@ -114,12 +115,6 @@ func (p *decoder) unmarshalMessage(checkDelims bool) (Value, error) {
 	return rawValueOf(items, b[:len(b):len(b)]), nil
 }
 
-// This expression is more liberal than ConsumeAnyTypeUrl in C++.
-// However, the C++ parser does not handle many legal URL strings.
-// The Go implementation is more liberal to be backwards compatible with
-// the historical Go implementation which was overly liberal (and buggy).
-var urlRegexp = regexp.MustCompile(`^[-_a-zA-Z0-9]+([./][-_a-zA-Z0-9]+)*`)
-
 // unmarshalKey parses the key, which may be a Name, String, or Uint.
 func (p *decoder) unmarshalKey() (v Value, err error) {
 	if p.tryConsumeChar('[') {
@@ -134,21 +129,70 @@ func (p *decoder) unmarshalKey() (v Value, err error) {
 			if err != nil {
 				return Value{}, err
 			}
-		} else if n := matchWithDelim(urlRegexp, p.in); n > 0 {
-			v = rawValueOf(string(p.in[:n]), p.in[:n:n])
-			p.consume(n)
 		} else {
-			return Value{}, newSyntaxError("invalid %q as identifier", errRegexp.Find(p.in))
+			v, err = p.unmarshalURL()
+			if err != nil {
+				return Value{}, err
+			}
 		}
 		if err := p.consumeChar(']', "at end of extension name"); err != nil {
 			return Value{}, err
 		}
 		return v, nil
 	}
-	if matchWithDelim(intRegexp, p.in) > 0 && p.in[0] != '-' {
-		return p.unmarshalNumber()
+	v, err = p.unmarshalName()
+	if err == nil {
+		return v, nil
 	}
-	return p.unmarshalName()
+	v, err = p.unmarshalNumberKey()
+	if err == nil {
+		return v, nil
+	}
+	return Value{}, err
+}
+
+// unmarshalURL parses an Any type URL string. The C++ parser does not handle
+// many legal URL strings. This implementation is more liberal and allows for
+// the pattern ^[-_a-zA-Z0-9]+([./][-_a-zA-Z0-9]+)*`).
+func (p *decoder) unmarshalURL() (Value, error) {
+	s := p.in
+	var size int
+	for len(s) > 0 && (s[0] == '-' || s[0] == '_' ||
+		('0' <= s[0] && s[0] <= '9') ||
+		('a' <= s[0] && s[0] <= 'z') ||
+		('A' <= s[0] && s[0] <= 'Z')) {
+		s = s[1:]
+		size++
+		if len(s) > 0 && (s[0] == '/' || s[0] == '.') {
+			s = s[1:]
+			size++
+		}
+	}
+
+	// Last character cannot be '.' or '/'.
+	// Next byte should either be a delimiter or it is at the end.
+	if size == 0 || p.in[size-1] == '.' || p.in[size-1] == '/' ||
+		(len(s) > 0 && !isDelim(s[0])) {
+		return Value{}, newSyntaxError("invalid %q as identifier", errRegexp.Find(p.in))
+	}
+	v := rawValueOf(string(p.in[:size]), p.in[:size:size])
+	p.consume(size)
+	return v, nil
+}
+
+// unmarshalNumberKey parses field number as key. Field numbers are non-negative
+// integers.
+func (p *decoder) unmarshalNumberKey() (Value, error) {
+	num, ok := parseNumber(p.in)
+	if !ok || num.neg || num.typ == numFloat {
+		return Value{}, newSyntaxError("invalid %q as identifier", errRegexp.Find(p.in))
+	}
+	v, err := strconv.ParseUint(string(num.value), 0, 64)
+	if err != nil {
+		return Value{}, newSyntaxError("invalid %q as identifier", errRegexp.Find(p.in))
+	}
+	p.consume(num.size)
+	return rawValueOf(v, num.value), nil
 }
 
 func (p *decoder) unmarshalValue() (Value, error) {
@@ -163,27 +207,62 @@ func (p *decoder) unmarshalValue() (Value, error) {
 	case '{', '<':
 		return p.unmarshalMessage(true)
 	default:
-		n := matchWithDelim(nameRegexp, p.in) // zero if no match
-		if n > 0 && literals[string(p.in[:n])] == nil {
-			return p.unmarshalName()
+		n, ok := consumeName(p.in)
+		if ok && literals[string(p.in[:n])] == nil {
+			v := rawValueOf(protoreflect.Name(p.in[:n]), p.in[:n:n])
+			p.consume(n)
+			return v, nil
 		}
 		return p.unmarshalNumber()
 	}
 }
 
-// This expression matches all valid proto identifiers.
-var nameRegexp = regexp.MustCompile(`^[_a-zA-Z][_a-zA-Z0-9]*`)
-
-// unmarshalName unmarshals an unquoted identifier.
+// unmarshalName unmarshals an unquoted proto identifier.
+// Regular expression that matches an identifier: `^[_a-zA-Z][_a-zA-Z0-9]*`
 //
 // E.g., `field_name` => ValueOf(protoreflect.Name("field_name"))
 func (p *decoder) unmarshalName() (Value, error) {
-	if n := matchWithDelim(nameRegexp, p.in); n > 0 {
-		v := rawValueOf(protoreflect.Name(p.in[:n]), p.in[:n:n])
-		p.consume(n)
-		return v, nil
+	n, ok := consumeName(p.in)
+	if !ok {
+		return Value{}, newSyntaxError("invalid %q as identifier", errRegexp.Find(p.in))
 	}
-	return Value{}, newSyntaxError("invalid %q as identifier", errRegexp.Find(p.in))
+
+	v := rawValueOf(protoreflect.Name(p.in[:n]), p.in[:n:n])
+	p.consume(n)
+	return v, nil
+}
+
+func consumeName(input []byte) (int, bool) {
+	var n int
+
+	s := input
+	if len(s) == 0 {
+		return 0, false
+	}
+
+	switch {
+	case s[0] == '_',
+		'a' <= s[0] && s[0] <= 'z',
+		'A' <= s[0] && s[0] <= 'Z':
+		s = s[1:]
+		n++
+	default:
+		return 0, false
+	}
+
+	for len(s) > 0 && (s[0] == '_' ||
+		'a' <= s[0] && s[0] <= 'z' ||
+		'A' <= s[0] && s[0] <= 'Z' ||
+		'0' <= s[0] && s[0] <= '9') {
+		s = s[1:]
+		n++
+	}
+
+	if len(s) > 0 && !isDelim(s[0]) {
+		return 0, false
+	}
+
+	return n, true
 }
 
 func (p *decoder) consumeChar(c byte, msg string) error {
@@ -224,23 +303,12 @@ func (p *decoder) consume(n int) {
 }
 
 // Any sequence that looks like a non-delimiter (for error reporting).
-var errRegexp = regexp.MustCompile("^([-+._a-zA-Z0-9]{1,32}|.)")
+var errRegexp = regexp.MustCompile(`^([-+._a-zA-Z0-9\/]+|.)`)
 
-// matchWithDelim matches r with the input b and verifies that the match
-// terminates with a delimiter of some form (e.g., r"[^-+_.a-zA-Z0-9]").
-// As a special case, EOF is considered a delimiter.
-func matchWithDelim(r *regexp.Regexp, b []byte) int {
-	n := len(r.Find(b))
-	if n < len(b) {
-		// Check that that the next character is a delimiter.
-		c := b[n]
-		notDelim := (c == '-' || c == '+' || c == '.' || c == '_' ||
-			('a' <= c && c <= 'z') ||
-			('A' <= c && c <= 'Z') ||
-			('0' <= c && c <= '9'))
-		if notDelim {
-			return 0
-		}
-	}
-	return n
+// isDelim returns true if given byte is a delimiter character.
+func isDelim(c byte) bool {
+	return !(c == '-' || c == '+' || c == '.' || c == '_' ||
+		('a' <= c && c <= 'z') ||
+		('A' <= c && c <= 'Z') ||
+		('0' <= c && c <= '9'))
 }

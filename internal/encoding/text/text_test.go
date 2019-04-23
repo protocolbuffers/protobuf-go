@@ -120,6 +120,15 @@ func Test(t *testing.T) {
 		in:      "[$]",
 		wantErr: `invalid "$" as identifier`,
 	}, {
+		in:      `[proto.package.]:0`,
+		wantErr: `invalid "proto.package." as identifier`,
+	}, {
+		in:      `[/proto.package]:0`,
+		wantErr: `invalid "/proto.package" as identifier`,
+	}, {
+		in:      `[proto.package/]:0`,
+		wantErr: `invalid "proto.package/" as identifier`,
+	}, {
 		// This parses fine, but should result in a error later since no
 		// type name in proto will ever be just a number.
 		in:      "[20]:0",
