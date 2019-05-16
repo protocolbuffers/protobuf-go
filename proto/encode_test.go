@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"testing"
 
-	protoV1 "github.com/golang/protobuf/proto"
 	"github.com/google/go-cmp/cmp"
 	"google.golang.org/protobuf/proto"
 
@@ -38,7 +37,7 @@ func TestEncode(t *testing.T) {
 					AllowPartial: test.partial,
 				}
 				if err := uopts.Unmarshal(wire, got); err != nil {
-					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, protoV1.MarshalTextString(want.(protoV1.Message)))
+					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, marshalText(want))
 					return
 				}
 
@@ -47,7 +46,7 @@ func TestEncode(t *testing.T) {
 					return
 				}
 				if !proto.Equal(got, want) {
-					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", protoV1.MarshalTextString(got.(protoV1.Message)), protoV1.MarshalTextString(want.(protoV1.Message)))
+					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", marshalText(got), marshalText(want))
 				}
 			})
 		}

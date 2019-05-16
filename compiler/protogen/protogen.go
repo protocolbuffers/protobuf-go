@@ -216,7 +216,7 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 	// .proto source file specifying the full import path of the Go package
 	// associated with this file.
 	//
-	//     option go_package = "github.com/golang/protobuf/ptypes/any";
+	//     option go_package = "google.golang.org/protobuf/types/known/anypb";
 	//
 	// Build systems which want to exert full control over import paths may
 	// specify M<filename>=<import_path> flags.

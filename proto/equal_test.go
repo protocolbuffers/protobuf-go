@@ -393,16 +393,16 @@ var inequalities = []struct{ a, b proto.Message }{
 	// Extensions.
 	{
 		build(&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalInt32Extension, scalar.Int32(1)),
+			extend(testpb.E_OptionalInt32Extension, int32(1)),
 		),
 		build(&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalInt32Extension, scalar.Int32(2)),
+			extend(testpb.E_OptionalInt32Extension, int32(2)),
 		),
 	},
 	{
 		&testpb.TestAllExtensions{},
 		build(&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalInt32Extension, scalar.Int32(2)),
+			extend(testpb.E_OptionalInt32Extension, int32(2)),
 		),
 	},
 	// Proto2 default values are not considered by Equal, so the following are still unequal.

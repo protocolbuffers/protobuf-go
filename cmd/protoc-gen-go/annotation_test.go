@@ -9,9 +9,10 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/golang/protobuf/proto"
+	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/fieldnum"
 	"google.golang.org/protobuf/internal/scalar"
+	"google.golang.org/protobuf/proto"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -26,7 +27,7 @@ func TestAnnotations(t *testing.T) {
 		t.Fatal(err)
 	}
 	gotInfo := &descriptorpb.GeneratedCodeInfo{}
-	if err := proto.UnmarshalText(string(metaFile), gotInfo); err != nil {
+	if err := prototext.Unmarshal(metaFile, gotInfo); err != nil {
 		t.Fatalf("can't parse meta file: %v", err)
 	}
 
@@ -66,7 +67,6 @@ func TestAnnotations(t *testing.T) {
 		})
 	}
 	if !proto.Equal(gotInfo, wantInfo) {
-		t.Errorf("unexpected annotations for annotations.proto; got:\n%v\nwant:\n%v",
-			proto.MarshalTextString(gotInfo), proto.MarshalTextString(wantInfo))
+		t.Errorf("unexpected annotations for annotations.proto; got:\n%v\nwant:\n%v", gotInfo, wantInfo)
 	}
 }

@@ -135,22 +135,22 @@ var testProtos = []testProto{
 			OptionalNestedEnum: test3pb.TestAllTypes_BAR,
 		}, build(
 			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalInt32Extension, scalar.Int32(1001)),
-			extend(testpb.E_OptionalInt64Extension, scalar.Int64(1002)),
-			extend(testpb.E_OptionalUint32Extension, scalar.Uint32(1003)),
-			extend(testpb.E_OptionalUint64Extension, scalar.Uint64(1004)),
-			extend(testpb.E_OptionalSint32Extension, scalar.Int32(1005)),
-			extend(testpb.E_OptionalSint64Extension, scalar.Int64(1006)),
-			extend(testpb.E_OptionalFixed32Extension, scalar.Uint32(1007)),
-			extend(testpb.E_OptionalFixed64Extension, scalar.Uint64(1008)),
-			extend(testpb.E_OptionalSfixed32Extension, scalar.Int32(1009)),
-			extend(testpb.E_OptionalSfixed64Extension, scalar.Int64(1010)),
-			extend(testpb.E_OptionalFloatExtension, scalar.Float32(1011.5)),
-			extend(testpb.E_OptionalDoubleExtension, scalar.Float64(1012.5)),
-			extend(testpb.E_OptionalBoolExtension, scalar.Bool(true)),
-			extend(testpb.E_OptionalStringExtension, scalar.String("string")),
+			extend(testpb.E_OptionalInt32Extension, int32(1001)),
+			extend(testpb.E_OptionalInt64Extension, int64(1002)),
+			extend(testpb.E_OptionalUint32Extension, uint32(1003)),
+			extend(testpb.E_OptionalUint64Extension, uint64(1004)),
+			extend(testpb.E_OptionalSint32Extension, int32(1005)),
+			extend(testpb.E_OptionalSint64Extension, int64(1006)),
+			extend(testpb.E_OptionalFixed32Extension, uint32(1007)),
+			extend(testpb.E_OptionalFixed64Extension, uint64(1008)),
+			extend(testpb.E_OptionalSfixed32Extension, int32(1009)),
+			extend(testpb.E_OptionalSfixed64Extension, int64(1010)),
+			extend(testpb.E_OptionalFloatExtension, float32(1011.5)),
+			extend(testpb.E_OptionalDoubleExtension, float64(1012.5)),
+			extend(testpb.E_OptionalBoolExtension, bool(true)),
+			extend(testpb.E_OptionalStringExtension, string("string")),
 			extend(testpb.E_OptionalBytesExtension, []byte("bytes")),
-			extend(testpb.E_OptionalNestedEnumExtension, testpb.TestAllTypes_BAR.Enum()),
+			extend(testpb.E_OptionalNestedEnumExtension, testpb.TestAllTypes_BAR),
 		)},
 		wire: pack.Message{
 			pack.Tag{1, pack.VarintType}, pack.Varint(1001),
@@ -1370,14 +1370,21 @@ func unknown(raw pref.RawFields) buildOpt {
 }
 
 func extend(desc *protoV1.ExtensionDesc, value interface{}) buildOpt {
+	// TODO: Should ExtensionType.ValueOf accept []T instead of *[]T?
+	t := reflect.TypeOf(value)
+	if t.Kind() == reflect.Slice && t.Elem().Kind() != reflect.Uint8 {
+		v := reflect.New(t)
+		v.Elem().Set(reflect.ValueOf(value))
+		value = v.Interface()
+	}
+
 	return func(m proto.Message) {
-		if err := protoV1.SetExtension(m.(protoV1.Message), desc, value); err != nil {
-			panic(err)
-		}
+		xt := desc.Type
+		m.ProtoReflect().Set(xt, xt.ValueOf(value))
 	}
 }
 
 func marshalText(m proto.Message) string {
-	b, _ := prototext.Marshal(m)
+	b, _ := prototext.MarshalOptions{Indent: "\t", AllowPartial: true}.Marshal(m)
 	return string(b)
 }

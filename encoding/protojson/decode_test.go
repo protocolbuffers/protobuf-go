@@ -8,7 +8,6 @@ import (
 	"math"
 	"testing"
 
-	protoV1 "github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/encoding/testprotos/pb2"
 	"google.golang.org/protobuf/encoding/testprotos/pb3"
@@ -2483,7 +2482,7 @@ func TestUnmarshal(t *testing.T) {
 			if err == nil && tt.wantErr {
 				t.Error("Unmarshal() got nil error, want error\n\n")
 			}
-			if tt.wantMessage != nil && !protoV1.Equal(tt.inputMessage.(protoV1.Message), tt.wantMessage.(protoV1.Message)) {
+			if tt.wantMessage != nil && !proto.Equal(tt.inputMessage, tt.wantMessage) {
 				t.Errorf("Unmarshal()\n<got>\n%v\n<want>\n%v\n", tt.inputMessage, tt.wantMessage)
 			}
 		})

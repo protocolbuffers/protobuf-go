@@ -7,7 +7,6 @@ package prototext_test
 import (
 	"testing"
 
-	protoV1 "github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/impl"
 	pimpl "google.golang.org/protobuf/internal/impl"
@@ -240,7 +239,7 @@ func TestRoundTrip(t *testing.T) {
 				t.Errorf("Unmarshal() returned error: %v\n\n", err)
 			}
 
-			if !protoV1.Equal(gotMessage, tt.message.(protoV1.Message)) {
+			if !proto.Equal(gotMessage, tt.message) {
 				t.Errorf("Unmarshal()\n<got>\n%v\n<want>\n%v\n", gotMessage, tt.message)
 			}
 		})
