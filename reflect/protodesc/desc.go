@@ -136,6 +136,32 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 		imps.importPublic(imp.Imports())
 	}
 
+	// Handle source locations.
+	for _, loc := range fd.GetSourceCodeInfo().GetLocation() {
+		var l protoreflect.SourceLocation
+		// TODO: Validate that the path points to an actual declaration?
+		l.Path = protoreflect.SourcePath(loc.GetPath())
+		s := loc.GetSpan()
+		switch len(s) {
+		case 3:
+			l.StartLine, l.StartColumn, l.EndLine, l.EndColumn = int(s[0]), int(s[1]), int(s[0]), int(s[2])
+		case 4:
+			l.StartLine, l.StartColumn, l.EndLine, l.EndColumn = int(s[0]), int(s[1]), int(s[2]), int(s[3])
+		default:
+			return nil, errors.New("invalid span: %v", s)
+		}
+		// TODO: Validate that the span information is sensible?
+		// See https://github.com/protocolbuffers/protobuf/issues/6378.
+		if false && (l.EndLine < l.StartLine || l.StartLine < 0 || l.StartColumn < 0 || l.EndColumn < 0 ||
+			(l.StartLine == l.EndLine && l.EndColumn <= l.StartColumn)) {
+			return nil, errors.New("invalid span: %v", s)
+		}
+		l.LeadingDetachedComments = loc.GetLeadingDetachedComments()
+		l.LeadingComments = loc.GetLeadingComments()
+		l.TrailingComments = loc.GetTrailingComments()
+		f.L2.Locations.List = append(f.L2.Locations.List, l)
+	}
+
 	// Step 1: Allocate and derive the names for all declarations.
 	// This copies all fields from the descriptor proto except:
 	//	google.protobuf.FieldDescriptorProto.type_name

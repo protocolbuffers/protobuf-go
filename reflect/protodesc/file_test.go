@@ -181,6 +181,33 @@ func TestNewFile(t *testing.T) {
 		`),
 		// TODO: Test import public
 	}, {
+		label: "preserve source code locations",
+		inDesc: mustParseFile(`
+			name: "test.proto"
+			package: "fizz.buzz"
+			source_code_info: {location: [{
+				span: [39,0,882,1]
+			}, {
+				path: [12]
+				span: [39,0,18]
+				leading_detached_comments: [" foo\n"," bar\n"]
+			}, {
+				path: [8,9]
+				span: [51,0,28]
+				leading_comments: " Comment\n"
+			}]}
+		`),
+	}, {
+		label: "invalid source code span",
+		inDesc: mustParseFile(`
+			name: "test.proto"
+			package: "fizz.buzz"
+			source_code_info: {location: [{
+				span: [39]
+			}]}
+		`),
+		wantErr: `invalid span: [39]`,
+	}, {
 		label: "resolve relative reference",
 		inDesc: mustParseFile(`
 			name: "test.proto"

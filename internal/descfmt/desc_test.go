@@ -18,18 +18,15 @@ func TestDescriptorAccessors(t *testing.T) {
 		"Name":          true,
 		"FullName":      true,
 		"IsPlaceholder": true,
+		"Options":       true,
 		"ProtoInternal": true,
 		"ProtoType":     true,
 
-		"DescriptorByName": true, // specific to FileDescriptor
-		"DefaultEnumValue": true, // specific to FieldDescriptor
-		"MapKey":           true, // specific to FieldDescriptor
-		"MapValue":         true, // specific to FieldDescriptor
-
-		// TODO: These should be removed or handled.
-		"DescriptorProto":       true,
-		"ExtensionRangeOptions": true,
-		"Options":               true,
+		"SourceLocations":       true, // specific to FileDescriptor
+		"ExtensionRangeOptions": true, // specific to MessageDescriptor
+		"DefaultEnumValue":      true, // specific to FieldDescriptor
+		"MapKey":                true, // specific to FieldDescriptor
+		"MapValue":              true, // specific to FieldDescriptor
 	}
 
 	for rt, m := range descriptorAccessors {

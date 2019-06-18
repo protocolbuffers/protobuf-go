@@ -50,8 +50,9 @@ type (
 		Services   Services
 	}
 	FileL2 struct {
-		Options func() pref.ProtoMessage
-		Imports FileImports
+		Options   func() pref.ProtoMessage
+		Imports   FileImports
+		Locations SourceLocations
 	}
 )
 
@@ -75,6 +76,7 @@ func (fd *File) Enums() pref.EnumDescriptors           { return &fd.L1.Enums }
 func (fd *File) Messages() pref.MessageDescriptors     { return &fd.L1.Messages }
 func (fd *File) Extensions() pref.ExtensionDescriptors { return &fd.L1.Extensions }
 func (fd *File) Services() pref.ServiceDescriptors     { return &fd.L1.Services }
+func (fd *File) SourceLocations() pref.SourceLocations { return &fd.L2.Locations }
 func (fd *File) Format(s fmt.State, r rune)            { descfmt.FormatDesc(s, r, fd) }
 func (fd *File) ProtoType(pref.FileDescriptor)         {}
 func (fd *File) ProtoInternal(pragma.DoNotImplement)   {}

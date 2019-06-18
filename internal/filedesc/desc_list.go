@@ -276,3 +276,11 @@ func (p *OneofFields) lazyInit() *OneofFields {
 	})
 	return p
 }
+
+type SourceLocations struct {
+	List []pref.SourceLocation
+}
+
+func (p *SourceLocations) Len() int                            { return len(p.List) }
+func (p *SourceLocations) Get(i int) pref.SourceLocation       { return p.List[i] }
+func (p *SourceLocations) ProtoInternal(pragma.DoNotImplement) {}

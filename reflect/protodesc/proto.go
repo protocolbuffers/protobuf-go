@@ -34,6 +34,28 @@ func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileD
 			p.WeakDependency = append(p.WeakDependency, int32(i))
 		}
 	}
+	for i, locs := 0, file.SourceLocations(); i < locs.Len(); i++ {
+		loc := locs.Get(i)
+		l := &descriptorpb.SourceCodeInfo_Location{}
+		l.Path = append(l.Path, loc.Path...)
+		if loc.StartLine == loc.EndLine {
+			l.Span = []int32{int32(loc.StartLine), int32(loc.StartColumn), int32(loc.EndColumn)}
+		} else {
+			l.Span = []int32{int32(loc.StartLine), int32(loc.StartColumn), int32(loc.EndLine), int32(loc.EndColumn)}
+		}
+		l.LeadingDetachedComments = append([]string(nil), loc.LeadingDetachedComments...)
+		if loc.LeadingComments != "" {
+			l.LeadingComments = proto.String(loc.LeadingComments)
+		}
+		if loc.TrailingComments != "" {
+			l.TrailingComments = proto.String(loc.TrailingComments)
+		}
+		if p.SourceCodeInfo == nil {
+			p.SourceCodeInfo = &descriptorpb.SourceCodeInfo{}
+		}
+		p.SourceCodeInfo.Location = append(p.SourceCodeInfo.Location, l)
+
+	}
 	for i, messages := 0, file.Messages(); i < messages.Len(); i++ {
 		p.MessageType = append(p.MessageType, ToDescriptorProto(messages.Get(i)))
 	}

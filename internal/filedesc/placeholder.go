@@ -11,10 +11,11 @@ import (
 )
 
 var (
-	emptyNames        = new(Names)
-	emptyEnumRanges   = new(EnumRanges)
-	emptyFieldRanges  = new(FieldRanges)
-	emptyFieldNumbers = new(FieldNumbers)
+	emptyNames           = new(Names)
+	emptyEnumRanges      = new(EnumRanges)
+	emptyFieldRanges     = new(FieldRanges)
+	emptyFieldNumbers    = new(FieldNumbers)
+	emptySourceLocations = new(SourceLocations)
 
 	emptyFiles      = new(FileImports)
 	emptyMessages   = new(Messages)
@@ -44,6 +45,7 @@ func (f PlaceholderFile) Messages() pref.MessageDescriptors     { return emptyMe
 func (f PlaceholderFile) Enums() pref.EnumDescriptors           { return emptyEnums }
 func (f PlaceholderFile) Extensions() pref.ExtensionDescriptors { return emptyExtensions }
 func (f PlaceholderFile) Services() pref.ServiceDescriptors     { return emptyServices }
+func (f PlaceholderFile) SourceLocations() pref.SourceLocations { return emptySourceLocations }
 func (f PlaceholderFile) ProtoType(pref.FileDescriptor)         { return }
 func (f PlaceholderFile) ProtoInternal(pragma.DoNotImplement)   { return }
 

@@ -133,6 +133,9 @@ type FileDescriptor interface {
 	// Services is a list of the top-level service declarations.
 	Services() ServiceDescriptors
 
+	// SourceLocations is a list of source locations.
+	SourceLocations() SourceLocations
+
 	isFileDescriptor
 }
 type isFileDescriptor interface{ ProtoType(FileDescriptor) }
