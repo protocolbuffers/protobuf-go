@@ -5,6 +5,7 @@
 package proto
 
 import (
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/pragma"
@@ -68,8 +69,11 @@ func (o UnmarshalOptions) unmarshalMessage(b []byte, m protoreflect.Message) err
 }
 
 func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message) error {
-	messageDesc := m.Descriptor()
-	fieldDescs := messageDesc.Fields()
+	md := m.Descriptor()
+	if messageset.IsMessageSet(md) {
+		return unmarshalMessageSet(b, m, o)
+	}
+	fields := md.Fields()
 	for len(b) > 0 {
 		// Parse the tag (field number and wire type).
 		num, wtyp, tagLen := wire.ConsumeTag(b)
@@ -78,9 +82,9 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 		}
 
 		// Parse the field value.
-		fd := fieldDescs.ByNumber(num)
-		if fd == nil && messageDesc.ExtensionRanges().Has(num) {
-			extType, err := o.Resolver.FindExtensionByNumber(messageDesc.FullName(), num)
+		fd := fields.ByNumber(num)
+		if fd == nil && md.ExtensionRanges().Has(num) {
+			extType, err := o.Resolver.FindExtensionByNumber(md.FullName(), num)
 			if err != nil && err != protoregistry.NotFound {
 				return err
 			}

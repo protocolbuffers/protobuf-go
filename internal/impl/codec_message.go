@@ -5,9 +5,11 @@
 package impl
 
 import (
+	"fmt"
 	"reflect"
 	"sort"
 
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
@@ -76,6 +78,21 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 		}
 		mi.orderedCoderFields = append(mi.orderedCoderFields, cf)
 		mi.coderFields[cf.num] = cf
+	}
+	if messageset.IsMessageSet(mi.PBType.Descriptor()) {
+		if !mi.extensionOffset.IsValid() {
+			panic(fmt.Sprintf("%v: MessageSet with no extensions field", mi.PBType.FullName()))
+		}
+		cf := &coderFieldInfo{
+			num:       messageset.FieldItem,
+			offset:    si.extensionOffset,
+			isPointer: true,
+			funcs:     makeMessageSetFieldCoder(mi),
+		}
+		mi.orderedCoderFields = append(mi.orderedCoderFields, cf)
+		mi.coderFields[cf.num] = cf
+		// Invalidate the extension offset, since the field codec handles extensions.
+		mi.extensionOffset = invalidOffset
 	}
 	sort.Slice(mi.orderedCoderFields, func(i, j int) bool {
 		return mi.orderedCoderFields[i].num < mi.orderedCoderFields[j].num

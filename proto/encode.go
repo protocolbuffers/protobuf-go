@@ -7,6 +7,7 @@ package proto
 import (
 	"sort"
 
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/mapsort"
 	"google.golang.org/protobuf/internal/pragma"
@@ -111,6 +112,9 @@ func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte
 }
 
 func (o MarshalOptions) marshalMessageSlow(b []byte, m protoreflect.Message) ([]byte, error) {
+	if messageset.IsMessageSet(m.Descriptor()) {
+		return marshalMessageSet(b, m, o)
+	}
 	// There are many choices for what order we visit fields in. The default one here
 	// is chosen for reasonable efficiency and simplicity given the protoreflect API.
 	// It is not deterministic, since Message.Range does not return fields in any

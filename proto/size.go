@@ -5,6 +5,7 @@
 package proto
 
 import (
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoiface"
@@ -28,6 +29,9 @@ func sizeMessage(m protoreflect.Message) (size int) {
 }
 
 func sizeMessageSlow(m protoreflect.Message) (size int) {
+	if messageset.IsMessageSet(m.Descriptor()) {
+		return sizeMessageSet(m)
+	}
 	m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		size += sizeField(fd, v)
 		return true
