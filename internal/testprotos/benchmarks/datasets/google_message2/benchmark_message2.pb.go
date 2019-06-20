@@ -18,6 +18,7 @@ const (
 )
 
 type GoogleMessage2 struct {
+	state         protoimpl.MessageState
 	Field1        *string                  `protobuf:"bytes,1,opt,name=field1" json:"field1,omitempty"`
 	Field3        *int64                   `protobuf:"varint,3,opt,name=field3" json:"field3,omitempty"`
 	Field4        *int64                   `protobuf:"varint,4,opt,name=field4" json:"field4,omitempty"`
@@ -63,10 +64,18 @@ func (x *GoogleMessage2) String() string {
 func (*GoogleMessage2) ProtoMessage() {}
 
 func (x *GoogleMessage2) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[0].MessageOf(x)
+	mi := &file_datasets_google_message2_benchmark_message2_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *GoogleMessage2) XXX_Methods() *protoiface.Methods {
+func (x *GoogleMessage2) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[0].Methods()
 }
 
@@ -302,6 +311,7 @@ func (x *GoogleMessage2) GetField206() bool {
 }
 
 type GoogleMessage2GroupedMessage struct {
+	state         protoimpl.MessageState
 	Field1        *float32 `protobuf:"fixed32,1,opt,name=field1" json:"field1,omitempty"`
 	Field2        *float32 `protobuf:"fixed32,2,opt,name=field2" json:"field2,omitempty"`
 	Field3        *float32 `protobuf:"fixed32,3,opt,name=field3,def=0" json:"field3,omitempty"`
@@ -328,10 +338,18 @@ func (x *GoogleMessage2GroupedMessage) String() string {
 func (*GoogleMessage2GroupedMessage) ProtoMessage() {}
 
 func (x *GoogleMessage2GroupedMessage) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[1].MessageOf(x)
+	mi := &file_datasets_google_message2_benchmark_message2_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *GoogleMessage2GroupedMessage) XXX_Methods() *protoiface.Methods {
+func (x *GoogleMessage2GroupedMessage) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[1].Methods()
 }
 
@@ -422,6 +440,7 @@ func (x *GoogleMessage2GroupedMessage) GetField11() int64 {
 }
 
 type GoogleMessage2_Group1 struct {
+	state         protoimpl.MessageState
 	Field11       *float32                      `protobuf:"fixed32,11,req,name=field11" json:"field11,omitempty"`
 	Field26       *float32                      `protobuf:"fixed32,26,opt,name=field26" json:"field26,omitempty"`
 	Field12       *string                       `protobuf:"bytes,12,opt,name=field12" json:"field12,omitempty"`
@@ -453,10 +472,18 @@ func (x *GoogleMessage2_Group1) String() string {
 func (*GoogleMessage2_Group1) ProtoMessage() {}
 
 func (x *GoogleMessage2_Group1) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[2].MessageOf(x)
+	mi := &file_datasets_google_message2_benchmark_message2_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *GoogleMessage2_Group1) XXX_Methods() *protoiface.Methods {
+func (x *GoogleMessage2_Group1) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[2].Methods()
 }
 
@@ -741,9 +768,11 @@ func file_datasets_google_message2_benchmark_message2_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_datasets_google_message2_benchmark_message2_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GoogleMessage2); i {
-			case 30:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 31:
+				return &v.sizeCache
+			case 32:
 				return &v.unknownFields
 			default:
 				return nil
@@ -751,9 +780,11 @@ func file_datasets_google_message2_benchmark_message2_proto_init() {
 		}
 		file_datasets_google_message2_benchmark_message2_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GoogleMessage2GroupedMessage); i {
-			case 11:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 12:
+				return &v.sizeCache
+			case 13:
 				return &v.unknownFields
 			default:
 				return nil
@@ -761,9 +792,11 @@ func file_datasets_google_message2_benchmark_message2_proto_init() {
 		}
 		file_datasets_google_message2_benchmark_message2_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GoogleMessage2_Group1); i {
-			case 16:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 17:
+				return &v.sizeCache
+			case 18:
 				return &v.unknownFields
 			default:
 				return nil

@@ -56,6 +56,7 @@ func (FieldTestMessage_Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type FieldTestMessage struct {
+	state            protoimpl.MessageState
 	OptionalBool     string                               `protobuf:"bytes,1,opt,name=optional_bool,json=optionalBool,proto3" json:"optional_bool,omitempty"`
 	OptionalEnum     FieldTestMessage_Enum                `protobuf:"varint,2,opt,name=optional_enum,json=optionalEnum,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum" json:"optional_enum,omitempty"`
 	OptionalInt32    int32                                `protobuf:"varint,3,opt,name=optional_int32,json=optionalInt32,proto3" json:"optional_int32,omitempty"`
@@ -108,10 +109,18 @@ func (x *FieldTestMessage) String() string {
 func (*FieldTestMessage) ProtoMessage() {}
 
 func (x *FieldTestMessage) ProtoReflect() protoreflect.Message {
-	return file_proto3_fields_proto_msgTypes[0].MessageOf(x)
+	mi := &file_proto3_fields_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldTestMessage) XXX_Methods() *protoiface.Methods {
+func (x *FieldTestMessage) XXX_Methods() *protoiface.Methods {
 	return file_proto3_fields_proto_msgTypes[0].Methods()
 }
 
@@ -380,6 +389,7 @@ func (x *FieldTestMessage) GetMapFixed64Enum() map[uint64]FieldTestMessage_Enum 
 }
 
 type FieldTestMessage_Message struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -395,10 +405,18 @@ func (x *FieldTestMessage_Message) String() string {
 func (*FieldTestMessage_Message) ProtoMessage() {}
 
 func (x *FieldTestMessage_Message) ProtoReflect() protoreflect.Message {
-	return file_proto3_fields_proto_msgTypes[4].MessageOf(x)
+	mi := &file_proto3_fields_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldTestMessage_Message) XXX_Methods() *protoiface.Methods {
+func (x *FieldTestMessage_Message) XXX_Methods() *protoiface.Methods {
 	return file_proto3_fields_proto_msgTypes[4].Methods()
 }
 
@@ -608,9 +626,11 @@ func file_proto3_fields_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_proto3_fields_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldTestMessage); i {
-			case 37:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 38:
+				return &v.sizeCache
+			case 39:
 				return &v.unknownFields
 			default:
 				return nil
@@ -619,8 +639,10 @@ func file_proto3_fields_proto_init() {
 		file_proto3_fields_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldTestMessage_Message); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"math"
 	"reflect"
+	"runtime"
 	"strings"
+	"sync"
 	"testing"
 
 	cmp "github.com/google/go-cmp/cmp"
@@ -23,6 +25,7 @@ import (
 	"google.golang.org/protobuf/reflect/prototype"
 
 	proto2_20180125 "google.golang.org/protobuf/internal/testprotos/legacy/proto2.v1.0.0-20180125-92554152"
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
@@ -1434,4 +1437,72 @@ func (p path) String() string {
 		ss = append(ss, fmt.Sprint(i))
 	}
 	return strings.Join(ss, ".")
+}
+
+// The MessageState implementation makes the assumption that when a
+// concrete message is unsafe casted as a *MessageState, the Go GC does
+// not reclaim the memory for the remainder of the concrete message.
+func TestUnsafeAssumptions(t *testing.T) {
+	if !pimpl.UnsafeEnabled {
+		t.Skip()
+	}
+
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			var ms [10]pref.Message
+
+			// Store the message only in its reflective form.
+			// Trigger the GC after each iteration.
+			for j := 0; j < 10; j++ {
+				ms[j] = (&testpb.TestAllTypes{
+					OptionalInt32: scalar.Int32(int32(j)),
+					OptionalFloat: scalar.Float32(float32(j)),
+					RepeatedInt32: []int32{int32(j)},
+					RepeatedFloat: []float32{float32(j)},
+					DefaultInt32:  scalar.Int32(int32(j)),
+					DefaultFloat:  scalar.Float32(float32(j)),
+				}).ProtoReflect()
+				runtime.GC()
+			}
+
+			// Convert the reflective form back into a concrete form.
+			// Verify that the values written previously are still the same.
+			for j := 0; j < 10; j++ {
+				switch m := ms[j].Interface().(*testpb.TestAllTypes); {
+				case m.GetOptionalInt32() != int32(j):
+				case m.GetOptionalFloat() != float32(j):
+				case m.GetRepeatedInt32()[0] != int32(j):
+				case m.GetRepeatedFloat()[0] != float32(j):
+				case m.GetDefaultInt32() != int32(j):
+				case m.GetDefaultFloat() != float32(j):
+				default:
+					continue
+				}
+				t.Error("memory corrupted detected")
+			}
+			defer wg.Done()
+		}()
+	}
+	wg.Wait()
+}
+
+func BenchmarkName(b *testing.B) {
+	var sink pref.FullName
+	b.Run("Value", func(b *testing.B) {
+		b.ReportAllocs()
+		m := new(descriptorpb.FileDescriptorProto)
+		for i := 0; i < b.N; i++ {
+			sink = m.ProtoReflect().Descriptor().FullName()
+		}
+	})
+	b.Run("Nil", func(b *testing.B) {
+		b.ReportAllocs()
+		m := (*descriptorpb.FileDescriptorProto)(nil)
+		for i := 0; i < b.N; i++ {
+			sink = m.ProtoReflect().Descriptor().FullName()
+		}
+	})
+	runtime.KeepAlive(sink)
 }

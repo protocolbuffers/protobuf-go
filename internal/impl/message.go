@@ -12,7 +12,6 @@ import (
 	"sync"
 	"sync/atomic"
 
-	pvalue "google.golang.org/protobuf/internal/value"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
@@ -39,13 +38,7 @@ type MessageInfo struct {
 	initMu   sync.Mutex // protects all unexported fields
 	initDone uint32
 
-	fields map[pref.FieldNumber]*fieldInfo
-	oneofs map[pref.Name]*oneofInfo
-
-	getUnknown func(pointer) pref.RawFields
-	setUnknown func(pointer, pref.RawFields)
-
-	extensionMap func(pointer) *extensionMap
+	reflectMessageInfo
 
 	// Information used by the fast-path methods.
 	methods piface.Methods
@@ -53,6 +46,17 @@ type MessageInfo struct {
 
 	extensionFieldInfosMu sync.RWMutex
 	extensionFieldInfos   map[pref.ExtensionType]*extensionFieldInfo
+}
+
+type reflectMessageInfo struct {
+	fields map[pref.FieldNumber]*fieldInfo
+	oneofs map[pref.Name]*oneofInfo
+
+	getUnknown   func(pointer) pref.RawFields
+	setUnknown   func(pointer, pref.RawFields)
+	extensionMap func(pointer) *extensionMap
+
+	nilMessage atomicNilMessage
 }
 
 // exporter is a function that returns a reference to the ith field of v,
@@ -88,10 +92,9 @@ func (mi *MessageInfo) init() {
 	// This function is called in the hot path. Inline the sync.Once
 	// logic, since allocating a closure for Once.Do is expensive.
 	// Keep init small to ensure that it can be inlined.
-	if atomic.LoadUint32(&mi.initDone) == 1 {
-		return
+	if atomic.LoadUint32(&mi.initDone) == 0 {
+		mi.initOnce()
 	}
-	mi.initOnce()
 }
 
 func (mi *MessageInfo) initOnce() {
@@ -293,247 +296,8 @@ func (mi *MessageInfo) makeExtensionFieldsFunc(t reflect.Type, si structInfo) {
 	}
 }
 
-func (mi *MessageInfo) MessageOf(p interface{}) pref.Message {
-	return (*messageReflectWrapper)(mi.dataTypeOf(p))
-}
-
+// TODO: Move this to be on the reflect message instance.
 func (mi *MessageInfo) Methods() *piface.Methods {
 	mi.init()
 	return &mi.methods
-}
-
-func (mi *MessageInfo) dataTypeOf(p interface{}) *messageDataType {
-	// TODO: Remove this check? This API is primarily used by generated code,
-	// and should not violate this assumption. Leave this check in for now to
-	// provide some sanity checks during development. This can be removed if
-	// it proves to be detrimental to performance.
-	if reflect.TypeOf(p) != mi.GoType {
-		panic(fmt.Sprintf("type mismatch: got %T, want %v", p, mi.GoType))
-	}
-	return &messageDataType{pointerOfIface(p), mi}
-}
-
-// messageDataType is a tuple of a pointer to the message data and
-// a pointer to the message type.
-//
-// TODO: Unfortunately, we need to close over a pointer and MessageInfo,
-// which incurs an an allocation. This pair is similar to a Go interface,
-// which is essentially a tuple of the same thing. We can make this efficient
-// with reflect.NamedOf (see https://golang.org/issues/16522).
-//
-// With that hypothetical API, we could dynamically create a new named type
-// that has the same underlying type as MessageInfo.GoType, and
-// dynamically create methods that close over MessageInfo.
-// Since the new type would have the same underlying type, we could directly
-// convert between pointers of those types, giving us an efficient way to swap
-// out the method set.
-//
-// Barring the ability to dynamically create named types, the workaround is
-//	1. either to accept the cost of an allocation for this wrapper struct or
-//	2. generate more types and methods, at the expense of binary size increase.
-type messageDataType struct {
-	p  pointer
-	mi *MessageInfo
-}
-
-type messageReflectWrapper messageDataType
-
-func (m *messageReflectWrapper) Descriptor() pref.MessageDescriptor {
-	return m.mi.PBType.Descriptor()
-}
-func (m *messageReflectWrapper) New() pref.Message {
-	return m.mi.PBType.New()
-}
-func (m *messageReflectWrapper) Interface() pref.ProtoMessage {
-	if m, ok := m.ProtoUnwrap().(pref.ProtoMessage); ok {
-		return m
-	}
-	return (*messageIfaceWrapper)(m)
-}
-func (m *messageReflectWrapper) ProtoUnwrap() interface{} {
-	return m.p.AsIfaceOf(m.mi.GoType.Elem())
-}
-
-func (m *messageReflectWrapper) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
-	m.mi.init()
-	for _, fi := range m.mi.fields {
-		if fi.has(m.p) {
-			if !f(fi.fieldDesc, fi.get(m.p)) {
-				return
-			}
-		}
-	}
-	m.mi.extensionMap(m.p).Range(f)
-}
-func (m *messageReflectWrapper) Has(fd pref.FieldDescriptor) bool {
-	if fi, xt := m.checkField(fd); fi != nil {
-		return fi.has(m.p)
-	} else {
-		return m.mi.extensionMap(m.p).Has(xt)
-	}
-}
-func (m *messageReflectWrapper) Clear(fd pref.FieldDescriptor) {
-	if fi, xt := m.checkField(fd); fi != nil {
-		fi.clear(m.p)
-	} else {
-		m.mi.extensionMap(m.p).Clear(xt)
-	}
-}
-func (m *messageReflectWrapper) Get(fd pref.FieldDescriptor) pref.Value {
-	if fi, xt := m.checkField(fd); fi != nil {
-		return fi.get(m.p)
-	} else {
-		return m.mi.extensionMap(m.p).Get(xt)
-	}
-}
-func (m *messageReflectWrapper) Set(fd pref.FieldDescriptor, v pref.Value) {
-	if fi, xt := m.checkField(fd); fi != nil {
-		fi.set(m.p, v)
-	} else {
-		m.mi.extensionMap(m.p).Set(xt, v)
-	}
-}
-func (m *messageReflectWrapper) Mutable(fd pref.FieldDescriptor) pref.Value {
-	if fi, xt := m.checkField(fd); fi != nil {
-		return fi.mutable(m.p)
-	} else {
-		return m.mi.extensionMap(m.p).Mutable(xt)
-	}
-}
-func (m *messageReflectWrapper) NewMessage(fd pref.FieldDescriptor) pref.Message {
-	if fi, xt := m.checkField(fd); fi != nil {
-		return fi.newMessage()
-	} else {
-		return xt.New().Message()
-	}
-}
-func (m *messageReflectWrapper) WhichOneof(od pref.OneofDescriptor) pref.FieldDescriptor {
-	m.mi.init()
-	if oi := m.mi.oneofs[od.Name()]; oi != nil && oi.oneofDesc == od {
-		return od.Fields().ByNumber(oi.which(m.p))
-	}
-	panic("invalid oneof descriptor")
-}
-func (m *messageReflectWrapper) GetUnknown() pref.RawFields {
-	m.mi.init()
-	return m.mi.getUnknown(m.p)
-}
-func (m *messageReflectWrapper) SetUnknown(b pref.RawFields) {
-	m.mi.init()
-	m.mi.setUnknown(m.p, b)
-}
-
-// checkField verifies that the provided field descriptor is valid.
-// Exactly one of the returned values is populated.
-func (m *messageReflectWrapper) checkField(fd pref.FieldDescriptor) (*fieldInfo, pref.ExtensionType) {
-	m.mi.init()
-	if fi := m.mi.fields[fd.Number()]; fi != nil {
-		if fi.fieldDesc != fd {
-			panic("mismatching field descriptor")
-		}
-		return fi, nil
-	}
-	if fd.IsExtension() {
-		if fd.ContainingMessage().FullName() != m.mi.PBType.FullName() {
-			// TODO: Should this be exact containing message descriptor match?
-			panic("mismatching containing message")
-		}
-		if !m.mi.PBType.ExtensionRanges().Has(fd.Number()) {
-			panic("invalid extension field")
-		}
-		return nil, fd.(pref.ExtensionType)
-	}
-	panic("invalid field descriptor")
-}
-
-type extensionMap map[int32]ExtensionField
-
-func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
-	if m != nil {
-		for _, x := range *m {
-			xt := x.GetType()
-			if !f(xt, xt.ValueOf(x.GetValue())) {
-				return
-			}
-		}
-	}
-}
-func (m *extensionMap) Has(xt pref.ExtensionType) (ok bool) {
-	if m != nil {
-		_, ok = (*m)[int32(xt.Number())]
-	}
-	return ok
-}
-func (m *extensionMap) Clear(xt pref.ExtensionType) {
-	delete(*m, int32(xt.Number()))
-}
-func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
-	if m != nil {
-		if x, ok := (*m)[int32(xt.Number())]; ok {
-			return xt.ValueOf(x.GetValue())
-		}
-	}
-	if !isComposite(xt) {
-		return defaultValueOf(xt)
-	}
-	return frozenValueOf(xt.New())
-}
-func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
-	if *m == nil {
-		*m = make(map[int32]ExtensionField)
-	}
-	var x ExtensionField
-	x.SetType(xt)
-	x.SetEagerValue(xt.InterfaceOf(v))
-	(*m)[int32(xt.Number())] = x
-}
-func (m *extensionMap) Mutable(xt pref.ExtensionType) pref.Value {
-	if !isComposite(xt) {
-		panic("invalid Mutable on field with non-composite type")
-	}
-	if x, ok := (*m)[int32(xt.Number())]; ok {
-		return xt.ValueOf(x.GetValue())
-	}
-	v := xt.New()
-	m.Set(xt, v)
-	return v
-}
-
-func isComposite(fd pref.FieldDescriptor) bool {
-	return fd.Kind() == pref.MessageKind || fd.Kind() == pref.GroupKind || fd.IsList() || fd.IsMap()
-}
-
-var _ pvalue.Unwrapper = (*messageReflectWrapper)(nil)
-
-type messageIfaceWrapper messageDataType
-
-func (m *messageIfaceWrapper) ProtoReflect() pref.Message {
-	return (*messageReflectWrapper)(m)
-}
-func (m *messageIfaceWrapper) XXX_Methods() *piface.Methods {
-	// TODO: Consider not recreating this on every call.
-	m.mi.init()
-	return &piface.Methods{
-		Flags:         piface.MethodFlagDeterministicMarshal,
-		MarshalAppend: m.marshalAppend,
-		Unmarshal:     m.unmarshal,
-		Size:          m.size,
-		IsInitialized: m.isInitialized,
-	}
-}
-func (m *messageIfaceWrapper) ProtoUnwrap() interface{} {
-	return m.p.AsIfaceOf(m.mi.GoType.Elem())
-}
-func (m *messageIfaceWrapper) marshalAppend(b []byte, _ pref.ProtoMessage, opts piface.MarshalOptions) ([]byte, error) {
-	return m.mi.marshalAppendPointer(b, m.p, newMarshalOptions(opts))
-}
-func (m *messageIfaceWrapper) unmarshal(b []byte, _ pref.ProtoMessage, opts piface.UnmarshalOptions) error {
-	_, err := m.mi.unmarshalPointer(b, m.p, 0, newUnmarshalOptions(opts))
-	return err
-}
-func (m *messageIfaceWrapper) size(msg pref.ProtoMessage) (size int) {
-	return m.mi.sizePointer(m.p, 0)
-}
-func (m *messageIfaceWrapper) isInitialized(_ pref.ProtoMessage) error {
-	return m.mi.isInitializedPointer(m.p)
 }

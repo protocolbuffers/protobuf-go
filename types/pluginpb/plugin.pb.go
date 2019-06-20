@@ -20,6 +20,7 @@ const (
 
 // The version number of protocol compiler.
 type Version struct {
+	state protoimpl.MessageState
 	Major *int32 `protobuf:"varint,1,opt,name=major" json:"major,omitempty"`
 	Minor *int32 `protobuf:"varint,2,opt,name=minor" json:"minor,omitempty"`
 	Patch *int32 `protobuf:"varint,3,opt,name=patch" json:"patch,omitempty"`
@@ -41,10 +42,18 @@ func (x *Version) String() string {
 func (*Version) ProtoMessage() {}
 
 func (x *Version) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_compiler_plugin_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_compiler_plugin_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Version) XXX_Methods() *protoiface.Methods {
+func (x *Version) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_compiler_plugin_proto_msgTypes[0].Methods()
 }
 
@@ -83,6 +92,7 @@ func (x *Version) GetSuffix() string {
 
 // An encoded CodeGeneratorRequest is written to the plugin's stdin.
 type CodeGeneratorRequest struct {
+	state protoimpl.MessageState
 	// The .proto files that were explicitly listed on the command-line.  The
 	// code generator should generate code only for these files.  Each file's
 	// descriptor will be included in proto_file, below.
@@ -121,10 +131,18 @@ func (x *CodeGeneratorRequest) String() string {
 func (*CodeGeneratorRequest) ProtoMessage() {}
 
 func (x *CodeGeneratorRequest) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_compiler_plugin_proto_msgTypes[1].MessageOf(x)
+	mi := &file_google_protobuf_compiler_plugin_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *CodeGeneratorRequest) XXX_Methods() *protoiface.Methods {
+func (x *CodeGeneratorRequest) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_compiler_plugin_proto_msgTypes[1].Methods()
 }
 
@@ -163,6 +181,7 @@ func (x *CodeGeneratorRequest) GetCompilerVersion() *Version {
 
 // The plugin writes an encoded CodeGeneratorResponse to stdout.
 type CodeGeneratorResponse struct {
+	state protoimpl.MessageState
 	// Error message.  If non-empty, code generation failed.  The plugin process
 	// should exit with status code zero even if it reports an error in this way.
 	//
@@ -188,10 +207,18 @@ func (x *CodeGeneratorResponse) String() string {
 func (*CodeGeneratorResponse) ProtoMessage() {}
 
 func (x *CodeGeneratorResponse) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_compiler_plugin_proto_msgTypes[2].MessageOf(x)
+	mi := &file_google_protobuf_compiler_plugin_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *CodeGeneratorResponse) XXX_Methods() *protoiface.Methods {
+func (x *CodeGeneratorResponse) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_compiler_plugin_proto_msgTypes[2].Methods()
 }
 
@@ -216,6 +243,7 @@ func (x *CodeGeneratorResponse) GetFile() []*CodeGeneratorResponse_File {
 
 // Represents a single generated file.
 type CodeGeneratorResponse_File struct {
+	state protoimpl.MessageState
 	// The file name, relative to the output directory.  The name must not
 	// contain "." or ".." components and must be relative, not be absolute (so,
 	// the file cannot lie outside the output directory).  "/" must be used as
@@ -283,10 +311,18 @@ func (x *CodeGeneratorResponse_File) String() string {
 func (*CodeGeneratorResponse_File) ProtoMessage() {}
 
 func (x *CodeGeneratorResponse_File) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_compiler_plugin_proto_msgTypes[3].MessageOf(x)
+	mi := &file_google_protobuf_compiler_plugin_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *CodeGeneratorResponse_File) XXX_Methods() *protoiface.Methods {
+func (x *CodeGeneratorResponse_File) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_compiler_plugin_proto_msgTypes[3].Methods()
 }
 
@@ -407,9 +443,11 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_compiler_plugin_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Version); i {
-			case 4:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 5:
+				return &v.sizeCache
+			case 6:
 				return &v.unknownFields
 			default:
 				return nil
@@ -417,9 +455,11 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 		}
 		file_google_protobuf_compiler_plugin_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CodeGeneratorRequest); i {
-			case 4:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 5:
+				return &v.sizeCache
+			case 6:
 				return &v.unknownFields
 			default:
 				return nil
@@ -427,9 +467,11 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 		}
 		file_google_protobuf_compiler_plugin_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CodeGeneratorResponse); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -437,9 +479,11 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 		}
 		file_google_protobuf_compiler_plugin_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CodeGeneratorResponse_File); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil

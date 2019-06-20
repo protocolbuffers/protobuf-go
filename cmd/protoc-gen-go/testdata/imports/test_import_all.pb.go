@@ -22,6 +22,7 @@ const (
 )
 
 type All struct {
+	state         protoimpl.MessageState
 	Am1           *test_a_1.M1 `protobuf:"bytes,1,opt,name=am1,proto3" json:"am1,omitempty"`
 	Am2           *test_a_1.M2 `protobuf:"bytes,2,opt,name=am2,proto3" json:"am2,omitempty"`
 	Bm1           *test_b_1.M1 `protobuf:"bytes,5,opt,name=bm1,proto3" json:"bm1,omitempty"`
@@ -42,10 +43,18 @@ func (x *All) String() string {
 func (*All) ProtoMessage() {}
 
 func (x *All) ProtoReflect() protoreflect.Message {
-	return file_imports_test_import_all_proto_msgTypes[0].MessageOf(x)
+	mi := &file_imports_test_import_all_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *All) XXX_Methods() *protoiface.Methods {
+func (x *All) XXX_Methods() *protoiface.Methods {
 	return file_imports_test_import_all_proto_msgTypes[0].Methods()
 }
 
@@ -165,9 +174,11 @@ func file_imports_test_import_all_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_imports_test_import_all_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*All); i {
-			case 5:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 6:
+				return &v.sizeCache
+			case 7:
 				return &v.unknownFields
 			default:
 				return nil

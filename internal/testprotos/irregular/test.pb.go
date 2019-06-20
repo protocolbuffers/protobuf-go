@@ -18,6 +18,7 @@ const (
 )
 
 type Message struct {
+	state           protoimpl.MessageState
 	OptionalMessage *IrregularMessage            `protobuf:"bytes,1,opt,name=optional_message,json=optionalMessage" json:"optional_message,omitempty"`
 	RepeatedMessage []*IrregularMessage          `protobuf:"bytes,2,rep,name=repeated_message,json=repeatedMessage" json:"repeated_message,omitempty"`
 	RequiredMessage *IrregularMessage            `protobuf:"bytes,3,req,name=required_message,json=requiredMessage" json:"required_message,omitempty"`
@@ -40,10 +41,18 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	return file_irregular_test_proto_msgTypes[0].MessageOf(x)
+	mi := &file_irregular_test_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message) XXX_Methods() *protoiface.Methods {
+func (x *Message) XXX_Methods() *protoiface.Methods {
 	return file_irregular_test_proto_msgTypes[0].Methods()
 }
 
@@ -193,9 +202,11 @@ func file_irregular_test_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_irregular_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message); i {
-			case 5:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 6:
+				return &v.sizeCache
+			case 7:
 				return &v.unknownFields
 			default:
 				return nil

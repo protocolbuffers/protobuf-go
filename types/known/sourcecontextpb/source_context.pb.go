@@ -20,6 +20,7 @@ const (
 // `SourceContext` represents information about the source of a
 // protobuf element, like the file in which it is defined.
 type SourceContext struct {
+	state protoimpl.MessageState
 	// The path-qualified name of the .proto file that contained the associated
 	// protobuf element.  For example: `"google/protobuf/source_context.proto"`.
 	FileName      string `protobuf:"bytes,1,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
@@ -38,10 +39,18 @@ func (x *SourceContext) String() string {
 func (*SourceContext) ProtoMessage() {}
 
 func (x *SourceContext) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_source_context_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_source_context_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *SourceContext) XXX_Methods() *protoiface.Methods {
+func (x *SourceContext) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_source_context_proto_msgTypes[0].Methods()
 }
 
@@ -110,9 +119,11 @@ func file_google_protobuf_source_context_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_source_context_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SourceContext); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

@@ -227,6 +227,7 @@ func (Field_Cardinality) EnumDescriptor() ([]byte, []int) {
 
 // A protocol buffer message type.
 type Type struct {
+	state protoimpl.MessageState
 	// The fully qualified message name.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// The list of fields.
@@ -254,10 +255,18 @@ func (x *Type) String() string {
 func (*Type) ProtoMessage() {}
 
 func (x *Type) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_type_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_type_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Type) XXX_Methods() *protoiface.Methods {
+func (x *Type) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_type_proto_msgTypes[0].Methods()
 }
 
@@ -310,6 +319,7 @@ func (x *Type) GetSyntax() Syntax {
 
 // A single field of a message type.
 type Field struct {
+	state protoimpl.MessageState
 	// The field type.
 	Kind Field_Kind `protobuf:"varint,1,opt,name=kind,proto3,enum=google.protobuf.Field_Kind" json:"kind,omitempty"`
 	// The field cardinality.
@@ -347,10 +357,18 @@ func (x *Field) String() string {
 func (*Field) ProtoMessage() {}
 
 func (x *Field) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_type_proto_msgTypes[1].MessageOf(x)
+	mi := &file_google_protobuf_type_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Field) XXX_Methods() *protoiface.Methods {
+func (x *Field) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_type_proto_msgTypes[1].Methods()
 }
 
@@ -431,6 +449,7 @@ func (x *Field) GetDefaultValue() string {
 
 // Enum type definition.
 type Enum struct {
+	state protoimpl.MessageState
 	// Enum type name.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Enum value definitions.
@@ -456,10 +475,18 @@ func (x *Enum) String() string {
 func (*Enum) ProtoMessage() {}
 
 func (x *Enum) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_type_proto_msgTypes[2].MessageOf(x)
+	mi := &file_google_protobuf_type_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Enum) XXX_Methods() *protoiface.Methods {
+func (x *Enum) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_type_proto_msgTypes[2].Methods()
 }
 
@@ -505,6 +532,7 @@ func (x *Enum) GetSyntax() Syntax {
 
 // Enum value definition.
 type EnumValue struct {
+	state protoimpl.MessageState
 	// Enum value name.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Enum value number.
@@ -526,10 +554,18 @@ func (x *EnumValue) String() string {
 func (*EnumValue) ProtoMessage() {}
 
 func (x *EnumValue) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_type_proto_msgTypes[3].MessageOf(x)
+	mi := &file_google_protobuf_type_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *EnumValue) XXX_Methods() *protoiface.Methods {
+func (x *EnumValue) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_type_proto_msgTypes[3].Methods()
 }
 
@@ -562,6 +598,7 @@ func (x *EnumValue) GetOptions() []*Option {
 // A protocol buffer option, which can be attached to a message, field,
 // enumeration, etc.
 type Option struct {
+	state protoimpl.MessageState
 	// The option's name. For protobuf built-in options (options defined in
 	// descriptor.proto), this is the short name. For example, `"map_entry"`.
 	// For custom options, it should be the fully-qualified name. For example,
@@ -587,10 +624,18 @@ func (x *Option) String() string {
 func (*Option) ProtoMessage() {}
 
 func (x *Option) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_type_proto_msgTypes[4].MessageOf(x)
+	mi := &file_google_protobuf_type_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Option) XXX_Methods() *protoiface.Methods {
+func (x *Option) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_type_proto_msgTypes[4].Methods()
 }
 
@@ -788,6 +833,32 @@ func file_google_protobuf_type_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_type_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Type); i {
+			case 0:
+				return &v.state
+			case 7:
+				return &v.sizeCache
+			case 8:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_google_protobuf_type_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Field); i {
+			case 0:
+				return &v.state
+			case 11:
+				return &v.sizeCache
+			case 12:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_google_protobuf_type_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Enum); i {
+			case 0:
+				return &v.state
 			case 6:
 				return &v.sizeCache
 			case 7:
@@ -796,31 +867,13 @@ func file_google_protobuf_type_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_type_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Field); i {
-			case 10:
-				return &v.sizeCache
-			case 11:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_type_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Enum); i {
-			case 5:
-				return &v.sizeCache
-			case 6:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
 		file_google_protobuf_type_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EnumValue); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -828,9 +881,11 @@ func file_google_protobuf_type_proto_init() {
 		}
 		file_google_protobuf_type_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Option); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

@@ -166,6 +166,7 @@ func (M_Submessage_Submessage_Subenum) EnumDescriptor() ([]byte, []int) {
 }
 
 type M struct {
+	state protoimpl.MessageState
 	// Field using a type in the same Go package, but a different source file.
 	M2 *M2      `protobuf:"bytes,1,opt,name=m2" json:"m2,omitempty"`
 	S  *string  `protobuf:"bytes,4,opt,name=s,def=default" json:"s,omitempty"`
@@ -191,10 +192,18 @@ func (x *M) String() string {
 func (*M) ProtoMessage() {}
 
 func (x *M) ProtoReflect() protoreflect.Message {
-	return file_import_public_sub_a_proto_msgTypes[0].MessageOf(x)
+	mi := &file_import_public_sub_a_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *M) XXX_Methods() *protoiface.Methods {
+func (x *M) XXX_Methods() *protoiface.Methods {
 	return file_import_public_sub_a_proto_msgTypes[0].Methods()
 }
 
@@ -283,6 +292,7 @@ func (*M_OneofInt32) isM_OneofField() {}
 func (*M_OneofInt64) isM_OneofField() {}
 
 type M_Submessage struct {
+	state protoimpl.MessageState
 	// Types that are valid to be assigned to SubmessageOneofField:
 	//	*M_Submessage_SubmessageOneofInt32
 	//	*M_Submessage_SubmessageOneofInt64
@@ -302,10 +312,18 @@ func (x *M_Submessage) String() string {
 func (*M_Submessage) ProtoMessage() {}
 
 func (x *M_Submessage) ProtoReflect() protoreflect.Message {
-	return file_import_public_sub_a_proto_msgTypes[1].MessageOf(x)
+	mi := &file_import_public_sub_a_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *M_Submessage) XXX_Methods() *protoiface.Methods {
+func (x *M_Submessage) XXX_Methods() *protoiface.Methods {
 	return file_import_public_sub_a_proto_msgTypes[1].Methods()
 }
 
@@ -457,11 +475,13 @@ func file_import_public_sub_a_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_import_public_sub_a_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*M); i {
-			case 5:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 6:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 7:
+				return &v.unknownFields
+			case 8:
 				return &v.extensionFields
 			default:
 				return nil
@@ -469,9 +489,11 @@ func file_import_public_sub_a_proto_init() {
 		}
 		file_import_public_sub_a_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*M_Submessage); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

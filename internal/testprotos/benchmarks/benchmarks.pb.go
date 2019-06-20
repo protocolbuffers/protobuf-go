@@ -18,6 +18,7 @@ const (
 )
 
 type BenchmarkDataset struct {
+	state protoimpl.MessageState
 	// Name of the benchmark dataset.  This should be unique across all datasets.
 	// Should only contain word characters: [a-zA-Z0-9_]
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -58,10 +59,18 @@ func (x *BenchmarkDataset) String() string {
 func (*BenchmarkDataset) ProtoMessage() {}
 
 func (x *BenchmarkDataset) ProtoReflect() protoreflect.Message {
-	return file_benchmarks_proto_msgTypes[0].MessageOf(x)
+	mi := &file_benchmarks_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *BenchmarkDataset) XXX_Methods() *protoiface.Methods {
+func (x *BenchmarkDataset) XXX_Methods() *protoiface.Methods {
 	return file_benchmarks_proto_msgTypes[0].Methods()
 }
 
@@ -143,9 +152,11 @@ func file_benchmarks_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_benchmarks_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BenchmarkDataset); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil

@@ -100,6 +100,7 @@ const (
 //
 //
 type Timestamp struct {
+	state protoimpl.MessageState
 	// Represents seconds of UTC time since Unix epoch
 	// 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
 	// 9999-12-31T23:59:59Z inclusive.
@@ -124,10 +125,18 @@ func (x *Timestamp) String() string {
 func (*Timestamp) ProtoMessage() {}
 
 func (x *Timestamp) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_timestamp_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_timestamp_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Timestamp) XXX_Methods() *protoiface.Methods {
+func (x *Timestamp) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_timestamp_proto_msgTypes[0].Methods()
 }
 
@@ -203,9 +212,11 @@ func file_google_protobuf_timestamp_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_timestamp_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Timestamp); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

@@ -18,6 +18,7 @@ const (
 )
 
 type Foo struct {
+	state protoimpl.MessageState
 	// Types that are valid to be assigned to Bar:
 	//	*Foo_GetBar
 	Bar           isFoo_Bar `protobuf_oneof:"bar"`
@@ -36,10 +37,18 @@ func (x *Foo) String() string {
 func (*Foo) ProtoMessage() {}
 
 func (x *Foo) ProtoReflect() protoreflect.Message {
-	return file_issue780_oneof_conflict_test_proto_msgTypes[0].MessageOf(x)
+	mi := &file_issue780_oneof_conflict_test_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Foo) XXX_Methods() *protoiface.Methods {
+func (x *Foo) XXX_Methods() *protoiface.Methods {
 	return file_issue780_oneof_conflict_test_proto_msgTypes[0].Methods()
 }
 
@@ -115,9 +124,11 @@ func file_issue780_oneof_conflict_test_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_issue780_oneof_conflict_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Foo); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

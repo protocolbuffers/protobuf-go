@@ -18,6 +18,7 @@ const (
 )
 
 type ExtraMessage struct {
+	state         protoimpl.MessageState
 	Data          []byte `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -34,10 +35,18 @@ func (x *ExtraMessage) String() string {
 func (*ExtraMessage) ProtoMessage() {}
 
 func (x *ExtraMessage) ProtoReflect() protoreflect.Message {
-	return file_extensions_extra_extra_proto_msgTypes[0].MessageOf(x)
+	mi := &file_extensions_extra_extra_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ExtraMessage) XXX_Methods() *protoiface.Methods {
+func (x *ExtraMessage) XXX_Methods() *protoiface.Methods {
 	return file_extensions_extra_extra_proto_msgTypes[0].Methods()
 }
 
@@ -101,9 +110,11 @@ func file_extensions_extra_extra_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_extensions_extra_extra_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ExtraMessage); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

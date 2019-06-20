@@ -133,6 +133,7 @@ func (Enums_NestedEnum) EnumDescriptor() ([]byte, []int) {
 
 // Scalars contains optional scalar fields.
 type Scalars struct {
+	state         protoimpl.MessageState
 	OptBool       *bool    `protobuf:"varint,1,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
 	OptInt32      *int32   `protobuf:"varint,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
 	OptInt64      *int64   `protobuf:"varint,3,opt,name=opt_int64,json=optInt64" json:"opt_int64,omitempty"`
@@ -163,10 +164,18 @@ func (x *Scalars) String() string {
 func (*Scalars) ProtoMessage() {}
 
 func (x *Scalars) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[0].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Scalars) XXX_Methods() *protoiface.Methods {
+func (x *Scalars) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[0].Methods()
 }
 
@@ -282,6 +291,7 @@ func (x *Scalars) GetOptString() string {
 
 // Message contains enum fields.
 type Enums struct {
+	state         protoimpl.MessageState
 	OptEnum       *Enum              `protobuf:"varint,1,opt,name=opt_enum,json=optEnum,enum=pb2.Enum" json:"opt_enum,omitempty"`
 	RptEnum       []Enum             `protobuf:"varint,2,rep,name=rpt_enum,json=rptEnum,enum=pb2.Enum" json:"rpt_enum,omitempty"`
 	OptNestedEnum *Enums_NestedEnum  `protobuf:"varint,3,opt,name=opt_nested_enum,json=optNestedEnum,enum=pb2.Enums_NestedEnum" json:"opt_nested_enum,omitempty"`
@@ -301,10 +311,18 @@ func (x *Enums) String() string {
 func (*Enums) ProtoMessage() {}
 
 func (x *Enums) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[1].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Enums) XXX_Methods() *protoiface.Methods {
+func (x *Enums) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[1].Methods()
 }
 
@@ -343,6 +361,7 @@ func (x *Enums) GetRptNestedEnum() []Enums_NestedEnum {
 
 // Message contains repeated fields.
 type Repeats struct {
+	state         protoimpl.MessageState
 	RptBool       []bool    `protobuf:"varint,1,rep,name=rpt_bool,json=rptBool" json:"rpt_bool,omitempty"`
 	RptInt32      []int32   `protobuf:"varint,2,rep,name=rpt_int32,json=rptInt32" json:"rpt_int32,omitempty"`
 	RptInt64      []int64   `protobuf:"varint,3,rep,name=rpt_int64,json=rptInt64" json:"rpt_int64,omitempty"`
@@ -367,10 +386,18 @@ func (x *Repeats) String() string {
 func (*Repeats) ProtoMessage() {}
 
 func (x *Repeats) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[2].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Repeats) XXX_Methods() *protoiface.Methods {
+func (x *Repeats) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[2].Methods()
 }
 
@@ -444,6 +471,7 @@ func (x *Repeats) GetRptBytes() [][]byte {
 
 // Message type used as submessage.
 type Nested struct {
+	state         protoimpl.MessageState
 	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	OptNested     *Nested `protobuf:"bytes,2,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -461,10 +489,18 @@ func (x *Nested) String() string {
 func (*Nested) ProtoMessage() {}
 
 func (x *Nested) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[3].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Nested) XXX_Methods() *protoiface.Methods {
+func (x *Nested) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[3].Methods()
 }
 
@@ -489,6 +525,7 @@ func (x *Nested) GetOptNested() *Nested {
 
 // Message contains message and group fields.
 type Nests struct {
+	state         protoimpl.MessageState
 	OptNested     *Nested           `protobuf:"bytes,1,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
 	Optgroup      *Nests_OptGroup   `protobuf:"group,2,opt,name=OptGroup,json=optgroup" json:"optgroup,omitempty"`
 	RptNested     []*Nested         `protobuf:"bytes,4,rep,name=rpt_nested,json=rptNested" json:"rpt_nested,omitempty"`
@@ -508,10 +545,18 @@ func (x *Nests) String() string {
 func (*Nests) ProtoMessage() {}
 
 func (x *Nests) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[4].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Nests) XXX_Methods() *protoiface.Methods {
+func (x *Nests) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[4].Methods()
 }
 
@@ -550,6 +595,7 @@ func (x *Nests) GetRptgroup() []*Nests_RptGroup {
 
 // Message contains required fields.
 type Requireds struct {
+	state         protoimpl.MessageState
 	ReqBool       *bool    `protobuf:"varint,1,req,name=req_bool,json=reqBool" json:"req_bool,omitempty"`
 	ReqSfixed64   *int64   `protobuf:"fixed64,2,req,name=req_sfixed64,json=reqSfixed64" json:"req_sfixed64,omitempty"`
 	ReqDouble     *float64 `protobuf:"fixed64,3,req,name=req_double,json=reqDouble" json:"req_double,omitempty"`
@@ -571,10 +617,18 @@ func (x *Requireds) String() string {
 func (*Requireds) ProtoMessage() {}
 
 func (x *Requireds) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[5].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Requireds) XXX_Methods() *protoiface.Methods {
+func (x *Requireds) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[5].Methods()
 }
 
@@ -627,6 +681,7 @@ func (x *Requireds) GetReqNested() *Nested {
 
 // Message contains both required and optional fields.
 type PartialRequired struct {
+	state         protoimpl.MessageState
 	ReqString     *string `protobuf:"bytes,1,req,name=req_string,json=reqString" json:"req_string,omitempty"`
 	OptString     *string `protobuf:"bytes,2,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -644,10 +699,18 @@ func (x *PartialRequired) String() string {
 func (*PartialRequired) ProtoMessage() {}
 
 func (x *PartialRequired) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[6].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *PartialRequired) XXX_Methods() *protoiface.Methods {
+func (x *PartialRequired) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[6].Methods()
 }
 
@@ -671,6 +734,7 @@ func (x *PartialRequired) GetOptString() string {
 }
 
 type NestedWithRequired struct {
+	state         protoimpl.MessageState
 	ReqString     *string `protobuf:"bytes,1,req,name=req_string,json=reqString" json:"req_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -687,10 +751,18 @@ func (x *NestedWithRequired) String() string {
 func (*NestedWithRequired) ProtoMessage() {}
 
 func (x *NestedWithRequired) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[7].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *NestedWithRequired) XXX_Methods() *protoiface.Methods {
+func (x *NestedWithRequired) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[7].Methods()
 }
 
@@ -707,6 +779,7 @@ func (x *NestedWithRequired) GetReqString() string {
 }
 
 type IndirectRequired struct {
+	state       protoimpl.MessageState
 	OptNested   *NestedWithRequired            `protobuf:"bytes,1,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
 	RptNested   []*NestedWithRequired          `protobuf:"bytes,2,rep,name=rpt_nested,json=rptNested" json:"rpt_nested,omitempty"`
 	StrToNested map[string]*NestedWithRequired `protobuf:"bytes,3,rep,name=str_to_nested,json=strToNested" json:"str_to_nested,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
@@ -728,10 +801,18 @@ func (x *IndirectRequired) String() string {
 func (*IndirectRequired) ProtoMessage() {}
 
 func (x *IndirectRequired) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[8].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *IndirectRequired) XXX_Methods() *protoiface.Methods {
+func (x *IndirectRequired) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[8].Methods()
 }
 
@@ -786,6 +867,7 @@ type IndirectRequired_OneofNested struct {
 func (*IndirectRequired_OneofNested) isIndirectRequired_Union() {}
 
 type Extensions struct {
+	state           protoimpl.MessageState
 	OptString       *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	OptBool         *bool   `protobuf:"varint,101,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
 	OptInt32        *int32  `protobuf:"varint,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
@@ -805,10 +887,18 @@ func (x *Extensions) String() string {
 func (*Extensions) ProtoMessage() {}
 
 func (x *Extensions) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[9].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Extensions) XXX_Methods() *protoiface.Methods {
+func (x *Extensions) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[9].Methods()
 }
 
@@ -848,6 +938,7 @@ func (x *Extensions) GetOptInt32() int32 {
 }
 
 type ExtensionsContainer struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -863,10 +954,18 @@ func (x *ExtensionsContainer) String() string {
 func (*ExtensionsContainer) ProtoMessage() {}
 
 func (x *ExtensionsContainer) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[10].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ExtensionsContainer) XXX_Methods() *protoiface.Methods {
+func (x *ExtensionsContainer) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[10].Methods()
 }
 
@@ -876,6 +975,7 @@ func (*ExtensionsContainer) Descriptor() ([]byte, []int) {
 }
 
 type MessageSet struct {
+	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
 	extensionFields protoimpl.ExtensionFields
@@ -892,10 +992,18 @@ func (x *MessageSet) String() string {
 func (*MessageSet) ProtoMessage() {}
 
 func (x *MessageSet) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[11].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *MessageSet) XXX_Methods() *protoiface.Methods {
+func (x *MessageSet) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[11].Methods()
 }
 
@@ -914,6 +1022,7 @@ func (*MessageSet) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 }
 
 type MessageSetExtension struct {
+	state         protoimpl.MessageState
 	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -930,10 +1039,18 @@ func (x *MessageSetExtension) String() string {
 func (*MessageSetExtension) ProtoMessage() {}
 
 func (x *MessageSetExtension) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[12].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *MessageSetExtension) XXX_Methods() *protoiface.Methods {
+func (x *MessageSetExtension) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[12].Methods()
 }
 
@@ -950,6 +1067,7 @@ func (x *MessageSetExtension) GetOptString() string {
 }
 
 type FakeMessageSet struct {
+	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
 	extensionFields protoimpl.ExtensionFields
@@ -966,10 +1084,18 @@ func (x *FakeMessageSet) String() string {
 func (*FakeMessageSet) ProtoMessage() {}
 
 func (x *FakeMessageSet) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[13].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FakeMessageSet) XXX_Methods() *protoiface.Methods {
+func (x *FakeMessageSet) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[13].Methods()
 }
 
@@ -988,6 +1114,7 @@ func (*FakeMessageSet) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 }
 
 type FakeMessageSetExtension struct {
+	state         protoimpl.MessageState
 	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1004,10 +1131,18 @@ func (x *FakeMessageSetExtension) String() string {
 func (*FakeMessageSetExtension) ProtoMessage() {}
 
 func (x *FakeMessageSetExtension) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[14].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FakeMessageSetExtension) XXX_Methods() *protoiface.Methods {
+func (x *FakeMessageSetExtension) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[14].Methods()
 }
 
@@ -1025,6 +1160,7 @@ func (x *FakeMessageSetExtension) GetOptString() string {
 
 // Message contains well-known type fields.
 type KnownTypes struct {
+	state         protoimpl.MessageState
 	OptBool       *wrapperspb.BoolValue   `protobuf:"bytes,1,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
 	OptInt32      *wrapperspb.Int32Value  `protobuf:"bytes,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
 	OptInt64      *wrapperspb.Int64Value  `protobuf:"bytes,3,opt,name=opt_int64,json=optInt64" json:"opt_int64,omitempty"`
@@ -1058,10 +1194,18 @@ func (x *KnownTypes) String() string {
 func (*KnownTypes) ProtoMessage() {}
 
 func (x *KnownTypes) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[15].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *KnownTypes) XXX_Methods() *protoiface.Methods {
+func (x *KnownTypes) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[15].Methods()
 }
 
@@ -1197,6 +1341,7 @@ func (x *KnownTypes) GetOptFieldmask() *fieldmaskpb.FieldMask {
 }
 
 type Nests_OptGroup struct {
+	state          protoimpl.MessageState
 	OptString      *string                        `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	OptNested      *Nested                        `protobuf:"bytes,2,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
 	Optnestedgroup *Nests_OptGroup_OptNestedGroup `protobuf:"group,3,opt,name=OptNestedGroup,json=optnestedgroup" json:"optnestedgroup,omitempty"`
@@ -1215,10 +1360,18 @@ func (x *Nests_OptGroup) String() string {
 func (*Nests_OptGroup) ProtoMessage() {}
 
 func (x *Nests_OptGroup) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[16].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Nests_OptGroup) XXX_Methods() *protoiface.Methods {
+func (x *Nests_OptGroup) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[16].Methods()
 }
 
@@ -1249,6 +1402,7 @@ func (x *Nests_OptGroup) GetOptnestedgroup() *Nests_OptGroup_OptNestedGroup {
 }
 
 type Nests_RptGroup struct {
+	state         protoimpl.MessageState
 	RptString     []string `protobuf:"bytes,1,rep,name=rpt_string,json=rptString" json:"rpt_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1265,10 +1419,18 @@ func (x *Nests_RptGroup) String() string {
 func (*Nests_RptGroup) ProtoMessage() {}
 
 func (x *Nests_RptGroup) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[17].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Nests_RptGroup) XXX_Methods() *protoiface.Methods {
+func (x *Nests_RptGroup) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[17].Methods()
 }
 
@@ -1285,6 +1447,7 @@ func (x *Nests_RptGroup) GetRptString() []string {
 }
 
 type Nests_OptGroup_OptNestedGroup struct {
+	state         protoimpl.MessageState
 	OptFixed32    *uint32 `protobuf:"fixed32,1,opt,name=opt_fixed32,json=optFixed32" json:"opt_fixed32,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1301,10 +1464,18 @@ func (x *Nests_OptGroup_OptNestedGroup) String() string {
 func (*Nests_OptGroup_OptNestedGroup) ProtoMessage() {}
 
 func (x *Nests_OptGroup_OptNestedGroup) ProtoReflect() protoreflect.Message {
-	return file_pb2_test_proto_msgTypes[18].MessageOf(x)
+	mi := &file_pb2_test_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Nests_OptGroup_OptNestedGroup) XXX_Methods() *protoiface.Methods {
+func (x *Nests_OptGroup_OptNestedGroup) XXX_Methods() *protoiface.Methods {
 	return file_pb2_test_proto_msgTypes[18].Methods()
 }
 
@@ -2043,9 +2214,11 @@ func file_pb2_test_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_pb2_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Scalars); i {
-			case 15:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 16:
+				return &v.sizeCache
+			case 17:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2053,9 +2226,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Enums); i {
-			case 4:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 5:
+				return &v.sizeCache
+			case 6:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2063,9 +2238,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Repeats); i {
-			case 9:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 10:
+				return &v.sizeCache
+			case 11:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2073,9 +2250,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Nested); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2083,9 +2262,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Nests); i {
-			case 4:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 5:
+				return &v.sizeCache
+			case 6:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2093,9 +2274,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Requireds); i {
-			case 6:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 7:
+				return &v.sizeCache
+			case 8:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2103,9 +2286,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*PartialRequired); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2113,9 +2298,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*NestedWithRequired); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2123,9 +2310,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*IndirectRequired); i {
-			case 4:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 5:
+				return &v.sizeCache
+			case 6:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2133,11 +2322,13 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Extensions); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 5:
+				return &v.unknownFields
+			case 6:
 				return &v.extensionFields
 			default:
 				return nil
@@ -2146,8 +2337,10 @@ func file_pb2_test_proto_init() {
 		file_pb2_test_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ExtensionsContainer); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2156,10 +2349,12 @@ func file_pb2_test_proto_init() {
 		file_pb2_test_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MessageSet); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 2:
+				return &v.unknownFields
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -2167,9 +2362,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MessageSetExtension); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2178,10 +2375,12 @@ func file_pb2_test_proto_init() {
 		file_pb2_test_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FakeMessageSet); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 2:
+				return &v.unknownFields
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -2189,9 +2388,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FakeMessageSetExtension); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2199,9 +2400,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*KnownTypes); i {
-			case 18:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 19:
+				return &v.sizeCache
+			case 20:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2209,9 +2412,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Nests_OptGroup); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2219,9 +2424,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Nests_RptGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2229,9 +2436,11 @@ func file_pb2_test_proto_init() {
 		}
 		file_pb2_test_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Nests_OptGroup_OptNestedGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

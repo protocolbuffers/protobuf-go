@@ -23,6 +23,7 @@ const (
 // This exists to demonstrate the current behavior and catch unintended
 // changes in it.
 type Message struct {
+	state protoimpl.MessageState
 	// Various CamelCase conversions.
 	FieldOne   *string `protobuf:"bytes,1,opt,name=field_one,json=fieldOne" json:"field_one,omitempty"`
 	FieldTwo   *string `protobuf:"bytes,2,opt,name=FieldTwo" json:"FieldTwo,omitempty"`
@@ -72,10 +73,18 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	return file_fieldnames_fieldnames_proto_msgTypes[0].MessageOf(x)
+	mi := &file_fieldnames_fieldnames_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message) XXX_Methods() *protoiface.Methods {
+func (x *Message) XXX_Methods() *protoiface.Methods {
 	return file_fieldnames_fieldnames_proto_msgTypes[0].Methods()
 }
 
@@ -268,6 +277,7 @@ type Message_OneofMessageConflict_ struct {
 func (*Message_OneofMessageConflict_) isMessage_OneofConflictC() {}
 
 type Message_OneofMessageConflict struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -283,10 +293,18 @@ func (x *Message_OneofMessageConflict) String() string {
 func (*Message_OneofMessageConflict) ProtoMessage() {}
 
 func (x *Message_OneofMessageConflict) ProtoReflect() protoreflect.Message {
-	return file_fieldnames_fieldnames_proto_msgTypes[1].MessageOf(x)
+	mi := &file_fieldnames_fieldnames_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message_OneofMessageConflict) XXX_Methods() *protoiface.Methods {
+func (x *Message_OneofMessageConflict) XXX_Methods() *protoiface.Methods {
 	return file_fieldnames_fieldnames_proto_msgTypes[1].Methods()
 }
 
@@ -385,9 +403,11 @@ func file_fieldnames_fieldnames_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_fieldnames_fieldnames_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message); i {
-			case 17:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 18:
+				return &v.sizeCache
+			case 19:
 				return &v.unknownFields
 			default:
 				return nil
@@ -396,8 +416,10 @@ func file_fieldnames_fieldnames_proto_init() {
 		file_fieldnames_fieldnames_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message_OneofMessageConflict); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

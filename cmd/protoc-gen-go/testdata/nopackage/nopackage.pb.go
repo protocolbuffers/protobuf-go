@@ -66,6 +66,7 @@ func (Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message struct {
+	state         protoimpl.MessageState
 	StringField   *string `protobuf:"bytes,1,opt,name=string_field,json=stringField" json:"string_field,omitempty"`
 	EnumField     *Enum   `protobuf:"varint,2,opt,name=enum_field,json=enumField,enum=Enum,def=0" json:"enum_field,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -83,10 +84,18 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	return file_nopackage_nopackage_proto_msgTypes[0].MessageOf(x)
+	mi := &file_nopackage_nopackage_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message) XXX_Methods() *protoiface.Methods {
+func (x *Message) XXX_Methods() *protoiface.Methods {
 	return file_nopackage_nopackage_proto_msgTypes[0].Methods()
 }
 
@@ -160,9 +169,11 @@ func file_nopackage_nopackage_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_nopackage_nopackage_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

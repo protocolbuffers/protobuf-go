@@ -19,6 +19,7 @@ const (
 )
 
 type Local struct {
+	state         protoimpl.MessageState
 	M             *sub.M `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
 	E             *sub.E `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -36,10 +37,18 @@ func (x *Local) String() string {
 func (*Local) ProtoMessage() {}
 
 func (x *Local) ProtoReflect() protoreflect.Message {
-	return file_import_public_b_proto_msgTypes[0].MessageOf(x)
+	mi := &file_import_public_b_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Local) XXX_Methods() *protoiface.Methods {
+func (x *Local) XXX_Methods() *protoiface.Methods {
 	return file_import_public_b_proto_msgTypes[0].Methods()
 }
 
@@ -120,9 +129,11 @@ func file_import_public_b_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_import_public_b_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Local); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

@@ -21,6 +21,7 @@ const (
 
 // COMMENT: Message1
 type Message1 struct {
+	state protoimpl.MessageState
 	// COMMENT: Field1A
 	Field1A *string `protobuf:"bytes,1,opt,name=Field1A" json:"Field1A,omitempty"`
 	// COMMENT: Oneof1A
@@ -44,10 +45,18 @@ func (x *Message1) String() string {
 func (*Message1) ProtoMessage() {}
 
 func (x *Message1) ProtoReflect() protoreflect.Message {
-	return file_comments_comments_proto_msgTypes[0].MessageOf(x)
+	mi := &file_comments_comments_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message1) XXX_Methods() *protoiface.Methods {
+func (x *Message1) XXX_Methods() *protoiface.Methods {
 	return file_comments_comments_proto_msgTypes[0].Methods()
 }
 
@@ -89,6 +98,7 @@ func (*Message1_Oneof1AField1) isMessage1_Oneof1A() {}
 
 // COMMENT: Message2
 type Message2 struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -104,10 +114,18 @@ func (x *Message2) String() string {
 func (*Message2) ProtoMessage() {}
 
 func (x *Message2) ProtoReflect() protoreflect.Message {
-	return file_comments_comments_proto_msgTypes[1].MessageOf(x)
+	mi := &file_comments_comments_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2) XXX_Methods() *protoiface.Methods {
+func (x *Message2) XXX_Methods() *protoiface.Methods {
 	return file_comments_comments_proto_msgTypes[1].Methods()
 }
 
@@ -118,6 +136,7 @@ func (*Message2) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message1A
 type Message1_Message1A struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -133,10 +152,18 @@ func (x *Message1_Message1A) String() string {
 func (*Message1_Message1A) ProtoMessage() {}
 
 func (x *Message1_Message1A) ProtoReflect() protoreflect.Message {
-	return file_comments_comments_proto_msgTypes[2].MessageOf(x)
+	mi := &file_comments_comments_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message1_Message1A) XXX_Methods() *protoiface.Methods {
+func (x *Message1_Message1A) XXX_Methods() *protoiface.Methods {
 	return file_comments_comments_proto_msgTypes[2].Methods()
 }
 
@@ -147,6 +174,7 @@ func (*Message1_Message1A) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message1B
 type Message1_Message1B struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -162,10 +190,18 @@ func (x *Message1_Message1B) String() string {
 func (*Message1_Message1B) ProtoMessage() {}
 
 func (x *Message1_Message1B) ProtoReflect() protoreflect.Message {
-	return file_comments_comments_proto_msgTypes[3].MessageOf(x)
+	mi := &file_comments_comments_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message1_Message1B) XXX_Methods() *protoiface.Methods {
+func (x *Message1_Message1B) XXX_Methods() *protoiface.Methods {
 	return file_comments_comments_proto_msgTypes[3].Methods()
 }
 
@@ -176,6 +212,7 @@ func (*Message1_Message1B) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message2A
 type Message2_Message2A struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -191,10 +228,18 @@ func (x *Message2_Message2A) String() string {
 func (*Message2_Message2A) ProtoMessage() {}
 
 func (x *Message2_Message2A) ProtoReflect() protoreflect.Message {
-	return file_comments_comments_proto_msgTypes[4].MessageOf(x)
+	mi := &file_comments_comments_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2_Message2A) XXX_Methods() *protoiface.Methods {
+func (x *Message2_Message2A) XXX_Methods() *protoiface.Methods {
 	return file_comments_comments_proto_msgTypes[4].Methods()
 }
 
@@ -205,6 +250,7 @@ func (*Message2_Message2A) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message2B
 type Message2_Message2B struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -220,10 +266,18 @@ func (x *Message2_Message2B) String() string {
 func (*Message2_Message2B) ProtoMessage() {}
 
 func (x *Message2_Message2B) ProtoReflect() protoreflect.Message {
-	return file_comments_comments_proto_msgTypes[5].MessageOf(x)
+	mi := &file_comments_comments_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2_Message2B) XXX_Methods() *protoiface.Methods {
+func (x *Message2_Message2B) XXX_Methods() *protoiface.Methods {
 	return file_comments_comments_proto_msgTypes[5].Methods()
 }
 
@@ -291,9 +345,11 @@ func file_comments_comments_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_comments_comments_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message1); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -302,8 +358,10 @@ func file_comments_comments_proto_init() {
 		file_comments_comments_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message2); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -312,8 +370,10 @@ func file_comments_comments_proto_init() {
 		file_comments_comments_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message1_Message1A); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -322,8 +382,10 @@ func file_comments_comments_proto_init() {
 		file_comments_comments_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message1_Message1B); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -332,8 +394,10 @@ func file_comments_comments_proto_init() {
 		file_comments_comments_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message2_Message2A); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -342,8 +406,10 @@ func file_comments_comments_proto_init() {
 		file_comments_comments_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message2_Message2B); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

@@ -70,6 +70,7 @@ func (FieldTestMessage_Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type FieldTestMessage struct {
+	state               protoimpl.MessageState
 	OptionalBool        *bool                                `protobuf:"varint,1,opt,name=optional_bool,json=optionalBool" json:"optional_bool,omitempty"`
 	OptionalEnum        *FieldTestMessage_Enum               `protobuf:"varint,2,opt,name=optional_enum,json=optionalEnum,enum=goproto.protoc.proto2.FieldTestMessage_Enum" json:"optional_enum,omitempty"`
 	OptionalInt32       *int32                               `protobuf:"varint,3,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty"`
@@ -191,10 +192,18 @@ func (x *FieldTestMessage) String() string {
 func (*FieldTestMessage) ProtoMessage() {}
 
 func (x *FieldTestMessage) ProtoReflect() protoreflect.Message {
-	return file_proto2_fields_proto_msgTypes[0].MessageOf(x)
+	mi := &file_proto2_fields_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldTestMessage) XXX_Methods() *protoiface.Methods {
+func (x *FieldTestMessage) XXX_Methods() *protoiface.Methods {
 	return file_proto2_fields_proto_msgTypes[0].Methods()
 }
 
@@ -1094,6 +1103,7 @@ func (*FieldTestMessage_OneofTwo_1) isFieldTestMessage_OneofTwo() {}
 func (*FieldTestMessage_OneofTwo_2) isFieldTestMessage_OneofTwo() {}
 
 type FieldTestMessage_OptionalGroup struct {
+	state         protoimpl.MessageState
 	OptionalGroup *string `protobuf:"bytes,19,opt,name=optional_group,json=optionalGroup" json:"optional_group,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1110,10 +1120,18 @@ func (x *FieldTestMessage_OptionalGroup) String() string {
 func (*FieldTestMessage_OptionalGroup) ProtoMessage() {}
 
 func (x *FieldTestMessage_OptionalGroup) ProtoReflect() protoreflect.Message {
-	return file_proto2_fields_proto_msgTypes[1].MessageOf(x)
+	mi := &file_proto2_fields_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldTestMessage_OptionalGroup) XXX_Methods() *protoiface.Methods {
+func (x *FieldTestMessage_OptionalGroup) XXX_Methods() *protoiface.Methods {
 	return file_proto2_fields_proto_msgTypes[1].Methods()
 }
 
@@ -1130,6 +1148,7 @@ func (x *FieldTestMessage_OptionalGroup) GetOptionalGroup() string {
 }
 
 type FieldTestMessage_RequiredGroup struct {
+	state         protoimpl.MessageState
 	RequiredGroup *string `protobuf:"bytes,119,req,name=required_group,json=requiredGroup" json:"required_group,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1146,10 +1165,18 @@ func (x *FieldTestMessage_RequiredGroup) String() string {
 func (*FieldTestMessage_RequiredGroup) ProtoMessage() {}
 
 func (x *FieldTestMessage_RequiredGroup) ProtoReflect() protoreflect.Message {
-	return file_proto2_fields_proto_msgTypes[2].MessageOf(x)
+	mi := &file_proto2_fields_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldTestMessage_RequiredGroup) XXX_Methods() *protoiface.Methods {
+func (x *FieldTestMessage_RequiredGroup) XXX_Methods() *protoiface.Methods {
 	return file_proto2_fields_proto_msgTypes[2].Methods()
 }
 
@@ -1166,6 +1193,7 @@ func (x *FieldTestMessage_RequiredGroup) GetRequiredGroup() string {
 }
 
 type FieldTestMessage_RepeatedGroup struct {
+	state         protoimpl.MessageState
 	RepeatedGroup []string `protobuf:"bytes,219,rep,name=repeated_group,json=repeatedGroup" json:"repeated_group,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1182,10 +1210,18 @@ func (x *FieldTestMessage_RepeatedGroup) String() string {
 func (*FieldTestMessage_RepeatedGroup) ProtoMessage() {}
 
 func (x *FieldTestMessage_RepeatedGroup) ProtoReflect() protoreflect.Message {
-	return file_proto2_fields_proto_msgTypes[3].MessageOf(x)
+	mi := &file_proto2_fields_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldTestMessage_RepeatedGroup) XXX_Methods() *protoiface.Methods {
+func (x *FieldTestMessage_RepeatedGroup) XXX_Methods() *protoiface.Methods {
 	return file_proto2_fields_proto_msgTypes[3].Methods()
 }
 
@@ -1202,6 +1238,7 @@ func (x *FieldTestMessage_RepeatedGroup) GetRepeatedGroup() []string {
 }
 
 type FieldTestMessage_OneofGroup struct {
+	state           protoimpl.MessageState
 	OneofGroupField *string `protobuf:"bytes,619,opt,name=oneof_group_field,json=oneofGroupField" json:"oneof_group_field,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
@@ -1218,10 +1255,18 @@ func (x *FieldTestMessage_OneofGroup) String() string {
 func (*FieldTestMessage_OneofGroup) ProtoMessage() {}
 
 func (x *FieldTestMessage_OneofGroup) ProtoReflect() protoreflect.Message {
-	return file_proto2_fields_proto_msgTypes[7].MessageOf(x)
+	mi := &file_proto2_fields_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldTestMessage_OneofGroup) XXX_Methods() *protoiface.Methods {
+func (x *FieldTestMessage_OneofGroup) XXX_Methods() *protoiface.Methods {
 	return file_proto2_fields_proto_msgTypes[7].Methods()
 }
 
@@ -1238,6 +1283,7 @@ func (x *FieldTestMessage_OneofGroup) GetOneofGroupField() string {
 }
 
 type FieldTestMessage_Message struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -1253,10 +1299,18 @@ func (x *FieldTestMessage_Message) String() string {
 func (*FieldTestMessage_Message) ProtoMessage() {}
 
 func (x *FieldTestMessage_Message) ProtoReflect() protoreflect.Message {
-	return file_proto2_fields_proto_msgTypes[8].MessageOf(x)
+	mi := &file_proto2_fields_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldTestMessage_Message) XXX_Methods() *protoiface.Methods {
+func (x *FieldTestMessage_Message) XXX_Methods() *protoiface.Methods {
 	return file_proto2_fields_proto_msgTypes[8].Methods()
 }
 
@@ -1700,9 +1754,11 @@ func file_proto2_fields_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_proto2_fields_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldTestMessage); i {
-			case 83:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 84:
+				return &v.sizeCache
+			case 85:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1710,9 +1766,11 @@ func file_proto2_fields_proto_init() {
 		}
 		file_proto2_fields_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldTestMessage_OptionalGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1720,9 +1778,11 @@ func file_proto2_fields_proto_init() {
 		}
 		file_proto2_fields_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldTestMessage_RequiredGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1730,9 +1790,11 @@ func file_proto2_fields_proto_init() {
 		}
 		file_proto2_fields_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldTestMessage_RepeatedGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1740,9 +1802,11 @@ func file_proto2_fields_proto_init() {
 		}
 		file_proto2_fields_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldTestMessage_OneofGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1751,8 +1815,10 @@ func file_proto2_fields_proto_init() {
 		file_proto2_fields_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldTestMessage_Message); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

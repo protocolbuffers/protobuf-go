@@ -29,6 +29,7 @@ const (
 // this message itself. See https://cloud.google.com/apis/design/glossary for
 // detailed terminology.
 type Api struct {
+	state protoimpl.MessageState
 	// The fully qualified name of this interface, including package name
 	// followed by the interface's simple name.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -80,10 +81,18 @@ func (x *Api) String() string {
 func (*Api) ProtoMessage() {}
 
 func (x *Api) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_api_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_api_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Api) XXX_Methods() *protoiface.Methods {
+func (x *Api) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_api_proto_msgTypes[0].Methods()
 }
 
@@ -143,6 +152,7 @@ func (x *Api) GetSyntax() typepb.Syntax {
 
 // Method represents a method of an API interface.
 type Method struct {
+	state protoimpl.MessageState
 	// The simple name of this method.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// A URL of the input message type.
@@ -172,10 +182,18 @@ func (x *Method) String() string {
 func (*Method) ProtoMessage() {}
 
 func (x *Method) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_api_proto_msgTypes[1].MessageOf(x)
+	mi := &file_google_protobuf_api_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Method) XXX_Methods() *protoiface.Methods {
+func (x *Method) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_api_proto_msgTypes[1].Methods()
 }
 
@@ -312,6 +330,7 @@ func (x *Method) GetSyntax() typepb.Syntax {
 //       ...
 //     }
 type Mixin struct {
+	state protoimpl.MessageState
 	// The fully qualified name of the interface which is included.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// If non-empty specifies a path under which inherited HTTP paths
@@ -332,10 +351,18 @@ func (x *Mixin) String() string {
 func (*Mixin) ProtoMessage() {}
 
 func (x *Mixin) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_api_proto_msgTypes[2].MessageOf(x)
+	mi := &file_google_protobuf_api_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Mixin) XXX_Methods() *protoiface.Methods {
+func (x *Mixin) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_api_proto_msgTypes[2].Methods()
 }
 
@@ -465,9 +492,11 @@ func file_google_protobuf_api_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_api_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Api); i {
-			case 7:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 8:
+				return &v.sizeCache
+			case 9:
 				return &v.unknownFields
 			default:
 				return nil
@@ -475,9 +504,11 @@ func file_google_protobuf_api_proto_init() {
 		}
 		file_google_protobuf_api_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Method); i {
-			case 7:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 8:
+				return &v.sizeCache
+			case 9:
 				return &v.unknownFields
 			default:
 				return nil
@@ -485,9 +516,11 @@ func file_google_protobuf_api_proto_init() {
 		}
 		file_google_protobuf_api_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Mixin); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

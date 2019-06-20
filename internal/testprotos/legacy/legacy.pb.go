@@ -30,6 +30,7 @@ const (
 )
 
 type Legacy struct {
+	state         protoimpl.MessageState
 	F1            *proto2_v0_0.Message  `protobuf:"bytes,1,opt,name=f1,proto3" json:"f1,omitempty"`
 	F2            *proto3_v0_0.Message  `protobuf:"bytes,2,opt,name=f2,proto3" json:"f2,omitempty"`
 	F3            *proto2_v0_01.Message `protobuf:"bytes,3,opt,name=f3,proto3" json:"f3,omitempty"`
@@ -57,10 +58,18 @@ func (x *Legacy) String() string {
 func (*Legacy) ProtoMessage() {}
 
 func (x *Legacy) ProtoReflect() protoreflect.Message {
-	return file_legacy_legacy_proto_msgTypes[0].MessageOf(x)
+	mi := &file_legacy_legacy_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Legacy) XXX_Methods() *protoiface.Methods {
+func (x *Legacy) XXX_Methods() *protoiface.Methods {
 	return file_legacy_legacy_proto_msgTypes[0].Methods()
 }
 
@@ -305,9 +314,11 @@ func file_legacy_legacy_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_legacy_legacy_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Legacy); i {
-			case 12:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 13:
+				return &v.sizeCache
+			case 14:
 				return &v.unknownFields
 			default:
 				return nil

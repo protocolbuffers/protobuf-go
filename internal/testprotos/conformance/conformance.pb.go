@@ -131,6 +131,7 @@ func (TestCategory) EnumDescriptor() ([]byte, []int) {
 // This will be known by message_type == "conformance.FailureSet", a conformance
 // test should return a serialized FailureSet in protobuf_payload.
 type FailureSet struct {
+	state         protoimpl.MessageState
 	Failure       []string `protobuf:"bytes,1,rep,name=failure,proto3" json:"failure,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -147,10 +148,18 @@ func (x *FailureSet) String() string {
 func (*FailureSet) ProtoMessage() {}
 
 func (x *FailureSet) ProtoReflect() protoreflect.Message {
-	return file_conformance_conformance_proto_msgTypes[0].MessageOf(x)
+	mi := &file_conformance_conformance_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FailureSet) XXX_Methods() *protoiface.Methods {
+func (x *FailureSet) XXX_Methods() *protoiface.Methods {
 	return file_conformance_conformance_proto_msgTypes[0].Methods()
 }
 
@@ -172,6 +181,7 @@ func (x *FailureSet) GetFailure() []string {
 //   2. parse the protobuf or JSON payload in "payload" (which may fail)
 //   3. if the parse succeeded, serialize the message in the requested format.
 type ConformanceRequest struct {
+	state protoimpl.MessageState
 	// The payload (whether protobuf of JSON) is always for a
 	// protobuf_test_messages.proto3.TestAllTypes proto (as defined in
 	// src/google/protobuf/proto3_test_messages.proto).
@@ -214,10 +224,18 @@ func (x *ConformanceRequest) String() string {
 func (*ConformanceRequest) ProtoMessage() {}
 
 func (x *ConformanceRequest) ProtoReflect() protoreflect.Message {
-	return file_conformance_conformance_proto_msgTypes[1].MessageOf(x)
+	mi := &file_conformance_conformance_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ConformanceRequest) XXX_Methods() *protoiface.Methods {
+func (x *ConformanceRequest) XXX_Methods() *protoiface.Methods {
 	return file_conformance_conformance_proto_msgTypes[1].Methods()
 }
 
@@ -319,6 +337,7 @@ func (*ConformanceRequest_TextPayload) isConformanceRequest_Payload() {}
 
 // Represents a single test case's output.
 type ConformanceResponse struct {
+	state protoimpl.MessageState
 	// Types that are valid to be assigned to Result:
 	// This string should be set to indicate parsing failed.  The string can
 	// provide more information about the parse error if it is available.
@@ -366,10 +385,18 @@ func (x *ConformanceResponse) String() string {
 func (*ConformanceResponse) ProtoMessage() {}
 
 func (x *ConformanceResponse) ProtoReflect() protoreflect.Message {
-	return file_conformance_conformance_proto_msgTypes[2].MessageOf(x)
+	mi := &file_conformance_conformance_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ConformanceResponse) XXX_Methods() *protoiface.Methods {
+func (x *ConformanceResponse) XXX_Methods() *protoiface.Methods {
 	return file_conformance_conformance_proto_msgTypes[2].Methods()
 }
 
@@ -495,6 +522,7 @@ func (*ConformanceResponse_TextPayload) isConformanceResponse_Result() {}
 
 // Encoding options for jspb format.
 type JspbEncodingConfig struct {
+	state protoimpl.MessageState
 	// Encode the value field of Any as jspb array if ture, otherwise binary.
 	UseJspbArrayAnyFormat bool `protobuf:"varint,1,opt,name=use_jspb_array_any_format,json=useJspbArrayAnyFormat,proto3" json:"use_jspb_array_any_format,omitempty"`
 	sizeCache             protoimpl.SizeCache
@@ -512,10 +540,18 @@ func (x *JspbEncodingConfig) String() string {
 func (*JspbEncodingConfig) ProtoMessage() {}
 
 func (x *JspbEncodingConfig) ProtoReflect() protoreflect.Message {
-	return file_conformance_conformance_proto_msgTypes[3].MessageOf(x)
+	mi := &file_conformance_conformance_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *JspbEncodingConfig) XXX_Methods() *protoiface.Methods {
+func (x *JspbEncodingConfig) XXX_Methods() *protoiface.Methods {
 	return file_conformance_conformance_proto_msgTypes[3].Methods()
 }
 
@@ -658,9 +694,11 @@ func file_conformance_conformance_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_conformance_conformance_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FailureSet); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -668,9 +706,11 @@ func file_conformance_conformance_proto_init() {
 		}
 		file_conformance_conformance_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ConformanceRequest); i {
-			case 5:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 6:
+				return &v.sizeCache
+			case 7:
 				return &v.unknownFields
 			default:
 				return nil
@@ -678,9 +718,11 @@ func file_conformance_conformance_proto_init() {
 		}
 		file_conformance_conformance_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ConformanceResponse); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -688,9 +730,11 @@ func file_conformance_conformance_proto_init() {
 		}
 		file_conformance_conformance_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*JspbEncodingConfig); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

@@ -98,6 +98,7 @@ const (
 //     }
 //
 type Any struct {
+	state protoimpl.MessageState
 	// A URL/resource name that uniquely identifies the type of the serialized
 	// protocol buffer message. This string must contain at least
 	// one "/" character. The last segment of the URL's path must represent
@@ -144,10 +145,18 @@ func (x *Any) String() string {
 func (*Any) ProtoMessage() {}
 
 func (x *Any) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_any_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_any_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Any) XXX_Methods() *protoiface.Methods {
+func (x *Any) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_any_proto_msgTypes[0].Methods()
 }
 
@@ -222,9 +231,11 @@ func file_google_protobuf_any_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_any_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Any); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

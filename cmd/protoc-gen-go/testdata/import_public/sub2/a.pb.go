@@ -18,6 +18,7 @@ const (
 )
 
 type Sub2Message struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -33,10 +34,18 @@ func (x *Sub2Message) String() string {
 func (*Sub2Message) ProtoMessage() {}
 
 func (x *Sub2Message) ProtoReflect() protoreflect.Message {
-	return file_import_public_sub2_a_proto_msgTypes[0].MessageOf(x)
+	mi := &file_import_public_sub2_a_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Sub2Message) XXX_Methods() *protoiface.Methods {
+func (x *Sub2Message) XXX_Methods() *protoiface.Methods {
 	return file_import_public_sub2_a_proto_msgTypes[0].Methods()
 }
 
@@ -93,8 +102,10 @@ func file_import_public_sub2_a_proto_init() {
 		file_import_public_sub2_a_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Sub2Message); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

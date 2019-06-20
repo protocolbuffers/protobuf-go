@@ -18,6 +18,7 @@ const (
 )
 
 type GoogleMessage4 struct {
+	state         protoimpl.MessageState
 	Field37503    *int32              `protobuf:"varint,1,opt,name=field37503" json:"field37503,omitempty"`
 	Field37504    *UnusedEmptyMessage `protobuf:"bytes,2,opt,name=field37504" json:"field37504,omitempty"`
 	Field37505    *UnusedEmptyMessage `protobuf:"bytes,3,opt,name=field37505" json:"field37505,omitempty"`
@@ -49,10 +50,18 @@ func (x *GoogleMessage4) String() string {
 func (*GoogleMessage4) ProtoMessage() {}
 
 func (x *GoogleMessage4) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[0].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *GoogleMessage4) XXX_Methods() *protoiface.Methods {
+func (x *GoogleMessage4) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[0].Methods()
 }
 
@@ -174,6 +183,7 @@ func (x *GoogleMessage4) GetField37518() *UnusedEmptyMessage {
 }
 
 type Message37489 struct {
+	state         protoimpl.MessageState
 	Field37534    *Message2517  `protobuf:"bytes,3,opt,name=field37534" json:"field37534,omitempty"`
 	Field37535    *Message7330  `protobuf:"bytes,4,opt,name=field37535" json:"field37535,omitempty"`
 	Field37536    *Message8815  `protobuf:"bytes,6,opt,name=field37536" json:"field37536,omitempty"`
@@ -210,10 +220,18 @@ func (x *Message37489) String() string {
 func (*Message37489) ProtoMessage() {}
 
 func (x *Message37489) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[1].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message37489) XXX_Methods() *protoiface.Methods {
+func (x *Message37489) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[1].Methods()
 }
 
@@ -370,6 +388,7 @@ func (x *Message37489) GetField37554() *Message37335 {
 }
 
 type Message7319 struct {
+	state         protoimpl.MessageState
 	Field7321     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field7321" json:"field7321,omitempty"`
 	Field7322     *UnusedEmptyMessage `protobuf:"bytes,7,opt,name=field7322" json:"field7322,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -387,10 +406,18 @@ func (x *Message7319) String() string {
 func (*Message7319) ProtoMessage() {}
 
 func (x *Message7319) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[2].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message7319) XXX_Methods() *protoiface.Methods {
+func (x *Message7319) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[2].Methods()
 }
 
@@ -414,6 +441,7 @@ func (x *Message7319) GetField7322() *UnusedEmptyMessage {
 }
 
 type Message12717 struct {
+	state         protoimpl.MessageState
 	Field12719    *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field12719" json:"field12719,omitempty"`
 	Field12720    *string             `protobuf:"bytes,2,opt,name=field12720" json:"field12720,omitempty"`
 	Field12721    *uint32             `protobuf:"varint,3,opt,name=field12721" json:"field12721,omitempty"`
@@ -438,10 +466,18 @@ func (x *Message12717) String() string {
 func (*Message12717) ProtoMessage() {}
 
 func (x *Message12717) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[3].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12717) XXX_Methods() *protoiface.Methods {
+func (x *Message12717) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[3].Methods()
 }
 
@@ -514,6 +550,7 @@ func (x *Message12717) GetField12727() int64 {
 }
 
 type Message37331 struct {
+	state         protoimpl.MessageState
 	Field37367    *UnusedEmptyMessage `protobuf:"bytes,4,opt,name=field37367" json:"field37367,omitempty"`
 	Field37368    *Message37326       `protobuf:"bytes,1,req,name=field37368" json:"field37368,omitempty"`
 	Field37369    *int64              `protobuf:"varint,2,req,name=field37369" json:"field37369,omitempty"`
@@ -533,10 +570,18 @@ func (x *Message37331) String() string {
 func (*Message37331) ProtoMessage() {}
 
 func (x *Message37331) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[4].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message37331) XXX_Methods() *protoiface.Methods {
+func (x *Message37331) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[4].Methods()
 }
 
@@ -574,6 +619,7 @@ func (x *Message37331) GetField37370() []byte {
 }
 
 type Message8815 struct {
+	state         protoimpl.MessageState
 	Field8819     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field8819" json:"field8819,omitempty"`
 	Field8820     []*Message8768      `protobuf:"bytes,2,rep,name=field8820" json:"field8820,omitempty"`
 	Field8821     *bool               `protobuf:"varint,3,opt,name=field8821" json:"field8821,omitempty"`
@@ -592,10 +638,18 @@ func (x *Message8815) String() string {
 func (*Message8815) ProtoMessage() {}
 
 func (x *Message8815) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[5].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message8815) XXX_Methods() *protoiface.Methods {
+func (x *Message8815) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[5].Methods()
 }
 
@@ -626,6 +680,7 @@ func (x *Message8815) GetField8821() bool {
 }
 
 type Message7330 struct {
+	state         protoimpl.MessageState
 	Field7332     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field7332" json:"field7332,omitempty"`
 	Field7333     *Message3069        `protobuf:"bytes,2,opt,name=field7333" json:"field7333,omitempty"`
 	Field7334     *Message7320        `protobuf:"bytes,3,opt,name=field7334" json:"field7334,omitempty"`
@@ -647,10 +702,18 @@ func (x *Message7330) String() string {
 func (*Message7330) ProtoMessage() {}
 
 func (x *Message7330) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[6].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message7330) XXX_Methods() *protoiface.Methods {
+func (x *Message7330) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[6].Methods()
 }
 
@@ -702,6 +765,7 @@ func (x *Message7330) GetField7337() int64 {
 }
 
 type Message12960 struct {
+	state         protoimpl.MessageState
 	Field12962    *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field12962" json:"field12962,omitempty"`
 	Field12963    *Message12948       `protobuf:"bytes,2,opt,name=field12963" json:"field12963,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -719,10 +783,18 @@ func (x *Message12960) String() string {
 func (*Message12960) ProtoMessage() {}
 
 func (x *Message12960) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[7].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12960) XXX_Methods() *protoiface.Methods {
+func (x *Message12960) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[7].Methods()
 }
 
@@ -746,6 +818,7 @@ func (x *Message12960) GetField12963() *Message12948 {
 }
 
 type Message176 struct {
+	state         protoimpl.MessageState
 	Field408      *string                  `protobuf:"bytes,1,req,name=field408" json:"field408,omitempty"`
 	Field409      *int32                   `protobuf:"varint,4,opt,name=field409" json:"field409,omitempty"`
 	Field410      *string                  `protobuf:"bytes,50,opt,name=field410" json:"field410,omitempty"`
@@ -820,10 +893,18 @@ func (x *Message176) String() string {
 func (*Message176) ProtoMessage() {}
 
 func (x *Message176) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[8].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message176) XXX_Methods() *protoiface.Methods {
+func (x *Message176) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[8].Methods()
 }
 
@@ -1246,6 +1327,7 @@ func (x *Message176) GetField466() *UnusedEmptyMessage {
 }
 
 type Message8817 struct {
+	state         protoimpl.MessageState
 	Field8825     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field8825" json:"field8825,omitempty"`
 	Field8826     []*Message8768      `protobuf:"bytes,2,rep,name=field8826" json:"field8826,omitempty"`
 	Field8827     *string             `protobuf:"bytes,3,opt,name=field8827" json:"field8827,omitempty"`
@@ -1264,10 +1346,18 @@ func (x *Message8817) String() string {
 func (*Message8817) ProtoMessage() {}
 
 func (x *Message8817) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[9].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message8817) XXX_Methods() *protoiface.Methods {
+func (x *Message8817) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[9].Methods()
 }
 
@@ -1298,6 +1388,7 @@ func (x *Message8817) GetField8827() string {
 }
 
 type Message8835 struct {
+	state         protoimpl.MessageState
 	Field8837     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field8837" json:"field8837,omitempty"`
 	Field8838     []string            `protobuf:"bytes,2,rep,name=field8838" json:"field8838,omitempty"`
 	Field8839     *UnusedEnum         `protobuf:"varint,3,opt,name=field8839,enum=benchmarks.google_message4.UnusedEnum" json:"field8839,omitempty"`
@@ -1316,10 +1407,18 @@ func (x *Message8835) String() string {
 func (*Message8835) ProtoMessage() {}
 
 func (x *Message8835) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[10].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message8835) XXX_Methods() *protoiface.Methods {
+func (x *Message8835) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[10].Methods()
 }
 
@@ -1350,6 +1449,7 @@ func (x *Message8835) GetField8839() UnusedEnum {
 }
 
 type Message37333 struct {
+	state         protoimpl.MessageState
 	Field37372    *UnusedEmptyMessage `protobuf:"bytes,3,opt,name=field37372" json:"field37372,omitempty"`
 	Field37373    *Message37326       `protobuf:"bytes,1,req,name=field37373" json:"field37373,omitempty"`
 	Field37374    *uint64             `protobuf:"varint,2,opt,name=field37374" json:"field37374,omitempty"`
@@ -1368,10 +1468,18 @@ func (x *Message37333) String() string {
 func (*Message37333) ProtoMessage() {}
 
 func (x *Message37333) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[11].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message37333) XXX_Methods() *protoiface.Methods {
+func (x *Message37333) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[11].Methods()
 }
 
@@ -1402,6 +1510,7 @@ func (x *Message37333) GetField37374() uint64 {
 }
 
 type Message13000 struct {
+	state         protoimpl.MessageState
 	Field13015    *int64          `protobuf:"varint,1,opt,name=field13015" json:"field13015,omitempty"`
 	Field13016    []*Message12979 `protobuf:"bytes,2,rep,name=field13016" json:"field13016,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -1419,10 +1528,18 @@ func (x *Message13000) String() string {
 func (*Message13000) ProtoMessage() {}
 
 func (x *Message13000) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[12].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message13000) XXX_Methods() *protoiface.Methods {
+func (x *Message13000) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[12].Methods()
 }
 
@@ -1446,6 +1563,7 @@ func (x *Message13000) GetField13016() []*Message12979 {
 }
 
 type Message37335 struct {
+	state         protoimpl.MessageState
 	Field37376    *UnusedEmptyMessage `protobuf:"bytes,4,opt,name=field37376" json:"field37376,omitempty"`
 	Field37377    *Message37326       `protobuf:"bytes,1,req,name=field37377" json:"field37377,omitempty"`
 	Field37378    *Message37173       `protobuf:"bytes,2,req,name=field37378" json:"field37378,omitempty"`
@@ -1465,10 +1583,18 @@ func (x *Message37335) String() string {
 func (*Message37335) ProtoMessage() {}
 
 func (x *Message37335) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[13].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message37335) XXX_Methods() *protoiface.Methods {
+func (x *Message37335) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[13].Methods()
 }
 
@@ -1506,6 +1632,7 @@ func (x *Message37335) GetField37379() uint64 {
 }
 
 type Message8848 struct {
+	state         protoimpl.MessageState
 	Field8850     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field8850" json:"field8850,omitempty"`
 	Field8851     *string             `protobuf:"bytes,2,opt,name=field8851" json:"field8851,omitempty"`
 	Field8852     []byte              `protobuf:"bytes,3,opt,name=field8852" json:"field8852,omitempty"`
@@ -1524,10 +1651,18 @@ func (x *Message8848) String() string {
 func (*Message8848) ProtoMessage() {}
 
 func (x *Message8848) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[14].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message8848) XXX_Methods() *protoiface.Methods {
+func (x *Message8848) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[14].Methods()
 }
 
@@ -1558,6 +1693,7 @@ func (x *Message8848) GetField8852() []byte {
 }
 
 type Message13035 struct {
+	state         protoimpl.MessageState
 	Field13058    *int64  `protobuf:"varint,1,opt,name=field13058" json:"field13058,omitempty"`
 	Field13059    []int64 `protobuf:"varint,2,rep,name=field13059" json:"field13059,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -1575,10 +1711,18 @@ func (x *Message13035) String() string {
 func (*Message13035) ProtoMessage() {}
 
 func (x *Message13035) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[15].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message13035) XXX_Methods() *protoiface.Methods {
+func (x *Message13035) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[15].Methods()
 }
 
@@ -1602,6 +1746,7 @@ func (x *Message13035) GetField13059() []int64 {
 }
 
 type Message8856 struct {
+	state         protoimpl.MessageState
 	Field8858     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field8858" json:"field8858,omitempty"`
 	Field8859     *string             `protobuf:"bytes,2,opt,name=field8859" json:"field8859,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -1619,10 +1764,18 @@ func (x *Message8856) String() string {
 func (*Message8856) ProtoMessage() {}
 
 func (x *Message8856) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[16].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message8856) XXX_Methods() *protoiface.Methods {
+func (x *Message8856) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[16].Methods()
 }
 
@@ -1646,6 +1799,7 @@ func (x *Message8856) GetField8859() string {
 }
 
 type Message12908 struct {
+	state         protoimpl.MessageState
 	Field12912    *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field12912" json:"field12912,omitempty"`
 	Field12913    *string             `protobuf:"bytes,2,opt,name=field12913" json:"field12913,omitempty"`
 	Field12914    *Message12799       `protobuf:"bytes,3,opt,name=field12914" json:"field12914,omitempty"`
@@ -1667,10 +1821,18 @@ func (x *Message12908) String() string {
 func (*Message12908) ProtoMessage() {}
 
 func (x *Message12908) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[17].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12908) XXX_Methods() *protoiface.Methods {
+func (x *Message12908) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[17].Methods()
 }
 
@@ -1722,6 +1884,7 @@ func (x *Message12908) GetField12917() *Message12870 {
 }
 
 type Message12910 struct {
+	state         protoimpl.MessageState
 	Field12920    *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field12920" json:"field12920,omitempty"`
 	Field12921    *Message12818       `protobuf:"bytes,2,opt,name=field12921" json:"field12921,omitempty"`
 	Field12922    []*Message12903     `protobuf:"bytes,3,rep,name=field12922" json:"field12922,omitempty"`
@@ -1740,10 +1903,18 @@ func (x *Message12910) String() string {
 func (*Message12910) ProtoMessage() {}
 
 func (x *Message12910) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[18].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12910) XXX_Methods() *protoiface.Methods {
+func (x *Message12910) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[18].Methods()
 }
 
@@ -1774,6 +1945,7 @@ func (x *Message12910) GetField12922() []*Message12903 {
 }
 
 type Message37327 struct {
+	state         protoimpl.MessageState
 	Field37347    *UnusedEmptyMessage `protobuf:"bytes,11,opt,name=field37347" json:"field37347,omitempty"`
 	Field37348    *Message37326       `protobuf:"bytes,1,req,name=field37348" json:"field37348,omitempty"`
 	Field37349    *bool               `protobuf:"varint,2,opt,name=field37349" json:"field37349,omitempty"`
@@ -1800,10 +1972,18 @@ func (x *Message37327) String() string {
 func (*Message37327) ProtoMessage() {}
 
 func (x *Message37327) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[19].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[19]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message37327) XXX_Methods() *protoiface.Methods {
+func (x *Message37327) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[19].Methods()
 }
 
@@ -1890,6 +2070,7 @@ func (x *Message37327) GetField37357() bool {
 }
 
 type Message37329 struct {
+	state         protoimpl.MessageState
 	Field37359    *UnusedEmptyMessage `protobuf:"bytes,6,opt,name=field37359" json:"field37359,omitempty"`
 	Field37360    *Message37326       `protobuf:"bytes,1,req,name=field37360" json:"field37360,omitempty"`
 	Field37361    *int64              `protobuf:"varint,2,req,name=field37361" json:"field37361,omitempty"`
@@ -1910,10 +2091,18 @@ func (x *Message37329) String() string {
 func (*Message37329) ProtoMessage() {}
 
 func (x *Message37329) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[20].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[20]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message37329) XXX_Methods() *protoiface.Methods {
+func (x *Message37329) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[20].Methods()
 }
 
@@ -1958,6 +2147,7 @@ func (x *Message37329) GetField37363() bool {
 }
 
 type Message2517 struct {
+	state         protoimpl.MessageState
 	Field2519     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field2519" json:"field2519,omitempty"`
 	Field2520     *Message2356        `protobuf:"bytes,2,opt,name=field2520" json:"field2520,omitempty"`
 	Field2521     *Message0           `protobuf:"bytes,3,opt,name=field2521" json:"field2521,omitempty"`
@@ -1978,10 +2168,18 @@ func (x *Message2517) String() string {
 func (*Message2517) ProtoMessage() {}
 
 func (x *Message2517) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[21].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[21]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2517) XXX_Methods() *protoiface.Methods {
+func (x *Message2517) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[21].Methods()
 }
 
@@ -2026,6 +2224,7 @@ func (x *Message2517) GetField2523() []*Message971 {
 }
 
 type Message12748 struct {
+	state         protoimpl.MessageState
 	Field12754    *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field12754" json:"field12754,omitempty"`
 	Field12755    *string             `protobuf:"bytes,2,opt,name=field12755" json:"field12755,omitempty"`
 	Field12756    *string             `protobuf:"bytes,3,opt,name=field12756" json:"field12756,omitempty"`
@@ -2045,10 +2244,18 @@ func (x *Message12748) String() string {
 func (*Message12748) ProtoMessage() {}
 
 func (x *Message12748) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[22].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[22]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12748) XXX_Methods() *protoiface.Methods {
+func (x *Message12748) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[22].Methods()
 }
 
@@ -2086,6 +2293,7 @@ func (x *Message12748) GetField12757() Enum12735 {
 }
 
 type Message12687 struct {
+	state         protoimpl.MessageState
 	Field12701    []*Message12686 `protobuf:"bytes,1,rep,name=field12701" json:"field12701,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2102,10 +2310,18 @@ func (x *Message12687) String() string {
 func (*Message12687) ProtoMessage() {}
 
 func (x *Message12687) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[23].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[23]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12687) XXX_Methods() *protoiface.Methods {
+func (x *Message12687) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[23].Methods()
 }
 
@@ -2122,6 +2338,7 @@ func (x *Message12687) GetField12701() []*Message12686 {
 }
 
 type Message11948 struct {
+	state         protoimpl.MessageState
 	Field11954    *string         `protobuf:"bytes,1,opt,name=field11954" json:"field11954,omitempty"`
 	Field11955    []*Message11949 `protobuf:"bytes,2,rep,name=field11955" json:"field11955,omitempty"`
 	Field11956    *bool           `protobuf:"varint,3,opt,name=field11956" json:"field11956,omitempty"`
@@ -2140,10 +2357,18 @@ func (x *Message11948) String() string {
 func (*Message11948) ProtoMessage() {}
 
 func (x *Message11948) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[24].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[24]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message11948) XXX_Methods() *protoiface.Methods {
+func (x *Message11948) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[24].Methods()
 }
 
@@ -2174,6 +2399,7 @@ func (x *Message11948) GetField11956() bool {
 }
 
 type Message11976 struct {
+	state         protoimpl.MessageState
 	Field12002    []*Message11975 `protobuf:"bytes,1,rep,name=field12002" json:"field12002,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2190,10 +2416,18 @@ func (x *Message11976) String() string {
 func (*Message11976) ProtoMessage() {}
 
 func (x *Message11976) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[25].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[25]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message11976) XXX_Methods() *protoiface.Methods {
+func (x *Message11976) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[25].Methods()
 }
 
@@ -2210,6 +2444,7 @@ func (x *Message11976) GetField12002() []*Message11975 {
 }
 
 type Message7320 struct {
+	state         protoimpl.MessageState
 	Field7323     *UnusedEmptyMessage `protobuf:"bytes,1,opt,name=field7323" json:"field7323,omitempty"`
 	Field7324     *Message7287        `protobuf:"bytes,8,opt,name=field7324" json:"field7324,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -2227,10 +2462,18 @@ func (x *Message7320) String() string {
 func (*Message7320) ProtoMessage() {}
 
 func (x *Message7320) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[26].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[26]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message7320) XXX_Methods() *protoiface.Methods {
+func (x *Message7320) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[26].Methods()
 }
 
@@ -2254,6 +2497,7 @@ func (x *Message7320) GetField7324() *Message7287 {
 }
 
 type Message3069 struct {
+	state           protoimpl.MessageState
 	Field3374       *Message3061               `protobuf:"bytes,1,opt,name=field3374" json:"field3374,omitempty"`
 	Field3375       []byte                     `protobuf:"bytes,2,opt,name=field3375" json:"field3375,omitempty"`
 	Message3070     []*Message3069_Message3070 `protobuf:"group,3,rep,name=Message3070,json=message3070" json:"message3070,omitempty"`
@@ -2273,10 +2517,18 @@ func (x *Message3069) String() string {
 func (*Message3069) ProtoMessage() {}
 
 func (x *Message3069) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[27].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[27]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message3069) XXX_Methods() *protoiface.Methods {
+func (x *Message3069) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[27].Methods()
 }
 
@@ -2316,6 +2568,7 @@ func (x *Message3069) GetMessage3070() []*Message3069_Message3070 {
 }
 
 type Message12948 struct {
+	state         protoimpl.MessageState
 	Field12958    []*Message12949 `protobuf:"bytes,1,rep,name=field12958" json:"field12958,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2332,10 +2585,18 @@ func (x *Message12948) String() string {
 func (*Message12948) ProtoMessage() {}
 
 func (x *Message12948) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[28].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[28]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12948) XXX_Methods() *protoiface.Methods {
+func (x *Message12948) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[28].Methods()
 }
 
@@ -2352,6 +2613,7 @@ func (x *Message12948) GetField12958() []*Message12949 {
 }
 
 type Message8768 struct {
+	state         protoimpl.MessageState
 	Field8782     *string             `protobuf:"bytes,1,opt,name=field8782" json:"field8782,omitempty"`
 	Field8783     *Message8572        `protobuf:"bytes,2,opt,name=field8783" json:"field8783,omitempty"`
 	Field8784     *bool               `protobuf:"varint,3,opt,name=field8784" json:"field8784,omitempty"`
@@ -2374,10 +2636,18 @@ func (x *Message8768) String() string {
 func (*Message8768) ProtoMessage() {}
 
 func (x *Message8768) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[29].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[29]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message8768) XXX_Methods() *protoiface.Methods {
+func (x *Message8768) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[29].Methods()
 }
 
@@ -2436,6 +2706,7 @@ func (x *Message8768) GetField8788() string {
 }
 
 type Message12979 struct {
+	state         protoimpl.MessageState
 	Field12981    []byte              `protobuf:"bytes,1,req,name=field12981" json:"field12981,omitempty"`
 	Field12982    []string            `protobuf:"bytes,2,rep,name=field12982" json:"field12982,omitempty"`
 	Field12983    *UnusedEmptyMessage `protobuf:"bytes,3,opt,name=field12983" json:"field12983,omitempty"`
@@ -2458,10 +2729,18 @@ func (x *Message12979) String() string {
 func (*Message12979) ProtoMessage() {}
 
 func (x *Message12979) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[30].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[30]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12979) XXX_Methods() *protoiface.Methods {
+func (x *Message12979) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[30].Methods()
 }
 
@@ -2520,6 +2799,7 @@ func (x *Message12979) GetField12987() *UnusedEmptyMessage {
 }
 
 type Message37173 struct {
+	state         protoimpl.MessageState
 	Field37252    *string             `protobuf:"bytes,1,opt,name=field37252" json:"field37252,omitempty"`
 	Field37253    *int64              `protobuf:"varint,2,opt,name=field37253" json:"field37253,omitempty"`
 	Field37254    *UnusedEnum         `protobuf:"varint,4,opt,name=field37254,enum=benchmarks.google_message4.UnusedEnum" json:"field37254,omitempty"`
@@ -2560,10 +2840,18 @@ func (x *Message37173) String() string {
 func (*Message37173) ProtoMessage() {}
 
 func (x *Message37173) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[31].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[31]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message37173) XXX_Methods() *protoiface.Methods {
+func (x *Message37173) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[31].Methods()
 }
 
@@ -2748,6 +3036,7 @@ func (x *Message37173) GetField37276() bool {
 }
 
 type Message12799 struct {
+	state         protoimpl.MessageState
 	Field12809    *string         `protobuf:"bytes,1,req,name=field12809" json:"field12809,omitempty"`
 	Field12810    []uint64        `protobuf:"fixed64,2,rep,name=field12810" json:"field12810,omitempty"`
 	Field12811    []*Message12776 `protobuf:"bytes,8,rep,name=field12811" json:"field12811,omitempty"`
@@ -2771,10 +3060,18 @@ func (x *Message12799) String() string {
 func (*Message12799) ProtoMessage() {}
 
 func (x *Message12799) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[32].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[32]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12799) XXX_Methods() *protoiface.Methods {
+func (x *Message12799) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[32].Methods()
 }
 
@@ -2840,6 +3137,7 @@ func (x *Message12799) GetField12816() *Message12797 {
 }
 
 type Message12870 struct {
+	state         protoimpl.MessageState
 	Field12879    *int32          `protobuf:"varint,1,req,name=field12879" json:"field12879,omitempty"`
 	Field12880    *int32          `protobuf:"varint,7,opt,name=field12880" json:"field12880,omitempty"`
 	Field12881    *int32          `protobuf:"varint,2,req,name=field12881" json:"field12881,omitempty"`
@@ -2875,10 +3173,18 @@ func (x *Message12870) String() string {
 func (*Message12870) ProtoMessage() {}
 
 func (x *Message12870) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[33].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[33]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12870) XXX_Methods() *protoiface.Methods {
+func (x *Message12870) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[33].Methods()
 }
 
@@ -3028,6 +3334,7 @@ func (x *Message12870) GetField12898() int32 {
 }
 
 type Message3804 struct {
+	state         protoimpl.MessageState
 	Field3818     *int64     `protobuf:"varint,1,req,name=field3818" json:"field3818,omitempty"`
 	Field3819     *bool      `protobuf:"varint,2,req,name=field3819" json:"field3819,omitempty"`
 	Field3820     []Enum3805 `protobuf:"varint,4,rep,name=field3820,enum=benchmarks.google_message4.Enum3805" json:"field3820,omitempty"`
@@ -3050,10 +3357,18 @@ func (x *Message3804) String() string {
 func (*Message3804) ProtoMessage() {}
 
 func (x *Message3804) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[34].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[34]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message3804) XXX_Methods() *protoiface.Methods {
+func (x *Message3804) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[34].Methods()
 }
 
@@ -3112,6 +3427,7 @@ func (x *Message3804) GetField3824() Enum3783 {
 }
 
 type Message12903 struct {
+	state         protoimpl.MessageState
 	Field12905    *string        `protobuf:"bytes,1,opt,name=field12905" json:"field12905,omitempty"`
 	Field12906    *Message8587   `protobuf:"bytes,2,opt,name=field12906" json:"field12906,omitempty"`
 	Field12907    []*Message8590 `protobuf:"bytes,3,rep,name=field12907" json:"field12907,omitempty"`
@@ -3130,10 +3446,18 @@ func (x *Message12903) String() string {
 func (*Message12903) ProtoMessage() {}
 
 func (x *Message12903) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[35].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[35]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message12903) XXX_Methods() *protoiface.Methods {
+func (x *Message12903) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[35].Methods()
 }
 
@@ -3164,6 +3488,7 @@ func (x *Message12903) GetField12907() []*Message8590 {
 }
 
 type Message37326 struct {
+	state         protoimpl.MessageState
 	Field37345    *string `protobuf:"bytes,1,req,name=field37345" json:"field37345,omitempty"`
 	Field37346    *string `protobuf:"bytes,2,opt,name=field37346" json:"field37346,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -3181,10 +3506,18 @@ func (x *Message37326) String() string {
 func (*Message37326) ProtoMessage() {}
 
 func (x *Message37326) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[36].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[36]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message37326) XXX_Methods() *protoiface.Methods {
+func (x *Message37326) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[36].Methods()
 }
 
@@ -3208,6 +3541,7 @@ func (x *Message37326) GetField37346() string {
 }
 
 type Message2356 struct {
+	state         protoimpl.MessageState
 	Field2368     *Message1374               `protobuf:"bytes,121,opt,name=field2368" json:"field2368,omitempty"`
 	Field2369     *uint64                    `protobuf:"varint,1,opt,name=field2369" json:"field2369,omitempty"`
 	Field2370     *int32                     `protobuf:"varint,2,opt,name=field2370" json:"field2370,omitempty"`
@@ -3254,10 +3588,18 @@ func (x *Message2356) String() string {
 func (*Message2356) ProtoMessage() {}
 
 func (x *Message2356) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[37].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[37]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2356) XXX_Methods() *protoiface.Methods {
+func (x *Message2356) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[37].Methods()
 }
 
@@ -3484,6 +3826,7 @@ func (x *Message2356) GetField2398() string {
 }
 
 type Message0 struct {
+	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
 	extensionFields protoimpl.ExtensionFields
@@ -3500,10 +3843,18 @@ func (x *Message0) String() string {
 func (*Message0) ProtoMessage() {}
 
 func (x *Message0) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[38].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[38]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message0) XXX_Methods() *protoiface.Methods {
+func (x *Message0) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[38].Methods()
 }
 
@@ -3522,6 +3873,7 @@ func (*Message0) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 }
 
 type Message971 struct {
+	state         protoimpl.MessageState
 	Field972      *string `protobuf:"bytes,1,opt,name=field972" json:"field972,omitempty"`
 	Field973      *int32  `protobuf:"varint,2,opt,name=field973" json:"field973,omitempty"`
 	Field974      *bool   `protobuf:"varint,3,opt,name=field974" json:"field974,omitempty"`
@@ -3540,10 +3892,18 @@ func (x *Message971) String() string {
 func (*Message971) ProtoMessage() {}
 
 func (x *Message971) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[39].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[39]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message971) XXX_Methods() *protoiface.Methods {
+func (x *Message971) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[39].Methods()
 }
 
@@ -3574,6 +3934,7 @@ func (x *Message971) GetField974() bool {
 }
 
 type Message176_Message178 struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -3589,10 +3950,18 @@ func (x *Message176_Message178) String() string {
 func (*Message176_Message178) ProtoMessage() {}
 
 func (x *Message176_Message178) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[40].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[40]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message176_Message178) XXX_Methods() *protoiface.Methods {
+func (x *Message176_Message178) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[40].Methods()
 }
 
@@ -3602,6 +3971,7 @@ func (*Message176_Message178) Descriptor() ([]byte, []int) {
 }
 
 type Message3069_Message3070 struct {
+	state         protoimpl.MessageState
 	Field3378     *Enum3071 `protobuf:"varint,4,req,name=field3378,enum=benchmarks.google_message4.Enum3071" json:"field3378,omitempty"`
 	Field3379     []byte    `protobuf:"bytes,5,req,name=field3379" json:"field3379,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -3619,10 +3989,18 @@ func (x *Message3069_Message3070) String() string {
 func (*Message3069_Message3070) ProtoMessage() {}
 
 func (x *Message3069_Message3070) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[41].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[41]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message3069_Message3070) XXX_Methods() *protoiface.Methods {
+func (x *Message3069_Message3070) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[41].Methods()
 }
 
@@ -3646,6 +4024,7 @@ func (x *Message3069_Message3070) GetField3379() []byte {
 }
 
 type Message2356_Message2357 struct {
+	state         protoimpl.MessageState
 	Field2399     *int64 `protobuf:"varint,9,opt,name=field2399" json:"field2399,omitempty"`
 	Field2400     *int32 `protobuf:"varint,10,opt,name=field2400" json:"field2400,omitempty"`
 	Field2401     *int32 `protobuf:"varint,11,opt,name=field2401" json:"field2401,omitempty"`
@@ -3673,10 +4052,18 @@ func (x *Message2356_Message2357) String() string {
 func (*Message2356_Message2357) ProtoMessage() {}
 
 func (x *Message2356_Message2357) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[42].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[42]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2356_Message2357) XXX_Methods() *protoiface.Methods {
+func (x *Message2356_Message2357) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[42].Methods()
 }
 
@@ -3770,6 +4157,7 @@ func (x *Message2356_Message2357) GetField2410() []byte {
 }
 
 type Message2356_Message2358 struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -3785,10 +4173,18 @@ func (x *Message2356_Message2358) String() string {
 func (*Message2356_Message2358) ProtoMessage() {}
 
 func (x *Message2356_Message2358) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[43].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[43]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2356_Message2358) XXX_Methods() *protoiface.Methods {
+func (x *Message2356_Message2358) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[43].Methods()
 }
 
@@ -3798,6 +4194,7 @@ func (*Message2356_Message2358) Descriptor() ([]byte, []int) {
 }
 
 type Message2356_Message2359 struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -3813,10 +4210,18 @@ func (x *Message2356_Message2359) String() string {
 func (*Message2356_Message2359) ProtoMessage() {}
 
 func (x *Message2356_Message2359) ProtoReflect() protoreflect.Message {
-	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[44].MessageOf(x)
+	mi := &file_datasets_google_message4_benchmark_message4_proto_msgTypes[44]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2356_Message2359) XXX_Methods() *protoiface.Methods {
+func (x *Message2356_Message2359) XXX_Methods() *protoiface.Methods {
 	return file_datasets_google_message4_benchmark_message4_proto_msgTypes[44].Methods()
 }
 
@@ -5120,9 +5525,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GoogleMessage4); i {
-			case 16:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 17:
+				return &v.sizeCache
+			case 18:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5130,9 +5537,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message37489); i {
-			case 21:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 22:
+				return &v.sizeCache
+			case 23:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5140,9 +5549,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message7319); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5150,9 +5561,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message12717); i {
-			case 9:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 10:
+				return &v.sizeCache
+			case 11:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5160,9 +5573,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message37331); i {
-			case 4:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 5:
+				return &v.sizeCache
+			case 6:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5170,9 +5585,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message8815); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5180,9 +5597,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message7330); i {
-			case 6:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 7:
+				return &v.sizeCache
+			case 8:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5190,9 +5609,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message12960); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5200,9 +5621,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message176); i {
-			case 59:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 60:
+				return &v.sizeCache
+			case 61:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5210,9 +5633,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message8817); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5220,9 +5645,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message8835); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5230,9 +5657,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message37333); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5240,9 +5669,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message13000); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5250,9 +5681,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message37335); i {
-			case 4:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 5:
+				return &v.sizeCache
+			case 6:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5260,9 +5693,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message8848); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5270,9 +5705,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message13035); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5280,9 +5717,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message8856); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5290,9 +5729,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message12908); i {
-			case 6:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 7:
+				return &v.sizeCache
+			case 8:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5300,9 +5741,11 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message12910); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5310,240 +5753,8 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message37327); i {
-			case 11:
-				return &v.sizeCache
-			case 12:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message37329); i {
-			case 5:
-				return &v.sizeCache
-			case 6:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message2517); i {
-			case 5:
-				return &v.sizeCache
-			case 6:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message12748); i {
-			case 4:
-				return &v.sizeCache
-			case 5:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message12687); i {
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message11948); i {
-			case 3:
-				return &v.sizeCache
-			case 4:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message11976); i {
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message7320); i {
-			case 2:
-				return &v.sizeCache
-			case 3:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message3069); i {
-			case 3:
-				return &v.sizeCache
-			case 4:
-				return &v.unknownFields
-			case 5:
-				return &v.extensionFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message12948); i {
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message8768); i {
-			case 7:
-				return &v.sizeCache
-			case 8:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message12979); i {
-			case 7:
-				return &v.sizeCache
-			case 8:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message37173); i {
-			case 25:
-				return &v.sizeCache
-			case 26:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message12799); i {
-			case 8:
-				return &v.sizeCache
-			case 9:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message12870); i {
-			case 20:
-				return &v.sizeCache
-			case 21:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message3804); i {
-			case 7:
-				return &v.sizeCache
-			case 8:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message12903); i {
-			case 3:
-				return &v.sizeCache
-			case 4:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message37326); i {
-			case 2:
-				return &v.sizeCache
-			case 3:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message2356); i {
-			case 31:
-				return &v.sizeCache
-			case 32:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message0); i {
 			case 0:
-				return &v.sizeCache
-			case 1:
-				return &v.unknownFields
-			case 2:
-				return &v.extensionFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message971); i {
-			case 3:
-				return &v.sizeCache
-			case 4:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message176_Message178); i {
-			case 0:
-				return &v.sizeCache
-			case 1:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message3069_Message3070); i {
-			case 2:
-				return &v.sizeCache
-			case 3:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_datasets_google_message4_benchmark_message4_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message2356_Message2357); i {
+				return &v.state
 			case 12:
 				return &v.sizeCache
 			case 13:
@@ -5552,11 +5763,293 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 				return nil
 			}
 		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message37329); i {
+			case 0:
+				return &v.state
+			case 6:
+				return &v.sizeCache
+			case 7:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message2517); i {
+			case 0:
+				return &v.state
+			case 6:
+				return &v.sizeCache
+			case 7:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message12748); i {
+			case 0:
+				return &v.state
+			case 5:
+				return &v.sizeCache
+			case 6:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message12687); i {
+			case 0:
+				return &v.state
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message11948); i {
+			case 0:
+				return &v.state
+			case 4:
+				return &v.sizeCache
+			case 5:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message11976); i {
+			case 0:
+				return &v.state
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message7320); i {
+			case 0:
+				return &v.state
+			case 3:
+				return &v.sizeCache
+			case 4:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message3069); i {
+			case 0:
+				return &v.state
+			case 4:
+				return &v.sizeCache
+			case 5:
+				return &v.unknownFields
+			case 6:
+				return &v.extensionFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message12948); i {
+			case 0:
+				return &v.state
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message8768); i {
+			case 0:
+				return &v.state
+			case 8:
+				return &v.sizeCache
+			case 9:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message12979); i {
+			case 0:
+				return &v.state
+			case 8:
+				return &v.sizeCache
+			case 9:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message37173); i {
+			case 0:
+				return &v.state
+			case 26:
+				return &v.sizeCache
+			case 27:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message12799); i {
+			case 0:
+				return &v.state
+			case 9:
+				return &v.sizeCache
+			case 10:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message12870); i {
+			case 0:
+				return &v.state
+			case 21:
+				return &v.sizeCache
+			case 22:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message3804); i {
+			case 0:
+				return &v.state
+			case 8:
+				return &v.sizeCache
+			case 9:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message12903); i {
+			case 0:
+				return &v.state
+			case 4:
+				return &v.sizeCache
+			case 5:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message37326); i {
+			case 0:
+				return &v.state
+			case 3:
+				return &v.sizeCache
+			case 4:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message2356); i {
+			case 0:
+				return &v.state
+			case 32:
+				return &v.sizeCache
+			case 33:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message0); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			case 3:
+				return &v.extensionFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message971); i {
+			case 0:
+				return &v.state
+			case 4:
+				return &v.sizeCache
+			case 5:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message176_Message178); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message3069_Message3070); i {
+			case 0:
+				return &v.state
+			case 3:
+				return &v.sizeCache
+			case 4:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message4_benchmark_message4_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message2356_Message2357); i {
+			case 0:
+				return &v.state
+			case 13:
+				return &v.sizeCache
+			case 14:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message2356_Message2358); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -5565,8 +6058,10 @@ func file_datasets_google_message4_benchmark_message4_proto_init() {
 		file_datasets_google_message4_benchmark_message4_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message2356_Message2359); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

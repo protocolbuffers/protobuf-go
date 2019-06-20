@@ -222,6 +222,7 @@ func (TestDeprecatedMessage_DeprecatedEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type TestAllTypes struct {
+	state                  protoimpl.MessageState
 	OptionalInt32          *int32                                 `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty"`
 	OptionalInt64          *int64                                 `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64" json:"optional_int64,omitempty"`
 	OptionalUint32         *uint32                                `protobuf:"varint,3,opt,name=optional_uint32,json=optionalUint32" json:"optional_uint32,omitempty"`
@@ -327,10 +328,18 @@ func (x *TestAllTypes) String() string {
 func (*TestAllTypes) ProtoMessage() {}
 
 func (x *TestAllTypes) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[0].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypes) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypes) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[0].Methods()
 }
 
@@ -1035,6 +1044,7 @@ func (*TestAllTypes_OneofEnum) isTestAllTypes_OneofField() {}
 
 // Deprecated: Do not use.
 type TestDeprecatedMessage struct {
+	state           protoimpl.MessageState
 	DeprecatedInt32 *int32 `protobuf:"varint,1,opt,name=deprecated_int32,json=deprecatedInt32" json:"deprecated_int32,omitempty"` // Deprecated: Do not use.
 	// Types that are valid to be assigned to DeprecatedOneof:
 	//	*TestDeprecatedMessage_DeprecatedOneofField
@@ -1054,10 +1064,18 @@ func (x *TestDeprecatedMessage) String() string {
 func (*TestDeprecatedMessage) ProtoMessage() {}
 
 func (x *TestDeprecatedMessage) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[1].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestDeprecatedMessage) XXX_Methods() *protoiface.Methods {
+func (x *TestDeprecatedMessage) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[1].Methods()
 }
 
@@ -1100,6 +1118,7 @@ type TestDeprecatedMessage_DeprecatedOneofField struct {
 func (*TestDeprecatedMessage_DeprecatedOneofField) isTestDeprecatedMessage_DeprecatedOneof() {}
 
 type ForeignMessage struct {
+	state         protoimpl.MessageState
 	C             *int32 `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
 	D             *int32 `protobuf:"varint,2,opt,name=d" json:"d,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -1117,10 +1136,18 @@ func (x *ForeignMessage) String() string {
 func (*ForeignMessage) ProtoMessage() {}
 
 func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[2].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ForeignMessage) XXX_Methods() *protoiface.Methods {
+func (x *ForeignMessage) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[2].Methods()
 }
 
@@ -1144,6 +1171,7 @@ func (x *ForeignMessage) GetD() int32 {
 }
 
 type TestReservedFields struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -1159,10 +1187,18 @@ func (x *TestReservedFields) String() string {
 func (*TestReservedFields) ProtoMessage() {}
 
 func (x *TestReservedFields) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[3].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestReservedFields) XXX_Methods() *protoiface.Methods {
+func (x *TestReservedFields) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[3].Methods()
 }
 
@@ -1172,6 +1208,7 @@ func (*TestReservedFields) Descriptor() ([]byte, []int) {
 }
 
 type TestAllExtensions struct {
+	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
 	extensionFields protoimpl.ExtensionFields
@@ -1188,10 +1225,18 @@ func (x *TestAllExtensions) String() string {
 func (*TestAllExtensions) ProtoMessage() {}
 
 func (x *TestAllExtensions) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[4].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllExtensions) XXX_Methods() *protoiface.Methods {
+func (x *TestAllExtensions) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[4].Methods()
 }
 
@@ -1210,6 +1255,7 @@ func (*TestAllExtensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 }
 
 type OptionalGroupExtension struct {
+	state         protoimpl.MessageState
 	A             *int32 `protobuf:"varint,17,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1226,10 +1272,18 @@ func (x *OptionalGroupExtension) String() string {
 func (*OptionalGroupExtension) ProtoMessage() {}
 
 func (x *OptionalGroupExtension) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[5].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *OptionalGroupExtension) XXX_Methods() *protoiface.Methods {
+func (x *OptionalGroupExtension) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[5].Methods()
 }
 
@@ -1246,6 +1300,7 @@ func (x *OptionalGroupExtension) GetA() int32 {
 }
 
 type RepeatedGroupExtension struct {
+	state         protoimpl.MessageState
 	A             *int32 `protobuf:"varint,47,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1262,10 +1317,18 @@ func (x *RepeatedGroupExtension) String() string {
 func (*RepeatedGroupExtension) ProtoMessage() {}
 
 func (x *RepeatedGroupExtension) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[6].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *RepeatedGroupExtension) XXX_Methods() *protoiface.Methods {
+func (x *RepeatedGroupExtension) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[6].Methods()
 }
 
@@ -1282,6 +1345,7 @@ func (x *RepeatedGroupExtension) GetA() int32 {
 }
 
 type TestNestedExtension struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -1297,10 +1361,18 @@ func (x *TestNestedExtension) String() string {
 func (*TestNestedExtension) ProtoMessage() {}
 
 func (x *TestNestedExtension) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[7].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestNestedExtension) XXX_Methods() *protoiface.Methods {
+func (x *TestNestedExtension) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[7].Methods()
 }
 
@@ -1310,6 +1382,7 @@ func (*TestNestedExtension) Descriptor() ([]byte, []int) {
 }
 
 type TestRequired struct {
+	state         protoimpl.MessageState
 	RequiredField *int32 `protobuf:"varint,1,req,name=required_field,json=requiredField" json:"required_field,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1326,10 +1399,18 @@ func (x *TestRequired) String() string {
 func (*TestRequired) ProtoMessage() {}
 
 func (x *TestRequired) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[8].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestRequired) XXX_Methods() *protoiface.Methods {
+func (x *TestRequired) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[8].Methods()
 }
 
@@ -1346,6 +1427,7 @@ func (x *TestRequired) GetRequiredField() int32 {
 }
 
 type TestRequiredForeign struct {
+	state           protoimpl.MessageState
 	OptionalMessage *TestRequired           `protobuf:"bytes,1,opt,name=optional_message,json=optionalMessage" json:"optional_message,omitempty"`
 	RepeatedMessage []*TestRequired         `protobuf:"bytes,2,rep,name=repeated_message,json=repeatedMessage" json:"repeated_message,omitempty"`
 	MapMessage      map[int32]*TestRequired `protobuf:"bytes,3,rep,name=map_message,json=mapMessage" json:"map_message,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
@@ -1367,10 +1449,18 @@ func (x *TestRequiredForeign) String() string {
 func (*TestRequiredForeign) ProtoMessage() {}
 
 func (x *TestRequiredForeign) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[9].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestRequiredForeign) XXX_Methods() *protoiface.Methods {
+func (x *TestRequiredForeign) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[9].Methods()
 }
 
@@ -1425,6 +1515,7 @@ type TestRequiredForeign_OneofMessage struct {
 func (*TestRequiredForeign_OneofMessage) isTestRequiredForeign_OneofField() {}
 
 type TestRequiredGroupFields struct {
+	state         protoimpl.MessageState
 	Optionalgroup *TestRequiredGroupFields_OptionalGroup   `protobuf:"group,1,opt,name=OptionalGroup,json=optionalgroup" json:"optionalgroup,omitempty"`
 	Repeatedgroup []*TestRequiredGroupFields_RepeatedGroup `protobuf:"group,3,rep,name=RepeatedGroup,json=repeatedgroup" json:"repeatedgroup,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -1442,10 +1533,18 @@ func (x *TestRequiredGroupFields) String() string {
 func (*TestRequiredGroupFields) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[10].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestRequiredGroupFields) XXX_Methods() *protoiface.Methods {
+func (x *TestRequiredGroupFields) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[10].Methods()
 }
 
@@ -1469,6 +1568,7 @@ func (x *TestRequiredGroupFields) GetRepeatedgroup() []*TestRequiredGroupFields_
 }
 
 type TestWeak struct {
+	state         protoimpl.MessageState
 	WeakMessage   *weak.WeakImportMessage `protobuf:"bytes,1,opt,weak=goproto.proto.test.weak.WeakImportMessage,name=weak_message,json=weakMessage" json:"weak_message,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1485,10 +1585,18 @@ func (x *TestWeak) String() string {
 func (*TestWeak) ProtoMessage() {}
 
 func (x *TestWeak) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[11].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestWeak) XXX_Methods() *protoiface.Methods {
+func (x *TestWeak) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[11].Methods()
 }
 
@@ -1506,6 +1614,7 @@ func (x *TestWeak) GetWeakMessage() *weak.WeakImportMessage {
 
 // Test that RPC services work.
 type FooRequest struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -1521,10 +1630,18 @@ func (x *FooRequest) String() string {
 func (*FooRequest) ProtoMessage() {}
 
 func (x *FooRequest) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[12].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FooRequest) XXX_Methods() *protoiface.Methods {
+func (x *FooRequest) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[12].Methods()
 }
 
@@ -1534,6 +1651,7 @@ func (*FooRequest) Descriptor() ([]byte, []int) {
 }
 
 type FooResponse struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -1549,10 +1667,18 @@ func (x *FooResponse) String() string {
 func (*FooResponse) ProtoMessage() {}
 
 func (x *FooResponse) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[13].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FooResponse) XXX_Methods() *protoiface.Methods {
+func (x *FooResponse) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[13].Methods()
 }
 
@@ -1562,6 +1688,7 @@ func (*FooResponse) Descriptor() ([]byte, []int) {
 }
 
 type TestAllTypes_NestedMessage struct {
+	state         protoimpl.MessageState
 	A             *int32        `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
 	Corecursive   *TestAllTypes `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -1579,10 +1706,18 @@ func (x *TestAllTypes_NestedMessage) String() string {
 func (*TestAllTypes_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[14].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypes_NestedMessage) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypes_NestedMessage) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[14].Methods()
 }
 
@@ -1606,6 +1741,7 @@ func (x *TestAllTypes_NestedMessage) GetCorecursive() *TestAllTypes {
 }
 
 type TestAllTypes_OptionalGroup struct {
+	state         protoimpl.MessageState
 	A             *int32 `protobuf:"varint,17,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1622,10 +1758,18 @@ func (x *TestAllTypes_OptionalGroup) String() string {
 func (*TestAllTypes_OptionalGroup) ProtoMessage() {}
 
 func (x *TestAllTypes_OptionalGroup) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[15].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypes_OptionalGroup) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypes_OptionalGroup) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[15].Methods()
 }
 
@@ -1642,6 +1786,7 @@ func (x *TestAllTypes_OptionalGroup) GetA() int32 {
 }
 
 type TestAllTypes_RepeatedGroup struct {
+	state         protoimpl.MessageState
 	A             *int32 `protobuf:"varint,47,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1658,10 +1803,18 @@ func (x *TestAllTypes_RepeatedGroup) String() string {
 func (*TestAllTypes_RepeatedGroup) ProtoMessage() {}
 
 func (x *TestAllTypes_RepeatedGroup) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[16].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypes_RepeatedGroup) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypes_RepeatedGroup) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[16].Methods()
 }
 
@@ -1678,6 +1831,7 @@ func (x *TestAllTypes_RepeatedGroup) GetA() int32 {
 }
 
 type TestRequiredGroupFields_OptionalGroup struct {
+	state         protoimpl.MessageState
 	A             *int32 `protobuf:"varint,2,req,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1694,10 +1848,18 @@ func (x *TestRequiredGroupFields_OptionalGroup) String() string {
 func (*TestRequiredGroupFields_OptionalGroup) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields_OptionalGroup) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[35].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[35]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestRequiredGroupFields_OptionalGroup) XXX_Methods() *protoiface.Methods {
+func (x *TestRequiredGroupFields_OptionalGroup) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[35].Methods()
 }
 
@@ -1714,6 +1876,7 @@ func (x *TestRequiredGroupFields_OptionalGroup) GetA() int32 {
 }
 
 type TestRequiredGroupFields_RepeatedGroup struct {
+	state         protoimpl.MessageState
 	A             *int32 `protobuf:"varint,4,req,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1730,10 +1893,18 @@ func (x *TestRequiredGroupFields_RepeatedGroup) String() string {
 func (*TestRequiredGroupFields_RepeatedGroup) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields_RepeatedGroup) ProtoReflect() protoreflect.Message {
-	return file_test_test_proto_msgTypes[36].MessageOf(x)
+	mi := &file_test_test_proto_msgTypes[36]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestRequiredGroupFields_RepeatedGroup) XXX_Methods() *protoiface.Methods {
+func (x *TestRequiredGroupFields_RepeatedGroup) XXX_Methods() *protoiface.Methods {
 	return file_test_test_proto_msgTypes[36].Methods()
 }
 
@@ -3459,9 +3630,11 @@ func file_test_test_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_test_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypes); i {
-			case 79:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 80:
+				return &v.sizeCache
+			case 81:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3469,9 +3642,11 @@ func file_test_test_proto_init() {
 		}
 		file_test_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestDeprecatedMessage); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3479,9 +3654,11 @@ func file_test_test_proto_init() {
 		}
 		file_test_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ForeignMessage); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3490,8 +3667,10 @@ func file_test_test_proto_init() {
 		file_test_test_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestReservedFields); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3500,10 +3679,12 @@ func file_test_test_proto_init() {
 		file_test_test_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllExtensions); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 2:
+				return &v.unknownFields
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3511,9 +3692,11 @@ func file_test_test_proto_init() {
 		}
 		file_test_test_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*OptionalGroupExtension); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3521,9 +3704,11 @@ func file_test_test_proto_init() {
 		}
 		file_test_test_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RepeatedGroupExtension); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3532,15 +3717,7 @@ func file_test_test_proto_init() {
 		file_test_test_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestNestedExtension); i {
 			case 0:
-				return &v.sizeCache
-			case 1:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_test_test_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TestRequired); i {
+				return &v.state
 			case 1:
 				return &v.sizeCache
 			case 2:
@@ -3549,18 +3726,10 @@ func file_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_test_test_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TestRequiredForeign); i {
-			case 4:
-				return &v.sizeCache
-			case 5:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_test_test_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TestRequiredGroupFields); i {
+		file_test_test_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TestRequired); i {
+			case 0:
+				return &v.state
 			case 2:
 				return &v.sizeCache
 			case 3:
@@ -3569,11 +3738,37 @@ func file_test_test_proto_init() {
 				return nil
 			}
 		}
+		file_test_test_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TestRequiredForeign); i {
+			case 0:
+				return &v.state
+			case 5:
+				return &v.sizeCache
+			case 6:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_test_test_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TestRequiredGroupFields); i {
+			case 0:
+				return &v.state
+			case 3:
+				return &v.sizeCache
+			case 4:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 		file_test_test_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestWeak); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3582,8 +3777,10 @@ func file_test_test_proto_init() {
 		file_test_test_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FooRequest); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3592,8 +3789,10 @@ func file_test_test_proto_init() {
 		file_test_test_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FooResponse); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3601,6 +3800,20 @@ func file_test_test_proto_init() {
 		}
 		file_test_test_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypes_NestedMessage); i {
+			case 0:
+				return &v.state
+			case 3:
+				return &v.sizeCache
+			case 4:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_test_test_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TestAllTypes_OptionalGroup); i {
+			case 0:
+				return &v.state
 			case 2:
 				return &v.sizeCache
 			case 3:
@@ -3609,21 +3822,13 @@ func file_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_test_test_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TestAllTypes_OptionalGroup); i {
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
 		file_test_test_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypes_RepeatedGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3631,9 +3836,11 @@ func file_test_test_proto_init() {
 		}
 		file_test_test_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestRequiredGroupFields_OptionalGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3641,9 +3848,11 @@ func file_test_test_proto_init() {
 		}
 		file_test_test_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestRequiredGroupFields_RepeatedGroup); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

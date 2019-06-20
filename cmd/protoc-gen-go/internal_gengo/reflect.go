@@ -293,12 +293,25 @@ func genReflectMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 
 	// ProtoReflect method.
 	g.P("func (x *", message.GoIdent, ") ProtoReflect() ", protoreflectPackage.Ident("Message"), " {")
-	g.P("return ", typesVar, "[", idx, "].MessageOf(x)")
+	g.P("mi := &", typesVar, "[", idx, "]")
+	if generateMessateStateFields {
+		g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " && x != nil {")
+		g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
+		g.P("if ms.LoadMessageInfo() == nil {")
+		g.P("ms.StoreMessageInfo(mi)")
+		g.P("}")
+		g.P("return ms")
+		g.P("}")
+	}
+	g.P("return mi.MessageOf(x)")
 	g.P("}")
 	g.P()
-	g.P("func (m *", message.GoIdent, ") XXX_Methods() *", protoifacePackage.Ident("Methods"), " {")
+
+	// XXX_Methods method.
+	g.P("func (x *", message.GoIdent, ") XXX_Methods() *", protoifacePackage.Ident("Methods"), " {")
 	g.P("return ", typesVar, "[", idx, "].Methods()")
 	g.P("}")
+	g.P()
 }
 
 func fileVarName(f *protogen.File, suffix string) string {

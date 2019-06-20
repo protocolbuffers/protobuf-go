@@ -9,9 +9,13 @@ package impl
 import (
 	"fmt"
 	"reflect"
+	"sync"
 )
 
 const UnsafeEnabled = false
+
+// Pointer is an opaque pointer type.
+type Pointer interface{}
 
 // offset represents the offset to a struct field, accessible from a pointer.
 // The offset is the field index into a struct.
@@ -45,6 +49,11 @@ var zeroOffset = offset{index: 0}
 
 // pointer is an abstract representation of a pointer to a struct or field.
 type pointer struct{ v reflect.Value }
+
+// pointerOf returns p as a pointer.
+func pointerOf(p Pointer) pointer {
+	return pointerOfIface(p)
+}
 
 // pointerOfValue returns v as a pointer.
 func pointerOfValue(v reflect.Value) pointer {
@@ -145,4 +154,22 @@ func (p pointer) AppendPointerSlice(v pointer) {
 // SetPointer sets *p to v.
 func (p pointer) SetPointer(v pointer) {
 	p.v.Elem().Set(v.v)
+}
+
+func (Export) MessageStateOf(p Pointer) *messageState     { panic("not supported") }
+func (ms *messageState) pointer() pointer                 { panic("not supported") }
+func (ms *messageState) LoadMessageInfo() *MessageInfo    { panic("not supported") }
+func (ms *messageState) StoreMessageInfo(mi *MessageInfo) { panic("not supported") }
+
+type atomicNilMessage struct {
+	once sync.Once
+	m    messageReflectWrapper
+}
+
+func (m *atomicNilMessage) Init(mi *MessageInfo) *messageReflectWrapper {
+	m.once.Do(func() {
+		m.m.p = pointerOfIface(reflect.Zero(mi.GoType).Interface())
+		m.m.mi = mi
+	})
+	return &m.m
 }

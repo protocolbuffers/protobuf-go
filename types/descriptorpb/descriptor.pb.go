@@ -405,6 +405,7 @@ func (MethodOptions_IdempotencyLevel) EnumDescriptor() ([]byte, []int) {
 // The protocol compiler can output a FileDescriptorSet containing the .proto
 // files it parses.
 type FileDescriptorSet struct {
+	state         protoimpl.MessageState
 	File          []*FileDescriptorProto `protobuf:"bytes,1,rep,name=file" json:"file,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -421,10 +422,18 @@ func (x *FileDescriptorSet) String() string {
 func (*FileDescriptorSet) ProtoMessage() {}
 
 func (x *FileDescriptorSet) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FileDescriptorSet) XXX_Methods() *protoiface.Methods {
+func (x *FileDescriptorSet) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[0].Methods()
 }
 
@@ -442,6 +451,7 @@ func (x *FileDescriptorSet) GetFile() []*FileDescriptorProto {
 
 // Describes a complete .proto file.
 type FileDescriptorProto struct {
+	state   protoimpl.MessageState
 	Name    *string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Package *string `protobuf:"bytes,2,opt,name=package" json:"package,omitempty"`
 	// Names of files imported by this file.
@@ -480,10 +490,18 @@ func (x *FileDescriptorProto) String() string {
 func (*FileDescriptorProto) ProtoMessage() {}
 
 func (x *FileDescriptorProto) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[1].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FileDescriptorProto) XXX_Methods() *protoiface.Methods {
+func (x *FileDescriptorProto) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[1].Methods()
 }
 
@@ -578,6 +596,7 @@ func (x *FileDescriptorProto) GetSyntax() string {
 
 // Describes a message type.
 type DescriptorProto struct {
+	state          protoimpl.MessageState
 	Name           *string                           `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Field          []*FieldDescriptorProto           `protobuf:"bytes,2,rep,name=field" json:"field,omitempty"`
 	Extension      []*FieldDescriptorProto           `protobuf:"bytes,6,rep,name=extension" json:"extension,omitempty"`
@@ -605,10 +624,18 @@ func (x *DescriptorProto) String() string {
 func (*DescriptorProto) ProtoMessage() {}
 
 func (x *DescriptorProto) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[2].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *DescriptorProto) XXX_Methods() *protoiface.Methods {
+func (x *DescriptorProto) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[2].Methods()
 }
 
@@ -688,6 +715,7 @@ func (x *DescriptorProto) GetReservedName() []string {
 }
 
 type ExtensionRangeOptions struct {
+	state protoimpl.MessageState
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
@@ -706,10 +734,18 @@ func (x *ExtensionRangeOptions) String() string {
 func (*ExtensionRangeOptions) ProtoMessage() {}
 
 func (x *ExtensionRangeOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[3].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ExtensionRangeOptions) XXX_Methods() *protoiface.Methods {
+func (x *ExtensionRangeOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[3].Methods()
 }
 
@@ -736,6 +772,7 @@ func (x *ExtensionRangeOptions) GetUninterpretedOption() []*UninterpretedOption 
 
 // Describes a field within a message.
 type FieldDescriptorProto struct {
+	state  protoimpl.MessageState
 	Name   *string                     `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Number *int32                      `protobuf:"varint,3,opt,name=number" json:"number,omitempty"`
 	Label  *FieldDescriptorProto_Label `protobuf:"varint,4,opt,name=label,enum=google.protobuf.FieldDescriptorProto_Label" json:"label,omitempty"`
@@ -781,10 +818,18 @@ func (x *FieldDescriptorProto) String() string {
 func (*FieldDescriptorProto) ProtoMessage() {}
 
 func (x *FieldDescriptorProto) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[4].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldDescriptorProto) XXX_Methods() *protoiface.Methods {
+func (x *FieldDescriptorProto) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[4].Methods()
 }
 
@@ -865,6 +910,7 @@ func (x *FieldDescriptorProto) GetOptions() *FieldOptions {
 
 // Describes a oneof.
 type OneofDescriptorProto struct {
+	state         protoimpl.MessageState
 	Name          *string       `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Options       *OneofOptions `protobuf:"bytes,2,opt,name=options" json:"options,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -882,10 +928,18 @@ func (x *OneofDescriptorProto) String() string {
 func (*OneofDescriptorProto) ProtoMessage() {}
 
 func (x *OneofDescriptorProto) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[5].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *OneofDescriptorProto) XXX_Methods() *protoiface.Methods {
+func (x *OneofDescriptorProto) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[5].Methods()
 }
 
@@ -910,6 +964,7 @@ func (x *OneofDescriptorProto) GetOptions() *OneofOptions {
 
 // Describes an enum type.
 type EnumDescriptorProto struct {
+	state   protoimpl.MessageState
 	Name    *string                     `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Value   []*EnumValueDescriptorProto `protobuf:"bytes,2,rep,name=value" json:"value,omitempty"`
 	Options *EnumOptions                `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
@@ -935,10 +990,18 @@ func (x *EnumDescriptorProto) String() string {
 func (*EnumDescriptorProto) ProtoMessage() {}
 
 func (x *EnumDescriptorProto) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[6].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *EnumDescriptorProto) XXX_Methods() *protoiface.Methods {
+func (x *EnumDescriptorProto) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[6].Methods()
 }
 
@@ -984,6 +1047,7 @@ func (x *EnumDescriptorProto) GetReservedName() []string {
 
 // Describes a value within an enum.
 type EnumValueDescriptorProto struct {
+	state         protoimpl.MessageState
 	Name          *string           `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Number        *int32            `protobuf:"varint,2,opt,name=number" json:"number,omitempty"`
 	Options       *EnumValueOptions `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
@@ -1002,10 +1066,18 @@ func (x *EnumValueDescriptorProto) String() string {
 func (*EnumValueDescriptorProto) ProtoMessage() {}
 
 func (x *EnumValueDescriptorProto) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[7].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *EnumValueDescriptorProto) XXX_Methods() *protoiface.Methods {
+func (x *EnumValueDescriptorProto) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[7].Methods()
 }
 
@@ -1037,6 +1109,7 @@ func (x *EnumValueDescriptorProto) GetOptions() *EnumValueOptions {
 
 // Describes a service.
 type ServiceDescriptorProto struct {
+	state         protoimpl.MessageState
 	Name          *string                  `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Method        []*MethodDescriptorProto `protobuf:"bytes,2,rep,name=method" json:"method,omitempty"`
 	Options       *ServiceOptions          `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
@@ -1055,10 +1128,18 @@ func (x *ServiceDescriptorProto) String() string {
 func (*ServiceDescriptorProto) ProtoMessage() {}
 
 func (x *ServiceDescriptorProto) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[8].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ServiceDescriptorProto) XXX_Methods() *protoiface.Methods {
+func (x *ServiceDescriptorProto) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[8].Methods()
 }
 
@@ -1090,7 +1171,8 @@ func (x *ServiceDescriptorProto) GetOptions() *ServiceOptions {
 
 // Describes a method of a service.
 type MethodDescriptorProto struct {
-	Name *string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	state protoimpl.MessageState
+	Name  *string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	// Input and output type names.  These are resolved in the same way as
 	// FieldDescriptorProto.type_name, but must refer to a message type.
 	InputType  *string        `protobuf:"bytes,2,opt,name=input_type,json=inputType" json:"input_type,omitempty"`
@@ -1115,10 +1197,18 @@ func (x *MethodDescriptorProto) String() string {
 func (*MethodDescriptorProto) ProtoMessage() {}
 
 func (x *MethodDescriptorProto) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[9].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *MethodDescriptorProto) XXX_Methods() *protoiface.Methods {
+func (x *MethodDescriptorProto) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[9].Methods()
 }
 
@@ -1173,6 +1263,7 @@ func (x *MethodDescriptorProto) GetServerStreaming() bool {
 }
 
 type FileOptions struct {
+	state protoimpl.MessageState
 	// Sets the Java package where classes generated from this .proto will be
 	// placed.  By default, the proto package is used, but this is often
 	// inappropriate because proto packages do not normally start with backwards
@@ -1273,10 +1364,18 @@ func (x *FileOptions) String() string {
 func (*FileOptions) ProtoMessage() {}
 
 func (x *FileOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[10].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FileOptions) XXX_Methods() *protoiface.Methods {
+func (x *FileOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[10].Methods()
 }
 
@@ -1453,6 +1552,7 @@ func (x *FileOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type MessageOptions struct {
+	state protoimpl.MessageState
 	// Set true to use the old proto1 MessageSet wire format for extensions.
 	// This is provided for backwards-compatibility with the MessageSet wire
 	// format.  You should not use this for any other reason:  It's less
@@ -1521,10 +1621,18 @@ func (x *MessageOptions) String() string {
 func (*MessageOptions) ProtoMessage() {}
 
 func (x *MessageOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[11].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *MessageOptions) XXX_Methods() *protoiface.Methods {
+func (x *MessageOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[11].Methods()
 }
 
@@ -1582,6 +1690,7 @@ func (x *MessageOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type FieldOptions struct {
+	state protoimpl.MessageState
 	// The ctype option instructs the C++ code generator to use a different
 	// representation of the field than it normally would.  See the specific
 	// options below.  This option is not yet implemented in the open source
@@ -1659,10 +1768,18 @@ func (x *FieldOptions) String() string {
 func (*FieldOptions) ProtoMessage() {}
 
 func (x *FieldOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[12].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldOptions) XXX_Methods() *protoiface.Methods {
+func (x *FieldOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[12].Methods()
 }
 
@@ -1736,6 +1853,7 @@ func (x *FieldOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type OneofOptions struct {
+	state protoimpl.MessageState
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
@@ -1754,10 +1872,18 @@ func (x *OneofOptions) String() string {
 func (*OneofOptions) ProtoMessage() {}
 
 func (x *OneofOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[13].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *OneofOptions) XXX_Methods() *protoiface.Methods {
+func (x *OneofOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[13].Methods()
 }
 
@@ -1783,6 +1909,7 @@ func (x *OneofOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type EnumOptions struct {
+	state protoimpl.MessageState
 	// Set this option to true to allow mapping different tag names to the same
 	// value.
 	AllowAlias *bool `protobuf:"varint,2,opt,name=allow_alias,json=allowAlias" json:"allow_alias,omitempty"`
@@ -1809,10 +1936,18 @@ func (x *EnumOptions) String() string {
 func (*EnumOptions) ProtoMessage() {}
 
 func (x *EnumOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[14].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *EnumOptions) XXX_Methods() *protoiface.Methods {
+func (x *EnumOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[14].Methods()
 }
 
@@ -1854,6 +1989,7 @@ func (x *EnumOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type EnumValueOptions struct {
+	state protoimpl.MessageState
 	// Is this enum value deprecated?
 	// Depending on the target platform, this can emit Deprecated annotations
 	// for the enum value, or it will be completely ignored; in the very least,
@@ -1877,10 +2013,18 @@ func (x *EnumValueOptions) String() string {
 func (*EnumValueOptions) ProtoMessage() {}
 
 func (x *EnumValueOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[15].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *EnumValueOptions) XXX_Methods() *protoiface.Methods {
+func (x *EnumValueOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[15].Methods()
 }
 
@@ -1915,6 +2059,7 @@ func (x *EnumValueOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type ServiceOptions struct {
+	state protoimpl.MessageState
 	// Is this service deprecated?
 	// Depending on the target platform, this can emit Deprecated annotations
 	// for the service, or it will be completely ignored; in the very least,
@@ -1938,10 +2083,18 @@ func (x *ServiceOptions) String() string {
 func (*ServiceOptions) ProtoMessage() {}
 
 func (x *ServiceOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[16].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ServiceOptions) XXX_Methods() *protoiface.Methods {
+func (x *ServiceOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[16].Methods()
 }
 
@@ -1976,6 +2129,7 @@ func (x *ServiceOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type MethodOptions struct {
+	state protoimpl.MessageState
 	// Is this method deprecated?
 	// Depending on the target platform, this can emit Deprecated annotations
 	// for the method, or it will be completely ignored; in the very least,
@@ -2000,10 +2154,18 @@ func (x *MethodOptions) String() string {
 func (*MethodOptions) ProtoMessage() {}
 
 func (x *MethodOptions) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[17].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *MethodOptions) XXX_Methods() *protoiface.Methods {
+func (x *MethodOptions) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[17].Methods()
 }
 
@@ -2052,7 +2214,8 @@ func (x *MethodOptions) GetUninterpretedOption() []*UninterpretedOption {
 // or produced by Descriptor::CopyTo()) will never have UninterpretedOptions
 // in them.
 type UninterpretedOption struct {
-	Name []*UninterpretedOption_NamePart `protobuf:"bytes,2,rep,name=name" json:"name,omitempty"`
+	state protoimpl.MessageState
+	Name  []*UninterpretedOption_NamePart `protobuf:"bytes,2,rep,name=name" json:"name,omitempty"`
 	// The value of the uninterpreted option, in whatever type the tokenizer
 	// identified it as during parsing. Exactly one of these should be set.
 	IdentifierValue  *string  `protobuf:"bytes,3,opt,name=identifier_value,json=identifierValue" json:"identifier_value,omitempty"`
@@ -2076,10 +2239,18 @@ func (x *UninterpretedOption) String() string {
 func (*UninterpretedOption) ProtoMessage() {}
 
 func (x *UninterpretedOption) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[18].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *UninterpretedOption) XXX_Methods() *protoiface.Methods {
+func (x *UninterpretedOption) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[18].Methods()
 }
 
@@ -2140,6 +2311,7 @@ func (x *UninterpretedOption) GetAggregateValue() string {
 // Encapsulates information about the original source file from which a
 // FileDescriptorProto was generated.
 type SourceCodeInfo struct {
+	state protoimpl.MessageState
 	// A Location identifies a piece of source code in a .proto file which
 	// corresponds to a particular definition.  This information is intended
 	// to be useful to IDEs, code indexers, documentation generators, and similar
@@ -2199,10 +2371,18 @@ func (x *SourceCodeInfo) String() string {
 func (*SourceCodeInfo) ProtoMessage() {}
 
 func (x *SourceCodeInfo) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[19].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[19]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *SourceCodeInfo) XXX_Methods() *protoiface.Methods {
+func (x *SourceCodeInfo) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[19].Methods()
 }
 
@@ -2222,6 +2402,7 @@ func (x *SourceCodeInfo) GetLocation() []*SourceCodeInfo_Location {
 // file. A GeneratedCodeInfo message is associated with only one generated
 // source file, but may contain references to different source .proto files.
 type GeneratedCodeInfo struct {
+	state protoimpl.MessageState
 	// An Annotation connects some span of text in generated code to an element
 	// of its generating .proto file.
 	Annotation    []*GeneratedCodeInfo_Annotation `protobuf:"bytes,1,rep,name=annotation" json:"annotation,omitempty"`
@@ -2240,10 +2421,18 @@ func (x *GeneratedCodeInfo) String() string {
 func (*GeneratedCodeInfo) ProtoMessage() {}
 
 func (x *GeneratedCodeInfo) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[20].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[20]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *GeneratedCodeInfo) XXX_Methods() *protoiface.Methods {
+func (x *GeneratedCodeInfo) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[20].Methods()
 }
 
@@ -2260,6 +2449,7 @@ func (x *GeneratedCodeInfo) GetAnnotation() []*GeneratedCodeInfo_Annotation {
 }
 
 type DescriptorProto_ExtensionRange struct {
+	state         protoimpl.MessageState
 	Start         *int32                 `protobuf:"varint,1,opt,name=start" json:"start,omitempty"`
 	End           *int32                 `protobuf:"varint,2,opt,name=end" json:"end,omitempty"`
 	Options       *ExtensionRangeOptions `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
@@ -2278,10 +2468,18 @@ func (x *DescriptorProto_ExtensionRange) String() string {
 func (*DescriptorProto_ExtensionRange) ProtoMessage() {}
 
 func (x *DescriptorProto_ExtensionRange) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[21].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[21]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *DescriptorProto_ExtensionRange) XXX_Methods() *protoiface.Methods {
+func (x *DescriptorProto_ExtensionRange) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[21].Methods()
 }
 
@@ -2315,6 +2513,7 @@ func (x *DescriptorProto_ExtensionRange) GetOptions() *ExtensionRangeOptions {
 // fields or extension ranges in the same message. Reserved ranges may
 // not overlap.
 type DescriptorProto_ReservedRange struct {
+	state         protoimpl.MessageState
 	Start         *int32 `protobuf:"varint,1,opt,name=start" json:"start,omitempty"`
 	End           *int32 `protobuf:"varint,2,opt,name=end" json:"end,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -2332,10 +2531,18 @@ func (x *DescriptorProto_ReservedRange) String() string {
 func (*DescriptorProto_ReservedRange) ProtoMessage() {}
 
 func (x *DescriptorProto_ReservedRange) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[22].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[22]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *DescriptorProto_ReservedRange) XXX_Methods() *protoiface.Methods {
+func (x *DescriptorProto_ReservedRange) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[22].Methods()
 }
 
@@ -2365,6 +2572,7 @@ func (x *DescriptorProto_ReservedRange) GetEnd() int32 {
 // is inclusive such that it can appropriately represent the entire int32
 // domain.
 type EnumDescriptorProto_EnumReservedRange struct {
+	state         protoimpl.MessageState
 	Start         *int32 `protobuf:"varint,1,opt,name=start" json:"start,omitempty"`
 	End           *int32 `protobuf:"varint,2,opt,name=end" json:"end,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -2382,10 +2590,18 @@ func (x *EnumDescriptorProto_EnumReservedRange) String() string {
 func (*EnumDescriptorProto_EnumReservedRange) ProtoMessage() {}
 
 func (x *EnumDescriptorProto_EnumReservedRange) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[23].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[23]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *EnumDescriptorProto_EnumReservedRange) XXX_Methods() *protoiface.Methods {
+func (x *EnumDescriptorProto_EnumReservedRange) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[23].Methods()
 }
 
@@ -2414,6 +2630,7 @@ func (x *EnumDescriptorProto_EnumReservedRange) GetEnd() int32 {
 // E.g.,{ ["foo", false], ["bar.baz", true], ["qux", false] } represents
 // "foo.(bar.baz).qux".
 type UninterpretedOption_NamePart struct {
+	state         protoimpl.MessageState
 	NamePart      *string `protobuf:"bytes,1,req,name=name_part,json=namePart" json:"name_part,omitempty"`
 	IsExtension   *bool   `protobuf:"varint,2,req,name=is_extension,json=isExtension" json:"is_extension,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -2431,10 +2648,18 @@ func (x *UninterpretedOption_NamePart) String() string {
 func (*UninterpretedOption_NamePart) ProtoMessage() {}
 
 func (x *UninterpretedOption_NamePart) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[24].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[24]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *UninterpretedOption_NamePart) XXX_Methods() *protoiface.Methods {
+func (x *UninterpretedOption_NamePart) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[24].Methods()
 }
 
@@ -2458,6 +2683,7 @@ func (x *UninterpretedOption_NamePart) GetIsExtension() bool {
 }
 
 type SourceCodeInfo_Location struct {
+	state protoimpl.MessageState
 	// Identifies which part of the FileDescriptorProto was defined at this
 	// location.
 	//
@@ -2553,10 +2779,18 @@ func (x *SourceCodeInfo_Location) String() string {
 func (*SourceCodeInfo_Location) ProtoMessage() {}
 
 func (x *SourceCodeInfo_Location) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[25].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[25]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *SourceCodeInfo_Location) XXX_Methods() *protoiface.Methods {
+func (x *SourceCodeInfo_Location) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[25].Methods()
 }
 
@@ -2601,6 +2835,7 @@ func (x *SourceCodeInfo_Location) GetLeadingDetachedComments() []string {
 }
 
 type GeneratedCodeInfo_Annotation struct {
+	state protoimpl.MessageState
 	// Identifies the element in the original source .proto file. This field
 	// is formatted the same as SourceCodeInfo.Location.path.
 	Path []int32 `protobuf:"varint,1,rep,packed,name=path" json:"path,omitempty"`
@@ -2628,10 +2863,18 @@ func (x *GeneratedCodeInfo_Annotation) String() string {
 func (*GeneratedCodeInfo_Annotation) ProtoMessage() {}
 
 func (x *GeneratedCodeInfo_Annotation) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_descriptor_proto_msgTypes[26].MessageOf(x)
+	mi := &file_google_protobuf_descriptor_proto_msgTypes[26]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *GeneratedCodeInfo_Annotation) XXX_Methods() *protoiface.Methods {
+func (x *GeneratedCodeInfo_Annotation) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_descriptor_proto_msgTypes[26].Methods()
 }
 
@@ -3254,9 +3497,11 @@ func file_google_protobuf_descriptor_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_descriptor_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FileDescriptorSet); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3264,9 +3509,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FileDescriptorProto); i {
-			case 12:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 13:
+				return &v.sizeCache
+			case 14:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3274,9 +3521,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DescriptorProto); i {
-			case 10:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 11:
+				return &v.sizeCache
+			case 12:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3284,11 +3533,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ExtensionRangeOptions); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 3:
+				return &v.unknownFields
+			case 4:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3296,9 +3547,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldDescriptorProto); i {
-			case 10:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 11:
+				return &v.sizeCache
+			case 12:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3306,9 +3559,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*OneofDescriptorProto); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3316,9 +3571,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EnumDescriptorProto); i {
-			case 5:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 6:
+				return &v.sizeCache
+			case 7:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3326,9 +3583,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EnumValueDescriptorProto); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3336,9 +3595,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ServiceDescriptorProto); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3346,9 +3607,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MethodDescriptorProto); i {
-			case 6:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 7:
+				return &v.sizeCache
+			case 8:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3356,11 +3619,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FileOptions); i {
-			case 21:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 22:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 23:
+				return &v.unknownFields
+			case 24:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3368,11 +3633,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MessageOptions); i {
-			case 5:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 6:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 7:
+				return &v.unknownFields
+			case 8:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3380,11 +3647,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldOptions); i {
-			case 7:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 8:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 9:
+				return &v.unknownFields
+			case 10:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3392,11 +3661,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*OneofOptions); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 3:
+				return &v.unknownFields
+			case 4:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3404,11 +3675,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EnumOptions); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 5:
+				return &v.unknownFields
+			case 6:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3416,11 +3689,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EnumValueOptions); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 4:
+				return &v.unknownFields
+			case 5:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3428,11 +3703,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ServiceOptions); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 4:
+				return &v.unknownFields
+			case 5:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3440,11 +3717,13 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MethodOptions); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 5:
+				return &v.unknownFields
+			case 6:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3452,9 +3731,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UninterpretedOption); i {
-			case 7:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 8:
+				return &v.sizeCache
+			case 9:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3462,9 +3743,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SourceCodeInfo); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3472,9 +3755,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GeneratedCodeInfo); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3482,9 +3767,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DescriptorProto_ExtensionRange); i {
-			case 3:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 4:
+				return &v.sizeCache
+			case 5:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3492,9 +3779,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DescriptorProto_ReservedRange); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3502,9 +3791,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EnumDescriptorProto_EnumReservedRange); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3512,9 +3803,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UninterpretedOption_NamePart); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3522,9 +3815,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SourceCodeInfo_Location); i {
-			case 5:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 6:
+				return &v.sizeCache
+			case 7:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3532,9 +3827,11 @@ func file_google_protobuf_descriptor_proto_init() {
 		}
 		file_google_protobuf_descriptor_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GeneratedCodeInfo_Annotation); i {
-			case 4:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 5:
+				return &v.sizeCache
+			case 6:
 				return &v.unknownFields
 			default:
 				return nil

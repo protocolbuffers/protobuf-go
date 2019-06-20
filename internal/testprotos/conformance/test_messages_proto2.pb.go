@@ -135,6 +135,7 @@ func (TestAllTypesProto2_NestedEnum) EnumDescriptor() ([]byte, []int) {
 // could trigger bugs that occur in any message type in this file.  We verify
 // this stays true in a unit test.
 type TestAllTypesProto2 struct {
+	state protoimpl.MessageState
 	// Singular
 	OptionalInt32          *int32                            `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty"`
 	OptionalInt64          *int64                            `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64" json:"optional_int64,omitempty"`
@@ -248,10 +249,18 @@ func (x *TestAllTypesProto2) String() string {
 func (*TestAllTypesProto2) ProtoMessage() {}
 
 func (x *TestAllTypesProto2) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypesProto2) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypesProto2) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_test_messages_proto2_proto_msgTypes[0].Methods()
 }
 
@@ -965,6 +974,7 @@ func (*TestAllTypesProto2_OneofDouble) isTestAllTypesProto2_OneofField() {}
 func (*TestAllTypesProto2_OneofEnum) isTestAllTypesProto2_OneofField() {}
 
 type ForeignMessageProto2 struct {
+	state         protoimpl.MessageState
 	C             *int32 `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -981,10 +991,18 @@ func (x *ForeignMessageProto2) String() string {
 func (*ForeignMessageProto2) ProtoMessage() {}
 
 func (x *ForeignMessageProto2) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[1].MessageOf(x)
+	mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ForeignMessageProto2) XXX_Methods() *protoiface.Methods {
+func (x *ForeignMessageProto2) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_test_messages_proto2_proto_msgTypes[1].Methods()
 }
 
@@ -1001,6 +1019,7 @@ func (x *ForeignMessageProto2) GetC() int32 {
 }
 
 type TestAllTypesProto2_NestedMessage struct {
+	state         protoimpl.MessageState
 	A             *int32              `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
 	Corecursive   *TestAllTypesProto2 `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -1018,10 +1037,18 @@ func (x *TestAllTypesProto2_NestedMessage) String() string {
 func (*TestAllTypesProto2_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypesProto2_NestedMessage) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[2].MessageOf(x)
+	mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypesProto2_NestedMessage) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypesProto2_NestedMessage) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_test_messages_proto2_proto_msgTypes[2].Methods()
 }
 
@@ -1046,6 +1073,7 @@ func (x *TestAllTypesProto2_NestedMessage) GetCorecursive() *TestAllTypesProto2 
 
 // groups
 type TestAllTypesProto2_Data struct {
+	state         protoimpl.MessageState
 	GroupInt32    *int32  `protobuf:"varint,202,opt,name=group_int32,json=groupInt32" json:"group_int32,omitempty"`
 	GroupUint32   *uint32 `protobuf:"varint,203,opt,name=group_uint32,json=groupUint32" json:"group_uint32,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -1063,10 +1091,18 @@ func (x *TestAllTypesProto2_Data) String() string {
 func (*TestAllTypesProto2_Data) ProtoMessage() {}
 
 func (x *TestAllTypesProto2_Data) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[22].MessageOf(x)
+	mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[22]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypesProto2_Data) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypesProto2_Data) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_test_messages_proto2_proto_msgTypes[22].Methods()
 }
 
@@ -1091,6 +1127,7 @@ func (x *TestAllTypesProto2_Data) GetGroupUint32() uint32 {
 
 // message_set test case.
 type TestAllTypesProto2_MessageSetCorrect struct {
+	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
 	extensionFields protoimpl.ExtensionFields
@@ -1107,10 +1144,18 @@ func (x *TestAllTypesProto2_MessageSetCorrect) String() string {
 func (*TestAllTypesProto2_MessageSetCorrect) ProtoMessage() {}
 
 func (x *TestAllTypesProto2_MessageSetCorrect) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[23].MessageOf(x)
+	mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[23]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypesProto2_MessageSetCorrect) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypesProto2_MessageSetCorrect) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_test_messages_proto2_proto_msgTypes[23].Methods()
 }
 
@@ -1129,6 +1174,7 @@ func (*TestAllTypesProto2_MessageSetCorrect) ExtensionRangeArray() []protoiface.
 }
 
 type TestAllTypesProto2_MessageSetCorrectExtension1 struct {
+	state         protoimpl.MessageState
 	Str           *string `protobuf:"bytes,25,opt,name=str" json:"str,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1145,10 +1191,18 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension1) String() string {
 func (*TestAllTypesProto2_MessageSetCorrectExtension1) ProtoMessage() {}
 
 func (x *TestAllTypesProto2_MessageSetCorrectExtension1) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[24].MessageOf(x)
+	mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[24]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypesProto2_MessageSetCorrectExtension1) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypesProto2_MessageSetCorrectExtension1) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_test_messages_proto2_proto_msgTypes[24].Methods()
 }
 
@@ -1165,6 +1219,7 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension1) GetStr() string {
 }
 
 type TestAllTypesProto2_MessageSetCorrectExtension2 struct {
+	state         protoimpl.MessageState
 	I             *int32 `protobuf:"varint,9,opt,name=i" json:"i,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1181,10 +1236,18 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension2) String() string {
 func (*TestAllTypesProto2_MessageSetCorrectExtension2) ProtoMessage() {}
 
 func (x *TestAllTypesProto2_MessageSetCorrectExtension2) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[25].MessageOf(x)
+	mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[25]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypesProto2_MessageSetCorrectExtension2) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypesProto2_MessageSetCorrectExtension2) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_test_messages_proto2_proto_msgTypes[25].Methods()
 }
 
@@ -1883,11 +1946,13 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_test_messages_proto2_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypesProto2); i {
-			case 82:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 83:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 84:
+				return &v.unknownFields
+			case 85:
 				return &v.extensionFields
 			default:
 				return nil
@@ -1895,9 +1960,11 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		}
 		file_google_protobuf_test_messages_proto2_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ForeignMessageProto2); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1905,9 +1972,11 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		}
 		file_google_protobuf_test_messages_proto2_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypesProto2_NestedMessage); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1915,9 +1984,11 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		}
 		file_google_protobuf_test_messages_proto2_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypesProto2_Data); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1926,10 +1997,12 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		file_google_protobuf_test_messages_proto2_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypesProto2_MessageSetCorrect); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 2:
+				return &v.unknownFields
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -1937,9 +2010,11 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		}
 		file_google_protobuf_test_messages_proto2_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypesProto2_MessageSetCorrectExtension1); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1947,9 +2022,11 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		}
 		file_google_protobuf_test_messages_proto2_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypesProto2_MessageSetCorrectExtension2); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

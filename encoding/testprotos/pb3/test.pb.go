@@ -112,6 +112,7 @@ func (Enums_NestedEnum) EnumDescriptor() ([]byte, []int) {
 
 // Scalars contains scalar field types.
 type Scalars struct {
+	state         protoimpl.MessageState
 	SBool         bool    `protobuf:"varint,1,opt,name=s_bool,json=sBool,proto3" json:"s_bool,omitempty"`
 	SInt32        int32   `protobuf:"varint,2,opt,name=s_int32,json=sInt32,proto3" json:"s_int32,omitempty"`
 	SInt64        int64   `protobuf:"varint,3,opt,name=s_int64,json=sInt64,proto3" json:"s_int64,omitempty"`
@@ -142,10 +143,18 @@ func (x *Scalars) String() string {
 func (*Scalars) ProtoMessage() {}
 
 func (x *Scalars) ProtoReflect() protoreflect.Message {
-	return file_pb3_test_proto_msgTypes[0].MessageOf(x)
+	mi := &file_pb3_test_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Scalars) XXX_Methods() *protoiface.Methods {
+func (x *Scalars) XXX_Methods() *protoiface.Methods {
 	return file_pb3_test_proto_msgTypes[0].Methods()
 }
 
@@ -261,6 +270,7 @@ func (x *Scalars) GetSString() string {
 
 // Message contains enum fields.
 type Enums struct {
+	state         protoimpl.MessageState
 	SEnum         Enum             `protobuf:"varint,1,opt,name=s_enum,json=sEnum,proto3,enum=pb3.Enum" json:"s_enum,omitempty"`
 	SNestedEnum   Enums_NestedEnum `protobuf:"varint,3,opt,name=s_nested_enum,json=sNestedEnum,proto3,enum=pb3.Enums_NestedEnum" json:"s_nested_enum,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -278,10 +288,18 @@ func (x *Enums) String() string {
 func (*Enums) ProtoMessage() {}
 
 func (x *Enums) ProtoReflect() protoreflect.Message {
-	return file_pb3_test_proto_msgTypes[1].MessageOf(x)
+	mi := &file_pb3_test_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Enums) XXX_Methods() *protoiface.Methods {
+func (x *Enums) XXX_Methods() *protoiface.Methods {
 	return file_pb3_test_proto_msgTypes[1].Methods()
 }
 
@@ -306,6 +324,7 @@ func (x *Enums) GetSNestedEnum() Enums_NestedEnum {
 
 // Message contains nested message field.
 type Nests struct {
+	state         protoimpl.MessageState
 	SNested       *Nested `protobuf:"bytes,2,opt,name=s_nested,json=sNested,proto3" json:"s_nested,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -322,10 +341,18 @@ func (x *Nests) String() string {
 func (*Nests) ProtoMessage() {}
 
 func (x *Nests) ProtoReflect() protoreflect.Message {
-	return file_pb3_test_proto_msgTypes[2].MessageOf(x)
+	mi := &file_pb3_test_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Nests) XXX_Methods() *protoiface.Methods {
+func (x *Nests) XXX_Methods() *protoiface.Methods {
 	return file_pb3_test_proto_msgTypes[2].Methods()
 }
 
@@ -343,6 +370,7 @@ func (x *Nests) GetSNested() *Nested {
 
 // Message type used as submessage.
 type Nested struct {
+	state         protoimpl.MessageState
 	SString       string  `protobuf:"bytes,1,opt,name=s_string,json=sString,proto3" json:"s_string,omitempty"`
 	SNested       *Nested `protobuf:"bytes,2,opt,name=s_nested,json=sNested,proto3" json:"s_nested,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -360,10 +388,18 @@ func (x *Nested) String() string {
 func (*Nested) ProtoMessage() {}
 
 func (x *Nested) ProtoReflect() protoreflect.Message {
-	return file_pb3_test_proto_msgTypes[3].MessageOf(x)
+	mi := &file_pb3_test_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Nested) XXX_Methods() *protoiface.Methods {
+func (x *Nested) XXX_Methods() *protoiface.Methods {
 	return file_pb3_test_proto_msgTypes[3].Methods()
 }
 
@@ -388,6 +424,7 @@ func (x *Nested) GetSNested() *Nested {
 
 // Message contains oneof field.
 type Oneofs struct {
+	state protoimpl.MessageState
 	// Types that are valid to be assigned to Union:
 	//	*Oneofs_OneofEnum
 	//	*Oneofs_OneofString
@@ -408,10 +445,18 @@ func (x *Oneofs) String() string {
 func (*Oneofs) ProtoMessage() {}
 
 func (x *Oneofs) ProtoReflect() protoreflect.Message {
-	return file_pb3_test_proto_msgTypes[4].MessageOf(x)
+	mi := &file_pb3_test_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Oneofs) XXX_Methods() *protoiface.Methods {
+func (x *Oneofs) XXX_Methods() *protoiface.Methods {
 	return file_pb3_test_proto_msgTypes[4].Methods()
 }
 
@@ -472,6 +517,7 @@ func (*Oneofs_OneofNested) isOneofs_Union() {}
 
 // Message contains map fields.
 type Maps struct {
+	state         protoimpl.MessageState
 	Int32ToStr    map[int32]string   `protobuf:"bytes,1,rep,name=int32_to_str,json=int32ToStr,proto3" json:"int32_to_str,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	BoolToUint32  map[bool]uint32    `protobuf:"bytes,2,rep,name=bool_to_uint32,json=boolToUint32,proto3" json:"bool_to_uint32,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
 	Uint64ToEnum  map[uint64]Enum    `protobuf:"bytes,3,rep,name=uint64_to_enum,json=uint64ToEnum,proto3" json:"uint64_to_enum,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=pb3.Enum"`
@@ -492,10 +538,18 @@ func (x *Maps) String() string {
 func (*Maps) ProtoMessage() {}
 
 func (x *Maps) ProtoReflect() protoreflect.Message {
-	return file_pb3_test_proto_msgTypes[5].MessageOf(x)
+	mi := &file_pb3_test_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Maps) XXX_Methods() *protoiface.Methods {
+func (x *Maps) XXX_Methods() *protoiface.Methods {
 	return file_pb3_test_proto_msgTypes[5].Methods()
 }
 
@@ -541,6 +595,7 @@ func (x *Maps) GetStrToOneofs() map[string]*Oneofs {
 
 // Message for testing json_name option.
 type JSONNames struct {
+	state         protoimpl.MessageState
 	SString       string `protobuf:"bytes,1,opt,name=s_string,json=foo_bar,proto3" json:"s_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -557,10 +612,18 @@ func (x *JSONNames) String() string {
 func (*JSONNames) ProtoMessage() {}
 
 func (x *JSONNames) ProtoReflect() protoreflect.Message {
-	return file_pb3_test_proto_msgTypes[6].MessageOf(x)
+	mi := &file_pb3_test_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *JSONNames) XXX_Methods() *protoiface.Methods {
+func (x *JSONNames) XXX_Methods() *protoiface.Methods {
 	return file_pb3_test_proto_msgTypes[6].Methods()
 }
 
@@ -748,9 +811,11 @@ func file_pb3_test_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_pb3_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Scalars); i {
-			case 15:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 16:
+				return &v.sizeCache
+			case 17:
 				return &v.unknownFields
 			default:
 				return nil
@@ -758,9 +823,11 @@ func file_pb3_test_proto_init() {
 		}
 		file_pb3_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Enums); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -768,16 +835,8 @@ func file_pb3_test_proto_init() {
 		}
 		file_pb3_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Nests); i {
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_pb3_test_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Nested); i {
+			case 0:
+				return &v.state
 			case 2:
 				return &v.sizeCache
 			case 3:
@@ -786,11 +845,25 @@ func file_pb3_test_proto_init() {
 				return nil
 			}
 		}
+		file_pb3_test_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Nested); i {
+			case 0:
+				return &v.state
+			case 3:
+				return &v.sizeCache
+			case 4:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 		file_pb3_test_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Oneofs); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -798,9 +871,11 @@ func file_pb3_test_proto_init() {
 		}
 		file_pb3_test_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Maps); i {
-			case 5:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 6:
+				return &v.sizeCache
+			case 7:
 				return &v.unknownFields
 			default:
 				return nil
@@ -808,9 +883,11 @@ func file_pb3_test_proto_init() {
 		}
 		file_pb3_test_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*JSONNames); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

@@ -69,6 +69,7 @@ func (NullValue) EnumDescriptor() ([]byte, []int) {
 //
 // The JSON representation for `Struct` is JSON object.
 type Struct struct {
+	state protoimpl.MessageState
 	// Unordered map of dynamically typed values.
 	Fields        map[string]*Value `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	sizeCache     protoimpl.SizeCache
@@ -86,10 +87,18 @@ func (x *Struct) String() string {
 func (*Struct) ProtoMessage() {}
 
 func (x *Struct) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_struct_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_struct_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Struct) XXX_Methods() *protoiface.Methods {
+func (x *Struct) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_struct_proto_msgTypes[0].Methods()
 }
 
@@ -112,6 +121,7 @@ func (x *Struct) GetFields() map[string]*Value {
 //
 // The JSON representation for `Value` is JSON value.
 type Value struct {
+	state protoimpl.MessageState
 	// The kind of value.
 	//
 	// Types that are valid to be assigned to Kind:
@@ -143,10 +153,18 @@ func (x *Value) String() string {
 func (*Value) ProtoMessage() {}
 
 func (x *Value) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_struct_proto_msgTypes[1].MessageOf(x)
+	mi := &file_google_protobuf_struct_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Value) XXX_Methods() *protoiface.Methods {
+func (x *Value) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_struct_proto_msgTypes[1].Methods()
 }
 
@@ -248,6 +266,7 @@ func (*Value_ListValue) isValue_Kind() {}
 //
 // The JSON representation for `ListValue` is JSON array.
 type ListValue struct {
+	state protoimpl.MessageState
 	// Repeated field of dynamically typed values.
 	Values        []*Value `protobuf:"bytes,1,rep,name=values,proto3" json:"values,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -265,10 +284,18 @@ func (x *ListValue) String() string {
 func (*ListValue) ProtoMessage() {}
 
 func (x *ListValue) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_struct_proto_msgTypes[2].MessageOf(x)
+	mi := &file_google_protobuf_struct_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ListValue) XXX_Methods() *protoiface.Methods {
+func (x *ListValue) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_struct_proto_msgTypes[2].Methods()
 }
 
@@ -379,9 +406,11 @@ func file_google_protobuf_struct_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_struct_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Struct); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -389,9 +418,11 @@ func file_google_protobuf_struct_proto_init() {
 		}
 		file_google_protobuf_struct_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Value); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -399,9 +430,11 @@ func file_google_protobuf_struct_proto_init() {
 		}
 		file_google_protobuf_struct_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListValue); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

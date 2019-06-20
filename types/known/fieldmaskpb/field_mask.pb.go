@@ -217,6 +217,7 @@ const (
 // request should verify the included field paths, and return an
 // `INVALID_ARGUMENT` error if any path is duplicated or unmappable.
 type FieldMask struct {
+	state protoimpl.MessageState
 	// The set of field mask paths.
 	Paths         []string `protobuf:"bytes,1,rep,name=paths,proto3" json:"paths,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -234,10 +235,18 @@ func (x *FieldMask) String() string {
 func (*FieldMask) ProtoMessage() {}
 
 func (x *FieldMask) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_field_mask_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_field_mask_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *FieldMask) XXX_Methods() *protoiface.Methods {
+func (x *FieldMask) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_field_mask_proto_msgTypes[0].Methods()
 }
 
@@ -305,9 +314,11 @@ func file_google_protobuf_field_mask_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_field_mask_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldMask); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

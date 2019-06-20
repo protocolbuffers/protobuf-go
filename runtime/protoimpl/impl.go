@@ -64,7 +64,9 @@ type (
 
 	DescBuilder      = filedesc.DescBuilder
 	TypeBuilder      = filetype.TypeBuilder
+	Pointer          = impl.Pointer
 	MessageInfo      = impl.MessageInfo
+	MessageState     = impl.MessageState
 	SizeCache        = impl.SizeCache
 	UnknownFields    = impl.UnknownFields
 	ExtensionFields  = impl.ExtensionFields

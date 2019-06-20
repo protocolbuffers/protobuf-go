@@ -111,6 +111,7 @@ func (TestAllTypes_NestedEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type TestAllTypes struct {
+	state                  protoimpl.MessageState
 	OptionalInt32          int32                                  `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32,proto3" json:"optional_int32,omitempty"`
 	OptionalInt64          int64                                  `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64,proto3" json:"optional_int64,omitempty"`
 	OptionalUint32         uint32                                 `protobuf:"varint,3,opt,name=optional_uint32,json=optionalUint32,proto3" json:"optional_uint32,omitempty"`
@@ -196,10 +197,18 @@ func (x *TestAllTypes) String() string {
 func (*TestAllTypes) ProtoMessage() {}
 
 func (x *TestAllTypes) ProtoReflect() protoreflect.Message {
-	return file_test3_test_proto_msgTypes[0].MessageOf(x)
+	mi := &file_test3_test_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypes) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypes) XXX_Methods() *protoiface.Methods {
 	return file_test3_test_proto_msgTypes[0].Methods()
 }
 
@@ -750,6 +759,7 @@ func (*TestAllTypes_OneofDouble) isTestAllTypes_OneofField() {}
 func (*TestAllTypes_OneofEnum) isTestAllTypes_OneofField() {}
 
 type ForeignMessage struct {
+	state         protoimpl.MessageState
 	C             int32 `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
 	D             int32 `protobuf:"varint,2,opt,name=d,proto3" json:"d,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -767,10 +777,18 @@ func (x *ForeignMessage) String() string {
 func (*ForeignMessage) ProtoMessage() {}
 
 func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
-	return file_test3_test_proto_msgTypes[1].MessageOf(x)
+	mi := &file_test3_test_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ForeignMessage) XXX_Methods() *protoiface.Methods {
+func (x *ForeignMessage) XXX_Methods() *protoiface.Methods {
 	return file_test3_test_proto_msgTypes[1].Methods()
 }
 
@@ -794,6 +812,7 @@ func (x *ForeignMessage) GetD() int32 {
 }
 
 type TestAllTypes_NestedMessage struct {
+	state         protoimpl.MessageState
 	A             int32         `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
 	Corecursive   *TestAllTypes `protobuf:"bytes,2,opt,name=corecursive,proto3" json:"corecursive,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -811,10 +830,18 @@ func (x *TestAllTypes_NestedMessage) String() string {
 func (*TestAllTypes_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
-	return file_test3_test_proto_msgTypes[2].MessageOf(x)
+	mi := &file_test3_test_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *TestAllTypes_NestedMessage) XXX_Methods() *protoiface.Methods {
+func (x *TestAllTypes_NestedMessage) XXX_Methods() *protoiface.Methods {
 	return file_test3_test_proto_msgTypes[2].Methods()
 }
 
@@ -1322,9 +1349,11 @@ func file_test3_test_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_test3_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypes); i {
-			case 60:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 61:
+				return &v.sizeCache
+			case 62:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1332,9 +1361,11 @@ func file_test3_test_proto_init() {
 		}
 		file_test3_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ForeignMessage); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1342,9 +1373,11 @@ func file_test3_test_proto_init() {
 		}
 		file_test3_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypes_NestedMessage); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

@@ -8,10 +8,14 @@ package impl
 
 import (
 	"reflect"
+	"sync/atomic"
 	"unsafe"
 )
 
 const UnsafeEnabled = true
+
+// Pointer is an opaque pointer type.
+type Pointer unsafe.Pointer
 
 // offset represents the offset to a struct field, accessible from a pointer.
 // The offset is the byte offset to the field from the start of the struct.
@@ -33,6 +37,11 @@ var zeroOffset = offset(0)
 
 // pointer is a pointer to a message struct or field.
 type pointer struct{ p unsafe.Pointer }
+
+// pointerOf returns p as a pointer.
+func pointerOf(p Pointer) pointer {
+	return pointer{p: unsafe.Pointer(p)}
+}
 
 // pointerOfValue returns v as a pointer.
 func pointerOfValue(v reflect.Value) pointer {
@@ -124,4 +133,31 @@ func (p pointer) AppendPointerSlice(v pointer) {
 // SetPointer sets *p to v.
 func (p pointer) SetPointer(v pointer) {
 	*(*unsafe.Pointer)(p.p) = (unsafe.Pointer)(v.p)
+}
+
+// Static check that MessageState does not exceed the size of a pointer.
+const _ = uint(unsafe.Sizeof(unsafe.Pointer(nil)) - unsafe.Sizeof(MessageState{}))
+
+func (Export) MessageStateOf(p Pointer) *messageState {
+	// Super-tricky - see documentation on MessageState.
+	return (*messageState)(unsafe.Pointer(p))
+}
+func (ms *messageState) pointer() pointer {
+	// Super-tricky - see documentation on MessageState.
+	return pointer{p: unsafe.Pointer(ms)}
+}
+func (ms *messageState) LoadMessageInfo() *MessageInfo {
+	return (*MessageInfo)(atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&ms.mi))))
+}
+func (ms *messageState) StoreMessageInfo(mi *MessageInfo) {
+	atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&ms.mi)), unsafe.Pointer(mi))
+}
+
+type atomicNilMessage struct{ m messageReflectWrapper }
+
+func (m *atomicNilMessage) Init(mi *MessageInfo) *messageReflectWrapper {
+	if (*messageReflectWrapper)(atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&m.m.mi)))) == nil {
+		atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&m.m.mi)), unsafe.Pointer(mi))
+	}
+	return &m.m
 }

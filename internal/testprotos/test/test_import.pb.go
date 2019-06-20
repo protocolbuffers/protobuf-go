@@ -66,6 +66,7 @@ func (ImportEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type ImportMessage struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -81,10 +82,18 @@ func (x *ImportMessage) String() string {
 func (*ImportMessage) ProtoMessage() {}
 
 func (x *ImportMessage) ProtoReflect() protoreflect.Message {
-	return file_test_test_import_proto_msgTypes[0].MessageOf(x)
+	mi := &file_test_test_import_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *ImportMessage) XXX_Methods() *protoiface.Methods {
+func (x *ImportMessage) XXX_Methods() *protoiface.Methods {
 	return file_test_test_import_proto_msgTypes[0].Methods()
 }
 
@@ -143,8 +152,10 @@ func file_test_test_import_proto_init() {
 		file_test_test_import_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ImportMessage); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

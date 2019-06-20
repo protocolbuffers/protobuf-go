@@ -18,6 +18,7 @@ const (
 )
 
 type Message struct {
+	state         protoimpl.MessageState
 	I32           *int32   `protobuf:"varint,1,opt,name=i32" json:"i32,omitempty"`
 	M             *Message `protobuf:"bytes,2,opt,name=m" json:"m,omitempty"`
 	sizeCache     protoimpl.SizeCache
@@ -35,10 +36,18 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	return file_proto2_proto2_proto_msgTypes[0].MessageOf(x)
+	mi := &file_proto2_proto2_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message) XXX_Methods() *protoiface.Methods {
+func (x *Message) XXX_Methods() *protoiface.Methods {
 	return file_proto2_proto2_proto_msgTypes[0].Methods()
 }
 
@@ -111,9 +120,11 @@ func file_proto2_proto2_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_proto2_proto2_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

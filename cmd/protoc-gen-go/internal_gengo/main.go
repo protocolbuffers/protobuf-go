@@ -48,9 +48,13 @@ const (
 	// ExtensionRangeArray method for messages that support extensions.
 	generateExtensionRangeMethods = true
 
-	// generateWKTMarkerMethods specifes whether to generate
+	// generateWKTMarkerMethods specifies whether to generate
 	// XXX_WellKnownType methods on well-known types.
 	generateWKTMarkerMethods = false
+
+	// generateMessateStateFields specifies whether to generate an unexported
+	// protoimpl.MessageState as the first field.
+	generateMessateStateFields = true
 
 	// generateNoUnkeyedLiteralFields specifies whether to generate
 	// the XXX_NoUnkeyedLiteral field.
@@ -395,6 +399,10 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 	g.Annotate(message.GoIdent.GoName, message.Location)
 	g.P("type ", message.GoIdent, " struct {")
 	sf := f.allMessageFieldsByPtr[message]
+	if generateMessateStateFields {
+		g.P("state ", protoimplPackage.Ident("MessageState"))
+		sf.append("state")
+	}
 	for _, field := range message.Fields {
 		if field.Oneof != nil {
 			// It would be a bit simpler to iterate over the oneofs below,

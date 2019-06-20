@@ -160,6 +160,7 @@ func (Enum3) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message1 struct {
+	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
 	extensionFields protoimpl.ExtensionFields
@@ -176,10 +177,18 @@ func (x *Message1) String() string {
 func (*Message1) ProtoMessage() {}
 
 func (x *Message1) ProtoReflect() protoreflect.Message {
-	return file_test_proto_msgTypes[0].MessageOf(x)
+	mi := &file_test_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message1) XXX_Methods() *protoiface.Methods {
+func (x *Message1) XXX_Methods() *protoiface.Methods {
 	return file_test_proto_msgTypes[0].Methods()
 }
 
@@ -198,6 +207,7 @@ func (*Message1) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 }
 
 type Message2 struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -213,10 +223,18 @@ func (x *Message2) String() string {
 func (*Message2) ProtoMessage() {}
 
 func (x *Message2) ProtoReflect() protoreflect.Message {
-	return file_test_proto_msgTypes[1].MessageOf(x)
+	mi := &file_test_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message2) XXX_Methods() *protoiface.Methods {
+func (x *Message2) XXX_Methods() *protoiface.Methods {
 	return file_test_proto_msgTypes[1].Methods()
 }
 
@@ -226,6 +244,7 @@ func (*Message2) Descriptor() ([]byte, []int) {
 }
 
 type Message3 struct {
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
@@ -241,10 +260,18 @@ func (x *Message3) String() string {
 func (*Message3) ProtoMessage() {}
 
 func (x *Message3) ProtoReflect() protoreflect.Message {
-	return file_test_proto_msgTypes[2].MessageOf(x)
+	mi := &file_test_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message3) XXX_Methods() *protoiface.Methods {
+func (x *Message3) XXX_Methods() *protoiface.Methods {
 	return file_test_proto_msgTypes[2].Methods()
 }
 
@@ -254,6 +281,7 @@ func (*Message3) Descriptor() ([]byte, []int) {
 }
 
 type Message4 struct {
+	state         protoimpl.MessageState
 	BoolField     *bool `protobuf:"varint,30,opt,name=bool_field,json=boolField" json:"bool_field,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -270,10 +298,18 @@ func (x *Message4) String() string {
 func (*Message4) ProtoMessage() {}
 
 func (x *Message4) ProtoReflect() protoreflect.Message {
-	return file_test_proto_msgTypes[3].MessageOf(x)
+	mi := &file_test_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Message4) XXX_Methods() *protoiface.Methods {
+func (x *Message4) XXX_Methods() *protoiface.Methods {
 	return file_test_proto_msgTypes[3].Methods()
 }
 
@@ -454,10 +490,12 @@ func file_test_proto_init() {
 		file_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message1); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
-				return &v.unknownFields
+				return &v.sizeCache
 			case 2:
+				return &v.unknownFields
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -466,8 +504,10 @@ func file_test_proto_init() {
 		file_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message2); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -476,8 +516,10 @@ func file_test_proto_init() {
 		file_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message3); i {
 			case 0:
-				return &v.sizeCache
+				return &v.state
 			case 1:
+				return &v.sizeCache
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -485,9 +527,11 @@ func file_test_proto_init() {
 		}
 		file_test_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Message4); i {
-			case 1:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 2:
+				return &v.sizeCache
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil

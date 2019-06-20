@@ -19,6 +19,7 @@ const (
 )
 
 type UsingPublicImport struct {
+	state protoimpl.MessageState
 	// Local is declared in b.proto, which is a public import of a.proto.
 	Local *Local `protobuf:"bytes,1,opt,name=local" json:"local,omitempty"`
 	// Sub2Message is declared in sub2/a.proto, which is a public import of
@@ -39,10 +40,18 @@ func (x *UsingPublicImport) String() string {
 func (*UsingPublicImport) ProtoMessage() {}
 
 func (x *UsingPublicImport) ProtoReflect() protoreflect.Message {
-	return file_import_public_c_proto_msgTypes[0].MessageOf(x)
+	mi := &file_import_public_c_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *UsingPublicImport) XXX_Methods() *protoiface.Methods {
+func (x *UsingPublicImport) XXX_Methods() *protoiface.Methods {
 	return file_import_public_c_proto_msgTypes[0].Methods()
 }
 
@@ -126,9 +135,11 @@ func file_import_public_c_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_import_public_c_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UsingPublicImport); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil

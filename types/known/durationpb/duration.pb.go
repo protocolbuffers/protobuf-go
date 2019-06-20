@@ -78,6 +78,7 @@ const (
 //
 //
 type Duration struct {
+	state protoimpl.MessageState
 	// Signed seconds of the span of time. Must be from -315,576,000,000
 	// to +315,576,000,000 inclusive. Note: these bounds are computed from:
 	// 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
@@ -104,10 +105,18 @@ func (x *Duration) String() string {
 func (*Duration) ProtoMessage() {}
 
 func (x *Duration) ProtoReflect() protoreflect.Message {
-	return file_google_protobuf_duration_proto_msgTypes[0].MessageOf(x)
+	mi := &file_google_protobuf_duration_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
 }
 
-func (m *Duration) XXX_Methods() *protoiface.Methods {
+func (x *Duration) XXX_Methods() *protoiface.Methods {
 	return file_google_protobuf_duration_proto_msgTypes[0].Methods()
 }
 
@@ -183,9 +192,11 @@ func file_google_protobuf_duration_proto_init() {
 	if !protoimpl.UnsafeEnabled {
 		file_google_protobuf_duration_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Duration); i {
-			case 2:
-				return &v.sizeCache
+			case 0:
+				return &v.state
 			case 3:
+				return &v.sizeCache
+			case 4:
 				return &v.unknownFields
 			default:
 				return nil
