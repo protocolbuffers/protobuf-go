@@ -34,7 +34,7 @@ func (mi *MessageInfo) isInitializedPointer(p pointer) error {
 			return err
 		}
 	}
-	for _, f := range mi.fieldsOrdered {
+	for _, f := range mi.orderedCoderFields {
 		if !f.isRequired && f.funcs.isInit == nil {
 			continue
 		}

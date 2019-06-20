@@ -7,7 +7,6 @@ package impl
 import (
 	"fmt"
 	"reflect"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -33,11 +32,7 @@ type MessageInfo struct {
 	initMu   sync.Mutex // protects all unexported fields
 	initDone uint32
 
-	// Keep a separate slice of fields for efficient field encoding in tag order
-	// and because iterating over a slice is substantially faster than a map.
-	fields        map[pref.FieldNumber]*fieldInfo
-	fieldsOrdered []*fieldInfo
-
+	fields map[pref.FieldNumber]*fieldInfo
 	oneofs map[pref.Name]*oneofInfo
 
 	getUnknown func(pointer) pref.RawFields
@@ -45,12 +40,10 @@ type MessageInfo struct {
 
 	extensionMap func(pointer) *extensionMap
 
+	// Information used by the fast-path methods.
 	methods piface.Methods
+	coderMessageInfo
 
-	needsInitCheck        bool
-	sizecacheOffset       offset
-	extensionOffset       offset
-	unknownOffset         offset
 	extensionFieldInfosMu sync.RWMutex
 	extensionFieldInfos   map[pref.ExtensionType]*extensionFieldInfo
 }
@@ -102,11 +95,10 @@ func (mi *MessageInfo) initOnce() {
 	}
 
 	si := mi.makeStructInfo(t.Elem())
-	mi.needsInitCheck = needsInitCheck(mi.PBType)
 	mi.makeKnownFieldsFunc(si)
 	mi.makeUnknownFieldsFunc(t.Elem())
 	mi.makeExtensionFieldsFunc(t.Elem())
-	mi.makeMethods(t.Elem())
+	mi.makeMethods(t.Elem(), si)
 
 	atomic.StoreUint32(&mi.initDone, 1)
 }
@@ -122,27 +114,6 @@ var (
 	unknownFieldsType   = reflect.TypeOf(UnknownFields(nil))
 	extensionFieldsType = reflect.TypeOf(ExtensionFields(nil))
 )
-
-func (mi *MessageInfo) makeMethods(t reflect.Type) {
-	mi.sizecacheOffset = invalidOffset
-	if fx, _ := t.FieldByName("XXX_sizecache"); fx.Type == sizecacheType {
-		mi.sizecacheOffset = offsetOf(fx)
-	}
-	mi.unknownOffset = invalidOffset
-	if fx, _ := t.FieldByName("XXX_unrecognized"); fx.Type == unknownFieldsType {
-		mi.unknownOffset = offsetOf(fx)
-	}
-	mi.extensionOffset = invalidOffset
-	if fx, _ := t.FieldByName("XXX_InternalExtensions"); fx.Type == extensionFieldsType {
-		mi.extensionOffset = offsetOf(fx)
-	} else if fx, _ = t.FieldByName("XXX_extensions"); fx.Type == extensionFieldsType {
-		mi.extensionOffset = offsetOf(fx)
-	}
-	mi.methods.Flags = piface.MethodFlagDeterministicMarshal
-	mi.methods.MarshalAppend = mi.marshalAppend
-	mi.methods.Size = mi.size
-	mi.methods.IsInitialized = mi.isInitialized
-}
 
 type structInfo struct {
 	fieldsByNumber        map[pref.FieldNumber]reflect.StructField
@@ -204,7 +175,6 @@ fieldLoop:
 // any discrepancies.
 func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	mi.fields = map[pref.FieldNumber]*fieldInfo{}
-	mi.fieldsOrdered = make([]*fieldInfo, 0, mi.PBType.Fields().Len())
 	for i := 0; i < mi.PBType.Descriptor().Fields().Len(); i++ {
 		fd := mi.PBType.Descriptor().Fields().Get(i)
 		fs := si.fieldsByNumber[fd.Number()]
@@ -212,16 +182,6 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 		switch {
 		case fd.ContainingOneof() != nil:
 			fi = fieldInfoForOneof(fd, si.oneofsByName[fd.ContainingOneof().Name()], si.oneofWrappersByNumber[fd.Number()])
-			// There is one fieldInfo for each proto message field, but only one struct
-			// field for all message fields in a oneof. We install the encoder functions
-			// on the fieldInfo for the first field in the oneof.
-			//
-			// A slightly simpler approach would be to have each fieldInfo's encoder
-			// handle the case where that field is set, but this would require more
-			// checks  against the current oneof type than a single map lookup.
-			if fd.ContainingOneof().Fields().Get(0).Name() == fd.Name() {
-				fi.funcs = makeOneofFieldCoder(si.oneofsByName[fd.ContainingOneof().Name()], fd.ContainingOneof(), si.fieldsByNumber, si.oneofWrappersByNumber)
-			}
 		case fd.IsMap():
 			fi = fieldInfoForMap(fd, fs)
 		case fd.IsList():
@@ -231,13 +191,8 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 		default:
 			fi = fieldInfoForScalar(fd, fs)
 		}
-		fi.num = fd.Number()
 		mi.fields[fd.Number()] = &fi
-		mi.fieldsOrdered = append(mi.fieldsOrdered, &fi)
 	}
-	sort.Slice(mi.fieldsOrdered, func(i, j int) bool {
-		return mi.fieldsOrdered[i].num < mi.fieldsOrdered[j].num
-	})
 
 	mi.oneofs = map[pref.Name]*oneofInfo{}
 	for i := 0; i < mi.PBType.Descriptor().Oneofs().Len(); i++ {

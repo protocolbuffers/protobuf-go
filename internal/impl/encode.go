@@ -68,7 +68,7 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 		e := p.Apply(mi.extensionOffset).Extensions()
 		size += mi.sizeExtensions(e, opts)
 	}
-	for _, f := range mi.fieldsOrdered {
+	for _, f := range mi.orderedCoderFields {
 		fptr := p.Apply(f.offset)
 		if f.isPointer && fptr.Elem().IsNil() {
 			continue
@@ -108,7 +108,7 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 			return b, err
 		}
 	}
-	for _, f := range mi.fieldsOrdered {
+	for _, f := range mi.orderedCoderFields {
 		fptr := p.Apply(f.offset)
 		if f.isPointer && fptr.Elem().IsNil() {
 			continue

@@ -29,6 +29,8 @@ type ifaceCoderFuncs struct {
 // struct fields.
 func fieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	switch {
+	case fd.IsMap():
+		return encoderFuncsForMap(fd, ft)
 	case fd.Cardinality() == pref.Repeated && !fd.IsPacked():
 		// Repeated fields (not packed).
 		if ft.Kind() != reflect.Slice {
