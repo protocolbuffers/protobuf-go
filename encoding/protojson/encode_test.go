@@ -886,12 +886,15 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc: "unknown fields are ignored",
-		input: &pb2.Scalars{
-			OptString: scalar.String("no unknowns"),
-			XXX_unrecognized: pack.Message{
+		input: func() proto.Message {
+			m := &pb2.Scalars{
+				OptString: scalar.String("no unknowns"),
+			}
+			m.ProtoReflect().SetUnknown(pack.Message{
 				pack.Tag{101, pack.BytesType}, pack.String("hello world"),
-			}.Marshal(),
-		},
+			}.Marshal())
+			return m
+		}(),
 		want: `{
   "optString": "no unknowns"
 }`,
