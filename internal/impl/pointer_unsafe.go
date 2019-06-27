@@ -115,3 +115,13 @@ func (p pointer) PointerSlice() []pointer {
 	// message type. We load it as []pointer.
 	return *(*[]pointer)(p.p)
 }
+
+// AppendPointerSlice appends v to p, which must be a []*T.
+func (p pointer) AppendPointerSlice(v pointer) {
+	*(*[]pointer)(p.p) = append(*(*[]pointer)(p.p), v)
+}
+
+// SetPointer sets *p to v.
+func (p pointer) SetPointer(v pointer) {
+	*(*unsafe.Pointer)(p.p) = (unsafe.Pointer)(v.p)
+}

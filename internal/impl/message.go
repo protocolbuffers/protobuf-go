@@ -516,6 +516,7 @@ func (m *messageIfaceWrapper) XXX_Methods() *piface.Methods {
 	return &piface.Methods{
 		Flags:         piface.MethodFlagDeterministicMarshal,
 		MarshalAppend: m.marshalAppend,
+		Unmarshal:     m.unmarshal,
 		Size:          m.size,
 		IsInitialized: m.isInitialized,
 	}
@@ -526,9 +527,13 @@ func (m *messageIfaceWrapper) ProtoUnwrap() interface{} {
 func (m *messageIfaceWrapper) marshalAppend(b []byte, _ pref.ProtoMessage, opts piface.MarshalOptions) ([]byte, error) {
 	return m.mi.marshalAppendPointer(b, m.p, newMarshalOptions(opts))
 }
+func (m *messageIfaceWrapper) unmarshal(b []byte, _ pref.ProtoMessage, opts piface.UnmarshalOptions) error {
+	_, err := m.mi.unmarshalPointer(b, m.p, 0, newUnmarshalOptions(opts))
+	return err
+}
 func (m *messageIfaceWrapper) size(msg pref.ProtoMessage) (size int) {
 	return m.mi.sizePointer(m.p, 0)
 }
-func (m *messageIfaceWrapper) isInitialized(msg pref.ProtoMessage) error {
+func (m *messageIfaceWrapper) isInitialized(_ pref.ProtoMessage) error {
 	return m.mi.isInitializedPointer(m.p)
 }

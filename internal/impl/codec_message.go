@@ -18,6 +18,8 @@ import (
 // possible.
 type coderMessageInfo struct {
 	orderedCoderFields []*coderFieldInfo
+	denseCoderFields   []*coderFieldInfo
+	coderFields        map[wire.Number]*coderFieldInfo
 	sizecacheOffset    offset
 	unknownOffset      offset
 	extensionOffset    offset
@@ -39,13 +41,14 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 	mi.unknownOffset = si.unknownOffset
 	mi.extensionOffset = si.extensionOffset
 
+	mi.coderFields = make(map[wire.Number]*coderFieldInfo)
 	for i := 0; i < mi.PBType.Descriptor().Fields().Len(); i++ {
 		fd := mi.PBType.Descriptor().Fields().Get(i)
-		if fd.ContainingOneof() != nil {
-			continue
-		}
 
 		fs := si.fieldsByNumber[fd.Number()]
+		if fd.ContainingOneof() != nil {
+			fs = si.oneofsByName[fd.ContainingOneof().Name()]
+		}
 		ft := fs.Type
 		var wiretag uint64
 		if !fd.IsPacked() {
@@ -53,37 +56,51 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 		} else {
 			wiretag = wire.EncodeTag(fd.Number(), wire.BytesType)
 		}
-		mi.orderedCoderFields = append(mi.orderedCoderFields, &coderFieldInfo{
+		var funcs pointerCoderFuncs
+		if fd.ContainingOneof() != nil {
+			funcs = makeOneofFieldCoder(si, fd)
+		} else {
+			funcs = fieldCoder(fd, ft)
+		}
+		cf := &coderFieldInfo{
 			num:     fd.Number(),
 			offset:  offsetOf(fs, mi.Exporter),
 			wiretag: wiretag,
 			tagsize: wire.SizeVarint(wiretag),
-			funcs:   fieldCoder(fd, ft),
+			funcs:   funcs,
 			isPointer: (fd.Cardinality() == pref.Repeated ||
 				fd.Kind() == pref.MessageKind ||
 				fd.Kind() == pref.GroupKind ||
 				fd.Syntax() != pref.Proto3),
 			isRequired: fd.Cardinality() == pref.Required,
-		})
-	}
-	for i := 0; i < mi.PBType.Descriptor().Oneofs().Len(); i++ {
-		od := mi.PBType.Descriptor().Oneofs().Get(i)
-		fs := si.oneofsByName[od.Name()]
-		mi.orderedCoderFields = append(mi.orderedCoderFields, &coderFieldInfo{
-			num:       od.Fields().Get(0).Number(),
-			offset:    offsetOf(fs, mi.Exporter),
-			funcs:     makeOneofFieldCoder(fs, od, si.fieldsByNumber, si.oneofWrappersByNumber),
-			isPointer: true,
-		})
+		}
+		mi.orderedCoderFields = append(mi.orderedCoderFields, cf)
+		mi.coderFields[cf.num] = cf
 	}
 	sort.Slice(mi.orderedCoderFields, func(i, j int) bool {
 		return mi.orderedCoderFields[i].num < mi.orderedCoderFields[j].num
 	})
 
+	var maxDense pref.FieldNumber
+	for _, cf := range mi.orderedCoderFields {
+		if cf.num >= 16 && cf.num >= 2*maxDense {
+			break
+		}
+		maxDense = cf.num
+	}
+	mi.denseCoderFields = make([]*coderFieldInfo, maxDense+1)
+	for _, cf := range mi.orderedCoderFields {
+		if int(cf.num) > len(mi.denseCoderFields) {
+			break
+		}
+		mi.denseCoderFields[cf.num] = cf
+	}
+
 	mi.needsInitCheck = needsInitCheck(mi.PBType)
 	mi.methods = piface.Methods{
 		Flags:         piface.MethodFlagDeterministicMarshal,
 		MarshalAppend: mi.marshalAppend,
+		Unmarshal:     mi.unmarshal,
 		Size:          mi.size,
 		IsInitialized: mi.isInitialized,
 	}

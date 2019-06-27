@@ -50,6 +50,14 @@ b = wire.Append{{.WireType}}(b, {{.FromGoType}})
 {{- end -}}
 {{- end -}}
 
+{{- define "Consume" -}}
+{{- if eq .Name "String" -}}
+wire.ConsumeString(b)
+{{- else -}}
+wire.Consume{{.WireType}}(b)
+{{- end -}}
+{{- end -}}
+
 {{- range .}}
 {{- if .FromGoType }}
 // size{{.Name}} returns the size of wire encoding a {{.GoType}} pointer as a {{.Name}}.
@@ -68,9 +76,23 @@ func append{{.Name}}(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 	return b, nil
 }
 
+// consume{{.Name}} wire decodes a {{.GoType}} pointer as a {{.Name}}.
+func consume{{.Name}}(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != {{.WireType.Expr}} {
+		return 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
+	return n, nil
+}
+
 var coder{{.Name}} = pointerCoderFuncs{
-	size:    size{{.Name}},
-	marshal: append{{.Name}},
+	size:      size{{.Name}},
+	marshal:   append{{.Name}},
+	unmarshal: consume{{.Name}},
 }
 
 // size{{.Name}} returns the size of wire encoding a {{.GoType}} pointer as a {{.Name}}.
@@ -96,8 +118,9 @@ func append{{.Name}}NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions
 }
 
 var coder{{.Name}}NoZero = pointerCoderFuncs{
-	size:    size{{.Name}}NoZero,
-	marshal: append{{.Name}}NoZero,
+	size:      size{{.Name}}NoZero,
+	marshal:   append{{.Name}}NoZero,
+	unmarshal: consume{{.Name}},
 }
 
 {{- if not .NoPointer}}
@@ -110,7 +133,7 @@ func size{{.Name}}Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + {{template "Size" .}}
 }
 
-// append{{.Name}} wire encodes a *{{.GoType}} pointer as a {{.Name}}.
+// append{{.Name}}Ptr wire encodes a *{{.GoType}} pointer as a {{.Name}}.
 // It panics if the pointer is nil.
 func append{{.Name}}Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.{{.GoType.PointerMethod}}Ptr()
@@ -119,9 +142,27 @@ func append{{.Name}}Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 	return b, nil
 }
 
+// consume{{.Name}}Ptr wire decodes a *{{.GoType}} pointer as a {{.Name}}.
+func consume{{.Name}}Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != {{.WireType.Expr}} {
+		return 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.{{.GoType.PointerMethod}}Ptr()
+	if *vp == nil {
+		*vp = new({{.GoType}})
+	}
+	**vp = {{.ToGoType}}
+	return n, nil
+}
+
 var coder{{.Name}}Ptr = pointerCoderFuncs{
-	size:    size{{.Name}}Ptr,
-	marshal: append{{.Name}}Ptr,
+	size:      size{{.Name}}Ptr,
+	marshal:   append{{.Name}}Ptr,
+	unmarshal: consume{{.Name}}Ptr,
 }
 {{end}}
 
@@ -148,9 +189,43 @@ func append{{.Name}}Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions)
 	return b, nil
 }
 
+// consume{{.Name}}Slice wire decodes a []{{.GoType}} pointer as a repeated {{.Name}}.
+func consume{{.Name}}Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.{{.GoType.PointerMethod}}Slice()
+	{{- if .WireType.Packable}}
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := {{template "Consume" .}}
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, {{.ToGoType}})
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	{{- end}}
+	if wtyp != {{.WireType.Expr}} {
+		return 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, {{.ToGoType}})
+	return n, nil
+}
+
 var coder{{.Name}}Slice = pointerCoderFuncs{
-	size:    size{{.Name}}Slice,
-	marshal: append{{.Name}}Slice,
+	size:      size{{.Name}}Slice,
+	marshal:   append{{.Name}}Slice,
+	unmarshal: consume{{.Name}}Slice,
 }
 
 {{if or (eq .WireType "Varint") (eq .WireType "Fixed32") (eq .WireType "Fixed64")}}
@@ -194,8 +269,9 @@ func append{{.Name}}PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOp
 }
 
 var coder{{.Name}}PackedSlice = pointerCoderFuncs{
-	size:    size{{.Name}}PackedSlice,
-	marshal: append{{.Name}}PackedSlice,
+	size:      size{{.Name}}PackedSlice,
+	marshal:   append{{.Name}}PackedSlice,
+	unmarshal: consume{{.Name}}Slice,
 }
 {{end}}
 
@@ -215,9 +291,22 @@ func append{{.Name}}Iface(b []byte, ival interface{}, wiretag uint64, _ marshalO
 	return b, nil
 }
 
+// consume{{.Name}}Iface decodes a {{.GoType}} value as a {{.Name}}.
+func consume{{.Name}}Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != {{.WireType.Expr}} {
+		return nil, 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return {{.ToGoType}}, n, nil
+}
+
 var coder{{.Name}}Iface = ifaceCoderFuncs{
 	size:    size{{.Name}}Iface,
 	marshal: append{{.Name}}Iface,
+	unmarshal: consume{{.Name}}Iface,
 }
 
 // size{{.Name}}SliceIface returns the size of wire encoding a []{{.GoType}} value as a repeated {{.Name}}.
@@ -243,9 +332,44 @@ func append{{.Name}}SliceIface(b []byte, ival interface{}, wiretag uint64, _ mar
 	return b, nil
 }
 
+// consume{{.Name}}SliceIface wire decodes a []{{.GoType}} value as a repeated {{.Name}}.
+func consume{{.Name}}SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]{{.GoType}})
+	{{- if .WireType.Packable}}
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := {{template "Consume" .}}
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, {{.ToGoType}})
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	{{- end}}
+	if wtyp != {{.WireType.Expr}} {
+		return nil, 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, {{.ToGoType}})
+	return ival, n, nil
+}
+
+
 var coder{{.Name}}SliceIface = ifaceCoderFuncs{
-	size:    size{{.Name}}SliceIface,
-	marshal: append{{.Name}}SliceIface,
+	size:      size{{.Name}}SliceIface,
+	marshal:   append{{.Name}}SliceIface,
+	unmarshal: consume{{.Name}}SliceIface,
 }
 
 {{end -}}

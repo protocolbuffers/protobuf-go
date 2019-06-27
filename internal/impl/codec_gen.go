@@ -27,9 +27,23 @@ func appendBool(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, 
 	return b, nil
 }
 
+// consumeBool wire decodes a bool pointer as a Bool.
+func consumeBool(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Bool() = wire.DecodeBool(v)
+	return n, nil
+}
+
 var coderBool = pointerCoderFuncs{
-	size:    sizeBool,
-	marshal: appendBool,
+	size:      sizeBool,
+	marshal:   appendBool,
+	unmarshal: consumeBool,
 }
 
 // sizeBool returns the size of wire encoding a bool pointer as a Bool.
@@ -55,8 +69,9 @@ func appendBoolNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]
 }
 
 var coderBoolNoZero = pointerCoderFuncs{
-	size:    sizeBoolNoZero,
-	marshal: appendBoolNoZero,
+	size:      sizeBoolNoZero,
+	marshal:   appendBoolNoZero,
+	unmarshal: consumeBool,
 }
 
 // sizeBoolPtr returns the size of wire encoding a *bool pointer as a Bool.
@@ -66,7 +81,7 @@ func sizeBoolPtr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(wire.EncodeBool(v))
 }
 
-// appendBool wire encodes a *bool pointer as a Bool.
+// appendBoolPtr wire encodes a *bool pointer as a Bool.
 // It panics if the pointer is nil.
 func appendBoolPtr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.BoolPtr()
@@ -75,9 +90,27 @@ func appendBoolPtr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byt
 	return b, nil
 }
 
+// consumeBoolPtr wire decodes a *bool pointer as a Bool.
+func consumeBoolPtr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.BoolPtr()
+	if *vp == nil {
+		*vp = new(bool)
+	}
+	**vp = wire.DecodeBool(v)
+	return n, nil
+}
+
 var coderBoolPtr = pointerCoderFuncs{
-	size:    sizeBoolPtr,
-	marshal: appendBoolPtr,
+	size:      sizeBoolPtr,
+	marshal:   appendBoolPtr,
+	unmarshal: consumeBoolPtr,
 }
 
 // sizeBoolSlice returns the size of wire encoding a []bool pointer as a repeated Bool.
@@ -99,9 +132,41 @@ func appendBoolSlice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 	return b, nil
 }
 
+// consumeBoolSlice wire decodes a []bool pointer as a repeated Bool.
+func consumeBoolSlice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.BoolSlice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, wire.DecodeBool(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, wire.DecodeBool(v))
+	return n, nil
+}
+
 var coderBoolSlice = pointerCoderFuncs{
-	size:    sizeBoolSlice,
-	marshal: appendBoolSlice,
+	size:      sizeBoolSlice,
+	marshal:   appendBoolSlice,
+	unmarshal: consumeBoolSlice,
 }
 
 // sizeBoolPackedSlice returns the size of wire encoding a []bool pointer as a packed repeated Bool.
@@ -136,8 +201,9 @@ func appendBoolPackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOptions
 }
 
 var coderBoolPackedSlice = pointerCoderFuncs{
-	size:    sizeBoolPackedSlice,
-	marshal: appendBoolPackedSlice,
+	size:      sizeBoolPackedSlice,
+	marshal:   appendBoolPackedSlice,
+	unmarshal: consumeBoolSlice,
 }
 
 // sizeBoolIface returns the size of wire encoding a bool value as a Bool.
@@ -154,9 +220,22 @@ func appendBoolIface(b []byte, ival interface{}, wiretag uint64, _ marshalOption
 	return b, nil
 }
 
+// consumeBoolIface decodes a bool value as a Bool.
+func consumeBoolIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return wire.DecodeBool(v), n, nil
+}
+
 var coderBoolIface = ifaceCoderFuncs{
-	size:    sizeBoolIface,
-	marshal: appendBoolIface,
+	size:      sizeBoolIface,
+	marshal:   appendBoolIface,
+	unmarshal: consumeBoolIface,
 }
 
 // sizeBoolSliceIface returns the size of wire encoding a []bool value as a repeated Bool.
@@ -178,9 +257,41 @@ func appendBoolSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalO
 	return b, nil
 }
 
+// consumeBoolSliceIface wire decodes a []bool value as a repeated Bool.
+func consumeBoolSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]bool)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, wire.DecodeBool(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, wire.DecodeBool(v))
+	return ival, n, nil
+}
+
 var coderBoolSliceIface = ifaceCoderFuncs{
-	size:    sizeBoolSliceIface,
-	marshal: appendBoolSliceIface,
+	size:      sizeBoolSliceIface,
+	marshal:   appendBoolSliceIface,
+	unmarshal: consumeBoolSliceIface,
 }
 
 // sizeInt32 returns the size of wire encoding a int32 pointer as a Int32.
@@ -197,9 +308,23 @@ func appendInt32(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte,
 	return b, nil
 }
 
+// consumeInt32 wire decodes a int32 pointer as a Int32.
+func consumeInt32(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Int32() = int32(v)
+	return n, nil
+}
+
 var coderInt32 = pointerCoderFuncs{
-	size:    sizeInt32,
-	marshal: appendInt32,
+	size:      sizeInt32,
+	marshal:   appendInt32,
+	unmarshal: consumeInt32,
 }
 
 // sizeInt32 returns the size of wire encoding a int32 pointer as a Int32.
@@ -225,8 +350,9 @@ func appendInt32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 }
 
 var coderInt32NoZero = pointerCoderFuncs{
-	size:    sizeInt32NoZero,
-	marshal: appendInt32NoZero,
+	size:      sizeInt32NoZero,
+	marshal:   appendInt32NoZero,
+	unmarshal: consumeInt32,
 }
 
 // sizeInt32Ptr returns the size of wire encoding a *int32 pointer as a Int32.
@@ -236,7 +362,7 @@ func sizeInt32Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(uint64(v))
 }
 
-// appendInt32 wire encodes a *int32 pointer as a Int32.
+// appendInt32Ptr wire encodes a *int32 pointer as a Int32.
 // It panics if the pointer is nil.
 func appendInt32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Int32Ptr()
@@ -245,9 +371,27 @@ func appendInt32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]by
 	return b, nil
 }
 
+// consumeInt32Ptr wire decodes a *int32 pointer as a Int32.
+func consumeInt32Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Int32Ptr()
+	if *vp == nil {
+		*vp = new(int32)
+	}
+	**vp = int32(v)
+	return n, nil
+}
+
 var coderInt32Ptr = pointerCoderFuncs{
-	size:    sizeInt32Ptr,
-	marshal: appendInt32Ptr,
+	size:      sizeInt32Ptr,
+	marshal:   appendInt32Ptr,
+	unmarshal: consumeInt32Ptr,
 }
 
 // sizeInt32Slice returns the size of wire encoding a []int32 pointer as a repeated Int32.
@@ -269,9 +413,41 @@ func appendInt32Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]
 	return b, nil
 }
 
+// consumeInt32Slice wire decodes a []int32 pointer as a repeated Int32.
+func consumeInt32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Int32Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, int32(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int32(v))
+	return n, nil
+}
+
 var coderInt32Slice = pointerCoderFuncs{
-	size:    sizeInt32Slice,
-	marshal: appendInt32Slice,
+	size:      sizeInt32Slice,
+	marshal:   appendInt32Slice,
+	unmarshal: consumeInt32Slice,
 }
 
 // sizeInt32PackedSlice returns the size of wire encoding a []int32 pointer as a packed repeated Int32.
@@ -306,8 +482,9 @@ func appendInt32PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOption
 }
 
 var coderInt32PackedSlice = pointerCoderFuncs{
-	size:    sizeInt32PackedSlice,
-	marshal: appendInt32PackedSlice,
+	size:      sizeInt32PackedSlice,
+	marshal:   appendInt32PackedSlice,
+	unmarshal: consumeInt32Slice,
 }
 
 // sizeInt32Iface returns the size of wire encoding a int32 value as a Int32.
@@ -324,9 +501,22 @@ func appendInt32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptio
 	return b, nil
 }
 
+// consumeInt32Iface decodes a int32 value as a Int32.
+func consumeInt32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return int32(v), n, nil
+}
+
 var coderInt32Iface = ifaceCoderFuncs{
-	size:    sizeInt32Iface,
-	marshal: appendInt32Iface,
+	size:      sizeInt32Iface,
+	marshal:   appendInt32Iface,
+	unmarshal: consumeInt32Iface,
 }
 
 // sizeInt32SliceIface returns the size of wire encoding a []int32 value as a repeated Int32.
@@ -348,9 +538,41 @@ func appendInt32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshal
 	return b, nil
 }
 
+// consumeInt32SliceIface wire decodes a []int32 value as a repeated Int32.
+func consumeInt32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]int32)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, int32(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int32(v))
+	return ival, n, nil
+}
+
 var coderInt32SliceIface = ifaceCoderFuncs{
-	size:    sizeInt32SliceIface,
-	marshal: appendInt32SliceIface,
+	size:      sizeInt32SliceIface,
+	marshal:   appendInt32SliceIface,
+	unmarshal: consumeInt32SliceIface,
 }
 
 // sizeSint32 returns the size of wire encoding a int32 pointer as a Sint32.
@@ -367,9 +589,23 @@ func appendSint32(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte
 	return b, nil
 }
 
+// consumeSint32 wire decodes a int32 pointer as a Sint32.
+func consumeSint32(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Int32() = int32(wire.DecodeZigZag(v & math.MaxUint32))
+	return n, nil
+}
+
 var coderSint32 = pointerCoderFuncs{
-	size:    sizeSint32,
-	marshal: appendSint32,
+	size:      sizeSint32,
+	marshal:   appendSint32,
+	unmarshal: consumeSint32,
 }
 
 // sizeSint32 returns the size of wire encoding a int32 pointer as a Sint32.
@@ -395,8 +631,9 @@ func appendSint32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 }
 
 var coderSint32NoZero = pointerCoderFuncs{
-	size:    sizeSint32NoZero,
-	marshal: appendSint32NoZero,
+	size:      sizeSint32NoZero,
+	marshal:   appendSint32NoZero,
+	unmarshal: consumeSint32,
 }
 
 // sizeSint32Ptr returns the size of wire encoding a *int32 pointer as a Sint32.
@@ -406,7 +643,7 @@ func sizeSint32Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(v)))
 }
 
-// appendSint32 wire encodes a *int32 pointer as a Sint32.
+// appendSint32Ptr wire encodes a *int32 pointer as a Sint32.
 // It panics if the pointer is nil.
 func appendSint32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Int32Ptr()
@@ -415,9 +652,27 @@ func appendSint32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 	return b, nil
 }
 
+// consumeSint32Ptr wire decodes a *int32 pointer as a Sint32.
+func consumeSint32Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Int32Ptr()
+	if *vp == nil {
+		*vp = new(int32)
+	}
+	**vp = int32(wire.DecodeZigZag(v & math.MaxUint32))
+	return n, nil
+}
+
 var coderSint32Ptr = pointerCoderFuncs{
-	size:    sizeSint32Ptr,
-	marshal: appendSint32Ptr,
+	size:      sizeSint32Ptr,
+	marshal:   appendSint32Ptr,
+	unmarshal: consumeSint32Ptr,
 }
 
 // sizeSint32Slice returns the size of wire encoding a []int32 pointer as a repeated Sint32.
@@ -439,9 +694,41 @@ func appendSint32Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeSint32Slice wire decodes a []int32 pointer as a repeated Sint32.
+func consumeSint32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Int32Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, int32(wire.DecodeZigZag(v&math.MaxUint32)))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int32(wire.DecodeZigZag(v&math.MaxUint32)))
+	return n, nil
+}
+
 var coderSint32Slice = pointerCoderFuncs{
-	size:    sizeSint32Slice,
-	marshal: appendSint32Slice,
+	size:      sizeSint32Slice,
+	marshal:   appendSint32Slice,
+	unmarshal: consumeSint32Slice,
 }
 
 // sizeSint32PackedSlice returns the size of wire encoding a []int32 pointer as a packed repeated Sint32.
@@ -476,8 +763,9 @@ func appendSint32PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOptio
 }
 
 var coderSint32PackedSlice = pointerCoderFuncs{
-	size:    sizeSint32PackedSlice,
-	marshal: appendSint32PackedSlice,
+	size:      sizeSint32PackedSlice,
+	marshal:   appendSint32PackedSlice,
+	unmarshal: consumeSint32Slice,
 }
 
 // sizeSint32Iface returns the size of wire encoding a int32 value as a Sint32.
@@ -494,9 +782,22 @@ func appendSint32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOpti
 	return b, nil
 }
 
+// consumeSint32Iface decodes a int32 value as a Sint32.
+func consumeSint32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return int32(wire.DecodeZigZag(v & math.MaxUint32)), n, nil
+}
+
 var coderSint32Iface = ifaceCoderFuncs{
-	size:    sizeSint32Iface,
-	marshal: appendSint32Iface,
+	size:      sizeSint32Iface,
+	marshal:   appendSint32Iface,
+	unmarshal: consumeSint32Iface,
 }
 
 // sizeSint32SliceIface returns the size of wire encoding a []int32 value as a repeated Sint32.
@@ -518,9 +819,41 @@ func appendSint32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marsha
 	return b, nil
 }
 
+// consumeSint32SliceIface wire decodes a []int32 value as a repeated Sint32.
+func consumeSint32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]int32)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, int32(wire.DecodeZigZag(v&math.MaxUint32)))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int32(wire.DecodeZigZag(v&math.MaxUint32)))
+	return ival, n, nil
+}
+
 var coderSint32SliceIface = ifaceCoderFuncs{
-	size:    sizeSint32SliceIface,
-	marshal: appendSint32SliceIface,
+	size:      sizeSint32SliceIface,
+	marshal:   appendSint32SliceIface,
+	unmarshal: consumeSint32SliceIface,
 }
 
 // sizeUint32 returns the size of wire encoding a uint32 pointer as a Uint32.
@@ -537,9 +870,23 @@ func appendUint32(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte
 	return b, nil
 }
 
+// consumeUint32 wire decodes a uint32 pointer as a Uint32.
+func consumeUint32(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Uint32() = uint32(v)
+	return n, nil
+}
+
 var coderUint32 = pointerCoderFuncs{
-	size:    sizeUint32,
-	marshal: appendUint32,
+	size:      sizeUint32,
+	marshal:   appendUint32,
+	unmarshal: consumeUint32,
 }
 
 // sizeUint32 returns the size of wire encoding a uint32 pointer as a Uint32.
@@ -565,8 +912,9 @@ func appendUint32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 }
 
 var coderUint32NoZero = pointerCoderFuncs{
-	size:    sizeUint32NoZero,
-	marshal: appendUint32NoZero,
+	size:      sizeUint32NoZero,
+	marshal:   appendUint32NoZero,
+	unmarshal: consumeUint32,
 }
 
 // sizeUint32Ptr returns the size of wire encoding a *uint32 pointer as a Uint32.
@@ -576,7 +924,7 @@ func sizeUint32Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(uint64(v))
 }
 
-// appendUint32 wire encodes a *uint32 pointer as a Uint32.
+// appendUint32Ptr wire encodes a *uint32 pointer as a Uint32.
 // It panics if the pointer is nil.
 func appendUint32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Uint32Ptr()
@@ -585,9 +933,27 @@ func appendUint32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 	return b, nil
 }
 
+// consumeUint32Ptr wire decodes a *uint32 pointer as a Uint32.
+func consumeUint32Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Uint32Ptr()
+	if *vp == nil {
+		*vp = new(uint32)
+	}
+	**vp = uint32(v)
+	return n, nil
+}
+
 var coderUint32Ptr = pointerCoderFuncs{
-	size:    sizeUint32Ptr,
-	marshal: appendUint32Ptr,
+	size:      sizeUint32Ptr,
+	marshal:   appendUint32Ptr,
+	unmarshal: consumeUint32Ptr,
 }
 
 // sizeUint32Slice returns the size of wire encoding a []uint32 pointer as a repeated Uint32.
@@ -609,9 +975,41 @@ func appendUint32Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeUint32Slice wire decodes a []uint32 pointer as a repeated Uint32.
+func consumeUint32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Uint32Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, uint32(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, uint32(v))
+	return n, nil
+}
+
 var coderUint32Slice = pointerCoderFuncs{
-	size:    sizeUint32Slice,
-	marshal: appendUint32Slice,
+	size:      sizeUint32Slice,
+	marshal:   appendUint32Slice,
+	unmarshal: consumeUint32Slice,
 }
 
 // sizeUint32PackedSlice returns the size of wire encoding a []uint32 pointer as a packed repeated Uint32.
@@ -646,8 +1044,9 @@ func appendUint32PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOptio
 }
 
 var coderUint32PackedSlice = pointerCoderFuncs{
-	size:    sizeUint32PackedSlice,
-	marshal: appendUint32PackedSlice,
+	size:      sizeUint32PackedSlice,
+	marshal:   appendUint32PackedSlice,
+	unmarshal: consumeUint32Slice,
 }
 
 // sizeUint32Iface returns the size of wire encoding a uint32 value as a Uint32.
@@ -664,9 +1063,22 @@ func appendUint32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOpti
 	return b, nil
 }
 
+// consumeUint32Iface decodes a uint32 value as a Uint32.
+func consumeUint32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return uint32(v), n, nil
+}
+
 var coderUint32Iface = ifaceCoderFuncs{
-	size:    sizeUint32Iface,
-	marshal: appendUint32Iface,
+	size:      sizeUint32Iface,
+	marshal:   appendUint32Iface,
+	unmarshal: consumeUint32Iface,
 }
 
 // sizeUint32SliceIface returns the size of wire encoding a []uint32 value as a repeated Uint32.
@@ -688,9 +1100,41 @@ func appendUint32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marsha
 	return b, nil
 }
 
+// consumeUint32SliceIface wire decodes a []uint32 value as a repeated Uint32.
+func consumeUint32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]uint32)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, uint32(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, uint32(v))
+	return ival, n, nil
+}
+
 var coderUint32SliceIface = ifaceCoderFuncs{
-	size:    sizeUint32SliceIface,
-	marshal: appendUint32SliceIface,
+	size:      sizeUint32SliceIface,
+	marshal:   appendUint32SliceIface,
+	unmarshal: consumeUint32SliceIface,
 }
 
 // sizeInt64 returns the size of wire encoding a int64 pointer as a Int64.
@@ -707,9 +1151,23 @@ func appendInt64(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte,
 	return b, nil
 }
 
+// consumeInt64 wire decodes a int64 pointer as a Int64.
+func consumeInt64(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Int64() = int64(v)
+	return n, nil
+}
+
 var coderInt64 = pointerCoderFuncs{
-	size:    sizeInt64,
-	marshal: appendInt64,
+	size:      sizeInt64,
+	marshal:   appendInt64,
+	unmarshal: consumeInt64,
 }
 
 // sizeInt64 returns the size of wire encoding a int64 pointer as a Int64.
@@ -735,8 +1193,9 @@ func appendInt64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 }
 
 var coderInt64NoZero = pointerCoderFuncs{
-	size:    sizeInt64NoZero,
-	marshal: appendInt64NoZero,
+	size:      sizeInt64NoZero,
+	marshal:   appendInt64NoZero,
+	unmarshal: consumeInt64,
 }
 
 // sizeInt64Ptr returns the size of wire encoding a *int64 pointer as a Int64.
@@ -746,7 +1205,7 @@ func sizeInt64Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(uint64(v))
 }
 
-// appendInt64 wire encodes a *int64 pointer as a Int64.
+// appendInt64Ptr wire encodes a *int64 pointer as a Int64.
 // It panics if the pointer is nil.
 func appendInt64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Int64Ptr()
@@ -755,9 +1214,27 @@ func appendInt64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]by
 	return b, nil
 }
 
+// consumeInt64Ptr wire decodes a *int64 pointer as a Int64.
+func consumeInt64Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Int64Ptr()
+	if *vp == nil {
+		*vp = new(int64)
+	}
+	**vp = int64(v)
+	return n, nil
+}
+
 var coderInt64Ptr = pointerCoderFuncs{
-	size:    sizeInt64Ptr,
-	marshal: appendInt64Ptr,
+	size:      sizeInt64Ptr,
+	marshal:   appendInt64Ptr,
+	unmarshal: consumeInt64Ptr,
 }
 
 // sizeInt64Slice returns the size of wire encoding a []int64 pointer as a repeated Int64.
@@ -779,9 +1256,41 @@ func appendInt64Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]
 	return b, nil
 }
 
+// consumeInt64Slice wire decodes a []int64 pointer as a repeated Int64.
+func consumeInt64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Int64Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, int64(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int64(v))
+	return n, nil
+}
+
 var coderInt64Slice = pointerCoderFuncs{
-	size:    sizeInt64Slice,
-	marshal: appendInt64Slice,
+	size:      sizeInt64Slice,
+	marshal:   appendInt64Slice,
+	unmarshal: consumeInt64Slice,
 }
 
 // sizeInt64PackedSlice returns the size of wire encoding a []int64 pointer as a packed repeated Int64.
@@ -816,8 +1325,9 @@ func appendInt64PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOption
 }
 
 var coderInt64PackedSlice = pointerCoderFuncs{
-	size:    sizeInt64PackedSlice,
-	marshal: appendInt64PackedSlice,
+	size:      sizeInt64PackedSlice,
+	marshal:   appendInt64PackedSlice,
+	unmarshal: consumeInt64Slice,
 }
 
 // sizeInt64Iface returns the size of wire encoding a int64 value as a Int64.
@@ -834,9 +1344,22 @@ func appendInt64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptio
 	return b, nil
 }
 
+// consumeInt64Iface decodes a int64 value as a Int64.
+func consumeInt64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return int64(v), n, nil
+}
+
 var coderInt64Iface = ifaceCoderFuncs{
-	size:    sizeInt64Iface,
-	marshal: appendInt64Iface,
+	size:      sizeInt64Iface,
+	marshal:   appendInt64Iface,
+	unmarshal: consumeInt64Iface,
 }
 
 // sizeInt64SliceIface returns the size of wire encoding a []int64 value as a repeated Int64.
@@ -858,9 +1381,41 @@ func appendInt64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshal
 	return b, nil
 }
 
+// consumeInt64SliceIface wire decodes a []int64 value as a repeated Int64.
+func consumeInt64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]int64)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, int64(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int64(v))
+	return ival, n, nil
+}
+
 var coderInt64SliceIface = ifaceCoderFuncs{
-	size:    sizeInt64SliceIface,
-	marshal: appendInt64SliceIface,
+	size:      sizeInt64SliceIface,
+	marshal:   appendInt64SliceIface,
+	unmarshal: consumeInt64SliceIface,
 }
 
 // sizeSint64 returns the size of wire encoding a int64 pointer as a Sint64.
@@ -877,9 +1432,23 @@ func appendSint64(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte
 	return b, nil
 }
 
+// consumeSint64 wire decodes a int64 pointer as a Sint64.
+func consumeSint64(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Int64() = wire.DecodeZigZag(v)
+	return n, nil
+}
+
 var coderSint64 = pointerCoderFuncs{
-	size:    sizeSint64,
-	marshal: appendSint64,
+	size:      sizeSint64,
+	marshal:   appendSint64,
+	unmarshal: consumeSint64,
 }
 
 // sizeSint64 returns the size of wire encoding a int64 pointer as a Sint64.
@@ -905,8 +1474,9 @@ func appendSint64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 }
 
 var coderSint64NoZero = pointerCoderFuncs{
-	size:    sizeSint64NoZero,
-	marshal: appendSint64NoZero,
+	size:      sizeSint64NoZero,
+	marshal:   appendSint64NoZero,
+	unmarshal: consumeSint64,
 }
 
 // sizeSint64Ptr returns the size of wire encoding a *int64 pointer as a Sint64.
@@ -916,7 +1486,7 @@ func sizeSint64Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(wire.EncodeZigZag(v))
 }
 
-// appendSint64 wire encodes a *int64 pointer as a Sint64.
+// appendSint64Ptr wire encodes a *int64 pointer as a Sint64.
 // It panics if the pointer is nil.
 func appendSint64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Int64Ptr()
@@ -925,9 +1495,27 @@ func appendSint64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 	return b, nil
 }
 
+// consumeSint64Ptr wire decodes a *int64 pointer as a Sint64.
+func consumeSint64Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Int64Ptr()
+	if *vp == nil {
+		*vp = new(int64)
+	}
+	**vp = wire.DecodeZigZag(v)
+	return n, nil
+}
+
 var coderSint64Ptr = pointerCoderFuncs{
-	size:    sizeSint64Ptr,
-	marshal: appendSint64Ptr,
+	size:      sizeSint64Ptr,
+	marshal:   appendSint64Ptr,
+	unmarshal: consumeSint64Ptr,
 }
 
 // sizeSint64Slice returns the size of wire encoding a []int64 pointer as a repeated Sint64.
@@ -949,9 +1537,41 @@ func appendSint64Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeSint64Slice wire decodes a []int64 pointer as a repeated Sint64.
+func consumeSint64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Int64Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, wire.DecodeZigZag(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, wire.DecodeZigZag(v))
+	return n, nil
+}
+
 var coderSint64Slice = pointerCoderFuncs{
-	size:    sizeSint64Slice,
-	marshal: appendSint64Slice,
+	size:      sizeSint64Slice,
+	marshal:   appendSint64Slice,
+	unmarshal: consumeSint64Slice,
 }
 
 // sizeSint64PackedSlice returns the size of wire encoding a []int64 pointer as a packed repeated Sint64.
@@ -986,8 +1606,9 @@ func appendSint64PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOptio
 }
 
 var coderSint64PackedSlice = pointerCoderFuncs{
-	size:    sizeSint64PackedSlice,
-	marshal: appendSint64PackedSlice,
+	size:      sizeSint64PackedSlice,
+	marshal:   appendSint64PackedSlice,
+	unmarshal: consumeSint64Slice,
 }
 
 // sizeSint64Iface returns the size of wire encoding a int64 value as a Sint64.
@@ -1004,9 +1625,22 @@ func appendSint64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOpti
 	return b, nil
 }
 
+// consumeSint64Iface decodes a int64 value as a Sint64.
+func consumeSint64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return wire.DecodeZigZag(v), n, nil
+}
+
 var coderSint64Iface = ifaceCoderFuncs{
-	size:    sizeSint64Iface,
-	marshal: appendSint64Iface,
+	size:      sizeSint64Iface,
+	marshal:   appendSint64Iface,
+	unmarshal: consumeSint64Iface,
 }
 
 // sizeSint64SliceIface returns the size of wire encoding a []int64 value as a repeated Sint64.
@@ -1028,9 +1662,41 @@ func appendSint64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marsha
 	return b, nil
 }
 
+// consumeSint64SliceIface wire decodes a []int64 value as a repeated Sint64.
+func consumeSint64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]int64)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, wire.DecodeZigZag(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, wire.DecodeZigZag(v))
+	return ival, n, nil
+}
+
 var coderSint64SliceIface = ifaceCoderFuncs{
-	size:    sizeSint64SliceIface,
-	marshal: appendSint64SliceIface,
+	size:      sizeSint64SliceIface,
+	marshal:   appendSint64SliceIface,
+	unmarshal: consumeSint64SliceIface,
 }
 
 // sizeUint64 returns the size of wire encoding a uint64 pointer as a Uint64.
@@ -1047,9 +1713,23 @@ func appendUint64(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte
 	return b, nil
 }
 
+// consumeUint64 wire decodes a uint64 pointer as a Uint64.
+func consumeUint64(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Uint64() = v
+	return n, nil
+}
+
 var coderUint64 = pointerCoderFuncs{
-	size:    sizeUint64,
-	marshal: appendUint64,
+	size:      sizeUint64,
+	marshal:   appendUint64,
+	unmarshal: consumeUint64,
 }
 
 // sizeUint64 returns the size of wire encoding a uint64 pointer as a Uint64.
@@ -1075,8 +1755,9 @@ func appendUint64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 }
 
 var coderUint64NoZero = pointerCoderFuncs{
-	size:    sizeUint64NoZero,
-	marshal: appendUint64NoZero,
+	size:      sizeUint64NoZero,
+	marshal:   appendUint64NoZero,
+	unmarshal: consumeUint64,
 }
 
 // sizeUint64Ptr returns the size of wire encoding a *uint64 pointer as a Uint64.
@@ -1086,7 +1767,7 @@ func sizeUint64Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(v)
 }
 
-// appendUint64 wire encodes a *uint64 pointer as a Uint64.
+// appendUint64Ptr wire encodes a *uint64 pointer as a Uint64.
 // It panics if the pointer is nil.
 func appendUint64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Uint64Ptr()
@@ -1095,9 +1776,27 @@ func appendUint64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 	return b, nil
 }
 
+// consumeUint64Ptr wire decodes a *uint64 pointer as a Uint64.
+func consumeUint64Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Uint64Ptr()
+	if *vp == nil {
+		*vp = new(uint64)
+	}
+	**vp = v
+	return n, nil
+}
+
 var coderUint64Ptr = pointerCoderFuncs{
-	size:    sizeUint64Ptr,
-	marshal: appendUint64Ptr,
+	size:      sizeUint64Ptr,
+	marshal:   appendUint64Ptr,
+	unmarshal: consumeUint64Ptr,
 }
 
 // sizeUint64Slice returns the size of wire encoding a []uint64 pointer as a repeated Uint64.
@@ -1119,9 +1818,41 @@ func appendUint64Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeUint64Slice wire decodes a []uint64 pointer as a repeated Uint64.
+func consumeUint64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Uint64Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, v)
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, v)
+	return n, nil
+}
+
 var coderUint64Slice = pointerCoderFuncs{
-	size:    sizeUint64Slice,
-	marshal: appendUint64Slice,
+	size:      sizeUint64Slice,
+	marshal:   appendUint64Slice,
+	unmarshal: consumeUint64Slice,
 }
 
 // sizeUint64PackedSlice returns the size of wire encoding a []uint64 pointer as a packed repeated Uint64.
@@ -1156,8 +1887,9 @@ func appendUint64PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOptio
 }
 
 var coderUint64PackedSlice = pointerCoderFuncs{
-	size:    sizeUint64PackedSlice,
-	marshal: appendUint64PackedSlice,
+	size:      sizeUint64PackedSlice,
+	marshal:   appendUint64PackedSlice,
+	unmarshal: consumeUint64Slice,
 }
 
 // sizeUint64Iface returns the size of wire encoding a uint64 value as a Uint64.
@@ -1174,9 +1906,22 @@ func appendUint64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOpti
 	return b, nil
 }
 
+// consumeUint64Iface decodes a uint64 value as a Uint64.
+func consumeUint64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return v, n, nil
+}
+
 var coderUint64Iface = ifaceCoderFuncs{
-	size:    sizeUint64Iface,
-	marshal: appendUint64Iface,
+	size:      sizeUint64Iface,
+	marshal:   appendUint64Iface,
+	unmarshal: consumeUint64Iface,
 }
 
 // sizeUint64SliceIface returns the size of wire encoding a []uint64 value as a repeated Uint64.
@@ -1198,9 +1943,41 @@ func appendUint64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marsha
 	return b, nil
 }
 
+// consumeUint64SliceIface wire decodes a []uint64 value as a repeated Uint64.
+func consumeUint64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]uint64)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, v)
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.VarintType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, v)
+	return ival, n, nil
+}
+
 var coderUint64SliceIface = ifaceCoderFuncs{
-	size:    sizeUint64SliceIface,
-	marshal: appendUint64SliceIface,
+	size:      sizeUint64SliceIface,
+	marshal:   appendUint64SliceIface,
+	unmarshal: consumeUint64SliceIface,
 }
 
 // sizeSfixed32 returns the size of wire encoding a int32 pointer as a Sfixed32.
@@ -1217,9 +1994,23 @@ func appendSfixed32(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]by
 	return b, nil
 }
 
+// consumeSfixed32 wire decodes a int32 pointer as a Sfixed32.
+func consumeSfixed32(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Int32() = int32(v)
+	return n, nil
+}
+
 var coderSfixed32 = pointerCoderFuncs{
-	size:    sizeSfixed32,
-	marshal: appendSfixed32,
+	size:      sizeSfixed32,
+	marshal:   appendSfixed32,
+	unmarshal: consumeSfixed32,
 }
 
 // sizeSfixed32 returns the size of wire encoding a int32 pointer as a Sfixed32.
@@ -1245,8 +2036,9 @@ func appendSfixed32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions)
 }
 
 var coderSfixed32NoZero = pointerCoderFuncs{
-	size:    sizeSfixed32NoZero,
-	marshal: appendSfixed32NoZero,
+	size:      sizeSfixed32NoZero,
+	marshal:   appendSfixed32NoZero,
+	unmarshal: consumeSfixed32,
 }
 
 // sizeSfixed32Ptr returns the size of wire encoding a *int32 pointer as a Sfixed32.
@@ -1255,7 +2047,7 @@ func sizeSfixed32Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendSfixed32 wire encodes a *int32 pointer as a Sfixed32.
+// appendSfixed32Ptr wire encodes a *int32 pointer as a Sfixed32.
 // It panics if the pointer is nil.
 func appendSfixed32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Int32Ptr()
@@ -1264,9 +2056,27 @@ func appendSfixed32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeSfixed32Ptr wire decodes a *int32 pointer as a Sfixed32.
+func consumeSfixed32Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Int32Ptr()
+	if *vp == nil {
+		*vp = new(int32)
+	}
+	**vp = int32(v)
+	return n, nil
+}
+
 var coderSfixed32Ptr = pointerCoderFuncs{
-	size:    sizeSfixed32Ptr,
-	marshal: appendSfixed32Ptr,
+	size:      sizeSfixed32Ptr,
+	marshal:   appendSfixed32Ptr,
+	unmarshal: consumeSfixed32Ptr,
 }
 
 // sizeSfixed32Slice returns the size of wire encoding a []int32 pointer as a repeated Sfixed32.
@@ -1286,9 +2096,41 @@ func appendSfixed32Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) 
 	return b, nil
 }
 
+// consumeSfixed32Slice wire decodes a []int32 pointer as a repeated Sfixed32.
+func consumeSfixed32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Int32Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed32(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, int32(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int32(v))
+	return n, nil
+}
+
 var coderSfixed32Slice = pointerCoderFuncs{
-	size:    sizeSfixed32Slice,
-	marshal: appendSfixed32Slice,
+	size:      sizeSfixed32Slice,
+	marshal:   appendSfixed32Slice,
+	unmarshal: consumeSfixed32Slice,
 }
 
 // sizeSfixed32PackedSlice returns the size of wire encoding a []int32 pointer as a packed repeated Sfixed32.
@@ -1317,8 +2159,9 @@ func appendSfixed32PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOpt
 }
 
 var coderSfixed32PackedSlice = pointerCoderFuncs{
-	size:    sizeSfixed32PackedSlice,
-	marshal: appendSfixed32PackedSlice,
+	size:      sizeSfixed32PackedSlice,
+	marshal:   appendSfixed32PackedSlice,
+	unmarshal: consumeSfixed32Slice,
 }
 
 // sizeSfixed32Iface returns the size of wire encoding a int32 value as a Sfixed32.
@@ -1334,9 +2177,22 @@ func appendSfixed32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOp
 	return b, nil
 }
 
+// consumeSfixed32Iface decodes a int32 value as a Sfixed32.
+func consumeSfixed32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.Fixed32Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return int32(v), n, nil
+}
+
 var coderSfixed32Iface = ifaceCoderFuncs{
-	size:    sizeSfixed32Iface,
-	marshal: appendSfixed32Iface,
+	size:      sizeSfixed32Iface,
+	marshal:   appendSfixed32Iface,
+	unmarshal: consumeSfixed32Iface,
 }
 
 // sizeSfixed32SliceIface returns the size of wire encoding a []int32 value as a repeated Sfixed32.
@@ -1356,9 +2212,41 @@ func appendSfixed32SliceIface(b []byte, ival interface{}, wiretag uint64, _ mars
 	return b, nil
 }
 
+// consumeSfixed32SliceIface wire decodes a []int32 value as a repeated Sfixed32.
+func consumeSfixed32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]int32)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed32(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, int32(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.Fixed32Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int32(v))
+	return ival, n, nil
+}
+
 var coderSfixed32SliceIface = ifaceCoderFuncs{
-	size:    sizeSfixed32SliceIface,
-	marshal: appendSfixed32SliceIface,
+	size:      sizeSfixed32SliceIface,
+	marshal:   appendSfixed32SliceIface,
+	unmarshal: consumeSfixed32SliceIface,
 }
 
 // sizeFixed32 returns the size of wire encoding a uint32 pointer as a Fixed32.
@@ -1375,9 +2263,23 @@ func appendFixed32(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byt
 	return b, nil
 }
 
+// consumeFixed32 wire decodes a uint32 pointer as a Fixed32.
+func consumeFixed32(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Uint32() = v
+	return n, nil
+}
+
 var coderFixed32 = pointerCoderFuncs{
-	size:    sizeFixed32,
-	marshal: appendFixed32,
+	size:      sizeFixed32,
+	marshal:   appendFixed32,
+	unmarshal: consumeFixed32,
 }
 
 // sizeFixed32 returns the size of wire encoding a uint32 pointer as a Fixed32.
@@ -1403,8 +2305,9 @@ func appendFixed32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) 
 }
 
 var coderFixed32NoZero = pointerCoderFuncs{
-	size:    sizeFixed32NoZero,
-	marshal: appendFixed32NoZero,
+	size:      sizeFixed32NoZero,
+	marshal:   appendFixed32NoZero,
+	unmarshal: consumeFixed32,
 }
 
 // sizeFixed32Ptr returns the size of wire encoding a *uint32 pointer as a Fixed32.
@@ -1413,7 +2316,7 @@ func sizeFixed32Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendFixed32 wire encodes a *uint32 pointer as a Fixed32.
+// appendFixed32Ptr wire encodes a *uint32 pointer as a Fixed32.
 // It panics if the pointer is nil.
 func appendFixed32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Uint32Ptr()
@@ -1422,9 +2325,27 @@ func appendFixed32Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]
 	return b, nil
 }
 
+// consumeFixed32Ptr wire decodes a *uint32 pointer as a Fixed32.
+func consumeFixed32Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Uint32Ptr()
+	if *vp == nil {
+		*vp = new(uint32)
+	}
+	**vp = v
+	return n, nil
+}
+
 var coderFixed32Ptr = pointerCoderFuncs{
-	size:    sizeFixed32Ptr,
-	marshal: appendFixed32Ptr,
+	size:      sizeFixed32Ptr,
+	marshal:   appendFixed32Ptr,
+	unmarshal: consumeFixed32Ptr,
 }
 
 // sizeFixed32Slice returns the size of wire encoding a []uint32 pointer as a repeated Fixed32.
@@ -1444,9 +2365,41 @@ func appendFixed32Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 	return b, nil
 }
 
+// consumeFixed32Slice wire decodes a []uint32 pointer as a repeated Fixed32.
+func consumeFixed32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Uint32Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed32(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, v)
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, v)
+	return n, nil
+}
+
 var coderFixed32Slice = pointerCoderFuncs{
-	size:    sizeFixed32Slice,
-	marshal: appendFixed32Slice,
+	size:      sizeFixed32Slice,
+	marshal:   appendFixed32Slice,
+	unmarshal: consumeFixed32Slice,
 }
 
 // sizeFixed32PackedSlice returns the size of wire encoding a []uint32 pointer as a packed repeated Fixed32.
@@ -1475,8 +2428,9 @@ func appendFixed32PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOpti
 }
 
 var coderFixed32PackedSlice = pointerCoderFuncs{
-	size:    sizeFixed32PackedSlice,
-	marshal: appendFixed32PackedSlice,
+	size:      sizeFixed32PackedSlice,
+	marshal:   appendFixed32PackedSlice,
+	unmarshal: consumeFixed32Slice,
 }
 
 // sizeFixed32Iface returns the size of wire encoding a uint32 value as a Fixed32.
@@ -1492,9 +2446,22 @@ func appendFixed32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOpt
 	return b, nil
 }
 
+// consumeFixed32Iface decodes a uint32 value as a Fixed32.
+func consumeFixed32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.Fixed32Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return v, n, nil
+}
+
 var coderFixed32Iface = ifaceCoderFuncs{
-	size:    sizeFixed32Iface,
-	marshal: appendFixed32Iface,
+	size:      sizeFixed32Iface,
+	marshal:   appendFixed32Iface,
+	unmarshal: consumeFixed32Iface,
 }
 
 // sizeFixed32SliceIface returns the size of wire encoding a []uint32 value as a repeated Fixed32.
@@ -1514,9 +2481,41 @@ func appendFixed32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marsh
 	return b, nil
 }
 
+// consumeFixed32SliceIface wire decodes a []uint32 value as a repeated Fixed32.
+func consumeFixed32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]uint32)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed32(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, v)
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.Fixed32Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, v)
+	return ival, n, nil
+}
+
 var coderFixed32SliceIface = ifaceCoderFuncs{
-	size:    sizeFixed32SliceIface,
-	marshal: appendFixed32SliceIface,
+	size:      sizeFixed32SliceIface,
+	marshal:   appendFixed32SliceIface,
+	unmarshal: consumeFixed32SliceIface,
 }
 
 // sizeFloat returns the size of wire encoding a float32 pointer as a Float.
@@ -1533,9 +2532,23 @@ func appendFloat(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte,
 	return b, nil
 }
 
+// consumeFloat wire decodes a float32 pointer as a Float.
+func consumeFloat(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Float32() = math.Float32frombits(v)
+	return n, nil
+}
+
 var coderFloat = pointerCoderFuncs{
-	size:    sizeFloat,
-	marshal: appendFloat,
+	size:      sizeFloat,
+	marshal:   appendFloat,
+	unmarshal: consumeFloat,
 }
 
 // sizeFloat returns the size of wire encoding a float32 pointer as a Float.
@@ -1561,8 +2574,9 @@ func appendFloatNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 }
 
 var coderFloatNoZero = pointerCoderFuncs{
-	size:    sizeFloatNoZero,
-	marshal: appendFloatNoZero,
+	size:      sizeFloatNoZero,
+	marshal:   appendFloatNoZero,
+	unmarshal: consumeFloat,
 }
 
 // sizeFloatPtr returns the size of wire encoding a *float32 pointer as a Float.
@@ -1571,7 +2585,7 @@ func sizeFloatPtr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendFloat wire encodes a *float32 pointer as a Float.
+// appendFloatPtr wire encodes a *float32 pointer as a Float.
 // It panics if the pointer is nil.
 func appendFloatPtr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Float32Ptr()
@@ -1580,9 +2594,27 @@ func appendFloatPtr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]by
 	return b, nil
 }
 
+// consumeFloatPtr wire decodes a *float32 pointer as a Float.
+func consumeFloatPtr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Float32Ptr()
+	if *vp == nil {
+		*vp = new(float32)
+	}
+	**vp = math.Float32frombits(v)
+	return n, nil
+}
+
 var coderFloatPtr = pointerCoderFuncs{
-	size:    sizeFloatPtr,
-	marshal: appendFloatPtr,
+	size:      sizeFloatPtr,
+	marshal:   appendFloatPtr,
+	unmarshal: consumeFloatPtr,
 }
 
 // sizeFloatSlice returns the size of wire encoding a []float32 pointer as a repeated Float.
@@ -1602,9 +2634,41 @@ func appendFloatSlice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]
 	return b, nil
 }
 
+// consumeFloatSlice wire decodes a []float32 pointer as a repeated Float.
+func consumeFloatSlice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Float32Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed32(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, math.Float32frombits(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.Fixed32Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, math.Float32frombits(v))
+	return n, nil
+}
+
 var coderFloatSlice = pointerCoderFuncs{
-	size:    sizeFloatSlice,
-	marshal: appendFloatSlice,
+	size:      sizeFloatSlice,
+	marshal:   appendFloatSlice,
+	unmarshal: consumeFloatSlice,
 }
 
 // sizeFloatPackedSlice returns the size of wire encoding a []float32 pointer as a packed repeated Float.
@@ -1633,8 +2697,9 @@ func appendFloatPackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOption
 }
 
 var coderFloatPackedSlice = pointerCoderFuncs{
-	size:    sizeFloatPackedSlice,
-	marshal: appendFloatPackedSlice,
+	size:      sizeFloatPackedSlice,
+	marshal:   appendFloatPackedSlice,
+	unmarshal: consumeFloatSlice,
 }
 
 // sizeFloatIface returns the size of wire encoding a float32 value as a Float.
@@ -1650,9 +2715,22 @@ func appendFloatIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptio
 	return b, nil
 }
 
+// consumeFloatIface decodes a float32 value as a Float.
+func consumeFloatIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.Fixed32Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return math.Float32frombits(v), n, nil
+}
+
 var coderFloatIface = ifaceCoderFuncs{
-	size:    sizeFloatIface,
-	marshal: appendFloatIface,
+	size:      sizeFloatIface,
+	marshal:   appendFloatIface,
+	unmarshal: consumeFloatIface,
 }
 
 // sizeFloatSliceIface returns the size of wire encoding a []float32 value as a repeated Float.
@@ -1672,9 +2750,41 @@ func appendFloatSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshal
 	return b, nil
 }
 
+// consumeFloatSliceIface wire decodes a []float32 value as a repeated Float.
+func consumeFloatSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]float32)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed32(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, math.Float32frombits(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.Fixed32Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed32(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, math.Float32frombits(v))
+	return ival, n, nil
+}
+
 var coderFloatSliceIface = ifaceCoderFuncs{
-	size:    sizeFloatSliceIface,
-	marshal: appendFloatSliceIface,
+	size:      sizeFloatSliceIface,
+	marshal:   appendFloatSliceIface,
+	unmarshal: consumeFloatSliceIface,
 }
 
 // sizeSfixed64 returns the size of wire encoding a int64 pointer as a Sfixed64.
@@ -1691,9 +2801,23 @@ func appendSfixed64(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]by
 	return b, nil
 }
 
+// consumeSfixed64 wire decodes a int64 pointer as a Sfixed64.
+func consumeSfixed64(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Int64() = int64(v)
+	return n, nil
+}
+
 var coderSfixed64 = pointerCoderFuncs{
-	size:    sizeSfixed64,
-	marshal: appendSfixed64,
+	size:      sizeSfixed64,
+	marshal:   appendSfixed64,
+	unmarshal: consumeSfixed64,
 }
 
 // sizeSfixed64 returns the size of wire encoding a int64 pointer as a Sfixed64.
@@ -1719,8 +2843,9 @@ func appendSfixed64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions)
 }
 
 var coderSfixed64NoZero = pointerCoderFuncs{
-	size:    sizeSfixed64NoZero,
-	marshal: appendSfixed64NoZero,
+	size:      sizeSfixed64NoZero,
+	marshal:   appendSfixed64NoZero,
+	unmarshal: consumeSfixed64,
 }
 
 // sizeSfixed64Ptr returns the size of wire encoding a *int64 pointer as a Sfixed64.
@@ -1729,7 +2854,7 @@ func sizeSfixed64Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendSfixed64 wire encodes a *int64 pointer as a Sfixed64.
+// appendSfixed64Ptr wire encodes a *int64 pointer as a Sfixed64.
 // It panics if the pointer is nil.
 func appendSfixed64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Int64Ptr()
@@ -1738,9 +2863,27 @@ func appendSfixed64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeSfixed64Ptr wire decodes a *int64 pointer as a Sfixed64.
+func consumeSfixed64Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Int64Ptr()
+	if *vp == nil {
+		*vp = new(int64)
+	}
+	**vp = int64(v)
+	return n, nil
+}
+
 var coderSfixed64Ptr = pointerCoderFuncs{
-	size:    sizeSfixed64Ptr,
-	marshal: appendSfixed64Ptr,
+	size:      sizeSfixed64Ptr,
+	marshal:   appendSfixed64Ptr,
+	unmarshal: consumeSfixed64Ptr,
 }
 
 // sizeSfixed64Slice returns the size of wire encoding a []int64 pointer as a repeated Sfixed64.
@@ -1760,9 +2903,41 @@ func appendSfixed64Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) 
 	return b, nil
 }
 
+// consumeSfixed64Slice wire decodes a []int64 pointer as a repeated Sfixed64.
+func consumeSfixed64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Int64Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed64(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, int64(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int64(v))
+	return n, nil
+}
+
 var coderSfixed64Slice = pointerCoderFuncs{
-	size:    sizeSfixed64Slice,
-	marshal: appendSfixed64Slice,
+	size:      sizeSfixed64Slice,
+	marshal:   appendSfixed64Slice,
+	unmarshal: consumeSfixed64Slice,
 }
 
 // sizeSfixed64PackedSlice returns the size of wire encoding a []int64 pointer as a packed repeated Sfixed64.
@@ -1791,8 +2966,9 @@ func appendSfixed64PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOpt
 }
 
 var coderSfixed64PackedSlice = pointerCoderFuncs{
-	size:    sizeSfixed64PackedSlice,
-	marshal: appendSfixed64PackedSlice,
+	size:      sizeSfixed64PackedSlice,
+	marshal:   appendSfixed64PackedSlice,
+	unmarshal: consumeSfixed64Slice,
 }
 
 // sizeSfixed64Iface returns the size of wire encoding a int64 value as a Sfixed64.
@@ -1808,9 +2984,22 @@ func appendSfixed64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOp
 	return b, nil
 }
 
+// consumeSfixed64Iface decodes a int64 value as a Sfixed64.
+func consumeSfixed64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.Fixed64Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return int64(v), n, nil
+}
+
 var coderSfixed64Iface = ifaceCoderFuncs{
-	size:    sizeSfixed64Iface,
-	marshal: appendSfixed64Iface,
+	size:      sizeSfixed64Iface,
+	marshal:   appendSfixed64Iface,
+	unmarshal: consumeSfixed64Iface,
 }
 
 // sizeSfixed64SliceIface returns the size of wire encoding a []int64 value as a repeated Sfixed64.
@@ -1830,9 +3019,41 @@ func appendSfixed64SliceIface(b []byte, ival interface{}, wiretag uint64, _ mars
 	return b, nil
 }
 
+// consumeSfixed64SliceIface wire decodes a []int64 value as a repeated Sfixed64.
+func consumeSfixed64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]int64)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed64(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, int64(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.Fixed64Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, int64(v))
+	return ival, n, nil
+}
+
 var coderSfixed64SliceIface = ifaceCoderFuncs{
-	size:    sizeSfixed64SliceIface,
-	marshal: appendSfixed64SliceIface,
+	size:      sizeSfixed64SliceIface,
+	marshal:   appendSfixed64SliceIface,
+	unmarshal: consumeSfixed64SliceIface,
 }
 
 // sizeFixed64 returns the size of wire encoding a uint64 pointer as a Fixed64.
@@ -1849,9 +3070,23 @@ func appendFixed64(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byt
 	return b, nil
 }
 
+// consumeFixed64 wire decodes a uint64 pointer as a Fixed64.
+func consumeFixed64(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Uint64() = v
+	return n, nil
+}
+
 var coderFixed64 = pointerCoderFuncs{
-	size:    sizeFixed64,
-	marshal: appendFixed64,
+	size:      sizeFixed64,
+	marshal:   appendFixed64,
+	unmarshal: consumeFixed64,
 }
 
 // sizeFixed64 returns the size of wire encoding a uint64 pointer as a Fixed64.
@@ -1877,8 +3112,9 @@ func appendFixed64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) 
 }
 
 var coderFixed64NoZero = pointerCoderFuncs{
-	size:    sizeFixed64NoZero,
-	marshal: appendFixed64NoZero,
+	size:      sizeFixed64NoZero,
+	marshal:   appendFixed64NoZero,
+	unmarshal: consumeFixed64,
 }
 
 // sizeFixed64Ptr returns the size of wire encoding a *uint64 pointer as a Fixed64.
@@ -1887,7 +3123,7 @@ func sizeFixed64Ptr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendFixed64 wire encodes a *uint64 pointer as a Fixed64.
+// appendFixed64Ptr wire encodes a *uint64 pointer as a Fixed64.
 // It panics if the pointer is nil.
 func appendFixed64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Uint64Ptr()
@@ -1896,9 +3132,27 @@ func appendFixed64Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]
 	return b, nil
 }
 
+// consumeFixed64Ptr wire decodes a *uint64 pointer as a Fixed64.
+func consumeFixed64Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Uint64Ptr()
+	if *vp == nil {
+		*vp = new(uint64)
+	}
+	**vp = v
+	return n, nil
+}
+
 var coderFixed64Ptr = pointerCoderFuncs{
-	size:    sizeFixed64Ptr,
-	marshal: appendFixed64Ptr,
+	size:      sizeFixed64Ptr,
+	marshal:   appendFixed64Ptr,
+	unmarshal: consumeFixed64Ptr,
 }
 
 // sizeFixed64Slice returns the size of wire encoding a []uint64 pointer as a repeated Fixed64.
@@ -1918,9 +3172,41 @@ func appendFixed64Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 	return b, nil
 }
 
+// consumeFixed64Slice wire decodes a []uint64 pointer as a repeated Fixed64.
+func consumeFixed64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Uint64Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed64(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, v)
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, v)
+	return n, nil
+}
+
 var coderFixed64Slice = pointerCoderFuncs{
-	size:    sizeFixed64Slice,
-	marshal: appendFixed64Slice,
+	size:      sizeFixed64Slice,
+	marshal:   appendFixed64Slice,
+	unmarshal: consumeFixed64Slice,
 }
 
 // sizeFixed64PackedSlice returns the size of wire encoding a []uint64 pointer as a packed repeated Fixed64.
@@ -1949,8 +3235,9 @@ func appendFixed64PackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOpti
 }
 
 var coderFixed64PackedSlice = pointerCoderFuncs{
-	size:    sizeFixed64PackedSlice,
-	marshal: appendFixed64PackedSlice,
+	size:      sizeFixed64PackedSlice,
+	marshal:   appendFixed64PackedSlice,
+	unmarshal: consumeFixed64Slice,
 }
 
 // sizeFixed64Iface returns the size of wire encoding a uint64 value as a Fixed64.
@@ -1966,9 +3253,22 @@ func appendFixed64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOpt
 	return b, nil
 }
 
+// consumeFixed64Iface decodes a uint64 value as a Fixed64.
+func consumeFixed64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.Fixed64Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return v, n, nil
+}
+
 var coderFixed64Iface = ifaceCoderFuncs{
-	size:    sizeFixed64Iface,
-	marshal: appendFixed64Iface,
+	size:      sizeFixed64Iface,
+	marshal:   appendFixed64Iface,
+	unmarshal: consumeFixed64Iface,
 }
 
 // sizeFixed64SliceIface returns the size of wire encoding a []uint64 value as a repeated Fixed64.
@@ -1988,9 +3288,41 @@ func appendFixed64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marsh
 	return b, nil
 }
 
+// consumeFixed64SliceIface wire decodes a []uint64 value as a repeated Fixed64.
+func consumeFixed64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]uint64)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed64(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, v)
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.Fixed64Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, v)
+	return ival, n, nil
+}
+
 var coderFixed64SliceIface = ifaceCoderFuncs{
-	size:    sizeFixed64SliceIface,
-	marshal: appendFixed64SliceIface,
+	size:      sizeFixed64SliceIface,
+	marshal:   appendFixed64SliceIface,
+	unmarshal: consumeFixed64SliceIface,
 }
 
 // sizeDouble returns the size of wire encoding a float64 pointer as a Double.
@@ -2007,9 +3339,23 @@ func appendDouble(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte
 	return b, nil
 }
 
+// consumeDouble wire decodes a float64 pointer as a Double.
+func consumeDouble(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Float64() = math.Float64frombits(v)
+	return n, nil
+}
+
 var coderDouble = pointerCoderFuncs{
-	size:    sizeDouble,
-	marshal: appendDouble,
+	size:      sizeDouble,
+	marshal:   appendDouble,
+	unmarshal: consumeDouble,
 }
 
 // sizeDouble returns the size of wire encoding a float64 pointer as a Double.
@@ -2035,8 +3381,9 @@ func appendDoubleNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 }
 
 var coderDoubleNoZero = pointerCoderFuncs{
-	size:    sizeDoubleNoZero,
-	marshal: appendDoubleNoZero,
+	size:      sizeDoubleNoZero,
+	marshal:   appendDoubleNoZero,
+	unmarshal: consumeDouble,
 }
 
 // sizeDoublePtr returns the size of wire encoding a *float64 pointer as a Double.
@@ -2045,7 +3392,7 @@ func sizeDoublePtr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendDouble wire encodes a *float64 pointer as a Double.
+// appendDoublePtr wire encodes a *float64 pointer as a Double.
 // It panics if the pointer is nil.
 func appendDoublePtr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.Float64Ptr()
@@ -2054,9 +3401,27 @@ func appendDoublePtr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 	return b, nil
 }
 
+// consumeDoublePtr wire decodes a *float64 pointer as a Double.
+func consumeDoublePtr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.Float64Ptr()
+	if *vp == nil {
+		*vp = new(float64)
+	}
+	**vp = math.Float64frombits(v)
+	return n, nil
+}
+
 var coderDoublePtr = pointerCoderFuncs{
-	size:    sizeDoublePtr,
-	marshal: appendDoublePtr,
+	size:      sizeDoublePtr,
+	marshal:   appendDoublePtr,
+	unmarshal: consumeDoublePtr,
 }
 
 // sizeDoubleSlice returns the size of wire encoding a []float64 pointer as a repeated Double.
@@ -2076,9 +3441,41 @@ func appendDoubleSlice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeDoubleSlice wire decodes a []float64 pointer as a repeated Double.
+func consumeDoubleSlice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.Float64Slice()
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed64(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			s = append(s, math.Float64frombits(v))
+			b = b[n:]
+		}
+		*sp = s
+		return n, nil
+	}
+	if wtyp != wire.Fixed64Type {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, math.Float64frombits(v))
+	return n, nil
+}
+
 var coderDoubleSlice = pointerCoderFuncs{
-	size:    sizeDoubleSlice,
-	marshal: appendDoubleSlice,
+	size:      sizeDoubleSlice,
+	marshal:   appendDoubleSlice,
+	unmarshal: consumeDoubleSlice,
 }
 
 // sizeDoublePackedSlice returns the size of wire encoding a []float64 pointer as a packed repeated Double.
@@ -2107,8 +3504,9 @@ func appendDoublePackedSlice(b []byte, p pointer, wiretag uint64, _ marshalOptio
 }
 
 var coderDoublePackedSlice = pointerCoderFuncs{
-	size:    sizeDoublePackedSlice,
-	marshal: appendDoublePackedSlice,
+	size:      sizeDoublePackedSlice,
+	marshal:   appendDoublePackedSlice,
+	unmarshal: consumeDoubleSlice,
 }
 
 // sizeDoubleIface returns the size of wire encoding a float64 value as a Double.
@@ -2124,9 +3522,22 @@ func appendDoubleIface(b []byte, ival interface{}, wiretag uint64, _ marshalOpti
 	return b, nil
 }
 
+// consumeDoubleIface decodes a float64 value as a Double.
+func consumeDoubleIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.Fixed64Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return math.Float64frombits(v), n, nil
+}
+
 var coderDoubleIface = ifaceCoderFuncs{
-	size:    sizeDoubleIface,
-	marshal: appendDoubleIface,
+	size:      sizeDoubleIface,
+	marshal:   appendDoubleIface,
+	unmarshal: consumeDoubleIface,
 }
 
 // sizeDoubleSliceIface returns the size of wire encoding a []float64 value as a repeated Double.
@@ -2146,9 +3557,41 @@ func appendDoubleSliceIface(b []byte, ival interface{}, wiretag uint64, _ marsha
 	return b, nil
 }
 
+// consumeDoubleSliceIface wire decodes a []float64 value as a repeated Double.
+func consumeDoubleSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]float64)
+	if wtyp == wire.BytesType {
+		s := *sp
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return nil, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeFixed64(b)
+			if n < 0 {
+				return nil, 0, wire.ParseError(n)
+			}
+			s = append(s, math.Float64frombits(v))
+			b = b[n:]
+		}
+		*sp = s
+		return ival, n, nil
+	}
+	if wtyp != wire.Fixed64Type {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeFixed64(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, math.Float64frombits(v))
+	return ival, n, nil
+}
+
 var coderDoubleSliceIface = ifaceCoderFuncs{
-	size:    sizeDoubleSliceIface,
-	marshal: appendDoubleSliceIface,
+	size:      sizeDoubleSliceIface,
+	marshal:   appendDoubleSliceIface,
+	unmarshal: consumeDoubleSliceIface,
 }
 
 // sizeString returns the size of wire encoding a string pointer as a String.
@@ -2165,9 +3608,23 @@ func appendString(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte
 	return b, nil
 }
 
+// consumeString wire decodes a string pointer as a String.
+func consumeString(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeString(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.String() = v
+	return n, nil
+}
+
 var coderString = pointerCoderFuncs{
-	size:    sizeString,
-	marshal: appendString,
+	size:      sizeString,
+	marshal:   appendString,
+	unmarshal: consumeString,
 }
 
 // sizeString returns the size of wire encoding a string pointer as a String.
@@ -2193,8 +3650,9 @@ func appendStringNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 }
 
 var coderStringNoZero = pointerCoderFuncs{
-	size:    sizeStringNoZero,
-	marshal: appendStringNoZero,
+	size:      sizeStringNoZero,
+	marshal:   appendStringNoZero,
+	unmarshal: consumeString,
 }
 
 // sizeStringPtr returns the size of wire encoding a *string pointer as a String.
@@ -2204,7 +3662,7 @@ func sizeStringPtr(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeBytes(len(v))
 }
 
-// appendString wire encodes a *string pointer as a String.
+// appendStringPtr wire encodes a *string pointer as a String.
 // It panics if the pointer is nil.
 func appendStringPtr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := **p.StringPtr()
@@ -2213,9 +3671,27 @@ func appendStringPtr(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 	return b, nil
 }
 
+// consumeStringPtr wire decodes a *string pointer as a String.
+func consumeStringPtr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeString(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	vp := p.StringPtr()
+	if *vp == nil {
+		*vp = new(string)
+	}
+	**vp = v
+	return n, nil
+}
+
 var coderStringPtr = pointerCoderFuncs{
-	size:    sizeStringPtr,
-	marshal: appendStringPtr,
+	size:      sizeStringPtr,
+	marshal:   appendStringPtr,
+	unmarshal: consumeStringPtr,
 }
 
 // sizeStringSlice returns the size of wire encoding a []string pointer as a repeated String.
@@ -2237,9 +3713,24 @@ func appendStringSlice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeStringSlice wire decodes a []string pointer as a repeated String.
+func consumeStringSlice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.StringSlice()
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeString(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, v)
+	return n, nil
+}
+
 var coderStringSlice = pointerCoderFuncs{
-	size:    sizeStringSlice,
-	marshal: appendStringSlice,
+	size:      sizeStringSlice,
+	marshal:   appendStringSlice,
+	unmarshal: consumeStringSlice,
 }
 
 // sizeStringIface returns the size of wire encoding a string value as a String.
@@ -2256,9 +3747,22 @@ func appendStringIface(b []byte, ival interface{}, wiretag uint64, _ marshalOpti
 	return b, nil
 }
 
+// consumeStringIface decodes a string value as a String.
+func consumeStringIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.BytesType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeString(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return v, n, nil
+}
+
 var coderStringIface = ifaceCoderFuncs{
-	size:    sizeStringIface,
-	marshal: appendStringIface,
+	size:      sizeStringIface,
+	marshal:   appendStringIface,
+	unmarshal: consumeStringIface,
 }
 
 // sizeStringSliceIface returns the size of wire encoding a []string value as a repeated String.
@@ -2280,9 +3784,24 @@ func appendStringSliceIface(b []byte, ival interface{}, wiretag uint64, _ marsha
 	return b, nil
 }
 
+// consumeStringSliceIface wire decodes a []string value as a repeated String.
+func consumeStringSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[]string)
+	if wtyp != wire.BytesType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeString(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, v)
+	return ival, n, nil
+}
+
 var coderStringSliceIface = ifaceCoderFuncs{
-	size:    sizeStringSliceIface,
-	marshal: appendStringSliceIface,
+	size:      sizeStringSliceIface,
+	marshal:   appendStringSliceIface,
+	unmarshal: consumeStringSliceIface,
 }
 
 // sizeBytes returns the size of wire encoding a []byte pointer as a Bytes.
@@ -2299,9 +3818,23 @@ func appendBytes(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte,
 	return b, nil
 }
 
+// consumeBytes wire decodes a []byte pointer as a Bytes.
+func consumeBytes(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Bytes() = append(([]byte)(nil), v...)
+	return n, nil
+}
+
 var coderBytes = pointerCoderFuncs{
-	size:    sizeBytes,
-	marshal: appendBytes,
+	size:      sizeBytes,
+	marshal:   appendBytes,
+	unmarshal: consumeBytes,
 }
 
 // sizeBytes returns the size of wire encoding a []byte pointer as a Bytes.
@@ -2327,8 +3860,9 @@ func appendBytesNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 }
 
 var coderBytesNoZero = pointerCoderFuncs{
-	size:    sizeBytesNoZero,
-	marshal: appendBytesNoZero,
+	size:      sizeBytesNoZero,
+	marshal:   appendBytesNoZero,
+	unmarshal: consumeBytes,
 }
 
 // sizeBytesSlice returns the size of wire encoding a [][]byte pointer as a repeated Bytes.
@@ -2350,9 +3884,24 @@ func appendBytesSlice(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]
 	return b, nil
 }
 
+// consumeBytesSlice wire decodes a [][]byte pointer as a repeated Bytes.
+func consumeBytesSlice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.BytesSlice()
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, append(([]byte)(nil), v...))
+	return n, nil
+}
+
 var coderBytesSlice = pointerCoderFuncs{
-	size:    sizeBytesSlice,
-	marshal: appendBytesSlice,
+	size:      sizeBytesSlice,
+	marshal:   appendBytesSlice,
+	unmarshal: consumeBytesSlice,
 }
 
 // sizeBytesIface returns the size of wire encoding a []byte value as a Bytes.
@@ -2369,9 +3918,22 @@ func appendBytesIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptio
 	return b, nil
 }
 
+// consumeBytesIface decodes a []byte value as a Bytes.
+func consumeBytesIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.BytesType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	return append(([]byte)(nil), v...), n, nil
+}
+
 var coderBytesIface = ifaceCoderFuncs{
-	size:    sizeBytesIface,
-	marshal: appendBytesIface,
+	size:      sizeBytesIface,
+	marshal:   appendBytesIface,
+	unmarshal: consumeBytesIface,
 }
 
 // sizeBytesSliceIface returns the size of wire encoding a [][]byte value as a repeated Bytes.
@@ -2393,9 +3955,24 @@ func appendBytesSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshal
 	return b, nil
 }
 
+// consumeBytesSliceIface wire decodes a [][]byte value as a repeated Bytes.
+func consumeBytesSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
+	sp := ival.(*[][]byte)
+	if wtyp != wire.BytesType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	*sp = append(*sp, append(([]byte)(nil), v...))
+	return ival, n, nil
+}
+
 var coderBytesSliceIface = ifaceCoderFuncs{
-	size:    sizeBytesSliceIface,
-	marshal: appendBytesSliceIface,
+	size:      sizeBytesSliceIface,
+	marshal:   appendBytesSliceIface,
+	unmarshal: consumeBytesSliceIface,
 }
 
 var wireTypes = map[protoreflect.Kind]wire.Type{

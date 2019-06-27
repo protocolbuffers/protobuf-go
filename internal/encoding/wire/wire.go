@@ -425,11 +425,6 @@ func AppendBytes(b []byte, v []byte) []byte {
 	return append(AppendVarint(b, uint64(len(v))), v...)
 }
 
-// AppendString appends v to b as a length-prefixed bytes value.
-func AppendString(b []byte, v string) []byte {
-	return append(AppendVarint(b, uint64(len(v))), v...)
-}
-
 // ConsumeBytes parses b as a length-prefixed bytes value, reporting its length.
 // This returns a negative length upon an error (see ParseError).
 func ConsumeBytes(b []byte) (v []byte, n int) {
@@ -447,6 +442,18 @@ func ConsumeBytes(b []byte) (v []byte, n int) {
 // given only the length.
 func SizeBytes(n int) int {
 	return SizeVarint(uint64(n)) + n
+}
+
+// AppendString appends v to b as a length-prefixed bytes value.
+func AppendString(b []byte, v string) []byte {
+	return append(AppendVarint(b, uint64(len(v))), v...)
+}
+
+// ConsumeString parses b as a length-prefixed bytes value, reporting its length.
+// This returns a negative length upon an error (see ParseError).
+func ConsumeString(b []byte) (v string, n int) {
+	bb, n := ConsumeBytes(b)
+	return string(bb), n
 }
 
 // AppendGroup appends v to b as group value, with a trailing end group marker.

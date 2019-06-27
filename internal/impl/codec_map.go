@@ -16,6 +16,17 @@ import (
 
 var protoMessageType = reflect.TypeOf((*proto.Message)(nil)).Elem()
 
+type mapInfo struct {
+	goType     reflect.Type
+	keyWiretag uint64
+	valWiretag uint64
+	keyFuncs   ifaceCoderFuncs
+	valFuncs   ifaceCoderFuncs
+	keyZero    interface{}
+	valZero    interface{}
+	newVal     func() interface{}
+}
+
 func encoderFuncsForMap(fd pref.FieldDescriptor, ft reflect.Type) (funcs pointerCoderFuncs) {
 	// TODO: Consider generating specialized map coders.
 	keyField := fd.MapKey()
@@ -25,12 +36,31 @@ func encoderFuncsForMap(fd pref.FieldDescriptor, ft reflect.Type) (funcs pointer
 	keyFuncs := encoderFuncsForValue(keyField, ft.Key())
 	valFuncs := encoderFuncsForValue(valField, ft.Elem())
 
+	mapi := &mapInfo{
+		goType:     ft,
+		keyWiretag: keyWiretag,
+		valWiretag: valWiretag,
+		keyFuncs:   keyFuncs,
+		valFuncs:   valFuncs,
+		keyZero:    reflect.Zero(ft.Key()).Interface(),
+		valZero:    reflect.Zero(ft.Elem()).Interface(),
+	}
+	switch valField.Kind() {
+	case pref.GroupKind, pref.MessageKind:
+		mapi.newVal = func() interface{} {
+			return reflect.New(ft.Elem().Elem()).Interface()
+		}
+	}
+
 	funcs = pointerCoderFuncs{
 		size: func(p pointer, tagsize int, opts marshalOptions) int {
 			return sizeMap(p, tagsize, ft, keyFuncs, valFuncs, opts)
 		},
 		marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
 			return appendMap(b, p, wiretag, keyWiretag, valWiretag, ft, keyFuncs, valFuncs, opts)
+		},
+		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
+			return consumeMap(b, p, wtyp, mapi, opts)
 		},
 	}
 	if valFuncs.isInit != nil {
@@ -45,6 +75,64 @@ const (
 	mapKeyTagSize = 1 // field 1, tag size 1.
 	mapValTagSize = 1 // field 2, tag size 2.
 )
+
+func consumeMap(b []byte, p pointer, wtyp wire.Type, mapi *mapInfo, opts unmarshalOptions) (int, error) {
+	mp := p.AsValueOf(mapi.goType)
+	if mp.Elem().IsNil() {
+		mp.Elem().Set(reflect.MakeMap(mapi.goType))
+	}
+	m := mp.Elem()
+
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	b, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	var (
+		key = mapi.keyZero
+		val = mapi.valZero
+	)
+	if mapi.newVal != nil {
+		val = mapi.newVal()
+	}
+	for len(b) > 0 {
+		num, wtyp, n := wire.ConsumeTag(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		b = b[n:]
+		err := errUnknown
+		switch num {
+		case 1:
+			var v interface{}
+			v, n, err = mapi.keyFuncs.unmarshal(b, key, num, wtyp, opts)
+			if err != nil {
+				break
+			}
+			key = v
+		case 2:
+			var v interface{}
+			v, n, err = mapi.valFuncs.unmarshal(b, val, num, wtyp, opts)
+			if err != nil {
+				break
+			}
+			val = v
+		}
+		if err == errUnknown {
+			n = wire.ConsumeFieldValue(num, wtyp, b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+		} else if err != nil {
+			return 0, err
+		}
+		b = b[n:]
+	}
+	m.SetMapIndex(reflect.ValueOf(key), reflect.ValueOf(val))
+	return n, nil
+}
 
 func sizeMap(p pointer, tagsize int, goType reflect.Type, keyFuncs, valFuncs ifaceCoderFuncs, opts marshalOptions) int {
 	m := p.AsValueOf(goType).Elem()

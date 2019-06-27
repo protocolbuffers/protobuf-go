@@ -8,21 +8,24 @@ import (
 	"fmt"
 	"reflect"
 
+	"google.golang.org/protobuf/internal/encoding/wire"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // pointerCoderFuncs is a set of pointer encoding functions.
 type pointerCoderFuncs struct {
-	size    func(p pointer, tagsize int, opts marshalOptions) int
-	marshal func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error)
-	isInit  func(p pointer) error
+	size      func(p pointer, tagsize int, opts marshalOptions) int
+	marshal   func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error)
+	unmarshal func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error)
+	isInit    func(p pointer) error
 }
 
 // ifaceCoderFuncs is a set of interface{} encoding functions.
 type ifaceCoderFuncs struct {
-	size    func(ival interface{}, tagsize int, opts marshalOptions) int
-	marshal func(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error)
-	isInit  func(ival interface{}) error
+	size      func(ival interface{}, tagsize int, opts marshalOptions) int
+	marshal   func(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error)
+	unmarshal func(b []byte, ival interface{}, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (interface{}, int, error)
+	isInit    func(ival interface{}) error
 }
 
 // fieldCoder returns pointer functions for a field, used for operating on
@@ -574,7 +577,7 @@ func encoderFuncsForValue(fd pref.FieldDescriptor, ft reflect.Type) ifaceCoderFu
 		case pref.MessageKind:
 			return coderMessageIface
 		case pref.GroupKind:
-			return coderGroupIface
+			return makeGroupValueCoder(fd, ft)
 		}
 	}
 	panic(fmt.Errorf("invalid type: no encoder for %v %v %v/%v", fd.FullName(), fd.Cardinality(), fd.Kind(), ft))

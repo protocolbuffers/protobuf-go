@@ -13,19 +13,19 @@ import (
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
+// marshalOptions is a more efficient representation of MarshalOptions.
+//
+// We don't preserve the AllowPartial flag, because fast-path (un)marshal
+// operations always allow partial messages.
 type marshalOptions uint
 
 const (
-	marshalAllowPartial marshalOptions = 1 << iota
-	marshalDeterministic
+	marshalDeterministic marshalOptions = 1 << iota
 	marshalUseCachedSize
 )
 
 func newMarshalOptions(opts piface.MarshalOptions) marshalOptions {
 	var o marshalOptions
-	if opts.AllowPartial {
-		o |= marshalAllowPartial
-	}
 	if opts.Deterministic {
 		o |= marshalDeterministic
 	}
@@ -37,13 +37,12 @@ func newMarshalOptions(opts piface.MarshalOptions) marshalOptions {
 
 func (o marshalOptions) Options() proto.MarshalOptions {
 	return proto.MarshalOptions{
-		AllowPartial:  o.AllowPartial(),
+		AllowPartial:  true,
 		Deterministic: o.Deterministic(),
 		UseCachedSize: o.UseCachedSize(),
 	}
 }
 
-func (o marshalOptions) AllowPartial() bool  { return o&marshalAllowPartial != 0 }
 func (o marshalOptions) Deterministic() bool { return o&marshalDeterministic != 0 }
 func (o marshalOptions) UseCachedSize() bool { return o&marshalUseCachedSize != 0 }
 

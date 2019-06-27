@@ -86,6 +86,7 @@ type ProtoKind struct {
 
 	// Conversions to/from generated structures.
 	GoType     GoType
+	ToGoType   Expr
 	FromGoType Expr
 	NoPointer  bool
 }
@@ -101,6 +102,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "wire.DecodeBool(v)",
 		FromValue:  "wire.EncodeBool(v.Bool())",
 		GoType:     GoBool,
+		ToGoType:   "wire.DecodeBool(v)",
 		FromGoType: "wire.EncodeBool(v)",
 	},
 	{
@@ -115,6 +117,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "int32(v)",
 		FromValue:  "uint64(int32(v.Int()))",
 		GoType:     GoInt32,
+		ToGoType:   "int32(v)",
 		FromGoType: "uint64(v)",
 	},
 	{
@@ -123,6 +126,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "int32(wire.DecodeZigZag(v & math.MaxUint32))",
 		FromValue:  "wire.EncodeZigZag(int64(int32(v.Int())))",
 		GoType:     GoInt32,
+		ToGoType:   "int32(wire.DecodeZigZag(v & math.MaxUint32))",
 		FromGoType: "wire.EncodeZigZag(int64(v))",
 	},
 	{
@@ -131,6 +135,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "uint32(v)",
 		FromValue:  "uint64(uint32(v.Uint()))",
 		GoType:     GoUint32,
+		ToGoType:   "uint32(v)",
 		FromGoType: "uint64(v)",
 	},
 	{
@@ -139,6 +144,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "int64(v)",
 		FromValue:  "uint64(v.Int())",
 		GoType:     GoInt64,
+		ToGoType:   "int64(v)",
 		FromGoType: "uint64(v)",
 	},
 	{
@@ -147,6 +153,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "wire.DecodeZigZag(v)",
 		FromValue:  "wire.EncodeZigZag(v.Int())",
 		GoType:     GoInt64,
+		ToGoType:   "wire.DecodeZigZag(v)",
 		FromGoType: "wire.EncodeZigZag(v)",
 	},
 	{
@@ -155,6 +162,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "v",
 		FromValue:  "v.Uint()",
 		GoType:     GoUint64,
+		ToGoType:   "v",
 		FromGoType: "v",
 	},
 	{
@@ -163,6 +171,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "int32(v)",
 		FromValue:  "uint32(v.Int())",
 		GoType:     GoInt32,
+		ToGoType:   "int32(v)",
 		FromGoType: "uint32(v)",
 	},
 	{
@@ -171,6 +180,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "uint32(v)",
 		FromValue:  "uint32(v.Uint())",
 		GoType:     GoUint32,
+		ToGoType:   "v",
 		FromGoType: "v",
 	},
 	{
@@ -179,6 +189,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "math.Float32frombits(uint32(v))",
 		FromValue:  "math.Float32bits(float32(v.Float()))",
 		GoType:     GoFloat32,
+		ToGoType:   "math.Float32frombits(v)",
 		FromGoType: "math.Float32bits(v)",
 	},
 	{
@@ -187,6 +198,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "int64(v)",
 		FromValue:  "uint64(v.Int())",
 		GoType:     GoInt64,
+		ToGoType:   "int64(v)",
 		FromGoType: "uint64(v)",
 	},
 	{
@@ -195,6 +207,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "v",
 		FromValue:  "v.Uint()",
 		GoType:     GoUint64,
+		ToGoType:   "v",
 		FromGoType: "v",
 	},
 	{
@@ -203,6 +216,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "math.Float64frombits(v)",
 		FromValue:  "math.Float64bits(v.Float())",
 		GoType:     GoFloat64,
+		ToGoType:   "math.Float64frombits(v)",
 		FromGoType: "math.Float64bits(v)",
 	},
 	{
@@ -211,6 +225,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "string(v)",
 		FromValue:  "v.String()",
 		GoType:     GoString,
+		ToGoType:   "v",
 		FromGoType: "v",
 	},
 	{
@@ -219,6 +234,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "append(([]byte)(nil), v...)",
 		FromValue:  "v.Bytes()",
 		GoType:     GoBytes,
+		ToGoType:   "append(([]byte)(nil), v...)",
 		FromGoType: "v",
 		NoPointer:  true,
 	},

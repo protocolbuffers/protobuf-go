@@ -135,3 +135,14 @@ func (p pointer) PointerSlice() []pointer {
 	}
 	return s
 }
+
+// AppendPointerSlice appends v to p, which must be a []*T.
+func (p pointer) AppendPointerSlice(v pointer) {
+	sp := p.v.Elem()
+	sp.Set(reflect.Append(sp, v.v))
+}
+
+// SetPointer sets *p to v.
+func (p pointer) SetPointer(v pointer) {
+	p.v.Elem().Set(v.v)
+}

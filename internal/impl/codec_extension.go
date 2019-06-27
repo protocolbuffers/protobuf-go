@@ -13,9 +13,10 @@ import (
 )
 
 type extensionFieldInfo struct {
-	wiretag uint64
-	tagsize int
-	funcs   ifaceCoderFuncs
+	wiretag             uint64
+	tagsize             int
+	unmarshalNeedsValue bool
+	funcs               ifaceCoderFuncs
 }
 
 func (mi *MessageInfo) extensionFieldInfo(xt pref.ExtensionType) *extensionFieldInfo {
@@ -34,7 +35,17 @@ func (mi *MessageInfo) extensionFieldInfo(xt pref.ExtensionType) *extensionField
 		tagsize: wire.SizeVarint(wiretag),
 		funcs:   encoderFuncsForValue(xt, xt.GoType()),
 	}
-
+	// Does the unmarshal function need a value passed to it?
+	// This is true for composite types, where we pass in a message, list, or map to fill in,
+	// and for enums, where we pass in a prototype value to specify the concrete enum type.
+	switch xt.Kind() {
+	case pref.MessageKind, pref.GroupKind, pref.EnumKind:
+		e.unmarshalNeedsValue = true
+	default:
+		if xt.Cardinality() == pref.Repeated {
+			e.unmarshalNeedsValue = true
+		}
+	}
 	mi.extensionFieldInfosMu.Lock()
 	if mi.extensionFieldInfos == nil {
 		mi.extensionFieldInfos = make(map[pref.ExtensionType]*extensionFieldInfo)
