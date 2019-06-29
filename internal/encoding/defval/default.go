@@ -112,7 +112,7 @@ func Unmarshal(s string, k pref.Kind, evs pref.EnumValueDescriptors, f Format) (
 			return pref.ValueOf(b), nil, nil
 		}
 	}
-	return pref.Value{}, nil, errors.New("invalid default value for %v: %q", k, s)
+	return pref.Value{}, nil, errors.New("could not parse value for %v: %q", k, s)
 }
 
 // Marshal serializes v as the default string according to the given kind k.
@@ -168,7 +168,7 @@ func Marshal(v pref.Value, ev pref.EnumValueDescriptor, k pref.Kind, f Format) (
 			return s, nil
 		}
 	}
-	return "", errors.New("invalid default value for %v: %v", k, v)
+	return "", errors.New("could not format value for %v: %v", k, v)
 }
 
 // unmarshalBytes deserializes bytes by applying C unescaping.

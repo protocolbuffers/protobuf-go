@@ -8,20 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
-
-func mustParseFile(s string) *descriptorpb.FileDescriptorProto {
-	pb := new(descriptorpb.FileDescriptorProto)
-	if err := prototext.Unmarshal([]byte(s), pb); err != nil {
-		panic(err)
-	}
-	return pb
-}
 
 // Tests validation logic for malformed descriptors.
 func TestNewFile_ValidationErrors(t *testing.T) {
@@ -144,7 +135,7 @@ func TestNewFile_ValidationErrors(t *testing.T) {
 				}},
 			}},
 		},
-		wantErr: "type_name",
+		wantErr: `message field "foo.BadMessage.bad_field" cannot resolve type: target name cannot be specified for int32`,
 	}, {
 		name: "type_name on string extension",
 		deps: []*descriptorpb.FileDescriptorProto{{
@@ -180,7 +171,7 @@ func TestNewFile_ValidationErrors(t *testing.T) {
 				TypeName: scalar.String("AnEnum"),
 			}},
 		},
-		wantErr: "type_name",
+		wantErr: `extension field "bar.my_ext" cannot resolve type: target name cannot be specified for string`,
 	}, {
 		name: "oneof_index on extension",
 		deps: []*descriptorpb.FileDescriptorProto{{
@@ -299,7 +290,7 @@ func TestNewFile_ValidationErrors(t *testing.T) {
 				}},
 			}},
 		},
-		wantErr: "foo.Foo without import of foo.proto",
+		wantErr: `message field "bar.Bar.foo" cannot resolve type: resolved "foo.Foo", but "foo.proto" is not imported`,
 	}, {
 		name: "enum dependency without import",
 		deps: []*descriptorpb.FileDescriptorProto{{
@@ -334,7 +325,7 @@ func TestNewFile_ValidationErrors(t *testing.T) {
 				}},
 			}},
 		},
-		wantErr: "foo.Foo without import of foo.proto",
+		wantErr: `message field "bar.Bar.foo" cannot resolve type: resolved "foo.Foo", but "foo.proto" is not imported`,
 	}, {
 		name: "message dependency on without import on file imported by a public import",
 		deps: []*descriptorpb.FileDescriptorProto{{
@@ -377,7 +368,7 @@ func TestNewFile_ValidationErrors(t *testing.T) {
 				}},
 			}},
 		},
-		wantErr: "foo.Foo without import of foo.proto",
+		wantErr: `message field "bar.Bar.foo" cannot resolve type: resolved "foo.Foo", but "foo.proto" is not imported`,
 	}}
 
 	for _, tc := range testCases {

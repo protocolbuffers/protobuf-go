@@ -7,6 +7,7 @@ package protodesc
 import (
 	"fmt"
 	"reflect"
+	"strings"
 
 	"google.golang.org/protobuf/internal/encoding/defval"
 	"google.golang.org/protobuf/internal/scalar"
@@ -102,16 +103,18 @@ func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.Fi
 		Name:    scalar.String(string(field.Name())),
 		Number:  scalar.Int32(int32(field.Number())),
 		Label:   descriptorpb.FieldDescriptorProto_Label(field.Cardinality()).Enum(),
-		Type:    descriptorpb.FieldDescriptorProto_Type(field.Kind()).Enum(),
 		Options: clone(field.Options()).(*descriptorpb.FieldOptions),
 	}
 	if field.IsExtension() {
 		p.Extendee = fullNameOf(field.ContainingMessage())
 	}
-	switch field.Kind() {
-	case protoreflect.EnumKind:
+	if field.Kind().IsValid() {
+		p.Type = descriptorpb.FieldDescriptorProto_Type(field.Kind()).Enum()
+	}
+	if field.Enum() != nil {
 		p.TypeName = fullNameOf(field.Enum())
-	case protoreflect.MessageKind, protoreflect.GroupKind:
+	}
+	if field.Message() != nil {
 		p.TypeName = fullNameOf(field.Message())
 	}
 	if field.HasJSONName() {
@@ -119,7 +122,9 @@ func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.Fi
 	}
 	if field.HasDefault() {
 		def, err := defval.Marshal(field.Default(), field.DefaultEnumValue(), field.Kind(), defval.Descriptor)
-		if err != nil {
+		if err != nil && field.DefaultEnumValue() != nil {
+			def = string(field.DefaultEnumValue().Name()) // occurs for unresolved enum values
+		} else if err != nil {
 			panic(fmt.Sprintf("%v: %v", field.FullName(), err))
 		}
 		p.DefaultValue = scalar.String(def)
@@ -206,6 +211,9 @@ func ToMethodDescriptorProto(method protoreflect.MethodDescriptor) *descriptorpb
 func fullNameOf(d protoreflect.Descriptor) *string {
 	if d == nil {
 		return nil
+	}
+	if strings.HasPrefix(string(d.FullName()), unknownPrefix) {
+		return scalar.String(string(d.FullName()[len(unknownPrefix):]))
 	}
 	return scalar.String("." + string(d.FullName()))
 }

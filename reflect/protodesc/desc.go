@@ -9,6 +9,7 @@ package protodesc
 import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
@@ -22,6 +23,36 @@ type Resolver interface {
 	FindDescriptorByName(protoreflect.FullName) (protoreflect.Descriptor, error)
 }
 
+// option is an optional argument that may be provided to NewFile.
+type option struct {
+	pragma.DoNotCompare
+	allowUnresolvable bool
+}
+
+// allowUnresolvable configures NewFile to permissively allow unresolvable
+// file, enum, or message dependencies. Unresolved dependencies are replaced by
+// placeholder equivalents.
+//
+// The following dependencies may be left unresolved:
+//	• Resolving an imported file.
+//	• Resolving the type for a message field or extension field.
+//	If the kind of the field is unknown, then a placeholder is used for both
+//	protoreflect.FieldDescriptor.Enum and protoreflect.FieldDescriptor.Message.
+//	• Resolving the enum value set as the default for an optional enum field.
+//	If unresolvable, the protoreflect.FieldDescriptor.Default is set to the
+//	first enum value in the associated enum (or zero if the also enum dependency
+//	is also unresolvable). The protoreflect.FieldDescriptor.DefaultEnumValue
+//	is set as a placeholder.
+//	• Resolving the extended message type for an extension field.
+//	• Resolving the input or output message type for a service method.
+//
+// If the unresolved dependency uses a relative name, then the placeholder will
+// contain an invalid FullName with a "*." prefix, indicating that the starting
+// prefix of the full name is unknown.
+func allowUnresolvable() option {
+	return option{allowUnresolvable: true}
+}
+
 // NewFile creates a new protoreflect.FileDescriptor from the provided
 // file descriptor message. The file must represent a valid proto file according
 // to protobuf semantics. The returned descriptor is a deep copy of the input.
@@ -31,9 +62,20 @@ type Resolver interface {
 // the path must be unique. The newly created file descriptor is not registered
 // back into the provided file registry.
 func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.FileDescriptor, error) {
+	// TODO: remove setting allowUnresolvable once naughty users are migrated.
+	return newFile(fd, r, allowUnresolvable())
+}
+func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (protoreflect.FileDescriptor, error) {
+	// Process the options.
+	var allowUnresolvable bool
+	for _, o := range opts {
+		allowUnresolvable = allowUnresolvable || o.allowUnresolvable
+	}
 	if r == nil {
 		r = (*protoregistry.Files)(nil) // empty resolver
 	}
+
+	// Handle the file descriptor content.
 	f := &filedesc.File{L2: &filedesc.FileL2{}}
 	switch fd.GetSyntax() {
 	case "proto2", "":
@@ -67,9 +109,10 @@ func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.Fil
 	for i, path := range fd.GetDependency() {
 		imp := &f.L2.Imports[i]
 		f, err := r.FindFileByPath(path)
-		if err != nil {
-			// TODO: This should be an error.
+		if err == protoregistry.NotFound && (allowUnresolvable || imp.IsWeak) {
 			f = filedesc.PlaceholderFile(path)
+		} else if err != nil {
+			return nil, errors.New("could not resolve import %q: %v", path, err)
 		}
 		imp.FileDescriptor = f
 
@@ -101,7 +144,7 @@ func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.Fil
 	}
 
 	// Step 2: Resolve every dependency reference not handled by step 1.
-	r2 := &resolver{local: r1, remote: r, imports: imps}
+	r2 := &resolver{local: r1, remote: r, imports: imps, allowUnresolvable: allowUnresolvable}
 	if err := r2.resolveMessageDependencies(f.L1.Messages.List, fd.GetMessageType()); err != nil {
 		return nil, err
 	}
@@ -135,12 +178,4 @@ func (is importSet) importPublic(imps protoreflect.FileImports) {
 			is.importPublic(imp.Imports())
 		}
 	}
-}
-
-// check returns an error if d does not belong to a currently imported file.
-func (is importSet) check(d protoreflect.Descriptor) error {
-	if !is[d.ParentFile().Path()] {
-		return errors.New("reference to type %v without import of %v", d.FullName(), d.ParentFile().Path())
-	}
-	return nil
 }
