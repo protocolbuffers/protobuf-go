@@ -425,7 +425,7 @@ func AppendBytes(b []byte, v []byte) []byte {
 	return append(AppendVarint(b, uint64(len(v))), v...)
 }
 
-// AppendString appends v to b as a lenght-prefixed bytes value.
+// AppendString appends v to b as a length-prefixed bytes value.
 func AppendString(b []byte, v string) []byte {
 	return append(AppendVarint(b, uint64(len(v))), v...)
 }
