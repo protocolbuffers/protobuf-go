@@ -8,11 +8,20 @@ import (
 	"strings"
 	"testing"
 
+	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
+
+func mustParseFile(s string) *descriptorpb.FileDescriptorProto {
+	pb := new(descriptorpb.FileDescriptorProto)
+	if err := prototext.Unmarshal([]byte(s), pb); err != nil {
+		panic(err)
+	}
+	return pb
+}
 
 // Tests validation logic for malformed descriptors.
 func TestNewFile_ValidationErrors(t *testing.T) {
@@ -592,6 +601,28 @@ func TestNewFile_ValidationOK(t *testing.T) {
 				}},
 			}},
 		},
+	}, {
+		name: "local enum value dependency in sibling to parent message",
+		fd: mustParseFile(`
+			name: "test.proto"
+			message_type: [{
+				name: "M1"
+				field: [{
+					name:          "F"
+					number:        1
+					label:         LABEL_OPTIONAL
+					type:          TYPE_ENUM
+					type_name:     ".M2.E"
+					default_value: "V2"
+				}]
+			}, {
+				name: "M2"
+				enum_type: [{
+					name: "E"
+					value: [{name:"V1" number:1}, {name:"V2" number:2}]
+				}]
+			}]
+		`),
 	}}
 
 	for _, tc := range testCases {

@@ -1,0 +1,231 @@
+// Copyright 2019 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package protodesc
+
+import (
+	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
+
+	"google.golang.org/protobuf/types/descriptorpb"
+)
+
+type descsByName map[protoreflect.FullName]protoreflect.Descriptor
+
+func (r descsByName) initEnumDeclarations(eds []*descriptorpb.EnumDescriptorProto, parent protoreflect.Descriptor) (es []filedesc.Enum, err error) {
+	es = make([]filedesc.Enum, len(eds)) // allocate up-front to ensure stable pointers
+	for i, ed := range eds {
+		e := &es[i]
+		e.L2 = new(filedesc.EnumL2)
+		if e.L0, err = r.makeBase(e, parent, ed.GetName(), i); err != nil {
+			return nil, err
+		}
+		if opts := ed.GetOptions(); opts != nil {
+			e.L2.Options = func() protoreflect.ProtoMessage { return opts }
+		}
+		for _, s := range ed.GetReservedName() {
+			e.L2.ReservedNames.List = append(e.L2.ReservedNames.List, protoreflect.Name(s))
+		}
+		for _, rr := range ed.GetReservedRange() {
+			e.L2.ReservedRanges.List = append(e.L2.ReservedRanges.List, [2]protoreflect.EnumNumber{
+				protoreflect.EnumNumber(rr.GetStart()),
+				protoreflect.EnumNumber(rr.GetEnd()),
+			})
+		}
+		if e.L2.Values.List, err = r.initEnumValuesFromDescriptorProto(ed.GetValue(), e); err != nil {
+			return nil, err
+		}
+	}
+	return es, nil
+}
+
+func (r descsByName) initEnumValuesFromDescriptorProto(vds []*descriptorpb.EnumValueDescriptorProto, parent protoreflect.Descriptor) (vs []filedesc.EnumValue, err error) {
+	vs = make([]filedesc.EnumValue, len(vds)) // allocate up-front to ensure stable pointers
+	for i, vd := range vds {
+		v := &vs[i]
+		if v.L0, err = r.makeBase(v, parent, vd.GetName(), i); err != nil {
+			return nil, err
+		}
+		if opts := vd.GetOptions(); opts != nil {
+			v.L1.Options = func() protoreflect.ProtoMessage { return opts }
+		}
+		v.L1.Number = protoreflect.EnumNumber(vd.GetNumber())
+	}
+	return vs, nil
+}
+
+func (r descsByName) initMessagesDeclarations(mds []*descriptorpb.DescriptorProto, parent protoreflect.Descriptor) (ms []filedesc.Message, err error) {
+	ms = make([]filedesc.Message, len(mds)) // allocate up-front to ensure stable pointers
+	for i, md := range mds {
+		m := &ms[i]
+		m.L2 = new(filedesc.MessageL2)
+		if m.L0, err = r.makeBase(m, parent, md.GetName(), i); err != nil {
+			return nil, err
+		}
+		if opts := md.GetOptions(); opts != nil {
+			m.L2.Options = func() protoreflect.ProtoMessage { return opts }
+			m.L2.IsMapEntry = opts.GetMapEntry()
+			m.L2.IsMessageSet = opts.GetMessageSetWireFormat()
+		}
+		for _, s := range md.GetReservedName() {
+			m.L2.ReservedNames.List = append(m.L2.ReservedNames.List, protoreflect.Name(s))
+		}
+		for _, rr := range md.GetReservedRange() {
+			m.L2.ReservedRanges.List = append(m.L2.ReservedRanges.List, [2]protoreflect.FieldNumber{
+				protoreflect.FieldNumber(rr.GetStart()),
+				protoreflect.FieldNumber(rr.GetEnd()),
+			})
+		}
+		for _, xr := range md.GetExtensionRange() {
+			m.L2.ExtensionRanges.List = append(m.L2.ExtensionRanges.List, [2]protoreflect.FieldNumber{
+				protoreflect.FieldNumber(xr.GetStart()),
+				protoreflect.FieldNumber(xr.GetEnd()),
+			})
+			var optsFunc func() protoreflect.ProtoMessage
+			if opts := xr.GetOptions(); opts != nil {
+				optsFunc = func() protoreflect.ProtoMessage { return opts }
+			}
+			m.L2.ExtensionRangeOptions = append(m.L2.ExtensionRangeOptions, optsFunc)
+		}
+		if m.L2.Fields.List, err = r.initFieldsFromDescriptorProto(md.GetField(), m); err != nil {
+			return nil, err
+		}
+		if m.L2.Oneofs.List, err = r.initOneofsFromDescriptorProto(md.GetOneofDecl(), m); err != nil {
+			return nil, err
+		}
+		if m.L1.Enums.List, err = r.initEnumDeclarations(md.GetEnumType(), m); err != nil {
+			return nil, err
+		}
+		if m.L1.Messages.List, err = r.initMessagesDeclarations(md.GetNestedType(), m); err != nil {
+			return nil, err
+		}
+		if m.L1.Extensions.List, err = r.initExtensionDeclarations(md.GetExtension(), m); err != nil {
+			return nil, err
+		}
+	}
+	return ms, nil
+}
+
+func (r descsByName) initFieldsFromDescriptorProto(fds []*descriptorpb.FieldDescriptorProto, parent protoreflect.Descriptor) (fs []filedesc.Field, err error) {
+	fs = make([]filedesc.Field, len(fds)) // allocate up-front to ensure stable pointers
+	for i, fd := range fds {
+		f := &fs[i]
+		if f.L0, err = r.makeBase(f, parent, fd.GetName(), i); err != nil {
+			return nil, err
+		}
+		if opts := fd.GetOptions(); opts != nil {
+			f.L1.Options = func() protoreflect.ProtoMessage { return opts }
+			f.L1.IsWeak = opts.GetWeak()
+			f.L1.HasPacked = opts.Packed != nil
+			f.L1.IsPacked = opts.GetPacked()
+		}
+		f.L1.Number = protoreflect.FieldNumber(fd.GetNumber())
+		f.L1.Cardinality = protoreflect.Cardinality(fd.GetLabel())
+		if fd.Type != nil {
+			f.L1.Kind = protoreflect.Kind(fd.GetType())
+		}
+		if fd.JsonName != nil {
+			f.L1.JSONName = filedesc.JSONName(fd.GetJsonName())
+		}
+	}
+	return fs, nil
+}
+
+func (r descsByName) initOneofsFromDescriptorProto(ods []*descriptorpb.OneofDescriptorProto, parent protoreflect.Descriptor) (os []filedesc.Oneof, err error) {
+	os = make([]filedesc.Oneof, len(ods)) // allocate up-front to ensure stable pointers
+	for i, od := range ods {
+		o := &os[i]
+		if o.L0, err = r.makeBase(o, parent, od.GetName(), i); err != nil {
+			return nil, err
+		}
+		if opts := od.GetOptions(); opts != nil {
+			o.L1.Options = func() protoreflect.ProtoMessage { return opts }
+		}
+	}
+	return os, nil
+}
+
+func (r descsByName) initExtensionDeclarations(xds []*descriptorpb.FieldDescriptorProto, parent protoreflect.Descriptor) (xs []filedesc.Extension, err error) {
+	xs = make([]filedesc.Extension, len(xds)) // allocate up-front to ensure stable pointers
+	for i, xd := range xds {
+		x := &xs[i]
+		x.L2 = new(filedesc.ExtensionL2)
+		if x.L0, err = r.makeBase(x, parent, xd.GetName(), i); err != nil {
+			return nil, err
+		}
+		if opts := xd.GetOptions(); opts != nil {
+			x.L2.Options = func() protoreflect.ProtoMessage { return opts }
+			x.L2.IsPacked = opts.GetPacked()
+		}
+		x.L1.Number = protoreflect.FieldNumber(xd.GetNumber())
+		x.L2.Cardinality = protoreflect.Cardinality(xd.GetLabel())
+		if xd.Type != nil {
+			x.L1.Kind = protoreflect.Kind(xd.GetType())
+		}
+		if xd.JsonName != nil {
+			x.L2.JSONName = filedesc.JSONName(xd.GetJsonName())
+		}
+	}
+	return xs, nil
+}
+
+func (r descsByName) initServiceDeclarations(sds []*descriptorpb.ServiceDescriptorProto, parent protoreflect.Descriptor) (ss []filedesc.Service, err error) {
+	ss = make([]filedesc.Service, len(sds)) // allocate up-front to ensure stable pointers
+	for i, sd := range sds {
+		s := &ss[i]
+		s.L2 = new(filedesc.ServiceL2)
+		if s.L0, err = r.makeBase(s, parent, sd.GetName(), i); err != nil {
+			return nil, err
+		}
+		if opts := sd.GetOptions(); opts != nil {
+			s.L2.Options = func() protoreflect.ProtoMessage { return opts }
+		}
+		if s.L2.Methods.List, err = r.initMethodsFromDescriptorProto(sd.GetMethod(), s); err != nil {
+			return nil, err
+		}
+	}
+	return ss, nil
+}
+
+func (r descsByName) initMethodsFromDescriptorProto(mds []*descriptorpb.MethodDescriptorProto, parent protoreflect.Descriptor) (ms []filedesc.Method, err error) {
+	ms = make([]filedesc.Method, len(mds)) // allocate up-front to ensure stable pointers
+	for i, md := range mds {
+		m := &ms[i]
+		if m.L0, err = r.makeBase(m, parent, md.GetName(), i); err != nil {
+			return nil, err
+		}
+		if opts := md.GetOptions(); opts != nil {
+			m.L1.Options = func() protoreflect.ProtoMessage { return opts }
+		}
+		m.L1.IsStreamingClient = md.GetClientStreaming()
+		m.L1.IsStreamingServer = md.GetServerStreaming()
+	}
+	return ms, nil
+}
+
+func (r descsByName) makeBase(child, parent protoreflect.Descriptor, name string, idx int) (filedesc.BaseL0, error) {
+	// TODO: Verify that the name is valid?
+
+	// Derive the full name of the child.
+	// Note that enum values are a sibling to the enum parent in the namespace.
+	var fullName protoreflect.FullName
+	if _, ok := parent.(protoreflect.EnumDescriptor); ok {
+		fullName = parent.FullName().Parent().Append(protoreflect.Name(name))
+	} else {
+		fullName = parent.FullName().Append(protoreflect.Name(name))
+	}
+	// TODO: Verify that this descriptor is not already declared?
+	r[fullName] = child
+
+	// TODO: Verify that the full name does not already exist in the resolver?
+	// This is not as critical since most usages of NewFile will register
+	// the created file back into the registry, which will perform this check.
+
+	return filedesc.BaseL0{
+		FullName:   fullName,
+		ParentFile: parent.ParentFile().(*filedesc.File),
+		Parent:     parent,
+		Index:      idx,
+	}, nil
+}
