@@ -133,18 +133,6 @@ func aberrantLoadMessageDesc(t reflect.Type, finalized bool) pref.MessageDescrip
 	md.L0.FullName = aberrantDeriveFullName(t.Elem())
 	md.L0.ParentFile = filedesc.SurrogateProto2
 
-	// If possible, use the custom protobuf name specified on the type.
-	fn, ok := t.MethodByName("XXX_MessageName")
-	if !ok {
-		fn, ok = t.Elem().MethodByName("XXX_MessageName")
-	}
-	if ok {
-		v := fn.Func.Call([]reflect.Value{reflect.Zero(fn.Type.In(0))})[0]
-		if s := pref.FullName(v.String()); s.IsValid() {
-			md.L0.FullName = s
-		}
-	}
-
 	// Try to determine if the message is using proto3 by checking scalars.
 	for i := 0; i < t.Elem().NumField(); i++ {
 		f := t.Elem().Field(i)

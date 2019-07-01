@@ -78,10 +78,6 @@ type AberrantMessage struct {
 	Ignored io.Reader
 }
 
-func (m *AberrantMessage) XXX_MessageName() string {
-	return "google.golang.org.example.AberrantMessage"
-}
-
 func (m *AberrantMessage) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return []protoiface.ExtensionRangeV1{{Start: 10, End: 100}}
 }
@@ -203,7 +199,7 @@ func TestAberrant(t *testing.T) {
 			{name:"opt_string"   number:14 label:LABEL_OPTIONAL type:TYPE_STRING   default_value:"hello, \"world!\"\n"},
 			{name:"opt_bytes"    number:15 label:LABEL_OPTIONAL type:TYPE_BYTES    default_value:"dead\\336\\255\\276\\357beef"},
 			{name:"opt_enum"     number:16 label:LABEL_OPTIONAL type:TYPE_ENUM     type_name:".google_golang_org.protobuf.internal.impl_test.AberrantEnum" default_value:"UNKNOWN_0"},
-			{name:"opt_message"  number:17 label:LABEL_OPTIONAL type:TYPE_MESSAGE  type_name:".google.golang.org.example.AberrantMessage"},
+			{name:"opt_message"  number:17 label:LABEL_OPTIONAL type:TYPE_MESSAGE  type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage"},
 
 			{name:"rep_bool"     number:18 label:LABEL_REPEATED type:TYPE_BOOL     options:{packed:true}},
 			{name:"rep_int32"    number:19 label:LABEL_REPEATED type:TYPE_INT32    options:{packed:true}},
@@ -221,25 +217,25 @@ func TestAberrant(t *testing.T) {
 			{name:"rep_string"   number:31 label:LABEL_REPEATED type:TYPE_STRING},
 			{name:"rep_bytes"    number:32 label:LABEL_REPEATED type:TYPE_BYTES},
 			{name:"rep_enum"     number:33 label:LABEL_REPEATED type:TYPE_ENUM     type_name:".google_golang_org.protobuf.internal.impl_test.AberrantEnum"},
-			{name:"rep_message"  number:34 label:LABEL_REPEATED type:TYPE_MESSAGE  type_name:".google.golang.org.example.AberrantMessage"},
+			{name:"rep_message"  number:34 label:LABEL_REPEATED type:TYPE_MESSAGE  type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage"},
 
-			{name:"map_string_bool"     number:35 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringBoolEntry"},
-			{name:"map_string_int32"    number:36 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringInt32Entry"},
-			{name:"map_string_sint32"   number:37 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringSint32Entry"},
-			{name:"map_string_uint32"   number:38 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringUint32Entry"},
-			{name:"map_string_int64"    number:39 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringInt64Entry"},
-			{name:"map_string_sint64"   number:40 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringSint64Entry"},
-			{name:"map_string_uint64"   number:41 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringUint64Entry"},
-			{name:"map_string_fixed32"  number:42 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringFixed32Entry"},
-			{name:"map_string_sfixed32" number:43 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringSfixed32Entry"},
-			{name:"map_string_float"    number:44 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringFloatEntry"},
-			{name:"map_string_fixed64"  number:45 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringFixed64Entry"},
-			{name:"map_string_sfixed64" number:46 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringSfixed64Entry"},
-			{name:"map_string_double"   number:47 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringDoubleEntry"},
-			{name:"map_string_string"   number:48 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringStringEntry"},
-			{name:"map_string_bytes"    number:49 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringBytesEntry"},
-			{name:"map_string_enum"     number:50 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringEnumEntry"},
-			{name:"map_string_message"  number:51 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage.MapStringMessageEntry"},
+			{name:"map_string_bool"     number:35 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringBoolEntry"},
+			{name:"map_string_int32"    number:36 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringInt32Entry"},
+			{name:"map_string_sint32"   number:37 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringSint32Entry"},
+			{name:"map_string_uint32"   number:38 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringUint32Entry"},
+			{name:"map_string_int64"    number:39 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringInt64Entry"},
+			{name:"map_string_sint64"   number:40 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringSint64Entry"},
+			{name:"map_string_uint64"   number:41 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringUint64Entry"},
+			{name:"map_string_fixed32"  number:42 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringFixed32Entry"},
+			{name:"map_string_sfixed32" number:43 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringSfixed32Entry"},
+			{name:"map_string_float"    number:44 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringFloatEntry"},
+			{name:"map_string_fixed64"  number:45 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringFixed64Entry"},
+			{name:"map_string_sfixed64" number:46 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringSfixed64Entry"},
+			{name:"map_string_double"   number:47 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringDoubleEntry"},
+			{name:"map_string_string"   number:48 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringStringEntry"},
+			{name:"map_string_bytes"    number:49 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringBytesEntry"},
+			{name:"map_string_enum"     number:50 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringEnumEntry"},
+			{name:"map_string_message"  number:51 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringMessageEntry"},
 
 			{name:"oneof_bool"     number:52 label:LABEL_OPTIONAL type:TYPE_BOOL     oneof_index:0 default_value:"true"},
 			{name:"oneof_int32"    number:53 label:LABEL_OPTIONAL type:TYPE_INT32    oneof_index:0 default_value:"-12345"},
@@ -257,7 +253,7 @@ func TestAberrant(t *testing.T) {
 			{name:"oneof_string"   number:65 label:LABEL_OPTIONAL type:TYPE_STRING   oneof_index:0 default_value:"hello, \"world!\"\n"},
 			{name:"oneof_bytes"    number:66 label:LABEL_OPTIONAL type:TYPE_BYTES    oneof_index:0 default_value:"dead\\336\\255\\276\\357beef"},
 			{name:"oneof_enum"     number:67 label:LABEL_OPTIONAL type:TYPE_ENUM     oneof_index:0 type_name:".google_golang_org.protobuf.internal.impl_test.AberrantEnum" default_value:"UNKNOWN_0"},
-			{name:"oneof_message"  number:68 label:LABEL_OPTIONAL type:TYPE_MESSAGE  oneof_index:0 type_name:".google.golang.org.example.AberrantMessage"}
+			{name:"oneof_message"  number:68 label:LABEL_OPTIONAL type:TYPE_MESSAGE  oneof_index:0 type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage"}
 		]
 		oneof_decl: [{name:"oneof_union"}]
 		extension_range: [{start:10 end:101}]
@@ -278,7 +274,7 @@ func TestAberrant(t *testing.T) {
 			{name:"MapStringStringEntry"   field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_STRING}]   options:{map_entry:true}},
 			{name:"MapStringBytesEntry"    field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_BYTES}]    options:{map_entry:true}},
 			{name:"MapStringEnumEntry"     field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_ENUM    type_name:".google_golang_org.protobuf.internal.impl_test.AberrantEnum"}] options:{map_entry:true}},
-			{name:"MapStringMessageEntry"  field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".google.golang.org.example.AberrantMessage"}]                  options:{map_entry:true}}
+			{name:"MapStringMessageEntry"  field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage"}]                  options:{map_entry:true}}
 		]
 	`), want); err != nil {
 		t.Fatalf("prototext.Unmarshal() error: %v", err)
