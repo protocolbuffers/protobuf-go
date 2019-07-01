@@ -347,7 +347,7 @@ func testFileAccessors(t *testing.T, fd pref.FileDescriptor) {
 						"IsPacked":    true,
 						"IsList":      true,
 						"IsMap":       false,
-						"Default":     int32(0),
+						"Default":     nil,
 					},
 					"ByNumber:6": M{
 						"Cardinality":     pref.Required,

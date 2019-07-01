@@ -528,6 +528,9 @@ type defaultValue struct {
 func (dv *defaultValue) get(fd pref.FieldDescriptor) pref.Value {
 	// Return the zero value as the default if unpopulated.
 	if !dv.has {
+		if fd.Cardinality() == pref.Repeated {
+			return pref.Value{}
+		}
 		switch fd.Kind() {
 		case pref.BoolKind:
 			return pref.ValueOf(false)

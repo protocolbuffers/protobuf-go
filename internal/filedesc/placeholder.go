@@ -64,6 +64,21 @@ func (e PlaceholderEnum) ReservedRanges() pref.EnumRanges     { return emptyEnum
 func (e PlaceholderEnum) ProtoType(pref.EnumDescriptor)       { return }
 func (e PlaceholderEnum) ProtoInternal(pragma.DoNotImplement) { return }
 
+// PlaceholderEnumValue is a placeholder, representing only the full name.
+type PlaceholderEnumValue pref.FullName
+
+func (e PlaceholderEnumValue) ParentFile() pref.FileDescriptor     { return nil }
+func (e PlaceholderEnumValue) Parent() pref.Descriptor             { return nil }
+func (e PlaceholderEnumValue) Index() int                          { return 0 }
+func (e PlaceholderEnumValue) Syntax() pref.Syntax                 { return 0 }
+func (e PlaceholderEnumValue) Name() pref.Name                     { return pref.FullName(e).Name() }
+func (e PlaceholderEnumValue) FullName() pref.FullName             { return pref.FullName(e) }
+func (e PlaceholderEnumValue) IsPlaceholder() bool                 { return true }
+func (e PlaceholderEnumValue) Options() pref.ProtoMessage          { return descopts.EnumValue }
+func (e PlaceholderEnumValue) Number() pref.EnumNumber             { return 0 }
+func (e PlaceholderEnumValue) ProtoType(pref.EnumValueDescriptor)  { return }
+func (e PlaceholderEnumValue) ProtoInternal(pragma.DoNotImplement) { return }
+
 // PlaceholderMessage is a placeholder, representing only the full name.
 type PlaceholderMessage pref.FullName
 

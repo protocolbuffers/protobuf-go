@@ -7,8 +7,10 @@ package impl
 import (
 	"fmt"
 	"reflect"
+	"strings"
 	"sync"
 
+	"google.golang.org/protobuf/internal/filedesc"
 	pvalue "google.golang.org/protobuf/internal/value"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -100,7 +102,7 @@ func LegacyLoadEnumDesc(t reflect.Type) pref.EnumDescriptor {
 	}
 	edV1, ok := ev.(enumV1)
 	if !ok {
-		panic(fmt.Sprintf("enum %v is no longer supported; please regenerate", t))
+		return aberrantLoadEnumDesc(t)
 	}
 	b, idxs := edV1.EnumDescriptor()
 
@@ -118,4 +120,72 @@ func LegacyLoadEnumDesc(t reflect.Type) pref.EnumDescriptor {
 		return ed.(protoreflect.EnumDescriptor)
 	}
 	return ed
+}
+
+var aberrantEnumDescCache sync.Map // map[reflect.Type]protoreflect.EnumDescriptor
+
+// aberrantLoadEnumDesc returns an EnumDescriptor derived from the Go type,
+// which must not implement protoreflect.Enum or enumV1.
+//
+// If the type does not implement enumV1, then there is no reliable
+// way to derive the original protobuf type information.
+// We are unable to use the global enum registry since it is
+// unfortunately keyed by the protobuf full name, which we also do not know.
+// Thus, this produces some bogus enum descriptor based on the Go type name.
+func aberrantLoadEnumDesc(t reflect.Type) pref.EnumDescriptor {
+	// Fast-path: check if an EnumDescriptor is cached for this concrete type.
+	if ed, ok := aberrantEnumDescCache.Load(t); ok {
+		return ed.(pref.EnumDescriptor)
+	}
+
+	// Slow-path: construct a bogus, but unique EnumDescriptor.
+	ed := &filedesc.Enum{L2: new(filedesc.EnumL2)}
+	ed.L0.FullName = aberrantDeriveFullName(t) // e.g., github_com.user.repo.MyEnum
+	ed.L0.ParentFile = filedesc.SurrogateProto3
+	ed.L2.Values.List = append(ed.L2.Values.List, filedesc.EnumValue{})
+
+	// TODO: Use the presence of a UnmarshalJSON method to determine proto2?
+
+	vd := &ed.L2.Values.List[0]
+	vd.L0.FullName = ed.L0.FullName + "_UNKNOWN" // e.g., github_com.user.repo.MyEnum_UNKNOWN
+	vd.L0.ParentFile = ed.L0.ParentFile
+	vd.L0.Parent = ed
+
+	// TODO: We could use the String method to obtain some enum value names by
+	// starting at 0 and print the enum until it produces invalid identifiers.
+	// An exhaustive query is clearly impractical, but can be best-effort.
+
+	if ed, ok := aberrantEnumDescCache.LoadOrStore(t, ed); ok {
+		return ed.(pref.EnumDescriptor)
+	}
+	return ed
+}
+
+// aberrantDeriveFullName derives a fully qualified protobuf name for the given Go type
+// The provided name is not guaranteed to be stable nor universally unique.
+// It should be sufficiently unique within a program.
+func aberrantDeriveFullName(t reflect.Type) pref.FullName {
+	sanitize := func(r rune) rune {
+		switch {
+		case r == '/':
+			return '.'
+		case 'a' <= r && r <= 'z', 'A' <= r && r <= 'Z', '0' <= r && r <= '9':
+			return r
+		default:
+			return '_'
+		}
+	}
+	prefix := strings.Map(sanitize, t.PkgPath())
+	suffix := strings.Map(sanitize, t.Name())
+	if suffix == "" {
+		suffix = fmt.Sprintf("UnknownX%X", reflect.ValueOf(t).Pointer())
+	}
+
+	ss := append(strings.Split(prefix, "."), suffix)
+	for i, s := range ss {
+		if s == "" || ('0' <= s[0] && s[0] <= '9') {
+			ss[i] = "x" + s
+		}
+	}
+	return pref.FullName(strings.Join(ss, "."))
 }
