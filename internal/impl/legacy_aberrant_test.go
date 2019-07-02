@@ -7,12 +7,14 @@ package impl_test
 import (
 	"io"
 	"reflect"
+	"sync"
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoiface"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -284,5 +286,37 @@ func TestAberrant(t *testing.T) {
 	got := protodesc.ToDescriptorProto(md)
 	if !proto.Equal(got, want) {
 		t.Errorf("mismatching descriptor:\ngot  %v\nwant %v", got, want)
+	}
+}
+
+type AberrantMessage1 struct {
+	M *AberrantMessage2 `protobuf:"bytes,1,opt,name=message"`
+}
+
+type AberrantMessage2 struct {
+	M *AberrantMessage1 `protobuf:"bytes,1,opt,name=message"`
+}
+
+func TestAberrantRace(t *testing.T) {
+	var gotMD1, wantMD1, gotMD2, wantMD2 protoreflect.MessageDescriptor
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		md := impl.LegacyLoadMessageDesc(reflect.TypeOf(&AberrantMessage1{}))
+		wantMD2 = md.Fields().Get(0).Message()
+		gotMD2 = wantMD2.Fields().Get(0).Message().Fields().Get(0).Message()
+	}()
+	go func() {
+		defer wg.Done()
+		md := impl.LegacyLoadMessageDesc(reflect.TypeOf(&AberrantMessage2{}))
+		wantMD1 = md.Fields().Get(0).Message()
+		gotMD1 = wantMD1.Fields().Get(0).Message().Fields().Get(0).Message()
+	}()
+	wg.Wait()
+
+	if gotMD1 != wantMD1 || gotMD2 != wantMD2 {
+		t.Errorf("mismatching exact message descriptors")
 	}
 }
