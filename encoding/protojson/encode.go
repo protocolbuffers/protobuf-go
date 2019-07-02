@@ -256,12 +256,11 @@ func (o MarshalOptions) marshalExtensions(m pref.Message) error {
 		if !fd.IsExtension() {
 			return true
 		}
-		xt := fd.(pref.ExtensionType)
 
 		// If extended type is a MessageSet, set field name to be the message type name.
-		name := xt.Descriptor().FullName()
-		if isMessageSetExtension(xt) {
-			name = xt.Descriptor().Message().FullName()
+		name := fd.FullName()
+		if isMessageSetExtension(fd) {
+			name = fd.Message().FullName()
 		}
 
 		// Use [name] format for JSON field name.
@@ -294,18 +293,17 @@ func (o MarshalOptions) marshalExtensions(m pref.Message) error {
 }
 
 // isMessageSetExtension reports whether extension extends a message set.
-func isMessageSetExtension(xt pref.ExtensionType) bool {
-	xd := xt.Descriptor()
-	if xd.Name() != "message_set_extension" {
+func isMessageSetExtension(fd pref.FieldDescriptor) bool {
+	if fd.Name() != "message_set_extension" {
 		return false
 	}
-	md := xd.Message()
+	md := fd.Message()
 	if md == nil {
 		return false
 	}
-	if xd.FullName().Parent() != md.FullName() {
+	if fd.FullName().Parent() != md.FullName() {
 		return false
 	}
-	xmd, ok := xd.ContainingMessage().(interface{ IsMessageSet() bool })
+	xmd, ok := fd.ContainingMessage().(interface{ IsMessageSet() bool })
 	return ok && xmd.IsMessageSet()
 }

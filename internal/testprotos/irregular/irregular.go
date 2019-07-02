@@ -8,6 +8,8 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/reflect/protodesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/prototype"
+
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
@@ -20,11 +22,19 @@ func (m *IrregularMessage) ProtoReflect() pref.Message { return (*message)(m) }
 
 type message IrregularMessage
 
-func (m *message) Descriptor() pref.MessageDescriptor { return descriptor.Messages().Get(0) }
+var messageType = &prototype.Message{
+	MessageDescriptor: fileDesc.Messages().Get(0),
+	NewMessage: func() pref.Message {
+		return &message{}
+	},
+}
+
+func (m *message) Descriptor() pref.MessageDescriptor { return messageType.Descriptor() }
+func (m *message) Type() pref.MessageType             { return messageType }
 func (m *message) New() pref.Message                  { return &message{} }
 func (m *message) Interface() pref.ProtoMessage       { return (*IrregularMessage)(m) }
 
-var fieldDescS = descriptor.Messages().Get(0).Fields().Get(0)
+var fieldDescS = fileDesc.Messages().Get(0).Fields().Get(0)
 
 func (m *message) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 	if m.set {
@@ -79,7 +89,7 @@ func (m *message) WhichOneof(pref.OneofDescriptor) pref.FieldDescriptor {
 func (m *message) GetUnknown() pref.RawFields { return nil }
 func (m *message) SetUnknown(pref.RawFields)  { return }
 
-var descriptor = func() pref.FileDescriptor {
+var fileDesc = func() pref.FileDescriptor {
 	p := &descriptorpb.FileDescriptorProto{}
 	if err := prototext.Unmarshal([]byte(descriptorText), p); err != nil {
 		panic(err)
@@ -91,7 +101,7 @@ var descriptor = func() pref.FileDescriptor {
 	return file
 }()
 
-func file_irregular_irregular_proto_init() { _ = descriptor }
+func file_irregular_irregular_proto_init() { _ = fileDesc }
 
 const descriptorText = `
   name: "internal/testprotos/irregular/irregular.proto"

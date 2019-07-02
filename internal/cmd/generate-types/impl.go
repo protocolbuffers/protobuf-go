@@ -437,6 +437,9 @@ var implMessageTemplate = template.Must(template.New("").Parse(`
 func (m *{{.}}) Descriptor() protoreflect.MessageDescriptor {
 	return m.mi.PBType.Descriptor()
 }
+func (m *{{.}}) Type() protoreflect.MessageType {
+	return m.mi.PBType
+}
 func (m *{{.}}) New() protoreflect.Message {
 	return m.mi.PBType.New()
 }

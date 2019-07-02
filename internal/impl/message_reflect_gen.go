@@ -14,6 +14,9 @@ import (
 func (m *messageState) Descriptor() protoreflect.MessageDescriptor {
 	return m.mi.PBType.Descriptor()
 }
+func (m *messageState) Type() protoreflect.MessageType {
+	return m.mi.PBType
+}
 func (m *messageState) New() protoreflect.Message {
 	return m.mi.PBType.New()
 }
@@ -105,6 +108,9 @@ func (m *messageState) SetUnknown(b protoreflect.RawFields) {
 
 func (m *messageReflectWrapper) Descriptor() protoreflect.MessageDescriptor {
 	return m.mi.PBType.Descriptor()
+}
+func (m *messageReflectWrapper) Type() protoreflect.MessageType {
+	return m.mi.PBType
 }
 func (m *messageReflectWrapper) New() protoreflect.Message {
 	return m.mi.PBType.New()

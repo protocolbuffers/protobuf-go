@@ -49,6 +49,10 @@ func (FieldTestMessage_Enum) Descriptor() protoreflect.EnumDescriptor {
 	return file_proto2_fields_proto_enumTypes[0].EnumDescriptor
 }
 
+func (FieldTestMessage_Enum) Type() protoreflect.EnumType {
+	return &file_proto2_fields_proto_enumTypes[0]
+}
+
 func (x FieldTestMessage_Enum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }

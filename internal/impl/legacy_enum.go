@@ -64,6 +64,9 @@ type legacyEnumWrapper struct {
 func (e *legacyEnumWrapper) Descriptor() pref.EnumDescriptor {
 	return e.pbTyp.Descriptor()
 }
+func (e *legacyEnumWrapper) Type() pref.EnumType {
+	return e.pbTyp
+}
 func (e *legacyEnumWrapper) Number() pref.EnumNumber {
 	return e.num
 }

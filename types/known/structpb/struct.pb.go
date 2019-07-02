@@ -50,6 +50,10 @@ func (NullValue) Descriptor() protoreflect.EnumDescriptor {
 	return file_google_protobuf_struct_proto_enumTypes[0].EnumDescriptor
 }
 
+func (NullValue) Type() protoreflect.EnumType {
+	return &file_google_protobuf_struct_proto_enumTypes[0]
+}
+
 func (x NullValue) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }

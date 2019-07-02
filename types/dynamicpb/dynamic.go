@@ -10,6 +10,7 @@ import (
 
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
@@ -29,7 +30,7 @@ import (
 //
 // Operations which modify a Message are not safe for concurrent use.
 type Message struct {
-	desc    pref.MessageDescriptor
+	typ     prototype.Message
 	known   map[pref.FieldNumber]pref.Value
 	ext     map[pref.FieldNumber]pref.FieldDescriptor
 	unknown pref.RawFields
@@ -38,7 +39,10 @@ type Message struct {
 // New creates a new message with the provided descriptor.
 func New(desc pref.MessageDescriptor) *Message {
 	return &Message{
-		desc:  desc,
+		typ: prototype.Message{
+			MessageDescriptor: desc,
+			NewMessage:        func() pref.Message { return New(desc) },
+		},
 		known: make(map[pref.FieldNumber]pref.Value),
 		ext:   make(map[pref.FieldNumber]pref.FieldDescriptor),
 	}
@@ -56,13 +60,18 @@ func (m *Message) String() string {
 
 // Descriptor returns the message descriptor.
 func (m *Message) Descriptor() pref.MessageDescriptor {
-	return m.desc
+	return m.typ.Descriptor()
+}
+
+// Type returns the message type.
+func (m *Message) Type() pref.MessageType {
+	return &m.typ
 }
 
 // New returns a newly allocated empty message with the same descriptor.
 // See protoreflect.Message for details.
 func (m *Message) New() pref.Message {
-	return New(m.desc)
+	return m.Type().New()
 }
 
 // Interface returns the message.
@@ -77,7 +86,7 @@ func (m *Message) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 	for num, v := range m.known {
 		fd := m.ext[num]
 		if fd == nil {
-			fd = m.desc.Fields().ByNumber(num)
+			fd = m.Descriptor().Fields().ByNumber(num)
 			if !isSet(fd, v) {
 				continue
 			}
@@ -237,16 +246,16 @@ func (m *Message) SetUnknown(r pref.RawFields) {
 }
 
 func (m *Message) checkField(fd pref.FieldDescriptor) {
-	if fd.IsExtension() && fd.ContainingMessage().FullName() == m.desc.FullName() {
+	if fd.IsExtension() && fd.ContainingMessage().FullName() == m.Descriptor().FullName() {
 		if _, ok := fd.(pref.ExtensionType); !ok {
 			panic(errors.New("%v: extension field descriptor does not implement ExtensionType", fd.FullName()))
 		}
 		return
 	}
-	if fd.Parent() == m.desc {
+	if fd.Parent() == m.Descriptor() {
 		return
 	}
-	fields := m.desc.Fields()
+	fields := m.Descriptor().Fields()
 	index := fd.Index()
 	if index >= fields.Len() || fields.Get(index) != fd {
 		panic(errors.New("%v: field descriptor does not belong to this message", fd.FullName()))

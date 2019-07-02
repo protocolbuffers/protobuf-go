@@ -11,7 +11,14 @@ import "google.golang.org/protobuf/internal/encoding/wire"
 // Enum does not provide a mutable API since enums are commonly backed by
 // Go constants, which are not addressable.
 type Enum interface {
+	// Descriptor returns enum descriptor, which contains only the protobuf
+	// type information for the enum.
 	Descriptor() EnumDescriptor
+
+	// Type returns the enum type, which encapsulates both Go and protobuf
+	// type information. If the Go type information is not needed,
+	// it is recommended that the enum descriptor be used instead.
+	Type() EnumType
 
 	// Number returns the enum value as an integer.
 	Number() EnumNumber
@@ -31,7 +38,14 @@ type Enum interface {
 // See Value for the Go types associated with a FieldDescriptor.
 // Providing a Value that is invalid or of an incorrect type panics.
 type Message interface {
+	// Descriptor returns message descriptor, which contains only the protobuf
+	// type information for the message.
 	Descriptor() MessageDescriptor
+
+	// Type returns the message type, which encapsulates both Go and protobuf
+	// type information. If the Go type information is not needed,
+	// it is recommended that the message descriptor be used instead.
+	Type() MessageType
 
 	// New returns a newly allocated and mutable empty message.
 	New() Message

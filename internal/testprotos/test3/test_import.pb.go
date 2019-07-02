@@ -45,6 +45,10 @@ func (ImportEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_test3_test_import_proto_enumTypes[0].EnumDescriptor
 }
 
+func (ImportEnum) Type() protoreflect.EnumType {
+	return &file_test3_test_import_proto_enumTypes[0]
+}
+
 func (x ImportEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }

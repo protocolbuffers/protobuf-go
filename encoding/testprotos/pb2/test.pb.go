@@ -59,6 +59,10 @@ func (Enum) Descriptor() protoreflect.EnumDescriptor {
 	return file_pb2_test_proto_enumTypes[0].EnumDescriptor
 }
 
+func (Enum) Type() protoreflect.EnumType {
+	return &file_pb2_test_proto_enumTypes[0]
+}
+
 func (x Enum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -110,6 +114,10 @@ func (x Enums_NestedEnum) String() string {
 
 func (Enums_NestedEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_pb2_test_proto_enumTypes[1].EnumDescriptor
+}
+
+func (Enums_NestedEnum) Type() protoreflect.EnumType {
+	return &file_pb2_test_proto_enumTypes[1]
 }
 
 func (x Enums_NestedEnum) Number() protoreflect.EnumNumber {

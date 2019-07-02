@@ -42,8 +42,8 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 	mi.extensionOffset = si.extensionOffset
 
 	mi.coderFields = make(map[wire.Number]*coderFieldInfo)
-	for i := 0; i < mi.PBType.Descriptor().Fields().Len(); i++ {
-		fd := mi.PBType.Descriptor().Fields().Get(i)
+	for i := 0; i < mi.PBType.Fields().Len(); i++ {
+		fd := mi.PBType.Fields().Get(i)
 
 		fs := si.fieldsByNumber[fd.Number()]
 		if fd.ContainingOneof() != nil {

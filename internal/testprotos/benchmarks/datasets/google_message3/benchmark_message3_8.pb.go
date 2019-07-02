@@ -48,6 +48,10 @@ func (Enum720) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[0].EnumDescriptor
 }
 
+func (Enum720) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[0]
+}
+
 func (x Enum720) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -644,6 +648,10 @@ func (Enum3476) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[1].EnumDescriptor
 }
 
+func (Enum3476) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[1]
+}
+
 func (x Enum3476) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -722,6 +730,10 @@ func (x Enum3805) String() string {
 
 func (Enum3805) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[2].EnumDescriptor
+}
+
+func (Enum3805) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[2]
 }
 
 func (x Enum3805) Number() protoreflect.EnumNumber {
@@ -828,6 +840,10 @@ func (Enum3783) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[3].EnumDescriptor
 }
 
+func (Enum3783) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[3]
+}
+
 func (x Enum3783) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -926,6 +942,10 @@ func (Enum3851) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[4].EnumDescriptor
 }
 
+func (Enum3851) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[4]
+}
+
 func (x Enum3851) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -974,6 +994,10 @@ func (x UnusedEnum) String() string {
 
 func (UnusedEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[5].EnumDescriptor
+}
+
+func (UnusedEnum) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[5]
 }
 
 func (x UnusedEnum) Number() protoreflect.EnumNumber {
@@ -1035,6 +1059,10 @@ func (Enum4146) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[6].EnumDescriptor
 }
 
+func (Enum4146) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[6]
+}
+
 func (x Enum4146) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -1083,6 +1111,10 @@ func (x Enum4160) String() string {
 
 func (Enum4160) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[7].EnumDescriptor
+}
+
+func (Enum4160) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[7]
 }
 
 func (x Enum4160) Number() protoreflect.EnumNumber {
@@ -1148,6 +1180,10 @@ func (x Enum4152) String() string {
 
 func (Enum4152) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[8].EnumDescriptor
+}
+
+func (Enum4152) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[8]
 }
 
 func (x Enum4152) Number() protoreflect.EnumNumber {
@@ -1260,6 +1296,10 @@ func (Enum6025) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[9].EnumDescriptor
 }
 
+func (Enum6025) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[9]
+}
+
 func (x Enum6025) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -1349,6 +1389,10 @@ func (Enum6065) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[10].EnumDescriptor
 }
 
+func (Enum6065) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[10]
+}
+
 func (x Enum6065) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -1415,6 +1459,10 @@ func (x Enum6579) String() string {
 
 func (Enum6579) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[11].EnumDescriptor
+}
+
+func (Enum6579) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[11]
 }
 
 func (x Enum6579) Number() protoreflect.EnumNumber {
@@ -1563,6 +1611,10 @@ func (Enum6588) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[12].EnumDescriptor
 }
 
+func (Enum6588) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[12]
+}
+
 func (x Enum6588) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -1614,6 +1666,10 @@ func (x Enum6769) String() string {
 
 func (Enum6769) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[13].EnumDescriptor
+}
+
+func (Enum6769) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[13]
 }
 
 func (x Enum6769) Number() protoreflect.EnumNumber {
@@ -1681,6 +1737,10 @@ func (Enum6774) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[14].EnumDescriptor
 }
 
+func (Enum6774) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[14]
+}
+
 func (x Enum6774) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -1743,6 +1803,10 @@ func (Enum6782) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[15].EnumDescriptor
 }
 
+func (Enum6782) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[15]
+}
+
 func (x Enum6782) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -1797,6 +1861,10 @@ func (x Enum6858) String() string {
 
 func (Enum6858) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[16].EnumDescriptor
+}
+
+func (Enum6858) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[16]
 }
 
 func (x Enum6858) Number() protoreflect.EnumNumber {
@@ -1861,6 +1929,10 @@ func (Enum6815) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[17].EnumDescriptor
 }
 
+func (Enum6815) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[17]
+}
+
 func (x Enum6815) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -1917,6 +1989,10 @@ func (Enum6822) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[18].EnumDescriptor
 }
 
+func (Enum6822) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[18]
+}
+
 func (x Enum6822) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -1968,6 +2044,10 @@ func (x Enum7654) String() string {
 
 func (Enum7654) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[19].EnumDescriptor
+}
+
+func (Enum7654) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[19]
 }
 
 func (x Enum7654) Number() protoreflect.EnumNumber {
@@ -2023,6 +2103,10 @@ func (Enum8292) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[20].EnumDescriptor
 }
 
+func (Enum8292) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[20]
+}
+
 func (x Enum8292) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -2074,6 +2158,10 @@ func (x Enum8450) String() string {
 
 func (Enum8450) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[21].EnumDescriptor
+}
+
+func (Enum8450) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[21]
 }
 
 func (x Enum8450) Number() protoreflect.EnumNumber {
@@ -2135,6 +2223,10 @@ func (Enum8900) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[22].EnumDescriptor
 }
 
+func (Enum8900) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[22]
+}
+
 func (x Enum8900) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -2192,6 +2284,10 @@ func (x Enum8945) String() string {
 
 func (Enum8945) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[23].EnumDescriptor
+}
+
+func (Enum8945) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[23]
 }
 
 func (x Enum8945) Number() protoreflect.EnumNumber {
@@ -2260,6 +2356,10 @@ func (x Enum8951) String() string {
 
 func (Enum8951) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[24].EnumDescriptor
+}
+
+func (Enum8951) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[24]
 }
 
 func (x Enum8951) Number() protoreflect.EnumNumber {
@@ -2555,6 +2655,10 @@ func (Enum9243) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[25].EnumDescriptor
 }
 
+func (Enum9243) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[25]
+}
+
 func (x Enum9243) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -2626,6 +2730,10 @@ func (Enum10157) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[26].EnumDescriptor
 }
 
+func (Enum10157) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[26]
+}
+
 func (x Enum10157) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -2695,6 +2803,10 @@ func (x Enum10167) String() string {
 
 func (Enum10167) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[27].EnumDescriptor
+}
+
+func (Enum10167) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[27]
 }
 
 func (x Enum10167) Number() protoreflect.EnumNumber {
@@ -2789,6 +2901,10 @@ func (Enum8862) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[28].EnumDescriptor
 }
 
+func (Enum8862) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[28]
+}
+
 func (x Enum8862) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -2860,6 +2976,10 @@ func (Enum10325) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[29].EnumDescriptor
 }
 
+func (Enum10325) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[29]
+}
+
 func (x Enum10325) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -2905,6 +3025,10 @@ func (x Enum10335) String() string {
 
 func (Enum10335) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[30].EnumDescriptor
+}
+
+func (Enum10335) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[30]
 }
 
 func (x Enum10335) Number() protoreflect.EnumNumber {
@@ -2955,6 +3079,10 @@ func (x Enum10337) String() string {
 
 func (Enum10337) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[31].EnumDescriptor
+}
+
+func (Enum10337) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[31]
 }
 
 func (x Enum10337) Number() protoreflect.EnumNumber {
@@ -3053,6 +3181,10 @@ func (x Enum10392) String() string {
 
 func (Enum10392) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[32].EnumDescriptor
+}
+
+func (Enum10392) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[32]
 }
 
 func (x Enum10392) Number() protoreflect.EnumNumber {
@@ -4179,6 +4311,10 @@ func (Enum11107) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[33].EnumDescriptor
 }
 
+func (Enum11107) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[33]
+}
+
 func (x Enum11107) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -4796,6 +4932,10 @@ func (Enum11541) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[34].EnumDescriptor
 }
 
+func (Enum11541) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[34]
+}
+
 func (x Enum11541) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -4910,6 +5050,10 @@ func (x Enum11468) String() string {
 
 func (Enum11468) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[35].EnumDescriptor
+}
+
+func (Enum11468) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[35]
 }
 
 func (x Enum11468) Number() protoreflect.EnumNumber {
@@ -5208,6 +5352,10 @@ func (Enum11022) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[36].EnumDescriptor
 }
 
+func (Enum11022) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[36]
+}
+
 func (x Enum11022) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -5259,6 +5407,10 @@ func (x Enum12670) String() string {
 
 func (Enum12670) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[37].EnumDescriptor
+}
+
+func (Enum12670) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[37]
 }
 
 func (x Enum12670) Number() protoreflect.EnumNumber {
@@ -5323,6 +5475,10 @@ func (Enum12871) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[38].EnumDescriptor
 }
 
+func (Enum12871) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[38]
+}
+
 func (x Enum12871) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -5374,6 +5530,10 @@ func (x Enum13092) String() string {
 
 func (Enum13092) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[39].EnumDescriptor
+}
+
+func (Enum13092) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[39]
 }
 
 func (x Enum13092) Number() protoreflect.EnumNumber {
@@ -5430,6 +5590,10 @@ func (x Enum13146) String() string {
 
 func (Enum13146) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[40].EnumDescriptor
+}
+
+func (Enum13146) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[40]
 }
 
 func (x Enum13146) Number() protoreflect.EnumNumber {
@@ -6562,6 +6726,10 @@ func (Enum16042) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[41].EnumDescriptor
 }
 
+func (Enum16042) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[41]
+}
+
 func (x Enum16042) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -6636,6 +6804,10 @@ func (Enum16553) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[42].EnumDescriptor
 }
 
+func (Enum16553) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[42]
+}
+
 func (x Enum16553) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -6687,6 +6859,10 @@ func (x Enum16728) String() string {
 
 func (Enum16728) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[43].EnumDescriptor
+}
+
+func (Enum16728) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[43]
 }
 
 func (x Enum16728) Number() protoreflect.EnumNumber {
@@ -6746,6 +6922,10 @@ func (x Enum16732) String() string {
 
 func (Enum16732) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[44].EnumDescriptor
+}
+
+func (Enum16732) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[44]
 }
 
 func (x Enum16732) Number() protoreflect.EnumNumber {
@@ -6811,6 +6991,10 @@ func (x Enum16738) String() string {
 
 func (Enum16738) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[45].EnumDescriptor
+}
+
+func (Enum16738) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[45]
 }
 
 func (x Enum16738) Number() protoreflect.EnumNumber {
@@ -6926,6 +7110,10 @@ func (Enum16698) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[46].EnumDescriptor
 }
 
+func (Enum16698) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[46]
+}
+
 func (x Enum16698) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -6986,6 +7174,10 @@ func (x Enum16819) String() string {
 
 func (Enum16819) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[47].EnumDescriptor
+}
+
+func (Enum16819) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[47]
 }
 
 func (x Enum16819) Number() protoreflect.EnumNumber {
@@ -7074,6 +7266,10 @@ func (Enum16925) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[48].EnumDescriptor
 }
 
+func (Enum16925) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[48]
+}
+
 func (x Enum16925) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -7122,6 +7318,10 @@ func (x Enum22854) String() string {
 
 func (Enum22854) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[49].EnumDescriptor
+}
+
+func (Enum22854) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[49]
 }
 
 func (x Enum22854) Number() protoreflect.EnumNumber {
@@ -7178,6 +7378,10 @@ func (x Enum24361) String() string {
 
 func (Enum24361) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[50].EnumDescriptor
+}
+
+func (Enum24361) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[50]
 }
 
 func (x Enum24361) Number() protoreflect.EnumNumber {
@@ -7320,6 +7524,10 @@ func (Enum16891) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[51].EnumDescriptor
 }
 
+func (Enum16891) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[51]
+}
+
 func (x Enum16891) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -7377,6 +7585,10 @@ func (x Enum27361) String() string {
 
 func (Enum27361) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[52].EnumDescriptor
+}
+
+func (Enum27361) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[52]
 }
 
 func (x Enum27361) Number() protoreflect.EnumNumber {
@@ -7444,6 +7656,10 @@ func (Enum33960) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[53].EnumDescriptor
 }
 
+func (Enum33960) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[53]
+}
+
 func (x Enum33960) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -7489,6 +7705,10 @@ func (x Enum34388) String() string {
 
 func (Enum34388) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[54].EnumDescriptor
+}
+
+func (Enum34388) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[54]
 }
 
 func (x Enum34388) Number() protoreflect.EnumNumber {
@@ -7548,6 +7768,10 @@ func (x Enum35477) String() string {
 
 func (Enum35477) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[55].EnumDescriptor
+}
+
+func (Enum35477) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[55]
 }
 
 func (x Enum35477) Number() protoreflect.EnumNumber {
@@ -7624,6 +7848,10 @@ func (Enum35507) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[56].EnumDescriptor
 }
 
+func (Enum35507) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[56]
+}
+
 func (x Enum35507) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -7692,6 +7920,10 @@ func (Enum36860) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[57].EnumDescriptor
 }
 
+func (Enum36860) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[57]
+}
+
 func (x Enum36860) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -7740,6 +7972,10 @@ func (x Enum36890) String() string {
 
 func (Enum36890) Descriptor() protoreflect.EnumDescriptor {
 	return file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[58].EnumDescriptor
+}
+
+func (Enum36890) Type() protoreflect.EnumType {
+	return &file_datasets_google_message3_benchmark_message3_8_proto_enumTypes[58]
 }
 
 func (x Enum36890) Number() protoreflect.EnumNumber {

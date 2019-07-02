@@ -52,6 +52,10 @@ func (E) Descriptor() protoreflect.EnumDescriptor {
 	return file_import_public_sub_a_proto_enumTypes[0].EnumDescriptor
 }
 
+func (E) Type() protoreflect.EnumType {
+	return &file_import_public_sub_a_proto_enumTypes[0]
+}
+
 func (x E) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -99,6 +103,10 @@ func (M_Subenum) Descriptor() protoreflect.EnumDescriptor {
 	return file_import_public_sub_a_proto_enumTypes[1].EnumDescriptor
 }
 
+func (M_Subenum) Type() protoreflect.EnumType {
+	return &file_import_public_sub_a_proto_enumTypes[1]
+}
+
 func (x M_Subenum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -144,6 +152,10 @@ func (x M_Submessage_Submessage_Subenum) String() string {
 
 func (M_Submessage_Submessage_Subenum) Descriptor() protoreflect.EnumDescriptor {
 	return file_import_public_sub_a_proto_enumTypes[2].EnumDescriptor
+}
+
+func (M_Submessage_Submessage_Subenum) Type() protoreflect.EnumType {
+	return &file_import_public_sub_a_proto_enumTypes[2]
 }
 
 func (x M_Submessage_Submessage_Subenum) Number() protoreflect.EnumNumber {

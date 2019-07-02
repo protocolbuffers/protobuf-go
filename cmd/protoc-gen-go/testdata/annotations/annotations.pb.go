@@ -45,6 +45,10 @@ func (AnnotationsTestEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_annotations_annotations_proto_enumTypes[0].EnumDescriptor
 }
 
+func (AnnotationsTestEnum) Type() protoreflect.EnumType {
+	return &file_annotations_annotations_proto_enumTypes[0]
+}
+
 func (x AnnotationsTestEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }

@@ -54,6 +54,10 @@ func (ForeignEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_test3_test_proto_enumTypes[0].EnumDescriptor
 }
 
+func (ForeignEnum) Type() protoreflect.EnumType {
+	return &file_test3_test_proto_enumTypes[0]
+}
+
 func (x ForeignEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -98,6 +102,10 @@ func (x TestAllTypes_NestedEnum) String() string {
 
 func (TestAllTypes_NestedEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_test3_test_proto_enumTypes[1].EnumDescriptor
+}
+
+func (TestAllTypes_NestedEnum) Type() protoreflect.EnumType {
+	return &file_test3_test_proto_enumTypes[1]
 }
 
 func (x TestAllTypes_NestedEnum) Number() protoreflect.EnumNumber {

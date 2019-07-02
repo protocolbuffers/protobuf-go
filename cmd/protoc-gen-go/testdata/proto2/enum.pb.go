@@ -51,6 +51,10 @@ func (EnumType1) Descriptor() protoreflect.EnumDescriptor {
 	return file_proto2_enum_proto_enumTypes[0].EnumDescriptor
 }
 
+func (EnumType1) Type() protoreflect.EnumType {
+	return &file_proto2_enum_proto_enumTypes[0]
+}
+
 func (x EnumType1) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -99,6 +103,10 @@ func (x EnumType2) String() string {
 
 func (EnumType2) Descriptor() protoreflect.EnumDescriptor {
 	return file_proto2_enum_proto_enumTypes[1].EnumDescriptor
+}
+
+func (EnumType2) Type() protoreflect.EnumType {
+	return &file_proto2_enum_proto_enumTypes[1]
 }
 
 func (x EnumType2) Number() protoreflect.EnumNumber {
@@ -150,6 +158,10 @@ func (EnumContainerMessage1_NestedEnumType1A) Descriptor() protoreflect.EnumDesc
 	return file_proto2_enum_proto_enumTypes[2].EnumDescriptor
 }
 
+func (EnumContainerMessage1_NestedEnumType1A) Type() protoreflect.EnumType {
+	return &file_proto2_enum_proto_enumTypes[2]
+}
+
 func (x EnumContainerMessage1_NestedEnumType1A) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -195,6 +207,10 @@ func (x EnumContainerMessage1_NestedEnumType1B) String() string {
 
 func (EnumContainerMessage1_NestedEnumType1B) Descriptor() protoreflect.EnumDescriptor {
 	return file_proto2_enum_proto_enumTypes[3].EnumDescriptor
+}
+
+func (EnumContainerMessage1_NestedEnumType1B) Type() protoreflect.EnumType {
+	return &file_proto2_enum_proto_enumTypes[3]
 }
 
 func (x EnumContainerMessage1_NestedEnumType1B) Number() protoreflect.EnumNumber {
@@ -246,6 +262,10 @@ func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A) Descriptor()
 	return file_proto2_enum_proto_enumTypes[4].EnumDescriptor
 }
 
+func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A) Type() protoreflect.EnumType {
+	return &file_proto2_enum_proto_enumTypes[4]
+}
+
 func (x EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -291,6 +311,10 @@ func (x EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) String() s
 
 func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) Descriptor() protoreflect.EnumDescriptor {
 	return file_proto2_enum_proto_enumTypes[5].EnumDescriptor
+}
+
+func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) Type() protoreflect.EnumType {
+	return &file_proto2_enum_proto_enumTypes[5]
 }
 
 func (x EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) Number() protoreflect.EnumNumber {

@@ -189,7 +189,7 @@ func (o MarshalOptions) marshalAny(m pref.Message) error {
 	// If type of value has custom JSON encoding, marshal out a field "value"
 	// with corresponding custom JSON encoding of the embedded message as a
 	// field.
-	if isCustomType(emt.Descriptor().FullName()) {
+	if isCustomType(emt.FullName()) {
 		o.encoder.WriteName("value")
 		return o.marshalCustomType(em)
 	}
@@ -235,7 +235,7 @@ func (o UnmarshalOptions) unmarshalAny(m pref.Message) error {
 
 	// Create new message for the embedded message type and unmarshal into it.
 	em := emt.New()
-	if isCustomType(emt.Descriptor().FullName()) {
+	if isCustomType(emt.FullName()) {
 		// If embedded message is a custom type, unmarshal the JSON "value" field
 		// into it.
 		if err := o.unmarshalAnyValue(em); err != nil {

@@ -57,6 +57,10 @@ func (ForeignEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_google_protobuf_test_messages_proto3_proto_enumTypes[0].EnumDescriptor
 }
 
+func (ForeignEnum) Type() protoreflect.EnumType {
+	return &file_google_protobuf_test_messages_proto3_proto_enumTypes[0]
+}
+
 func (x ForeignEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
@@ -101,6 +105,10 @@ func (x TestAllTypesProto3_NestedEnum) String() string {
 
 func (TestAllTypesProto3_NestedEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_google_protobuf_test_messages_proto3_proto_enumTypes[1].EnumDescriptor
+}
+
+func (TestAllTypesProto3_NestedEnum) Type() protoreflect.EnumType {
+	return &file_google_protobuf_test_messages_proto3_proto_enumTypes[1]
 }
 
 func (x TestAllTypesProto3_NestedEnum) Number() protoreflect.EnumNumber {
@@ -153,6 +161,10 @@ func (x TestAllTypesProto3_AliasedEnum) String() string {
 
 func (TestAllTypesProto3_AliasedEnum) Descriptor() protoreflect.EnumDescriptor {
 	return file_google_protobuf_test_messages_proto3_proto_enumTypes[2].EnumDescriptor
+}
+
+func (TestAllTypesProto3_AliasedEnum) Type() protoreflect.EnumType {
+	return &file_google_protobuf_test_messages_proto3_proto_enumTypes[2]
 }
 
 func (x TestAllTypesProto3_AliasedEnum) Number() protoreflect.EnumNumber {

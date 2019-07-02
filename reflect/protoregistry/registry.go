@@ -406,11 +406,11 @@ typeLoop:
 			var name protoreflect.FullName
 			switch t := typ.(type) {
 			case protoreflect.EnumType:
-				name = t.Descriptor().FullName()
+				name = t.FullName()
 			case protoreflect.MessageType:
-				name = t.Descriptor().FullName()
+				name = t.FullName()
 			case protoreflect.ExtensionType:
-				name = t.Descriptor().FullName()
+				name = t.FullName()
 			default:
 				panic(fmt.Sprintf("invalid type: %T", t))
 			}
@@ -423,8 +423,8 @@ typeLoop:
 
 			// Check for conflicts in extensionsByMessage.
 			if xt, _ := typ.(protoreflect.ExtensionType); xt != nil {
-				field := xt.Descriptor().Number()
-				message := xt.Descriptor().ContainingMessage().FullName()
+				field := xt.Number()
+				message := xt.ContainingMessage().FullName()
 				if r.extensionsByMessage[message][field] != nil {
 					if firstErr == nil {
 						firstErr = errors.New("extension %v is already registered on message %v", name, message)

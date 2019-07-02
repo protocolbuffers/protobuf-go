@@ -280,6 +280,12 @@ func genReflectEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo
 	g.P("}")
 	g.P()
 
+	// Type method.
+	g.P("func (", enum.GoIdent, ") Type() ", protoreflectPackage.Ident("EnumType"), " {")
+	g.P("return &", typesVar, "[", idx, "]")
+	g.P("}")
+	g.P()
+
 	// Number method.
 	g.P("func (x ", enum.GoIdent, ") Number() ", protoreflectPackage.Ident("EnumNumber"), " {")
 	g.P("return ", protoreflectPackage.Ident("EnumNumber"), "(x)")

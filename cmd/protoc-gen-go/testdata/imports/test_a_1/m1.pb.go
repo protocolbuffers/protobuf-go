@@ -45,6 +45,10 @@ func (E1) Descriptor() protoreflect.EnumDescriptor {
 	return file_imports_test_a_1_m1_proto_enumTypes[0].EnumDescriptor
 }
 
+func (E1) Type() protoreflect.EnumType {
+	return &file_imports_test_a_1_m1_proto_enumTypes[0]
+}
+
 func (x E1) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
