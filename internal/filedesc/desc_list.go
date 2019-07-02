@@ -6,11 +6,15 @@ package filedesc
 
 import (
 	"fmt"
+	"math"
 	"sort"
 	"sync"
 
 	"google.golang.org/protobuf/internal/descfmt"
+	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/pragma"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -24,60 +28,57 @@ func (p *FileImports) ProtoInternal(pragma.DoNotImplement) {}
 type Names struct {
 	List []pref.Name
 	once sync.Once
-	has  map[pref.Name]struct{} // protected by once
+	has  map[pref.Name]int // protected by once
 }
 
-func (p *Names) Len() int            { return len(p.List) }
-func (p *Names) Get(i int) pref.Name { return p.List[i] }
-func (p *Names) Has(s pref.Name) bool {
+func (p *Names) Len() int                            { return len(p.List) }
+func (p *Names) Get(i int) pref.Name                 { return p.List[i] }
+func (p *Names) Has(s pref.Name) bool                { return p.lazyInit().has[s] > 0 }
+func (p *Names) Format(s fmt.State, r rune)          { descfmt.FormatList(s, r, p) }
+func (p *Names) ProtoInternal(pragma.DoNotImplement) {}
+func (p *Names) lazyInit() *Names {
 	p.once.Do(func() {
 		if len(p.List) > 0 {
-			p.has = make(map[pref.Name]struct{}, len(p.List))
+			p.has = make(map[pref.Name]int, len(p.List))
 			for _, s := range p.List {
-				p.has[s] = struct{}{}
+				p.has[s] = p.has[s] + 1
 			}
 		}
 	})
-	_, ok := p.has[s]
-	return ok
+	return p
 }
-func (p *Names) Format(s fmt.State, r rune)          { descfmt.FormatList(s, r, p) }
-func (p *Names) ProtoInternal(pragma.DoNotImplement) {}
+
+// CheckValid reports any errors with the set of names with an error message
+// that completes the sentence: "ranges is invalid because it has ..."
+func (p *Names) CheckValid() error {
+	for s, n := range p.lazyInit().has {
+		switch {
+		case n > 1:
+			return errors.New("duplicate name: %q", s)
+		case false && !s.IsValid():
+			// NOTE: The C++ implementation does not validate the identifier.
+			// See https://github.com/protocolbuffers/protobuf/issues/6335.
+			return errors.New("invalid name: %q", s)
+		}
+	}
+	return nil
+}
 
 type EnumRanges struct {
 	List   [][2]pref.EnumNumber // start inclusive; end inclusive
 	once   sync.Once
-	sorted [][2]pref.EnumNumber         // protected by once
-	has    map[pref.EnumNumber]struct{} // protected by once
+	sorted [][2]pref.EnumNumber // protected by once
 }
 
 func (p *EnumRanges) Len() int                     { return len(p.List) }
 func (p *EnumRanges) Get(i int) [2]pref.EnumNumber { return p.List[i] }
 func (p *EnumRanges) Has(n pref.EnumNumber) bool {
-	p.once.Do(func() {
-		for _, r := range p.List {
-			if r[0] == r[1]-0 {
-				if p.has == nil {
-					p.has = make(map[pref.EnumNumber]struct{}, len(p.List))
-				}
-				p.has[r[0]] = struct{}{}
-			} else {
-				p.sorted = append(p.sorted, r)
-			}
-		}
-		sort.Slice(p.sorted, func(i, j int) bool {
-			return p.sorted[i][0] < p.sorted[j][0]
-		})
-	})
-	if _, ok := p.has[n]; ok {
-		return true
-	}
-	for ls := p.sorted; len(ls) > 0; {
+	for ls := p.lazyInit().sorted; len(ls) > 0; {
 		i := len(ls) / 2
-		switch r := ls[i]; {
-		case n < r[0]:
+		switch r := enumRange(ls[i]); {
+		case n < r.Start():
 			ls = ls[:i] // search lower
-		case n > r[1]:
+		case n > r.End():
 			ls = ls[i+1:] // search upper
 		default:
 			return true
@@ -87,42 +88,60 @@ func (p *EnumRanges) Has(n pref.EnumNumber) bool {
 }
 func (p *EnumRanges) Format(s fmt.State, r rune)          { descfmt.FormatList(s, r, p) }
 func (p *EnumRanges) ProtoInternal(pragma.DoNotImplement) {}
+func (p *EnumRanges) lazyInit() *EnumRanges {
+	p.once.Do(func() {
+		p.sorted = append(p.sorted, p.List...)
+		sort.Slice(p.sorted, func(i, j int) bool {
+			return p.sorted[i][0] < p.sorted[j][0]
+		})
+	})
+	return p
+}
+
+// CheckValid reports any errors with the set of names with an error message
+// that completes the sentence: "ranges is invalid because it has ..."
+func (p *EnumRanges) CheckValid() error {
+	var rp enumRange
+	for i, r := range p.lazyInit().sorted {
+		r := enumRange(r)
+		switch {
+		case !(r.Start() <= r.End()):
+			return errors.New("invalid range: %v", r)
+		case !(rp.End() < r.Start()) && i > 0:
+			return errors.New("overlapping ranges: %v with %v", rp, r)
+		}
+		rp = r
+	}
+	return nil
+}
+
+type enumRange [2]protoreflect.EnumNumber
+
+func (r enumRange) Start() protoreflect.EnumNumber { return r[0] } // inclusive
+func (r enumRange) End() protoreflect.EnumNumber   { return r[1] } // inclusive
+func (r enumRange) String() string {
+	if r.Start() == r.End() {
+		return fmt.Sprintf("%d", r.Start())
+	}
+	return fmt.Sprintf("%d to %d", r.Start(), r.End())
+}
 
 type FieldRanges struct {
 	List   [][2]pref.FieldNumber // start inclusive; end exclusive
 	once   sync.Once
-	sorted [][2]pref.FieldNumber         // protected by once
-	has    map[pref.FieldNumber]struct{} // protected by once
+	sorted [][2]pref.FieldNumber // protected by once
 }
 
 func (p *FieldRanges) Len() int                      { return len(p.List) }
 func (p *FieldRanges) Get(i int) [2]pref.FieldNumber { return p.List[i] }
 func (p *FieldRanges) Has(n pref.FieldNumber) bool {
-	p.once.Do(func() {
-		for _, r := range p.List {
-			if r[0] == r[1]-1 {
-				if p.has == nil {
-					p.has = make(map[pref.FieldNumber]struct{}, len(p.List))
-				}
-				p.has[r[0]] = struct{}{}
-			} else {
-				p.sorted = append(p.sorted, r)
-			}
-		}
-		sort.Slice(p.sorted, func(i, j int) bool {
-			return p.sorted[i][0] < p.sorted[j][0]
-		})
-	})
-	if _, ok := p.has[n]; ok {
-		return true
-	}
-	for ls := p.sorted; len(ls) > 0; {
+	for ls := p.lazyInit().sorted; len(ls) > 0; {
 		i := len(ls) / 2
-		switch r := ls[i]; {
-		case n < r[0]:
+		switch r := fieldRange(ls[i]); {
+		case n < r.Start():
 			ls = ls[:i] // search lower
-		case n >= r[1]:
-			ls = ls[i+1:] // search higher
+		case n > r.End():
+			ls = ls[i+1:] // search upper
 		default:
 			return true
 		}
@@ -131,6 +150,76 @@ func (p *FieldRanges) Has(n pref.FieldNumber) bool {
 }
 func (p *FieldRanges) Format(s fmt.State, r rune)          { descfmt.FormatList(s, r, p) }
 func (p *FieldRanges) ProtoInternal(pragma.DoNotImplement) {}
+func (p *FieldRanges) lazyInit() *FieldRanges {
+	p.once.Do(func() {
+		p.sorted = append(p.sorted, p.List...)
+		sort.Slice(p.sorted, func(i, j int) bool {
+			return p.sorted[i][0] < p.sorted[j][0]
+		})
+	})
+	return p
+}
+
+// CheckValid reports any errors with the set of ranges with an error message
+// that completes the sentence: "ranges is invalid because it has ..."
+func (p *FieldRanges) CheckValid(isMessageSet bool) error {
+	var rp fieldRange
+	for i, r := range p.lazyInit().sorted {
+		r := fieldRange(r)
+		switch {
+		case !isValidFieldNumber(r.Start(), isMessageSet):
+			return errors.New("invalid field number: %d", r.Start())
+		case !isValidFieldNumber(r.End(), isMessageSet):
+			return errors.New("invalid field number: %d", r.End())
+		case !(r.Start() <= r.End()):
+			return errors.New("invalid range: %v", r)
+		case !(rp.End() < r.Start()) && i > 0:
+			return errors.New("overlapping ranges: %v with %v", rp, r)
+		}
+		rp = r
+	}
+	return nil
+}
+
+// isValidFieldNumber reports whether the field number is valid.
+// Unlike the FieldNumber.IsValid method, it allows ranges that cover the
+// reserved number range.
+func isValidFieldNumber(n protoreflect.FieldNumber, isMessageSet bool) bool {
+	if isMessageSet {
+		return wire.MinValidNumber <= n && n <= math.MaxInt32
+	}
+	return wire.MinValidNumber <= n && n <= wire.MaxValidNumber
+}
+
+// CheckOverlap reports an error if p and q overlap.
+func (p *FieldRanges) CheckOverlap(q *FieldRanges) error {
+	rps := p.lazyInit().sorted
+	rqs := q.lazyInit().sorted
+	for pi, qi := 0, 0; pi < len(rps) && qi < len(rqs); {
+		rp := fieldRange(rps[pi])
+		rq := fieldRange(rqs[qi])
+		if !(rp.End() < rq.Start() || rq.End() < rp.Start()) {
+			return errors.New("overlapping ranges: %v with %v", rp, rq)
+		}
+		if rp.Start() < rq.Start() {
+			pi++
+		} else {
+			qi++
+		}
+	}
+	return nil
+}
+
+type fieldRange [2]protoreflect.FieldNumber
+
+func (r fieldRange) Start() protoreflect.FieldNumber { return r[0] }     // inclusive
+func (r fieldRange) End() protoreflect.FieldNumber   { return r[1] - 1 } // inclusive
+func (r fieldRange) String() string {
+	if r.Start() == r.End() {
+		return fmt.Sprintf("%d", r.Start())
+	}
+	return fmt.Sprintf("%d to %d", r.Start(), r.End())
+}
 
 type FieldNumbers struct {
 	List []pref.FieldNumber

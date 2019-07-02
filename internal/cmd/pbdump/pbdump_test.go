@@ -36,7 +36,7 @@ func TestFields(t *testing.T) {
 		wantErr  string
 	}{{
 		inFields: []fieldsKind{{pref.MessageKind, ""}},
-		wantMsg:  mustMakeMessage(`name:"M"`),
+		wantMsg:  mustMakeMessage(`name:"X"`),
 	}, {
 		inFields: []fieldsKind{{pref.MessageKind, "987654321"}},
 		wantErr:  "invalid field: 987654321",
@@ -62,27 +62,27 @@ func TestFields(t *testing.T) {
 			{pref.GroupKind, "10"},
 		},
 		wantMsg: mustMakeMessage(`
-			name: "M"
+			name: "X"
 			field: [
-				{name:"f10" number:10 label:LABEL_OPTIONAL type:TYPE_GROUP type_name:".M.M10"}
+				{name:"x10" number:10 label:LABEL_OPTIONAL type:TYPE_GROUP type_name:".X.X10"}
 			]
 			nested_type: [{
-				name: "M10"
+				name: "X10"
 				field: [
-					{name:"f20" number:20 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".M.M10.M20"},
-					{name:"f21" number:21 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".M.M10.M21"}
+					{name:"x20" number:20 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".X.X10.X20"},
+					{name:"x21" number:21 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".X.X10.X21"}
 				]
 				nested_type: [{
-					name: "M20"
+					name: "X20"
 					field:[
-						{name:"f30" number:30 label:LABEL_OPTIONAL type:TYPE_MESSAGE, type_name:".M.M10.M20.M30"},
-						{name:"f31" number:31 label:LABEL_REPEATED type:TYPE_INT32 options:{packed:true}}
+						{name:"x30" number:30 label:LABEL_OPTIONAL type:TYPE_MESSAGE, type_name:".X.X10.X20.X30"},
+						{name:"x31" number:31 label:LABEL_REPEATED type:TYPE_INT32 options:{packed:true}}
 					]
 					nested_type: [{
-						name: "M30"
+						name: "X30"
 					}]
 				}, {
-					name: "M21"
+					name: "X21"
 				}]
 			}]
 		`),
@@ -103,7 +103,7 @@ func TestFields(t *testing.T) {
 			if tt.wantErr != "" {
 				t.Errorf("all Set calls succeeded, want %v error", tt.wantErr)
 			}
-			gotMsg := fields.messageDescriptor("M")
+			gotMsg := fields.messageDescriptor("X")
 			if !proto.Equal(gotMsg, tt.wantMsg) {
 				t.Errorf("messageDescriptor() mismatch:\ngot  %v\nwant %v", gotMsg, tt.wantMsg)
 			}

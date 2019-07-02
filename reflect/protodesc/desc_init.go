@@ -5,6 +5,7 @@
 package protodesc
 
 import (
+	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
@@ -214,7 +215,9 @@ func (r descsByName) initMethodsFromDescriptorProto(mds []*descriptorpb.MethodDe
 }
 
 func (r descsByName) makeBase(child, parent protoreflect.Descriptor, name string, idx int) (filedesc.BaseL0, error) {
-	// TODO: Verify that the name is valid?
+	if !protoreflect.Name(name).IsValid() {
+		return filedesc.BaseL0{}, errors.New("descriptor %q has an invalid nested name: %q", parent.FullName(), name)
+	}
 
 	// Derive the full name of the child.
 	// Note that enum values are a sibling to the enum parent in the namespace.
@@ -224,7 +227,9 @@ func (r descsByName) makeBase(child, parent protoreflect.Descriptor, name string
 	} else {
 		fullName = parent.FullName().Append(protoreflect.Name(name))
 	}
-	// TODO: Verify that this descriptor is not already declared?
+	if _, ok := r[fullName]; ok {
+		return filedesc.BaseL0{}, errors.New("descriptor %q already declared", fullName)
+	}
 	r[fullName] = child
 
 	// TODO: Verify that the full name does not already exist in the resolver?

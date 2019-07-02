@@ -17,6 +17,9 @@ import (
 )
 
 // Resolver is the resolver used by NewFile to resolve dependencies.
+// The enums and messages provided must belong to some parent file,
+// which is also registered.
+//
 // It is implemented by protoregistry.Files.
 type Resolver interface {
 	FindFileByPath(string) (protoreflect.FileDescriptor, error)
@@ -57,7 +60,7 @@ func allowUnresolvable() option {
 // file descriptor message. The file must represent a valid proto file according
 // to protobuf semantics. The returned descriptor is a deep copy of the input.
 //
-// Any import files, enum types, or message types referenced in the file are
+// Any imported files, enum types, or message types referenced in the file are
 // resolved using the provided registry. When looking up an import file path,
 // the path must be unique. The newly created file descriptor is not registered
 // back into the provided file registry.
@@ -83,10 +86,16 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 	case "proto3":
 		f.L1.Syntax = protoreflect.Proto3
 	default:
-		return nil, errors.New("invalid syntax: %v", fd.GetSyntax())
+		return nil, errors.New("invalid syntax: %q", fd.GetSyntax())
 	}
 	f.L1.Path = fd.GetName()
+	if f.L1.Path == "" {
+		return nil, errors.New("file path must be populated")
+	}
 	f.L1.Package = protoreflect.FullName(fd.GetPackage())
+	if !f.L1.Package.IsValid() && f.L1.Package != "" {
+		return nil, errors.New("invalid package: %q", f.L1.Package)
+	}
 	if opts := fd.GetOptions(); opts != nil {
 		opts = clone(opts).(*descriptorpb.FileOptions)
 		f.L2.Options = func() protoreflect.ProtoMessage { return opts }
@@ -94,13 +103,13 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 
 	f.L2.Imports = make(filedesc.FileImports, len(fd.GetDependency()))
 	for _, i := range fd.GetPublicDependency() {
-		if int(i) >= len(f.L2.Imports) || f.L2.Imports[i].IsPublic {
+		if !(0 <= i && int(i) < len(f.L2.Imports)) || f.L2.Imports[i].IsPublic {
 			return nil, errors.New("invalid or duplicate public import index: %d", i)
 		}
 		f.L2.Imports[i].IsPublic = true
 	}
 	for _, i := range fd.GetWeakDependency() {
-		if int(i) >= len(f.L2.Imports) || f.L2.Imports[i].IsWeak {
+		if !(0 <= i && int(i) < len(f.L2.Imports)) || f.L2.Imports[i].IsWeak {
 			return nil, errors.New("invalid or duplicate weak import index: %d", i)
 		}
 		f.L2.Imports[i].IsWeak = true
@@ -116,7 +125,13 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 		}
 		imp.FileDescriptor = f
 
+		if imps[imp.Path()] {
+			return nil, errors.New("already imported %q", path)
+		}
 		imps[imp.Path()] = true
+	}
+	for i, _ := range fd.GetDependency() {
+		imp := &f.L2.Imports[i]
 		imps.importPublic(imp.Imports())
 	}
 

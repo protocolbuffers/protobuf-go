@@ -5,59 +5,72 @@
 package protodesc
 
 import (
+	"strings"
+	"unicode"
+
+	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-// TODO: Should we be responsible for validating other parts of the descriptor
-// that we don't directly use?
-//
-// For example:
-//	* That "json_name" is not set for an extension field. Maybe, maybe not.
-//	* That "weak" is not set for an extension field (double check this).
-
-// TODO: Store the input file descriptor to implement:
-//	* protoreflect.Descriptor.DescriptorProto
-//	* protoreflect.Descriptor.DescriptorOptions
-
-// TODO: Should we return a File instead of protoreflect.FileDescriptor?
-// This would allow users to mutate the File before converting it.
-// However, this will complicate future work for validation since File may now
-// diverge from the stored descriptor proto (see above TODO).
-
-// TODO: This is important to prevent users from creating invalid types,
-// but is not functionality needed now.
-//
-// Things to verify:
-//	* Weak fields are only used if flags.Proto1Legacy is set
-//	* Weak fields can only reference singular messages
-//	(check if this the case for oneof fields)
-//	* FieldDescriptor.MessageType cannot reference a remote type when the
-//	remote name is a type within the local file.
-//	* Default enum identifiers resolve to a declared number.
-//	* Default values are only allowed in proto2.
-//	* Default strings are valid UTF-8? Note that protoc does not check this.
-//	* Field extensions are only valid in proto2, except when extending the
-//	descriptor options.
-//	* Remote enum and message types are actually found in imported files.
-//	* Placeholder messages and types may only be for weak fields.
-//	* Placeholder full names must be valid.
-//	* The name of each descriptor must be valid.
-//	* Options are of the correct Go type (e.g. *descriptorpb.MessageOptions).
-// 	* len(ExtensionRangeOptions) <= len(ExtensionRanges)
-
 func validateEnumDeclarations(es []filedesc.Enum, eds []*descriptorpb.EnumDescriptorProto) error {
 	for i, ed := range eds {
 		e := &es[i]
-		for j, _ := range ed.GetValue() {
+		if err := e.L2.ReservedNames.CheckValid(); err != nil {
+			return errors.New("enum %q reserved names has %v", e.FullName(), err)
+		}
+		if err := e.L2.ReservedRanges.CheckValid(); err != nil {
+			return errors.New("enum %q reserved ranges has %v", e.FullName(), err)
+		}
+		if len(ed.GetValue()) == 0 {
+			return errors.New("enum %q must contain at least one value declaration", e.FullName())
+		}
+		allowAlias := ed.GetOptions().GetAllowAlias()
+		foundAlias := false
+		for i := 0; i < e.Values().Len(); i++ {
+			v1 := e.Values().Get(i)
+			if v2 := e.Values().ByNumber(v1.Number()); v1 != v2 {
+				foundAlias = true
+				if !allowAlias {
+					return errors.New("enum %q has conflicting non-aliased values on number %d: %q with %q", e.FullName(), v1.Number(), v1.Name(), v2.Name())
+				}
+			}
+		}
+		if allowAlias && !foundAlias {
+			return errors.New("enum %q allows aliases, but none were found", e.FullName())
+		}
+		if e.Syntax() == protoreflect.Proto3 {
+			if v := e.Values().Get(0); v.Number() != 0 {
+				return errors.New("enum %q using proto3 semantics must have zero number for the first value", v.FullName())
+			}
+			// Verify that value names in proto3 do not conflict if the
+			// case-insensitive prefix is removed.
+			// See protoc v3.8.0: src/google/protobuf/descriptor.cc:4991-5055
+			names := map[string]protoreflect.EnumValueDescriptor{}
+			prefix := strings.Replace(strings.ToLower(string(e.Name())), "_", "", -1)
+			for i := 0; i < e.Values().Len(); i++ {
+				v1 := e.Values().Get(i)
+				s := enumValueName(trimEnumPrefix(v1.Name(), prefix))
+				if v2, ok := names[s]; ok && v1.Number() != v2.Number() {
+					return errors.New("enum %q using proto3 semantics has conflict: %q with %q", e.FullName(), v1.Name(), v2.Name())
+				}
+				names[s] = v1
+			}
+		}
+
+		for j, vd := range ed.GetValue() {
 			v := &e.L2.Values.List[j]
+			if vd.Number == nil {
+				return errors.New("enum value %q must have a specified number", v.FullName())
+			}
 			if e.L2.ReservedNames.Has(v.Name()) {
-				return errors.New("enum %v contains value with reserved name %q", e.Name(), v.Name())
+				return errors.New("enum value %q must not use reserved name", v.FullName())
 			}
 			if e.L2.ReservedRanges.Has(v.Number()) {
-				return errors.New("enum %v contains value with reserved number %d", e.Name(), v.Number())
+				return errors.New("enum value %q must not use reserved number %d", v.FullName(), v.Number())
 			}
 		}
 	}
@@ -67,19 +80,105 @@ func validateEnumDeclarations(es []filedesc.Enum, eds []*descriptorpb.EnumDescri
 func validateMessageDeclarations(ms []filedesc.Message, mds []*descriptorpb.DescriptorProto) error {
 	for i, md := range mds {
 		m := &ms[i]
+
+		// Handle the message descriptor itself.
+		isMessageSet := md.GetOptions().GetMessageSetWireFormat()
+		if err := m.L2.ReservedNames.CheckValid(); err != nil {
+			return errors.New("message %q reserved names has %v", m.FullName(), err)
+		}
+		if err := m.L2.ReservedRanges.CheckValid(isMessageSet); err != nil {
+			return errors.New("message %q reserved ranges has %v", m.FullName(), err)
+		}
+		if err := m.L2.ExtensionRanges.CheckValid(isMessageSet); err != nil {
+			return errors.New("message %q extension ranges has %v", m.FullName(), err)
+		}
+		if err := (*filedesc.FieldRanges).CheckOverlap(&m.L2.ReservedRanges, &m.L2.ExtensionRanges); err != nil {
+			return errors.New("message %q reserved and extension ranges has %v", m.FullName(), err)
+		}
+		for i := 0; i < m.Fields().Len(); i++ {
+			f1 := m.Fields().Get(i)
+			if f2 := m.Fields().ByNumber(f1.Number()); f1 != f2 {
+				return errors.New("message %q has conflicting fields: %q with %q", m.FullName(), f1.Name(), f2.Name())
+			}
+		}
+		if isMessageSet && (m.Syntax() != protoreflect.Proto2 || m.Fields().Len() > 0 || m.ExtensionRanges().Len() == 0) {
+			return errors.New("message %q is an invalid proto1 MessageSet", m.FullName())
+		}
+		if m.Syntax() == protoreflect.Proto3 {
+			if m.ExtensionRanges().Len() > 0 {
+				return errors.New("message %q using proto3 semantics cannot have extension ranges", m.FullName())
+			}
+			// Verify that field names in proto3 do not conflict if lowercased
+			// with all underscores removed.
+			// See protoc v3.8.0: src/google/protobuf/descriptor.cc:5830-5847
+			names := map[string]protoreflect.FieldDescriptor{}
+			for i := 0; i < m.Fields().Len(); i++ {
+				f1 := m.Fields().Get(i)
+				s := strings.Replace(strings.ToLower(string(f1.Name())), "_", "", -1)
+				if f2, ok := names[s]; ok {
+					return errors.New("message %q using proto3 semantics has conflict: %q with %q", m.FullName(), f1.Name(), f2.Name())
+				}
+				names[s] = f1
+			}
+		}
+
 		for j, fd := range md.GetField() {
 			f := &m.L2.Fields.List[j]
 			if m.L2.ReservedNames.Has(f.Name()) {
-				return errors.New("%v contains field with reserved name %q", m.Name(), f.Name())
+				return errors.New("message field %q must not use reserved name", f.FullName())
+			}
+			if !f.Number().IsValid() {
+				return errors.New("message field %q has an invalid number: %d", f.FullName(), f.Number())
+			}
+			if !f.Cardinality().IsValid() {
+				return errors.New("message field %q has an invalid cardinality: %d", f.FullName(), f.Cardinality())
 			}
 			if m.L2.ReservedRanges.Has(f.Number()) {
-				return errors.New("%v contains field with reserved number %d", m.Name(), f.Number())
+				return errors.New("message field %q must not use reserved number %d", f.FullName(), f.Number())
 			}
 			if m.L2.ExtensionRanges.Has(f.Number()) {
-				return errors.New("%v contains field with number %d in extension range", m.Name(), f.Number())
+				return errors.New("message field %q with number %d in extension range", f.FullName(), f.Number())
 			}
-			if fd.GetExtendee() != "" {
-				return errors.New("message field may not have extendee")
+			if fd.Extendee != nil {
+				return errors.New("message field %q may not have extendee: %q", f.FullName(), fd.GetExtendee())
+			}
+			if f.IsWeak() && (!isOptionalMessage(f) || f.ContainingOneof() != nil) {
+				return errors.New("message field %q may only be weak for an optional message", f.FullName())
+			}
+			if f.IsPacked() && !isPackable(f) {
+				return errors.New("message field %q is not packable", f.FullName())
+			}
+			if err := checkValidGroup(f); err != nil {
+				return errors.New("message field %q is an invalid group: %v", f.FullName(), err)
+			}
+			if err := checkValidMap(f); err != nil {
+				return errors.New("message field %q is an invalid map: %v", f.FullName(), err)
+			}
+			if f.Syntax() == protoreflect.Proto3 {
+				if f.Cardinality() == protoreflect.Required {
+					return errors.New("message field %q using proto3 semantics cannot be required", f.FullName())
+				}
+				if f.Enum() != nil && f.Enum().Syntax() != protoreflect.Proto3 {
+					return errors.New("message field %q using proto3 semantics may only depend on a proto3 enum", f.FullName())
+				}
+			}
+		}
+		for j, _ := range md.GetOneofDecl() {
+			o := &m.L2.Oneofs.List[j]
+			if o.Fields().Len() == 0 {
+				return errors.New("message oneof %q must contain at least one field declaration", o.FullName())
+			}
+			if n := o.Fields().Len(); n-1 != (o.Fields().Get(n-1).Index() - o.Fields().Get(0).Index()) {
+				return errors.New("message oneof %q must have consecutively declared fields", o.FullName())
+			}
+			for i := 0; i < o.Fields().Len(); i++ {
+				f := o.Fields().Get(i)
+				if f.Cardinality() != protoreflect.Optional {
+					return errors.New("message field %q belongs in a oneof and must be optional", f.FullName())
+				}
+				if f.IsWeak() {
+					return errors.New("message field %q belongs in a oneof and must not be a weak reference", f.FullName())
+				}
 			}
 		}
 
@@ -99,10 +198,228 @@ func validateMessageDeclarations(ms []filedesc.Message, mds []*descriptorpb.Desc
 func validateExtensionDeclarations(xs []filedesc.Extension, xds []*descriptorpb.FieldDescriptorProto) error {
 	for i, xd := range xds {
 		x := &xs[i]
-		if xd.OneofIndex != nil {
-			return errors.New("extension may not have oneof_index")
+		// NOTE: Avoid using the IsValid method since extensions to MessageSet
+		// may have a field number higher than normal. This check only verifies
+		// that the number is not negative or reserved. We check again later
+		// if we know that the extendee is definitely not a MessageSet.
+		if n := x.Number(); n < 0 || (wire.FirstReservedNumber <= n && n <= wire.LastReservedNumber) {
+			return errors.New("extension field %q has an invalid number: %d", x.FullName(), x.Number())
 		}
-		_ = x
+		if !x.Cardinality().IsValid() || x.Cardinality() == protoreflect.Required {
+			return errors.New("extension field %q has an invalid cardinality: %d", x.FullName(), x.Cardinality())
+		}
+		if xd.JsonName != nil {
+			if xd.GetJsonName() != jsonName(x.Name()) {
+				return errors.New("extension field %q may not have an explicitly set JSON name: %q", x.FullName(), xd.GetJsonName())
+			}
+		}
+		if xd.OneofIndex != nil {
+			return errors.New("extension field %q may not be part of a oneof", x.FullName())
+		}
+		if md := x.ContainingMessage(); !md.IsPlaceholder() {
+			if !md.ExtensionRanges().Has(x.Number()) {
+				return errors.New("extension field %q extends %q with non-extension field number: %d", x.FullName(), md.FullName(), x.Number())
+			}
+			isMessageSet := md.Options().(*descriptorpb.MessageOptions).GetMessageSetWireFormat()
+			if isMessageSet && !isOptionalMessage(x) {
+				return errors.New("extension field %q extends MessageSet and must be an optional message", x.FullName())
+			}
+			if !isMessageSet && !x.Number().IsValid() {
+				return errors.New("extension field %q has an invalid number: %d", x.FullName(), x.Number())
+			}
+		}
+		if xd.GetOptions().GetWeak() {
+			return errors.New("extension field %q cannot be a weak reference", x.FullName())
+		}
+		if x.IsPacked() && !isPackable(x) {
+			return errors.New("extension field %q is not packable", x.FullName())
+		}
+		if err := checkValidGroup(x); err != nil {
+			return errors.New("extension field %q is an invalid group: %v", x.FullName(), err)
+		}
+		if md := x.Message(); md != nil && md.IsMapEntry() {
+			return errors.New("extension field %q cannot be a map entry", x.FullName())
+		}
+		if x.Syntax() == protoreflect.Proto3 {
+			switch x.ContainingMessage().FullName() {
+			case (*descriptorpb.FileOptions)(nil).ProtoReflect().Descriptor().FullName():
+			case (*descriptorpb.EnumOptions)(nil).ProtoReflect().Descriptor().FullName():
+			case (*descriptorpb.EnumValueOptions)(nil).ProtoReflect().Descriptor().FullName():
+			case (*descriptorpb.MessageOptions)(nil).ProtoReflect().Descriptor().FullName():
+			case (*descriptorpb.FieldOptions)(nil).ProtoReflect().Descriptor().FullName():
+			case (*descriptorpb.OneofOptions)(nil).ProtoReflect().Descriptor().FullName():
+			case (*descriptorpb.ExtensionRangeOptions)(nil).ProtoReflect().Descriptor().FullName():
+			case (*descriptorpb.ServiceOptions)(nil).ProtoReflect().Descriptor().FullName():
+			case (*descriptorpb.MethodOptions)(nil).ProtoReflect().Descriptor().FullName():
+			default:
+				return errors.New("extension field %q cannot be declared in proto3 unless extended descriptor options", x.FullName())
+			}
+		}
 	}
 	return nil
+}
+
+// isOptionalMessage reports whether this is an optional message.
+// If the kind is unknown, it is assumed to be a message.
+func isOptionalMessage(fd protoreflect.FieldDescriptor) bool {
+	return (fd.Kind() == 0 || fd.Kind() == protoreflect.MessageKind) && fd.Cardinality() == protoreflect.Optional
+}
+
+// isPackable checks whether the pack option can be specified.
+func isPackable(fd protoreflect.FieldDescriptor) bool {
+	switch fd.Kind() {
+	case protoreflect.StringKind, protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
+		return false
+	}
+	return fd.IsList()
+}
+
+// checkValidGroup reports whether fd is a valid group according to the same
+// rules that protoc imposes.
+func checkValidGroup(fd protoreflect.FieldDescriptor) error {
+	md := fd.Message()
+	switch {
+	case fd.Kind() != protoreflect.GroupKind:
+		return nil
+	case fd.Syntax() != protoreflect.Proto2:
+		return errors.New("invalid under proto2 semantics")
+	case md == nil || md.IsPlaceholder():
+		return errors.New("message must be resolvable")
+	case fd.FullName().Parent() != md.FullName().Parent():
+		return errors.New("message and field must be declared in the same scope")
+	case !unicode.IsUpper(rune(md.Name()[0])):
+		return errors.New("message name must start with an uppercase")
+	case fd.Name() != protoreflect.Name(strings.ToLower(string(md.Name()))):
+		return errors.New("field name must be lowercased form of the message name")
+	}
+	return nil
+}
+
+// checkValidMap checks whether the field is a valid map according to the same
+// rules that protoc imposes.
+// See protoc v3.8.0: src/google/protobuf/descriptor.cc:6045-6115
+func checkValidMap(fd protoreflect.FieldDescriptor) error {
+	md := fd.Message()
+	switch {
+	case md == nil || !md.IsMapEntry():
+		return nil
+	case fd.FullName().Parent() != md.FullName().Parent():
+		return errors.New("message and field must be declared in the same scope")
+	case md.Name() != mapEntryName(fd.Name()):
+		return errors.New("incorrect implicit map entry name")
+	case fd.Cardinality() != protoreflect.Repeated:
+		return errors.New("field must be repeated")
+	case md.Fields().Len() != 2:
+		return errors.New("message must have exactly two fields")
+	case md.ExtensionRanges().Len() > 0:
+		return errors.New("message must not have any extension ranges")
+	case md.Enums().Len()+md.Messages().Len()+md.Extensions().Len() > 0:
+		return errors.New("message must not have any nested declarations")
+	}
+	kf := md.Fields().Get(0)
+	vf := md.Fields().Get(1)
+	switch {
+	case kf.Name() != "key" || kf.Number() != 1 || kf.Cardinality() != protoreflect.Optional || kf.ContainingOneof() != nil || kf.HasDefault():
+		return errors.New("invalid key field")
+	case vf.Name() != "value" || vf.Number() != 2 || vf.Cardinality() != protoreflect.Optional || vf.ContainingOneof() != nil || vf.HasDefault():
+		return errors.New("invalid value field")
+	}
+	switch kf.Kind() {
+	case protoreflect.BoolKind: // bool
+	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind: // int32
+	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind: // int64
+	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind: // uint32
+	case protoreflect.Uint64Kind, protoreflect.Fixed64Kind: // uint64
+	case protoreflect.StringKind: // string
+	default:
+		return errors.New("invalid key kind: %v", kf.Kind())
+	}
+	if e := vf.Enum(); e != nil && e.Values().Len() > 0 && e.Values().Get(0).Number() != 0 {
+		return errors.New("map enum value must have zero number for the first value")
+	}
+	return nil
+}
+
+// mapEntryName derives the name of the map entry message given the field name.
+// See protoc v3.8.0: src/google/protobuf/descriptor.cc:254-276,6057
+func mapEntryName(s protoreflect.Name) protoreflect.Name {
+	var b []byte
+	upperNext := true
+	for _, c := range s {
+		switch {
+		case c == '_':
+			upperNext = true
+		case upperNext:
+			b = append(b, byte(unicode.ToUpper(c)))
+			upperNext = false
+		default:
+			b = append(b, byte(c))
+		}
+	}
+	b = append(b, "Entry"...)
+	return protoreflect.Name(b)
+}
+
+// enumValueName derives the camel-cased enum value name.
+// See protoc v3.8.0: src/google/protobuf/descriptor.cc:297-313
+func enumValueName(s protoreflect.Name) string {
+	var b []byte
+	upperNext := true
+	for _, c := range s {
+		switch {
+		case c == '_':
+			upperNext = true
+		case upperNext:
+			b = append(b, byte(unicode.ToUpper(c)))
+			upperNext = false
+		default:
+			b = append(b, byte(unicode.ToLower(c)))
+			upperNext = false
+		}
+	}
+	return string(b)
+}
+
+// trimEnumPrefix trims the enum name prefix from an enum value name,
+// where the prefix is all lowercase without underscores.
+// See protoc v3.8.0: src/google/protobuf/descriptor.cc:330-375
+func trimEnumPrefix(s protoreflect.Name, prefix string) protoreflect.Name {
+	s0 := s // original input
+	for len(s) > 0 && len(prefix) > 0 {
+		if s[0] == '_' {
+			s = s[1:]
+			continue
+		}
+		if unicode.ToLower(rune(s[0])) != rune(prefix[0]) {
+			return s0 // no prefix match
+		}
+		s, prefix = s[1:], prefix[1:]
+	}
+	if len(prefix) > 0 {
+		return s0 // no prefix match
+	}
+	s = protoreflect.Name(strings.TrimLeft(string(s), "_"))
+	if len(s) == 0 {
+		return s0 // avoid returning empty string
+	}
+	return s
+}
+
+// jsonName creates a JSON name from the protobuf short name.
+// See protoc v3.8.0: src/google/protobuf/descriptor.cc:278-295
+func jsonName(s protoreflect.Name) string {
+	var b []byte
+	var wasUnderscore bool
+	for i := 0; i < len(s); i++ { // proto identifiers are always ASCII
+		c := s[i]
+		if c != '_' {
+			isLower := 'a' <= c && c <= 'z'
+			if wasUnderscore && isLower {
+				c -= 'a' - 'A'
+			}
+			b = append(b, c)
+		}
+		wasUnderscore = c == '_'
+	}
+	return string(b)
 }

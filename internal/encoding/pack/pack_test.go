@@ -26,21 +26,22 @@ var msgDesc = func() pref.MessageDescriptor {
 		message_type: [{
 			name: "Message"
 			field: [
-				{name:"F1"  number:1  label:LABEL_REPEATED type:TYPE_BOOL     options:{packed:true}},
-				{name:"F2"  number:2  label:LABEL_REPEATED type:TYPE_INT64    options:{packed:true}},
-				{name:"F3"  number:3  label:LABEL_REPEATED type:TYPE_SINT64   options:{packed:true}},
-				{name:"F4"  number:4  label:LABEL_REPEATED type:TYPE_UINT64   options:{packed:true}},
-				{name:"F5"  number:5  label:LABEL_REPEATED type:TYPE_FIXED32  options:{packed:true}},
-				{name:"F6"  number:6  label:LABEL_REPEATED type:TYPE_SFIXED32 options:{packed:true}},
-				{name:"F7"  number:7  label:LABEL_REPEATED type:TYPE_FLOAT    options:{packed:true}},
-				{name:"F8"  number:8  label:LABEL_REPEATED type:TYPE_FIXED64  options:{packed:true}},
-				{name:"F9"  number:9  label:LABEL_REPEATED type:TYPE_SFIXED64 options:{packed:true}},
-				{name:"F10" number:10 label:LABEL_REPEATED type:TYPE_DOUBLE   options:{packed:true}},
-				{name:"F11" number:11 label:LABEL_OPTIONAL type:TYPE_STRING},
-				{name:"F12" number:12 label:LABEL_OPTIONAL type:TYPE_BYTES},
-				{name:"F13" number:13 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".Message"},
-				{name:"F14" number:14 label:LABEL_OPTIONAL type:TYPE_GROUP   type_name:".Message"}
+				{name:"f1"  number:1  label:LABEL_REPEATED type:TYPE_BOOL     options:{packed:true}},
+				{name:"f2"  number:2  label:LABEL_REPEATED type:TYPE_INT64    options:{packed:true}},
+				{name:"f3"  number:3  label:LABEL_REPEATED type:TYPE_SINT64   options:{packed:true}},
+				{name:"f4"  number:4  label:LABEL_REPEATED type:TYPE_UINT64   options:{packed:true}},
+				{name:"f5"  number:5  label:LABEL_REPEATED type:TYPE_FIXED32  options:{packed:true}},
+				{name:"f6"  number:6  label:LABEL_REPEATED type:TYPE_SFIXED32 options:{packed:true}},
+				{name:"f7"  number:7  label:LABEL_REPEATED type:TYPE_FLOAT    options:{packed:true}},
+				{name:"f8"  number:8  label:LABEL_REPEATED type:TYPE_FIXED64  options:{packed:true}},
+				{name:"f9"  number:9  label:LABEL_REPEATED type:TYPE_SFIXED64 options:{packed:true}},
+				{name:"f10" number:10 label:LABEL_REPEATED type:TYPE_DOUBLE   options:{packed:true}},
+				{name:"f11" number:11 label:LABEL_OPTIONAL type:TYPE_STRING},
+				{name:"f12" number:12 label:LABEL_OPTIONAL type:TYPE_BYTES},
+				{name:"f13" number:13 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".Message"},
+				{name:"f14" number:14 label:LABEL_OPTIONAL type:TYPE_GROUP   type_name:".Message.F14"}
 			]
+			nested_type: [{name: "F14"}]
 		}]
 	`
 	pb := new(descriptorpb.FileDescriptorProto)

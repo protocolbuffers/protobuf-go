@@ -205,7 +205,7 @@ func (fs fields) Descriptor() (protoreflect.MessageDescriptor, error) {
 	fd, err := protodesc.NewFile(&descriptorpb.FileDescriptorProto{
 		Name:        scalar.String("dump.proto"),
 		Syntax:      scalar.String("proto2"),
-		MessageType: []*descriptorpb.DescriptorProto{fs.messageDescriptor("M")},
+		MessageType: []*descriptorpb.DescriptorProto{fs.messageDescriptor("X")},
 	}, nil)
 	if err != nil {
 		return nil, err
@@ -220,7 +220,7 @@ func (fs fields) messageDescriptor(name protoreflect.FullName) *descriptorpb.Des
 			k = protoreflect.MessageKind
 		}
 		f := &descriptorpb.FieldDescriptorProto{
-			Name:   scalar.String(fmt.Sprintf("f%d", n)),
+			Name:   scalar.String(fmt.Sprintf("x%d", n)),
 			Number: scalar.Int32(int32(n)),
 			Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 			Type:   descriptorpb.FieldDescriptorProto_Type(k).Enum(),
@@ -234,7 +234,7 @@ func (fs fields) messageDescriptor(name protoreflect.FullName) *descriptorpb.Des
 			f.Label = descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum()
 			f.Options = &descriptorpb.FieldOptions{Packed: scalar.Bool(true)}
 		case protoreflect.MessageKind, protoreflect.GroupKind:
-			s := name.Append(protoreflect.Name(fmt.Sprintf("M%d", n)))
+			s := name.Append(protoreflect.Name(fmt.Sprintf("X%d", n)))
 			f.TypeName = scalar.String(string("." + s))
 			m.NestedType = append(m.NestedType, fs[n].sub.messageDescriptor(s))
 		}
