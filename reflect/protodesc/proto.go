@@ -6,22 +6,23 @@ package protodesc
 
 import (
 	"fmt"
+	"reflect"
 
 	"google.golang.org/protobuf/internal/encoding/defval"
 	"google.golang.org/protobuf/internal/scalar"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-// ToFileDescriptorProto converts a FileDescriptor to a
-// google.protobuf.FileDescriptorProto.
+// ToFileDescriptorProto copies a protoreflect.FileDescriptor into a
+// google.protobuf.FileDescriptorProto message.
 func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileDescriptorProto {
 	p := &descriptorpb.FileDescriptorProto{
 		Name:    scalar.String(file.Path()),
 		Package: scalar.String(string(file.Package())),
-		// TODO: Clone options messages, or document this as aliasing.
-		Options: file.Options().(*descriptorpb.FileOptions),
+		Options: clone(file.Options()).(*descriptorpb.FileOptions),
 	}
 	for i, imports := 0, file.Imports(); i < imports.Len(); i++ {
 		imp := imports.Get(i)
@@ -51,12 +52,12 @@ func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileD
 	return p
 }
 
-// ToDescriptorProto converts a MessageDescriptor to a
-// google.protobuf.DescriptorProto.
+// ToDescriptorProto copies a protoreflect.MessageDescriptor into a
+// google.protobuf.DescriptorProto message.
 func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.DescriptorProto {
 	p := &descriptorpb.DescriptorProto{
 		Name:    scalar.String(string(message.Name())),
-		Options: message.Options().(*descriptorpb.MessageOptions),
+		Options: clone(message.Options()).(*descriptorpb.MessageOptions),
 	}
 	for i, fields := 0, message.Fields(); i < fields.Len(); i++ {
 		p.Field = append(p.Field, ToFieldDescriptorProto(fields.Get(i)))
@@ -75,7 +76,7 @@ func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.Des
 		p.ExtensionRange = append(p.ExtensionRange, &descriptorpb.DescriptorProto_ExtensionRange{
 			Start:   scalar.Int32(int32(xrange[0])),
 			End:     scalar.Int32(int32(xrange[1])),
-			Options: message.ExtensionRangeOptions(i).(*descriptorpb.ExtensionRangeOptions),
+			Options: clone(message.ExtensionRangeOptions(i)).(*descriptorpb.ExtensionRangeOptions),
 		})
 	}
 	for i, oneofs := 0, message.Oneofs(); i < oneofs.Len(); i++ {
@@ -94,15 +95,15 @@ func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.Des
 	return p
 }
 
-// ToFieldDescriptorProto converts a FieldDescriptor to a
-// google.protobuf.FieldDescriptorProto.
+// ToFieldDescriptorProto copies a protoreflect.FieldDescriptor into a
+// google.protobuf.FieldDescriptorProto message.
 func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.FieldDescriptorProto {
 	p := &descriptorpb.FieldDescriptorProto{
 		Name:    scalar.String(string(field.Name())),
 		Number:  scalar.Int32(int32(field.Number())),
 		Label:   descriptorpb.FieldDescriptorProto_Label(field.Cardinality()).Enum(),
 		Type:    descriptorpb.FieldDescriptorProto_Type(field.Kind()).Enum(),
-		Options: field.Options().(*descriptorpb.FieldOptions),
+		Options: clone(field.Options()).(*descriptorpb.FieldOptions),
 	}
 	if field.IsExtension() {
 		p.Extendee = fullNameOf(field.ContainingMessage())
@@ -129,21 +130,21 @@ func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.Fi
 	return p
 }
 
-// ToOneofDescriptorProto converts a OneofDescriptor to a
-// google.protobuf.OneofDescriptorProto.
+// ToOneofDescriptorProto copies a protoreflect.OneofDescriptor into a
+// google.protobuf.OneofDescriptorProto message.
 func ToOneofDescriptorProto(oneof protoreflect.OneofDescriptor) *descriptorpb.OneofDescriptorProto {
 	return &descriptorpb.OneofDescriptorProto{
 		Name:    scalar.String(string(oneof.Name())),
-		Options: oneof.Options().(*descriptorpb.OneofOptions),
+		Options: clone(oneof.Options()).(*descriptorpb.OneofOptions),
 	}
 }
 
-// ToEnumDescriptorProto converts a EnumDescriptor to a
-// google.protobuf.EnumDescriptorProto.
+// ToEnumDescriptorProto copies a protoreflect.EnumDescriptor into a
+// google.protobuf.EnumDescriptorProto message.
 func ToEnumDescriptorProto(enum protoreflect.EnumDescriptor) *descriptorpb.EnumDescriptorProto {
 	p := &descriptorpb.EnumDescriptorProto{
 		Name:    scalar.String(string(enum.Name())),
-		Options: enum.Options().(*descriptorpb.EnumOptions),
+		Options: clone(enum.Options()).(*descriptorpb.EnumOptions),
 	}
 	for i, values := 0, enum.Values(); i < values.Len(); i++ {
 		p.Value = append(p.Value, ToEnumValueDescriptorProto(values.Get(i)))
@@ -161,22 +162,22 @@ func ToEnumDescriptorProto(enum protoreflect.EnumDescriptor) *descriptorpb.EnumD
 	return p
 }
 
-// ToEnumValueDescriptorProto converts a EnumValueDescriptor to a
-// google.protobuf.EnumValueDescriptorProto.
+// ToEnumValueDescriptorProto copies a protoreflect.EnumValueDescriptor into a
+// google.protobuf.EnumValueDescriptorProto message.
 func ToEnumValueDescriptorProto(value protoreflect.EnumValueDescriptor) *descriptorpb.EnumValueDescriptorProto {
 	return &descriptorpb.EnumValueDescriptorProto{
 		Name:    scalar.String(string(value.Name())),
 		Number:  scalar.Int32(int32(value.Number())),
-		Options: value.Options().(*descriptorpb.EnumValueOptions),
+		Options: clone(value.Options()).(*descriptorpb.EnumValueOptions),
 	}
 }
 
-// ToServiceDescriptorProto converts a ServiceDescriptor to a
-// google.protobuf.ServiceDescriptorProto.
+// ToServiceDescriptorProto copies a protoreflect.ServiceDescriptor into a
+// google.protobuf.ServiceDescriptorProto message.
 func ToServiceDescriptorProto(service protoreflect.ServiceDescriptor) *descriptorpb.ServiceDescriptorProto {
 	p := &descriptorpb.ServiceDescriptorProto{
 		Name:    scalar.String(string(service.Name())),
-		Options: service.Options().(*descriptorpb.ServiceOptions),
+		Options: clone(service.Options()).(*descriptorpb.ServiceOptions),
 	}
 	for i, methods := 0, service.Methods(); i < methods.Len(); i++ {
 		p.Method = append(p.Method, ToMethodDescriptorProto(methods.Get(i)))
@@ -184,14 +185,14 @@ func ToServiceDescriptorProto(service protoreflect.ServiceDescriptor) *descripto
 	return p
 }
 
-// ToMethodDescriptorProto converts a MethodDescriptor to a
-// google.protobuf.MethodDescriptorProto.
+// ToMethodDescriptorProto copies a protoreflect.MethodDescriptor into a
+// google.protobuf.MethodDescriptorProto message.
 func ToMethodDescriptorProto(method protoreflect.MethodDescriptor) *descriptorpb.MethodDescriptorProto {
 	p := &descriptorpb.MethodDescriptorProto{
 		Name:       scalar.String(string(method.Name())),
 		InputType:  fullNameOf(method.Input()),
 		OutputType: fullNameOf(method.Output()),
-		Options:    method.Options().(*descriptorpb.MethodOptions),
+		Options:    clone(method.Options()).(*descriptorpb.MethodOptions),
 	}
 	if method.IsStreamingClient() {
 		p.ClientStreaming = scalar.Bool(true)
@@ -207,4 +208,13 @@ func fullNameOf(d protoreflect.Descriptor) *string {
 		return nil
 	}
 	return scalar.String("." + string(d.FullName()))
+}
+
+func clone(src proto.Message) proto.Message {
+	if reflect.ValueOf(src).IsNil() {
+		return src
+	}
+	dst := src.ProtoReflect().New().Interface()
+	proto.Merge(dst, src)
+	return dst
 }

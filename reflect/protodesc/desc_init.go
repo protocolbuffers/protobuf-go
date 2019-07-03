@@ -22,6 +22,7 @@ func (r descsByName) initEnumDeclarations(eds []*descriptorpb.EnumDescriptorProt
 			return nil, err
 		}
 		if opts := ed.GetOptions(); opts != nil {
+			opts = clone(opts).(*descriptorpb.EnumOptions)
 			e.L2.Options = func() protoreflect.ProtoMessage { return opts }
 		}
 		for _, s := range ed.GetReservedName() {
@@ -48,6 +49,7 @@ func (r descsByName) initEnumValuesFromDescriptorProto(vds []*descriptorpb.EnumV
 			return nil, err
 		}
 		if opts := vd.GetOptions(); opts != nil {
+			opts = clone(opts).(*descriptorpb.EnumValueOptions)
 			v.L1.Options = func() protoreflect.ProtoMessage { return opts }
 		}
 		v.L1.Number = protoreflect.EnumNumber(vd.GetNumber())
@@ -64,6 +66,7 @@ func (r descsByName) initMessagesDeclarations(mds []*descriptorpb.DescriptorProt
 			return nil, err
 		}
 		if opts := md.GetOptions(); opts != nil {
+			opts = clone(opts).(*descriptorpb.MessageOptions)
 			m.L2.Options = func() protoreflect.ProtoMessage { return opts }
 			m.L2.IsMapEntry = opts.GetMapEntry()
 			m.L2.IsMessageSet = opts.GetMessageSetWireFormat()
@@ -84,6 +87,7 @@ func (r descsByName) initMessagesDeclarations(mds []*descriptorpb.DescriptorProt
 			})
 			var optsFunc func() protoreflect.ProtoMessage
 			if opts := xr.GetOptions(); opts != nil {
+				opts = clone(opts).(*descriptorpb.ExtensionRangeOptions)
 				optsFunc = func() protoreflect.ProtoMessage { return opts }
 			}
 			m.L2.ExtensionRangeOptions = append(m.L2.ExtensionRangeOptions, optsFunc)
@@ -115,6 +119,7 @@ func (r descsByName) initFieldsFromDescriptorProto(fds []*descriptorpb.FieldDesc
 			return nil, err
 		}
 		if opts := fd.GetOptions(); opts != nil {
+			opts = clone(opts).(*descriptorpb.FieldOptions)
 			f.L1.Options = func() protoreflect.ProtoMessage { return opts }
 			f.L1.IsWeak = opts.GetWeak()
 			f.L1.HasPacked = opts.Packed != nil
@@ -140,6 +145,7 @@ func (r descsByName) initOneofsFromDescriptorProto(ods []*descriptorpb.OneofDesc
 			return nil, err
 		}
 		if opts := od.GetOptions(); opts != nil {
+			opts = clone(opts).(*descriptorpb.OneofOptions)
 			o.L1.Options = func() protoreflect.ProtoMessage { return opts }
 		}
 	}
@@ -155,6 +161,7 @@ func (r descsByName) initExtensionDeclarations(xds []*descriptorpb.FieldDescript
 			return nil, err
 		}
 		if opts := xd.GetOptions(); opts != nil {
+			opts = clone(opts).(*descriptorpb.FieldOptions)
 			x.L2.Options = func() protoreflect.ProtoMessage { return opts }
 			x.L2.IsPacked = opts.GetPacked()
 		}
@@ -179,6 +186,7 @@ func (r descsByName) initServiceDeclarations(sds []*descriptorpb.ServiceDescript
 			return nil, err
 		}
 		if opts := sd.GetOptions(); opts != nil {
+			opts = clone(opts).(*descriptorpb.ServiceOptions)
 			s.L2.Options = func() protoreflect.ProtoMessage { return opts }
 		}
 		if s.L2.Methods.List, err = r.initMethodsFromDescriptorProto(sd.GetMethod(), s); err != nil {
@@ -196,6 +204,7 @@ func (r descsByName) initMethodsFromDescriptorProto(mds []*descriptorpb.MethodDe
 			return nil, err
 		}
 		if opts := md.GetOptions(); opts != nil {
+			opts = clone(opts).(*descriptorpb.MethodOptions)
 			m.L1.Options = func() protoreflect.ProtoMessage { return opts }
 		}
 		m.L1.IsStreamingClient = md.GetClientStreaming()

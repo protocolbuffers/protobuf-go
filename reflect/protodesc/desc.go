@@ -24,15 +24,12 @@ type Resolver interface {
 
 // NewFile creates a new protoreflect.FileDescriptor from the provided
 // file descriptor message. The file must represent a valid proto file according
-// to protobuf semantics.
+// to protobuf semantics. The returned descriptor is a deep copy of the input.
 //
 // Any import files, enum types, or message types referenced in the file are
 // resolved using the provided registry. When looking up an import file path,
 // the path must be unique. The newly created file descriptor is not registered
 // back into the provided file registry.
-//
-// The caller must relinquish full ownership of the input fd and must not
-// access or mutate any fields.
 func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.FileDescriptor, error) {
 	if r == nil {
 		r = (*protoregistry.Files)(nil) // empty resolver
@@ -49,6 +46,7 @@ func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.Fil
 	f.L1.Path = fd.GetName()
 	f.L1.Package = protoreflect.FullName(fd.GetPackage())
 	if opts := fd.GetOptions(); opts != nil {
+		opts = clone(opts).(*descriptorpb.FileOptions)
 		f.L2.Options = func() protoreflect.ProtoMessage { return opts }
 	}
 
