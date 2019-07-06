@@ -35,20 +35,9 @@ type coderFieldInfo struct {
 }
 
 func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
-	mi.sizecacheOffset = invalidOffset
-	if fx, _ := t.FieldByName("XXX_sizecache"); fx.Type == sizecacheType {
-		mi.sizecacheOffset = offsetOf(fx)
-	}
-	mi.unknownOffset = invalidOffset
-	if fx, _ := t.FieldByName("XXX_unrecognized"); fx.Type == unknownFieldsType {
-		mi.unknownOffset = offsetOf(fx)
-	}
-	mi.extensionOffset = invalidOffset
-	if fx, _ := t.FieldByName("XXX_InternalExtensions"); fx.Type == extensionFieldsType {
-		mi.extensionOffset = offsetOf(fx)
-	} else if fx, _ = t.FieldByName("XXX_extensions"); fx.Type == extensionFieldsType {
-		mi.extensionOffset = offsetOf(fx)
-	}
+	mi.sizecacheOffset = si.sizecacheOffset
+	mi.unknownOffset = si.unknownOffset
+	mi.extensionOffset = si.extensionOffset
 
 	for i := 0; i < mi.PBType.Descriptor().Fields().Len(); i++ {
 		fd := mi.PBType.Descriptor().Fields().Get(i)

@@ -96,8 +96,8 @@ func (mi *MessageInfo) initOnce() {
 
 	si := mi.makeStructInfo(t.Elem())
 	mi.makeKnownFieldsFunc(si)
-	mi.makeUnknownFieldsFunc(t.Elem())
-	mi.makeExtensionFieldsFunc(t.Elem())
+	mi.makeUnknownFieldsFunc(t.Elem(), si)
+	mi.makeExtensionFieldsFunc(t.Elem(), si)
 	mi.makeMethods(t.Elem(), si)
 
 	atomic.StoreUint32(&mi.initDone, 1)
@@ -116,6 +116,10 @@ var (
 )
 
 type structInfo struct {
+	sizecacheOffset offset
+	extensionOffset offset
+	unknownOffset   offset
+
 	fieldsByNumber        map[pref.FieldNumber]reflect.StructField
 	oneofsByName          map[pref.Name]reflect.StructField
 	oneofWrappersByType   map[reflect.Type]pref.FieldNumber
@@ -123,13 +127,31 @@ type structInfo struct {
 }
 
 func (mi *MessageInfo) makeStructInfo(t reflect.Type) structInfo {
-	// Generate a mapping of field numbers and names to Go struct field or type.
 	si := structInfo{
+		sizecacheOffset: invalidOffset,
+		extensionOffset: invalidOffset,
+		unknownOffset:   invalidOffset,
+
 		fieldsByNumber:        map[pref.FieldNumber]reflect.StructField{},
 		oneofsByName:          map[pref.Name]reflect.StructField{},
 		oneofWrappersByType:   map[reflect.Type]pref.FieldNumber{},
 		oneofWrappersByNumber: map[pref.FieldNumber]reflect.Type{},
 	}
+
+	if f, _ := t.FieldByName("XXX_sizecache"); f.Type == sizecacheType {
+		si.sizecacheOffset = offsetOf(f)
+	}
+	if f, _ := t.FieldByName("XXX_InternalExtensions"); f.Type == extensionFieldsType {
+		si.extensionOffset = offsetOf(f)
+	}
+	if f, _ := t.FieldByName("XXX_extensions"); f.Type == extensionFieldsType {
+		si.extensionOffset = offsetOf(f)
+	}
+	if f, _ := t.FieldByName("XXX_unrecognized"); f.Type == unknownFieldsType {
+		si.unknownOffset = offsetOf(f)
+	}
+
+	// Generate a mapping of field numbers and names to Go struct field or type.
 fieldLoop:
 	for i := 0; i < t.NumField(); i++ {
 		f := t.Field(i)
@@ -145,6 +167,8 @@ fieldLoop:
 			continue fieldLoop
 		}
 	}
+
+	// Derive a mapping of oneof wrappers to fields.
 	var oneofWrappers []interface{}
 	if fn, ok := reflect.PtrTo(t).MethodByName("XXX_OneofFuncs"); ok {
 		oneofWrappers = fn.Func.Call([]reflect.Value{reflect.Zero(fn.Type.In(0))})[3].Interface().([]interface{})
@@ -164,6 +188,7 @@ fieldLoop:
 			}
 		}
 	}
+
 	return si
 }
 
@@ -201,24 +226,22 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	}
 }
 
-func (mi *MessageInfo) makeUnknownFieldsFunc(t reflect.Type) {
+func (mi *MessageInfo) makeUnknownFieldsFunc(t reflect.Type, si structInfo) {
 	mi.getUnknown = func(pointer) pref.RawFields { return nil }
 	mi.setUnknown = func(pointer, pref.RawFields) { return }
-	fu, _ := t.FieldByName("XXX_unrecognized")
-	if fu.Type == unknownFieldsType {
-		fieldOffset := offsetOf(fu)
+	if si.unknownOffset.IsValid() {
 		mi.getUnknown = func(p pointer) pref.RawFields {
 			if p.IsNil() {
 				return nil
 			}
-			rv := p.Apply(fieldOffset).AsValueOf(unknownFieldsType)
+			rv := p.Apply(si.unknownOffset).AsValueOf(unknownFieldsType)
 			return pref.RawFields(*rv.Interface().(*[]byte))
 		}
 		mi.setUnknown = func(p pointer, b pref.RawFields) {
 			if p.IsNil() {
 				panic("invalid SetUnknown on nil Message")
 			}
-			rv := p.Apply(fieldOffset).AsValueOf(unknownFieldsType)
+			rv := p.Apply(si.unknownOffset).AsValueOf(unknownFieldsType)
 			*rv.Interface().(*[]byte) = []byte(b)
 		}
 	} else {
@@ -233,18 +256,13 @@ func (mi *MessageInfo) makeUnknownFieldsFunc(t reflect.Type) {
 	}
 }
 
-func (mi *MessageInfo) makeExtensionFieldsFunc(t reflect.Type) {
-	fx, _ := t.FieldByName("XXX_extensions")
-	if fx.Type != extensionFieldsType {
-		fx, _ = t.FieldByName("XXX_InternalExtensions")
-	}
-	if fx.Type == extensionFieldsType {
-		fieldOffset := offsetOf(fx)
+func (mi *MessageInfo) makeExtensionFieldsFunc(t reflect.Type, si structInfo) {
+	if si.extensionOffset.IsValid() {
 		mi.extensionMap = func(p pointer) *extensionMap {
 			if p.IsNil() {
 				return (*extensionMap)(nil)
 			}
-			v := p.Apply(fieldOffset).AsValueOf(extensionFieldsType)
+			v := p.Apply(si.extensionOffset).AsValueOf(extensionFieldsType)
 			return (*extensionMap)(v.Interface().(*map[int32]ExtensionField))
 		}
 	} else {
