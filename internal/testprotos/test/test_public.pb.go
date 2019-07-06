@@ -18,9 +18,8 @@ const (
 )
 
 type PublicImportMessage struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *PublicImportMessage) Reset() {
@@ -87,6 +86,18 @@ func init() { file_test_test_public_proto_init() }
 func file_test_test_public_proto_init() {
 	if File_test_test_public_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_test_test_public_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PublicImportMessage); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

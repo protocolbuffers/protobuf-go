@@ -18,9 +18,8 @@ const (
 )
 
 type M4 struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *M4) Reset() {
@@ -87,6 +86,18 @@ func init() { file_imports_test_a_2_m4_proto_init() }
 func file_imports_test_a_2_m4_proto_init() {
 	if File_imports_test_a_2_m4_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_imports_test_a_2_m4_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*M4); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

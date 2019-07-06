@@ -19,11 +19,10 @@ const (
 )
 
 type Local struct {
-	M                    *sub.M                  `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
-	E                    *sub.E                  `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	M             *sub.M `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
+	E             *sub.E `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Local) Reset() {
@@ -117,6 +116,18 @@ func init() { file_import_public_b_proto_init() }
 func file_import_public_b_proto_init() {
 	if File_import_public_b_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_import_public_b_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Local); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -57,12 +57,11 @@ type M_Submessage_SubmessageOneofInt64 = sub.M_Submessage_SubmessageOneofInt64
 var E_ExtensionField = sub.E_ExtensionField
 
 type Public struct {
-	M                    *sub.M                  `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
-	E                    *sub.E                  `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
-	Local                *Local                  `protobuf:"bytes,3,opt,name=local" json:"local,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	M             *sub.M `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
+	E             *sub.E `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
+	Local         *Local `protobuf:"bytes,3,opt,name=local" json:"local,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Public) Reset() {
@@ -172,6 +171,18 @@ func file_import_public_a_proto_init() {
 		return
 	}
 	file_import_public_b_proto_init()
+	if !protoimpl.UnsafeEnabled {
+		file_import_public_a_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Public); i {
+			case 3:
+				return &v.sizeCache
+			case 4:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			RawDescriptor: file_import_public_a_proto_rawDesc,

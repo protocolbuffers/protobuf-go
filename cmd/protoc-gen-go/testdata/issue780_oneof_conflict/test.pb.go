@@ -20,10 +20,9 @@ const (
 type Foo struct {
 	// Types that are valid to be assigned to Bar:
 	//	*Foo_GetBar
-	Bar                  isFoo_Bar               `protobuf_oneof:"bar"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Bar           isFoo_Bar `protobuf_oneof:"bar"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Foo) Reset() {
@@ -112,6 +111,18 @@ func init() { file_issue780_oneof_conflict_test_proto_init() }
 func file_issue780_oneof_conflict_test_proto_init() {
 	if File_issue780_oneof_conflict_test_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_issue780_oneof_conflict_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Foo); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_issue780_oneof_conflict_test_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*Foo_GetBar)(nil),

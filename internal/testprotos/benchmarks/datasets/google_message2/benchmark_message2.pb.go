@@ -18,39 +18,38 @@ const (
 )
 
 type GoogleMessage2 struct {
-	Field1               *string                  `protobuf:"bytes,1,opt,name=field1" json:"field1,omitempty"`
-	Field3               *int64                   `protobuf:"varint,3,opt,name=field3" json:"field3,omitempty"`
-	Field4               *int64                   `protobuf:"varint,4,opt,name=field4" json:"field4,omitempty"`
-	Field30              *int64                   `protobuf:"varint,30,opt,name=field30" json:"field30,omitempty"`
-	Field75              *bool                    `protobuf:"varint,75,opt,name=field75,def=0" json:"field75,omitempty"`
-	Field6               *string                  `protobuf:"bytes,6,opt,name=field6" json:"field6,omitempty"`
-	Field2               []byte                   `protobuf:"bytes,2,opt,name=field2" json:"field2,omitempty"`
-	Field21              *int32                   `protobuf:"varint,21,opt,name=field21,def=0" json:"field21,omitempty"`
-	Field71              *int32                   `protobuf:"varint,71,opt,name=field71" json:"field71,omitempty"`
-	Field25              *float32                 `protobuf:"fixed32,25,opt,name=field25" json:"field25,omitempty"`
-	Field109             *int32                   `protobuf:"varint,109,opt,name=field109,def=0" json:"field109,omitempty"`
-	Field210             *int32                   `protobuf:"varint,210,opt,name=field210,def=0" json:"field210,omitempty"`
-	Field211             *int32                   `protobuf:"varint,211,opt,name=field211,def=0" json:"field211,omitempty"`
-	Field212             *int32                   `protobuf:"varint,212,opt,name=field212,def=0" json:"field212,omitempty"`
-	Field213             *int32                   `protobuf:"varint,213,opt,name=field213,def=0" json:"field213,omitempty"`
-	Field216             *int32                   `protobuf:"varint,216,opt,name=field216,def=0" json:"field216,omitempty"`
-	Field217             *int32                   `protobuf:"varint,217,opt,name=field217,def=0" json:"field217,omitempty"`
-	Field218             *int32                   `protobuf:"varint,218,opt,name=field218,def=0" json:"field218,omitempty"`
-	Field220             *int32                   `protobuf:"varint,220,opt,name=field220,def=0" json:"field220,omitempty"`
-	Field221             *int32                   `protobuf:"varint,221,opt,name=field221,def=0" json:"field221,omitempty"`
-	Field222             *float32                 `protobuf:"fixed32,222,opt,name=field222,def=0" json:"field222,omitempty"`
-	Field63              *int32                   `protobuf:"varint,63,opt,name=field63" json:"field63,omitempty"`
-	Group1               []*GoogleMessage2_Group1 `protobuf:"group,10,rep,name=Group1,json=group1" json:"group1,omitempty"`
-	Field128             []string                 `protobuf:"bytes,128,rep,name=field128" json:"field128,omitempty"`
-	Field131             *int64                   `protobuf:"varint,131,opt,name=field131" json:"field131,omitempty"`
-	Field127             []string                 `protobuf:"bytes,127,rep,name=field127" json:"field127,omitempty"`
-	Field129             *int32                   `protobuf:"varint,129,opt,name=field129" json:"field129,omitempty"`
-	Field130             []int64                  `protobuf:"varint,130,rep,name=field130" json:"field130,omitempty"`
-	Field205             *bool                    `protobuf:"varint,205,opt,name=field205,def=0" json:"field205,omitempty"`
-	Field206             *bool                    `protobuf:"varint,206,opt,name=field206,def=0" json:"field206,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields  `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache      `json:"-"`
+	Field1        *string                  `protobuf:"bytes,1,opt,name=field1" json:"field1,omitempty"`
+	Field3        *int64                   `protobuf:"varint,3,opt,name=field3" json:"field3,omitempty"`
+	Field4        *int64                   `protobuf:"varint,4,opt,name=field4" json:"field4,omitempty"`
+	Field30       *int64                   `protobuf:"varint,30,opt,name=field30" json:"field30,omitempty"`
+	Field75       *bool                    `protobuf:"varint,75,opt,name=field75,def=0" json:"field75,omitempty"`
+	Field6        *string                  `protobuf:"bytes,6,opt,name=field6" json:"field6,omitempty"`
+	Field2        []byte                   `protobuf:"bytes,2,opt,name=field2" json:"field2,omitempty"`
+	Field21       *int32                   `protobuf:"varint,21,opt,name=field21,def=0" json:"field21,omitempty"`
+	Field71       *int32                   `protobuf:"varint,71,opt,name=field71" json:"field71,omitempty"`
+	Field25       *float32                 `protobuf:"fixed32,25,opt,name=field25" json:"field25,omitempty"`
+	Field109      *int32                   `protobuf:"varint,109,opt,name=field109,def=0" json:"field109,omitempty"`
+	Field210      *int32                   `protobuf:"varint,210,opt,name=field210,def=0" json:"field210,omitempty"`
+	Field211      *int32                   `protobuf:"varint,211,opt,name=field211,def=0" json:"field211,omitempty"`
+	Field212      *int32                   `protobuf:"varint,212,opt,name=field212,def=0" json:"field212,omitempty"`
+	Field213      *int32                   `protobuf:"varint,213,opt,name=field213,def=0" json:"field213,omitempty"`
+	Field216      *int32                   `protobuf:"varint,216,opt,name=field216,def=0" json:"field216,omitempty"`
+	Field217      *int32                   `protobuf:"varint,217,opt,name=field217,def=0" json:"field217,omitempty"`
+	Field218      *int32                   `protobuf:"varint,218,opt,name=field218,def=0" json:"field218,omitempty"`
+	Field220      *int32                   `protobuf:"varint,220,opt,name=field220,def=0" json:"field220,omitempty"`
+	Field221      *int32                   `protobuf:"varint,221,opt,name=field221,def=0" json:"field221,omitempty"`
+	Field222      *float32                 `protobuf:"fixed32,222,opt,name=field222,def=0" json:"field222,omitempty"`
+	Field63       *int32                   `protobuf:"varint,63,opt,name=field63" json:"field63,omitempty"`
+	Group1        []*GoogleMessage2_Group1 `protobuf:"group,10,rep,name=Group1,json=group1" json:"group1,omitempty"`
+	Field128      []string                 `protobuf:"bytes,128,rep,name=field128" json:"field128,omitempty"`
+	Field131      *int64                   `protobuf:"varint,131,opt,name=field131" json:"field131,omitempty"`
+	Field127      []string                 `protobuf:"bytes,127,rep,name=field127" json:"field127,omitempty"`
+	Field129      *int32                   `protobuf:"varint,129,opt,name=field129" json:"field129,omitempty"`
+	Field130      []int64                  `protobuf:"varint,130,rep,name=field130" json:"field130,omitempty"`
+	Field205      *bool                    `protobuf:"varint,205,opt,name=field205,def=0" json:"field205,omitempty"`
+	Field206      *bool                    `protobuf:"varint,206,opt,name=field206,def=0" json:"field206,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *GoogleMessage2) Reset() {
@@ -303,20 +302,19 @@ func (x *GoogleMessage2) GetField206() bool {
 }
 
 type GoogleMessage2GroupedMessage struct {
-	Field1               *float32                `protobuf:"fixed32,1,opt,name=field1" json:"field1,omitempty"`
-	Field2               *float32                `protobuf:"fixed32,2,opt,name=field2" json:"field2,omitempty"`
-	Field3               *float32                `protobuf:"fixed32,3,opt,name=field3,def=0" json:"field3,omitempty"`
-	Field4               *bool                   `protobuf:"varint,4,opt,name=field4" json:"field4,omitempty"`
-	Field5               *bool                   `protobuf:"varint,5,opt,name=field5" json:"field5,omitempty"`
-	Field6               *bool                   `protobuf:"varint,6,opt,name=field6,def=1" json:"field6,omitempty"`
-	Field7               *bool                   `protobuf:"varint,7,opt,name=field7,def=0" json:"field7,omitempty"`
-	Field8               *float32                `protobuf:"fixed32,8,opt,name=field8" json:"field8,omitempty"`
-	Field9               *bool                   `protobuf:"varint,9,opt,name=field9" json:"field9,omitempty"`
-	Field10              *float32                `protobuf:"fixed32,10,opt,name=field10" json:"field10,omitempty"`
-	Field11              *int64                  `protobuf:"varint,11,opt,name=field11" json:"field11,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Field1        *float32 `protobuf:"fixed32,1,opt,name=field1" json:"field1,omitempty"`
+	Field2        *float32 `protobuf:"fixed32,2,opt,name=field2" json:"field2,omitempty"`
+	Field3        *float32 `protobuf:"fixed32,3,opt,name=field3,def=0" json:"field3,omitempty"`
+	Field4        *bool    `protobuf:"varint,4,opt,name=field4" json:"field4,omitempty"`
+	Field5        *bool    `protobuf:"varint,5,opt,name=field5" json:"field5,omitempty"`
+	Field6        *bool    `protobuf:"varint,6,opt,name=field6,def=1" json:"field6,omitempty"`
+	Field7        *bool    `protobuf:"varint,7,opt,name=field7,def=0" json:"field7,omitempty"`
+	Field8        *float32 `protobuf:"fixed32,8,opt,name=field8" json:"field8,omitempty"`
+	Field9        *bool    `protobuf:"varint,9,opt,name=field9" json:"field9,omitempty"`
+	Field10       *float32 `protobuf:"fixed32,10,opt,name=field10" json:"field10,omitempty"`
+	Field11       *int64   `protobuf:"varint,11,opt,name=field11" json:"field11,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *GoogleMessage2GroupedMessage) Reset() {
@@ -424,25 +422,24 @@ func (x *GoogleMessage2GroupedMessage) GetField11() int64 {
 }
 
 type GoogleMessage2_Group1 struct {
-	Field11              *float32                      `protobuf:"fixed32,11,req,name=field11" json:"field11,omitempty"`
-	Field26              *float32                      `protobuf:"fixed32,26,opt,name=field26" json:"field26,omitempty"`
-	Field12              *string                       `protobuf:"bytes,12,opt,name=field12" json:"field12,omitempty"`
-	Field13              *string                       `protobuf:"bytes,13,opt,name=field13" json:"field13,omitempty"`
-	Field14              []string                      `protobuf:"bytes,14,rep,name=field14" json:"field14,omitempty"`
-	Field15              *uint64                       `protobuf:"varint,15,req,name=field15" json:"field15,omitempty"`
-	Field5               *int32                        `protobuf:"varint,5,opt,name=field5" json:"field5,omitempty"`
-	Field27              *string                       `protobuf:"bytes,27,opt,name=field27" json:"field27,omitempty"`
-	Field28              *int32                        `protobuf:"varint,28,opt,name=field28" json:"field28,omitempty"`
-	Field29              *string                       `protobuf:"bytes,29,opt,name=field29" json:"field29,omitempty"`
-	Field16              *string                       `protobuf:"bytes,16,opt,name=field16" json:"field16,omitempty"`
-	Field22              []string                      `protobuf:"bytes,22,rep,name=field22" json:"field22,omitempty"`
-	Field73              []int32                       `protobuf:"varint,73,rep,name=field73" json:"field73,omitempty"`
-	Field20              *int32                        `protobuf:"varint,20,opt,name=field20,def=0" json:"field20,omitempty"`
-	Field24              *string                       `protobuf:"bytes,24,opt,name=field24" json:"field24,omitempty"`
-	Field31              *GoogleMessage2GroupedMessage `protobuf:"bytes,31,opt,name=field31" json:"field31,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                      `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields       `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache           `json:"-"`
+	Field11       *float32                      `protobuf:"fixed32,11,req,name=field11" json:"field11,omitempty"`
+	Field26       *float32                      `protobuf:"fixed32,26,opt,name=field26" json:"field26,omitempty"`
+	Field12       *string                       `protobuf:"bytes,12,opt,name=field12" json:"field12,omitempty"`
+	Field13       *string                       `protobuf:"bytes,13,opt,name=field13" json:"field13,omitempty"`
+	Field14       []string                      `protobuf:"bytes,14,rep,name=field14" json:"field14,omitempty"`
+	Field15       *uint64                       `protobuf:"varint,15,req,name=field15" json:"field15,omitempty"`
+	Field5        *int32                        `protobuf:"varint,5,opt,name=field5" json:"field5,omitempty"`
+	Field27       *string                       `protobuf:"bytes,27,opt,name=field27" json:"field27,omitempty"`
+	Field28       *int32                        `protobuf:"varint,28,opt,name=field28" json:"field28,omitempty"`
+	Field29       *string                       `protobuf:"bytes,29,opt,name=field29" json:"field29,omitempty"`
+	Field16       *string                       `protobuf:"bytes,16,opt,name=field16" json:"field16,omitempty"`
+	Field22       []string                      `protobuf:"bytes,22,rep,name=field22" json:"field22,omitempty"`
+	Field73       []int32                       `protobuf:"varint,73,rep,name=field73" json:"field73,omitempty"`
+	Field20       *int32                        `protobuf:"varint,20,opt,name=field20,def=0" json:"field20,omitempty"`
+	Field24       *string                       `protobuf:"bytes,24,opt,name=field24" json:"field24,omitempty"`
+	Field31       *GoogleMessage2GroupedMessage `protobuf:"bytes,31,opt,name=field31" json:"field31,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *GoogleMessage2_Group1) Reset() {
@@ -740,6 +737,38 @@ func init() { file_datasets_google_message2_benchmark_message2_proto_init() }
 func file_datasets_google_message2_benchmark_message2_proto_init() {
 	if File_datasets_google_message2_benchmark_message2_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_datasets_google_message2_benchmark_message2_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GoogleMessage2); i {
+			case 30:
+				return &v.sizeCache
+			case 31:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message2_benchmark_message2_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GoogleMessage2GroupedMessage); i {
+			case 11:
+				return &v.sizeCache
+			case 12:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_datasets_google_message2_benchmark_message2_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GoogleMessage2_Group1); i {
+			case 16:
+				return &v.sizeCache
+			case 17:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

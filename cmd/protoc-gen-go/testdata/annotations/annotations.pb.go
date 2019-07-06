@@ -66,10 +66,9 @@ func (AnnotationsTestEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type AnnotationsTestMessage struct {
-	AnnotationsTestField *string                 `protobuf:"bytes,1,opt,name=AnnotationsTestField" json:"AnnotationsTestField,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	AnnotationsTestField *string `protobuf:"bytes,1,opt,name=AnnotationsTestField" json:"AnnotationsTestField,omitempty"`
+	sizeCache            protoimpl.SizeCache
+	unknownFields        protoimpl.UnknownFields
 }
 
 func (x *AnnotationsTestMessage) Reset() {
@@ -154,6 +153,18 @@ func init() { file_annotations_annotations_proto_init() }
 func file_annotations_annotations_proto_init() {
 	if File_annotations_annotations_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_annotations_annotations_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AnnotationsTestMessage); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

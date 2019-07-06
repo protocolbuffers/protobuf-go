@@ -18,10 +18,9 @@ const (
 )
 
 type WeakImportMessage struct {
-	A                    *int32                  `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	A             *int32 `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *WeakImportMessage) Reset() {
@@ -97,6 +96,18 @@ func init() { file_test_weak_test_weak_proto_init() }
 func file_test_weak_test_weak_proto_init() {
 	if File_test_weak_test_weak_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_test_weak_test_weak_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*WeakImportMessage); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

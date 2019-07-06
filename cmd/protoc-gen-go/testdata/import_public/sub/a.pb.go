@@ -174,11 +174,10 @@ type M struct {
 	// Types that are valid to be assigned to OneofField:
 	//	*M_OneofInt32
 	//	*M_OneofInt64
-	OneofField             isM_OneofField            `protobuf_oneof:"oneof_field"`
-	XXX_NoUnkeyedLiteral   struct{}                  `json:"-"`
-	XXX_InternalExtensions protoimpl.ExtensionFields `json:"-"`
-	XXX_unrecognized       protoimpl.UnknownFields   `json:"-"`
-	XXX_sizecache          protoimpl.SizeCache       `json:"-"`
+	OneofField      isM_OneofField `protobuf_oneof:"oneof_field"`
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields ``
 }
 
 func (x *M) Reset() {
@@ -288,9 +287,8 @@ type M_Submessage struct {
 	//	*M_Submessage_SubmessageOneofInt32
 	//	*M_Submessage_SubmessageOneofInt64
 	SubmessageOneofField isM_Submessage_SubmessageOneofField `protobuf_oneof:"submessage_oneof_field"`
-	XXX_NoUnkeyedLiteral struct{}                            `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields             `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache                 `json:"-"`
+	sizeCache            protoimpl.SizeCache
+	unknownFields        protoimpl.UnknownFields
 }
 
 func (x *M_Submessage) Reset() {
@@ -456,6 +454,30 @@ func file_import_public_sub_a_proto_init() {
 		return
 	}
 	file_import_public_sub_b_proto_init()
+	if !protoimpl.UnsafeEnabled {
+		file_import_public_sub_a_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*M); i {
+			case 5:
+				return &v.sizeCache
+			case 6:
+				return &v.unknownFields
+			case 7:
+				return &v.extensionFields
+			default:
+				return nil
+			}
+		}
+		file_import_public_sub_a_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*M_Submessage); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+	}
 	file_import_public_sub_a_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*M_OneofInt32)(nil),
 		(*M_OneofInt64)(nil),

@@ -19,8 +19,8 @@ import (
 type coderMessageInfo struct {
 	orderedCoderFields []*coderFieldInfo
 	sizecacheOffset    offset
-	extensionOffset    offset
 	unknownOffset      offset
+	extensionOffset    offset
 	needsInitCheck     bool
 }
 
@@ -55,7 +55,7 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 		}
 		mi.orderedCoderFields = append(mi.orderedCoderFields, &coderFieldInfo{
 			num:     fd.Number(),
-			offset:  offsetOf(fs),
+			offset:  offsetOf(fs, mi.Exporter),
 			wiretag: wiretag,
 			tagsize: wire.SizeVarint(wiretag),
 			funcs:   fieldCoder(fd, ft),
@@ -71,7 +71,7 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 		fs := si.oneofsByName[od.Name()]
 		mi.orderedCoderFields = append(mi.orderedCoderFields, &coderFieldInfo{
 			num:       od.Fields().Get(0).Number(),
-			offset:    offsetOf(fs),
+			offset:    offsetOf(fs, mi.Exporter),
 			funcs:     makeOneofFieldCoder(fs, od, si.fieldsByNumber, si.oneofWrappersByNumber),
 			isPointer: true,
 		})

@@ -56,10 +56,9 @@ type Message struct {
 	//
 	// Types that are valid to be assigned to OneofConflictC:
 	//	*Message_OneofMessageConflict_
-	OneofConflictC       isMessage_OneofConflictC `protobuf_oneof:"oneof_conflict_c"`
-	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields  `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache      `json:"-"`
+	OneofConflictC isMessage_OneofConflictC `protobuf_oneof:"oneof_conflict_c"`
+	sizeCache      protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
 }
 
 func (x *Message) Reset() {
@@ -269,9 +268,8 @@ type Message_OneofMessageConflict_ struct {
 func (*Message_OneofMessageConflict_) isMessage_OneofConflictC() {}
 
 type Message_OneofMessageConflict struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message_OneofMessageConflict) Reset() {
@@ -383,6 +381,28 @@ func init() { file_fieldnames_fieldnames_proto_init() }
 func file_fieldnames_fieldnames_proto_init() {
 	if File_fieldnames_fieldnames_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_fieldnames_fieldnames_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message); i {
+			case 17:
+				return &v.sizeCache
+			case 18:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_fieldnames_fieldnames_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message_OneofMessageConflict); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_fieldnames_fieldnames_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*Message_OneofConflictA)(nil),

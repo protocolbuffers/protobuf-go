@@ -18,11 +18,10 @@ const (
 )
 
 type Layer1 struct {
-	L2                   *Layer1_Layer2          `protobuf:"bytes,1,opt,name=l2" json:"l2,omitempty"`
-	L3                   *Layer1_Layer2_Layer3   `protobuf:"bytes,2,opt,name=l3" json:"l3,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	L2            *Layer1_Layer2        `protobuf:"bytes,1,opt,name=l2" json:"l2,omitempty"`
+	L3            *Layer1_Layer2_Layer3 `protobuf:"bytes,2,opt,name=l3" json:"l3,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Layer1) Reset() {
@@ -63,10 +62,9 @@ func (x *Layer1) GetL3() *Layer1_Layer2_Layer3 {
 }
 
 type Layer1_Layer2 struct {
-	L3                   *Layer1_Layer2_Layer3   `protobuf:"bytes,1,opt,name=l3" json:"l3,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	L3            *Layer1_Layer2_Layer3 `protobuf:"bytes,1,opt,name=l3" json:"l3,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Layer1_Layer2) Reset() {
@@ -100,9 +98,8 @@ func (x *Layer1_Layer2) GetL3() *Layer1_Layer2_Layer3 {
 }
 
 type Layer1_Layer2_Layer3 struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Layer1_Layer2_Layer3) Reset() {
@@ -187,6 +184,38 @@ func init() { file_proto2_nested_messages_proto_init() }
 func file_proto2_nested_messages_proto_init() {
 	if File_proto2_nested_messages_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_proto2_nested_messages_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Layer1); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto2_nested_messages_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Layer1_Layer2); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto2_nested_messages_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Layer1_Layer2_Layer3); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

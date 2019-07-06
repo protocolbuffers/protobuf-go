@@ -11,12 +11,14 @@ import (
 	"unsafe"
 )
 
+const UnsafeEnabled = true
+
 // offset represents the offset to a struct field, accessible from a pointer.
 // The offset is the byte offset to the field from the start of the struct.
 type offset uintptr
 
 // offsetOf returns a field offset for the struct field.
-func offsetOf(f reflect.StructField) offset {
+func offsetOf(f reflect.StructField, x exporter) offset {
 	return offset(f.Offset)
 }
 

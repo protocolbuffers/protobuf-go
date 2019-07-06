@@ -22,10 +22,9 @@ const (
 type SourceContext struct {
 	// The path-qualified name of the .proto file that contained the associated
 	// protobuf element.  For example: `"google/protobuf/source_context.proto"`.
-	FileName             string                  `protobuf:"bytes,1,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	FileName      string `protobuf:"bytes,1,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *SourceContext) Reset() {
@@ -107,6 +106,18 @@ func init() { file_google_protobuf_source_context_proto_init() }
 func file_google_protobuf_source_context_proto_init() {
 	if File_google_protobuf_source_context_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_google_protobuf_source_context_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SourceContext); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

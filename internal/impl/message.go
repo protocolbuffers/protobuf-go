@@ -29,6 +29,10 @@ type MessageInfo struct {
 	// Once set, this field must never be mutated.
 	PBType pref.MessageType
 
+	// Exporter must be provided in a purego environment in order to provide
+	// access to unexported fields.
+	Exporter exporter
+
 	// OneofWrappers is list of pointers to oneof wrapper struct types.
 	OneofWrappers []interface{}
 
@@ -50,6 +54,11 @@ type MessageInfo struct {
 	extensionFieldInfosMu sync.RWMutex
 	extensionFieldInfos   map[pref.ExtensionType]*extensionFieldInfo
 }
+
+// exporter is a function that returns a reference to the ith field of v,
+// where v is a pointer to a struct. It returns nil if it does not support
+// exporting the requested field (e.g., already exported).
+type exporter func(v interface{}, i int) interface{}
 
 var prefMessageType = reflect.TypeOf((*pref.Message)(nil)).Elem()
 
@@ -120,8 +129,8 @@ var (
 
 type structInfo struct {
 	sizecacheOffset offset
-	extensionOffset offset
 	unknownOffset   offset
+	extensionOffset offset
 
 	fieldsByNumber        map[pref.FieldNumber]reflect.StructField
 	oneofsByName          map[pref.Name]reflect.StructField
@@ -132,8 +141,8 @@ type structInfo struct {
 func (mi *MessageInfo) makeStructInfo(t reflect.Type) structInfo {
 	si := structInfo{
 		sizecacheOffset: invalidOffset,
-		extensionOffset: invalidOffset,
 		unknownOffset:   invalidOffset,
+		extensionOffset: invalidOffset,
 
 		fieldsByNumber:        map[pref.FieldNumber]reflect.StructField{},
 		oneofsByName:          map[pref.Name]reflect.StructField{},
@@ -141,17 +150,26 @@ func (mi *MessageInfo) makeStructInfo(t reflect.Type) structInfo {
 		oneofWrappersByNumber: map[pref.FieldNumber]reflect.Type{},
 	}
 
+	if f, _ := t.FieldByName("sizeCache"); f.Type == sizecacheType {
+		si.sizecacheOffset = offsetOf(f, mi.Exporter)
+	}
 	if f, _ := t.FieldByName("XXX_sizecache"); f.Type == sizecacheType {
-		si.sizecacheOffset = offsetOf(f)
+		si.sizecacheOffset = offsetOf(f, mi.Exporter)
 	}
-	if f, _ := t.FieldByName("XXX_InternalExtensions"); f.Type == extensionFieldsType {
-		si.extensionOffset = offsetOf(f)
-	}
-	if f, _ := t.FieldByName("XXX_extensions"); f.Type == extensionFieldsType {
-		si.extensionOffset = offsetOf(f)
+	if f, _ := t.FieldByName("unknownFields"); f.Type == unknownFieldsType {
+		si.unknownOffset = offsetOf(f, mi.Exporter)
 	}
 	if f, _ := t.FieldByName("XXX_unrecognized"); f.Type == unknownFieldsType {
-		si.unknownOffset = offsetOf(f)
+		si.unknownOffset = offsetOf(f, mi.Exporter)
+	}
+	if f, _ := t.FieldByName("extensionFields"); f.Type == extensionFieldsType {
+		si.extensionOffset = offsetOf(f, mi.Exporter)
+	}
+	if f, _ := t.FieldByName("XXX_InternalExtensions"); f.Type == extensionFieldsType {
+		si.extensionOffset = offsetOf(f, mi.Exporter)
+	}
+	if f, _ := t.FieldByName("XXX_extensions"); f.Type == extensionFieldsType {
+		si.extensionOffset = offsetOf(f, mi.Exporter)
 	}
 
 	// Generate a mapping of field numbers and names to Go struct field or type.
@@ -209,15 +227,15 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 		var fi fieldInfo
 		switch {
 		case fd.ContainingOneof() != nil:
-			fi = fieldInfoForOneof(fd, si.oneofsByName[fd.ContainingOneof().Name()], si.oneofWrappersByNumber[fd.Number()])
+			fi = fieldInfoForOneof(fd, si.oneofsByName[fd.ContainingOneof().Name()], mi.Exporter, si.oneofWrappersByNumber[fd.Number()])
 		case fd.IsMap():
-			fi = fieldInfoForMap(fd, fs)
+			fi = fieldInfoForMap(fd, fs, mi.Exporter)
 		case fd.IsList():
-			fi = fieldInfoForList(fd, fs)
+			fi = fieldInfoForList(fd, fs, mi.Exporter)
 		case fd.Kind() == pref.MessageKind || fd.Kind() == pref.GroupKind:
-			fi = fieldInfoForMessage(fd, fs)
+			fi = fieldInfoForMessage(fd, fs, mi.Exporter)
 		default:
-			fi = fieldInfoForScalar(fd, fs)
+			fi = fieldInfoForScalar(fd, fs, mi.Exporter)
 		}
 		mi.fields[fd.Number()] = &fi
 	}
@@ -225,7 +243,7 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	mi.oneofs = map[pref.Name]*oneofInfo{}
 	for i := 0; i < mi.PBType.Descriptor().Oneofs().Len(); i++ {
 		od := mi.PBType.Descriptor().Oneofs().Get(i)
-		mi.oneofs[od.Name()] = makeOneofInfo(od, si.oneofsByName[od.Name()], si.oneofWrappersByType)
+		mi.oneofs[od.Name()] = makeOneofInfo(od, si.oneofsByName[od.Name()], mi.Exporter, si.oneofWrappersByType)
 	}
 }
 

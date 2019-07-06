@@ -56,46 +56,45 @@ func (FieldTestMessage_Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type FieldTestMessage struct {
-	OptionalBool         string                               `protobuf:"bytes,1,opt,name=optional_bool,json=optionalBool,proto3" json:"optional_bool,omitempty"`
-	OptionalEnum         FieldTestMessage_Enum                `protobuf:"varint,2,opt,name=optional_enum,json=optionalEnum,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum" json:"optional_enum,omitempty"`
-	OptionalInt32        int32                                `protobuf:"varint,3,opt,name=optional_int32,json=optionalInt32,proto3" json:"optional_int32,omitempty"`
-	OptionalSint32       int32                                `protobuf:"zigzag32,4,opt,name=optional_sint32,json=optionalSint32,proto3" json:"optional_sint32,omitempty"`
-	OptionalUint32       uint32                               `protobuf:"varint,5,opt,name=optional_uint32,json=optionalUint32,proto3" json:"optional_uint32,omitempty"`
-	OptionalInt64        int64                                `protobuf:"varint,6,opt,name=optional_int64,json=optionalInt64,proto3" json:"optional_int64,omitempty"`
-	OptionalSint64       int64                                `protobuf:"zigzag64,7,opt,name=optional_sint64,json=optionalSint64,proto3" json:"optional_sint64,omitempty"`
-	OptionalUint64       uint64                               `protobuf:"varint,8,opt,name=optional_uint64,json=optionalUint64,proto3" json:"optional_uint64,omitempty"`
-	OptionalSfixed32     int32                                `protobuf:"fixed32,9,opt,name=optional_sfixed32,json=optionalSfixed32,proto3" json:"optional_sfixed32,omitempty"`
-	OptionalFixed32      uint32                               `protobuf:"fixed32,10,opt,name=optional_fixed32,json=optionalFixed32,proto3" json:"optional_fixed32,omitempty"`
-	OptionalFloat        float32                              `protobuf:"fixed32,11,opt,name=optional_float,json=optionalFloat,proto3" json:"optional_float,omitempty"`
-	OptionalSfixed64     int64                                `protobuf:"fixed64,12,opt,name=optional_sfixed64,json=optionalSfixed64,proto3" json:"optional_sfixed64,omitempty"`
-	OptionalFixed64      uint64                               `protobuf:"fixed64,13,opt,name=optional_fixed64,json=optionalFixed64,proto3" json:"optional_fixed64,omitempty"`
-	OptionalDouble       float64                              `protobuf:"fixed64,14,opt,name=optional_double,json=optionalDouble,proto3" json:"optional_double,omitempty"`
-	OptionalString       string                               `protobuf:"bytes,15,opt,name=optional_string,json=optionalString,proto3" json:"optional_string,omitempty"`
-	OptionalBytes        []byte                               `protobuf:"bytes,16,opt,name=optional_bytes,json=optionalBytes,proto3" json:"optional_bytes,omitempty"`
-	Optional_Message     *FieldTestMessage_Message            `protobuf:"bytes,17,opt,name=optional_Message,json=optionalMessage,proto3" json:"optional_Message,omitempty"`
-	RepeatedBool         []bool                               `protobuf:"varint,201,rep,packed,name=repeated_bool,json=repeatedBool,proto3" json:"repeated_bool,omitempty"`
-	RepeatedEnum         []FieldTestMessage_Enum              `protobuf:"varint,202,rep,packed,name=repeated_enum,json=repeatedEnum,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum" json:"repeated_enum,omitempty"`
-	RepeatedInt32        []int32                              `protobuf:"varint,203,rep,packed,name=repeated_int32,json=repeatedInt32,proto3" json:"repeated_int32,omitempty"`
-	RepeatedSint32       []int32                              `protobuf:"zigzag32,204,rep,packed,name=repeated_sint32,json=repeatedSint32,proto3" json:"repeated_sint32,omitempty"`
-	RepeatedUint32       []uint32                             `protobuf:"varint,205,rep,packed,name=repeated_uint32,json=repeatedUint32,proto3" json:"repeated_uint32,omitempty"`
-	RepeatedInt64        []int64                              `protobuf:"varint,206,rep,packed,name=repeated_int64,json=repeatedInt64,proto3" json:"repeated_int64,omitempty"`
-	RepeatedSint64       []int64                              `protobuf:"zigzag64,207,rep,packed,name=repeated_sint64,json=repeatedSint64,proto3" json:"repeated_sint64,omitempty"`
-	RepeatedUint64       []uint64                             `protobuf:"varint,208,rep,packed,name=repeated_uint64,json=repeatedUint64,proto3" json:"repeated_uint64,omitempty"`
-	RepeatedSfixed32     []int32                              `protobuf:"fixed32,209,rep,packed,name=repeated_sfixed32,json=repeatedSfixed32,proto3" json:"repeated_sfixed32,omitempty"`
-	RepeatedFixed32      []uint32                             `protobuf:"fixed32,210,rep,packed,name=repeated_fixed32,json=repeatedFixed32,proto3" json:"repeated_fixed32,omitempty"`
-	RepeatedFloat        []float32                            `protobuf:"fixed32,211,rep,packed,name=repeated_float,json=repeatedFloat,proto3" json:"repeated_float,omitempty"`
-	RepeatedSfixed64     []int64                              `protobuf:"fixed64,212,rep,packed,name=repeated_sfixed64,json=repeatedSfixed64,proto3" json:"repeated_sfixed64,omitempty"`
-	RepeatedFixed64      []uint64                             `protobuf:"fixed64,213,rep,packed,name=repeated_fixed64,json=repeatedFixed64,proto3" json:"repeated_fixed64,omitempty"`
-	RepeatedDouble       []float64                            `protobuf:"fixed64,214,rep,packed,name=repeated_double,json=repeatedDouble,proto3" json:"repeated_double,omitempty"`
-	RepeatedString       []string                             `protobuf:"bytes,215,rep,name=repeated_string,json=repeatedString,proto3" json:"repeated_string,omitempty"`
-	RepeatedBytes        [][]byte                             `protobuf:"bytes,216,rep,name=repeated_bytes,json=repeatedBytes,proto3" json:"repeated_bytes,omitempty"`
-	Repeated_Message     []*FieldTestMessage_Message          `protobuf:"bytes,217,rep,name=repeated_Message,json=repeatedMessage,proto3" json:"repeated_Message,omitempty"`
-	MapInt32Int64        map[int32]int64                      `protobuf:"bytes,500,rep,name=map_int32_int64,json=mapInt32Int64,proto3" json:"map_int32_int64,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	MapStringMessage     map[string]*FieldTestMessage_Message `protobuf:"bytes,501,rep,name=map_string_message,json=mapStringMessage,proto3" json:"map_string_message,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	MapFixed64Enum       map[uint64]FieldTestMessage_Enum     `protobuf:"bytes,502,rep,name=map_fixed64_enum,json=mapFixed64Enum,proto3" json:"map_fixed64_enum,omitempty" protobuf_key:"fixed64,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum"`
-	XXX_NoUnkeyedLiteral struct{}                             `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields              `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache                  `json:"-"`
+	OptionalBool     string                               `protobuf:"bytes,1,opt,name=optional_bool,json=optionalBool,proto3" json:"optional_bool,omitempty"`
+	OptionalEnum     FieldTestMessage_Enum                `protobuf:"varint,2,opt,name=optional_enum,json=optionalEnum,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum" json:"optional_enum,omitempty"`
+	OptionalInt32    int32                                `protobuf:"varint,3,opt,name=optional_int32,json=optionalInt32,proto3" json:"optional_int32,omitempty"`
+	OptionalSint32   int32                                `protobuf:"zigzag32,4,opt,name=optional_sint32,json=optionalSint32,proto3" json:"optional_sint32,omitempty"`
+	OptionalUint32   uint32                               `protobuf:"varint,5,opt,name=optional_uint32,json=optionalUint32,proto3" json:"optional_uint32,omitempty"`
+	OptionalInt64    int64                                `protobuf:"varint,6,opt,name=optional_int64,json=optionalInt64,proto3" json:"optional_int64,omitempty"`
+	OptionalSint64   int64                                `protobuf:"zigzag64,7,opt,name=optional_sint64,json=optionalSint64,proto3" json:"optional_sint64,omitempty"`
+	OptionalUint64   uint64                               `protobuf:"varint,8,opt,name=optional_uint64,json=optionalUint64,proto3" json:"optional_uint64,omitempty"`
+	OptionalSfixed32 int32                                `protobuf:"fixed32,9,opt,name=optional_sfixed32,json=optionalSfixed32,proto3" json:"optional_sfixed32,omitempty"`
+	OptionalFixed32  uint32                               `protobuf:"fixed32,10,opt,name=optional_fixed32,json=optionalFixed32,proto3" json:"optional_fixed32,omitempty"`
+	OptionalFloat    float32                              `protobuf:"fixed32,11,opt,name=optional_float,json=optionalFloat,proto3" json:"optional_float,omitempty"`
+	OptionalSfixed64 int64                                `protobuf:"fixed64,12,opt,name=optional_sfixed64,json=optionalSfixed64,proto3" json:"optional_sfixed64,omitempty"`
+	OptionalFixed64  uint64                               `protobuf:"fixed64,13,opt,name=optional_fixed64,json=optionalFixed64,proto3" json:"optional_fixed64,omitempty"`
+	OptionalDouble   float64                              `protobuf:"fixed64,14,opt,name=optional_double,json=optionalDouble,proto3" json:"optional_double,omitempty"`
+	OptionalString   string                               `protobuf:"bytes,15,opt,name=optional_string,json=optionalString,proto3" json:"optional_string,omitempty"`
+	OptionalBytes    []byte                               `protobuf:"bytes,16,opt,name=optional_bytes,json=optionalBytes,proto3" json:"optional_bytes,omitempty"`
+	Optional_Message *FieldTestMessage_Message            `protobuf:"bytes,17,opt,name=optional_Message,json=optionalMessage,proto3" json:"optional_Message,omitempty"`
+	RepeatedBool     []bool                               `protobuf:"varint,201,rep,packed,name=repeated_bool,json=repeatedBool,proto3" json:"repeated_bool,omitempty"`
+	RepeatedEnum     []FieldTestMessage_Enum              `protobuf:"varint,202,rep,packed,name=repeated_enum,json=repeatedEnum,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum" json:"repeated_enum,omitempty"`
+	RepeatedInt32    []int32                              `protobuf:"varint,203,rep,packed,name=repeated_int32,json=repeatedInt32,proto3" json:"repeated_int32,omitempty"`
+	RepeatedSint32   []int32                              `protobuf:"zigzag32,204,rep,packed,name=repeated_sint32,json=repeatedSint32,proto3" json:"repeated_sint32,omitempty"`
+	RepeatedUint32   []uint32                             `protobuf:"varint,205,rep,packed,name=repeated_uint32,json=repeatedUint32,proto3" json:"repeated_uint32,omitempty"`
+	RepeatedInt64    []int64                              `protobuf:"varint,206,rep,packed,name=repeated_int64,json=repeatedInt64,proto3" json:"repeated_int64,omitempty"`
+	RepeatedSint64   []int64                              `protobuf:"zigzag64,207,rep,packed,name=repeated_sint64,json=repeatedSint64,proto3" json:"repeated_sint64,omitempty"`
+	RepeatedUint64   []uint64                             `protobuf:"varint,208,rep,packed,name=repeated_uint64,json=repeatedUint64,proto3" json:"repeated_uint64,omitempty"`
+	RepeatedSfixed32 []int32                              `protobuf:"fixed32,209,rep,packed,name=repeated_sfixed32,json=repeatedSfixed32,proto3" json:"repeated_sfixed32,omitempty"`
+	RepeatedFixed32  []uint32                             `protobuf:"fixed32,210,rep,packed,name=repeated_fixed32,json=repeatedFixed32,proto3" json:"repeated_fixed32,omitempty"`
+	RepeatedFloat    []float32                            `protobuf:"fixed32,211,rep,packed,name=repeated_float,json=repeatedFloat,proto3" json:"repeated_float,omitempty"`
+	RepeatedSfixed64 []int64                              `protobuf:"fixed64,212,rep,packed,name=repeated_sfixed64,json=repeatedSfixed64,proto3" json:"repeated_sfixed64,omitempty"`
+	RepeatedFixed64  []uint64                             `protobuf:"fixed64,213,rep,packed,name=repeated_fixed64,json=repeatedFixed64,proto3" json:"repeated_fixed64,omitempty"`
+	RepeatedDouble   []float64                            `protobuf:"fixed64,214,rep,packed,name=repeated_double,json=repeatedDouble,proto3" json:"repeated_double,omitempty"`
+	RepeatedString   []string                             `protobuf:"bytes,215,rep,name=repeated_string,json=repeatedString,proto3" json:"repeated_string,omitempty"`
+	RepeatedBytes    [][]byte                             `protobuf:"bytes,216,rep,name=repeated_bytes,json=repeatedBytes,proto3" json:"repeated_bytes,omitempty"`
+	Repeated_Message []*FieldTestMessage_Message          `protobuf:"bytes,217,rep,name=repeated_Message,json=repeatedMessage,proto3" json:"repeated_Message,omitempty"`
+	MapInt32Int64    map[int32]int64                      `protobuf:"bytes,500,rep,name=map_int32_int64,json=mapInt32Int64,proto3" json:"map_int32_int64,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	MapStringMessage map[string]*FieldTestMessage_Message `protobuf:"bytes,501,rep,name=map_string_message,json=mapStringMessage,proto3" json:"map_string_message,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	MapFixed64Enum   map[uint64]FieldTestMessage_Enum     `protobuf:"bytes,502,rep,name=map_fixed64_enum,json=mapFixed64Enum,proto3" json:"map_fixed64_enum,omitempty" protobuf_key:"fixed64,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum"`
+	sizeCache        protoimpl.SizeCache
+	unknownFields    protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage) Reset() {
@@ -381,9 +380,8 @@ func (x *FieldTestMessage) GetMapFixed64Enum() map[uint64]FieldTestMessage_Enum 
 }
 
 type FieldTestMessage_Message struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage_Message) Reset() {
@@ -606,6 +604,28 @@ func init() { file_proto3_fields_proto_init() }
 func file_proto3_fields_proto_init() {
 	if File_proto3_fields_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_proto3_fields_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldTestMessage); i {
+			case 37:
+				return &v.sizeCache
+			case 38:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto3_fields_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldTestMessage_Message); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

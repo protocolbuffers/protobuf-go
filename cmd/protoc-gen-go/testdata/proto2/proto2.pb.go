@@ -18,11 +18,10 @@ const (
 )
 
 type Message struct {
-	I32                  *int32                  `protobuf:"varint,1,opt,name=i32" json:"i32,omitempty"`
-	M                    *Message                `protobuf:"bytes,2,opt,name=m" json:"m,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	I32           *int32   `protobuf:"varint,1,opt,name=i32" json:"i32,omitempty"`
+	M             *Message `protobuf:"bytes,2,opt,name=m" json:"m,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message) Reset() {
@@ -108,6 +107,18 @@ func init() { file_proto2_proto2_proto_init() }
 func file_proto2_proto2_proto_init() {
 	if File_proto2_proto2_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_proto2_proto2_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

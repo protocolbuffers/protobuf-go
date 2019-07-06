@@ -66,11 +66,10 @@ func (Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message struct {
-	StringField          *string                 `protobuf:"bytes,1,opt,name=string_field,json=stringField" json:"string_field,omitempty"`
-	EnumField            *Enum                   `protobuf:"varint,2,opt,name=enum_field,json=enumField,enum=Enum,def=0" json:"enum_field,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	StringField   *string `protobuf:"bytes,1,opt,name=string_field,json=stringField" json:"string_field,omitempty"`
+	EnumField     *Enum   `protobuf:"varint,2,opt,name=enum_field,json=enumField,enum=Enum,def=0" json:"enum_field,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message) Reset() {
@@ -157,6 +156,18 @@ func init() { file_nopackage_nopackage_proto_init() }
 func file_nopackage_nopackage_proto_init() {
 	if File_nopackage_nopackage_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_nopackage_nopackage_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

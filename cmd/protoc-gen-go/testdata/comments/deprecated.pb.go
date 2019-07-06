@@ -56,10 +56,9 @@ func (DeprecatedEnum) EnumDescriptor() ([]byte, []int) {
 
 // Deprecated: Do not use.
 type DeprecatedMessage struct {
-	DeprecatedField      string                  `protobuf:"bytes,1,opt,name=deprecated_field,json=deprecatedField,proto3" json:"deprecated_field,omitempty"` // Deprecated: Do not use.
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	DeprecatedField string `protobuf:"bytes,1,opt,name=deprecated_field,json=deprecatedField,proto3" json:"deprecated_field,omitempty"` // Deprecated: Do not use.
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
 }
 
 func (x *DeprecatedMessage) Reset() {
@@ -144,6 +143,18 @@ func init() { file_comments_deprecated_proto_init() }
 func file_comments_deprecated_proto_init() {
 	if File_comments_deprecated_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_comments_deprecated_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeprecatedMessage); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -18,9 +18,8 @@ const (
 )
 
 type Sub2Message struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Sub2Message) Reset() {
@@ -89,6 +88,18 @@ func init() { file_import_public_sub2_a_proto_init() }
 func file_import_public_sub2_a_proto_init() {
 	if File_import_public_sub2_a_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_import_public_sub2_a_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Sub2Message); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

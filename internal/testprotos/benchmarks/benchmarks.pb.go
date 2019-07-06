@@ -42,10 +42,9 @@ type BenchmarkDataset struct {
 	// potentially more realistic results than just parsing the same message
 	// over and over.  A single message parsed repeatedly could yield unusually
 	// good branch prediction performance.
-	Payload              [][]byte                `protobuf:"bytes,3,rep,name=payload,proto3" json:"payload,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Payload       [][]byte `protobuf:"bytes,3,rep,name=payload,proto3" json:"payload,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *BenchmarkDataset) Reset() {
@@ -140,6 +139,18 @@ func init() { file_benchmarks_proto_init() }
 func file_benchmarks_proto_init() {
 	if File_benchmarks_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_benchmarks_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BenchmarkDataset); i {
+			case 3:
+				return &v.sizeCache
+			case 4:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

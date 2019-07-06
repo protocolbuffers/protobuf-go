@@ -26,7 +26,7 @@ type fieldInfo struct {
 	newMessage func() pref.Message
 }
 
-func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, ot reflect.Type) fieldInfo {
+func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x exporter, ot reflect.Type) fieldInfo {
 	ft := fs.Type
 	if ft.Kind() != reflect.Interface {
 		panic(fmt.Sprintf("invalid type: got %v, want interface kind", ft))
@@ -44,7 +44,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, ot refle
 	}
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs)
+	fieldOffset := offsetOf(fs, x)
 	return fieldInfo{
 		// NOTE: The logic below intentionally assumes that oneof fields are
 		// well-formatted. That is, the oneof interface never contains a
@@ -111,7 +111,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, ot refle
 	}
 }
 
-func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField) fieldInfo {
+func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
 	if ft.Kind() != reflect.Map {
 		panic(fmt.Sprintf("invalid type: got %v, want map kind", ft))
@@ -123,7 +123,7 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField) fieldInfo 
 	})
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs)
+	fieldOffset := offsetOf(fs, x)
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
@@ -158,7 +158,7 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField) fieldInfo 
 	}
 }
 
-func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField) fieldInfo {
+func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
 	if ft.Kind() != reflect.Slice {
 		panic(fmt.Sprintf("invalid type: got %v, want slice kind", ft))
@@ -169,7 +169,7 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField) fieldInfo
 	})
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs)
+	fieldOffset := offsetOf(fs, x)
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
@@ -206,7 +206,7 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField) fieldInfo
 
 var emptyBytes = reflect.ValueOf([]byte{})
 
-func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField) fieldInfo {
+func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
 	nullable := fd.Syntax() == pref.Proto2
 	if nullable {
@@ -220,7 +220,7 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField) fieldIn
 	conv, _ := newConverter(ft, fd.Kind())
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs)
+	fieldOffset := offsetOf(fs, x)
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
@@ -281,13 +281,13 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField) fieldIn
 	}
 }
 
-func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField) fieldInfo {
+func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
 	conv, _ := newConverter(ft, fd.Kind())
 	frozenEmpty := pref.ValueOf(frozenMessage{conv.NewMessage()})
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs)
+	fieldOffset := offsetOf(fs, x)
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
@@ -334,8 +334,8 @@ type oneofInfo struct {
 	which     func(pointer) pref.FieldNumber
 }
 
-func makeOneofInfo(od pref.OneofDescriptor, fs reflect.StructField, wrappersByType map[reflect.Type]pref.FieldNumber) *oneofInfo {
-	fieldOffset := offsetOf(fs)
+func makeOneofInfo(od pref.OneofDescriptor, fs reflect.StructField, x exporter, wrappersByType map[reflect.Type]pref.FieldNumber) *oneofInfo {
+	fieldOffset := offsetOf(fs, x)
 	return &oneofInfo{
 		oneofDesc: od,
 		which: func(p pointer) pref.FieldNumber {

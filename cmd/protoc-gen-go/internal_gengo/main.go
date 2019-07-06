@@ -39,6 +39,22 @@ const (
 	// generateOneofWrapperMethods specifies whether to generate
 	// XXX_OneofWrappers methods on messages with oneofs.
 	generateOneofWrapperMethods = false
+
+	// generateNoUnkeyedLiteralFields specifies whether to generate
+	// the XXX_NoUnkeyedLiteral field.
+	generateNoUnkeyedLiteralFields = false
+
+	// generateExportedSizeCacheFields specifies whether to generate an exported
+	// XXX_sizecache field instead of an unexported sizeCache field.
+	generateExportedSizeCacheFields = false
+
+	// generateExportedUnknownFields specifies whether to generate an exported
+	// XXX_unrecognized field instead of an unexported unknownFields field.
+	generateExportedUnknownFields = false
+
+	// generateExportedExtensionFields specifies whether to generate an exported
+	// XXX_InternalExtensions field instead of an unexported extensionFields field.
+	generateExportedExtensionFields = false
 )
 
 const (
@@ -54,11 +70,28 @@ const (
 type fileInfo struct {
 	*protogen.File
 
-	allEnums         []*protogen.Enum
-	allEnumsByPtr    map[*protogen.Enum]int // value is index into allEnums
-	allMessages      []*protogen.Message
-	allMessagesByPtr map[*protogen.Message]int // value is index into allMessages
-	allExtensions    []*protogen.Extension
+	allEnums      []*protogen.Enum
+	allMessages   []*protogen.Message
+	allExtensions []*protogen.Extension
+
+	allEnumsByPtr         map[*protogen.Enum]int    // value is index into allEnums
+	allMessagesByPtr      map[*protogen.Message]int // value is index into allMessages
+	allMessageFieldsByPtr map[*protogen.Message]*structFields
+}
+
+type structFields struct {
+	count      int
+	unexported map[int]string
+}
+
+func (sf *structFields) append(name string) {
+	if r, _ := utf8.DecodeRuneInString(name); !unicode.IsUpper(r) {
+		if sf.unexported == nil {
+			sf.unexported = make(map[int]string)
+		}
+		sf.unexported[sf.count] = name
+	}
+	sf.count++
 }
 
 // GenerateFile generates the contents of a .pb.go file.
@@ -90,8 +123,10 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 	}
 	if len(f.allMessages) > 0 {
 		f.allMessagesByPtr = make(map[*protogen.Message]int)
+		f.allMessageFieldsByPtr = make(map[*protogen.Message]*structFields)
 		for i, m := range f.allMessages {
 			f.allMessagesByPtr[m] = i
+			f.allMessageFieldsByPtr[m] = new(structFields)
 		}
 	}
 
@@ -347,15 +382,28 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 	}
 	g.Annotate(message.GoIdent.GoName, message.Location)
 	g.P("type ", message.GoIdent, " struct {")
+	sf := f.allMessageFieldsByPtr[message]
 	for _, field := range message.Fields {
 		if field.Oneof != nil {
 			// It would be a bit simpler to iterate over the oneofs below,
 			// but generating the field here keeps the contents of the Go
 			// struct in the same order as the contents of the source
 			// .proto file.
-			if field == field.Oneof.Fields[0] {
-				genOneofField(gen, g, f, message, field.Oneof)
+			oneof := field.Oneof
+			if field != oneof.Fields[0] {
+				continue // already generated oneof field for first entry
 			}
+			if g.PrintLeadingComments(oneof.Location) {
+				g.P("//")
+			}
+			g.P("// Types that are valid to be assigned to ", oneofFieldName(oneof), ":")
+			for _, field := range oneof.Fields {
+				g.PrintLeadingComments(field.Location)
+				g.P("//\t*", fieldOneofType(field))
+			}
+			g.Annotate(message.GoIdent.GoName+"."+oneofFieldName(oneof), oneof.Location)
+			g.P(oneofFieldName(oneof), " ", oneofInterfaceName(oneof), " `protobuf_oneof:\"", oneof.Desc.Name(), "\"`")
+			sf.append(oneofFieldName(oneof))
 			continue
 		}
 		g.PrintLeadingComments(field.Location)
@@ -378,19 +426,42 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 		g.Annotate(message.GoIdent.GoName+"."+field.GoName, field.Location)
 		g.P(field.GoName, " ", goType, " `", strings.Join(tags, " "), "`",
 			deprecationComment(field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated()))
+		sf.append(field.GoName)
 	}
-	g.P("XXX_NoUnkeyedLiteral struct{} `json:\"-\"`")
 
+	if generateNoUnkeyedLiteralFields {
+		g.P("XXX_NoUnkeyedLiteral", " struct{} `json:\"-\"`")
+		sf.append("XXX_NoUnkeyedLiteral")
+	}
+	if generateExportedSizeCacheFields {
+		g.P("XXX_sizecache", " ", protoimplPackage.Ident("SizeCache"), " `json:\"-\"`")
+		sf.append("XXX_sizecache")
+	} else {
+		g.P("sizeCache", " ", protoimplPackage.Ident("SizeCache"))
+		sf.append("sizeCache")
+	}
+	if generateExportedUnknownFields {
+		g.P("XXX_unrecognized", " ", protoimplPackage.Ident("UnknownFields"), " `json:\"-\"`")
+		sf.append("XXX_unrecognized")
+	} else {
+		g.P("unknownFields", " ", protoimplPackage.Ident("UnknownFields"))
+		sf.append("unknownFields")
+	}
 	if message.Desc.ExtensionRanges().Len() > 0 {
+		// TODO: Remove this tag when we drop v1 support.
 		var tags []string
 		if message.Desc.Options().(*descriptorpb.MessageOptions).GetMessageSetWireFormat() {
 			tags = append(tags, `protobuf_messageset:"1"`)
 		}
-		tags = append(tags, `json:"-"`)
-		g.P("XXX_InternalExtensions ", protoimplPackage.Ident("ExtensionFields"), " `", strings.Join(tags, " "), "`")
+		if generateExportedExtensionFields {
+			tags = append(tags, `json:"-"`)
+			g.P("XXX_InternalExtensions", " ", protoimplPackage.Ident("ExtensionFields"), " `", strings.Join(tags, " "), "`")
+			sf.append("XXX_InternalExtensions")
+		} else {
+			g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"), " `", strings.Join(tags, " "), "`")
+			sf.append("extensionFields")
+		}
 	}
-	g.P("XXX_unrecognized ", protoimplPackage.Ident("UnknownFields"), " `json:\"-\"`")
-	g.P("XXX_sizecache ", protoimplPackage.Ident("SizeCache"), " `json:\"-\"`")
 	g.P("}")
 	g.P()
 
@@ -742,20 +813,6 @@ var wellKnownTypes = map[protoreflect.FullName]bool{
 	"google.protobuf.UInt32Value": true,
 	"google.protobuf.UInt64Value": true,
 	"google.protobuf.Value":       true,
-}
-
-// genOneofField generates the struct field for a oneof.
-func genOneofField(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message, oneof *protogen.Oneof) {
-	if g.PrintLeadingComments(oneof.Location) {
-		g.P("//")
-	}
-	g.P("// Types that are valid to be assigned to ", oneofFieldName(oneof), ":")
-	for _, field := range oneof.Fields {
-		g.PrintLeadingComments(field.Location)
-		g.P("//\t*", fieldOneofType(field))
-	}
-	g.Annotate(message.GoIdent.GoName+"."+oneofFieldName(oneof), oneof.Location)
-	g.P(oneofFieldName(oneof), " ", oneofInterfaceName(oneof), " `protobuf_oneof:\"", oneof.Desc.Name(), "\"`")
 }
 
 // genOneofGetter generate a Get method for a oneof.

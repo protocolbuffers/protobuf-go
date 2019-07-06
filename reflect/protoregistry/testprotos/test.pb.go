@@ -160,10 +160,9 @@ func (Enum3) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message1 struct {
-	XXX_NoUnkeyedLiteral   struct{}                  `json:"-"`
-	XXX_InternalExtensions protoimpl.ExtensionFields `json:"-"`
-	XXX_unrecognized       protoimpl.UnknownFields   `json:"-"`
-	XXX_sizecache          protoimpl.SizeCache       `json:"-"`
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields ``
 }
 
 func (x *Message1) Reset() {
@@ -199,9 +198,8 @@ func (*Message1) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 }
 
 type Message2 struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message2) Reset() {
@@ -228,9 +226,8 @@ func (*Message2) Descriptor() ([]byte, []int) {
 }
 
 type Message3 struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message3) Reset() {
@@ -257,10 +254,9 @@ func (*Message3) Descriptor() ([]byte, []int) {
 }
 
 type Message4 struct {
-	BoolField            *bool                   `protobuf:"varint,30,opt,name=bool_field,json=boolField" json:"bool_field,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	BoolField     *bool `protobuf:"varint,30,opt,name=bool_field,json=boolField" json:"bool_field,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message4) Reset() {
@@ -453,6 +449,50 @@ func init() { file_test_proto_init() }
 func file_test_proto_init() {
 	if File_test_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message1); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			case 2:
+				return &v.extensionFields
+			default:
+				return nil
+			}
+		}
+		file_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message2); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message3); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_test_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message4); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

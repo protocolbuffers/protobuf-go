@@ -19,10 +19,9 @@ const (
 )
 
 type A1M1 struct {
-	F                    *test_a_1.M1            `protobuf:"bytes,1,opt,name=f,proto3" json:"f,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	F             *test_a_1.M1 `protobuf:"bytes,1,opt,name=f,proto3" json:"f,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *A1M1) Reset() {
@@ -101,6 +100,18 @@ func init() { file_imports_test_import_a1m1_proto_init() }
 func file_imports_test_import_a1m1_proto_init() {
 	if File_imports_test_import_a1m1_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_imports_test_import_a1m1_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*A1M1); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

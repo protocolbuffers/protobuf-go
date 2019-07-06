@@ -154,6 +154,27 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	}
 
 	if len(f.allMessages) > 0 {
+		// Populate MessageInfo.Exporters.
+		g.P("if !", protoimplPackage.Ident("UnsafeEnabled"), " {")
+		for _, message := range f.allMessages {
+			if sf := f.allMessageFieldsByPtr[message]; len(sf.unexported) > 0 {
+				idx := f.allMessagesByPtr[message]
+				typesVar := messageTypesVarName(f)
+
+				g.P(typesVar, "[", idx, "].Exporter = func(v interface{}, i int) interface{} {")
+				g.P("switch v := v.(*", message.GoIdent, "); i {")
+				for i := 0; i < sf.count; i++ {
+					if name := sf.unexported[i]; name != "" {
+						g.P("case ", i, ": return &v.", name)
+					}
+				}
+				g.P("default: return nil")
+				g.P("}")
+				g.P("}")
+			}
+		}
+		g.P("}")
+
 		// Populate MessageInfo.OneofWrappers.
 		for _, message := range f.allMessages {
 			if len(message.Oneofs) > 0 {

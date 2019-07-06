@@ -314,11 +314,10 @@ func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) EnumDescript
 }
 
 type EnumContainerMessage1 struct {
-	DefaultDuplicate1    *EnumType2              `protobuf:"varint,1,opt,name=default_duplicate1,json=defaultDuplicate1,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate1,omitempty"`
-	DefaultDuplicate2    *EnumType2              `protobuf:"varint,2,opt,name=default_duplicate2,json=defaultDuplicate2,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate2,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	DefaultDuplicate1 *EnumType2 `protobuf:"varint,1,opt,name=default_duplicate1,json=defaultDuplicate1,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate1,omitempty"`
+	DefaultDuplicate2 *EnumType2 `protobuf:"varint,2,opt,name=default_duplicate2,json=defaultDuplicate2,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate2,omitempty"`
+	sizeCache         protoimpl.SizeCache
+	unknownFields     protoimpl.UnknownFields
 }
 
 func (x *EnumContainerMessage1) Reset() {
@@ -362,9 +361,8 @@ func (x *EnumContainerMessage1) GetDefaultDuplicate2() EnumType2 {
 }
 
 type EnumContainerMessage1_EnumContainerMessage2 struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *EnumContainerMessage1_EnumContainerMessage2) Reset() {
@@ -472,6 +470,28 @@ func init() { file_proto2_enum_proto_init() }
 func file_proto2_enum_proto_init() {
 	if File_proto2_enum_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_proto2_enum_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EnumContainerMessage1); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto2_enum_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EnumContainerMessage1_EnumContainerMessage2); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

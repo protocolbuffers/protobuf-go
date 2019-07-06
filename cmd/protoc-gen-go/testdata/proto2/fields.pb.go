@@ -175,10 +175,9 @@ type FieldTestMessage struct {
 	// Types that are valid to be assigned to OneofTwo:
 	//	*FieldTestMessage_OneofTwo_1
 	//	*FieldTestMessage_OneofTwo_2
-	OneofTwo             isFieldTestMessage_OneofTwo `protobuf_oneof:"oneof_two"`
-	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields     `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache         `json:"-"`
+	OneofTwo      isFieldTestMessage_OneofTwo `protobuf_oneof:"oneof_two"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage) Reset() {
@@ -1095,10 +1094,9 @@ func (*FieldTestMessage_OneofTwo_1) isFieldTestMessage_OneofTwo() {}
 func (*FieldTestMessage_OneofTwo_2) isFieldTestMessage_OneofTwo() {}
 
 type FieldTestMessage_OptionalGroup struct {
-	OptionalGroup        *string                 `protobuf:"bytes,19,opt,name=optional_group,json=optionalGroup" json:"optional_group,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	OptionalGroup *string `protobuf:"bytes,19,opt,name=optional_group,json=optionalGroup" json:"optional_group,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage_OptionalGroup) Reset() {
@@ -1132,10 +1130,9 @@ func (x *FieldTestMessage_OptionalGroup) GetOptionalGroup() string {
 }
 
 type FieldTestMessage_RequiredGroup struct {
-	RequiredGroup        *string                 `protobuf:"bytes,119,req,name=required_group,json=requiredGroup" json:"required_group,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	RequiredGroup *string `protobuf:"bytes,119,req,name=required_group,json=requiredGroup" json:"required_group,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage_RequiredGroup) Reset() {
@@ -1169,10 +1166,9 @@ func (x *FieldTestMessage_RequiredGroup) GetRequiredGroup() string {
 }
 
 type FieldTestMessage_RepeatedGroup struct {
-	RepeatedGroup        []string                `protobuf:"bytes,219,rep,name=repeated_group,json=repeatedGroup" json:"repeated_group,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	RepeatedGroup []string `protobuf:"bytes,219,rep,name=repeated_group,json=repeatedGroup" json:"repeated_group,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage_RepeatedGroup) Reset() {
@@ -1206,10 +1202,9 @@ func (x *FieldTestMessage_RepeatedGroup) GetRepeatedGroup() []string {
 }
 
 type FieldTestMessage_OneofGroup struct {
-	OneofGroupField      *string                 `protobuf:"bytes,619,opt,name=oneof_group_field,json=oneofGroupField" json:"oneof_group_field,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	OneofGroupField *string `protobuf:"bytes,619,opt,name=oneof_group_field,json=oneofGroupField" json:"oneof_group_field,omitempty"`
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage_OneofGroup) Reset() {
@@ -1243,9 +1238,8 @@ func (x *FieldTestMessage_OneofGroup) GetOneofGroupField() string {
 }
 
 type FieldTestMessage_Message struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage_Message) Reset() {
@@ -1702,6 +1696,68 @@ func init() { file_proto2_fields_proto_init() }
 func file_proto2_fields_proto_init() {
 	if File_proto2_fields_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_proto2_fields_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldTestMessage); i {
+			case 83:
+				return &v.sizeCache
+			case 84:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto2_fields_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldTestMessage_OptionalGroup); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto2_fields_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldTestMessage_RequiredGroup); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto2_fields_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldTestMessage_RepeatedGroup); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto2_fields_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldTestMessage_OneofGroup); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto2_fields_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldTestMessage_Message); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_proto2_fields_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*FieldTestMessage_OneofBool)(nil),

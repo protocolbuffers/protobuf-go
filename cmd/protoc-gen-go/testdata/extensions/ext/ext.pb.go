@@ -68,10 +68,9 @@ func (Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message struct {
-	Data                 []byte                  `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Data          []byte `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message) Reset() {
@@ -105,10 +104,9 @@ func (x *Message) GetData() []byte {
 }
 
 type ExtensionGroup struct {
-	ExtensionGroup       *string                 `protobuf:"bytes,120,opt,name=extension_group,json=extensionGroup" json:"extension_group,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	ExtensionGroup *string `protobuf:"bytes,120,opt,name=extension_group,json=extensionGroup" json:"extension_group,omitempty"`
+	sizeCache      protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
 }
 
 func (x *ExtensionGroup) Reset() {
@@ -143,9 +141,8 @@ func (x *ExtensionGroup) GetExtensionGroup() string {
 
 // Extend in the scope of another type.
 type ExtendingMessage struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *ExtendingMessage) Reset() {
@@ -172,10 +169,9 @@ func (*ExtendingMessage) Descriptor() ([]byte, []int) {
 }
 
 type RepeatedGroup struct {
-	RepeatedXGroup       []string                `protobuf:"bytes,319,rep,name=repeated_x_group,json=repeatedXGroup" json:"repeated_x_group,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	RepeatedXGroup []string `protobuf:"bytes,319,rep,name=repeated_x_group,json=repeatedXGroup" json:"repeated_x_group,omitempty"`
+	sizeCache      protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
 }
 
 func (x *RepeatedGroup) Reset() {
@@ -210,10 +206,9 @@ func (x *RepeatedGroup) GetRepeatedXGroup() []string {
 
 // An extension of an extension.
 type Extendable struct {
-	XXX_NoUnkeyedLiteral   struct{}                  `json:"-"`
-	XXX_InternalExtensions protoimpl.ExtensionFields `json:"-"`
-	XXX_unrecognized       protoimpl.UnknownFields   `json:"-"`
-	XXX_sizecache          protoimpl.SizeCache       `json:"-"`
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields ``
 }
 
 func (x *Extendable) Reset() {
@@ -250,9 +245,8 @@ func (*Extendable) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 
 // Message set wire format.
 type MessageSetWireFormatExtension struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *MessageSetWireFormatExtension) Reset() {
@@ -279,9 +273,8 @@ func (*MessageSetWireFormatExtension) Descriptor() ([]byte, []int) {
 }
 
 type Message_M struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message_M) Reset() {
@@ -308,9 +301,8 @@ func (*Message_M) Descriptor() ([]byte, []int) {
 }
 
 type ExtendingMessage_ExtendingMessageSubmessage struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *ExtendingMessage_ExtendingMessageSubmessage) Reset() {
@@ -1237,6 +1229,90 @@ func init() { file_extensions_ext_ext_proto_init() }
 func file_extensions_ext_ext_proto_init() {
 	if File_extensions_ext_ext_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_extensions_ext_ext_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_extensions_ext_ext_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ExtensionGroup); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_extensions_ext_ext_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ExtendingMessage); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_extensions_ext_ext_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*RepeatedGroup); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_extensions_ext_ext_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Extendable); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			case 2:
+				return &v.extensionFields
+			default:
+				return nil
+			}
+		}
+		file_extensions_ext_ext_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MessageSetWireFormatExtension); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_extensions_ext_ext_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message_M); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_extensions_ext_ext_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ExtendingMessage_ExtendingMessageSubmessage); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

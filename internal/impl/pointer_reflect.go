@@ -11,26 +11,37 @@ import (
 	"reflect"
 )
 
+const UnsafeEnabled = false
+
 // offset represents the offset to a struct field, accessible from a pointer.
 // The offset is the field index into a struct.
-type offset []int
+type offset struct {
+	index  int
+	export exporter
+}
 
 // offsetOf returns a field offset for the struct field.
-func offsetOf(f reflect.StructField) offset {
+func offsetOf(f reflect.StructField, x exporter) offset {
 	if len(f.Index) != 1 {
 		panic("embedded structs are not supported")
 	}
-	return f.Index
+	if f.PkgPath == "" {
+		return offset{index: f.Index[0]} // field is already exported
+	}
+	if x == nil {
+		panic("exporter must be provided for unexported field")
+	}
+	return offset{index: f.Index[0], export: x}
 }
 
 // IsValid reports whether the offset is valid.
-func (f offset) IsValid() bool { return f != nil }
+func (f offset) IsValid() bool { return f.index >= 0 }
 
 // invalidOffset is an invalid field offset.
-var invalidOffset = offset(nil)
+var invalidOffset = offset{index: -1}
 
 // zeroOffset is a noop when calling pointer.Apply.
-var zeroOffset = offset([]int{0})
+var zeroOffset = offset{index: 0}
 
 // pointer is an abstract representation of a pointer to a struct or field.
 type pointer struct{ v reflect.Value }
@@ -53,8 +64,12 @@ func (p pointer) IsNil() bool {
 // Apply adds an offset to the pointer to derive a new pointer
 // to a specified field. The current pointer must be pointing at a struct.
 func (p pointer) Apply(f offset) pointer {
-	// TODO: Handle unexported fields in an API that hides XXX fields?
-	return pointer{v: p.v.Elem().FieldByIndex(f).Addr()}
+	if f.export != nil {
+		if v := reflect.ValueOf(f.export(p.v.Interface(), f.index)); v.IsValid() {
+			return pointer{v: v}
+		}
+	}
+	return pointer{v: p.v.Elem().Field(f.index).Addr()}
 }
 
 // AsValueOf treats p as a pointer to an object of type t and returns the value.

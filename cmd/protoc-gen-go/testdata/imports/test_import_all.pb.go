@@ -22,14 +22,13 @@ const (
 )
 
 type All struct {
-	Am1                  *test_a_1.M1            `protobuf:"bytes,1,opt,name=am1,proto3" json:"am1,omitempty"`
-	Am2                  *test_a_1.M2            `protobuf:"bytes,2,opt,name=am2,proto3" json:"am2,omitempty"`
-	Bm1                  *test_b_1.M1            `protobuf:"bytes,5,opt,name=bm1,proto3" json:"bm1,omitempty"`
-	Bm2                  *test_b_1.M2            `protobuf:"bytes,6,opt,name=bm2,proto3" json:"bm2,omitempty"`
-	Fmt                  *fmt.M                  `protobuf:"bytes,7,opt,name=fmt,proto3" json:"fmt,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Am1           *test_a_1.M1 `protobuf:"bytes,1,opt,name=am1,proto3" json:"am1,omitempty"`
+	Am2           *test_a_1.M2 `protobuf:"bytes,2,opt,name=am2,proto3" json:"am2,omitempty"`
+	Bm1           *test_b_1.M1 `protobuf:"bytes,5,opt,name=bm1,proto3" json:"bm1,omitempty"`
+	Bm2           *test_b_1.M2 `protobuf:"bytes,6,opt,name=bm2,proto3" json:"bm2,omitempty"`
+	Fmt           *fmt.M       `protobuf:"bytes,7,opt,name=fmt,proto3" json:"fmt,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *All) Reset() {
@@ -162,6 +161,18 @@ func init() { file_imports_test_import_all_proto_init() }
 func file_imports_test_import_all_proto_init() {
 	if File_imports_test_import_all_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_imports_test_import_all_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*All); i {
+			case 5:
+				return &v.sizeCache
+			case 6:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

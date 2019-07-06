@@ -18,11 +18,10 @@ const (
 )
 
 type BaseMessage struct {
-	Field                  *string                   `protobuf:"bytes,1,opt,name=field" json:"field,omitempty"`
-	XXX_NoUnkeyedLiteral   struct{}                  `json:"-"`
-	XXX_InternalExtensions protoimpl.ExtensionFields `json:"-"`
-	XXX_unrecognized       protoimpl.UnknownFields   `json:"-"`
-	XXX_sizecache          protoimpl.SizeCache       `json:"-"`
+	Field           *string `protobuf:"bytes,1,opt,name=field" json:"field,omitempty"`
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields ``
 }
 
 func (x *BaseMessage) Reset() {
@@ -66,10 +65,9 @@ func (x *BaseMessage) GetField() string {
 }
 
 type MessageSetWireFormatMessage struct {
-	XXX_NoUnkeyedLiteral   struct{}                  `json:"-"`
-	XXX_InternalExtensions protoimpl.ExtensionFields `protobuf_messageset:"1" json:"-"`
-	XXX_unrecognized       protoimpl.UnknownFields   `json:"-"`
-	XXX_sizecache          protoimpl.SizeCache       `json:"-"`
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields `protobuf_messageset:"1"`
 }
 
 func (x *MessageSetWireFormatMessage) Reset() {
@@ -153,6 +151,32 @@ func init() { file_extensions_base_base_proto_init() }
 func file_extensions_base_base_proto_init() {
 	if File_extensions_base_base_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_extensions_base_base_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BaseMessage); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			case 3:
+				return &v.extensionFields
+			default:
+				return nil
+			}
+		}
+		file_extensions_base_base_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MessageSetWireFormatMessage); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			case 2:
+				return &v.extensionFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

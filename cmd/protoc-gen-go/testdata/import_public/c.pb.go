@@ -23,10 +23,9 @@ type UsingPublicImport struct {
 	Local *Local `protobuf:"bytes,1,opt,name=local" json:"local,omitempty"`
 	// Sub2Message is declared in sub2/a.proto, which is a public import of
 	// sub/a.proto, which is a public import of a.proto.
-	Sub2                 *sub2.Sub2Message       `protobuf:"bytes,2,opt,name=sub2" json:"sub2,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Sub2          *sub2.Sub2Message `protobuf:"bytes,2,opt,name=sub2" json:"sub2,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *UsingPublicImport) Reset() {
@@ -124,6 +123,18 @@ func file_import_public_c_proto_init() {
 		return
 	}
 	file_import_public_a_proto_init()
+	if !protoimpl.UnsafeEnabled {
+		file_import_public_c_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UsingPublicImport); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			RawDescriptor: file_import_public_c_proto_rawDesc,

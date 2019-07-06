@@ -180,10 +180,9 @@ type TestAllTypes struct {
 	//	*TestAllTypes_OneofFloat
 	//	*TestAllTypes_OneofDouble
 	//	*TestAllTypes_OneofEnum
-	OneofField           isTestAllTypes_OneofField `protobuf_oneof:"oneof_field"`
-	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields   `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache       `json:"-"`
+	OneofField    isTestAllTypes_OneofField `protobuf_oneof:"oneof_field"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *TestAllTypes) Reset() {
@@ -751,11 +750,10 @@ func (*TestAllTypes_OneofDouble) isTestAllTypes_OneofField() {}
 func (*TestAllTypes_OneofEnum) isTestAllTypes_OneofField() {}
 
 type ForeignMessage struct {
-	C                    int32                   `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
-	D                    int32                   `protobuf:"varint,2,opt,name=d,proto3" json:"d,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	C             int32 `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
+	D             int32 `protobuf:"varint,2,opt,name=d,proto3" json:"d,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *ForeignMessage) Reset() {
@@ -796,11 +794,10 @@ func (x *ForeignMessage) GetD() int32 {
 }
 
 type TestAllTypes_NestedMessage struct {
-	A                    int32                   `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
-	Corecursive          *TestAllTypes           `protobuf:"bytes,2,opt,name=corecursive,proto3" json:"corecursive,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	A             int32         `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
+	Corecursive   *TestAllTypes `protobuf:"bytes,2,opt,name=corecursive,proto3" json:"corecursive,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *TestAllTypes_NestedMessage) Reset() {
@@ -1322,6 +1319,38 @@ func file_test3_test_proto_init() {
 		return
 	}
 	file_test3_test_import_proto_init()
+	if !protoimpl.UnsafeEnabled {
+		file_test3_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TestAllTypes); i {
+			case 60:
+				return &v.sizeCache
+			case 61:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_test3_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ForeignMessage); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_test3_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TestAllTypes_NestedMessage); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+	}
 	file_test3_test_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*TestAllTypes_OneofUint32)(nil),
 		(*TestAllTypes_OneofNestedMessage)(nil),

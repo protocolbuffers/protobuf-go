@@ -28,10 +28,9 @@ type Message1 struct {
 	// Types that are valid to be assigned to Oneof1A:
 	// COMMENT: Oneof1AField1
 	//	*Message1_Oneof1AField1
-	Oneof1A              isMessage1_Oneof1A      `protobuf_oneof:"Oneof1a"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Oneof1A       isMessage1_Oneof1A `protobuf_oneof:"Oneof1a"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message1) Reset() {
@@ -90,9 +89,8 @@ func (*Message1_Oneof1AField1) isMessage1_Oneof1A() {}
 
 // COMMENT: Message2
 type Message2 struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message2) Reset() {
@@ -120,9 +118,8 @@ func (*Message2) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message1A
 type Message1_Message1A struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message1_Message1A) Reset() {
@@ -150,9 +147,8 @@ func (*Message1_Message1A) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message1B
 type Message1_Message1B struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message1_Message1B) Reset() {
@@ -180,9 +176,8 @@ func (*Message1_Message1B) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message2A
 type Message2_Message2A struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message2_Message2A) Reset() {
@@ -210,9 +205,8 @@ func (*Message2_Message2A) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message2B
 type Message2_Message2B struct {
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message2_Message2B) Reset() {
@@ -293,6 +287,68 @@ func init() { file_comments_comments_proto_init() }
 func file_comments_comments_proto_init() {
 	if File_comments_comments_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_comments_comments_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message1); i {
+			case 2:
+				return &v.sizeCache
+			case 3:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_comments_comments_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message2); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_comments_comments_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message1_Message1A); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_comments_comments_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message1_Message1B); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_comments_comments_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message2_Message2A); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_comments_comments_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message2_Message2B); i {
+			case 0:
+				return &v.sizeCache
+			case 1:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_comments_comments_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*Message1_Oneof1AField1)(nil),

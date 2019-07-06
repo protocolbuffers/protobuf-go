@@ -24,10 +24,9 @@ type Message struct {
 	MapMessage      map[string]*IrregularMessage `protobuf:"bytes,4,rep,name=map_message,json=mapMessage" json:"map_message,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Types that are valid to be assigned to Union:
 	//	*Message_OneofMessage
-	Union                isMessage_Union         `protobuf_oneof:"union"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Union         isMessage_Union `protobuf_oneof:"union"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Message) Reset() {
@@ -191,6 +190,18 @@ func file_irregular_test_proto_init() {
 		return
 	}
 	file_irregular_irregular_proto_init()
+	if !protoimpl.UnsafeEnabled {
+		file_irregular_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Message); i {
+			case 5:
+				return &v.sizeCache
+			case 6:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+	}
 	file_irregular_test_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*Message_OneofMessage)(nil),
 	}

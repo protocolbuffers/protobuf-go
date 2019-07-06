@@ -18,10 +18,9 @@ const (
 )
 
 type ExtraMessage struct {
-	Data                 []byte                  `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Data          []byte `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *ExtraMessage) Reset() {
@@ -98,6 +97,18 @@ func init() { file_extensions_extra_extra_proto_init() }
 func file_extensions_extra_extra_proto_init() {
 	if File_extensions_extra_extra_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_extensions_extra_extra_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ExtraMessage); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -131,10 +131,9 @@ func (TestCategory) EnumDescriptor() ([]byte, []int) {
 // This will be known by message_type == "conformance.FailureSet", a conformance
 // test should return a serialized FailureSet in protobuf_payload.
 type FailureSet struct {
-	Failure              []string                `protobuf:"bytes,1,rep,name=failure,proto3" json:"failure,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Failure       []string `protobuf:"bytes,1,rep,name=failure,proto3" json:"failure,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *FailureSet) Reset() {
@@ -199,10 +198,9 @@ type ConformanceRequest struct {
 	// for more information.
 	TestCategory TestCategory `protobuf:"varint,5,opt,name=test_category,json=testCategory,proto3,enum=conformance.TestCategory" json:"test_category,omitempty"`
 	// Specify details for how to encode jspb.
-	JspbEncodingOptions  *JspbEncodingConfig     `protobuf:"bytes,6,opt,name=jspb_encoding_options,json=jspbEncodingOptions,proto3" json:"jspb_encoding_options,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	JspbEncodingOptions *JspbEncodingConfig `protobuf:"bytes,6,opt,name=jspb_encoding_options,json=jspbEncodingOptions,proto3" json:"jspb_encoding_options,omitempty"`
+	sizeCache           protoimpl.SizeCache
+	unknownFields       protoimpl.UnknownFields
 }
 
 func (x *ConformanceRequest) Reset() {
@@ -352,10 +350,9 @@ type ConformanceResponse struct {
 	// If the input was successfully parsed and the requested output was
 	// TEXT_FORMAT, serialize to TEXT_FORMAT and set it in this field.
 	//	*ConformanceResponse_TextPayload
-	Result               isConformanceResponse_Result `protobuf_oneof:"result"`
-	XXX_NoUnkeyedLiteral struct{}                     `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields      `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache          `json:"-"`
+	Result        isConformanceResponse_Result `protobuf_oneof:"result"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *ConformanceResponse) Reset() {
@@ -499,10 +496,9 @@ func (*ConformanceResponse_TextPayload) isConformanceResponse_Result() {}
 // Encoding options for jspb format.
 type JspbEncodingConfig struct {
 	// Encode the value field of Any as jspb array if ture, otherwise binary.
-	UseJspbArrayAnyFormat bool                    `protobuf:"varint,1,opt,name=use_jspb_array_any_format,json=useJspbArrayAnyFormat,proto3" json:"use_jspb_array_any_format,omitempty"`
-	XXX_NoUnkeyedLiteral  struct{}                `json:"-"`
-	XXX_unrecognized      protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache         protoimpl.SizeCache     `json:"-"`
+	UseJspbArrayAnyFormat bool `protobuf:"varint,1,opt,name=use_jspb_array_any_format,json=useJspbArrayAnyFormat,proto3" json:"use_jspb_array_any_format,omitempty"`
+	sizeCache             protoimpl.SizeCache
+	unknownFields         protoimpl.UnknownFields
 }
 
 func (x *JspbEncodingConfig) Reset() {
@@ -658,6 +654,48 @@ func init() { file_conformance_conformance_proto_init() }
 func file_conformance_conformance_proto_init() {
 	if File_conformance_conformance_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_conformance_conformance_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FailureSet); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_conformance_conformance_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConformanceRequest); i {
+			case 5:
+				return &v.sizeCache
+			case 6:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_conformance_conformance_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConformanceResponse); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_conformance_conformance_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*JspbEncodingConfig); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_conformance_conformance_proto_msgTypes[1].OneofWrappers = []interface{}{
 		(*ConformanceRequest_ProtobufPayload)(nil),

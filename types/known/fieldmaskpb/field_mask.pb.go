@@ -218,10 +218,9 @@ const (
 // `INVALID_ARGUMENT` error if any path is duplicated or unmappable.
 type FieldMask struct {
 	// The set of field mask paths.
-	Paths                []string                `protobuf:"bytes,1,rep,name=paths,proto3" json:"paths,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
-	XXX_unrecognized     protoimpl.UnknownFields `json:"-"`
-	XXX_sizecache        protoimpl.SizeCache     `json:"-"`
+	Paths         []string `protobuf:"bytes,1,rep,name=paths,proto3" json:"paths,omitempty"`
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 }
 
 func (x *FieldMask) Reset() {
@@ -302,6 +301,18 @@ func init() { file_google_protobuf_field_mask_proto_init() }
 func file_google_protobuf_field_mask_proto_init() {
 	if File_google_protobuf_field_mask_proto != nil {
 		return
+	}
+	if !protoimpl.UnsafeEnabled {
+		file_google_protobuf_field_mask_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldMask); i {
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
