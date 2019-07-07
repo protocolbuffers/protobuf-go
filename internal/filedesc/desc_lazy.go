@@ -6,6 +6,7 @@ package filedesc
 
 import (
 	"reflect"
+	"sync"
 
 	"google.golang.org/protobuf/internal/descopts"
 	"google.golang.org/protobuf/internal/encoding/wire"
@@ -675,14 +676,18 @@ func (db *DescBuilder) optionsUnmarshaler(p pref.ProtoMessage, b []byte) func() 
 	if b == nil {
 		return nil
 	}
+	var opts pref.ProtoMessage
+	var once sync.Once
 	return func() pref.ProtoMessage {
-		p := reflect.New(reflect.TypeOf(p).Elem()).Interface().(pref.ProtoMessage)
-		if err := (proto.UnmarshalOptions{
-			AllowPartial: true,
-			Resolver:     db.TypeResolver,
-		}).Unmarshal(b, p); err != nil {
-			panic(err)
-		}
-		return p
+		once.Do(func() {
+			opts = reflect.New(reflect.TypeOf(p).Elem()).Interface().(pref.ProtoMessage)
+			if err := (proto.UnmarshalOptions{
+				AllowPartial: true,
+				Resolver:     db.TypeResolver,
+			}).Unmarshal(b, opts); err != nil {
+				panic(err)
+			}
+		})
+		return opts
 	}
 }
