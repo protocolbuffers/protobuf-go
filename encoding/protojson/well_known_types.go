@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/internal/encoding/json"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/fieldnum"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -888,8 +889,8 @@ func (o MarshalOptions) marshalFieldMask(m pref.Message) error {
 	for i := 0; i < list.Len(); i++ {
 		s := list.Get(i).String()
 		// Return error if conversion to camelCase is not reversible.
-		cc := camelCase(s)
-		if s != snakeCase(cc) {
+		cc := strs.JSONCamelCase(s)
+		if s != strs.JSONSnakeCase(cc) {
 			return errors.New("%s.paths contains irreversible value %q", m.Descriptor().FullName(), s)
 		}
 		paths = append(paths, cc)
@@ -920,53 +921,7 @@ func (o UnmarshalOptions) unmarshalFieldMask(m pref.Message) error {
 		s = strings.TrimSpace(s)
 		// Convert to snake_case. Unlike encoding, no validation is done because
 		// it is not possible to know the original path names.
-		list.Append(pref.ValueOf(snakeCase(s)))
+		list.Append(pref.ValueOf(strs.JSONSnakeCase(s)))
 	}
 	return nil
-}
-
-// camelCase converts given string into camelCase where ASCII character after _
-// is turned into uppercase and _'s are removed.
-func camelCase(s string) string {
-	var b []byte
-	var afterUnderscore bool
-	for i := 0; i < len(s); i++ {
-		c := s[i]
-		if afterUnderscore {
-			if isASCIILower(c) {
-				c -= 'a' - 'A'
-			}
-		}
-		if c == '_' {
-			afterUnderscore = true
-			continue
-		}
-		afterUnderscore = false
-		b = append(b, c)
-	}
-	return string(b)
-}
-
-// snakeCase converts given string into snake_case where ASCII uppercase
-// character is turned into _ + lowercase.
-func snakeCase(s string) string {
-	var b []byte
-	for i := 0; i < len(s); i++ {
-		c := s[i]
-		if isASCIIUpper(c) {
-			c += 'a' - 'A'
-			b = append(b, '_', c)
-		} else {
-			b = append(b, c)
-		}
-	}
-	return string(b)
-}
-
-func isASCIILower(c byte) bool {
-	return 'a' <= c && c <= 'z'
-}
-
-func isASCIIUpper(c byte) bool {
-	return 'A' <= c && c <= 'Z'
 }

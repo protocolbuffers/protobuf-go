@@ -5,8 +5,11 @@
 package filedesc
 
 import (
+	"sync"
+
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/fieldnum"
+	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -89,8 +92,8 @@ func (fd *File) checkDecls() {
 }
 
 func (fd *File) unmarshalSeed(b []byte) {
-	nb := getNameBuilder()
-	defer putNameBuilder(nb)
+	sb := getBuilder()
+	defer putBuilder(sb)
 
 	var prevField pref.FieldNumber
 	var numEnums, numMessages, numExtensions, numServices int
@@ -114,9 +117,9 @@ func (fd *File) unmarshalSeed(b []byte) {
 					panic("invalid syntax")
 				}
 			case fieldnum.FileDescriptorProto_Name:
-				fd.L1.Path = nb.MakeString(v)
+				fd.L1.Path = sb.MakeString(v)
 			case fieldnum.FileDescriptorProto_Package:
-				fd.L1.Package = pref.FullName(nb.MakeString(v))
+				fd.L1.Package = pref.FullName(sb.MakeString(v))
 			case fieldnum.FileDescriptorProto_EnumType:
 				if prevField != fieldnum.FileDescriptorProto_EnumType {
 					if numEnums > 0 {
@@ -183,7 +186,7 @@ func (fd *File) unmarshalSeed(b []byte) {
 		for i := range fd.L1.Enums.List {
 			_, n := wire.ConsumeVarint(b)
 			v, m := wire.ConsumeBytes(b[n:])
-			fd.L1.Enums.List[i].unmarshalSeed(v, nb, fd, fd, i)
+			fd.L1.Enums.List[i].unmarshalSeed(v, sb, fd, fd, i)
 			b = b[n+m:]
 		}
 	}
@@ -192,7 +195,7 @@ func (fd *File) unmarshalSeed(b []byte) {
 		for i := range fd.L1.Messages.List {
 			_, n := wire.ConsumeVarint(b)
 			v, m := wire.ConsumeBytes(b[n:])
-			fd.L1.Messages.List[i].unmarshalSeed(v, nb, fd, fd, i)
+			fd.L1.Messages.List[i].unmarshalSeed(v, sb, fd, fd, i)
 			b = b[n+m:]
 		}
 	}
@@ -201,7 +204,7 @@ func (fd *File) unmarshalSeed(b []byte) {
 		for i := range fd.L1.Extensions.List {
 			_, n := wire.ConsumeVarint(b)
 			v, m := wire.ConsumeBytes(b[n:])
-			fd.L1.Extensions.List[i].unmarshalSeed(v, nb, fd, fd, i)
+			fd.L1.Extensions.List[i].unmarshalSeed(v, sb, fd, fd, i)
 			b = b[n+m:]
 		}
 	}
@@ -210,13 +213,13 @@ func (fd *File) unmarshalSeed(b []byte) {
 		for i := range fd.L1.Services.List {
 			_, n := wire.ConsumeVarint(b)
 			v, m := wire.ConsumeBytes(b[n:])
-			fd.L1.Services.List[i].unmarshalSeed(v, nb, fd, fd, i)
+			fd.L1.Services.List[i].unmarshalSeed(v, sb, fd, fd, i)
 			b = b[n+m:]
 		}
 	}
 }
 
-func (ed *Enum) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.Descriptor, i int) {
+func (ed *Enum) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
 	ed.L0.ParentFile = pf
 	ed.L0.Parent = pd
 	ed.L0.Index = i
@@ -231,7 +234,7 @@ func (ed *Enum) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.Descr
 			b = b[m:]
 			switch num {
 			case fieldnum.EnumDescriptorProto_Name:
-				ed.L0.FullName = nb.AppendFullName(pd.FullName(), v)
+				ed.L0.FullName = appendFullName(sb, pd.FullName(), v)
 			case fieldnum.EnumDescriptorProto_Value:
 				numValues++
 			}
@@ -258,7 +261,7 @@ func (ed *Enum) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.Descr
 			b = b[m:]
 			switch num {
 			case fieldnum.EnumDescriptorProto_Value:
-				ed.L2.Values.List[i].unmarshalFull(v, nb, pf, ed, i)
+				ed.L2.Values.List[i].unmarshalFull(v, sb, pf, ed, i)
 				i++
 			}
 		default:
@@ -268,7 +271,7 @@ func (ed *Enum) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.Descr
 	}
 }
 
-func (md *Message) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.Descriptor, i int) {
+func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
 	md.L0.ParentFile = pf
 	md.L0.Parent = pd
 	md.L0.Index = i
@@ -286,7 +289,7 @@ func (md *Message) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.De
 			b = b[m:]
 			switch num {
 			case fieldnum.DescriptorProto_Name:
-				md.L0.FullName = nb.AppendFullName(pd.FullName(), v)
+				md.L0.FullName = appendFullName(sb, pd.FullName(), v)
 			case fieldnum.DescriptorProto_EnumType:
 				if prevField != fieldnum.DescriptorProto_EnumType {
 					if numEnums > 0 {
@@ -337,7 +340,7 @@ func (md *Message) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.De
 		for i := range md.L1.Enums.List {
 			_, n := wire.ConsumeVarint(b)
 			v, m := wire.ConsumeBytes(b[n:])
-			md.L1.Enums.List[i].unmarshalSeed(v, nb, pf, md, i)
+			md.L1.Enums.List[i].unmarshalSeed(v, sb, pf, md, i)
 			b = b[n+m:]
 		}
 	}
@@ -346,7 +349,7 @@ func (md *Message) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.De
 		for i := range md.L1.Messages.List {
 			_, n := wire.ConsumeVarint(b)
 			v, m := wire.ConsumeBytes(b[n:])
-			md.L1.Messages.List[i].unmarshalSeed(v, nb, pf, md, i)
+			md.L1.Messages.List[i].unmarshalSeed(v, sb, pf, md, i)
 			b = b[n+m:]
 		}
 	}
@@ -355,13 +358,13 @@ func (md *Message) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.De
 		for i := range md.L1.Extensions.List {
 			_, n := wire.ConsumeVarint(b)
 			v, m := wire.ConsumeBytes(b[n:])
-			md.L1.Extensions.List[i].unmarshalSeed(v, nb, pf, md, i)
+			md.L1.Extensions.List[i].unmarshalSeed(v, sb, pf, md, i)
 			b = b[n+m:]
 		}
 	}
 }
 
-func (xd *Extension) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.Descriptor, i int) {
+func (xd *Extension) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
 	xd.L0.ParentFile = pf
 	xd.L0.Parent = pd
 	xd.L0.Index = i
@@ -384,9 +387,9 @@ func (xd *Extension) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldDescriptorProto_Name:
-				xd.L0.FullName = nb.AppendFullName(pd.FullName(), v)
+				xd.L0.FullName = appendFullName(sb, pd.FullName(), v)
 			case fieldnum.FieldDescriptorProto_Extendee:
-				xd.L1.Extendee = PlaceholderMessage(nb.MakeFullName(v))
+				xd.L1.Extendee = PlaceholderMessage(makeFullName(sb, v))
 			}
 		default:
 			m := wire.ConsumeFieldValue(num, typ, b)
@@ -395,7 +398,7 @@ func (xd *Extension) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.
 	}
 }
 
-func (sd *Service) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.Descriptor, i int) {
+func (sd *Service) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
 	sd.L0.ParentFile = pf
 	sd.L0.Parent = pd
 	sd.L0.Index = i
@@ -409,11 +412,35 @@ func (sd *Service) unmarshalSeed(b []byte, nb *nameBuilder, pf *File, pd pref.De
 			b = b[m:]
 			switch num {
 			case fieldnum.ServiceDescriptorProto_Name:
-				sd.L0.FullName = nb.AppendFullName(pd.FullName(), v)
+				sd.L0.FullName = appendFullName(sb, pd.FullName(), v)
 			}
 		default:
 			m := wire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
+}
+
+var nameBuilderPool = sync.Pool{
+	New: func() interface{} { return new(strs.Builder) },
+}
+
+func getBuilder() *strs.Builder {
+	return nameBuilderPool.Get().(*strs.Builder)
+}
+func putBuilder(b *strs.Builder) {
+	nameBuilderPool.Put(b)
+}
+
+// makeFullName converts b to a protoreflect.FullName,
+// where b must start with a leading dot.
+func makeFullName(sb *strs.Builder, b []byte) pref.FullName {
+	if len(b) == 0 || b[0] != '.' {
+		panic("name reference must be fully qualified")
+	}
+	return pref.FullName(sb.MakeString(b[1:]))
+}
+
+func appendFullName(sb *strs.Builder, prefix pref.FullName, suffix []byte) pref.FullName {
+	return sb.AppendFullName(prefix, pref.Name(strs.UnsafeString(suffix)))
 }

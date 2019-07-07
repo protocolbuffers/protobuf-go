@@ -11,7 +11,6 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -881,59 +880,5 @@ func TestNewFile(t *testing.T) {
 				t.Errorf("NewFile() error:\ngot:  %v\nwant: %v", err, tt.wantErr)
 			}
 		})
-	}
-}
-
-func TestName(t *testing.T) {
-	tests := []struct {
-		in            protoreflect.Name
-		enumPrefix    string
-		wantMapEntry  protoreflect.Name
-		wantEnumValue string
-		wantTrimValue protoreflect.Name
-		wantJSON      string
-	}{{
-		in:            "abc",
-		enumPrefix:    "",
-		wantMapEntry:  "AbcEntry",
-		wantEnumValue: "Abc",
-		wantTrimValue: "abc",
-		wantJSON:      "abc",
-	}, {
-		in:            "foo_baR_",
-		enumPrefix:    "foo_bar",
-		wantMapEntry:  "FooBaREntry",
-		wantEnumValue: "FooBar",
-		wantTrimValue: "foo_baR_",
-		wantJSON:      "fooBaR",
-	}, {
-		in:            "snake_caseCamelCase",
-		enumPrefix:    "snakecasecamel",
-		wantMapEntry:  "SnakeCaseCamelCaseEntry",
-		wantEnumValue: "SnakeCasecamelcase",
-		wantTrimValue: "Case",
-		wantJSON:      "snakeCaseCamelCase",
-	}, {
-		in:            "FiZz_BuZz",
-		enumPrefix:    "fizz",
-		wantMapEntry:  "FiZzBuZzEntry",
-		wantEnumValue: "FizzBuzz",
-		wantTrimValue: "BuZz",
-		wantJSON:      "FiZzBuZz",
-	}}
-
-	for _, tt := range tests {
-		if got := mapEntryName(tt.in); got != tt.wantMapEntry {
-			t.Errorf("mapEntryName(%q) = %q, want %q", tt.in, got, tt.wantMapEntry)
-		}
-		if got := enumValueName(tt.in); got != tt.wantEnumValue {
-			t.Errorf("enumValueName(%q) = %q, want %q", tt.in, got, tt.wantEnumValue)
-		}
-		if got := trimEnumPrefix(tt.in, tt.enumPrefix); got != tt.wantTrimValue {
-			t.Errorf("trimEnumPrefix(%q, %q) = %q, want %q", tt.in, tt.enumPrefix, got, tt.wantTrimValue)
-		}
-		if got := jsonName(tt.in); got != tt.wantJSON {
-			t.Errorf("jsonName(%q) = %q, want %q", tt.in, got, tt.wantJSON)
-		}
 	}
 }

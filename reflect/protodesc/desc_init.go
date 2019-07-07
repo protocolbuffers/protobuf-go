@@ -7,6 +7,7 @@ package protodesc
 import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -14,12 +15,12 @@ import (
 
 type descsByName map[protoreflect.FullName]protoreflect.Descriptor
 
-func (r descsByName) initEnumDeclarations(eds []*descriptorpb.EnumDescriptorProto, parent protoreflect.Descriptor) (es []filedesc.Enum, err error) {
+func (r descsByName) initEnumDeclarations(eds []*descriptorpb.EnumDescriptorProto, parent protoreflect.Descriptor, sb *strs.Builder) (es []filedesc.Enum, err error) {
 	es = make([]filedesc.Enum, len(eds)) // allocate up-front to ensure stable pointers
 	for i, ed := range eds {
 		e := &es[i]
 		e.L2 = new(filedesc.EnumL2)
-		if e.L0, err = r.makeBase(e, parent, ed.GetName(), i); err != nil {
+		if e.L0, err = r.makeBase(e, parent, ed.GetName(), i, sb); err != nil {
 			return nil, err
 		}
 		if opts := ed.GetOptions(); opts != nil {
@@ -35,18 +36,18 @@ func (r descsByName) initEnumDeclarations(eds []*descriptorpb.EnumDescriptorProt
 				protoreflect.EnumNumber(rr.GetEnd()),
 			})
 		}
-		if e.L2.Values.List, err = r.initEnumValuesFromDescriptorProto(ed.GetValue(), e); err != nil {
+		if e.L2.Values.List, err = r.initEnumValuesFromDescriptorProto(ed.GetValue(), e, sb); err != nil {
 			return nil, err
 		}
 	}
 	return es, nil
 }
 
-func (r descsByName) initEnumValuesFromDescriptorProto(vds []*descriptorpb.EnumValueDescriptorProto, parent protoreflect.Descriptor) (vs []filedesc.EnumValue, err error) {
+func (r descsByName) initEnumValuesFromDescriptorProto(vds []*descriptorpb.EnumValueDescriptorProto, parent protoreflect.Descriptor, sb *strs.Builder) (vs []filedesc.EnumValue, err error) {
 	vs = make([]filedesc.EnumValue, len(vds)) // allocate up-front to ensure stable pointers
 	for i, vd := range vds {
 		v := &vs[i]
-		if v.L0, err = r.makeBase(v, parent, vd.GetName(), i); err != nil {
+		if v.L0, err = r.makeBase(v, parent, vd.GetName(), i, sb); err != nil {
 			return nil, err
 		}
 		if opts := vd.GetOptions(); opts != nil {
@@ -58,12 +59,12 @@ func (r descsByName) initEnumValuesFromDescriptorProto(vds []*descriptorpb.EnumV
 	return vs, nil
 }
 
-func (r descsByName) initMessagesDeclarations(mds []*descriptorpb.DescriptorProto, parent protoreflect.Descriptor) (ms []filedesc.Message, err error) {
+func (r descsByName) initMessagesDeclarations(mds []*descriptorpb.DescriptorProto, parent protoreflect.Descriptor, sb *strs.Builder) (ms []filedesc.Message, err error) {
 	ms = make([]filedesc.Message, len(mds)) // allocate up-front to ensure stable pointers
 	for i, md := range mds {
 		m := &ms[i]
 		m.L2 = new(filedesc.MessageL2)
-		if m.L0, err = r.makeBase(m, parent, md.GetName(), i); err != nil {
+		if m.L0, err = r.makeBase(m, parent, md.GetName(), i, sb); err != nil {
 			return nil, err
 		}
 		if opts := md.GetOptions(); opts != nil {
@@ -93,30 +94,30 @@ func (r descsByName) initMessagesDeclarations(mds []*descriptorpb.DescriptorProt
 			}
 			m.L2.ExtensionRangeOptions = append(m.L2.ExtensionRangeOptions, optsFunc)
 		}
-		if m.L2.Fields.List, err = r.initFieldsFromDescriptorProto(md.GetField(), m); err != nil {
+		if m.L2.Fields.List, err = r.initFieldsFromDescriptorProto(md.GetField(), m, sb); err != nil {
 			return nil, err
 		}
-		if m.L2.Oneofs.List, err = r.initOneofsFromDescriptorProto(md.GetOneofDecl(), m); err != nil {
+		if m.L2.Oneofs.List, err = r.initOneofsFromDescriptorProto(md.GetOneofDecl(), m, sb); err != nil {
 			return nil, err
 		}
-		if m.L1.Enums.List, err = r.initEnumDeclarations(md.GetEnumType(), m); err != nil {
+		if m.L1.Enums.List, err = r.initEnumDeclarations(md.GetEnumType(), m, sb); err != nil {
 			return nil, err
 		}
-		if m.L1.Messages.List, err = r.initMessagesDeclarations(md.GetNestedType(), m); err != nil {
+		if m.L1.Messages.List, err = r.initMessagesDeclarations(md.GetNestedType(), m, sb); err != nil {
 			return nil, err
 		}
-		if m.L1.Extensions.List, err = r.initExtensionDeclarations(md.GetExtension(), m); err != nil {
+		if m.L1.Extensions.List, err = r.initExtensionDeclarations(md.GetExtension(), m, sb); err != nil {
 			return nil, err
 		}
 	}
 	return ms, nil
 }
 
-func (r descsByName) initFieldsFromDescriptorProto(fds []*descriptorpb.FieldDescriptorProto, parent protoreflect.Descriptor) (fs []filedesc.Field, err error) {
+func (r descsByName) initFieldsFromDescriptorProto(fds []*descriptorpb.FieldDescriptorProto, parent protoreflect.Descriptor, sb *strs.Builder) (fs []filedesc.Field, err error) {
 	fs = make([]filedesc.Field, len(fds)) // allocate up-front to ensure stable pointers
 	for i, fd := range fds {
 		f := &fs[i]
-		if f.L0, err = r.makeBase(f, parent, fd.GetName(), i); err != nil {
+		if f.L0, err = r.makeBase(f, parent, fd.GetName(), i, sb); err != nil {
 			return nil, err
 		}
 		if opts := fd.GetOptions(); opts != nil {
@@ -138,11 +139,11 @@ func (r descsByName) initFieldsFromDescriptorProto(fds []*descriptorpb.FieldDesc
 	return fs, nil
 }
 
-func (r descsByName) initOneofsFromDescriptorProto(ods []*descriptorpb.OneofDescriptorProto, parent protoreflect.Descriptor) (os []filedesc.Oneof, err error) {
+func (r descsByName) initOneofsFromDescriptorProto(ods []*descriptorpb.OneofDescriptorProto, parent protoreflect.Descriptor, sb *strs.Builder) (os []filedesc.Oneof, err error) {
 	os = make([]filedesc.Oneof, len(ods)) // allocate up-front to ensure stable pointers
 	for i, od := range ods {
 		o := &os[i]
-		if o.L0, err = r.makeBase(o, parent, od.GetName(), i); err != nil {
+		if o.L0, err = r.makeBase(o, parent, od.GetName(), i, sb); err != nil {
 			return nil, err
 		}
 		if opts := od.GetOptions(); opts != nil {
@@ -153,12 +154,12 @@ func (r descsByName) initOneofsFromDescriptorProto(ods []*descriptorpb.OneofDesc
 	return os, nil
 }
 
-func (r descsByName) initExtensionDeclarations(xds []*descriptorpb.FieldDescriptorProto, parent protoreflect.Descriptor) (xs []filedesc.Extension, err error) {
+func (r descsByName) initExtensionDeclarations(xds []*descriptorpb.FieldDescriptorProto, parent protoreflect.Descriptor, sb *strs.Builder) (xs []filedesc.Extension, err error) {
 	xs = make([]filedesc.Extension, len(xds)) // allocate up-front to ensure stable pointers
 	for i, xd := range xds {
 		x := &xs[i]
 		x.L2 = new(filedesc.ExtensionL2)
-		if x.L0, err = r.makeBase(x, parent, xd.GetName(), i); err != nil {
+		if x.L0, err = r.makeBase(x, parent, xd.GetName(), i, sb); err != nil {
 			return nil, err
 		}
 		if opts := xd.GetOptions(); opts != nil {
@@ -178,30 +179,30 @@ func (r descsByName) initExtensionDeclarations(xds []*descriptorpb.FieldDescript
 	return xs, nil
 }
 
-func (r descsByName) initServiceDeclarations(sds []*descriptorpb.ServiceDescriptorProto, parent protoreflect.Descriptor) (ss []filedesc.Service, err error) {
+func (r descsByName) initServiceDeclarations(sds []*descriptorpb.ServiceDescriptorProto, parent protoreflect.Descriptor, sb *strs.Builder) (ss []filedesc.Service, err error) {
 	ss = make([]filedesc.Service, len(sds)) // allocate up-front to ensure stable pointers
 	for i, sd := range sds {
 		s := &ss[i]
 		s.L2 = new(filedesc.ServiceL2)
-		if s.L0, err = r.makeBase(s, parent, sd.GetName(), i); err != nil {
+		if s.L0, err = r.makeBase(s, parent, sd.GetName(), i, sb); err != nil {
 			return nil, err
 		}
 		if opts := sd.GetOptions(); opts != nil {
 			opts = clone(opts).(*descriptorpb.ServiceOptions)
 			s.L2.Options = func() protoreflect.ProtoMessage { return opts }
 		}
-		if s.L2.Methods.List, err = r.initMethodsFromDescriptorProto(sd.GetMethod(), s); err != nil {
+		if s.L2.Methods.List, err = r.initMethodsFromDescriptorProto(sd.GetMethod(), s, sb); err != nil {
 			return nil, err
 		}
 	}
 	return ss, nil
 }
 
-func (r descsByName) initMethodsFromDescriptorProto(mds []*descriptorpb.MethodDescriptorProto, parent protoreflect.Descriptor) (ms []filedesc.Method, err error) {
+func (r descsByName) initMethodsFromDescriptorProto(mds []*descriptorpb.MethodDescriptorProto, parent protoreflect.Descriptor, sb *strs.Builder) (ms []filedesc.Method, err error) {
 	ms = make([]filedesc.Method, len(mds)) // allocate up-front to ensure stable pointers
 	for i, md := range mds {
 		m := &ms[i]
-		if m.L0, err = r.makeBase(m, parent, md.GetName(), i); err != nil {
+		if m.L0, err = r.makeBase(m, parent, md.GetName(), i, sb); err != nil {
 			return nil, err
 		}
 		if opts := md.GetOptions(); opts != nil {
@@ -214,7 +215,7 @@ func (r descsByName) initMethodsFromDescriptorProto(mds []*descriptorpb.MethodDe
 	return ms, nil
 }
 
-func (r descsByName) makeBase(child, parent protoreflect.Descriptor, name string, idx int) (filedesc.BaseL0, error) {
+func (r descsByName) makeBase(child, parent protoreflect.Descriptor, name string, idx int, sb *strs.Builder) (filedesc.BaseL0, error) {
 	if !protoreflect.Name(name).IsValid() {
 		return filedesc.BaseL0{}, errors.New("descriptor %q has an invalid nested name: %q", parent.FullName(), name)
 	}
@@ -223,9 +224,9 @@ func (r descsByName) makeBase(child, parent protoreflect.Descriptor, name string
 	// Note that enum values are a sibling to the enum parent in the namespace.
 	var fullName protoreflect.FullName
 	if _, ok := parent.(protoreflect.EnumDescriptor); ok {
-		fullName = parent.FullName().Parent().Append(protoreflect.Name(name))
+		fullName = sb.AppendFullName(parent.FullName().Parent(), protoreflect.Name(name))
 	} else {
-		fullName = parent.FullName().Append(protoreflect.Name(name))
+		fullName = sb.AppendFullName(parent.FullName(), protoreflect.Name(name))
 	}
 	if _, ok := r[fullName]; ok {
 		return filedesc.BaseL0{}, errors.New("descriptor %q already declared", fullName)

@@ -11,6 +11,7 @@ import (
 	"google.golang.org/protobuf/internal/descopts"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/fieldnum"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -132,8 +133,8 @@ func (file *File) resolveMessageDependency(md pref.MessageDescriptor, i, j int32
 }
 
 func (fd *File) unmarshalFull(b []byte) {
-	nb := getNameBuilder()
-	defer putNameBuilder(nb)
+	sb := getBuilder()
+	defer putBuilder(sb)
 
 	var enumIdx, messageIdx, extensionIdx, serviceIdx int
 	var rawOptions []byte
@@ -156,23 +157,23 @@ func (fd *File) unmarshalFull(b []byte) {
 			b = b[m:]
 			switch num {
 			case fieldnum.FileDescriptorProto_Dependency:
-				path := nb.MakeString(v)
+				path := sb.MakeString(v)
 				imp, _ := fd.builder.FileRegistry.FindFileByPath(path)
 				if imp == nil {
 					imp = PlaceholderFile(path)
 				}
 				fd.L2.Imports = append(fd.L2.Imports, pref.FileImport{FileDescriptor: imp})
 			case fieldnum.FileDescriptorProto_EnumType:
-				fd.L1.Enums.List[enumIdx].unmarshalFull(v, nb)
+				fd.L1.Enums.List[enumIdx].unmarshalFull(v, sb)
 				enumIdx++
 			case fieldnum.FileDescriptorProto_MessageType:
-				fd.L1.Messages.List[messageIdx].unmarshalFull(v, nb)
+				fd.L1.Messages.List[messageIdx].unmarshalFull(v, sb)
 				messageIdx++
 			case fieldnum.FileDescriptorProto_Extension:
-				fd.L1.Extensions.List[extensionIdx].unmarshalFull(v, nb)
+				fd.L1.Extensions.List[extensionIdx].unmarshalFull(v, sb)
 				extensionIdx++
 			case fieldnum.FileDescriptorProto_Service:
-				fd.L1.Services.List[serviceIdx].unmarshalFull(v, nb)
+				fd.L1.Services.List[serviceIdx].unmarshalFull(v, sb)
 				serviceIdx++
 			case fieldnum.FileDescriptorProto_Options:
 				rawOptions = appendOptions(rawOptions, v)
@@ -185,7 +186,7 @@ func (fd *File) unmarshalFull(b []byte) {
 	fd.L2.Options = fd.builder.optionsUnmarshaler(descopts.File, rawOptions)
 }
 
-func (ed *Enum) unmarshalFull(b []byte, nb *nameBuilder) {
+func (ed *Enum) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawValues [][]byte
 	var rawOptions []byte
 	if !ed.L1.eagerValues {
@@ -202,7 +203,7 @@ func (ed *Enum) unmarshalFull(b []byte, nb *nameBuilder) {
 			case fieldnum.EnumDescriptorProto_Value:
 				rawValues = append(rawValues, v)
 			case fieldnum.EnumDescriptorProto_ReservedName:
-				ed.L2.ReservedNames.List = append(ed.L2.ReservedNames.List, pref.Name(nb.MakeString(v)))
+				ed.L2.ReservedNames.List = append(ed.L2.ReservedNames.List, pref.Name(sb.MakeString(v)))
 			case fieldnum.EnumDescriptorProto_ReservedRange:
 				ed.L2.ReservedRanges.List = append(ed.L2.ReservedRanges.List, unmarshalEnumReservedRange(v))
 			case fieldnum.EnumDescriptorProto_Options:
@@ -216,7 +217,7 @@ func (ed *Enum) unmarshalFull(b []byte, nb *nameBuilder) {
 	if !ed.L1.eagerValues && len(rawValues) > 0 {
 		ed.L2.Values.List = make([]EnumValue, len(rawValues))
 		for i, b := range rawValues {
-			ed.L2.Values.List[i].unmarshalFull(b, nb, ed.L0.ParentFile, ed, i)
+			ed.L2.Values.List[i].unmarshalFull(b, sb, ed.L0.ParentFile, ed, i)
 		}
 	}
 	ed.L2.Options = ed.L0.ParentFile.builder.optionsUnmarshaler(descopts.Enum, rawOptions)
@@ -244,7 +245,7 @@ func unmarshalEnumReservedRange(b []byte) (r [2]pref.EnumNumber) {
 	return r
 }
 
-func (vd *EnumValue) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Descriptor, i int) {
+func (vd *EnumValue) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
 	vd.L0.ParentFile = pf
 	vd.L0.Parent = pd
 	vd.L0.Index = i
@@ -267,7 +268,7 @@ func (vd *EnumValue) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.
 			switch num {
 			case fieldnum.EnumValueDescriptorProto_Name:
 				// NOTE: Enum values are in the same scope as the enum parent.
-				vd.L0.FullName = nb.AppendFullName(pd.Parent().FullName(), v)
+				vd.L0.FullName = appendFullName(sb, pd.Parent().FullName(), v)
 			case fieldnum.EnumValueDescriptorProto_Options:
 				rawOptions = appendOptions(rawOptions, v)
 			}
@@ -279,7 +280,7 @@ func (vd *EnumValue) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.
 	vd.L1.Options = pf.builder.optionsUnmarshaler(descopts.EnumValue, rawOptions)
 }
 
-func (md *Message) unmarshalFull(b []byte, nb *nameBuilder) {
+func (md *Message) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawFields, rawOneofs [][]byte
 	var enumIdx, messageIdx, extensionIdx int
 	var rawOptions []byte
@@ -297,7 +298,7 @@ func (md *Message) unmarshalFull(b []byte, nb *nameBuilder) {
 			case fieldnum.DescriptorProto_OneofDecl:
 				rawOneofs = append(rawOneofs, v)
 			case fieldnum.DescriptorProto_ReservedName:
-				md.L2.ReservedNames.List = append(md.L2.ReservedNames.List, pref.Name(nb.MakeString(v)))
+				md.L2.ReservedNames.List = append(md.L2.ReservedNames.List, pref.Name(sb.MakeString(v)))
 			case fieldnum.DescriptorProto_ReservedRange:
 				md.L2.ReservedRanges.List = append(md.L2.ReservedRanges.List, unmarshalMessageReservedRange(v))
 			case fieldnum.DescriptorProto_ExtensionRange:
@@ -306,13 +307,13 @@ func (md *Message) unmarshalFull(b []byte, nb *nameBuilder) {
 				md.L2.ExtensionRanges.List = append(md.L2.ExtensionRanges.List, r)
 				md.L2.ExtensionRangeOptions = append(md.L2.ExtensionRangeOptions, opts)
 			case fieldnum.DescriptorProto_EnumType:
-				md.L1.Enums.List[enumIdx].unmarshalFull(v, nb)
+				md.L1.Enums.List[enumIdx].unmarshalFull(v, sb)
 				enumIdx++
 			case fieldnum.DescriptorProto_NestedType:
-				md.L1.Messages.List[messageIdx].unmarshalFull(v, nb)
+				md.L1.Messages.List[messageIdx].unmarshalFull(v, sb)
 				messageIdx++
 			case fieldnum.DescriptorProto_Extension:
-				md.L1.Extensions.List[extensionIdx].unmarshalFull(v, nb)
+				md.L1.Extensions.List[extensionIdx].unmarshalFull(v, sb)
 				extensionIdx++
 			case fieldnum.DescriptorProto_Options:
 				md.unmarshalOptions(v)
@@ -328,14 +329,14 @@ func (md *Message) unmarshalFull(b []byte, nb *nameBuilder) {
 		md.L2.Oneofs.List = make([]Oneof, len(rawOneofs))
 		for i, b := range rawFields {
 			fd := &md.L2.Fields.List[i]
-			fd.unmarshalFull(b, nb, md.L0.ParentFile, md, i)
+			fd.unmarshalFull(b, sb, md.L0.ParentFile, md, i)
 			if fd.L1.Cardinality == pref.Required {
 				md.L2.RequiredNumbers.List = append(md.L2.RequiredNumbers.List, fd.L1.Number)
 			}
 		}
 		for i, b := range rawOneofs {
 			od := &md.L2.Oneofs.List[i]
-			od.unmarshalFull(b, nb, md.L0.ParentFile, md, i)
+			od.unmarshalFull(b, sb, md.L0.ParentFile, md, i)
 		}
 	}
 	md.L2.Options = md.L0.ParentFile.builder.optionsUnmarshaler(descopts.Message, rawOptions)
@@ -413,7 +414,7 @@ func unmarshalMessageExtensionRange(b []byte) (r [2]pref.FieldNumber, rawOptions
 	return r, rawOptions
 }
 
-func (fd *Field) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Descriptor, i int) {
+func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
 	fd.L0.ParentFile = pf
 	fd.L0.Parent = pd
 	fd.L0.Index = i
@@ -450,9 +451,9 @@ func (fd *Field) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Desc
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldDescriptorProto_Name:
-				fd.L0.FullName = nb.AppendFullName(pd.FullName(), v)
+				fd.L0.FullName = appendFullName(sb, pd.FullName(), v)
 			case fieldnum.FieldDescriptorProto_JsonName:
-				fd.L1.JSONName = JSONName(nb.MakeString(v))
+				fd.L1.JSONName = JSONName(sb.MakeString(v))
 			case fieldnum.FieldDescriptorProto_DefaultValue:
 				fd.L1.Default.val = pref.ValueOf(v) // temporarily store as bytes; later resolved in resolveMessages
 			case fieldnum.FieldDescriptorProto_TypeName:
@@ -467,7 +468,7 @@ func (fd *Field) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Desc
 		}
 	}
 	if rawTypeName != nil {
-		name := nb.MakeFullName(rawTypeName)
+		name := makeFullName(sb, rawTypeName)
 		switch fd.L1.Kind {
 		case pref.EnumKind:
 			fd.L1.Enum = PlaceholderEnum(name)
@@ -500,7 +501,7 @@ func (fd *Field) unmarshalOptions(b []byte) {
 	}
 }
 
-func (od *Oneof) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Descriptor, i int) {
+func (od *Oneof) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
 	od.L0.ParentFile = pf
 	od.L0.Parent = pd
 	od.L0.Index = i
@@ -515,7 +516,7 @@ func (od *Oneof) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Desc
 			b = b[m:]
 			switch num {
 			case fieldnum.OneofDescriptorProto_Name:
-				od.L0.FullName = nb.AppendFullName(pd.FullName(), v)
+				od.L0.FullName = appendFullName(sb, pd.FullName(), v)
 			case fieldnum.OneofDescriptorProto_Options:
 				rawOptions = appendOptions(rawOptions, v)
 			}
@@ -527,7 +528,7 @@ func (od *Oneof) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Desc
 	od.L1.Options = pf.builder.optionsUnmarshaler(descopts.Oneof, rawOptions)
 }
 
-func (xd *Extension) unmarshalFull(b []byte, nb *nameBuilder) {
+func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawTypeName []byte
 	var rawOptions []byte
 	xd.L2 = new(ExtensionL2)
@@ -547,7 +548,7 @@ func (xd *Extension) unmarshalFull(b []byte, nb *nameBuilder) {
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldDescriptorProto_JsonName:
-				xd.L2.JSONName = JSONName(nb.MakeString(v))
+				xd.L2.JSONName = JSONName(sb.MakeString(v))
 			case fieldnum.FieldDescriptorProto_DefaultValue:
 				xd.L2.Default.val = pref.ValueOf(v) // temporarily store as bytes; later resolved in resolveExtensions
 			case fieldnum.FieldDescriptorProto_TypeName:
@@ -562,7 +563,7 @@ func (xd *Extension) unmarshalFull(b []byte, nb *nameBuilder) {
 		}
 	}
 	if rawTypeName != nil {
-		name := nb.MakeFullName(rawTypeName)
+		name := makeFullName(sb, rawTypeName)
 		switch xd.L1.Kind {
 		case pref.EnumKind:
 			xd.L2.Enum = PlaceholderEnum(name)
@@ -592,7 +593,7 @@ func (xd *Extension) unmarshalOptions(b []byte) {
 	}
 }
 
-func (sd *Service) unmarshalFull(b []byte, nb *nameBuilder) {
+func (sd *Service) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawMethods [][]byte
 	var rawOptions []byte
 	sd.L2 = new(ServiceL2)
@@ -617,13 +618,13 @@ func (sd *Service) unmarshalFull(b []byte, nb *nameBuilder) {
 	if len(rawMethods) > 0 {
 		sd.L2.Methods.List = make([]Method, len(rawMethods))
 		for i, b := range rawMethods {
-			sd.L2.Methods.List[i].unmarshalFull(b, nb, sd.L0.ParentFile, sd, i)
+			sd.L2.Methods.List[i].unmarshalFull(b, sb, sd.L0.ParentFile, sd, i)
 		}
 	}
 	sd.L2.Options = sd.L0.ParentFile.builder.optionsUnmarshaler(descopts.Service, rawOptions)
 }
 
-func (md *Method) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Descriptor, i int) {
+func (md *Method) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
 	md.L0.ParentFile = pf
 	md.L0.Parent = pd
 	md.L0.Index = i
@@ -647,11 +648,11 @@ func (md *Method) unmarshalFull(b []byte, nb *nameBuilder, pf *File, pd pref.Des
 			b = b[m:]
 			switch num {
 			case fieldnum.MethodDescriptorProto_Name:
-				md.L0.FullName = nb.AppendFullName(pd.FullName(), v)
+				md.L0.FullName = appendFullName(sb, pd.FullName(), v)
 			case fieldnum.MethodDescriptorProto_InputType:
-				md.L1.Input = PlaceholderMessage(nb.MakeFullName(v))
+				md.L1.Input = PlaceholderMessage(makeFullName(sb, v))
 			case fieldnum.MethodDescriptorProto_OutputType:
-				md.L1.Output = PlaceholderMessage(nb.MakeFullName(v))
+				md.L1.Output = PlaceholderMessage(makeFullName(sb, v))
 			case fieldnum.MethodDescriptorProto_Options:
 				rawOptions = appendOptions(rawOptions, v)
 			}

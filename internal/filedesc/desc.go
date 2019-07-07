@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/internal/descopts"
 	"google.golang.org/protobuf/internal/encoding/defval"
 	"google.golang.org/protobuf/internal/pragma"
+	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -465,28 +466,10 @@ type jsonName struct {
 func (js *jsonName) get(fd pref.FieldDescriptor) string {
 	if !js.has {
 		js.once.Do(func() {
-			js.name = makeJSONName(fd.Name())
+			js.name = strs.JSONCamelCase(string(fd.Name()))
 		})
 	}
 	return js.name
-}
-
-// makeJSONName creates a JSON name from the protobuf short name.
-func makeJSONName(s pref.Name) string {
-	var b []byte
-	var wasUnderscore bool
-	for i := 0; i < len(s); i++ { // proto identifiers are always ASCII
-		c := s[i]
-		if c != '_' {
-			isLower := 'a' <= c && c <= 'z'
-			if wasUnderscore && isLower {
-				c -= 'a' - 'A'
-			}
-			b = append(b, c)
-		}
-		wasUnderscore = c == '_'
-	}
-	return string(b)
 }
 
 func DefaultValue(v pref.Value, ev pref.EnumValueDescriptor) defaultValue {

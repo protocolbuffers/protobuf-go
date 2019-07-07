@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/internal/descopts"
 	ptag "google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/prototype"
@@ -248,7 +249,7 @@ func aberrantAppendField(md *filedesc.Message, goType reflect.Type, tag, tagKey,
 				n := len(md.L1.Messages.List)
 				md.L1.Messages.List = append(md.L1.Messages.List, filedesc.Message{L2: new(filedesc.MessageL2)})
 				md2 := &md.L1.Messages.List[n]
-				md2.L0.FullName = md.FullName().Append(aberrantMapEntryName(fd.Name()))
+				md2.L0.FullName = md.FullName().Append(pref.Name(strs.MapEntryName(string(fd.Name()))))
 				md2.L0.ParentFile = md.L0.ParentFile
 				md2.L0.Parent = md
 				md2.L0.Index = n

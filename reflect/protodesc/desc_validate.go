@@ -11,6 +11,7 @@ import (
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -53,7 +54,7 @@ func validateEnumDeclarations(es []filedesc.Enum, eds []*descriptorpb.EnumDescri
 			prefix := strings.Replace(strings.ToLower(string(e.Name())), "_", "", -1)
 			for i := 0; i < e.Values().Len(); i++ {
 				v1 := e.Values().Get(i)
-				s := enumValueName(trimEnumPrefix(v1.Name(), prefix))
+				s := strs.EnumValueName(strs.TrimEnumPrefix(string(v1.Name()), prefix))
 				if v2, ok := names[s]; ok && v1.Number() != v2.Number() {
 					return errors.New("enum %q using proto3 semantics has conflict: %q with %q", e.FullName(), v1.Name(), v2.Name())
 				}
@@ -209,7 +210,7 @@ func validateExtensionDeclarations(xs []filedesc.Extension, xds []*descriptorpb.
 			return errors.New("extension field %q has an invalid cardinality: %d", x.FullName(), x.Cardinality())
 		}
 		if xd.JsonName != nil {
-			if xd.GetJsonName() != jsonName(x.Name()) {
+			if xd.GetJsonName() != strs.JSONCamelCase(string(x.Name())) {
 				return errors.New("extension field %q may not have an explicitly set JSON name: %q", x.FullName(), xd.GetJsonName())
 			}
 		}
@@ -305,7 +306,7 @@ func checkValidMap(fd protoreflect.FieldDescriptor) error {
 		return nil
 	case fd.FullName().Parent() != md.FullName().Parent():
 		return errors.New("message and field must be declared in the same scope")
-	case md.Name() != mapEntryName(fd.Name()):
+	case md.Name() != protoreflect.Name(strs.MapEntryName(string(fd.Name()))):
 		return errors.New("incorrect implicit map entry name")
 	case fd.Cardinality() != protoreflect.Repeated:
 		return errors.New("field must be repeated")
@@ -338,88 +339,4 @@ func checkValidMap(fd protoreflect.FieldDescriptor) error {
 		return errors.New("map enum value must have zero number for the first value")
 	}
 	return nil
-}
-
-// mapEntryName derives the name of the map entry message given the field name.
-// See protoc v3.8.0: src/google/protobuf/descriptor.cc:254-276,6057
-func mapEntryName(s protoreflect.Name) protoreflect.Name {
-	var b []byte
-	upperNext := true
-	for _, c := range s {
-		switch {
-		case c == '_':
-			upperNext = true
-		case upperNext:
-			b = append(b, byte(unicode.ToUpper(c)))
-			upperNext = false
-		default:
-			b = append(b, byte(c))
-		}
-	}
-	b = append(b, "Entry"...)
-	return protoreflect.Name(b)
-}
-
-// enumValueName derives the camel-cased enum value name.
-// See protoc v3.8.0: src/google/protobuf/descriptor.cc:297-313
-func enumValueName(s protoreflect.Name) string {
-	var b []byte
-	upperNext := true
-	for _, c := range s {
-		switch {
-		case c == '_':
-			upperNext = true
-		case upperNext:
-			b = append(b, byte(unicode.ToUpper(c)))
-			upperNext = false
-		default:
-			b = append(b, byte(unicode.ToLower(c)))
-			upperNext = false
-		}
-	}
-	return string(b)
-}
-
-// trimEnumPrefix trims the enum name prefix from an enum value name,
-// where the prefix is all lowercase without underscores.
-// See protoc v3.8.0: src/google/protobuf/descriptor.cc:330-375
-func trimEnumPrefix(s protoreflect.Name, prefix string) protoreflect.Name {
-	s0 := s // original input
-	for len(s) > 0 && len(prefix) > 0 {
-		if s[0] == '_' {
-			s = s[1:]
-			continue
-		}
-		if unicode.ToLower(rune(s[0])) != rune(prefix[0]) {
-			return s0 // no prefix match
-		}
-		s, prefix = s[1:], prefix[1:]
-	}
-	if len(prefix) > 0 {
-		return s0 // no prefix match
-	}
-	s = protoreflect.Name(strings.TrimLeft(string(s), "_"))
-	if len(s) == 0 {
-		return s0 // avoid returning empty string
-	}
-	return s
-}
-
-// jsonName creates a JSON name from the protobuf short name.
-// See protoc v3.8.0: src/google/protobuf/descriptor.cc:278-295
-func jsonName(s protoreflect.Name) string {
-	var b []byte
-	var wasUnderscore bool
-	for i := 0; i < len(s); i++ { // proto identifiers are always ASCII
-		c := s[i]
-		if c != '_' {
-			isLower := 'a' <= c && c <= 'z'
-			if wasUnderscore && isLower {
-				c -= 'a' - 'A'
-			}
-			b = append(b, c)
-		}
-		wasUnderscore = c == '_'
-	}
-	return string(b)
 }

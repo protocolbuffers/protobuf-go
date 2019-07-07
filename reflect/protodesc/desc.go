@@ -10,6 +10,7 @@ import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/pragma"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
@@ -144,17 +145,18 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 	//	google.protobuf.MethodDescriptorProto.input
 	//	google.protobuf.MethodDescriptorProto.output
 	var err error
+	sb := new(strs.Builder)
 	r1 := make(descsByName)
-	if f.L1.Enums.List, err = r1.initEnumDeclarations(fd.GetEnumType(), f); err != nil {
+	if f.L1.Enums.List, err = r1.initEnumDeclarations(fd.GetEnumType(), f, sb); err != nil {
 		return nil, err
 	}
-	if f.L1.Messages.List, err = r1.initMessagesDeclarations(fd.GetMessageType(), f); err != nil {
+	if f.L1.Messages.List, err = r1.initMessagesDeclarations(fd.GetMessageType(), f, sb); err != nil {
 		return nil, err
 	}
-	if f.L1.Extensions.List, err = r1.initExtensionDeclarations(fd.GetExtension(), f); err != nil {
+	if f.L1.Extensions.List, err = r1.initExtensionDeclarations(fd.GetExtension(), f, sb); err != nil {
 		return nil, err
 	}
-	if f.L1.Services.List, err = r1.initServiceDeclarations(fd.GetService(), f); err != nil {
+	if f.L1.Services.List, err = r1.initServiceDeclarations(fd.GetService(), f, sb); err != nil {
 		return nil, err
 	}
 
