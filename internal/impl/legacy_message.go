@@ -90,14 +90,11 @@ var (
 	aberrantMessageDescCache map[reflect.Type]protoreflect.MessageDescriptor
 )
 
-// aberrantLoadEnumDesc returns an EnumDescriptor derived from the Go type,
+// aberrantLoadMessageDesc returns an EnumDescriptor derived from the Go type,
 // which must not implement protoreflect.ProtoMessage or messageV1.
 //
 // This is a best-effort derivation of the message descriptor using the protobuf
 // tags on the struct fields.
-//
-// The finalized flag determines whether the returned message descriptor must
-// be fully initialized.
 func aberrantLoadMessageDesc(t reflect.Type) pref.MessageDescriptor {
 	aberrantMessageDescLock.Lock()
 	defer aberrantMessageDescLock.Unlock()

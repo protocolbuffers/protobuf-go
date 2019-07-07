@@ -22,8 +22,6 @@ type ExtensionDescV1 struct {
 	// Type is the descriptor type for the extension field using the v2 API.
 	// If populated, the information in this field takes precedence over
 	// all other fields in ExtensionDescV1.
-	//
-	// TODO: Delete this and make this whole struct implement ExtensionDescV1.
 	Type protoreflect.ExtensionType
 
 	// ExtendedType is a typed nil-pointer to the parent message type that

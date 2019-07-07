@@ -17,8 +17,6 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-// TODO: Add support for proto options.
-
 func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo) {
 	g.P("var ", f.GoDescriptorIdent, " ", protoreflectPackage.Ident("FileDescriptor"))
 	g.P()

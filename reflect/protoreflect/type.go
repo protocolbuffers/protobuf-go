@@ -27,8 +27,6 @@ type Descriptor interface {
 	// Support for this functionality is optional and may return nil.
 	ParentFile() FileDescriptor
 
-	// TODO: Switch the signature of Parent to drop the bool.
-
 	// Parent returns the parent containing this descriptor declaration.
 	// The following shows the mapping from child type to possible parent types:
 	//
