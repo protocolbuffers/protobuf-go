@@ -8,11 +8,11 @@ import (
 	"text/template"
 )
 
-func generateImplEncode() string {
-	return mustExecute(implEncodeTemplate, ProtoKinds)
+func generateImplCodec() string {
+	return mustExecute(implCodecTemplate, ProtoKinds)
 }
 
-var implEncodeTemplate = template.Must(template.New("").Parse(`
+var implCodecTemplate = template.Must(template.New("").Parse(`
 {{- /*
   IsZero is an expression testing if 'v' is the zero value.
 */ -}}
