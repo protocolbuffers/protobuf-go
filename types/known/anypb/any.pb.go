@@ -156,8 +156,6 @@ func (*Any) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_any_proto_rawDescGZIP(), []int{0}
 }
 
-func (*Any) XXX_WellKnownType() string { return "Any" }
-
 func (x *Any) GetTypeUrl() string {
 	if x != nil {
 		return x.TypeUrl

@@ -54,8 +54,6 @@ func (*Empty) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_empty_proto_rawDescGZIP(), []int{0}
 }
 
-func (*Empty) XXX_WellKnownType() string { return "Empty" }
-
 var File_google_protobuf_empty_proto protoreflect.FileDescriptor
 
 var file_google_protobuf_empty_proto_rawDesc = []byte{

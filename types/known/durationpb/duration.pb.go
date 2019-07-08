@@ -116,8 +116,6 @@ func (*Duration) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_duration_proto_rawDescGZIP(), []int{0}
 }
 
-func (*Duration) XXX_WellKnownType() string { return "Duration" }
-
 func (x *Duration) GetSeconds() int64 {
 	if x != nil {
 		return x.Seconds

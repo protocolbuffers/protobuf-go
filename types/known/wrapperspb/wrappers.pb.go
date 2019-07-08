@@ -50,8 +50,6 @@ func (*DoubleValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{0}
 }
 
-func (*DoubleValue) XXX_WellKnownType() string { return "DoubleValue" }
-
 func (x *DoubleValue) GetValue() float64 {
 	if x != nil {
 		return x.Value
@@ -91,8 +89,6 @@ func (m *FloatValue) XXX_Methods() *protoiface.Methods {
 func (*FloatValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{1}
 }
-
-func (*FloatValue) XXX_WellKnownType() string { return "FloatValue" }
 
 func (x *FloatValue) GetValue() float32 {
 	if x != nil {
@@ -134,8 +130,6 @@ func (*Int64Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{2}
 }
 
-func (*Int64Value) XXX_WellKnownType() string { return "Int64Value" }
-
 func (x *Int64Value) GetValue() int64 {
 	if x != nil {
 		return x.Value
@@ -175,8 +169,6 @@ func (m *UInt64Value) XXX_Methods() *protoiface.Methods {
 func (*UInt64Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{3}
 }
-
-func (*UInt64Value) XXX_WellKnownType() string { return "UInt64Value" }
 
 func (x *UInt64Value) GetValue() uint64 {
 	if x != nil {
@@ -218,8 +210,6 @@ func (*Int32Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{4}
 }
 
-func (*Int32Value) XXX_WellKnownType() string { return "Int32Value" }
-
 func (x *Int32Value) GetValue() int32 {
 	if x != nil {
 		return x.Value
@@ -259,8 +249,6 @@ func (m *UInt32Value) XXX_Methods() *protoiface.Methods {
 func (*UInt32Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{5}
 }
-
-func (*UInt32Value) XXX_WellKnownType() string { return "UInt32Value" }
 
 func (x *UInt32Value) GetValue() uint32 {
 	if x != nil {
@@ -302,8 +290,6 @@ func (*BoolValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{6}
 }
 
-func (*BoolValue) XXX_WellKnownType() string { return "BoolValue" }
-
 func (x *BoolValue) GetValue() bool {
 	if x != nil {
 		return x.Value
@@ -344,8 +330,6 @@ func (*StringValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{7}
 }
 
-func (*StringValue) XXX_WellKnownType() string { return "StringValue" }
-
 func (x *StringValue) GetValue() string {
 	if x != nil {
 		return x.Value
@@ -385,8 +369,6 @@ func (m *BytesValue) XXX_Methods() *protoiface.Methods {
 func (*BytesValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{8}
 }
-
-func (*BytesValue) XXX_WellKnownType() string { return "BytesValue" }
 
 func (x *BytesValue) GetValue() []byte {
 	if x != nil {

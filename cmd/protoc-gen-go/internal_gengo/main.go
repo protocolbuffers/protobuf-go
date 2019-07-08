@@ -40,6 +40,10 @@ const (
 	// XXX_OneofWrappers methods on messages with oneofs.
 	generateOneofWrapperMethods = false
 
+	// generateWKTMarkerMethods specifes whether to generate
+	// XXX_WellKnownType methods on well-known types.
+	generateWKTMarkerMethods = false
+
 	// generateNoUnkeyedLiteralFields specifies whether to generate
 	// the XXX_NoUnkeyedLiteral field.
 	generateNoUnkeyedLiteralFields = false
@@ -742,10 +746,8 @@ func deprecationComment(deprecated bool) string {
 	return "// Deprecated: Do not use."
 }
 
-// TODO: Remove this. This was added to aid protojson, but protojson does this work
-// through the use of protobuf reflection now.
 func genWellKnownType(g *protogen.GeneratedFile, ptr string, ident protogen.GoIdent, desc protoreflect.Descriptor) {
-	if wellKnownTypes[desc.FullName()] {
+	if generateWKTMarkerMethods && wellKnownTypes[desc.FullName()] {
 		g.P("func (", ptr, ident, `) XXX_WellKnownType() string { return "`, desc.Name(), `" }`)
 		g.P()
 	}

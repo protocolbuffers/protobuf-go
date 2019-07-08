@@ -60,8 +60,6 @@ func (NullValue) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_struct_proto_rawDescGZIP(), []int{0}
 }
 
-func (NullValue) XXX_WellKnownType() string { return "NullValue" }
-
 // `Struct` represents a structured data value, consisting of fields
 // which map to dynamically typed values. In some languages, `Struct`
 // might be supported by a native representation. For example, in
@@ -99,8 +97,6 @@ func (m *Struct) XXX_Methods() *protoiface.Methods {
 func (*Struct) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_struct_proto_rawDescGZIP(), []int{0}
 }
-
-func (*Struct) XXX_WellKnownType() string { return "Struct" }
 
 func (x *Struct) GetFields() map[string]*Value {
 	if x != nil {
@@ -158,8 +154,6 @@ func (m *Value) XXX_Methods() *protoiface.Methods {
 func (*Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_struct_proto_rawDescGZIP(), []int{1}
 }
-
-func (*Value) XXX_WellKnownType() string { return "Value" }
 
 func (m *Value) GetKind() isValue_Kind {
 	if m != nil {
@@ -282,8 +276,6 @@ func (m *ListValue) XXX_Methods() *protoiface.Methods {
 func (*ListValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_struct_proto_rawDescGZIP(), []int{2}
 }
-
-func (*ListValue) XXX_WellKnownType() string { return "ListValue" }
 
 func (x *ListValue) GetValues() []*Value {
 	if x != nil {

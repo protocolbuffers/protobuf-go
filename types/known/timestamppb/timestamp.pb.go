@@ -136,8 +136,6 @@ func (*Timestamp) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_timestamp_proto_rawDescGZIP(), []int{0}
 }
 
-func (*Timestamp) XXX_WellKnownType() string { return "Timestamp" }
-
 func (x *Timestamp) GetSeconds() int64 {
 	if x != nil {
 		return x.Seconds
