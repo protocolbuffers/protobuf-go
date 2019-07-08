@@ -29,6 +29,9 @@ type MessageInfo struct {
 	// Once set, this field must never be mutated.
 	PBType pref.MessageType
 
+	// OneofWrappers is list of pointers to oneof wrapper struct types.
+	OneofWrappers []interface{}
+
 	initMu   sync.Mutex // protects all unexported fields
 	initDone uint32
 
@@ -169,7 +172,7 @@ fieldLoop:
 	}
 
 	// Derive a mapping of oneof wrappers to fields.
-	var oneofWrappers []interface{}
+	oneofWrappers := mi.OneofWrappers
 	if fn, ok := reflect.PtrTo(t).MethodByName("XXX_OneofFuncs"); ok {
 		oneofWrappers = fn.Func.Call([]reflect.Value{reflect.Zero(fn.Type.In(0))})[3].Interface().([]interface{})
 	}

@@ -960,33 +960,6 @@ func (x *FieldTestMessage) GetOneofTwo_2() int64 {
 	return 0
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*FieldTestMessage) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*FieldTestMessage_OneofBool)(nil),
-		(*FieldTestMessage_OneofEnum)(nil),
-		(*FieldTestMessage_OneofInt32)(nil),
-		(*FieldTestMessage_OneofSint32)(nil),
-		(*FieldTestMessage_OneofUint32)(nil),
-		(*FieldTestMessage_OneofInt64)(nil),
-		(*FieldTestMessage_OneofSint64)(nil),
-		(*FieldTestMessage_OneofUint64)(nil),
-		(*FieldTestMessage_OneofSfixed32)(nil),
-		(*FieldTestMessage_OneofFixed32)(nil),
-		(*FieldTestMessage_OneofFloat)(nil),
-		(*FieldTestMessage_OneofSfixed64)(nil),
-		(*FieldTestMessage_OneofFixed64)(nil),
-		(*FieldTestMessage_OneofDouble)(nil),
-		(*FieldTestMessage_OneofString)(nil),
-		(*FieldTestMessage_OneofBytes)(nil),
-		(*FieldTestMessage_Oneof_Message)(nil),
-		(*FieldTestMessage_Oneofgroup)(nil),
-		(*FieldTestMessage_OneofLargestTag)(nil),
-		(*FieldTestMessage_OneofTwo_1)(nil),
-		(*FieldTestMessage_OneofTwo_2)(nil),
-	}
-}
-
 type isFieldTestMessage_OneofField interface {
 	isFieldTestMessage_OneofField()
 }
@@ -1729,6 +1702,29 @@ func init() { file_proto2_fields_proto_init() }
 func file_proto2_fields_proto_init() {
 	if File_proto2_fields_proto != nil {
 		return
+	}
+	file_proto2_fields_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*FieldTestMessage_OneofBool)(nil),
+		(*FieldTestMessage_OneofEnum)(nil),
+		(*FieldTestMessage_OneofInt32)(nil),
+		(*FieldTestMessage_OneofSint32)(nil),
+		(*FieldTestMessage_OneofUint32)(nil),
+		(*FieldTestMessage_OneofInt64)(nil),
+		(*FieldTestMessage_OneofSint64)(nil),
+		(*FieldTestMessage_OneofUint64)(nil),
+		(*FieldTestMessage_OneofSfixed32)(nil),
+		(*FieldTestMessage_OneofFixed32)(nil),
+		(*FieldTestMessage_OneofFloat)(nil),
+		(*FieldTestMessage_OneofSfixed64)(nil),
+		(*FieldTestMessage_OneofFixed64)(nil),
+		(*FieldTestMessage_OneofDouble)(nil),
+		(*FieldTestMessage_OneofString)(nil),
+		(*FieldTestMessage_OneofBytes)(nil),
+		(*FieldTestMessage_Oneof_Message)(nil),
+		(*FieldTestMessage_Oneofgroup)(nil),
+		(*FieldTestMessage_OneofLargestTag)(nil),
+		(*FieldTestMessage_OneofTwo_1)(nil),
+		(*FieldTestMessage_OneofTwo_2)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

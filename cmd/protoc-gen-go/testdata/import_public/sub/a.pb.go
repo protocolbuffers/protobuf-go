@@ -267,14 +267,6 @@ func (x *M) GetOneofInt64() int64 {
 	return 0
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*M) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*M_OneofInt32)(nil),
-		(*M_OneofInt64)(nil),
-	}
-}
-
 type isM_OneofField interface {
 	isM_OneofField()
 }
@@ -343,14 +335,6 @@ func (x *M_Submessage) GetSubmessageOneofInt64() int64 {
 		return x.SubmessageOneofInt64
 	}
 	return 0
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*M_Submessage) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*M_Submessage_SubmessageOneofInt32)(nil),
-		(*M_Submessage_SubmessageOneofInt64)(nil),
-	}
 }
 
 type isM_Submessage_SubmessageOneofField interface {
@@ -472,6 +456,14 @@ func file_import_public_sub_a_proto_init() {
 		return
 	}
 	file_import_public_sub_b_proto_init()
+	file_import_public_sub_a_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*M_OneofInt32)(nil),
+		(*M_OneofInt64)(nil),
+	}
+	file_import_public_sub_a_proto_msgTypes[1].OneofWrappers = []interface{}{
+		(*M_Submessage_SubmessageOneofInt32)(nil),
+		(*M_Submessage_SubmessageOneofInt64)(nil),
+	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			RawDescriptor: file_import_public_sub_a_proto_rawDesc,

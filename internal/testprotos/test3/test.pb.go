@@ -692,21 +692,6 @@ func (x *TestAllTypes) GetOneofEnum() TestAllTypes_NestedEnum {
 	return TestAllTypes_FOO
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*TestAllTypes) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*TestAllTypes_OneofUint32)(nil),
-		(*TestAllTypes_OneofNestedMessage)(nil),
-		(*TestAllTypes_OneofString)(nil),
-		(*TestAllTypes_OneofBytes)(nil),
-		(*TestAllTypes_OneofBool)(nil),
-		(*TestAllTypes_OneofUint64)(nil),
-		(*TestAllTypes_OneofFloat)(nil),
-		(*TestAllTypes_OneofDouble)(nil),
-		(*TestAllTypes_OneofEnum)(nil),
-	}
-}
-
 type isTestAllTypes_OneofField interface {
 	isTestAllTypes_OneofField()
 }
@@ -1337,6 +1322,17 @@ func file_test3_test_proto_init() {
 		return
 	}
 	file_test3_test_import_proto_init()
+	file_test3_test_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*TestAllTypes_OneofUint32)(nil),
+		(*TestAllTypes_OneofNestedMessage)(nil),
+		(*TestAllTypes_OneofString)(nil),
+		(*TestAllTypes_OneofBytes)(nil),
+		(*TestAllTypes_OneofBool)(nil),
+		(*TestAllTypes_OneofUint64)(nil),
+		(*TestAllTypes_OneofFloat)(nil),
+		(*TestAllTypes_OneofDouble)(nil),
+		(*TestAllTypes_OneofEnum)(nil),
+	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			RawDescriptor: file_test3_test_proto_rawDesc,

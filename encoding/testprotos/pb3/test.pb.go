@@ -453,15 +453,6 @@ func (x *Oneofs) GetOneofNested() *Nested {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*Oneofs) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*Oneofs_OneofEnum)(nil),
-		(*Oneofs_OneofString)(nil),
-		(*Oneofs_OneofNested)(nil),
-	}
-}
-
 type isOneofs_Union interface {
 	isOneofs_Union()
 }
@@ -760,6 +751,11 @@ func init() { file_pb3_test_proto_init() }
 func file_pb3_test_proto_init() {
 	if File_pb3_test_proto != nil {
 		return
+	}
+	file_pb3_test_proto_msgTypes[4].OneofWrappers = []interface{}{
+		(*Oneofs_OneofEnum)(nil),
+		(*Oneofs_OneofString)(nil),
+		(*Oneofs_OneofNested)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

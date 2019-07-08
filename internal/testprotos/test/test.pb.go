@@ -976,21 +976,6 @@ func (x *TestAllTypes) GetOneofEnum() TestAllTypes_NestedEnum {
 	return TestAllTypes_FOO
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*TestAllTypes) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*TestAllTypes_OneofUint32)(nil),
-		(*TestAllTypes_OneofNestedMessage)(nil),
-		(*TestAllTypes_OneofString)(nil),
-		(*TestAllTypes_OneofBytes)(nil),
-		(*TestAllTypes_OneofBool)(nil),
-		(*TestAllTypes_OneofUint64)(nil),
-		(*TestAllTypes_OneofFloat)(nil),
-		(*TestAllTypes_OneofDouble)(nil),
-		(*TestAllTypes_OneofEnum)(nil),
-	}
-}
-
 type isTestAllTypes_OneofField interface {
 	isTestAllTypes_OneofField()
 }
@@ -1104,13 +1089,6 @@ func (x *TestDeprecatedMessage) GetDeprecatedOneofField() int32 {
 		return x.DeprecatedOneofField
 	}
 	return 0
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*TestDeprecatedMessage) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*TestDeprecatedMessage_DeprecatedOneofField)(nil),
-	}
 }
 
 type isTestDeprecatedMessage_DeprecatedOneof interface {
@@ -1444,13 +1422,6 @@ func (x *TestRequiredForeign) GetOneofMessage() *TestRequired {
 		return x.OneofMessage
 	}
 	return nil
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*TestRequiredForeign) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*TestRequiredForeign_OneofMessage)(nil),
-	}
 }
 
 type isTestRequiredForeign_OneofField interface {
@@ -3504,6 +3475,23 @@ func file_test_test_proto_init() {
 	}
 	file_test_test_import_proto_init()
 	file_test_test_public_proto_init()
+	file_test_test_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*TestAllTypes_OneofUint32)(nil),
+		(*TestAllTypes_OneofNestedMessage)(nil),
+		(*TestAllTypes_OneofString)(nil),
+		(*TestAllTypes_OneofBytes)(nil),
+		(*TestAllTypes_OneofBool)(nil),
+		(*TestAllTypes_OneofUint64)(nil),
+		(*TestAllTypes_OneofFloat)(nil),
+		(*TestAllTypes_OneofDouble)(nil),
+		(*TestAllTypes_OneofEnum)(nil),
+	}
+	file_test_test_proto_msgTypes[1].OneofWrappers = []interface{}{
+		(*TestDeprecatedMessage_DeprecatedOneofField)(nil),
+	}
+	file_test_test_proto_msgTypes[9].OneofWrappers = []interface{}{
+		(*TestRequiredForeign_OneofMessage)(nil),
+	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			RawDescriptor: file_test_test_proto_rawDesc,

@@ -153,6 +153,25 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 		g.P(initFuncName(impFile), "()")
 	}
 
+	if len(f.allMessages) > 0 {
+		// Populate MessageInfo.OneofWrappers.
+		for _, message := range f.allMessages {
+			if len(message.Oneofs) > 0 {
+				idx := f.allMessagesByPtr[message]
+				typesVar := messageTypesVarName(f)
+
+				// Associate the wrapper types by directly passing them to the MessageInfo.
+				g.P(typesVar, "[", idx, "].OneofWrappers = []interface{} {")
+				for _, oneof := range message.Oneofs {
+					for _, field := range oneof.Fields {
+						g.P("(*", fieldOneofType(field), ")(nil),")
+					}
+				}
+				g.P("}")
+			}
+		}
+	}
+
 	g.P("out := ", protoimplPackage.Ident("TypeBuilder"), "{")
 	g.P("File: ", protoimplPackage.Ident("DescBuilder"), "{")
 	g.P("RawDescriptor: ", rawDescVarName(f), ",")

@@ -232,16 +232,6 @@ func (x *Message) GetOneofMessageConflict() string {
 	return ""
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*Message) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*Message_OneofConflictA)(nil),
-		(*Message_OneofNoConflict)(nil),
-		(*Message_OneofConflictB_)(nil),
-		(*Message_OneofMessageConflict_)(nil),
-	}
-}
-
 type isMessage_OneofConflictA_ interface {
 	isMessage_OneofConflictA_()
 }
@@ -393,6 +383,12 @@ func init() { file_fieldnames_fieldnames_proto_init() }
 func file_fieldnames_fieldnames_proto_init() {
 	if File_fieldnames_fieldnames_proto != nil {
 		return
+	}
+	file_fieldnames_fieldnames_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*Message_OneofConflictA)(nil),
+		(*Message_OneofNoConflict)(nil),
+		(*Message_OneofConflictB_)(nil),
+		(*Message_OneofMessageConflict_)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

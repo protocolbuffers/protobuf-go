@@ -1184,21 +1184,6 @@ func (x *TestAllTypesProto3) GetFieldName18__() int32 {
 	return 0
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*TestAllTypesProto3) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*TestAllTypesProto3_OneofUint32)(nil),
-		(*TestAllTypesProto3_OneofNestedMessage)(nil),
-		(*TestAllTypesProto3_OneofString)(nil),
-		(*TestAllTypesProto3_OneofBytes)(nil),
-		(*TestAllTypesProto3_OneofBool)(nil),
-		(*TestAllTypesProto3_OneofUint64)(nil),
-		(*TestAllTypesProto3_OneofFloat)(nil),
-		(*TestAllTypesProto3_OneofDouble)(nil),
-		(*TestAllTypesProto3_OneofEnum)(nil),
-	}
-}
-
 type isTestAllTypesProto3_OneofField interface {
 	isTestAllTypesProto3_OneofField()
 }
@@ -2147,6 +2132,17 @@ func init() { file_google_protobuf_test_messages_proto3_proto_init() }
 func file_google_protobuf_test_messages_proto3_proto_init() {
 	if File_google_protobuf_test_messages_proto3_proto != nil {
 		return
+	}
+	file_google_protobuf_test_messages_proto3_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*TestAllTypesProto3_OneofUint32)(nil),
+		(*TestAllTypesProto3_OneofNestedMessage)(nil),
+		(*TestAllTypesProto3_OneofString)(nil),
+		(*TestAllTypesProto3_OneofBytes)(nil),
+		(*TestAllTypesProto3_OneofBool)(nil),
+		(*TestAllTypesProto3_OneofUint64)(nil),
+		(*TestAllTypesProto3_OneofFloat)(nil),
+		(*TestAllTypesProto3_OneofDouble)(nil),
+		(*TestAllTypesProto3_OneofEnum)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

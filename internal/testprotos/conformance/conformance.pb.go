@@ -291,16 +291,6 @@ func (x *ConformanceRequest) GetJspbEncodingOptions() *JspbEncodingConfig {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*ConformanceRequest) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*ConformanceRequest_ProtobufPayload)(nil),
-		(*ConformanceRequest_JsonPayload)(nil),
-		(*ConformanceRequest_JspbPayload)(nil),
-		(*ConformanceRequest_TextPayload)(nil),
-	}
-}
-
 type isConformanceRequest_Payload interface {
 	isConformanceRequest_Payload()
 }
@@ -452,20 +442,6 @@ func (x *ConformanceResponse) GetTextPayload() string {
 		return x.TextPayload
 	}
 	return ""
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*ConformanceResponse) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*ConformanceResponse_ParseError)(nil),
-		(*ConformanceResponse_SerializeError)(nil),
-		(*ConformanceResponse_RuntimeError)(nil),
-		(*ConformanceResponse_ProtobufPayload)(nil),
-		(*ConformanceResponse_JsonPayload)(nil),
-		(*ConformanceResponse_Skipped)(nil),
-		(*ConformanceResponse_JspbPayload)(nil),
-		(*ConformanceResponse_TextPayload)(nil),
-	}
 }
 
 type isConformanceResponse_Result interface {
@@ -682,6 +658,22 @@ func init() { file_conformance_conformance_proto_init() }
 func file_conformance_conformance_proto_init() {
 	if File_conformance_conformance_proto != nil {
 		return
+	}
+	file_conformance_conformance_proto_msgTypes[1].OneofWrappers = []interface{}{
+		(*ConformanceRequest_ProtobufPayload)(nil),
+		(*ConformanceRequest_JsonPayload)(nil),
+		(*ConformanceRequest_JspbPayload)(nil),
+		(*ConformanceRequest_TextPayload)(nil),
+	}
+	file_conformance_conformance_proto_msgTypes[2].OneofWrappers = []interface{}{
+		(*ConformanceResponse_ParseError)(nil),
+		(*ConformanceResponse_SerializeError)(nil),
+		(*ConformanceResponse_RuntimeError)(nil),
+		(*ConformanceResponse_ProtobufPayload)(nil),
+		(*ConformanceResponse_JsonPayload)(nil),
+		(*ConformanceResponse_Skipped)(nil),
+		(*ConformanceResponse_JspbPayload)(nil),
+		(*ConformanceResponse_TextPayload)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

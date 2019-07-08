@@ -212,18 +212,6 @@ func (x *Value) GetListValue() *ListValue {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*Value) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*Value_NullValue)(nil),
-		(*Value_NumberValue)(nil),
-		(*Value_StringValue)(nil),
-		(*Value_BoolValue)(nil),
-		(*Value_StructValue)(nil),
-		(*Value_ListValue)(nil),
-	}
-}
-
 type isValue_Kind interface {
 	isValue_Kind()
 }
@@ -398,6 +386,14 @@ func init() { file_google_protobuf_struct_proto_init() }
 func file_google_protobuf_struct_proto_init() {
 	if File_google_protobuf_struct_proto != nil {
 		return
+	}
+	file_google_protobuf_struct_proto_msgTypes[1].OneofWrappers = []interface{}{
+		(*Value_NullValue)(nil),
+		(*Value_NumberValue)(nil),
+		(*Value_StringValue)(nil),
+		(*Value_BoolValue)(nil),
+		(*Value_StructValue)(nil),
+		(*Value_ListValue)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -35,6 +35,10 @@ const (
 	// GZIP'd contents of the raw file descriptor and the path from the root
 	// to the given enum or message descriptor.
 	generateRawDescMethods = true
+
+	// generateOneofWrapperMethods specifies whether to generate
+	// XXX_OneofWrappers methods on messages with oneofs.
+	generateOneofWrapperMethods = false
 )
 
 const (
@@ -523,14 +527,9 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 		g.P()
 	}
 
-	// XXX_OneofWrappers method.
+	// Oneof wrapper types.
 	if len(message.Oneofs) > 0 {
 		genOneofWrappers(gen, g, f, message)
-	}
-
-	// Oneof wrapper types.
-	for _, oneof := range message.Oneofs {
-		genOneofTypes(gen, g, f, message, oneof)
 	}
 }
 
@@ -771,19 +770,25 @@ func genOneofGetter(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo
 	g.P()
 }
 
-// genOneofWrappers generates the XXX_OneofWrappers method for a message.
+// genOneofWrappers generates the oneof wrapper types and associates the types
+// with the parent message type.
 func genOneofWrappers(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
-	g.P("// XXX_OneofWrappers is for the internal use of the proto package.")
-	g.P("func (*", message.GoIdent.GoName, ") XXX_OneofWrappers() []interface{} {")
-	g.P("return []interface{}{")
-	for _, oneof := range message.Oneofs {
-		for _, field := range oneof.Fields {
-			g.P("(*", fieldOneofType(field), ")(nil),")
-		}
+	idx := f.allMessagesByPtr[message]
+	typesVar := messageTypesVarName(f)
+
+	// Associate the wrapper types through a XXX_OneofWrappers method.
+	if generateOneofWrapperMethods {
+		g.P("// XXX_OneofWrappers is for the internal use of the proto package.")
+		g.P("func (*", message.GoIdent.GoName, ") XXX_OneofWrappers() []interface{} {")
+		g.P("return ", typesVar, "[", idx, "].OneofWrappers")
+		g.P("}")
+		g.P()
 	}
-	g.P("}")
-	g.P("}")
-	g.P()
+
+	// Generate the oneof wrapper types.
+	for _, oneof := range message.Oneofs {
+		genOneofTypes(gen, g, f, message, oneof)
+	}
 }
 
 // genOneofTypes generates the interface type used for a oneof field,

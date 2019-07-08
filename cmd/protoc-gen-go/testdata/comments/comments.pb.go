@@ -78,13 +78,6 @@ func (x *Message1) GetOneof1AField1() string {
 	return ""
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*Message1) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*Message1_Oneof1AField1)(nil),
-	}
-}
-
 type isMessage1_Oneof1A interface {
 	isMessage1_Oneof1A()
 }
@@ -300,6 +293,9 @@ func init() { file_comments_comments_proto_init() }
 func file_comments_comments_proto_init() {
 	if File_comments_comments_proto != nil {
 		return
+	}
+	file_comments_comments_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*Message1_Oneof1AField1)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -63,13 +63,6 @@ func (x *Foo) GetGetBar() string {
 	return ""
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*Foo) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*Foo_GetBar)(nil),
-	}
-}
-
 type isFoo_Bar interface {
 	isFoo_Bar()
 }
@@ -119,6 +112,9 @@ func init() { file_issue780_oneof_conflict_test_proto_init() }
 func file_issue780_oneof_conflict_test_proto_init() {
 	if File_issue780_oneof_conflict_test_proto != nil {
 		return
+	}
+	file_issue780_oneof_conflict_test_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*Foo_GetBar)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

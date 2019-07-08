@@ -784,13 +784,6 @@ func (x *IndirectRequired) GetOneofNested() *NestedWithRequired {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*IndirectRequired) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*IndirectRequired_OneofNested)(nil),
-	}
-}
-
 type isIndirectRequired_Union interface {
 	isIndirectRequired_Union()
 }
@@ -2065,6 +2058,9 @@ func init() { file_pb2_test_proto_init() }
 func file_pb2_test_proto_init() {
 	if File_pb2_test_proto != nil {
 		return
+	}
+	file_pb2_test_proto_msgTypes[8].OneofWrappers = []interface{}{
+		(*IndirectRequired_OneofNested)(nil),
 	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

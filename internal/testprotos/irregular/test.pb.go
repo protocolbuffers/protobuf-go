@@ -95,13 +95,6 @@ func (x *Message) GetOneofMessage() *IrregularMessage {
 	return nil
 }
 
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*Message) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*Message_OneofMessage)(nil),
-	}
-}
-
 type isMessage_Union interface {
 	isMessage_Union()
 }
@@ -198,6 +191,9 @@ func file_irregular_test_proto_init() {
 		return
 	}
 	file_irregular_irregular_proto_init()
+	file_irregular_test_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*Message_OneofMessage)(nil),
+	}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			RawDescriptor: file_irregular_test_proto_rawDesc,
