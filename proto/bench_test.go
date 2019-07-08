@@ -38,7 +38,7 @@ func BenchmarkEncode(b *testing.B) {
 						} else {
 							_, err = opts.Marshal(want)
 						}
-						if err != nil {
+						if err != nil && !test.partial {
 							b.Fatal(err)
 						}
 					}
@@ -55,16 +55,16 @@ func BenchmarkDecode(b *testing.B) {
 			opts := proto.UnmarshalOptions{AllowPartial: *allowPartial}
 			b.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(b *testing.B) {
 				b.RunParallel(func(pb *testing.PB) {
-					m := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
-					v1 := m.(protoV1.Message)
 					for pb.Next() {
+						m := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
+						v1 := m.(protoV1.Message)
 						var err error
 						if *benchV1 {
 							err = protoV1.Unmarshal(test.wire, v1)
 						} else {
 							err = opts.Unmarshal(test.wire, m)
 						}
-						if err != nil {
+						if err != nil && !test.partial {
 							b.Fatal(err)
 						}
 					}
