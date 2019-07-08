@@ -234,7 +234,7 @@ type TestAllTypesProto2 struct {
 	FieldName18__   *int32 `protobuf:"varint,418,opt,name=Field_name18__,json=FieldName18" json:"Field_name18__,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *TestAllTypesProto2) Reset() {
@@ -1093,7 +1093,7 @@ func (x *TestAllTypesProto2_Data) GetGroupUint32() uint32 {
 type TestAllTypesProto2_MessageSetCorrect struct {
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields `protobuf_messageset:"1"`
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *TestAllTypesProto2_MessageSetCorrect) Reset() {
@@ -1213,7 +1213,7 @@ var file_google_protobuf_test_messages_proto2_proto_extDescs = []protoiface.Exte
 		ExtendedType:  (*TestAllTypesProto2_MessageSetCorrect)(nil),
 		ExtensionType: (*TestAllTypesProto2_MessageSetCorrectExtension1)(nil),
 		Field:         1547769,
-		Name:          "protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1",
+		Name:          "protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1.message_set_extension",
 		Tag:           "bytes,1547769,opt,name=message_set_extension",
 		Filename:      "google/protobuf/test_messages_proto2.proto",
 	},
@@ -1221,7 +1221,7 @@ var file_google_protobuf_test_messages_proto2_proto_extDescs = []protoiface.Exte
 		ExtendedType:  (*TestAllTypesProto2_MessageSetCorrect)(nil),
 		ExtensionType: (*TestAllTypesProto2_MessageSetCorrectExtension2)(nil),
 		Field:         4135312,
-		Name:          "protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2",
+		Name:          "protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2.message_set_extension",
 		Tag:           "bytes,4135312,opt,name=message_set_extension",
 		Filename:      "google/protobuf/test_messages_proto2.proto",
 	},

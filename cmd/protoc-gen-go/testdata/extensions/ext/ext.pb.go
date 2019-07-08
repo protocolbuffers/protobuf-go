@@ -208,7 +208,7 @@ func (x *RepeatedGroup) GetRepeatedXGroup() []string {
 type Extendable struct {
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *Extendable) Reset() {
@@ -653,7 +653,7 @@ var file_extensions_ext_ext_proto_extDescs = []protoiface.ExtensionDescV1{
 		ExtendedType:  (*base.MessageSetWireFormatMessage)(nil),
 		ExtensionType: (*MessageSetWireFormatExtension)(nil),
 		Field:         101,
-		Name:          "goproto.protoc.extension.ext.",
+		Name:          "goproto.protoc.extension.ext.message_set_extension",
 		Tag:           "bytes,101,opt,name=message_set_extension",
 		Filename:      "extensions/ext/ext.proto",
 	},
@@ -677,7 +677,7 @@ var file_extensions_ext_ext_proto_extDescs = []protoiface.ExtensionDescV1{
 		ExtendedType:  (*base.MessageSetWireFormatMessage)(nil),
 		ExtensionType: (*MessageSetWireFormatExtension)(nil),
 		Field:         100,
-		Name:          "goproto.protoc.extension.ext.MessageSetWireFormatExtension",
+		Name:          "goproto.protoc.extension.ext.MessageSetWireFormatExtension.message_set_extension",
 		Tag:           "bytes,100,opt,name=message_set_extension",
 		Filename:      "extensions/ext/ext.proto",
 	},

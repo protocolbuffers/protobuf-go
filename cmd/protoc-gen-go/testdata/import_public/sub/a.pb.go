@@ -177,7 +177,7 @@ type M struct {
 	OneofField      isM_OneofField `protobuf_oneof:"oneof_field"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *M) Reset() {

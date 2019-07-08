@@ -791,7 +791,7 @@ type Extensions struct {
 	OptInt32        *int32  `protobuf:"varint,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *Extensions) Reset() {
@@ -878,7 +878,7 @@ func (*ExtensionsContainer) Descriptor() ([]byte, []int) {
 type MessageSet struct {
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields `protobuf_messageset:"1"`
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *MessageSet) Reset() {
@@ -952,7 +952,7 @@ func (x *MessageSetExtension) GetOptString() string {
 type FakeMessageSet struct {
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *FakeMessageSet) Reset() {
@@ -1389,7 +1389,7 @@ var file_pb2_test_proto_extDescs = []protoiface.ExtensionDescV1{
 		ExtendedType:  (*MessageSet)(nil),
 		ExtensionType: (*FakeMessageSetExtension)(nil),
 		Field:         50,
-		Name:          "pb2.",
+		Name:          "pb2.message_set_extension",
 		Tag:           "bytes,50,opt,name=message_set_extension",
 		Filename:      "pb2/test.proto",
 	},
@@ -1461,7 +1461,7 @@ var file_pb2_test_proto_extDescs = []protoiface.ExtensionDescV1{
 		ExtendedType:  (*MessageSet)(nil),
 		ExtensionType: (*MessageSetExtension)(nil),
 		Field:         10,
-		Name:          "pb2.MessageSetExtension",
+		Name:          "pb2.MessageSetExtension.message_set_extension",
 		Tag:           "bytes,10,opt,name=message_set_extension",
 		Filename:      "pb2/test.proto",
 	},

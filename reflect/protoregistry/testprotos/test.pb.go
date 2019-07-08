@@ -162,7 +162,7 @@ func (Enum3) EnumDescriptor() ([]byte, []int) {
 type Message1 struct {
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *Message1) Reset() {

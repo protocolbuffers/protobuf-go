@@ -448,17 +448,11 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 		sf.append("unknownFields")
 	}
 	if message.Desc.ExtensionRanges().Len() > 0 {
-		// TODO: Remove this tag when we drop v1 support.
-		var tags []string
-		if message.Desc.Options().(*descriptorpb.MessageOptions).GetMessageSetWireFormat() {
-			tags = append(tags, `protobuf_messageset:"1"`)
-		}
 		if generateExportedExtensionFields {
-			tags = append(tags, `json:"-"`)
-			g.P("XXX_InternalExtensions", " ", protoimplPackage.Ident("ExtensionFields"), " `", strings.Join(tags, " "), "`")
+			g.P("XXX_InternalExtensions", " ", protoimplPackage.Ident("ExtensionFields"), " `json:\"-\"`")
 			sf.append("XXX_InternalExtensions")
 		} else {
-			g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"), " `", strings.Join(tags, " "), "`")
+			g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"))
 			sf.append("extensionFields")
 		}
 	}
@@ -696,19 +690,6 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 
 	g.P("var ", extDescsVarName(f), " = []", protoifacePackage.Ident("ExtensionDescV1"), "{")
 	for _, extension := range f.allExtensions {
-		// Special case for proto2 message sets: If this extension is extending
-		// proto2.bridge.MessageSet, and its final name component is "message_set_extension",
-		// then drop that last component.
-		//
-		// TODO: This should be implemented in the text formatter rather than the generator.
-		// In addition, the situation for when to apply this special case is implemented
-		// differently in other languages:
-		// https://github.com/google/protobuf/blob/aff10976/src/google/protobuf/text_format.cc#L1560
-		name := extension.Desc.FullName()
-		if n, ok := isExtensionMessageSetElement(extension); ok {
-			name = n
-		}
-
 		g.P("{")
 		g.P("ExtendedType: (*", extension.Extendee.GoIdent, ")(nil),")
 		goType, pointer := fieldGoType(g, extension)
@@ -717,7 +698,7 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 		}
 		g.P("ExtensionType: (", goType, ")(nil),")
 		g.P("Field: ", extension.Desc.Number(), ",")
-		g.P("Name: ", strconv.Quote(string(name)), ",")
+		g.P("Name: ", strconv.Quote(string(extension.Desc.FullName())), ",")
 		g.P("Tag: ", strconv.Quote(fieldProtobufTag(extension)), ",")
 		g.P("Filename: ", strconv.Quote(f.Desc.Path()), ",")
 		g.P("},")
@@ -741,29 +722,6 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 		g.P()
 	}
 	g.P(")")
-}
-
-// isExtensionMessageSetELement returns the adjusted name of an extension
-// which extends proto2.bridge.MessageSet.
-func isExtensionMessageSetElement(extension *protogen.Extension) (name protoreflect.FullName, ok bool) {
-	opts := extension.Extendee.Desc.Options().(*descriptorpb.MessageOptions)
-	if !opts.GetMessageSetWireFormat() || extension.Desc.Name() != "message_set_extension" {
-		return "", false
-	}
-	if extension.Parent == nil {
-		// This case shouldn't be given special handling at all--we're
-		// only supposed to drop the ".message_set_extension" for
-		// extensions defined within a message (i.e., the extension
-		// takes the message's name).
-		//
-		// This matches the behavior of the v1 generator, however.
-		//
-		// TODO: See if we can drop this case.
-		name = extension.Desc.FullName()
-		name = name[:len(name)-len("message_set_extension")]
-		return name, true
-	}
-	return extension.Desc.FullName().Parent(), true
 }
 
 // extensionVar returns the var holding the ExtensionDesc for an extension.

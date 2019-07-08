@@ -642,7 +642,7 @@ type Message9182 struct {
 	Field9230       *float32              `protobuf:"fixed32,39,opt,name=field9230" json:"field9230,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *Message9182) Reset() {

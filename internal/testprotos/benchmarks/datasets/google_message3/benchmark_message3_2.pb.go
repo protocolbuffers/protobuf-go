@@ -1560,7 +1560,7 @@ type Message11874 struct {
 	Field11891      *bool         `protobuf:"varint,7,opt,name=field11891" json:"field11891,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *Message11874) Reset() {
@@ -2204,7 +2204,7 @@ type Message18283 struct {
 	Field18581      *bool                 `protobuf:"varint,193,opt,name=field18581" json:"field18581,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *Message18283) Reset() {

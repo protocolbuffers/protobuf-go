@@ -2259,7 +2259,7 @@ type Message3069 struct {
 	Message3070     []*Message3069_Message3070 `protobuf:"group,3,rep,name=Message3070,json=message3070" json:"message3070,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *Message3069) Reset() {
@@ -3486,7 +3486,7 @@ func (x *Message2356) GetField2398() string {
 type Message0 struct {
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields `protobuf_messageset:"1"`
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *Message0) Reset() {

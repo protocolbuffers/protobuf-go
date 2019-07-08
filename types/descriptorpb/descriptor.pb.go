@@ -692,7 +692,7 @@ type ExtensionRangeOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *ExtensionRangeOptions) Reset() {
@@ -1259,7 +1259,7 @@ type FileOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *FileOptions) Reset() {
@@ -1507,7 +1507,7 @@ type MessageOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *MessageOptions) Reset() {
@@ -1645,7 +1645,7 @@ type FieldOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *FieldOptions) Reset() {
@@ -1740,7 +1740,7 @@ type OneofOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *OneofOptions) Reset() {
@@ -1795,7 +1795,7 @@ type EnumOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *EnumOptions) Reset() {
@@ -1863,7 +1863,7 @@ type EnumValueOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *EnumValueOptions) Reset() {
@@ -1924,7 +1924,7 @@ type ServiceOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *ServiceOptions) Reset() {
@@ -1986,7 +1986,7 @@ type MethodOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 	sizeCache           protoimpl.SizeCache
 	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields ``
+	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *MethodOptions) Reset() {

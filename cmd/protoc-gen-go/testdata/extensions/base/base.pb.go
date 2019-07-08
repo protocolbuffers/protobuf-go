@@ -21,7 +21,7 @@ type BaseMessage struct {
 	Field           *string `protobuf:"bytes,1,opt,name=field" json:"field,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *BaseMessage) Reset() {
@@ -67,7 +67,7 @@ func (x *BaseMessage) GetField() string {
 type MessageSetWireFormatMessage struct {
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields `protobuf_messageset:"1"`
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *MessageSetWireFormatMessage) Reset() {

@@ -1174,7 +1174,7 @@ func (*TestReservedFields) Descriptor() ([]byte, []int) {
 type TestAllExtensions struct {
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields ``
+	extensionFields protoimpl.ExtensionFields
 }
 
 func (x *TestAllExtensions) Reset() {
