@@ -13,6 +13,7 @@ import (
 
 	defval "google.golang.org/protobuf/internal/encoding/defval"
 	fdesc "google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -101,7 +102,10 @@ func Unmarshal(tag string, goType reflect.Type, evs pref.EnumValueDescriptors) p
 		case strings.HasPrefix(s, "enum="):
 			f.L1.Kind = pref.EnumKind
 		case strings.HasPrefix(s, "json="):
-			f.L1.JSONName = fdesc.JSONName(s[len("json="):])
+			jsonName := s[len("json="):]
+			if jsonName != strs.JSONCamelCase(string(f.L0.FullName.Name())) {
+				f.L1.JSONName = fdesc.JSONName(jsonName)
+			}
 		case s == "packed":
 			f.L1.HasPacked = true
 			f.L1.IsPacked = true
@@ -176,7 +180,8 @@ func Marshal(fd pref.FieldDescriptor, enumName string) string {
 	}
 	tag = append(tag, "name="+name)
 	if jsonName := fd.JSONName(); jsonName != "" && jsonName != name && !fd.IsExtension() {
-		// TODO: The jsonName != name condition looks wrong.
+		// NOTE: The jsonName != name condition is suspect, but it preserve
+		// the exact same semantics from the previous generator.
 		tag = append(tag, "json="+jsonName)
 	}
 	// The previous implementation does not tag extension fields as proto3,

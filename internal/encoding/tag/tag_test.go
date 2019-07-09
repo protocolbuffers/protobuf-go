@@ -22,7 +22,6 @@ func Test(t *testing.T) {
 	fd.L1.Number = 1337
 	fd.L1.Cardinality = pref.Repeated
 	fd.L1.Kind = pref.BytesKind
-	fd.L1.JSONName = fdesc.JSONName("fooField")
 	fd.L1.Default = fdesc.DefaultValue(pref.ValueOf([]byte("hello, \xde\xad\xbe\xef\n")), nil)
 
 	// Marshal test.
