@@ -5,9 +5,6 @@
 package proto
 
 import (
-	"bytes"
-	"fmt"
-
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -15,66 +12,46 @@ import (
 // IsInitialized returns an error if any required fields in m are not set.
 func IsInitialized(m Message) error {
 	if methods := protoMethods(m); methods != nil && methods.IsInitialized != nil {
-		if err := methods.IsInitialized(m); err == nil {
-			return nil
-		}
-		// Fall through to the slow path, since the fast-path
-		// implementation doesn't produce nice errors.
-		//
-		// TODO: Consider producing better errors from the fast path.
+		return methods.IsInitialized(m)
 	}
-	return isInitialized(m.ProtoReflect(), nil)
+	return isInitialized(m.ProtoReflect())
 }
 
 // IsInitialized returns an error if any required fields in m are not set.
-func isInitialized(m pref.Message, stack []interface{}) error {
+func isInitialized(m pref.Message) error {
 	md := m.Descriptor()
 	fds := md.Fields()
 	for i, nums := 0, md.RequiredNumbers(); i < nums.Len(); i++ {
 		fd := fds.ByNumber(nums.Get(i))
 		if !m.Has(fd) {
-			stack = append(stack, fd.Name())
-			return newRequiredNotSetError(stack)
+			return errors.RequiredNotSet(string(fd.FullName()))
 		}
 	}
 	var err error
 	m.Range(func(fd pref.FieldDescriptor, v pref.Value) bool {
-		// Recurse into fields containing message values.
-		stack := append(stack, fd.Name())
 		switch {
 		case fd.IsList():
 			if fd.Message() == nil {
 				return true
 			}
 			for i, list := 0, v.List(); i < list.Len() && err == nil; i++ {
-				stack := append(stack, "[", i, "].")
-				err = isInitialized(list.Get(i).Message(), stack)
+				err = IsInitialized(list.Get(i).Message().Interface())
 			}
 		case fd.IsMap():
 			if fd.MapValue().Message() == nil {
 				return true
 			}
 			v.Map().Range(func(key pref.MapKey, v pref.Value) bool {
-				stack := append(stack, "[", key, "].")
-				err = isInitialized(v.Message(), stack)
+				err = IsInitialized(v.Message().Interface())
 				return err == nil
 			})
 		default:
 			if fd.Message() == nil {
 				return true
 			}
-			stack := append(stack, ".")
-			err = isInitialized(v.Message(), stack)
+			err = IsInitialized(v.Message().Interface())
 		}
 		return err == nil
 	})
 	return err
-}
-
-func newRequiredNotSetError(stack []interface{}) error {
-	var buf bytes.Buffer
-	for _, s := range stack {
-		fmt.Fprint(&buf, s)
-	}
-	return errors.RequiredNotSet(buf.String())
 }

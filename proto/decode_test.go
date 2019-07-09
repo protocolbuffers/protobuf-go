@@ -952,6 +952,11 @@ var testProtos = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc:     "required field in nil message unset",
+		partial:  true,
+		decodeTo: []proto.Message{(*testpb.TestRequired)(nil)},
+	},
+	{
 		desc:     "required field unset",
 		partial:  true,
 		decodeTo: []proto.Message{&testpb.TestRequired{}},
@@ -1222,6 +1227,14 @@ var testProtos = []testProto{
 				pack.Tag{1, pack.VarintType}, pack.Varint(2),
 			}),
 		}.Marshal(),
+	},
+	{
+		desc: "nil messages",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*test3pb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+		},
 	},
 	{
 		desc:    "legacy",

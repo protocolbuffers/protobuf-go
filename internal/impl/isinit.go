@@ -7,14 +7,10 @@ package impl
 import (
 	"sync"
 
+	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
-
-type errRequiredNotSet struct{}
-
-func (errRequiredNotSet) Error() string        { return "proto: required field not set" }
-func (errRequiredNotSet) RequiredNotSet() bool { return true }
 
 func (mi *MessageInfo) isInitialized(msg proto.Message) error {
 	return mi.isInitializedPointer(pointerOfIface(msg))
@@ -26,7 +22,12 @@ func (mi *MessageInfo) isInitializedPointer(p pointer) error {
 		return nil
 	}
 	if p.IsNil() {
-		return errRequiredNotSet{}
+		for _, f := range mi.orderedCoderFields {
+			if f.isRequired {
+				return errors.RequiredNotSet(string(mi.PBType.Fields().ByNumber(f.num).FullName()))
+			}
+		}
+		return nil
 	}
 	if mi.extensionOffset.IsValid() {
 		e := p.Apply(mi.extensionOffset).Extensions()
@@ -41,7 +42,7 @@ func (mi *MessageInfo) isInitializedPointer(p pointer) error {
 		fptr := p.Apply(f.offset)
 		if f.isPointer && fptr.Elem().IsNil() {
 			if f.isRequired {
-				return errRequiredNotSet{}
+				return errors.RequiredNotSet(string(mi.PBType.Fields().ByNumber(f.num).FullName()))
 			}
 			continue
 		}

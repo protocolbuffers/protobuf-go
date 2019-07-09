@@ -21,13 +21,13 @@ func TestIsInitializedErrors(t *testing.T) {
 	}{
 		{
 			&testpb.TestRequired{},
-			`proto: required field required_field not set`,
+			`proto: required field goproto.proto.test.TestRequired.required_field not set`,
 		},
 		{
 			&testpb.TestRequiredForeign{
 				OptionalMessage: &testpb.TestRequired{},
 			},
-			`proto: required field optional_message.required_field not set`,
+			`proto: required field goproto.proto.test.TestRequired.required_field not set`,
 		},
 		{
 			&testpb.TestRequiredForeign{
@@ -36,7 +36,7 @@ func TestIsInitializedErrors(t *testing.T) {
 					{},
 				},
 			},
-			`proto: required field repeated_message[1].required_field not set`,
+			`proto: required field goproto.proto.test.TestRequired.required_field not set`,
 		},
 		{
 			&testpb.TestRequiredForeign{
@@ -44,7 +44,7 @@ func TestIsInitializedErrors(t *testing.T) {
 					1: {},
 				},
 			},
-			`proto: required field map_message[1].required_field not set`,
+			`proto: required field goproto.proto.test.TestRequired.required_field not set`,
 		},
 	} {
 		err := proto.IsInitialized(test.m)
