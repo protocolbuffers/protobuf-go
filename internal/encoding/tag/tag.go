@@ -170,7 +170,9 @@ func Marshal(fd pref.FieldDescriptor, enumName string) string {
 	if fd.IsPacked() {
 		tag = append(tag, "packed")
 	}
-	// TODO: Weak fields?
+	if fd.IsWeak() {
+		tag = append(tag, "weak="+string(fd.Message().FullName()))
+	}
 	name := string(fd.Name())
 	if fd.Kind() == pref.GroupKind {
 		// The name of the FieldDescriptor for a group field is
