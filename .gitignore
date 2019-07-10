@@ -6,6 +6,7 @@
 /cmd/protoc-gen-go-grpc/protoc-gen-go-grpc
 /cmd/protoc-gen-go-grpc/testdata/go.sum
 /vendor
+/internal/fuzz/wire/fuzz-fuzz.zip
 
 # This file includes artifacts of the system test that should not be checked in.
 # For files created by specific development environment (e.g. editor),
