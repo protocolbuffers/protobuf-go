@@ -265,6 +265,82 @@ message TestWeak {
   optional goproto.proto.test.weak.WeakImportMessage weak_message = 1 [weak=true];
 }
 
+message TestPackedTypes {
+  repeated    int32 packed_int32    =  90 [packed = true];
+  repeated    int64 packed_int64    =  91 [packed = true];
+  repeated   uint32 packed_uint32   =  92 [packed = true];
+  repeated   uint64 packed_uint64   =  93 [packed = true];
+  repeated   sint32 packed_sint32   =  94 [packed = true];
+  repeated   sint64 packed_sint64   =  95 [packed = true];
+  repeated  fixed32 packed_fixed32  =  96 [packed = true];
+  repeated  fixed64 packed_fixed64  =  97 [packed = true];
+  repeated sfixed32 packed_sfixed32 =  98 [packed = true];
+  repeated sfixed64 packed_sfixed64 =  99 [packed = true];
+  repeated    float packed_float    = 100 [packed = true];
+  repeated   double packed_double   = 101 [packed = true];
+  repeated     bool packed_bool     = 102 [packed = true];
+  repeated ForeignEnum packed_enum  = 103 [packed = true];
+}
+
+message TestUnpackedTypes {
+  repeated    int32 unpacked_int32    =  90 [packed = false];
+  repeated    int64 unpacked_int64    =  91 [packed = false];
+  repeated   uint32 unpacked_uint32   =  92 [packed = false];
+  repeated   uint64 unpacked_uint64   =  93 [packed = false];
+  repeated   sint32 unpacked_sint32   =  94 [packed = false];
+  repeated   sint64 unpacked_sint64   =  95 [packed = false];
+  repeated  fixed32 unpacked_fixed32  =  96 [packed = false];
+  repeated  fixed64 unpacked_fixed64  =  97 [packed = false];
+  repeated sfixed32 unpacked_sfixed32 =  98 [packed = false];
+  repeated sfixed64 unpacked_sfixed64 =  99 [packed = false];
+  repeated    float unpacked_float    = 100 [packed = false];
+  repeated   double unpacked_double   = 101 [packed = false];
+  repeated     bool unpacked_bool     = 102 [packed = false];
+  repeated ForeignEnum unpacked_enum  = 103 [packed = false];
+}
+
+message TestPackedExtensions {
+  extensions 1 to max;
+}
+
+extend TestPackedExtensions {
+  repeated    int32 packed_int32_extension    =  90 [packed = true];
+  repeated    int64 packed_int64_extension    =  91 [packed = true];
+  repeated   uint32 packed_uint32_extension   =  92 [packed = true];
+  repeated   uint64 packed_uint64_extension   =  93 [packed = true];
+  repeated   sint32 packed_sint32_extension   =  94 [packed = true];
+  repeated   sint64 packed_sint64_extension   =  95 [packed = true];
+  repeated  fixed32 packed_fixed32_extension  =  96 [packed = true];
+  repeated  fixed64 packed_fixed64_extension  =  97 [packed = true];
+  repeated sfixed32 packed_sfixed32_extension =  98 [packed = true];
+  repeated sfixed64 packed_sfixed64_extension =  99 [packed = true];
+  repeated    float packed_float_extension    = 100 [packed = true];
+  repeated   double packed_double_extension   = 101 [packed = true];
+  repeated     bool packed_bool_extension     = 102 [packed = true];
+  repeated ForeignEnum packed_enum_extension  = 103 [packed = true];
+}
+
+message TestUnpackedExtensions {
+  extensions 1 to max;
+}
+
+extend TestUnpackedExtensions {
+  repeated    int32 unpacked_int32_extension    =  90 [packed = false];
+  repeated    int64 unpacked_int64_extension    =  91 [packed = false];
+  repeated   uint32 unpacked_uint32_extension   =  92 [packed = false];
+  repeated   uint64 unpacked_uint64_extension   =  93 [packed = false];
+  repeated   sint32 unpacked_sint32_extension   =  94 [packed = false];
+  repeated   sint64 unpacked_sint64_extension   =  95 [packed = false];
+  repeated  fixed32 unpacked_fixed32_extension  =  96 [packed = false];
+  repeated  fixed64 unpacked_fixed64_extension  =  97 [packed = false];
+  repeated sfixed32 unpacked_sfixed32_extension =  98 [packed = false];
+  repeated sfixed64 unpacked_sfixed64_extension =  99 [packed = false];
+  repeated    float unpacked_float_extension    = 100 [packed = false];
+  repeated   double unpacked_double_extension   = 101 [packed = false];
+  repeated     bool unpacked_bool_extension     = 102 [packed = false];
+  repeated ForeignEnum unpacked_enum_extension  = 103 [packed = false];
+}
+
 // Test that RPC services work.
 message FooRequest  {}
 message FooResponse {}

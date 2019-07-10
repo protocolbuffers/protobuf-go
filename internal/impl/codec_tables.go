@@ -499,6 +499,68 @@ func encoderFuncsForValue(fd pref.FieldDescriptor, ft reflect.Type) ifaceCoderFu
 			return coderGroupSliceIface
 		}
 	case fd.Cardinality() == pref.Repeated && fd.IsPacked():
+		if ft.Kind() != reflect.Ptr || ft.Elem().Kind() != reflect.Slice {
+			break
+		}
+		ft := ft.Elem().Elem()
+		switch fd.Kind() {
+		case pref.BoolKind:
+			if ft.Kind() == reflect.Bool {
+				return coderBoolPackedSliceIface
+			}
+		case pref.EnumKind:
+			if ft.Kind() == reflect.Int32 {
+				return coderEnumPackedSliceIface
+			}
+		case pref.Int32Kind:
+			if ft.Kind() == reflect.Int32 {
+				return coderInt32PackedSliceIface
+			}
+		case pref.Sint32Kind:
+			if ft.Kind() == reflect.Int32 {
+				return coderSint32PackedSliceIface
+			}
+		case pref.Uint32Kind:
+			if ft.Kind() == reflect.Uint32 {
+				return coderUint32PackedSliceIface
+			}
+		case pref.Int64Kind:
+			if ft.Kind() == reflect.Int64 {
+				return coderInt64PackedSliceIface
+			}
+		case pref.Sint64Kind:
+			if ft.Kind() == reflect.Int64 {
+				return coderSint64PackedSliceIface
+			}
+		case pref.Uint64Kind:
+			if ft.Kind() == reflect.Uint64 {
+				return coderUint64PackedSliceIface
+			}
+		case pref.Sfixed32Kind:
+			if ft.Kind() == reflect.Int32 {
+				return coderSfixed32PackedSliceIface
+			}
+		case pref.Fixed32Kind:
+			if ft.Kind() == reflect.Uint32 {
+				return coderFixed32PackedSliceIface
+			}
+		case pref.FloatKind:
+			if ft.Kind() == reflect.Float32 {
+				return coderFloatPackedSliceIface
+			}
+		case pref.Sfixed64Kind:
+			if ft.Kind() == reflect.Int64 {
+				return coderSfixed64PackedSliceIface
+			}
+		case pref.Fixed64Kind:
+			if ft.Kind() == reflect.Uint64 {
+				return coderFixed64PackedSliceIface
+			}
+		case pref.DoubleKind:
+			if ft.Kind() == reflect.Float64 {
+				return coderDoublePackedSliceIface
+			}
+		}
 	default:
 		switch fd.Kind() {
 		case pref.BoolKind:

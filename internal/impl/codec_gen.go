@@ -294,6 +294,43 @@ var coderBoolSliceIface = ifaceCoderFuncs{
 	unmarshal: consumeBoolSliceIface,
 }
 
+// sizeBoolPackedSliceIface returns the size of wire encoding a []bool value as a packed repeated Bool.
+func sizeBoolPackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]bool)
+	if len(s) == 0 {
+		return 0
+	}
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(wire.EncodeBool(v))
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendBoolPackedSliceIface encodes a []bool value as a packed repeated Bool.
+func appendBoolPackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]bool)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(wire.EncodeBool(v))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendVarint(b, wire.EncodeBool(v))
+	}
+	return b, nil
+}
+
+var coderBoolPackedSliceIface = ifaceCoderFuncs{
+	size:      sizeBoolPackedSliceIface,
+	marshal:   appendBoolPackedSliceIface,
+	unmarshal: consumeBoolSliceIface,
+}
+
 // sizeInt32 returns the size of wire encoding a int32 pointer as a Int32.
 func sizeInt32(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Int32()
@@ -572,6 +609,43 @@ func consumeInt32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire
 var coderInt32SliceIface = ifaceCoderFuncs{
 	size:      sizeInt32SliceIface,
 	marshal:   appendInt32SliceIface,
+	unmarshal: consumeInt32SliceIface,
+}
+
+// sizeInt32PackedSliceIface returns the size of wire encoding a []int32 value as a packed repeated Int32.
+func sizeInt32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]int32)
+	if len(s) == 0 {
+		return 0
+	}
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(uint64(v))
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendInt32PackedSliceIface encodes a []int32 value as a packed repeated Int32.
+func appendInt32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]int32)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(uint64(v))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendVarint(b, uint64(v))
+	}
+	return b, nil
+}
+
+var coderInt32PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeInt32PackedSliceIface,
+	marshal:   appendInt32PackedSliceIface,
 	unmarshal: consumeInt32SliceIface,
 }
 
@@ -856,6 +930,43 @@ var coderSint32SliceIface = ifaceCoderFuncs{
 	unmarshal: consumeSint32SliceIface,
 }
 
+// sizeSint32PackedSliceIface returns the size of wire encoding a []int32 value as a packed repeated Sint32.
+func sizeSint32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]int32)
+	if len(s) == 0 {
+		return 0
+	}
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendSint32PackedSliceIface encodes a []int32 value as a packed repeated Sint32.
+func appendSint32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]int32)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+	}
+	return b, nil
+}
+
+var coderSint32PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeSint32PackedSliceIface,
+	marshal:   appendSint32PackedSliceIface,
+	unmarshal: consumeSint32SliceIface,
+}
+
 // sizeUint32 returns the size of wire encoding a uint32 pointer as a Uint32.
 func sizeUint32(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Uint32()
@@ -1134,6 +1245,43 @@ func consumeUint32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wir
 var coderUint32SliceIface = ifaceCoderFuncs{
 	size:      sizeUint32SliceIface,
 	marshal:   appendUint32SliceIface,
+	unmarshal: consumeUint32SliceIface,
+}
+
+// sizeUint32PackedSliceIface returns the size of wire encoding a []uint32 value as a packed repeated Uint32.
+func sizeUint32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]uint32)
+	if len(s) == 0 {
+		return 0
+	}
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(uint64(v))
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendUint32PackedSliceIface encodes a []uint32 value as a packed repeated Uint32.
+func appendUint32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]uint32)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(uint64(v))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendVarint(b, uint64(v))
+	}
+	return b, nil
+}
+
+var coderUint32PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeUint32PackedSliceIface,
+	marshal:   appendUint32PackedSliceIface,
 	unmarshal: consumeUint32SliceIface,
 }
 
@@ -1418,6 +1566,43 @@ var coderInt64SliceIface = ifaceCoderFuncs{
 	unmarshal: consumeInt64SliceIface,
 }
 
+// sizeInt64PackedSliceIface returns the size of wire encoding a []int64 value as a packed repeated Int64.
+func sizeInt64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]int64)
+	if len(s) == 0 {
+		return 0
+	}
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(uint64(v))
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendInt64PackedSliceIface encodes a []int64 value as a packed repeated Int64.
+func appendInt64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]int64)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(uint64(v))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendVarint(b, uint64(v))
+	}
+	return b, nil
+}
+
+var coderInt64PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeInt64PackedSliceIface,
+	marshal:   appendInt64PackedSliceIface,
+	unmarshal: consumeInt64SliceIface,
+}
+
 // sizeSint64 returns the size of wire encoding a int64 pointer as a Sint64.
 func sizeSint64(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Int64()
@@ -1696,6 +1881,43 @@ func consumeSint64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wir
 var coderSint64SliceIface = ifaceCoderFuncs{
 	size:      sizeSint64SliceIface,
 	marshal:   appendSint64SliceIface,
+	unmarshal: consumeSint64SliceIface,
+}
+
+// sizeSint64PackedSliceIface returns the size of wire encoding a []int64 value as a packed repeated Sint64.
+func sizeSint64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]int64)
+	if len(s) == 0 {
+		return 0
+	}
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(wire.EncodeZigZag(v))
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendSint64PackedSliceIface encodes a []int64 value as a packed repeated Sint64.
+func appendSint64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]int64)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(wire.EncodeZigZag(v))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+	}
+	return b, nil
+}
+
+var coderSint64PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeSint64PackedSliceIface,
+	marshal:   appendSint64PackedSliceIface,
 	unmarshal: consumeSint64SliceIface,
 }
 
@@ -1980,6 +2202,43 @@ var coderUint64SliceIface = ifaceCoderFuncs{
 	unmarshal: consumeUint64SliceIface,
 }
 
+// sizeUint64PackedSliceIface returns the size of wire encoding a []uint64 value as a packed repeated Uint64.
+func sizeUint64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]uint64)
+	if len(s) == 0 {
+		return 0
+	}
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(v)
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendUint64PackedSliceIface encodes a []uint64 value as a packed repeated Uint64.
+func appendUint64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]uint64)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for _, v := range s {
+		n += wire.SizeVarint(v)
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendVarint(b, v)
+	}
+	return b, nil
+}
+
+var coderUint64PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeUint64PackedSliceIface,
+	marshal:   appendUint64PackedSliceIface,
+	unmarshal: consumeUint64SliceIface,
+}
+
 // sizeSfixed32 returns the size of wire encoding a int32 pointer as a Sfixed32.
 func sizeSfixed32(p pointer, tagsize int, _ marshalOptions) (size int) {
 
@@ -2246,6 +2505,37 @@ func consumeSfixed32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp w
 var coderSfixed32SliceIface = ifaceCoderFuncs{
 	size:      sizeSfixed32SliceIface,
 	marshal:   appendSfixed32SliceIface,
+	unmarshal: consumeSfixed32SliceIface,
+}
+
+// sizeSfixed32PackedSliceIface returns the size of wire encoding a []int32 value as a packed repeated Sfixed32.
+func sizeSfixed32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]int32)
+	if len(s) == 0 {
+		return 0
+	}
+	n := len(s) * wire.SizeFixed32()
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendSfixed32PackedSliceIface encodes a []int32 value as a packed repeated Sfixed32.
+func appendSfixed32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]int32)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := len(s) * wire.SizeFixed32()
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendFixed32(b, uint32(v))
+	}
+	return b, nil
+}
+
+var coderSfixed32PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeSfixed32PackedSliceIface,
+	marshal:   appendSfixed32PackedSliceIface,
 	unmarshal: consumeSfixed32SliceIface,
 }
 
@@ -2518,6 +2808,37 @@ var coderFixed32SliceIface = ifaceCoderFuncs{
 	unmarshal: consumeFixed32SliceIface,
 }
 
+// sizeFixed32PackedSliceIface returns the size of wire encoding a []uint32 value as a packed repeated Fixed32.
+func sizeFixed32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]uint32)
+	if len(s) == 0 {
+		return 0
+	}
+	n := len(s) * wire.SizeFixed32()
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendFixed32PackedSliceIface encodes a []uint32 value as a packed repeated Fixed32.
+func appendFixed32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]uint32)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := len(s) * wire.SizeFixed32()
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendFixed32(b, v)
+	}
+	return b, nil
+}
+
+var coderFixed32PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeFixed32PackedSliceIface,
+	marshal:   appendFixed32PackedSliceIface,
+	unmarshal: consumeFixed32SliceIface,
+}
+
 // sizeFloat returns the size of wire encoding a float32 pointer as a Float.
 func sizeFloat(p pointer, tagsize int, _ marshalOptions) (size int) {
 
@@ -2784,6 +3105,37 @@ func consumeFloatSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire
 var coderFloatSliceIface = ifaceCoderFuncs{
 	size:      sizeFloatSliceIface,
 	marshal:   appendFloatSliceIface,
+	unmarshal: consumeFloatSliceIface,
+}
+
+// sizeFloatPackedSliceIface returns the size of wire encoding a []float32 value as a packed repeated Float.
+func sizeFloatPackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]float32)
+	if len(s) == 0 {
+		return 0
+	}
+	n := len(s) * wire.SizeFixed32()
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendFloatPackedSliceIface encodes a []float32 value as a packed repeated Float.
+func appendFloatPackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]float32)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := len(s) * wire.SizeFixed32()
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendFixed32(b, math.Float32bits(v))
+	}
+	return b, nil
+}
+
+var coderFloatPackedSliceIface = ifaceCoderFuncs{
+	size:      sizeFloatPackedSliceIface,
+	marshal:   appendFloatPackedSliceIface,
 	unmarshal: consumeFloatSliceIface,
 }
 
@@ -3056,6 +3408,37 @@ var coderSfixed64SliceIface = ifaceCoderFuncs{
 	unmarshal: consumeSfixed64SliceIface,
 }
 
+// sizeSfixed64PackedSliceIface returns the size of wire encoding a []int64 value as a packed repeated Sfixed64.
+func sizeSfixed64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]int64)
+	if len(s) == 0 {
+		return 0
+	}
+	n := len(s) * wire.SizeFixed64()
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendSfixed64PackedSliceIface encodes a []int64 value as a packed repeated Sfixed64.
+func appendSfixed64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]int64)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := len(s) * wire.SizeFixed64()
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendFixed64(b, uint64(v))
+	}
+	return b, nil
+}
+
+var coderSfixed64PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeSfixed64PackedSliceIface,
+	marshal:   appendSfixed64PackedSliceIface,
+	unmarshal: consumeSfixed64SliceIface,
+}
+
 // sizeFixed64 returns the size of wire encoding a uint64 pointer as a Fixed64.
 func sizeFixed64(p pointer, tagsize int, _ marshalOptions) (size int) {
 
@@ -3325,6 +3708,37 @@ var coderFixed64SliceIface = ifaceCoderFuncs{
 	unmarshal: consumeFixed64SliceIface,
 }
 
+// sizeFixed64PackedSliceIface returns the size of wire encoding a []uint64 value as a packed repeated Fixed64.
+func sizeFixed64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]uint64)
+	if len(s) == 0 {
+		return 0
+	}
+	n := len(s) * wire.SizeFixed64()
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendFixed64PackedSliceIface encodes a []uint64 value as a packed repeated Fixed64.
+func appendFixed64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]uint64)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := len(s) * wire.SizeFixed64()
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendFixed64(b, v)
+	}
+	return b, nil
+}
+
+var coderFixed64PackedSliceIface = ifaceCoderFuncs{
+	size:      sizeFixed64PackedSliceIface,
+	marshal:   appendFixed64PackedSliceIface,
+	unmarshal: consumeFixed64SliceIface,
+}
+
 // sizeDouble returns the size of wire encoding a float64 pointer as a Double.
 func sizeDouble(p pointer, tagsize int, _ marshalOptions) (size int) {
 
@@ -3591,6 +4005,37 @@ func consumeDoubleSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wir
 var coderDoubleSliceIface = ifaceCoderFuncs{
 	size:      sizeDoubleSliceIface,
 	marshal:   appendDoubleSliceIface,
+	unmarshal: consumeDoubleSliceIface,
+}
+
+// sizeDoublePackedSliceIface returns the size of wire encoding a []float64 value as a packed repeated Double.
+func sizeDoublePackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]float64)
+	if len(s) == 0 {
+		return 0
+	}
+	n := len(s) * wire.SizeFixed64()
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendDoublePackedSliceIface encodes a []float64 value as a packed repeated Double.
+func appendDoublePackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]float64)
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := len(s) * wire.SizeFixed64()
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		b = wire.AppendFixed64(b, math.Float64bits(v))
+	}
+	return b, nil
+}
+
+var coderDoublePackedSliceIface = ifaceCoderFuncs{
+	size:      sizeDoublePackedSliceIface,
+	marshal:   appendDoublePackedSliceIface,
 	unmarshal: consumeDoubleSliceIface,
 }
 

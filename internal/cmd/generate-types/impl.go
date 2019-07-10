@@ -365,12 +365,58 @@ func consume{{.Name}}SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp 
 	return ival, n, nil
 }
 
-
 var coder{{.Name}}SliceIface = ifaceCoderFuncs{
 	size:      size{{.Name}}SliceIface,
 	marshal:   append{{.Name}}SliceIface,
 	unmarshal: consume{{.Name}}SliceIface,
 }
+
+{{if or (eq .WireType "Varint") (eq .WireType "Fixed32") (eq .WireType "Fixed64")}}
+// size{{.Name}}PackedSliceIface returns the size of wire encoding a []{{.GoType}} value as a packed repeated {{.Name}}.
+func size{{.Name}}PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
+	s := *ival.(*[]{{.GoType}})
+	if len(s) == 0 {
+		return 0
+	}
+	{{if .WireType.ConstSize -}}
+	n := len(s) * {{template "Size" .}}
+	{{- else -}}
+	n := 0
+	for _, v := range s {
+		n += {{template "Size" .}}
+	}
+	{{- end}}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// append{{.Name}}PackedSliceIface encodes a []{{.GoType}} value as a packed repeated {{.Name}}.
+func append{{.Name}}PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *ival.(*[]{{.GoType}})
+	if len(s) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	{{if .WireType.ConstSize -}}
+	n := len(s) * {{template "Size" .}}
+	{{- else -}}
+	n := 0
+	for _, v := range s {
+		n += {{template "Size" .}}
+	}
+	{{- end}}
+	b = wire.AppendVarint(b, uint64(n))
+	for _, v := range s {
+		{{template "Append" .}}
+	}
+	return b, nil
+}
+
+var coder{{.Name}}PackedSliceIface = ifaceCoderFuncs{
+	size:      size{{.Name}}PackedSliceIface,
+	marshal:   append{{.Name}}PackedSliceIface,
+	unmarshal: consume{{.Name}}SliceIface,
+}
+{{end}}
 
 {{end -}}
 {{end -}}

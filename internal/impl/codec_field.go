@@ -698,6 +698,49 @@ var coderEnumSliceIface = ifaceCoderFuncs{
 	unmarshal: consumeEnumSliceIface,
 }
 
+func sizeEnumPackedSliceIface(ival interface{}, tagsize int, opts marshalOptions) (size int) {
+	return sizeEnumPackedSliceReflect(reflect.ValueOf(ival).Elem(), tagsize, opts)
+}
+
+func sizeEnumPackedSliceReflect(s reflect.Value, tagsize int, _ marshalOptions) (size int) {
+	llen := s.Len()
+	if llen == 0 {
+		return 0
+	}
+	n := 0
+	for i := 0; i < llen; i++ {
+		n += wire.SizeVarint(uint64(s.Index(i).Int()))
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+func appendEnumPackedSliceIface(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error) {
+	return appendEnumPackedSliceReflect(b, reflect.ValueOf(ival).Elem(), wiretag, opts)
+}
+
+func appendEnumPackedSliceReflect(b []byte, s reflect.Value, wiretag uint64, opts marshalOptions) ([]byte, error) {
+	llen := s.Len()
+	if llen == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for i := 0; i < llen; i++ {
+		n += wire.SizeVarint(uint64(s.Index(i).Int()))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for i := 0; i < llen; i++ {
+		b = wire.AppendVarint(b, uint64(s.Index(i).Int()))
+	}
+	return b, nil
+}
+
+var coderEnumPackedSliceIface = ifaceCoderFuncs{
+	size:      sizeEnumPackedSliceIface,
+	marshal:   appendEnumPackedSliceIface,
+	unmarshal: consumeEnumSliceIface,
+}
+
 // Strings with UTF8 validation.
 
 func appendStringValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {

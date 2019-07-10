@@ -104,35 +104,12 @@ var coderEnumSlice = pointerCoderFuncs{
 	unmarshal: consumeEnumSlice,
 }
 
-func sizeEnumPackedSlice(p pointer, tagsize int, _ marshalOptions) (size int) {
-	s := p.v.Elem()
-	slen := s.Len()
-	if slen == 0 {
-		return 0
-	}
-	n := 0
-	for i := 0; i < slen; i++ {
-		n += wire.SizeVarint(uint64(s.Index(i).Int()))
-	}
-	return tagsize + wire.SizeBytes(n)
+func sizeEnumPackedSlice(p pointer, tagsize int, opts marshalOptions) (size int) {
+	return sizeEnumPackedSliceReflect(p.v.Elem(), tagsize, opts)
 }
 
 func appendEnumPackedSlice(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	s := p.v.Elem()
-	slen := s.Len()
-	if slen == 0 {
-		return b, nil
-	}
-	b = wire.AppendVarint(b, wiretag)
-	n := 0
-	for i := 0; i < slen; i++ {
-		n += wire.SizeVarint(uint64(s.Index(i).Int()))
-	}
-	b = wire.AppendVarint(b, uint64(n))
-	for i := 0; i < slen; i++ {
-		b = wire.AppendVarint(b, uint64(s.Index(i).Int()))
-	}
-	return b, nil
+	return appendEnumPackedSliceReflect(b, p.v.Elem(), wiretag, opts)
 }
 
 var coderEnumPackedSlice = pointerCoderFuncs{

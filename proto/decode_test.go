@@ -509,6 +509,92 @@ var testProtos = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc: "packed repeated types",
+		decodeTo: []proto.Message{&testpb.TestPackedTypes{
+			PackedInt32:    []int32{1001, 2001},
+			PackedInt64:    []int64{1002, 2002},
+			PackedUint32:   []uint32{1003, 2003},
+			PackedUint64:   []uint64{1004, 2004},
+			PackedSint32:   []int32{1005, 2005},
+			PackedSint64:   []int64{1006, 2006},
+			PackedFixed32:  []uint32{1007, 2007},
+			PackedFixed64:  []uint64{1008, 2008},
+			PackedSfixed32: []int32{1009, 2009},
+			PackedSfixed64: []int64{1010, 2010},
+			PackedFloat:    []float32{1011.5, 2011.5},
+			PackedDouble:   []float64{1012.5, 2012.5},
+			PackedBool:     []bool{true, false},
+			PackedEnum: []testpb.ForeignEnum{
+				testpb.ForeignEnum_FOREIGN_FOO,
+				testpb.ForeignEnum_FOREIGN_BAR,
+			},
+		}, build(
+			&testpb.TestPackedExtensions{},
+			extend(testpb.E_PackedInt32Extension, []int32{1001, 2001}),
+			extend(testpb.E_PackedInt64Extension, []int64{1002, 2002}),
+			extend(testpb.E_PackedUint32Extension, []uint32{1003, 2003}),
+			extend(testpb.E_PackedUint64Extension, []uint64{1004, 2004}),
+			extend(testpb.E_PackedSint32Extension, []int32{1005, 2005}),
+			extend(testpb.E_PackedSint64Extension, []int64{1006, 2006}),
+			extend(testpb.E_PackedFixed32Extension, []uint32{1007, 2007}),
+			extend(testpb.E_PackedFixed64Extension, []uint64{1008, 2008}),
+			extend(testpb.E_PackedSfixed32Extension, []int32{1009, 2009}),
+			extend(testpb.E_PackedSfixed64Extension, []int64{1010, 2010}),
+			extend(testpb.E_PackedFloatExtension, []float32{1011.5, 2011.5}),
+			extend(testpb.E_PackedDoubleExtension, []float64{1012.5, 2012.5}),
+			extend(testpb.E_PackedBoolExtension, []bool{true, false}),
+			extend(testpb.E_PackedEnumExtension, []testpb.ForeignEnum{
+				testpb.ForeignEnum_FOREIGN_FOO,
+				testpb.ForeignEnum_FOREIGN_BAR,
+			}),
+		)},
+		wire: pack.Message{
+			pack.Tag{90, pack.BytesType}, pack.LengthPrefix{
+				pack.Varint(1001), pack.Varint(2001),
+			},
+			pack.Tag{91, pack.BytesType}, pack.LengthPrefix{
+				pack.Varint(1002), pack.Varint(2002),
+			},
+			pack.Tag{92, pack.BytesType}, pack.LengthPrefix{
+				pack.Uvarint(1003), pack.Uvarint(2003),
+			},
+			pack.Tag{93, pack.BytesType}, pack.LengthPrefix{
+				pack.Uvarint(1004), pack.Uvarint(2004),
+			},
+			pack.Tag{94, pack.BytesType}, pack.LengthPrefix{
+				pack.Svarint(1005), pack.Svarint(2005),
+			},
+			pack.Tag{95, pack.BytesType}, pack.LengthPrefix{
+				pack.Svarint(1006), pack.Svarint(2006),
+			},
+			pack.Tag{96, pack.BytesType}, pack.LengthPrefix{
+				pack.Uint32(1007), pack.Uint32(2007),
+			},
+			pack.Tag{97, pack.BytesType}, pack.LengthPrefix{
+				pack.Uint64(1008), pack.Uint64(2008),
+			},
+			pack.Tag{98, pack.BytesType}, pack.LengthPrefix{
+				pack.Int32(1009), pack.Int32(2009),
+			},
+			pack.Tag{99, pack.BytesType}, pack.LengthPrefix{
+				pack.Int64(1010), pack.Int64(2010),
+			},
+			pack.Tag{100, pack.BytesType}, pack.LengthPrefix{
+				pack.Float32(1011.5), pack.Float32(2011.5),
+			},
+			pack.Tag{101, pack.BytesType}, pack.LengthPrefix{
+				pack.Float64(1012.5), pack.Float64(2012.5),
+			},
+			pack.Tag{102, pack.BytesType}, pack.LengthPrefix{
+				pack.Bool(true), pack.Bool(false),
+			},
+			pack.Tag{103, pack.BytesType}, pack.LengthPrefix{
+				pack.Varint(int(testpb.ForeignEnum_FOREIGN_FOO)),
+				pack.Varint(int(testpb.ForeignEnum_FOREIGN_BAR)),
+			},
+		}.Marshal(),
+	},
+	{
 		desc: "repeated messages",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
