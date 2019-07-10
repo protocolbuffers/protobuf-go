@@ -204,11 +204,15 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporte
 	}
 }
 
-var emptyBytes = reflect.ValueOf([]byte{})
+var (
+	nilBytes   = reflect.ValueOf([]byte(nil))
+	emptyBytes = reflect.ValueOf([]byte{})
+)
 
 func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
 	nullable := fd.Syntax() == pref.Proto2
+	isBytes := ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8
 	if nullable {
 		if ft.Kind() != reflect.Ptr && ft.Kind() != reflect.Slice {
 			panic(fmt.Sprintf("invalid type: got %v, want pointer", ft))
@@ -274,8 +278,12 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x expor
 				rv = rv.Elem()
 			}
 			rv.Set(conv.GoValueOf(v))
-			if nullable && rv.Kind() == reflect.Slice && rv.IsNil() {
-				rv.Set(emptyBytes)
+			if isBytes && rv.Len() == 0 {
+				if nullable {
+					rv.Set(emptyBytes) // preserve presence in proto2
+				} else {
+					rv.Set(nilBytes) // do not preserve presence in proto3
+				}
 			}
 		},
 	}

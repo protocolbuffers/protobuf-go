@@ -270,6 +270,11 @@ func TestScalarProto2(t *testing.T) {
 		}).ProtoReflect()},
 		clearFields{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22},
 		equalMessage{new(ScalarProto2).ProtoReflect()},
+
+		// Setting a bytes field nil empty bytes should preserve presence.
+		setFields{10: V([]byte(nil)), 11: V([]byte(nil)), 21: V([]byte(nil)), 22: V([]byte(nil))},
+		getFields{10: V([]byte{}), 11: V([]byte(nil)), 21: V([]byte{}), 22: V([]byte(nil))},
+		hasFields{10: true, 11: true, 21: true, 22: true},
 	})
 
 	// Test read-only operations on nil message.
@@ -391,6 +396,11 @@ func TestScalarProto3(t *testing.T) {
 		hasFields{6: false, 7: false},
 		setFields{6: V(float32(math.Copysign(0, -1))), 7: V(float64(math.Copysign(0, -1)))},
 		hasFields{6: true, 7: true},
+
+		// Setting a bytes field to non-nil empty bytes should not preserve presence.
+		setFields{10: V([]byte{}), 11: V([]byte{}), 21: V([]byte{}), 22: V([]byte{})},
+		getFields{10: V([]byte(nil)), 11: V([]byte(nil)), 21: V([]byte(nil)), 22: V([]byte(nil))},
+		hasFields{10: false, 11: false, 21: false, 22: false},
 	})
 
 	// Test read-only operations on nil message.
@@ -1200,7 +1210,6 @@ var cmpOpts = cmp.Options{
 		}
 	}),
 	cmpopts.EquateNaNs(),
-	cmpopts.EquateEmpty(),
 }
 
 func testMessage(t *testing.T, p path, m pref.Message, tt messageOps) {
