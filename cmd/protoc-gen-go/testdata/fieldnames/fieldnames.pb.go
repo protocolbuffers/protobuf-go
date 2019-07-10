@@ -14,13 +14,6 @@ import (
 	sync "sync"
 )
 
-const (
-	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 0)
-	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(0 - protoimpl.MinVersion)
-)
-
 // Assorted edge cases in field name conflict resolution.
 //
 // Not all (or possibly any) of these behave in an easily-understood fashion.

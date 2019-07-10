@@ -40,13 +40,6 @@ import (
 	sync "sync"
 )
 
-const (
-	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 0)
-	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(0 - protoimpl.MinVersion)
-)
-
 // A Duration represents a signed, fixed-length span of time represented
 // as a count of seconds and fractions of seconds at nanosecond
 // resolution. It is independent of any calendar and concepts like "day"

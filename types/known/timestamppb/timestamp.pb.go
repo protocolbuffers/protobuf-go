@@ -40,13 +40,6 @@ import (
 	sync "sync"
 )
 
-const (
-	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 0)
-	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(0 - protoimpl.MinVersion)
-)
-
 // A Timestamp represents a point in time independent of any time zone or local
 // calendar, encoded as a count of seconds and fractions of seconds at
 // nanosecond resolution. The count is relative to an epoch at UTC midnight on

@@ -9,12 +9,21 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
+	"os"
+	"path/filepath"
 
 	gengo "google.golang.org/protobuf/cmd/protoc-gen-go/internal_gengo"
 	"google.golang.org/protobuf/compiler/protogen"
+	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
 func main() {
+	if len(os.Args) == 2 && os.Args[1] == "--version" {
+		fmt.Fprintf(os.Stderr, "%v %v\n", filepath.Base(os.Args[0]), protoimpl.VersionString())
+		os.Exit(1)
+	}
+
 	var (
 		flags        flag.FlagSet
 		plugins      = flags.String("plugins", "", "deprecated option")

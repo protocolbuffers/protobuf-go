@@ -15,13 +15,6 @@ import (
 	sync "sync"
 )
 
-const (
-	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 0)
-	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(0 - protoimpl.MinVersion)
-)
-
 var file_test_ext_proto_extDescs = []protoiface.ExtensionDescV1{
 	{
 		ExtendedType:  (*TestAllExtensions)(nil),

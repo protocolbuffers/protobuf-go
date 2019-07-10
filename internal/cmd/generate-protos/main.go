@@ -53,6 +53,7 @@ func init() {
 					if file.Generate {
 						switch plugin {
 						case "go":
+							gengo.GenerateVersionMarkers = false
 							gengo.GenerateFile(gen, file)
 							generateFieldNumbers(gen, file)
 						case "gogrpc":
