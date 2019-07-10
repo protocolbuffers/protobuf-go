@@ -15,7 +15,6 @@ import (
 	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/runtime/protoiface"
 
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -25,34 +24,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
-
-func init() {
-	// TODO: remove these registerExtension calls when generated code registers
-	// to V2 global registry.
-	registerExtension(pb2.E_OptExtBool)
-	registerExtension(pb2.E_OptExtString)
-	registerExtension(pb2.E_OptExtEnum)
-	registerExtension(pb2.E_OptExtNested)
-	registerExtension(pb2.E_RptExtFixed32)
-	registerExtension(pb2.E_RptExtEnum)
-	registerExtension(pb2.E_RptExtNested)
-	registerExtension(pb2.E_ExtensionsContainer_OptExtBool)
-	registerExtension(pb2.E_ExtensionsContainer_OptExtString)
-	registerExtension(pb2.E_ExtensionsContainer_OptExtEnum)
-	registerExtension(pb2.E_ExtensionsContainer_OptExtNested)
-	registerExtension(pb2.E_ExtensionsContainer_RptExtString)
-	registerExtension(pb2.E_ExtensionsContainer_RptExtEnum)
-	registerExtension(pb2.E_ExtensionsContainer_RptExtNested)
-	registerExtension(pb2.E_MessageSetExtension)
-	registerExtension(pb2.E_MessageSetExtension_MessageSetExtension)
-	registerExtension(pb2.E_MessageSetExtension_NotMessageSetExtension)
-	registerExtension(pb2.E_MessageSetExtension_ExtNested)
-	registerExtension(pb2.E_FakeMessageSetExtension_MessageSetExtension)
-}
-
-func registerExtension(xd *protoiface.ExtensionDescV1) {
-	preg.GlobalTypes.Register(xd.Type)
-}
 
 func TestUnmarshal(t *testing.T) {
 	tests := []struct {

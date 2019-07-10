@@ -352,8 +352,8 @@ opt_enum: 101
 opt_nested_enum: -101
 `,
 		wantMessage: &pb2.Enums{
-			OptEnum:       pb2Enum(101),
-			OptNestedEnum: pb2Enums_NestedEnum(-101),
+			OptEnum:       pb2.Enum(101).Enum(),
+			OptNestedEnum: pb2.Enums_NestedEnum(-101).Enum(),
 		},
 	}, {
 		desc:         "proto2 enum set to invalid named",

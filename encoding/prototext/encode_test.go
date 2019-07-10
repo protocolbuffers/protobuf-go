@@ -5,7 +5,6 @@
 package prototext_test
 
 import (
-	"encoding/hex"
 	"math"
 	"testing"
 
@@ -29,30 +28,9 @@ func init() {
 	detrand.Disable()
 }
 
-func pb2Enum(i int32) *pb2.Enum {
-	p := new(pb2.Enum)
-	*p = pb2.Enum(i)
-	return p
-}
-
-func pb2Enums_NestedEnum(i int32) *pb2.Enums_NestedEnum {
-	p := new(pb2.Enums_NestedEnum)
-	*p = pb2.Enums_NestedEnum(i)
-	return p
-}
-
 // TODO: Use proto.SetExtension when available.
 func setExtension(m proto.Message, xd *protoiface.ExtensionDescV1, val interface{}) {
 	m.ProtoReflect().Set(xd.Type, xd.Type.ValueOf(val))
-}
-
-// dhex decodes a hex-string and returns the bytes and panics if s is invalid.
-func dhex(s string) []byte {
-	b, err := hex.DecodeString(s)
-	if err != nil {
-		panic(err)
-	}
-	return b
 }
 
 func TestMarshal(t *testing.T) {
@@ -205,8 +183,8 @@ opt_string: "谷歌"
 	}, {
 		desc: "proto2 enum set to zero value",
 		input: &pb2.Enums{
-			OptEnum:       pb2Enum(0),
-			OptNestedEnum: pb2Enums_NestedEnum(0),
+			OptEnum:       pb2.Enum(0).Enum(),
+			OptNestedEnum: pb2.Enums_NestedEnum(0).Enum(),
 		},
 		want: `opt_enum: 0
 opt_nested_enum: 0
@@ -223,8 +201,8 @@ opt_nested_enum: UNO
 	}, {
 		desc: "proto2 enum set to numeric values",
 		input: &pb2.Enums{
-			OptEnum:       pb2Enum(2),
-			OptNestedEnum: pb2Enums_NestedEnum(2),
+			OptEnum:       pb2.Enum(2).Enum(),
+			OptNestedEnum: pb2.Enums_NestedEnum(2).Enum(),
 		},
 		want: `opt_enum: TWO
 opt_nested_enum: DOS
@@ -232,8 +210,8 @@ opt_nested_enum: DOS
 	}, {
 		desc: "proto2 enum set to unnamed numeric values",
 		input: &pb2.Enums{
-			OptEnum:       pb2Enum(101),
-			OptNestedEnum: pb2Enums_NestedEnum(-101),
+			OptEnum:       pb2.Enum(101).Enum(),
+			OptNestedEnum: pb2.Enums_NestedEnum(-101).Enum(),
 		},
 		want: `opt_enum: 101
 opt_nested_enum: -101
@@ -1215,7 +1193,7 @@ value: "\n\x13embedded inside Any\x12\x0b\n\tinception"
 		},
 		input: &anypb.Any{
 			TypeUrl: "foo/pb2.Nested",
-			Value:   dhex("80"),
+			Value:   []byte("\x80"),
 		},
 		want: `type_url: "foo/pb2.Nested"
 value: "\x80"

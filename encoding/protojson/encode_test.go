@@ -6,13 +6,10 @@ package protojson_test
 
 import (
 	"bytes"
-	"encoding/hex"
 	"math"
-	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	pimpl "google.golang.org/protobuf/internal/impl"
@@ -32,35 +29,9 @@ import (
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
-// splitLines is a cmpopts.Option for comparing strings with line breaks.
-var splitLines = cmpopts.AcyclicTransformer("SplitLines", func(s string) []string {
-	return strings.Split(s, "\n")
-})
-
-func pb2Enum(i int32) *pb2.Enum {
-	p := new(pb2.Enum)
-	*p = pb2.Enum(i)
-	return p
-}
-
-func pb2Enums_NestedEnum(i int32) *pb2.Enums_NestedEnum {
-	p := new(pb2.Enums_NestedEnum)
-	*p = pb2.Enums_NestedEnum(i)
-	return p
-}
-
 // TODO: Replace this with proto.SetExtension.
 func setExtension(m proto.Message, xd *protoiface.ExtensionDescV1, val interface{}) {
 	m.ProtoReflect().Set(xd.Type, xd.Type.ValueOf(val))
-}
-
-// dhex decodes a hex-string and returns the bytes and panics if s is invalid.
-func dhex(s string) []byte {
-	b, err := hex.DecodeString(s)
-	if err != nil {
-		panic(err)
-	}
-	return b
 }
 
 func TestMarshal(t *testing.T) {
@@ -215,8 +186,8 @@ func TestMarshal(t *testing.T) {
 	}, {
 		desc: "proto2 enum set to zero value",
 		input: &pb2.Enums{
-			OptEnum:       pb2Enum(0),
-			OptNestedEnum: pb2Enums_NestedEnum(0),
+			OptEnum:       pb2.Enum(0).Enum(),
+			OptNestedEnum: pb2.Enums_NestedEnum(0).Enum(),
 		},
 		want: `{
   "optEnum": 0,
@@ -235,8 +206,8 @@ func TestMarshal(t *testing.T) {
 	}, {
 		desc: "proto2 enum set to numeric values",
 		input: &pb2.Enums{
-			OptEnum:       pb2Enum(2),
-			OptNestedEnum: pb2Enums_NestedEnum(2),
+			OptEnum:       pb2.Enum(2).Enum(),
+			OptNestedEnum: pb2.Enums_NestedEnum(2).Enum(),
 		},
 		want: `{
   "optEnum": "TWO",
@@ -245,8 +216,8 @@ func TestMarshal(t *testing.T) {
 	}, {
 		desc: "proto2 enum set to unnamed numeric values",
 		input: &pb2.Enums{
-			OptEnum:       pb2Enum(101),
-			OptNestedEnum: pb2Enums_NestedEnum(-101),
+			OptEnum:       pb2.Enum(101).Enum(),
+			OptNestedEnum: pb2.Enums_NestedEnum(-101).Enum(),
 		},
 		want: `{
   "optEnum": 101,
@@ -1636,7 +1607,7 @@ func TestMarshal(t *testing.T) {
 		},
 		input: &anypb.Any{
 			TypeUrl: "foo/pb2.Nested",
-			Value:   dhex("80"),
+			Value:   []byte("\x80"),
 		},
 		wantErr: true,
 	}, {
@@ -1941,7 +1912,7 @@ func TestMarshal(t *testing.T) {
 			got := string(b)
 			if got != tt.want {
 				t.Errorf("Marshal()\n<got>\n%v\n<want>\n%v\n", got, tt.want)
-				if diff := cmp.Diff(tt.want, got, splitLines); diff != "" {
+				if diff := cmp.Diff(tt.want, got); diff != "" {
 					t.Errorf("Marshal() diff -want +got\n%v\n", diff)
 				}
 			}
