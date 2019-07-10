@@ -11,7 +11,6 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/fieldnum"
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -61,9 +60,9 @@ func TestAnnotations(t *testing.T) {
 		end := begin + len(want.text)
 		wantInfo.Annotation = append(wantInfo.Annotation, &descriptorpb.GeneratedCodeInfo_Annotation{
 			Path:       want.path,
-			Begin:      scalar.Int32(int32(begin)),
-			End:        scalar.Int32(int32(end)),
-			SourceFile: scalar.String("annotations/annotations.proto"),
+			Begin:      proto.Int32(int32(begin)),
+			End:        proto.Int32(int32(end)),
+			SourceFile: proto.String("annotations/annotations.proto"),
 		})
 	}
 	if !proto.Equal(gotInfo, wantInfo) {

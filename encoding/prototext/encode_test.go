@@ -13,7 +13,6 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	pimpl "google.golang.org/protobuf/internal/impl"
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/runtime/protoiface"
@@ -51,21 +50,21 @@ func TestMarshal(t *testing.T) {
 	}, {
 		desc: "proto2 optional scalars set to zero values",
 		input: &pb2.Scalars{
-			OptBool:     scalar.Bool(false),
-			OptInt32:    scalar.Int32(0),
-			OptInt64:    scalar.Int64(0),
-			OptUint32:   scalar.Uint32(0),
-			OptUint64:   scalar.Uint64(0),
-			OptSint32:   scalar.Int32(0),
-			OptSint64:   scalar.Int64(0),
-			OptFixed32:  scalar.Uint32(0),
-			OptFixed64:  scalar.Uint64(0),
-			OptSfixed32: scalar.Int32(0),
-			OptSfixed64: scalar.Int64(0),
-			OptFloat:    scalar.Float32(0),
-			OptDouble:   scalar.Float64(0),
+			OptBool:     proto.Bool(false),
+			OptInt32:    proto.Int32(0),
+			OptInt64:    proto.Int64(0),
+			OptUint32:   proto.Uint32(0),
+			OptUint64:   proto.Uint64(0),
+			OptSint32:   proto.Int32(0),
+			OptSint64:   proto.Int64(0),
+			OptFixed32:  proto.Uint32(0),
+			OptFixed64:  proto.Uint64(0),
+			OptSfixed32: proto.Int32(0),
+			OptSfixed64: proto.Int64(0),
+			OptFloat:    proto.Float32(0),
+			OptDouble:   proto.Float64(0),
 			OptBytes:    []byte{},
-			OptString:   scalar.String(""),
+			OptString:   proto.String(""),
 		},
 		want: `opt_bool: false
 opt_int32: 0
@@ -106,19 +105,19 @@ opt_string: ""
 	}, {
 		desc: "proto2 optional scalars set to some values",
 		input: &pb2.Scalars{
-			OptBool:     scalar.Bool(true),
-			OptInt32:    scalar.Int32(0xff),
-			OptInt64:    scalar.Int64(0xdeadbeef),
-			OptUint32:   scalar.Uint32(47),
-			OptUint64:   scalar.Uint64(0xdeadbeef),
-			OptSint32:   scalar.Int32(-1001),
-			OptSint64:   scalar.Int64(-0xffff),
-			OptFixed64:  scalar.Uint64(64),
-			OptSfixed32: scalar.Int32(-32),
-			OptFloat:    scalar.Float32(1.02),
-			OptDouble:   scalar.Float64(1.0199999809265137),
+			OptBool:     proto.Bool(true),
+			OptInt32:    proto.Int32(0xff),
+			OptInt64:    proto.Int64(0xdeadbeef),
+			OptUint32:   proto.Uint32(47),
+			OptUint64:   proto.Uint64(0xdeadbeef),
+			OptSint32:   proto.Int32(-1001),
+			OptSint64:   proto.Int64(-0xffff),
+			OptFixed64:  proto.Uint64(64),
+			OptSfixed32: proto.Int32(-32),
+			OptFloat:    proto.Float32(1.02),
+			OptDouble:   proto.Float64(1.0199999809265137),
 			OptBytes:    []byte("\xe8\xb0\xb7\xe6\xad\x8c"),
-			OptString:   scalar.String("谷歌"),
+			OptString:   proto.String("谷歌"),
 		},
 		want: `opt_bool: true
 opt_int32: 255
@@ -271,9 +270,9 @@ OptGroup: {}
 		desc: "proto2 nested messages",
 		input: &pb2.Nests{
 			OptNested: &pb2.Nested{
-				OptString: scalar.String("nested message"),
+				OptString: proto.String("nested message"),
 				OptNested: &pb2.Nested{
-					OptString: scalar.String("another nested message"),
+					OptString: proto.String("another nested message"),
 				},
 			},
 		},
@@ -288,12 +287,12 @@ OptGroup: {}
 		desc: "proto2 groups",
 		input: &pb2.Nests{
 			Optgroup: &pb2.Nests_OptGroup{
-				OptString: scalar.String("inside a group"),
+				OptString: proto.String("inside a group"),
 				OptNested: &pb2.Nested{
-					OptString: scalar.String("nested message inside a group"),
+					OptString: proto.String("nested message inside a group"),
 				},
 				Optnestedgroup: &pb2.Nests_OptGroup_OptNestedGroup{
-					OptFixed32: scalar.Uint32(47),
+					OptFixed32: proto.Uint32(47),
 				},
 			},
 		},
@@ -483,12 +482,12 @@ rpt_nested_enum: DIEZ
 		input: &pb2.Nests{
 			RptNested: []*pb2.Nested{
 				{
-					OptString: scalar.String("repeat nested one"),
+					OptString: proto.String("repeat nested one"),
 				},
 				{
-					OptString: scalar.String("repeat nested two"),
+					OptString: proto.String("repeat nested two"),
 					OptNested: &pb2.Nested{
-						OptString: scalar.String("inside repeat nested two"),
+						OptString: proto.String("inside repeat nested two"),
 					},
 				},
 				{},
@@ -691,10 +690,10 @@ str_to_oneofs: {
 	}, {
 		desc: "required fields partially set",
 		input: &pb2.Requireds{
-			ReqBool:     scalar.Bool(false),
-			ReqSfixed64: scalar.Int64(0xbeefcafe),
-			ReqDouble:   scalar.Float64(math.NaN()),
-			ReqString:   scalar.String("hello"),
+			ReqBool:     proto.Bool(false),
+			ReqSfixed64: proto.Int64(0xbeefcafe),
+			ReqDouble:   proto.Float64(math.NaN()),
+			ReqString:   proto.String("hello"),
 			ReqEnum:     pb2.Enum_ONE.Enum(),
 		},
 		want: `req_bool: false
@@ -708,10 +707,10 @@ req_enum: ONE
 		desc: "required fields not set with AllowPartial",
 		mo:   prototext.MarshalOptions{AllowPartial: true},
 		input: &pb2.Requireds{
-			ReqBool:     scalar.Bool(false),
-			ReqSfixed64: scalar.Int64(0xbeefcafe),
-			ReqDouble:   scalar.Float64(math.NaN()),
-			ReqString:   scalar.String("hello"),
+			ReqBool:     proto.Bool(false),
+			ReqSfixed64: proto.Int64(0xbeefcafe),
+			ReqDouble:   proto.Float64(math.NaN()),
+			ReqString:   proto.String("hello"),
 			ReqEnum:     pb2.Enum_ONE.Enum(),
 		},
 		want: `req_bool: false
@@ -723,10 +722,10 @@ req_enum: ONE
 	}, {
 		desc: "required fields all set",
 		input: &pb2.Requireds{
-			ReqBool:     scalar.Bool(false),
-			ReqSfixed64: scalar.Int64(0),
-			ReqDouble:   scalar.Float64(1.23),
-			ReqString:   scalar.String(""),
+			ReqBool:     proto.Bool(false),
+			ReqSfixed64: proto.Int64(0),
+			ReqDouble:   proto.Float64(1.23),
+			ReqString:   proto.String(""),
 			ReqEnum:     pb2.Enum_ONE.Enum(),
 			ReqNested:   &pb2.Nested{},
 		},
@@ -829,7 +828,7 @@ req_nested: {}
 		desc: "unknown varint and fixed types",
 		input: func() proto.Message {
 			m := &pb2.Scalars{
-				OptString: scalar.String("this message contains unknown fields"),
+				OptString: proto.String("this message contains unknown fields"),
 			}
 			m.ProtoReflect().SetUnknown(pack.Message{
 				pack.Tag{101, pack.VarintType}, pack.Bool(true),
@@ -900,17 +899,17 @@ req_nested: {}
 		desc: "extensions of non-repeated fields",
 		input: func() proto.Message {
 			m := &pb2.Extensions{
-				OptString: scalar.String("non-extension field"),
-				OptBool:   scalar.Bool(true),
-				OptInt32:  scalar.Int32(42),
+				OptString: proto.String("non-extension field"),
+				OptBool:   proto.Bool(true),
+				OptInt32:  proto.Int32(42),
 			}
 			setExtension(m, pb2.E_OptExtBool, true)
 			setExtension(m, pb2.E_OptExtString, "extension field")
 			setExtension(m, pb2.E_OptExtEnum, pb2.Enum_TEN)
 			setExtension(m, pb2.E_OptExtNested, &pb2.Nested{
-				OptString: scalar.String("nested in an extension"),
+				OptString: proto.String("nested in an extension"),
 				OptNested: &pb2.Nested{
-					OptString: scalar.String("another nested in an extension"),
+					OptString: proto.String("another nested in an extension"),
 				},
 			})
 			return m
@@ -941,10 +940,10 @@ opt_int32: 42
 		input: func() proto.Message {
 			m := &pb2.Extensions{}
 			setExtension(m, pb2.E_OptExtPartial, &pb2.PartialRequired{
-				OptString: scalar.String("partial1"),
+				OptString: proto.String("partial1"),
 			})
 			setExtension(m, pb2.E_ExtensionsContainer_OptExtPartial, &pb2.PartialRequired{
-				OptString: scalar.String("partial2"),
+				OptString: proto.String("partial2"),
 			})
 			return m
 		}(),
@@ -962,7 +961,7 @@ opt_int32: 42
 		input: func() proto.Message {
 			m := &pb2.Extensions{}
 			setExtension(m, pb2.E_OptExtPartial, &pb2.PartialRequired{
-				OptString: scalar.String("partial1"),
+				OptString: proto.String("partial1"),
 			})
 			return m
 		}(),
@@ -977,9 +976,9 @@ opt_int32: 42
 			setExtension(m, pb2.E_RptExtEnum, &[]pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
 			setExtension(m, pb2.E_RptExtFixed32, &[]uint32{42, 47})
 			setExtension(m, pb2.E_RptExtNested, &[]*pb2.Nested{
-				&pb2.Nested{OptString: scalar.String("one")},
-				&pb2.Nested{OptString: scalar.String("two")},
-				&pb2.Nested{OptString: scalar.String("three")},
+				&pb2.Nested{OptString: proto.String("one")},
+				&pb2.Nested{OptString: proto.String("two")},
+				&pb2.Nested{OptString: proto.String("three")},
 			})
 			return m
 		}(),
@@ -1006,9 +1005,9 @@ opt_int32: 42
 			setExtension(m, pb2.E_ExtensionsContainer_OptExtString, "extension field")
 			setExtension(m, pb2.E_ExtensionsContainer_OptExtEnum, pb2.Enum_TEN)
 			setExtension(m, pb2.E_ExtensionsContainer_OptExtNested, &pb2.Nested{
-				OptString: scalar.String("nested in an extension"),
+				OptString: proto.String("nested in an extension"),
 				OptNested: &pb2.Nested{
-					OptString: scalar.String("another nested in an extension"),
+					OptString: proto.String("another nested in an extension"),
 				},
 			})
 			return m
@@ -1027,16 +1026,16 @@ opt_int32: 42
 		desc: "extensions of repeated fields in another message",
 		input: func() proto.Message {
 			m := &pb2.Extensions{
-				OptString: scalar.String("non-extension field"),
-				OptBool:   scalar.Bool(true),
-				OptInt32:  scalar.Int32(42),
+				OptString: proto.String("non-extension field"),
+				OptBool:   proto.Bool(true),
+				OptInt32:  proto.Int32(42),
 			}
 			setExtension(m, pb2.E_ExtensionsContainer_RptExtEnum, &[]pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
 			setExtension(m, pb2.E_ExtensionsContainer_RptExtString, &[]string{"hello", "world"})
 			setExtension(m, pb2.E_ExtensionsContainer_RptExtNested, &[]*pb2.Nested{
-				&pb2.Nested{OptString: scalar.String("one")},
-				&pb2.Nested{OptString: scalar.String("two")},
-				&pb2.Nested{OptString: scalar.String("three")},
+				&pb2.Nested{OptString: proto.String("one")},
+				&pb2.Nested{OptString: proto.String("two")},
+				&pb2.Nested{OptString: proto.String("three")},
 			})
 			return m
 		}(),
@@ -1063,13 +1062,13 @@ opt_int32: 42
 		input: func() proto.Message {
 			m := &pb2.MessageSet{}
 			setExtension(m, pb2.E_MessageSetExtension_MessageSetExtension, &pb2.MessageSetExtension{
-				OptString: scalar.String("a messageset extension"),
+				OptString: proto.String("a messageset extension"),
 			})
 			setExtension(m, pb2.E_MessageSetExtension_NotMessageSetExtension, &pb2.MessageSetExtension{
-				OptString: scalar.String("not a messageset extension"),
+				OptString: proto.String("not a messageset extension"),
 			})
 			setExtension(m, pb2.E_MessageSetExtension_ExtNested, &pb2.Nested{
-				OptString: scalar.String("just a regular extension"),
+				OptString: proto.String("just a regular extension"),
 			})
 			return m
 		}(),
@@ -1088,7 +1087,7 @@ opt_int32: 42
 		input: func() proto.Message {
 			m := &pb2.FakeMessageSet{}
 			setExtension(m, pb2.E_FakeMessageSetExtension_MessageSetExtension, &pb2.FakeMessageSetExtension{
-				OptString: scalar.String("not a messageset extension"),
+				OptString: proto.String("not a messageset extension"),
 			})
 			return m
 		}(),
@@ -1101,7 +1100,7 @@ opt_int32: 42
 		input: func() proto.Message {
 			m := &pb2.MessageSet{}
 			setExtension(m, pb2.E_MessageSetExtension, &pb2.FakeMessageSetExtension{
-				OptString: scalar.String("another not a messageset extension"),
+				OptString: proto.String("another not a messageset extension"),
 			})
 			return m
 		}(),
@@ -1116,9 +1115,9 @@ opt_int32: 42
 		},
 		input: func() proto.Message {
 			m := &pb2.Nested{
-				OptString: scalar.String("embedded inside Any"),
+				OptString: proto.String("embedded inside Any"),
 				OptNested: &pb2.Nested{
-					OptString: scalar.String("inception"),
+					OptString: proto.String("inception"),
 				},
 			}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1140,9 +1139,9 @@ value: "\n\x13embedded inside Any\x12\x0b\n\tinception"
 		},
 		input: func() proto.Message {
 			m := &pb2.Nested{
-				OptString: scalar.String("embedded inside Any"),
+				OptString: proto.String("embedded inside Any"),
 				OptNested: &pb2.Nested{
-					OptString: scalar.String("inception"),
+					OptString: proto.String("inception"),
 				},
 			}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1168,7 +1167,7 @@ value: "\n\x13embedded inside Any\x12\x0b\n\tinception"
 		},
 		input: func() proto.Message {
 			m := &pb2.PartialRequired{
-				OptString: scalar.String("embedded inside Any"),
+				OptString: proto.String("embedded inside Any"),
 			}
 			b, err := proto.MarshalOptions{
 				AllowPartial:  true,

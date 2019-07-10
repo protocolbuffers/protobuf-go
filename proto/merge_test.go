@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/internal/encoding/pack"
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
@@ -36,52 +35,52 @@ func TestMerge(t *testing.T) {
 		desc: "clone a large message",
 		dst:  new(testpb.TestAllTypes),
 		src: &testpb.TestAllTypes{
-			OptionalInt64:      scalar.Int64(0),
+			OptionalInt64:      proto.Int64(0),
 			OptionalNestedEnum: testpb.TestAllTypes_NestedEnum(1).Enum(),
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(100),
+				A: proto.Int32(100),
 			},
 			RepeatedSfixed32: []int32{1, 2, 3},
 			RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
-				{A: scalar.Int32(200)},
-				{A: scalar.Int32(300)},
+				{A: proto.Int32(200)},
+				{A: proto.Int32(300)},
 			},
 			MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{
 				"fizz": 400,
 				"buzz": 500,
 			},
 			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"foo": {A: scalar.Int32(600)},
-				"bar": {A: scalar.Int32(700)},
+				"foo": {A: proto.Int32(600)},
+				"bar": {A: proto.Int32(700)},
 			},
 			OneofField: &testpb.TestAllTypes_OneofNestedMessage{
 				&testpb.TestAllTypes_NestedMessage{
-					A: scalar.Int32(800),
+					A: proto.Int32(800),
 				},
 			},
 		},
 		want: &testpb.TestAllTypes{
-			OptionalInt64:      scalar.Int64(0),
+			OptionalInt64:      proto.Int64(0),
 			OptionalNestedEnum: testpb.TestAllTypes_NestedEnum(1).Enum(),
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(100),
+				A: proto.Int32(100),
 			},
 			RepeatedSfixed32: []int32{1, 2, 3},
 			RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
-				{A: scalar.Int32(200)},
-				{A: scalar.Int32(300)},
+				{A: proto.Int32(200)},
+				{A: proto.Int32(300)},
 			},
 			MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{
 				"fizz": 400,
 				"buzz": 500,
 			},
 			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"foo": {A: scalar.Int32(600)},
-				"bar": {A: scalar.Int32(700)},
+				"foo": {A: proto.Int32(600)},
+				"bar": {A: proto.Int32(700)},
 			},
 			OneofField: &testpb.TestAllTypes_OneofNestedMessage{
 				&testpb.TestAllTypes_NestedMessage{
-					A: scalar.Int32(800),
+					A: proto.Int32(800),
 				},
 			},
 		},
@@ -122,31 +121,31 @@ func TestMerge(t *testing.T) {
 	}, {
 		desc: "merge singular fields",
 		dst: &testpb.TestAllTypes{
-			OptionalInt32:      scalar.Int32(1),
-			OptionalInt64:      scalar.Int64(1),
+			OptionalInt32:      proto.Int32(1),
+			OptionalInt64:      proto.Int64(1),
 			OptionalNestedEnum: testpb.TestAllTypes_NestedEnum(10).Enum(),
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(100),
+				A: proto.Int32(100),
 				Corecursive: &testpb.TestAllTypes{
-					OptionalInt64: scalar.Int64(1000),
+					OptionalInt64: proto.Int64(1000),
 				},
 			},
 		},
 		src: &testpb.TestAllTypes{
-			OptionalInt64:      scalar.Int64(2),
+			OptionalInt64:      proto.Int64(2),
 			OptionalNestedEnum: testpb.TestAllTypes_NestedEnum(20).Enum(),
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(200),
+				A: proto.Int32(200),
 			},
 		},
 		want: &testpb.TestAllTypes{
-			OptionalInt32:      scalar.Int32(1),
-			OptionalInt64:      scalar.Int64(2),
+			OptionalInt32:      proto.Int32(1),
+			OptionalInt64:      proto.Int64(2),
 			OptionalNestedEnum: testpb.TestAllTypes_NestedEnum(20).Enum(),
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(200),
+				A: proto.Int32(200),
 				Corecursive: &testpb.TestAllTypes{
-					OptionalInt64: scalar.Int64(1000),
+					OptionalInt64: proto.Int64(1000),
 				},
 			},
 		},
@@ -161,24 +160,24 @@ func TestMerge(t *testing.T) {
 		dst: &testpb.TestAllTypes{
 			RepeatedSfixed32: []int32{1, 2, 3},
 			RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
-				{A: scalar.Int32(100)},
-				{A: scalar.Int32(200)},
+				{A: proto.Int32(100)},
+				{A: proto.Int32(200)},
 			},
 		},
 		src: &testpb.TestAllTypes{
 			RepeatedSfixed32: []int32{4, 5, 6},
 			RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
-				{A: scalar.Int32(300)},
-				{A: scalar.Int32(400)},
+				{A: proto.Int32(300)},
+				{A: proto.Int32(400)},
 			},
 		},
 		want: &testpb.TestAllTypes{
 			RepeatedSfixed32: []int32{1, 2, 3, 4, 5, 6},
 			RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
-				{A: scalar.Int32(100)},
-				{A: scalar.Int32(200)},
-				{A: scalar.Int32(300)},
-				{A: scalar.Int32(400)},
+				{A: proto.Int32(100)},
+				{A: proto.Int32(200)},
+				{A: proto.Int32(300)},
+				{A: proto.Int32(400)},
 			},
 		},
 		mutator: func(mi proto.Message) {
@@ -195,7 +194,7 @@ func TestMerge(t *testing.T) {
 				"guzz": 300,
 			},
 			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"foo": {A: scalar.Int32(400)},
+				"foo": {A: proto.Int32(400)},
 			},
 		},
 		src: &testpb.TestAllTypes{
@@ -204,7 +203,7 @@ func TestMerge(t *testing.T) {
 				"buzz": 2000,
 			},
 			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"foo": {A: scalar.Int32(3000)},
+				"foo": {A: proto.Int32(3000)},
 				"bar": {},
 			},
 		},
@@ -215,21 +214,21 @@ func TestMerge(t *testing.T) {
 				"guzz": 300,
 			},
 			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"foo": {A: scalar.Int32(3000)},
+				"foo": {A: proto.Int32(3000)},
 				"bar": {},
 			},
 		},
 		mutator: func(mi proto.Message) {
 			m := mi.(*testpb.TestAllTypes)
 			delete(m.MapStringNestedEnum, "fizz")
-			m.MapStringNestedMessage["bar"].A = scalar.Int32(1)
+			m.MapStringNestedMessage["bar"].A = proto.Int32(1)
 		},
 	}, {
 		desc: "merge oneof message fields",
 		dst: &testpb.TestAllTypes{
 			OneofField: &testpb.TestAllTypes_OneofNestedMessage{
 				&testpb.TestAllTypes_NestedMessage{
-					A: scalar.Int32(100),
+					A: proto.Int32(100),
 				},
 			},
 		},
@@ -237,7 +236,7 @@ func TestMerge(t *testing.T) {
 			OneofField: &testpb.TestAllTypes_OneofNestedMessage{
 				&testpb.TestAllTypes_NestedMessage{
 					Corecursive: &testpb.TestAllTypes{
-						OptionalInt64: scalar.Int64(1000),
+						OptionalInt64: proto.Int64(1000),
 					},
 				},
 			},
@@ -245,9 +244,9 @@ func TestMerge(t *testing.T) {
 		want: &testpb.TestAllTypes{
 			OneofField: &testpb.TestAllTypes_OneofNestedMessage{
 				&testpb.TestAllTypes_NestedMessage{
-					A: scalar.Int32(100),
+					A: proto.Int32(100),
 					Corecursive: &testpb.TestAllTypes{
-						OptionalInt64: scalar.Int64(1000),
+						OptionalInt64: proto.Int64(1000),
 					},
 				},
 			},
@@ -282,7 +281,7 @@ func TestMerge(t *testing.T) {
 			m.ProtoReflect().Set(
 				testpb.E_OptionalNestedMessageExtension.Type,
 				testpb.E_OptionalNestedMessageExtension.Type.ValueOf(&testpb.TestAllTypes_NestedMessage{
-					A: scalar.Int32(50),
+					A: proto.Int32(50),
 				}),
 			)
 			m.ProtoReflect().Set(
@@ -301,7 +300,7 @@ func TestMerge(t *testing.T) {
 				testpb.E_OptionalNestedMessageExtension.Type,
 				testpb.E_OptionalNestedMessageExtension.Type.ValueOf(&testpb.TestAllTypes_NestedMessage{
 					Corecursive: &testpb.TestAllTypes{
-						OptionalInt64: scalar.Int64(1000),
+						OptionalInt64: proto.Int64(1000),
 					},
 				}),
 			)
@@ -324,9 +323,9 @@ func TestMerge(t *testing.T) {
 			m.ProtoReflect().Set(
 				testpb.E_OptionalNestedMessageExtension.Type,
 				testpb.E_OptionalNestedMessageExtension.Type.ValueOf(&testpb.TestAllTypes_NestedMessage{
-					A: scalar.Int32(50),
+					A: proto.Int32(50),
 					Corecursive: &testpb.TestAllTypes{
-						OptionalInt64: scalar.Int64(1000),
+						OptionalInt64: proto.Int64(1000),
 					},
 				}),
 			)

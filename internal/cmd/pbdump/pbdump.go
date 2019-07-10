@@ -19,7 +19,7 @@ import (
 
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/encoding/wire"
-	"google.golang.org/protobuf/internal/scalar"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
@@ -203,8 +203,8 @@ func (fs fields) set(prefix, s string, k protoreflect.Kind) error {
 // Descriptor returns the field tree as a message descriptor.
 func (fs fields) Descriptor() (protoreflect.MessageDescriptor, error) {
 	fd, err := protodesc.NewFile(&descriptorpb.FileDescriptorProto{
-		Name:        scalar.String("dump.proto"),
-		Syntax:      scalar.String("proto2"),
+		Name:        proto.String("dump.proto"),
+		Syntax:      proto.String("proto2"),
 		MessageType: []*descriptorpb.DescriptorProto{fs.messageDescriptor("X")},
 	}, nil)
 	if err != nil {
@@ -213,15 +213,15 @@ func (fs fields) Descriptor() (protoreflect.MessageDescriptor, error) {
 	return fd.Messages().Get(0), nil
 }
 func (fs fields) messageDescriptor(name protoreflect.FullName) *descriptorpb.DescriptorProto {
-	m := &descriptorpb.DescriptorProto{Name: scalar.String(string(name.Name()))}
+	m := &descriptorpb.DescriptorProto{Name: proto.String(string(name.Name()))}
 	for _, n := range fs.sortedNums() {
 		k := fs[n].kind
 		if !k.IsValid() {
 			k = protoreflect.MessageKind
 		}
 		f := &descriptorpb.FieldDescriptorProto{
-			Name:   scalar.String(fmt.Sprintf("x%d", n)),
-			Number: scalar.Int32(int32(n)),
+			Name:   proto.String(fmt.Sprintf("x%d", n)),
+			Number: proto.Int32(int32(n)),
 			Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 			Type:   descriptorpb.FieldDescriptorProto_Type(k).Enum(),
 		}
@@ -232,10 +232,10 @@ func (fs fields) messageDescriptor(name protoreflect.FullName) *descriptorpb.Des
 			protoreflect.Sfixed32Kind, protoreflect.Fixed32Kind, protoreflect.FloatKind,
 			protoreflect.Sfixed64Kind, protoreflect.Fixed64Kind, protoreflect.DoubleKind:
 			f.Label = descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum()
-			f.Options = &descriptorpb.FieldOptions{Packed: scalar.Bool(true)}
+			f.Options = &descriptorpb.FieldOptions{Packed: proto.Bool(true)}
 		case protoreflect.MessageKind, protoreflect.GroupKind:
 			s := name.Append(protoreflect.Name(fmt.Sprintf("X%d", n)))
-			f.TypeName = scalar.String(string("." + s))
+			f.TypeName = proto.String(string("." + s))
 			m.NestedType = append(m.NestedType, fs[n].sub.messageDescriptor(s))
 		}
 		m.Field = append(m.Field, f)

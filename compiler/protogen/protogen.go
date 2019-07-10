@@ -30,7 +30,6 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/fieldnum"
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -340,7 +339,7 @@ func (gen *Plugin) Error(err error) {
 func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 	resp := &pluginpb.CodeGeneratorResponse{}
 	if gen.err != nil {
-		resp.Error = scalar.String(gen.err.Error())
+		resp.Error = proto.String(gen.err.Error())
 		return resp
 	}
 	for _, g := range gen.genFiles {
@@ -350,23 +349,23 @@ func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 		content, err := g.Content()
 		if err != nil {
 			return &pluginpb.CodeGeneratorResponse{
-				Error: scalar.String(err.Error()),
+				Error: proto.String(err.Error()),
 			}
 		}
 		resp.File = append(resp.File, &pluginpb.CodeGeneratorResponse_File{
-			Name:    scalar.String(g.filename),
-			Content: scalar.String(string(content)),
+			Name:    proto.String(g.filename),
+			Content: proto.String(string(content)),
 		})
 		if gen.annotateCode && strings.HasSuffix(g.filename, ".go") {
 			meta, err := g.metaFile(content)
 			if err != nil {
 				return &pluginpb.CodeGeneratorResponse{
-					Error: scalar.String(err.Error()),
+					Error: proto.String(err.Error()),
 				}
 			}
 			resp.File = append(resp.File, &pluginpb.CodeGeneratorResponse_File{
-				Name:    scalar.String(g.filename + ".meta"),
-				Content: scalar.String(meta),
+				Name:    proto.String(g.filename + ".meta"),
+				Content: proto.String(meta),
 			})
 		}
 	}
@@ -1061,10 +1060,10 @@ func (g *GeneratedFile) metaFile(content []byte) (string, error) {
 		seenAnnotations[s] = true
 		for _, loc := range g.annotations[s] {
 			info.Annotation = append(info.Annotation, &descriptorpb.GeneratedCodeInfo_Annotation{
-				SourceFile: scalar.String(loc.SourceFile),
+				SourceFile: proto.String(loc.SourceFile),
 				Path:       loc.Path,
-				Begin:      scalar.Int32(int32(fset.Position(ident.Pos()).Offset)),
-				End:        scalar.Int32(int32(fset.Position(ident.End()).Offset)),
+				Begin:      proto.Int32(int32(fset.Position(ident.Pos()).Offset)),
+				End:        proto.Int32(int32(fset.Position(ident.End()).Offset)),
 			})
 		}
 	}

@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/internal/encoding/pack"
-	"google.golang.org/protobuf/internal/scalar"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 	"google.golang.org/protobuf/proto"
@@ -28,60 +27,60 @@ func TestEqual(t *testing.T) {
 var inequalities = []struct{ a, b proto.Message }{
 	// Scalar values.
 	{
-		&testpb.TestAllTypes{OptionalInt32: scalar.Int32(1)},
-		&testpb.TestAllTypes{OptionalInt32: scalar.Int32(2)},
+		&testpb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+		&testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalInt64: scalar.Int64(1)},
-		&testpb.TestAllTypes{OptionalInt64: scalar.Int64(2)},
+		&testpb.TestAllTypes{OptionalInt64: proto.Int64(1)},
+		&testpb.TestAllTypes{OptionalInt64: proto.Int64(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalUint32: scalar.Uint32(1)},
-		&testpb.TestAllTypes{OptionalUint32: scalar.Uint32(2)},
+		&testpb.TestAllTypes{OptionalUint32: proto.Uint32(1)},
+		&testpb.TestAllTypes{OptionalUint32: proto.Uint32(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalUint64: scalar.Uint64(1)},
-		&testpb.TestAllTypes{OptionalUint64: scalar.Uint64(2)},
+		&testpb.TestAllTypes{OptionalUint64: proto.Uint64(1)},
+		&testpb.TestAllTypes{OptionalUint64: proto.Uint64(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalSint32: scalar.Int32(1)},
-		&testpb.TestAllTypes{OptionalSint32: scalar.Int32(2)},
+		&testpb.TestAllTypes{OptionalSint32: proto.Int32(1)},
+		&testpb.TestAllTypes{OptionalSint32: proto.Int32(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalSint64: scalar.Int64(1)},
-		&testpb.TestAllTypes{OptionalSint64: scalar.Int64(2)},
+		&testpb.TestAllTypes{OptionalSint64: proto.Int64(1)},
+		&testpb.TestAllTypes{OptionalSint64: proto.Int64(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalFixed32: scalar.Uint32(1)},
-		&testpb.TestAllTypes{OptionalFixed32: scalar.Uint32(2)},
+		&testpb.TestAllTypes{OptionalFixed32: proto.Uint32(1)},
+		&testpb.TestAllTypes{OptionalFixed32: proto.Uint32(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalFixed64: scalar.Uint64(1)},
-		&testpb.TestAllTypes{OptionalFixed64: scalar.Uint64(2)},
+		&testpb.TestAllTypes{OptionalFixed64: proto.Uint64(1)},
+		&testpb.TestAllTypes{OptionalFixed64: proto.Uint64(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalSfixed32: scalar.Int32(1)},
-		&testpb.TestAllTypes{OptionalSfixed32: scalar.Int32(2)},
+		&testpb.TestAllTypes{OptionalSfixed32: proto.Int32(1)},
+		&testpb.TestAllTypes{OptionalSfixed32: proto.Int32(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalSfixed64: scalar.Int64(1)},
-		&testpb.TestAllTypes{OptionalSfixed64: scalar.Int64(2)},
+		&testpb.TestAllTypes{OptionalSfixed64: proto.Int64(1)},
+		&testpb.TestAllTypes{OptionalSfixed64: proto.Int64(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalFloat: scalar.Float32(1)},
-		&testpb.TestAllTypes{OptionalFloat: scalar.Float32(2)},
+		&testpb.TestAllTypes{OptionalFloat: proto.Float32(1)},
+		&testpb.TestAllTypes{OptionalFloat: proto.Float32(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalDouble: scalar.Float64(1)},
-		&testpb.TestAllTypes{OptionalDouble: scalar.Float64(2)},
+		&testpb.TestAllTypes{OptionalDouble: proto.Float64(1)},
+		&testpb.TestAllTypes{OptionalDouble: proto.Float64(2)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalBool: scalar.Bool(true)},
-		&testpb.TestAllTypes{OptionalBool: scalar.Bool(false)},
+		&testpb.TestAllTypes{OptionalBool: proto.Bool(true)},
+		&testpb.TestAllTypes{OptionalBool: proto.Bool(false)},
 	},
 	{
-		&testpb.TestAllTypes{OptionalString: scalar.String("a")},
-		&testpb.TestAllTypes{OptionalString: scalar.String("b")},
+		&testpb.TestAllTypes{OptionalString: proto.String("a")},
+		&testpb.TestAllTypes{OptionalString: proto.String("b")},
 	},
 	{
 		&testpb.TestAllTypes{OptionalBytes: []byte("a")},
@@ -94,59 +93,59 @@ var inequalities = []struct{ a, b proto.Message }{
 	// Proto2 presence.
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalInt32: scalar.Int32(0)},
+		&testpb.TestAllTypes{OptionalInt32: proto.Int32(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalInt64: scalar.Int64(0)},
+		&testpb.TestAllTypes{OptionalInt64: proto.Int64(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalUint32: scalar.Uint32(0)},
+		&testpb.TestAllTypes{OptionalUint32: proto.Uint32(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalUint64: scalar.Uint64(0)},
+		&testpb.TestAllTypes{OptionalUint64: proto.Uint64(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalSint32: scalar.Int32(0)},
+		&testpb.TestAllTypes{OptionalSint32: proto.Int32(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalSint64: scalar.Int64(0)},
+		&testpb.TestAllTypes{OptionalSint64: proto.Int64(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalFixed32: scalar.Uint32(0)},
+		&testpb.TestAllTypes{OptionalFixed32: proto.Uint32(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalFixed64: scalar.Uint64(0)},
+		&testpb.TestAllTypes{OptionalFixed64: proto.Uint64(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalSfixed32: scalar.Int32(0)},
+		&testpb.TestAllTypes{OptionalSfixed32: proto.Int32(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalSfixed64: scalar.Int64(0)},
+		&testpb.TestAllTypes{OptionalSfixed64: proto.Int64(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalFloat: scalar.Float32(0)},
+		&testpb.TestAllTypes{OptionalFloat: proto.Float32(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalDouble: scalar.Float64(0)},
+		&testpb.TestAllTypes{OptionalDouble: proto.Float64(0)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalBool: scalar.Bool(false)},
+		&testpb.TestAllTypes{OptionalBool: proto.Bool(false)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{OptionalString: scalar.String("")},
+		&testpb.TestAllTypes{OptionalString: proto.String("")},
 	},
 	{
 		&testpb.TestAllTypes{},
@@ -159,10 +158,10 @@ var inequalities = []struct{ a, b proto.Message }{
 	// Groups.
 	{
 		&testpb.TestAllTypes{Optionalgroup: &testpb.TestAllTypes_OptionalGroup{
-			A: scalar.Int32(1),
+			A: proto.Int32(1),
 		}},
 		&testpb.TestAllTypes{Optionalgroup: &testpb.TestAllTypes_OptionalGroup{
-			A: scalar.Int32(2),
+			A: proto.Int32(2),
 		}},
 	},
 	{
@@ -172,10 +171,10 @@ var inequalities = []struct{ a, b proto.Message }{
 	// Messages.
 	{
 		&testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-			A: scalar.Int32(1),
+			A: proto.Int32(1),
 		}},
 		&testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-			A: scalar.Int32(2),
+			A: proto.Int32(2),
 		}},
 	},
 	{
@@ -257,22 +256,22 @@ var inequalities = []struct{ a, b proto.Message }{
 	},
 	{
 		&testpb.TestAllTypes{Repeatedgroup: []*testpb.TestAllTypes_RepeatedGroup{
-			{A: scalar.Int32(1)},
-			{A: scalar.Int32(2)},
+			{A: proto.Int32(1)},
+			{A: proto.Int32(2)},
 		}},
 		&testpb.TestAllTypes{Repeatedgroup: []*testpb.TestAllTypes_RepeatedGroup{
-			{A: scalar.Int32(1)},
-			{A: scalar.Int32(3)},
+			{A: proto.Int32(1)},
+			{A: proto.Int32(3)},
 		}},
 	},
 	{
 		&testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
-			{A: scalar.Int32(1)},
-			{A: scalar.Int32(2)},
+			{A: proto.Int32(1)},
+			{A: proto.Int32(2)},
 		}},
 		&testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
-			{A: scalar.Int32(1)},
-			{A: scalar.Int32(3)},
+			{A: proto.Int32(1)},
+			{A: proto.Int32(3)},
 		}},
 	},
 	// Maps: various configurations.
@@ -351,12 +350,12 @@ var inequalities = []struct{ a, b proto.Message }{
 	},
 	{
 		&testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-			"a": {A: scalar.Int32(1)},
-			"b": {A: scalar.Int32(2)},
+			"a": {A: proto.Int32(1)},
+			"b": {A: proto.Int32(2)},
 		}},
 		&testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-			"a": {A: scalar.Int32(1)},
-			"b": {A: scalar.Int32(3)},
+			"a": {A: proto.Int32(1)},
+			"b": {A: proto.Int32(3)},
 		}},
 	},
 	{
@@ -407,64 +406,64 @@ var inequalities = []struct{ a, b proto.Message }{
 	},
 	// Proto2 default values are not considered by Equal, so the following are still unequal.
 	{
-		&testpb.TestAllTypes{DefaultInt32: scalar.Int32(81)},
+		&testpb.TestAllTypes{DefaultInt32: proto.Int32(81)},
 		&testpb.TestAllTypes{},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultInt32: scalar.Int32(81)},
+		&testpb.TestAllTypes{DefaultInt32: proto.Int32(81)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultInt64: scalar.Int64(82)},
+		&testpb.TestAllTypes{DefaultInt64: proto.Int64(82)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultUint32: scalar.Uint32(83)},
+		&testpb.TestAllTypes{DefaultUint32: proto.Uint32(83)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultUint64: scalar.Uint64(84)},
+		&testpb.TestAllTypes{DefaultUint64: proto.Uint64(84)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultSint32: scalar.Int32(-85)},
+		&testpb.TestAllTypes{DefaultSint32: proto.Int32(-85)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultSint64: scalar.Int64(86)},
+		&testpb.TestAllTypes{DefaultSint64: proto.Int64(86)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultFixed32: scalar.Uint32(87)},
+		&testpb.TestAllTypes{DefaultFixed32: proto.Uint32(87)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultFixed64: scalar.Uint64(88)},
+		&testpb.TestAllTypes{DefaultFixed64: proto.Uint64(88)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultSfixed32: scalar.Int32(89)},
+		&testpb.TestAllTypes{DefaultSfixed32: proto.Int32(89)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultSfixed64: scalar.Int64(-90)},
+		&testpb.TestAllTypes{DefaultSfixed64: proto.Int64(-90)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultFloat: scalar.Float32(91.5)},
+		&testpb.TestAllTypes{DefaultFloat: proto.Float32(91.5)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultDouble: scalar.Float64(92e3)},
+		&testpb.TestAllTypes{DefaultDouble: proto.Float64(92e3)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultBool: scalar.Bool(true)},
+		&testpb.TestAllTypes{DefaultBool: proto.Bool(true)},
 	},
 	{
 		&testpb.TestAllTypes{},
-		&testpb.TestAllTypes{DefaultString: scalar.String("hello")},
+		&testpb.TestAllTypes{DefaultString: proto.String("hello")},
 	},
 	{
 		&testpb.TestAllTypes{},

@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"google.golang.org/protobuf/internal/encoding/defval"
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
@@ -21,8 +20,8 @@ import (
 // google.protobuf.FileDescriptorProto message.
 func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileDescriptorProto {
 	p := &descriptorpb.FileDescriptorProto{
-		Name:    scalar.String(file.Path()),
-		Package: scalar.String(string(file.Package())),
+		Name:    proto.String(file.Path()),
+		Package: proto.String(string(file.Package())),
 		Options: clone(file.Options()).(*descriptorpb.FileOptions),
 	}
 	for i, imports := 0, file.Imports(); i < imports.Len(); i++ {
@@ -48,7 +47,7 @@ func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileD
 		p.Extension = append(p.Extension, ToFieldDescriptorProto(exts.Get(i)))
 	}
 	if syntax := file.Syntax(); syntax != protoreflect.Proto2 {
-		p.Syntax = scalar.String(file.Syntax().String())
+		p.Syntax = proto.String(file.Syntax().String())
 	}
 	return p
 }
@@ -57,7 +56,7 @@ func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileD
 // google.protobuf.DescriptorProto message.
 func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.DescriptorProto {
 	p := &descriptorpb.DescriptorProto{
-		Name:    scalar.String(string(message.Name())),
+		Name:    proto.String(string(message.Name())),
 		Options: clone(message.Options()).(*descriptorpb.MessageOptions),
 	}
 	for i, fields := 0, message.Fields(); i < fields.Len(); i++ {
@@ -75,8 +74,8 @@ func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.Des
 	for i, xranges := 0, message.ExtensionRanges(); i < xranges.Len(); i++ {
 		xrange := xranges.Get(i)
 		p.ExtensionRange = append(p.ExtensionRange, &descriptorpb.DescriptorProto_ExtensionRange{
-			Start:   scalar.Int32(int32(xrange[0])),
-			End:     scalar.Int32(int32(xrange[1])),
+			Start:   proto.Int32(int32(xrange[0])),
+			End:     proto.Int32(int32(xrange[1])),
 			Options: clone(message.ExtensionRangeOptions(i)).(*descriptorpb.ExtensionRangeOptions),
 		})
 	}
@@ -86,8 +85,8 @@ func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.Des
 	for i, ranges := 0, message.ReservedRanges(); i < ranges.Len(); i++ {
 		rrange := ranges.Get(i)
 		p.ReservedRange = append(p.ReservedRange, &descriptorpb.DescriptorProto_ReservedRange{
-			Start: scalar.Int32(int32(rrange[0])),
-			End:   scalar.Int32(int32(rrange[1])),
+			Start: proto.Int32(int32(rrange[0])),
+			End:   proto.Int32(int32(rrange[1])),
 		})
 	}
 	for i, names := 0, message.ReservedNames(); i < names.Len(); i++ {
@@ -100,8 +99,8 @@ func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.Des
 // google.protobuf.FieldDescriptorProto message.
 func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.FieldDescriptorProto {
 	p := &descriptorpb.FieldDescriptorProto{
-		Name:    scalar.String(string(field.Name())),
-		Number:  scalar.Int32(int32(field.Number())),
+		Name:    proto.String(string(field.Name())),
+		Number:  proto.Int32(int32(field.Number())),
 		Label:   descriptorpb.FieldDescriptorProto_Label(field.Cardinality()).Enum(),
 		Options: clone(field.Options()).(*descriptorpb.FieldOptions),
 	}
@@ -118,7 +117,7 @@ func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.Fi
 		p.TypeName = fullNameOf(field.Message())
 	}
 	if field.HasJSONName() {
-		p.JsonName = scalar.String(field.JSONName())
+		p.JsonName = proto.String(field.JSONName())
 	}
 	if field.HasDefault() {
 		def, err := defval.Marshal(field.Default(), field.DefaultEnumValue(), field.Kind(), defval.Descriptor)
@@ -127,10 +126,10 @@ func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.Fi
 		} else if err != nil {
 			panic(fmt.Sprintf("%v: %v", field.FullName(), err))
 		}
-		p.DefaultValue = scalar.String(def)
+		p.DefaultValue = proto.String(def)
 	}
 	if oneof := field.ContainingOneof(); oneof != nil {
-		p.OneofIndex = scalar.Int32(int32(oneof.Index()))
+		p.OneofIndex = proto.Int32(int32(oneof.Index()))
 	}
 	return p
 }
@@ -139,7 +138,7 @@ func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.Fi
 // google.protobuf.OneofDescriptorProto message.
 func ToOneofDescriptorProto(oneof protoreflect.OneofDescriptor) *descriptorpb.OneofDescriptorProto {
 	return &descriptorpb.OneofDescriptorProto{
-		Name:    scalar.String(string(oneof.Name())),
+		Name:    proto.String(string(oneof.Name())),
 		Options: clone(oneof.Options()).(*descriptorpb.OneofOptions),
 	}
 }
@@ -148,7 +147,7 @@ func ToOneofDescriptorProto(oneof protoreflect.OneofDescriptor) *descriptorpb.On
 // google.protobuf.EnumDescriptorProto message.
 func ToEnumDescriptorProto(enum protoreflect.EnumDescriptor) *descriptorpb.EnumDescriptorProto {
 	p := &descriptorpb.EnumDescriptorProto{
-		Name:    scalar.String(string(enum.Name())),
+		Name:    proto.String(string(enum.Name())),
 		Options: clone(enum.Options()).(*descriptorpb.EnumOptions),
 	}
 	for i, values := 0, enum.Values(); i < values.Len(); i++ {
@@ -157,8 +156,8 @@ func ToEnumDescriptorProto(enum protoreflect.EnumDescriptor) *descriptorpb.EnumD
 	for i, ranges := 0, enum.ReservedRanges(); i < ranges.Len(); i++ {
 		rrange := ranges.Get(i)
 		p.ReservedRange = append(p.ReservedRange, &descriptorpb.EnumDescriptorProto_EnumReservedRange{
-			Start: scalar.Int32(int32(rrange[0])),
-			End:   scalar.Int32(int32(rrange[1])),
+			Start: proto.Int32(int32(rrange[0])),
+			End:   proto.Int32(int32(rrange[1])),
 		})
 	}
 	for i, names := 0, enum.ReservedNames(); i < names.Len(); i++ {
@@ -171,8 +170,8 @@ func ToEnumDescriptorProto(enum protoreflect.EnumDescriptor) *descriptorpb.EnumD
 // google.protobuf.EnumValueDescriptorProto message.
 func ToEnumValueDescriptorProto(value protoreflect.EnumValueDescriptor) *descriptorpb.EnumValueDescriptorProto {
 	return &descriptorpb.EnumValueDescriptorProto{
-		Name:    scalar.String(string(value.Name())),
-		Number:  scalar.Int32(int32(value.Number())),
+		Name:    proto.String(string(value.Name())),
+		Number:  proto.Int32(int32(value.Number())),
 		Options: clone(value.Options()).(*descriptorpb.EnumValueOptions),
 	}
 }
@@ -181,7 +180,7 @@ func ToEnumValueDescriptorProto(value protoreflect.EnumValueDescriptor) *descrip
 // google.protobuf.ServiceDescriptorProto message.
 func ToServiceDescriptorProto(service protoreflect.ServiceDescriptor) *descriptorpb.ServiceDescriptorProto {
 	p := &descriptorpb.ServiceDescriptorProto{
-		Name:    scalar.String(string(service.Name())),
+		Name:    proto.String(string(service.Name())),
 		Options: clone(service.Options()).(*descriptorpb.ServiceOptions),
 	}
 	for i, methods := 0, service.Methods(); i < methods.Len(); i++ {
@@ -194,16 +193,16 @@ func ToServiceDescriptorProto(service protoreflect.ServiceDescriptor) *descripto
 // google.protobuf.MethodDescriptorProto message.
 func ToMethodDescriptorProto(method protoreflect.MethodDescriptor) *descriptorpb.MethodDescriptorProto {
 	p := &descriptorpb.MethodDescriptorProto{
-		Name:       scalar.String(string(method.Name())),
+		Name:       proto.String(string(method.Name())),
 		InputType:  fullNameOf(method.Input()),
 		OutputType: fullNameOf(method.Output()),
 		Options:    clone(method.Options()).(*descriptorpb.MethodOptions),
 	}
 	if method.IsStreamingClient() {
-		p.ClientStreaming = scalar.Bool(true)
+		p.ClientStreaming = proto.Bool(true)
 	}
 	if method.IsStreamingServer() {
-		p.ServerStreaming = scalar.Bool(true)
+		p.ServerStreaming = proto.Bool(true)
 	}
 	return p
 }
@@ -213,9 +212,9 @@ func fullNameOf(d protoreflect.Descriptor) *string {
 		return nil
 	}
 	if strings.HasPrefix(string(d.FullName()), unknownPrefix) {
-		return scalar.String(string(d.FullName()[len(unknownPrefix):]))
+		return proto.String(string(d.FullName()[len(unknownPrefix):]))
 	}
-	return scalar.String("." + string(d.FullName()))
+	return proto.String("." + string(d.FullName()))
 }
 
 func clone(src proto.Message) proto.Message {

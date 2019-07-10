@@ -7,7 +7,6 @@ package proto_test
 import (
 	"testing"
 
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
@@ -15,7 +14,7 @@ import (
 
 func TestReset(t *testing.T) {
 	m := &testpb.TestAllTypes{
-		OptionalSfixed64:       scalar.Int64(5),
+		OptionalSfixed64:       proto.Int64(5),
 		RepeatedInt32:          []int32{},
 		RepeatedFloat:          []float32{1.234, 5.678},
 		MapFixed64Fixed64:      map[uint64]uint64{5: 7},

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"testing"
 
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
@@ -32,7 +31,7 @@ func TestIsInitializedErrors(t *testing.T) {
 		{
 			&testpb.TestRequiredForeign{
 				RepeatedMessage: []*testpb.TestRequired{
-					{RequiredField: scalar.Int32(1)},
+					{RequiredField: proto.Int32(1)},
 					{},
 				},
 			},

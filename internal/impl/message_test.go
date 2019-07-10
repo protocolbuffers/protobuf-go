@@ -17,7 +17,6 @@ import (
 	cmpopts "github.com/google/go-cmp/cmp/cmpopts"
 	"google.golang.org/protobuf/encoding/prototext"
 	pimpl "google.golang.org/protobuf/internal/impl"
-	scalar "google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 	pdesc "google.golang.org/protobuf/reflect/protodesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -1071,10 +1070,10 @@ func TestEnumMessages(t *testing.T) {
 	emptyM2 := new(ScalarProto2).ProtoReflect()
 	emptyM3 := new(ScalarProto3).ProtoReflect()
 
-	wantL := pimpl.Export{}.MessageOf(&proto2_20180125.Message{OptionalFloat: scalar.Float32(math.E)})
+	wantL := pimpl.Export{}.MessageOf(&proto2_20180125.Message{OptionalFloat: proto.Float32(math.E)})
 	wantM := (&EnumMessages{EnumP2: EnumProto2(1234).Enum()}).ProtoReflect()
-	wantM2a := &ScalarProto2{Float32: scalar.Float32(math.Pi)}
-	wantM2b := &ScalarProto2{Float32: scalar.Float32(math.Phi)}
+	wantM2a := &ScalarProto2{Float32: proto.Float32(math.Pi)}
+	wantM2b := &ScalarProto2{Float32: proto.Float32(math.Phi)}
 	wantM3a := &ScalarProto3{Float32: math.Pi}
 	wantM3b := &ScalarProto3{Float32: math.Ln2}
 
@@ -1158,7 +1157,7 @@ func TestEnumMessages(t *testing.T) {
 		equalMessage{(&EnumMessages{
 			EnumP2:        EnumProto2(0xdead).Enum(),
 			EnumP3:        EnumProto3(0).Enum(),
-			MessageLegacy: &proto2_20180125.Message{OptionalFloat: scalar.Float32(math.E)},
+			MessageLegacy: &proto2_20180125.Message{OptionalFloat: proto.Float32(math.E)},
 			MessageCycle:  wantM.Interface().(*EnumMessages),
 			MessageList:   []*ScalarProto2{wantM2a, wantM2b},
 			EnumMap:       map[string]EnumProto3{"one": 1, "two": 2},
@@ -1466,12 +1465,12 @@ func TestUnsafeAssumptions(t *testing.T) {
 			// Trigger the GC after each iteration.
 			for j := 0; j < 10; j++ {
 				ms[j] = (&testpb.TestAllTypes{
-					OptionalInt32: scalar.Int32(int32(j)),
-					OptionalFloat: scalar.Float32(float32(j)),
+					OptionalInt32: proto.Int32(int32(j)),
+					OptionalFloat: proto.Float32(float32(j)),
 					RepeatedInt32: []int32{int32(j)},
 					RepeatedFloat: []float32{float32(j)},
-					DefaultInt32:  scalar.Int32(int32(j)),
-					DefaultFloat:  scalar.Float32(float32(j)),
+					DefaultInt32:  proto.Int32(int32(j)),
+					DefaultFloat:  proto.Float32(float32(j)),
 				}).ProtoReflect()
 				runtime.GC()
 			}

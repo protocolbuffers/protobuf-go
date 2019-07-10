@@ -12,7 +12,6 @@ import (
 	protoV1 "github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/encoding/pack"
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 
@@ -90,20 +89,20 @@ var testProtos = []testProto{
 	{
 		desc: "basic scalar types",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			OptionalInt32:      scalar.Int32(1001),
-			OptionalInt64:      scalar.Int64(1002),
-			OptionalUint32:     scalar.Uint32(1003),
-			OptionalUint64:     scalar.Uint64(1004),
-			OptionalSint32:     scalar.Int32(1005),
-			OptionalSint64:     scalar.Int64(1006),
-			OptionalFixed32:    scalar.Uint32(1007),
-			OptionalFixed64:    scalar.Uint64(1008),
-			OptionalSfixed32:   scalar.Int32(1009),
-			OptionalSfixed64:   scalar.Int64(1010),
-			OptionalFloat:      scalar.Float32(1011.5),
-			OptionalDouble:     scalar.Float64(1012.5),
-			OptionalBool:       scalar.Bool(true),
-			OptionalString:     scalar.String("string"),
+			OptionalInt32:      proto.Int32(1001),
+			OptionalInt64:      proto.Int64(1002),
+			OptionalUint32:     proto.Uint32(1003),
+			OptionalUint64:     proto.Uint64(1004),
+			OptionalSint32:     proto.Int32(1005),
+			OptionalSint64:     proto.Int64(1006),
+			OptionalFixed32:    proto.Uint32(1007),
+			OptionalFixed64:    proto.Uint64(1008),
+			OptionalSfixed32:   proto.Int32(1009),
+			OptionalSfixed64:   proto.Int64(1010),
+			OptionalFloat:      proto.Float32(1011.5),
+			OptionalDouble:     proto.Float64(1012.5),
+			OptionalBool:       proto.Bool(true),
+			OptionalString:     proto.String("string"),
 			OptionalBytes:      []byte("bytes"),
 			OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum(),
 		}, &test3pb.TestAllTypes{
@@ -165,12 +164,12 @@ var testProtos = []testProto{
 		desc: "groups",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			Optionalgroup: &testpb.TestAllTypes_OptionalGroup{
-				A: scalar.Int32(1017),
+				A: proto.Int32(1017),
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_OptionalgroupExtension, &testpb.OptionalGroupExtension{
-				A: scalar.Int32(1017),
+				A: proto.Int32(1017),
 			}),
 		)},
 		wire: pack.Message{
@@ -183,12 +182,12 @@ var testProtos = []testProto{
 		desc: "groups (field overridden)",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			Optionalgroup: &testpb.TestAllTypes_OptionalGroup{
-				A: scalar.Int32(2),
+				A: proto.Int32(2),
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_OptionalgroupExtension, &testpb.OptionalGroupExtension{
-				A: scalar.Int32(2),
+				A: proto.Int32(2),
 			}),
 		)},
 		wire: pack.Message{
@@ -204,9 +203,9 @@ var testProtos = []testProto{
 		desc: "messages",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(42),
+				A: proto.Int32(42),
 				Corecursive: &testpb.TestAllTypes{
-					OptionalInt32: scalar.Int32(43),
+					OptionalInt32: proto.Int32(43),
 				},
 			},
 		}, &test3pb.TestAllTypes{
@@ -219,9 +218,9 @@ var testProtos = []testProto{
 		}, build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(42),
+				A: proto.Int32(42),
 				Corecursive: &testpb.TestAllTypes{
-					OptionalInt32: scalar.Int32(43),
+					OptionalInt32: proto.Int32(43),
 				},
 			}),
 		)},
@@ -238,9 +237,9 @@ var testProtos = []testProto{
 		desc: "messages (split across multiple tags)",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(42),
+				A: proto.Int32(42),
 				Corecursive: &testpb.TestAllTypes{
-					OptionalInt32: scalar.Int32(43),
+					OptionalInt32: proto.Int32(43),
 				},
 			},
 		}, &test3pb.TestAllTypes{
@@ -253,9 +252,9 @@ var testProtos = []testProto{
 		}, build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(42),
+				A: proto.Int32(42),
 				Corecursive: &testpb.TestAllTypes{
-					OptionalInt32: scalar.Int32(43),
+					OptionalInt32: proto.Int32(43),
 				},
 			}),
 		)},
@@ -274,7 +273,7 @@ var testProtos = []testProto{
 		desc: "messages (field overridden)",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(2),
+				A: proto.Int32(2),
 			},
 		}, &test3pb.TestAllTypes{
 			OptionalNestedMessage: &test3pb.TestAllTypes_NestedMessage{
@@ -283,7 +282,7 @@ var testProtos = []testProto{
 		}, build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllTypes_NestedMessage{
-				A: scalar.Int32(2),
+				A: proto.Int32(2),
 			}),
 		)},
 		wire: pack.Message{
@@ -588,9 +587,9 @@ var testProtos = []testProto{
 		desc: "repeated messages",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
-				{A: scalar.Int32(1)},
+				{A: proto.Int32(1)},
 				nil,
-				{A: scalar.Int32(2)},
+				{A: proto.Int32(2)},
 			},
 		}, &test3pb.TestAllTypes{
 			RepeatedNestedMessage: []*test3pb.TestAllTypes_NestedMessage{
@@ -601,9 +600,9 @@ var testProtos = []testProto{
 		}, build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_RepeatedNestedMessageExtension, []*testpb.TestAllTypes_NestedMessage{
-				{A: scalar.Int32(1)},
+				{A: proto.Int32(1)},
 				nil,
-				{A: scalar.Int32(2)},
+				{A: proto.Int32(2)},
 			}),
 		)},
 		wire: pack.Message{
@@ -620,16 +619,16 @@ var testProtos = []testProto{
 		desc: "repeated groups",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			Repeatedgroup: []*testpb.TestAllTypes_RepeatedGroup{
-				{A: scalar.Int32(1017)},
+				{A: proto.Int32(1017)},
 				nil,
-				{A: scalar.Int32(2017)},
+				{A: proto.Int32(2017)},
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_RepeatedgroupExtension, []*testpb.RepeatedGroupExtension{
-				{A: scalar.Int32(1017)},
+				{A: proto.Int32(1017)},
 				nil,
-				{A: scalar.Int32(2017)},
+				{A: proto.Int32(2017)},
 			}),
 		)},
 		wire: pack.Message{
@@ -662,8 +661,8 @@ var testProtos = []testProto{
 			MapStringString:     map[string]string{"69.1.key": "69.1.val", "69.2.key": "69.2.val"},
 			MapStringBytes:      map[string][]byte{"70.1.key": []byte("70.1.val"), "70.2.key": []byte("70.2.val")},
 			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"71.1.key": {A: scalar.Int32(1171)},
-				"71.2.key": {A: scalar.Int32(2171)},
+				"71.1.key": {A: proto.Int32(1171)},
+				"71.2.key": {A: proto.Int32(2171)},
 			},
 			MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{
 				"73.1.key": testpb.TestAllTypes_FOO,
@@ -849,7 +848,7 @@ var testProtos = []testProto{
 		desc: "oneof (message)",
 		decodeTo: []proto.Message{
 			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofNestedMessage{
-				&testpb.TestAllTypes_NestedMessage{A: scalar.Int32(1112)},
+				&testpb.TestAllTypes_NestedMessage{A: proto.Int32(1112)},
 			}}, &test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofNestedMessage{
 				&test3pb.TestAllTypes_NestedMessage{A: 1112},
 			}},
@@ -877,7 +876,7 @@ var testProtos = []testProto{
 				&testpb.TestAllTypes_NestedMessage{
 					A: scalar.Int32(1),
 					Corecursive: &testpb.TestAllTypes{
-						OptionalInt32: scalar.Int32(43),
+						OptionalInt32: proto.Int32(43),
 					},
 				},
 			}}, &test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofNestedMessage{
@@ -1042,7 +1041,7 @@ var testProtos = []testProto{
 	{
 		desc: "required field set",
 		decodeTo: []proto.Message{&testpb.TestRequired{
-			RequiredField: scalar.Int32(1),
+			RequiredField: proto.Int32(1),
 		}},
 		wire: pack.Message{
 			pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1062,7 +1061,7 @@ var testProtos = []testProto{
 		desc: "required field in optional message set",
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			OptionalMessage: &testpb.TestRequired{
-				RequiredField: scalar.Int32(1),
+				RequiredField: proto.Int32(1),
 			},
 		}},
 		wire: pack.Message{
@@ -1075,7 +1074,7 @@ var testProtos = []testProto{
 		desc: "required field in optional message set (split across multiple tags)",
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			OptionalMessage: &testpb.TestRequired{
-				RequiredField: scalar.Int32(1),
+				RequiredField: proto.Int32(1),
 			},
 		}},
 		wire: pack.Message{
@@ -1090,7 +1089,7 @@ var testProtos = []testProto{
 		partial: true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			RepeatedMessage: []*testpb.TestRequired{
-				{RequiredField: scalar.Int32(1)},
+				{RequiredField: proto.Int32(1)},
 				{},
 			},
 		}},
@@ -1105,8 +1104,8 @@ var testProtos = []testProto{
 		desc: "required field in repeated message set",
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			RepeatedMessage: []*testpb.TestRequired{
-				{RequiredField: scalar.Int32(1)},
-				{RequiredField: scalar.Int32(2)},
+				{RequiredField: proto.Int32(1)},
+				{RequiredField: proto.Int32(2)},
 			},
 		}},
 		wire: pack.Message{
@@ -1123,7 +1122,7 @@ var testProtos = []testProto{
 		partial: true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			MapMessage: map[int32]*testpb.TestRequired{
-				1: {RequiredField: scalar.Int32(1)},
+				1: {RequiredField: proto.Int32(1)},
 				2: {},
 			},
 		}},
@@ -1144,8 +1143,8 @@ var testProtos = []testProto{
 		desc: "required field in map message set",
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			MapMessage: map[int32]*testpb.TestRequired{
-				1: {RequiredField: scalar.Int32(1)},
-				2: {RequiredField: scalar.Int32(2)},
+				1: {RequiredField: proto.Int32(1)},
+				2: {RequiredField: proto.Int32(2)},
 			},
 		}},
 		wire: pack.Message{
@@ -1178,7 +1177,7 @@ var testProtos = []testProto{
 		desc: "required field in optional group set",
 		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
 			Optionalgroup: &testpb.TestRequiredGroupFields_OptionalGroup{
-				A: scalar.Int32(1),
+				A: proto.Int32(1),
 			},
 		}},
 		wire: pack.Message{
@@ -1192,7 +1191,7 @@ var testProtos = []testProto{
 		partial: true,
 		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
 			Repeatedgroup: []*testpb.TestRequiredGroupFields_RepeatedGroup{
-				{A: scalar.Int32(1)},
+				{A: proto.Int32(1)},
 				{},
 			},
 		}},
@@ -1208,8 +1207,8 @@ var testProtos = []testProto{
 		desc: "required field in repeated group set",
 		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
 			Repeatedgroup: []*testpb.TestRequiredGroupFields_RepeatedGroup{
-				{A: scalar.Int32(1)},
-				{A: scalar.Int32(2)},
+				{A: proto.Int32(1)},
+				{A: proto.Int32(2)},
 			},
 		}},
 		wire: pack.Message{
@@ -1236,7 +1235,7 @@ var testProtos = []testProto{
 		decodeTo: []proto.Message{
 			&testpb.TestRequiredForeign{OneofField: &testpb.TestRequiredForeign_OneofMessage{
 				&testpb.TestRequired{
-					RequiredField: scalar.Int32(1),
+					RequiredField: proto.Int32(1),
 				},
 			}},
 		},
@@ -1260,7 +1259,7 @@ var testProtos = []testProto{
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Single, &testpb.TestRequired{
-				RequiredField: scalar.Int32(1),
+				RequiredField: proto.Int32(1),
 			}),
 		)},
 		wire: pack.Message{
@@ -1275,7 +1274,7 @@ var testProtos = []testProto{
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Multi, []*testpb.TestRequired{
-				{RequiredField: scalar.Int32(1)},
+				{RequiredField: proto.Int32(1)},
 				{},
 			}),
 		)},
@@ -1291,8 +1290,8 @@ var testProtos = []testProto{
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Multi, []*testpb.TestRequired{
-				{RequiredField: scalar.Int32(1)},
-				{RequiredField: scalar.Int32(2)},
+				{RequiredField: proto.Int32(1)},
+				{RequiredField: proto.Int32(2)},
 			}),
 		)},
 		wire: pack.Message{
@@ -1318,26 +1317,26 @@ var testProtos = []testProto{
 		decodeTo: []proto.Message{
 			&legacypb.Legacy{
 				F1: &legacy1pb.Message{
-					OptionalInt32:     scalar.Int32(1),
+					OptionalInt32:     proto.Int32(1),
 					OptionalChildEnum: legacy1pb.Message_ALPHA.Enum(),
 					OptionalChildMessage: &legacy1pb.Message_ChildMessage{
-						F1: scalar.String("x"),
+						F1: proto.String("x"),
 					},
 					Optionalgroup: &legacy1pb.Message_OptionalGroup{
-						F1: scalar.String("x"),
+						F1: proto.String("x"),
 					},
 					RepeatedChildMessage: []*legacy1pb.Message_ChildMessage{
-						{F1: scalar.String("x")},
+						{F1: proto.String("x")},
 					},
 					Repeatedgroup: []*legacy1pb.Message_RepeatedGroup{
-						{F1: scalar.String("x")},
+						{F1: proto.String("x")},
 					},
 					MapBoolChildMessage: map[bool]*legacy1pb.Message_ChildMessage{
-						true: {F1: scalar.String("x")},
+						true: {F1: proto.String("x")},
 					},
 					OneofUnion: &legacy1pb.Message_OneofChildMessage{
 						&legacy1pb.Message_ChildMessage{
-							F1: scalar.String("x"),
+							F1: proto.String("x"),
 						},
 					},
 				},

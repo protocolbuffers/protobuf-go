@@ -10,7 +10,6 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/impl"
 	pimpl "google.golang.org/protobuf/internal/impl"
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
@@ -155,9 +154,9 @@ func TestRoundTrip(t *testing.T) {
 		resolver: preg.NewTypes(),
 		message: func() proto.Message {
 			m := &pb2.Nested{
-				OptString: scalar.String("embedded inside Any"),
+				OptString: proto.String("embedded inside Any"),
 				OptNested: &pb2.Nested{
-					OptString: scalar.String("inception"),
+					OptString: proto.String("inception"),
 				},
 			}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -176,9 +175,9 @@ func TestRoundTrip(t *testing.T) {
 		resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
 		message: func() *pb2.KnownTypes {
 			m := &pb2.Nested{
-				OptString: scalar.String("embedded inside Any"),
+				OptString: proto.String("embedded inside Any"),
 				OptNested: &pb2.Nested{
-					OptString: scalar.String("inception"),
+					OptString: proto.String("inception"),
 				},
 			}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -201,7 +200,7 @@ func TestRoundTrip(t *testing.T) {
 		}(),
 		message: func() *pb2.KnownTypes {
 			m1 := &pb2.Nested{
-				OptString: scalar.String("message inside Any of another Any field"),
+				OptString: proto.String("message inside Any of another Any field"),
 			}
 			b1, err := proto.MarshalOptions{Deterministic: true}.Marshal(m1)
 			if err != nil {

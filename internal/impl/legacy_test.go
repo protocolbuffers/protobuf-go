@@ -15,7 +15,6 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/internal/pragma"
-	"google.golang.org/protobuf/internal/scalar"
 	"google.golang.org/protobuf/proto"
 	pdesc "google.golang.org/protobuf/reflect/protodesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -375,8 +374,8 @@ func TestLegacyExtensions(t *testing.T) {
 	}
 
 	// Set some values and append to values to the lists.
-	m1a := &proto2_20180125.Message_ChildMessage{F1: scalar.String("m1a")}
-	m1b := &proto2_20180125.Message_ChildMessage{F1: scalar.String("m2b")}
+	m1a := &proto2_20180125.Message_ChildMessage{F1: proto.String("m1a")}
+	m1b := &proto2_20180125.Message_ChildMessage{F1: proto.String("m2b")}
 	m2a := &EnumMessages{EnumP2: EnumProto2(0x1b).Enum()}
 	m2b := &EnumMessages{EnumP2: EnumProto2(0x2b).Enum()}
 	setValues := map[int]interface{}{

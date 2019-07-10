@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"google.golang.org/protobuf/internal/scalar"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -25,7 +25,7 @@ func TestPluginParameters(t *testing.T) {
 	}
 	const params = "integer=2"
 	_, err := New(&pluginpb.CodeGeneratorRequest{
-		Parameter: scalar.String(params),
+		Parameter: proto.String(params),
 	}, opts)
 	if err != nil {
 		t.Errorf("New(generator parameters %q): %v", params, err)
@@ -46,7 +46,7 @@ func TestPluginParameterErrors(t *testing.T) {
 			ParamFunc: flags.Set,
 		}
 		_, err := New(&pluginpb.CodeGeneratorRequest{
-			Parameter: scalar.String(parameter),
+			Parameter: proto.String(parameter),
 		}, opts)
 		if err == nil {
 			t.Errorf("New(generator parameters %q): want error, got nil", parameter)
@@ -58,14 +58,14 @@ func TestNoGoPackage(t *testing.T) {
 	gen, err := New(&pluginpb.CodeGeneratorRequest{
 		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
-				Name:    scalar.String("testdata/go_package/no_go_package.proto"),
-				Syntax:  scalar.String(protoreflect.Proto3.String()),
-				Package: scalar.String("goproto.testdata"),
+				Name:    proto.String("testdata/go_package/no_go_package.proto"),
+				Syntax:  proto.String(protoreflect.Proto3.String()),
+				Package: proto.String("goproto.testdata"),
 			},
 			{
-				Name:       scalar.String("testdata/go_package/no_go_package_import.proto"),
-				Syntax:     scalar.String(protoreflect.Proto3.String()),
-				Package:    scalar.String("goproto.testdata"),
+				Name:       proto.String("testdata/go_package/no_go_package_import.proto"),
+				Syntax:     proto.String(protoreflect.Proto3.String()),
+				Package:    proto.String("goproto.testdata"),
 				Dependency: []string{"go_package/no_go_package.proto"},
 			},
 		},
@@ -167,13 +167,13 @@ TEST: %v
 			test.desc, test.parameter, filename, test.generate, test.goPackageOption)
 
 		req := &pluginpb.CodeGeneratorRequest{
-			Parameter: scalar.String(test.parameter),
+			Parameter: proto.String(test.parameter),
 			ProtoFile: []*descriptorpb.FileDescriptorProto{
 				{
-					Name:    scalar.String(filename),
-					Package: scalar.String(protoPackageName),
+					Name:    proto.String(filename),
+					Package: proto.String(protoPackageName),
 					Options: &descriptorpb.FileOptions{
-						GoPackage: scalar.String(test.goPackageOption),
+						GoPackage: proto.String(test.goPackageOption),
 					},
 				},
 			},
@@ -207,14 +207,14 @@ func TestPackageNameInference(t *testing.T) {
 	gen, err := New(&pluginpb.CodeGeneratorRequest{
 		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
-				Name:    scalar.String("dir/file1.proto"),
-				Package: scalar.String("proto.package"),
+				Name:    proto.String("dir/file1.proto"),
+				Package: proto.String("proto.package"),
 			},
 			{
-				Name:    scalar.String("dir/file2.proto"),
-				Package: scalar.String("proto.package"),
+				Name:    proto.String("dir/file2.proto"),
+				Package: proto.String("proto.package"),
 				Options: &descriptorpb.FileOptions{
-					GoPackage: scalar.String("foo"),
+					GoPackage: proto.String("foo"),
 				},
 			},
 		},
@@ -234,17 +234,17 @@ func TestInconsistentPackageNames(t *testing.T) {
 	_, err := New(&pluginpb.CodeGeneratorRequest{
 		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
-				Name:    scalar.String("dir/file1.proto"),
-				Package: scalar.String("proto.package"),
+				Name:    proto.String("dir/file1.proto"),
+				Package: proto.String("proto.package"),
 				Options: &descriptorpb.FileOptions{
-					GoPackage: scalar.String("golang.org/x/foo"),
+					GoPackage: proto.String("golang.org/x/foo"),
 				},
 			},
 			{
-				Name:    scalar.String("dir/file2.proto"),
-				Package: scalar.String("proto.package"),
+				Name:    proto.String("dir/file2.proto"),
+				Package: proto.String("proto.package"),
 				Options: &descriptorpb.FileOptions{
-					GoPackage: scalar.String("golang.org/x/foo;bar"),
+					GoPackage: proto.String("golang.org/x/foo;bar"),
 				},
 			},
 		},
