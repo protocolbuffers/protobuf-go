@@ -186,6 +186,9 @@ Loop:
 			if fd == nil {
 				fd = fieldDescs.ByName(pref.Name(name))
 			}
+			if fd != nil && fd.IsWeak() && fd.Message().IsPlaceholder() {
+				fd = nil // reset since the weak reference is not linked in
+			}
 		}
 
 		if fd == nil {

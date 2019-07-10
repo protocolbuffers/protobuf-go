@@ -95,19 +95,19 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 		case text.Name:
 			name, _ = tkey.Name()
 			fd = fieldDescs.ByName(name)
-			// The proto name of a group field is in all lowercase. However, the
-			// textproto field name is the type name. Check to make sure that
-			// group name is correct.
-			if fd == nil {
+			switch {
+			case fd == nil:
+				// The proto name of a group field is in all lowercase,
+				// while the textproto field name is the group message name.
+				// Check to make sure that group name is correct.
 				gd := fieldDescs.ByName(pref.Name(strings.ToLower(string(name))))
 				if gd != nil && gd.Kind() == pref.GroupKind && gd.Message().Name() == name {
 					fd = gd
 				}
-			} else {
-				if fd.Kind() == pref.GroupKind && fd.Message().Name() != name {
-					// Reset fd to nil because name does not match.
-					fd = nil
-				}
+			case fd.Kind() == pref.GroupKind && fd.Message().Name() != name:
+				fd = nil // reset since field name is actually the message name
+			case fd.IsWeak() && fd.Message().IsPlaceholder():
+				fd = nil // reset since the weak reference is not linked in
 			}
 		case text.String:
 			// Handle extensions only. This code path is not for Any.

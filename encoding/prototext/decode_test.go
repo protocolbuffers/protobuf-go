@@ -9,12 +9,15 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
+	"google.golang.org/protobuf/internal/flags"
 	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
 	"google.golang.org/protobuf/encoding/testprotos/pb2"
 	"google.golang.org/protobuf/encoding/testprotos/pb3"
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
@@ -26,6 +29,7 @@ func TestUnmarshal(t *testing.T) {
 		inputText    string
 		wantMessage  proto.Message
 		wantErr      bool // TODO: Verify error message content.
+		skip         bool
 	}{{
 		desc:         "proto2 empty message",
 		inputMessage: &pb2.Scalars{},
@@ -1484,10 +1488,29 @@ unknown: ""
 type_url: "pb2.Nested"
 `,
 		wantErr: true,
+	}, {
+		desc:         "weak fields",
+		inputMessage: &testpb.TestWeak{},
+		inputText:    `weak_message1:{a:1}`,
+		wantMessage: func() *testpb.TestWeak {
+			m := new(testpb.TestWeak)
+			m.SetWeakMessage1(&weakpb.WeakImportMessage1{A: proto.Int32(1)})
+			return m
+		}(),
+		skip: !flags.Proto1Legacy,
+	}, {
+		desc:         "weak fields; unknown field",
+		inputMessage: &testpb.TestWeak{},
+		inputText:    `weak_message1:{a:1} weak_message2:{a:1}`,
+		wantErr:      true, // weak_message2 is unknown since the package containing it is not imported
+		skip:         !flags.Proto1Legacy,
 	}}
 
 	for _, tt := range tests {
 		tt := tt
+		if tt.skip {
+			continue
+		}
 		t.Run(tt.desc, func(t *testing.T) {
 			err := tt.umo.Unmarshal([]byte(tt.inputText), tt.inputMessage)
 			if err != nil && !tt.wantErr {
