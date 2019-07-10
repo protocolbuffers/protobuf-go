@@ -16,6 +16,7 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/strs"
 )
 
 func (p *encoder) marshalString(v Value) error {
@@ -225,18 +226,4 @@ func indexNeedEscapeInString(s string) int {
 	}
 	return len(s)
 }
-
-// indexNeedEscapeInBytes returns the index of the character that needs
-// escaping. If no characters need escaping, this returns the input length.
-// TODO: Remove this duplicate function when https://golang.org/issue/31506 gets
-// resolved.
-func indexNeedEscapeInBytes(b []byte) int {
-	for i := 0; i < len(b); {
-		c, size := utf8.DecodeRune(b[i:])
-		if c < ' ' || c == '"' || c == '\'' || c == '\\' || c >= utf8.RuneSelf {
-			return i
-		}
-		i += size
-	}
-	return len(b)
-}
+func indexNeedEscapeInBytes(b []byte) int { return indexNeedEscapeInString(strs.UnsafeString(b)) }
