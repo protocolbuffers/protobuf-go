@@ -250,8 +250,8 @@ func mustInitDeps(t *testing.T) {
 	// Explicitly clear GOROOT, so each toolchain uses their default GOROOT.
 	check(os.Unsetenv("GOROOT"))
 
-	// Set a cache directory within the test directory.
-	check(os.Setenv("GOCACHE", filepath.Join(testDir, "gocache")))
+	// Set a cache directory outside the test directory.
+	check(os.Setenv("GOCACHE", filepath.Join(repoRoot, ".gocache")))
 
 	// Setup GOPATH for pre-module support (i.e., go1.10 and earlier).
 	goPath = filepath.Join(testDir, "gopath")
