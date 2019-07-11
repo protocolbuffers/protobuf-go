@@ -49,10 +49,7 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m Message) error {
 	}
 
 	// TODO: Reset m?
-	err := o.unmarshalMessageFast(b, m)
-	if err == errInternalNoFast {
-		err = o.unmarshalMessage(b, m.ProtoReflect())
-	}
+	err := o.unmarshalMessage(b, m.ProtoReflect())
 	if err != nil {
 		return err
 	}
@@ -62,15 +59,14 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m Message) error {
 	return IsInitialized(m)
 }
 
-func (o UnmarshalOptions) unmarshalMessageFast(b []byte, m Message) error {
-	methods := protoMethods(m)
-	if methods == nil || methods.Unmarshal == nil {
-		return errInternalNoFast
+func (o UnmarshalOptions) unmarshalMessage(b []byte, m protoreflect.Message) error {
+	if methods := protoMethods(m); methods != nil && methods.Unmarshal != nil {
+		return methods.Unmarshal(b, m, protoiface.UnmarshalOptions(o))
 	}
-	return methods.Unmarshal(b, m, protoiface.UnmarshalOptions(o))
+	return o.unmarshalMessageSlow(b, m)
 }
 
-func (o UnmarshalOptions) unmarshalMessage(b []byte, m protoreflect.Message) error {
+func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message) error {
 	messageDesc := m.Descriptor()
 	fieldDescs := messageDesc.Fields()
 	for len(b) > 0 {

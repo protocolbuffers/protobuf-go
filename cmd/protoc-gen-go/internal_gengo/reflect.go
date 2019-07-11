@@ -306,12 +306,6 @@ func genReflectMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 	g.P("return mi.MessageOf(x)")
 	g.P("}")
 	g.P()
-
-	// XXX_Methods method.
-	g.P("func (x *", message.GoIdent, ") XXX_Methods() *", protoifacePackage.Ident("Methods"), " {")
-	g.P("return ", typesVar, "[", idx, "].Methods()")
-	g.P("}")
-	g.P()
 }
 
 func fileVarName(f *protogen.File, suffix string) string {

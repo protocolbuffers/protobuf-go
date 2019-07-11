@@ -5,7 +5,6 @@ package durationpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -114,10 +113,6 @@ func (x *Duration) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Duration) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_duration_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Duration.ProtoReflect.Type instead.

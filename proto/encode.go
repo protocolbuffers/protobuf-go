@@ -87,10 +87,7 @@ func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
 	// effort with the single initialization check below.
 	allowPartial := o.AllowPartial
 	o.AllowPartial = true
-	out, err := o.marshalMessageFast(b, m)
-	if err == errInternalNoFast {
-		out, err = o.marshalMessage(b, m.ProtoReflect())
-	}
+	out, err := o.marshalMessage(b, m.ProtoReflect())
 	if err != nil {
 		return nil, err
 	}
@@ -100,26 +97,24 @@ func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
 	return out, IsInitialized(m)
 }
 
-func (o MarshalOptions) marshalMessageFast(b []byte, m Message) ([]byte, error) {
-	methods := protoMethods(m)
-	if methods == nil ||
-		methods.MarshalAppend == nil ||
-		(o.Deterministic && methods.Flags&protoiface.MethodFlagDeterministicMarshal == 0) {
-		return nil, errInternalNoFast
-	}
-	if methods.Size != nil {
-		sz := methods.Size(m)
-		if cap(b) < len(b)+sz {
-			x := make([]byte, len(b), len(b)+sz)
-			copy(x, b)
-			b = x
+func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte, error) {
+	if methods := protoMethods(m); methods != nil && methods.MarshalAppend != nil &&
+		!(o.Deterministic && methods.Flags&protoiface.MethodFlagDeterministicMarshal == 0) {
+		if methods.Size != nil {
+			sz := methods.Size(m)
+			if cap(b) < len(b)+sz {
+				x := make([]byte, len(b), len(b)+sz)
+				copy(x, b)
+				b = x
+			}
+			o.UseCachedSize = true
 		}
-		o.UseCachedSize = true
+		return methods.MarshalAppend(b, m, protoiface.MarshalOptions(o))
 	}
-	return methods.MarshalAppend(b, m, protoiface.MarshalOptions(o))
+	return o.marshalMessageSlow(b, m)
 }
 
-func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte, error) {
+func (o MarshalOptions) marshalMessageSlow(b []byte, m protoreflect.Message) ([]byte, error) {
 	// There are many choices for what order we visit fields in. The default one here
 	// is chosen for reasonable efficiency and simplicity given the protoreflect API.
 	// It is not deterministic, since Message.Range does not return fields in any

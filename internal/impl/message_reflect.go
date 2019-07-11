@@ -11,7 +11,6 @@ import (
 	"google.golang.org/protobuf/internal/pragma"
 	pvalue "google.golang.org/protobuf/internal/value"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
-	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 // MessageState is a data structure that is nested as the first field in a
@@ -81,8 +80,8 @@ type messageDataType struct {
 }
 
 type (
-	messageIfaceWrapper   messageDataType
 	messageReflectWrapper messageDataType
+	messageIfaceWrapper   messageDataType
 )
 
 var (
@@ -112,32 +111,8 @@ func (m *messageReflectWrapper) pointer() pointer { return m.p }
 func (m *messageIfaceWrapper) ProtoReflect() pref.Message {
 	return (*messageReflectWrapper)(m)
 }
-func (m *messageIfaceWrapper) XXX_Methods() *piface.Methods {
-	// TODO: Consider not recreating this on every call.
-	m.mi.init()
-	return &piface.Methods{
-		Flags:         piface.MethodFlagDeterministicMarshal,
-		MarshalAppend: m.marshalAppend,
-		Unmarshal:     m.unmarshal,
-		Size:          m.size,
-		IsInitialized: m.isInitialized,
-	}
-}
 func (m *messageIfaceWrapper) ProtoUnwrap() interface{} {
 	return m.p.AsIfaceOf(m.mi.GoType.Elem())
-}
-func (m *messageIfaceWrapper) marshalAppend(b []byte, _ pref.ProtoMessage, opts piface.MarshalOptions) ([]byte, error) {
-	return m.mi.marshalAppendPointer(b, m.p, newMarshalOptions(opts))
-}
-func (m *messageIfaceWrapper) unmarshal(b []byte, _ pref.ProtoMessage, opts piface.UnmarshalOptions) error {
-	_, err := m.mi.unmarshalPointer(b, m.p, 0, newUnmarshalOptions(opts))
-	return err
-}
-func (m *messageIfaceWrapper) size(msg pref.ProtoMessage) (size int) {
-	return m.mi.sizePointer(m.p, 0)
-}
-func (m *messageIfaceWrapper) isInitialized(_ pref.ProtoMessage) error {
-	return m.mi.isInitializedPointer(m.p)
 }
 
 type extensionMap map[int32]ExtensionField

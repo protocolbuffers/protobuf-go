@@ -5,7 +5,6 @@ package fieldmaskpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -244,10 +243,6 @@ func (x *FieldMask) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *FieldMask) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_field_mask_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use FieldMask.ProtoReflect.Type instead.

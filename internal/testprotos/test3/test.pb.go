@@ -6,7 +6,6 @@ package test3
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	prototype "google.golang.org/protobuf/reflect/prototype"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -206,10 +205,6 @@ func (x *TestAllTypes) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllTypes) XXX_Methods() *protoiface.Methods {
-	return file_test3_test_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use TestAllTypes.ProtoReflect.Type instead.
@@ -788,10 +783,6 @@ func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *ForeignMessage) XXX_Methods() *protoiface.Methods {
-	return file_test3_test_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use ForeignMessage.ProtoReflect.Type instead.
 func (*ForeignMessage) Descriptor() ([]byte, []int) {
 	return file_test3_test_proto_rawDescGZIP(), []int{1}
@@ -839,10 +830,6 @@ func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllTypes_NestedMessage) XXX_Methods() *protoiface.Methods {
-	return file_test3_test_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use TestAllTypes_NestedMessage.ProtoReflect.Type instead.

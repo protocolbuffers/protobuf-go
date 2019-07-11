@@ -5,7 +5,6 @@ package beta
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -43,10 +42,6 @@ func (x *M2) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *M2) XXX_Methods() *protoiface.Methods {
-	return file_imports_test_b_1_m2_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use M2.ProtoReflect.Type instead.

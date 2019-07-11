@@ -6,19 +6,23 @@ package proto
 
 import (
 	"google.golang.org/protobuf/internal/errors"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // IsInitialized returns an error if any required fields in m are not set.
 func IsInitialized(m Message) error {
-	if methods := protoMethods(m); methods != nil && methods.IsInitialized != nil {
-		return methods.IsInitialized(m)
-	}
 	return isInitialized(m.ProtoReflect())
 }
 
 // IsInitialized returns an error if any required fields in m are not set.
-func isInitialized(m pref.Message) error {
+func isInitialized(m protoreflect.Message) error {
+	if methods := protoMethods(m); methods != nil && methods.IsInitialized != nil {
+		return methods.IsInitialized(m)
+	}
+	return isInitializedSlow(m)
+}
+
+func isInitializedSlow(m protoreflect.Message) error {
 	md := m.Descriptor()
 	fds := md.Fields()
 	for i, nums := 0, md.RequiredNumbers(); i < nums.Len(); i++ {
@@ -28,28 +32,28 @@ func isInitialized(m pref.Message) error {
 		}
 	}
 	var err error
-	m.Range(func(fd pref.FieldDescriptor, v pref.Value) bool {
+	m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		switch {
 		case fd.IsList():
 			if fd.Message() == nil {
 				return true
 			}
 			for i, list := 0, v.List(); i < list.Len() && err == nil; i++ {
-				err = IsInitialized(list.Get(i).Message().Interface())
+				err = isInitialized(list.Get(i).Message())
 			}
 		case fd.IsMap():
 			if fd.MapValue().Message() == nil {
 				return true
 			}
-			v.Map().Range(func(key pref.MapKey, v pref.Value) bool {
-				err = IsInitialized(v.Message().Interface())
+			v.Map().Range(func(key protoreflect.MapKey, v protoreflect.Value) bool {
+				err = isInitialized(v.Message())
 				return err == nil
 			})
 		default:
 			if fd.Message() == nil {
 				return true
 			}
-			err = IsInitialized(v.Message().Interface())
+			err = isInitialized(v.Message())
 		}
 		return err == nil
 	})

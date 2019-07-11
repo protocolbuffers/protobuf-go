@@ -5,7 +5,6 @@ package google_message2
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -73,10 +72,6 @@ func (x *GoogleMessage2) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *GoogleMessage2) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use GoogleMessage2.ProtoReflect.Type instead.
@@ -349,10 +344,6 @@ func (x *GoogleMessage2GroupedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *GoogleMessage2GroupedMessage) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use GoogleMessage2GroupedMessage.ProtoReflect.Type instead.
 func (*GoogleMessage2GroupedMessage) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message2_benchmark_message2_proto_rawDescGZIP(), []int{1}
@@ -481,10 +472,6 @@ func (x *GoogleMessage2_Group1) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *GoogleMessage2_Group1) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message2_benchmark_message2_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use GoogleMessage2_Group1.ProtoReflect.Type instead.

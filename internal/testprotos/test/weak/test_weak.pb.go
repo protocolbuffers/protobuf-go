@@ -5,7 +5,6 @@ package weak
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -44,10 +43,6 @@ func (x *WeakImportMessage) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *WeakImportMessage) XXX_Methods() *protoiface.Methods {
-	return file_test_weak_test_weak_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use WeakImportMessage.ProtoReflect.Type instead.

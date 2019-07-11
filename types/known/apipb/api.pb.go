@@ -5,7 +5,6 @@ package apipb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sourcecontextpb "google.golang.org/protobuf/types/known/sourcecontextpb"
 	typepb "google.golang.org/protobuf/types/known/typepb"
@@ -90,10 +89,6 @@ func (x *Api) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Api) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_api_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Api.ProtoReflect.Type instead.
@@ -191,10 +186,6 @@ func (x *Method) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Method) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_api_proto_msgTypes[1].Methods()
 }
 
 // Deprecated: Use Method.ProtoReflect.Type instead.
@@ -360,10 +351,6 @@ func (x *Mixin) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Mixin) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_api_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use Mixin.ProtoReflect.Type instead.

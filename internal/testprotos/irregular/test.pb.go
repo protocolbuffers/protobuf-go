@@ -5,7 +5,6 @@ package irregular
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -50,10 +49,6 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message) XXX_Methods() *protoiface.Methods {
-	return file_irregular_test_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Message.ProtoReflect.Type instead.

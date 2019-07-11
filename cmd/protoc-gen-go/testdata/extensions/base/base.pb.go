@@ -47,10 +47,6 @@ func (x *BaseMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *BaseMessage) XXX_Methods() *protoiface.Methods {
-	return file_extensions_base_base_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use BaseMessage.ProtoReflect.Type instead.
 func (*BaseMessage) Descriptor() ([]byte, []int) {
 	return file_extensions_base_base_proto_rawDescGZIP(), []int{0}
@@ -100,10 +96,6 @@ func (x *MessageSetWireFormatMessage) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *MessageSetWireFormatMessage) XXX_Methods() *protoiface.Methods {
-	return file_extensions_base_base_proto_msgTypes[1].Methods()
 }
 
 // Deprecated: Use MessageSetWireFormatMessage.ProtoReflect.Type instead.

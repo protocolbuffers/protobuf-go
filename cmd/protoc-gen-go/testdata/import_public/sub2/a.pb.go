@@ -5,7 +5,6 @@ package sub2
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -43,10 +42,6 @@ func (x *Sub2Message) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Sub2Message) XXX_Methods() *protoiface.Methods {
-	return file_import_public_sub2_a_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Sub2Message.ProtoReflect.Type instead.

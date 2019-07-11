@@ -8,6 +8,7 @@ package impl
 
 import (
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/runtime/protoiface"
 )
 
 func (m *messageState) Descriptor() protoreflect.MessageDescriptor {
@@ -21,6 +22,10 @@ func (m *messageState) Interface() protoreflect.ProtoMessage {
 }
 func (m *messageState) ProtoUnwrap() interface{} {
 	return m.pointer().AsIfaceOf(m.mi.GoType.Elem())
+}
+func (m *messageState) ProtoMethods() *protoiface.Methods {
+	m.mi.init()
+	return &m.mi.methods
 }
 
 func (m *messageState) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
@@ -112,6 +117,10 @@ func (m *messageReflectWrapper) Interface() protoreflect.ProtoMessage {
 }
 func (m *messageReflectWrapper) ProtoUnwrap() interface{} {
 	return m.pointer().AsIfaceOf(m.mi.GoType.Elem())
+}
+func (m *messageReflectWrapper) ProtoMethods() *protoiface.Methods {
+	m.mi.init()
+	return &m.mi.methods
 }
 
 func (m *messageReflectWrapper) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {

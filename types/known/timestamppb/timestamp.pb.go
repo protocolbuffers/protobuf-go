@@ -5,7 +5,6 @@ package timestamppb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -134,10 +133,6 @@ func (x *Timestamp) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Timestamp) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_timestamp_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Timestamp.ProtoReflect.Type instead.

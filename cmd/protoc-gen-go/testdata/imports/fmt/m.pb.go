@@ -5,7 +5,6 @@ package fmt
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -43,10 +42,6 @@ func (x *M) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *M) XXX_Methods() *protoiface.Methods {
-	return file_imports_fmt_m_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use M.ProtoReflect.Type instead.

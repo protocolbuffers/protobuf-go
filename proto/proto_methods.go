@@ -7,11 +7,14 @@
 
 package proto
 
-import "google.golang.org/protobuf/runtime/protoiface"
+import (
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/runtime/protoiface"
+)
 
-func protoMethods(m Message) *protoiface.Methods {
+func protoMethods(m protoreflect.Message) *protoiface.Methods {
 	if x, ok := m.(protoiface.Methoder); ok {
-		return x.XXX_Methods()
+		return x.ProtoMethods()
 	}
 	return nil
 }

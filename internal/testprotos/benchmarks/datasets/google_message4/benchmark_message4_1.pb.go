@@ -46,10 +46,6 @@ func (x *Message2463) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message2463) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use Message2463.ProtoReflect.Type instead.
 func (*Message2463) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{0}
@@ -90,10 +86,6 @@ func (x *Message12686) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message12686) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[1].Methods()
 }
 
 // Deprecated: Use Message12686.ProtoReflect.Type instead.
@@ -143,10 +135,6 @@ func (x *Message11949) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message11949) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[2].Methods()
-}
-
 // Deprecated: Use Message11949.ProtoReflect.Type instead.
 func (*Message11949) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{2}
@@ -188,10 +176,6 @@ func (x *Message11975) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message11975) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[3].Methods()
 }
 
 // Deprecated: Use Message11975.ProtoReflect.Type instead.
@@ -303,10 +287,6 @@ func (x *Message7287) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message7287) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[4].Methods()
 }
 
 // Deprecated: Use Message7287.ProtoReflect.Type instead.
@@ -444,10 +424,6 @@ func (x *Message3061) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3061) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[5].Methods()
 }
 
 // Deprecated: Use Message3061.ProtoReflect.Type instead.
@@ -819,10 +795,6 @@ func (x *Message12949) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message12949) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[6].Methods()
-}
-
 // Deprecated: Use Message12949.ProtoReflect.Type instead.
 func (*Message12949) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{6}
@@ -904,10 +876,6 @@ func (x *Message8572) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message8572) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[7].Methods()
 }
 
 // Deprecated: Use Message8572.ProtoReflect.Type instead.
@@ -1298,10 +1266,6 @@ func (x *Message8774) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message8774) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[8].Methods()
-}
-
 // Deprecated: Use Message8774.ProtoReflect.Type instead.
 func (*Message8774) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{8}
@@ -1379,10 +1343,6 @@ func (x *Message12776) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message12776) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[9].Methods()
 }
 
 // Deprecated: Use Message12776.ProtoReflect.Type instead.
@@ -1506,10 +1466,6 @@ func (x *Message12798) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message12798) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[10].Methods()
-}
-
 // Deprecated: Use Message12798.ProtoReflect.Type instead.
 func (*Message12798) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{10}
@@ -1574,10 +1530,6 @@ func (x *Message12797) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message12797) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[11].Methods()
-}
-
 // Deprecated: Use Message12797.ProtoReflect.Type instead.
 func (*Message12797) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{11}
@@ -1637,10 +1589,6 @@ func (x *Message12825) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message12825) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[12].Methods()
 }
 
 // Deprecated: Use Message12825.ProtoReflect.Type instead.
@@ -1725,10 +1673,6 @@ func (x *Message8590) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message8590) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[13].Methods()
-}
-
 // Deprecated: Use Message8590.ProtoReflect.Type instead.
 func (*Message8590) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{13}
@@ -1760,10 +1704,6 @@ func (x *Message8587) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message8587) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[14].Methods()
 }
 
 // Deprecated: Use Message8587.ProtoReflect.Type instead.
@@ -1799,10 +1739,6 @@ func (x *Message1374) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message1374) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[15].Methods()
 }
 
 // Deprecated: Use Message1374.ProtoReflect.Type instead.
@@ -1852,10 +1788,6 @@ func (x *Message2462) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message2462) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[16].Methods()
 }
 
 // Deprecated: Use Message2462.ProtoReflect.Type instead.
@@ -1910,10 +1842,6 @@ func (x *Message12685) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message12685) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[17].Methods()
 }
 
 // Deprecated: Use Message12685.ProtoReflect.Type instead.
@@ -2005,10 +1933,6 @@ func (x *Message10320) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message10320) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[18].Methods()
-}
-
 // Deprecated: Use Message10320.ProtoReflect.Type instead.
 func (*Message10320) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{18}
@@ -2094,10 +2018,6 @@ func (x *Message11947) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message11947) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[19].Methods()
-}
-
 // Deprecated: Use Message11947.ProtoReflect.Type instead.
 func (*Message11947) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{19}
@@ -2152,10 +2072,6 @@ func (x *Message11920) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message11920) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[20].Methods()
 }
 
 // Deprecated: Use Message11920.ProtoReflect.Type instead.
@@ -2221,10 +2137,6 @@ func (x *Message6643) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message6643) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[21].Methods()
 }
 
 // Deprecated: Use Message6643.ProtoReflect.Type instead.
@@ -2404,10 +2316,6 @@ func (x *Message6133) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message6133) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[22].Methods()
 }
 
 // Deprecated: Use Message6133.ProtoReflect.Type instead.
@@ -2596,10 +2504,6 @@ func (x *Message6109) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message6109) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[23].Methods()
-}
-
 // Deprecated: Use Message6109.ProtoReflect.Type instead.
 func (*Message6109) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{23}
@@ -2728,10 +2632,6 @@ func (x *Message3046) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message3046) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[24].Methods()
-}
-
 // Deprecated: Use Message3046.ProtoReflect.Type instead.
 func (*Message3046) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{24}
@@ -2780,10 +2680,6 @@ func (x *Message3060) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3060) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[25].Methods()
 }
 
 // Deprecated: Use Message3060.ProtoReflect.Type instead.
@@ -2842,10 +2738,6 @@ func (x *Message3041) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message3041) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[26].Methods()
-}
-
 // Deprecated: Use Message3041.ProtoReflect.Type instead.
 func (*Message3041) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{26}
@@ -2896,10 +2788,6 @@ func (x *Message3040) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3040) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[27].Methods()
 }
 
 // Deprecated: Use Message3040.ProtoReflect.Type instead.
@@ -2974,10 +2862,6 @@ func (x *Message3050) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3050) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[28].Methods()
 }
 
 // Deprecated: Use Message3050.ProtoReflect.Type instead.
@@ -3060,10 +2944,6 @@ func (x *Message7905) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message7905) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[29].Methods()
 }
 
 // Deprecated: Use Message7905.ProtoReflect.Type instead.
@@ -3149,10 +3029,6 @@ func (x *Message3886) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message3886) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[30].Methods()
-}
-
 // Deprecated: Use Message3886.ProtoReflect.Type instead.
 func (*Message3886) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{30}
@@ -3197,10 +3073,6 @@ func (x *Message7864) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message7864) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[31].Methods()
 }
 
 // Deprecated: Use Message7864.ProtoReflect.Type instead.
@@ -3279,10 +3151,6 @@ func (x *Message3922) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message3922) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[32].Methods()
-}
-
 // Deprecated: Use Message3922.ProtoReflect.Type instead.
 func (*Message3922) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{32}
@@ -3330,10 +3198,6 @@ func (x *Message3052) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3052) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[33].Methods()
 }
 
 // Deprecated: Use Message3052.ProtoReflect.Type instead.
@@ -3432,10 +3296,6 @@ func (x *Message8575) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message8575) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[34].Methods()
-}
-
 // Deprecated: Use Message8575.ProtoReflect.Type instead.
 func (*Message8575) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{34}
@@ -3483,10 +3343,6 @@ func (x *Message7843) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message7843) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[35].Methods()
 }
 
 // Deprecated: Use Message7843.ProtoReflect.Type instead.
@@ -3635,10 +3491,6 @@ func (x *Message3919) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message3919) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[36].Methods()
-}
-
 // Deprecated: Use Message3919.ProtoReflect.Type instead.
 func (*Message3919) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{36}
@@ -3697,10 +3549,6 @@ func (x *Message7929) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message7929) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[37].Methods()
 }
 
 // Deprecated: Use Message7929.ProtoReflect.Type instead.
@@ -3879,10 +3727,6 @@ func (x *Message3061_Message3062) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message3061_Message3062) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[38].Methods()
-}
-
 // Deprecated: Use Message3061_Message3062.ProtoReflect.Type instead.
 func (*Message3061_Message3062) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{5, 0}
@@ -3939,10 +3783,6 @@ func (x *Message3061_Message3063) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3061_Message3063) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[39].Methods()
 }
 
 // Deprecated: Use Message3061_Message3063.ProtoReflect.Type instead.
@@ -4023,10 +3863,6 @@ func (x *Message3061_Message3064) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3061_Message3064) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[40].Methods()
 }
 
 // Deprecated: Use Message3061_Message3064.ProtoReflect.Type instead.
@@ -4195,10 +4031,6 @@ func (x *Message3061_Message3065) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message3061_Message3065) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[41].Methods()
-}
-
 // Deprecated: Use Message3061_Message3065.ProtoReflect.Type instead.
 func (*Message3061_Message3065) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_1_proto_rawDescGZIP(), []int{5, 3}
@@ -4238,10 +4070,6 @@ func (x *Message3061_Message3066) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3061_Message3066) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[42].Methods()
 }
 
 // Deprecated: Use Message3061_Message3066.ProtoReflect.Type instead.
@@ -4335,10 +4163,6 @@ func (x *Message3886_Message3887) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3886_Message3887) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message4_benchmark_message4_1_proto_msgTypes[43].Methods()
 }
 
 // Deprecated: Use Message3886_Message3887.ProtoReflect.Type instead.

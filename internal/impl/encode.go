@@ -47,8 +47,14 @@ func (o marshalOptions) Deterministic() bool { return o&marshalDeterministic != 
 func (o marshalOptions) UseCachedSize() bool { return o&marshalUseCachedSize != 0 }
 
 // size is protoreflect.Methods.Size.
-func (mi *MessageInfo) size(msg pref.ProtoMessage) (size int) {
-	return mi.sizePointer(pointerOfIface(msg), 0)
+func (mi *MessageInfo) size(m pref.Message) (size int) {
+	var p pointer
+	if ms, ok := m.(*messageState); ok {
+		p = ms.pointer()
+	} else {
+		p = m.(*messageReflectWrapper).pointer()
+	}
+	return mi.sizePointer(p, 0)
 }
 
 func (mi *MessageInfo) sizePointer(p pointer, opts marshalOptions) (size int) {
@@ -88,8 +94,14 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 }
 
 // marshalAppend is protoreflect.Methods.MarshalAppend.
-func (mi *MessageInfo) marshalAppend(b []byte, msg pref.ProtoMessage, opts piface.MarshalOptions) ([]byte, error) {
-	return mi.marshalAppendPointer(b, pointerOfIface(msg), newMarshalOptions(opts))
+func (mi *MessageInfo) marshalAppend(b []byte, m pref.Message, opts piface.MarshalOptions) ([]byte, error) {
+	var p pointer
+	if ms, ok := m.(*messageState); ok {
+		p = ms.pointer()
+	} else {
+		p = m.(*messageReflectWrapper).pointer()
+	}
+	return mi.marshalAppendPointer(b, p, newMarshalOptions(opts))
 }
 
 func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOptions) ([]byte, error) {

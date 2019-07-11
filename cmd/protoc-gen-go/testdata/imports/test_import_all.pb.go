@@ -9,7 +9,6 @@ import (
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports/test_a_2"
 	test_b_1 "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports/test_b_1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -52,10 +51,6 @@ func (x *All) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *All) XXX_Methods() *protoiface.Methods {
-	return file_imports_test_import_all_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use All.ProtoReflect.Type instead.

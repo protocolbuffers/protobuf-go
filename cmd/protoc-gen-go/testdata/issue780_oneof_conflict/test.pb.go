@@ -5,7 +5,6 @@ package oneoftest
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -46,10 +45,6 @@ func (x *Foo) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Foo) XXX_Methods() *protoiface.Methods {
-	return file_issue780_oneof_conflict_test_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Foo.ProtoReflect.Type instead.

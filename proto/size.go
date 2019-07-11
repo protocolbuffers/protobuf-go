@@ -16,22 +16,17 @@ func Size(m Message) int {
 
 // Size returns the size in bytes of the wire-format encoding of m.
 func (o MarshalOptions) Size(m Message) int {
-	if size, err := sizeMessageFast(m); err == nil {
-		return size
-	}
 	return sizeMessage(m.ProtoReflect())
 }
 
-func sizeMessageFast(m Message) (int, error) {
-	// TODO: Pass MarshalOptions to size to permit disabling fast path?
-	methods := protoMethods(m)
-	if methods == nil || methods.Size == nil {
-		return 0, errInternalNoFast
+func sizeMessage(m protoreflect.Message) (size int) {
+	if methods := protoMethods(m); methods != nil && methods.Size != nil {
+		return methods.Size(m)
 	}
-	return methods.Size(m), nil
+	return sizeMessageSlow(m)
 }
 
-func sizeMessage(m protoreflect.Message) (size int) {
+func sizeMessageSlow(m protoreflect.Message) (size int) {
 	m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		size += sizeField(fd, v)
 		return true

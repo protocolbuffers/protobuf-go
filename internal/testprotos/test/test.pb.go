@@ -339,10 +339,6 @@ func (x *TestAllTypes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestAllTypes) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use TestAllTypes.ProtoReflect.Type instead.
 func (*TestAllTypes) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0}
@@ -1075,10 +1071,6 @@ func (x *TestDeprecatedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestDeprecatedMessage) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use TestDeprecatedMessage.ProtoReflect.Type instead.
 func (*TestDeprecatedMessage) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{1}
@@ -1147,10 +1139,6 @@ func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *ForeignMessage) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[2].Methods()
-}
-
 // Deprecated: Use ForeignMessage.ProtoReflect.Type instead.
 func (*ForeignMessage) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{2}
@@ -1198,10 +1186,6 @@ func (x *TestReservedFields) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestReservedFields) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[3].Methods()
-}
-
 // Deprecated: Use TestReservedFields.ProtoReflect.Type instead.
 func (*TestReservedFields) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{3}
@@ -1234,10 +1218,6 @@ func (x *TestAllExtensions) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllExtensions) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[4].Methods()
 }
 
 // Deprecated: Use TestAllExtensions.ProtoReflect.Type instead.
@@ -1283,10 +1263,6 @@ func (x *OptionalGroupExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *OptionalGroupExtension) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[5].Methods()
-}
-
 // Deprecated: Use OptionalGroupExtension.ProtoReflect.Type instead.
 func (*OptionalGroupExtension) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{5}
@@ -1326,10 +1302,6 @@ func (x *RepeatedGroupExtension) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *RepeatedGroupExtension) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[6].Methods()
 }
 
 // Deprecated: Use RepeatedGroupExtension.ProtoReflect.Type instead.
@@ -1372,10 +1344,6 @@ func (x *TestNestedExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestNestedExtension) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[7].Methods()
-}
-
 // Deprecated: Use TestNestedExtension.ProtoReflect.Type instead.
 func (*TestNestedExtension) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{7}
@@ -1408,10 +1376,6 @@ func (x *TestRequired) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestRequired) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[8].Methods()
 }
 
 // Deprecated: Use TestRequired.ProtoReflect.Type instead.
@@ -1458,10 +1422,6 @@ func (x *TestRequiredForeign) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestRequiredForeign) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[9].Methods()
 }
 
 // Deprecated: Use TestRequiredForeign.ProtoReflect.Type instead.
@@ -1544,10 +1504,6 @@ func (x *TestRequiredGroupFields) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestRequiredGroupFields) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[10].Methods()
-}
-
 // Deprecated: Use TestRequiredGroupFields.ProtoReflect.Type instead.
 func (*TestRequiredGroupFields) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{10}
@@ -1594,10 +1550,6 @@ func (x *TestWeak) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestWeak) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[11].Methods()
 }
 
 // Deprecated: Use TestWeak.ProtoReflect.Type instead.
@@ -1652,10 +1604,6 @@ func (x *TestPackedTypes) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestPackedTypes) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[12].Methods()
 }
 
 // Deprecated: Use TestPackedTypes.ProtoReflect.Type instead.
@@ -1803,10 +1751,6 @@ func (x *TestUnpackedTypes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestUnpackedTypes) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[13].Methods()
-}
-
 // Deprecated: Use TestUnpackedTypes.ProtoReflect.Type instead.
 func (*TestUnpackedTypes) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{13}
@@ -1939,10 +1883,6 @@ func (x *TestPackedExtensions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestPackedExtensions) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[14].Methods()
-}
-
 // Deprecated: Use TestPackedExtensions.ProtoReflect.Type instead.
 func (*TestPackedExtensions) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{14}
@@ -1984,10 +1924,6 @@ func (x *TestUnpackedExtensions) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestUnpackedExtensions) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[15].Methods()
 }
 
 // Deprecated: Use TestUnpackedExtensions.ProtoReflect.Type instead.
@@ -2033,10 +1969,6 @@ func (x *FooRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *FooRequest) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[16].Methods()
-}
-
 // Deprecated: Use FooRequest.ProtoReflect.Type instead.
 func (*FooRequest) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{16}
@@ -2068,10 +2000,6 @@ func (x *FooResponse) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *FooResponse) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[17].Methods()
 }
 
 // Deprecated: Use FooResponse.ProtoReflect.Type instead.
@@ -2107,10 +2035,6 @@ func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllTypes_NestedMessage) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[18].Methods()
 }
 
 // Deprecated: Use TestAllTypes_NestedMessage.ProtoReflect.Type instead.
@@ -2161,10 +2085,6 @@ func (x *TestAllTypes_OptionalGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestAllTypes_OptionalGroup) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[19].Methods()
-}
-
 // Deprecated: Use TestAllTypes_OptionalGroup.ProtoReflect.Type instead.
 func (*TestAllTypes_OptionalGroup) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0, 1}
@@ -2204,10 +2124,6 @@ func (x *TestAllTypes_RepeatedGroup) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllTypes_RepeatedGroup) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[20].Methods()
 }
 
 // Deprecated: Use TestAllTypes_RepeatedGroup.ProtoReflect.Type instead.
@@ -2251,10 +2167,6 @@ func (x *TestRequiredGroupFields_OptionalGroup) ProtoReflect() protoreflect.Mess
 	return mi.MessageOf(x)
 }
 
-func (x *TestRequiredGroupFields_OptionalGroup) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[39].Methods()
-}
-
 // Deprecated: Use TestRequiredGroupFields_OptionalGroup.ProtoReflect.Type instead.
 func (*TestRequiredGroupFields_OptionalGroup) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{10, 0}
@@ -2294,10 +2206,6 @@ func (x *TestRequiredGroupFields_RepeatedGroup) ProtoReflect() protoreflect.Mess
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestRequiredGroupFields_RepeatedGroup) XXX_Methods() *protoiface.Methods {
-	return file_test_test_proto_msgTypes[40].Methods()
 }
 
 // Deprecated: Use TestRequiredGroupFields_RepeatedGroup.ProtoReflect.Type instead.

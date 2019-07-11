@@ -17,7 +17,6 @@ import (
 	proto3_v1_2 "google.golang.org/protobuf/internal/testprotos/legacy/proto3.v1.2.0-20180814-aa810b61"
 	proto3_v1_21 "google.golang.org/protobuf/internal/testprotos/legacy/proto3.v1.2.1-20181126-8d0c54c1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -67,10 +66,6 @@ func (x *Legacy) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Legacy) XXX_Methods() *protoiface.Methods {
-	return file_legacy_legacy_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Legacy.ProtoReflect.Type instead.

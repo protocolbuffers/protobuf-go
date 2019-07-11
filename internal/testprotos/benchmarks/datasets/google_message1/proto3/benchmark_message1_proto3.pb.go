@@ -5,7 +5,6 @@ package proto3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -84,10 +83,6 @@ func (x *GoogleMessage1) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *GoogleMessage1) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use GoogleMessage1.ProtoReflect.Type instead.
@@ -428,10 +423,6 @@ func (x *GoogleMessage1SubMessage) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *GoogleMessage1SubMessage) XXX_Methods() *protoiface.Methods {
-	return file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_msgTypes[1].Methods()
 }
 
 // Deprecated: Use GoogleMessage1SubMessage.ProtoReflect.Type instead.

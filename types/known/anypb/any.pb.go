@@ -5,7 +5,6 @@ package anypb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -154,10 +153,6 @@ func (x *Any) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Any) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_any_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Any.ProtoReflect.Type instead.

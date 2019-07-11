@@ -6,7 +6,6 @@ package test
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	prototype "google.golang.org/protobuf/reflect/prototype"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -91,10 +90,6 @@ func (x *ImportMessage) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *ImportMessage) XXX_Methods() *protoiface.Methods {
-	return file_test_test_import_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use ImportMessage.ProtoReflect.Type instead.

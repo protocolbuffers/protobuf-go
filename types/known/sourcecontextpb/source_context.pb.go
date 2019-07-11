@@ -5,7 +5,6 @@ package sourcecontextpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -48,10 +47,6 @@ func (x *SourceContext) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *SourceContext) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_source_context_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use SourceContext.ProtoReflect.Type instead.

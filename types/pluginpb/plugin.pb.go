@@ -5,7 +5,6 @@ package pluginpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
 	sync "sync"
@@ -51,10 +50,6 @@ func (x *Version) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Version) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_compiler_plugin_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Version.ProtoReflect.Type instead.
@@ -142,10 +137,6 @@ func (x *CodeGeneratorRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *CodeGeneratorRequest) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_compiler_plugin_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use CodeGeneratorRequest.ProtoReflect.Type instead.
 func (*CodeGeneratorRequest) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_compiler_plugin_proto_rawDescGZIP(), []int{1}
@@ -216,10 +207,6 @@ func (x *CodeGeneratorResponse) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *CodeGeneratorResponse) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_compiler_plugin_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use CodeGeneratorResponse.ProtoReflect.Type instead.
@@ -320,10 +307,6 @@ func (x *CodeGeneratorResponse_File) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *CodeGeneratorResponse_File) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_compiler_plugin_proto_msgTypes[3].Methods()
 }
 
 // Deprecated: Use CodeGeneratorResponse_File.ProtoReflect.Type instead.

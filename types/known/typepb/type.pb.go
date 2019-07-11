@@ -6,7 +6,6 @@ package typepb
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	prototype "google.golang.org/protobuf/reflect/prototype"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	sourcecontextpb "google.golang.org/protobuf/types/known/sourcecontextpb"
@@ -266,10 +265,6 @@ func (x *Type) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Type) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_type_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use Type.ProtoReflect.Type instead.
 func (*Type) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{0}
@@ -366,10 +361,6 @@ func (x *Field) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Field) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_type_proto_msgTypes[1].Methods()
 }
 
 // Deprecated: Use Field.ProtoReflect.Type instead.
@@ -486,10 +477,6 @@ func (x *Enum) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Enum) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_type_proto_msgTypes[2].Methods()
-}
-
 // Deprecated: Use Enum.ProtoReflect.Type instead.
 func (*Enum) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{2}
@@ -565,10 +552,6 @@ func (x *EnumValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *EnumValue) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_type_proto_msgTypes[3].Methods()
-}
-
 // Deprecated: Use EnumValue.ProtoReflect.Type instead.
 func (*EnumValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{3}
@@ -633,10 +616,6 @@ func (x *Option) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Option) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_type_proto_msgTypes[4].Methods()
 }
 
 // Deprecated: Use Option.ProtoReflect.Type instead.

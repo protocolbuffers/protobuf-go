@@ -260,10 +260,6 @@ func (x *TestAllTypesProto2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestAllTypesProto2) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use TestAllTypesProto2.ProtoReflect.Type instead.
 func (*TestAllTypesProto2) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0}
@@ -1002,10 +998,6 @@ func (x *ForeignMessageProto2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *ForeignMessageProto2) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use ForeignMessageProto2.ProtoReflect.Type instead.
 func (*ForeignMessageProto2) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{1}
@@ -1046,10 +1038,6 @@ func (x *TestAllTypesProto2_NestedMessage) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllTypesProto2_NestedMessage) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use TestAllTypesProto2_NestedMessage.ProtoReflect.Type instead.
@@ -1102,10 +1090,6 @@ func (x *TestAllTypesProto2_Data) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TestAllTypesProto2_Data) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[22].Methods()
-}
-
 // Deprecated: Use TestAllTypesProto2_Data.ProtoReflect.Type instead.
 func (*TestAllTypesProto2_Data) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 20}
@@ -1155,10 +1139,6 @@ func (x *TestAllTypesProto2_MessageSetCorrect) ProtoReflect() protoreflect.Messa
 	return mi.MessageOf(x)
 }
 
-func (x *TestAllTypesProto2_MessageSetCorrect) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[23].Methods()
-}
-
 // Deprecated: Use TestAllTypesProto2_MessageSetCorrect.ProtoReflect.Type instead.
 func (*TestAllTypesProto2_MessageSetCorrect) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 21}
@@ -1202,10 +1182,6 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension1) ProtoReflect() protoref
 	return mi.MessageOf(x)
 }
 
-func (x *TestAllTypesProto2_MessageSetCorrectExtension1) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[24].Methods()
-}
-
 // Deprecated: Use TestAllTypesProto2_MessageSetCorrectExtension1.ProtoReflect.Type instead.
 func (*TestAllTypesProto2_MessageSetCorrectExtension1) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 22}
@@ -1245,10 +1221,6 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension2) ProtoReflect() protoref
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllTypesProto2_MessageSetCorrectExtension2) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto2_proto_msgTypes[25].Methods()
 }
 
 // Deprecated: Use TestAllTypesProto2_MessageSetCorrectExtension2.ProtoReflect.Type instead.

@@ -5,7 +5,6 @@ package benchmarks
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -68,10 +67,6 @@ func (x *BenchmarkDataset) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *BenchmarkDataset) XXX_Methods() *protoiface.Methods {
-	return file_benchmarks_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use BenchmarkDataset.ProtoReflect.Type instead.

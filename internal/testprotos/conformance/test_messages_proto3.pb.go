@@ -6,7 +6,6 @@ package conformance
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	prototype "google.golang.org/protobuf/reflect/prototype"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
@@ -327,10 +326,6 @@ func (x *TestAllTypesProto3) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllTypesProto3) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto3_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use TestAllTypesProto3.ProtoReflect.Type instead.
@@ -1279,10 +1274,6 @@ func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *ForeignMessage) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto3_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use ForeignMessage.ProtoReflect.Type instead.
 func (*ForeignMessage) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{1}
@@ -1323,10 +1314,6 @@ func (x *TestAllTypesProto3_NestedMessage) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *TestAllTypesProto3_NestedMessage) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_test_messages_proto3_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use TestAllTypesProto3_NestedMessage.ProtoReflect.Type instead.

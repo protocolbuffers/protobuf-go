@@ -453,6 +453,10 @@ func (m *{{.}}) Interface() protoreflect.ProtoMessage {
 func (m *{{.}}) ProtoUnwrap() interface{} {
 	return m.pointer().AsIfaceOf(m.mi.GoType.Elem())
 }
+func (m *{{.}}) ProtoMethods() *protoiface.Methods {
+	m.mi.init()
+	return &m.mi.methods
+}
 
 func (m *{{.}}) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	m.mi.init()

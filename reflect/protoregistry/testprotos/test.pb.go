@@ -188,10 +188,6 @@ func (x *Message1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message1) XXX_Methods() *protoiface.Methods {
-	return file_test_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use Message1.ProtoReflect.Type instead.
 func (*Message1) Descriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{0}
@@ -234,10 +230,6 @@ func (x *Message2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Message2) XXX_Methods() *protoiface.Methods {
-	return file_test_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use Message2.ProtoReflect.Type instead.
 func (*Message2) Descriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{1}
@@ -269,10 +261,6 @@ func (x *Message3) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message3) XXX_Methods() *protoiface.Methods {
-	return file_test_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use Message3.ProtoReflect.Type instead.
@@ -307,10 +295,6 @@ func (x *Message4) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Message4) XXX_Methods() *protoiface.Methods {
-	return file_test_proto_msgTypes[3].Methods()
 }
 
 // Deprecated: Use Message4.ProtoReflect.Type instead.

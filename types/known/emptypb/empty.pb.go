@@ -5,7 +5,6 @@ package emptypb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -52,10 +51,6 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Empty) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_empty_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Empty.ProtoReflect.Type instead.

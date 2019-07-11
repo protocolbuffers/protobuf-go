@@ -175,10 +175,6 @@ func (x *Scalars) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Scalars) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use Scalars.ProtoReflect.Type instead.
 func (*Scalars) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{0}
@@ -322,10 +318,6 @@ func (x *Enums) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Enums) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use Enums.ProtoReflect.Type instead.
 func (*Enums) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{1}
@@ -395,10 +387,6 @@ func (x *Repeats) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Repeats) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use Repeats.ProtoReflect.Type instead.
@@ -500,10 +488,6 @@ func (x *Nested) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Nested) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[3].Methods()
-}
-
 // Deprecated: Use Nested.ProtoReflect.Type instead.
 func (*Nested) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{3}
@@ -554,10 +538,6 @@ func (x *Nests) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Nests) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[4].Methods()
 }
 
 // Deprecated: Use Nests.ProtoReflect.Type instead.
@@ -626,10 +606,6 @@ func (x *Requireds) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Requireds) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[5].Methods()
 }
 
 // Deprecated: Use Requireds.ProtoReflect.Type instead.
@@ -710,10 +686,6 @@ func (x *PartialRequired) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *PartialRequired) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[6].Methods()
-}
-
 // Deprecated: Use PartialRequired.ProtoReflect.Type instead.
 func (*PartialRequired) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{6}
@@ -762,10 +734,6 @@ func (x *NestedWithRequired) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *NestedWithRequired) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[7].Methods()
-}
-
 // Deprecated: Use NestedWithRequired.ProtoReflect.Type instead.
 func (*NestedWithRequired) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{7}
@@ -810,10 +778,6 @@ func (x *IndirectRequired) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *IndirectRequired) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[8].Methods()
 }
 
 // Deprecated: Use IndirectRequired.ProtoReflect.Type instead.
@@ -898,10 +862,6 @@ func (x *Extensions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Extensions) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[9].Methods()
-}
-
 // Deprecated: Use Extensions.ProtoReflect.Type instead.
 func (*Extensions) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{9}
@@ -965,10 +925,6 @@ func (x *ExtensionsContainer) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *ExtensionsContainer) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[10].Methods()
-}
-
 // Deprecated: Use ExtensionsContainer.ProtoReflect.Type instead.
 func (*ExtensionsContainer) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{10}
@@ -1001,10 +957,6 @@ func (x *MessageSet) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *MessageSet) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[11].Methods()
 }
 
 // Deprecated: Use MessageSet.ProtoReflect.Type instead.
@@ -1050,10 +1002,6 @@ func (x *MessageSetExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *MessageSetExtension) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[12].Methods()
-}
-
 // Deprecated: Use MessageSetExtension.ProtoReflect.Type instead.
 func (*MessageSetExtension) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{12}
@@ -1093,10 +1041,6 @@ func (x *FakeMessageSet) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *FakeMessageSet) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[13].Methods()
 }
 
 // Deprecated: Use FakeMessageSet.ProtoReflect.Type instead.
@@ -1140,10 +1084,6 @@ func (x *FakeMessageSetExtension) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *FakeMessageSetExtension) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[14].Methods()
 }
 
 // Deprecated: Use FakeMessageSetExtension.ProtoReflect.Type instead.
@@ -1203,10 +1143,6 @@ func (x *KnownTypes) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *KnownTypes) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[15].Methods()
 }
 
 // Deprecated: Use KnownTypes.ProtoReflect.Type instead.
@@ -1371,10 +1307,6 @@ func (x *Nests_OptGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Nests_OptGroup) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[16].Methods()
-}
-
 // Deprecated: Use Nests_OptGroup.ProtoReflect.Type instead.
 func (*Nests_OptGroup) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{4, 0}
@@ -1430,10 +1362,6 @@ func (x *Nests_RptGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Nests_RptGroup) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[17].Methods()
-}
-
 // Deprecated: Use Nests_RptGroup.ProtoReflect.Type instead.
 func (*Nests_RptGroup) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{4, 1}
@@ -1473,10 +1401,6 @@ func (x *Nests_OptGroup_OptNestedGroup) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Nests_OptGroup_OptNestedGroup) XXX_Methods() *protoiface.Methods {
-	return file_pb2_test_proto_msgTypes[18].Methods()
 }
 
 // Deprecated: Use Nests_OptGroup_OptNestedGroup.ProtoReflect.Type instead.

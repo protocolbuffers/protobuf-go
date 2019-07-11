@@ -5,7 +5,6 @@ package wrapperspb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -48,10 +47,6 @@ func (x *DoubleValue) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *DoubleValue) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use DoubleValue.ProtoReflect.Type instead.
@@ -99,10 +94,6 @@ func (x *FloatValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *FloatValue) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use FloatValue.ProtoReflect.Type instead.
 func (*FloatValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{1}
@@ -146,10 +137,6 @@ func (x *Int64Value) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Int64Value) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use Int64Value.ProtoReflect.Type instead.
@@ -197,10 +184,6 @@ func (x *UInt64Value) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *UInt64Value) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[3].Methods()
-}
-
 // Deprecated: Use UInt64Value.ProtoReflect.Type instead.
 func (*UInt64Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{3}
@@ -244,10 +227,6 @@ func (x *Int32Value) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Int32Value) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[4].Methods()
 }
 
 // Deprecated: Use Int32Value.ProtoReflect.Type instead.
@@ -295,10 +274,6 @@ func (x *UInt32Value) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *UInt32Value) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[5].Methods()
-}
-
 // Deprecated: Use UInt32Value.ProtoReflect.Type instead.
 func (*UInt32Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{5}
@@ -342,10 +317,6 @@ func (x *BoolValue) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *BoolValue) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[6].Methods()
 }
 
 // Deprecated: Use BoolValue.ProtoReflect.Type instead.
@@ -393,10 +364,6 @@ func (x *StringValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *StringValue) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[7].Methods()
-}
-
 // Deprecated: Use StringValue.ProtoReflect.Type instead.
 func (*StringValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{7}
@@ -440,10 +407,6 @@ func (x *BytesValue) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *BytesValue) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_wrappers_proto_msgTypes[8].Methods()
 }
 
 // Deprecated: Use BytesValue.ProtoReflect.Type instead.

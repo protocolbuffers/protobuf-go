@@ -8,12 +8,17 @@ import (
 	"sync"
 
 	"google.golang.org/protobuf/internal/errors"
-	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
-func (mi *MessageInfo) isInitialized(msg proto.Message) error {
-	return mi.isInitializedPointer(pointerOfIface(msg))
+func (mi *MessageInfo) isInitialized(m pref.Message) error {
+	var p pointer
+	if ms, ok := m.(*messageState); ok {
+		p = ms.pointer()
+	} else {
+		p = m.(*messageReflectWrapper).pointer()
+	}
+	return mi.isInitializedPointer(p)
 }
 
 func (mi *MessageInfo) isInitializedPointer(p pointer) error {

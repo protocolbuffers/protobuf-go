@@ -295,9 +295,3 @@ func (mi *MessageInfo) makeExtensionFieldsFunc(t reflect.Type, si structInfo) {
 		}
 	}
 }
-
-// TODO: Move this to be on the reflect message instance.
-func (mi *MessageInfo) Methods() *piface.Methods {
-	mi.init()
-	return &mi.methods
-}

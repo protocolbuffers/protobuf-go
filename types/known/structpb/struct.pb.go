@@ -6,7 +6,6 @@ package structpb
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	prototype "google.golang.org/protobuf/reflect/prototype"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -98,10 +97,6 @@ func (x *Struct) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Struct) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_struct_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use Struct.ProtoReflect.Type instead.
 func (*Struct) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_struct_proto_rawDescGZIP(), []int{0}
@@ -162,10 +157,6 @@ func (x *Value) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Value) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_struct_proto_msgTypes[1].Methods()
 }
 
 // Deprecated: Use Value.ProtoReflect.Type instead.
@@ -293,10 +284,6 @@ func (x *ListValue) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *ListValue) XXX_Methods() *protoiface.Methods {
-	return file_google_protobuf_struct_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use ListValue.ProtoReflect.Type instead.

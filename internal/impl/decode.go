@@ -50,8 +50,14 @@ func (o unmarshalOptions) DiscardUnknown() bool                 { return o.flags
 func (o unmarshalOptions) Resolver() preg.ExtensionTypeResolver { return o.resolver }
 
 // unmarshal is protoreflect.Methods.Unmarshal.
-func (mi *MessageInfo) unmarshal(b []byte, m pref.ProtoMessage, opts piface.UnmarshalOptions) error {
-	_, err := mi.unmarshalPointer(b, pointerOfIface(m), 0, newUnmarshalOptions(opts))
+func (mi *MessageInfo) unmarshal(b []byte, m pref.Message, opts piface.UnmarshalOptions) error {
+	var p pointer
+	if ms, ok := m.(*messageState); ok {
+		p = ms.pointer()
+	} else {
+		p = m.(*messageReflectWrapper).pointer()
+	}
+	_, err := mi.unmarshalPointer(b, p, 0, newUnmarshalOptions(opts))
 	return err
 }
 

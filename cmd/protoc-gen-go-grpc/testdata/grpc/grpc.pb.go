@@ -5,7 +5,6 @@ package grpc
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -45,10 +44,6 @@ func (x *Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Request) XXX_Methods() *protoiface.Methods {
-	return file_grpc_grpc_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use Request.ProtoReflect.Type instead.
 func (*Request) Descriptor() ([]byte, []int) {
 	return file_grpc_grpc_proto_rawDescGZIP(), []int{0}
@@ -80,10 +75,6 @@ func (x *Response) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Response) XXX_Methods() *protoiface.Methods {
-	return file_grpc_grpc_proto_msgTypes[1].Methods()
 }
 
 // Deprecated: Use Response.ProtoReflect.Type instead.

@@ -5,7 +5,6 @@ package proto2
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -45,10 +44,6 @@ func (x *Layer1) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Layer1) XXX_Methods() *protoiface.Methods {
-	return file_proto2_nested_messages_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use Layer1.ProtoReflect.Type instead.
@@ -99,10 +94,6 @@ func (x *Layer1_Layer2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Layer1_Layer2) XXX_Methods() *protoiface.Methods {
-	return file_proto2_nested_messages_proto_msgTypes[1].Methods()
-}
-
 // Deprecated: Use Layer1_Layer2.ProtoReflect.Type instead.
 func (*Layer1_Layer2) Descriptor() ([]byte, []int) {
 	return file_proto2_nested_messages_proto_rawDescGZIP(), []int{0, 0}
@@ -141,10 +132,6 @@ func (x *Layer1_Layer2_Layer3) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *Layer1_Layer2_Layer3) XXX_Methods() *protoiface.Methods {
-	return file_proto2_nested_messages_proto_msgTypes[2].Methods()
 }
 
 // Deprecated: Use Layer1_Layer2_Layer3.ProtoReflect.Type instead.

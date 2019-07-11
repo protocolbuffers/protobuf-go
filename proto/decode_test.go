@@ -874,7 +874,7 @@ var testProtos = []testProto{
 		decodeTo: []proto.Message{
 			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofNestedMessage{
 				&testpb.TestAllTypes_NestedMessage{
-					A: scalar.Int32(1),
+					A: proto.Int32(1),
 					Corecursive: &testpb.TestAllTypes{
 						OptionalInt32: proto.Int32(43),
 					},

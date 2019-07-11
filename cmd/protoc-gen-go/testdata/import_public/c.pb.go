@@ -6,7 +6,6 @@ package import_public
 import (
 	sub2 "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_public/sub2"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -49,10 +48,6 @@ func (x *UsingPublicImport) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *UsingPublicImport) XXX_Methods() *protoiface.Methods {
-	return file_import_public_c_proto_msgTypes[0].Methods()
 }
 
 // Deprecated: Use UsingPublicImport.ProtoReflect.Type instead.

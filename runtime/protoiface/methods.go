@@ -15,10 +15,10 @@ import (
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
-// Methoder is an optional interface implemented by generated messages to
+// Methoder is an optional interface implemented by protoreflect.Message to
 // provide fast-path implementations of various operations.
 type Methoder interface {
-	XXX_Methods() *Methods // may return nil
+	ProtoMethods() *Methods // may return nil
 }
 
 // Methods is a set of optional fast-path implementations of various operations.
@@ -28,17 +28,17 @@ type Methods struct {
 
 	// MarshalAppend appends the wire-format encoding of m to b, returning the result.
 	// It does not perform required field checks.
-	MarshalAppend func(b []byte, m protoreflect.ProtoMessage, opts MarshalOptions) ([]byte, error)
+	MarshalAppend func(b []byte, m protoreflect.Message, opts MarshalOptions) ([]byte, error)
 
 	// Size returns the size in bytes of the wire-format encoding of m.
-	Size func(m protoreflect.ProtoMessage) int
+	Size func(m protoreflect.Message) int
 
 	// Unmarshal parses the wire-format message in b and places the result in m.
 	// It does not reset m or perform required field checks.
-	Unmarshal func(b []byte, m protoreflect.ProtoMessage, opts UnmarshalOptions) error
+	Unmarshal func(b []byte, m protoreflect.Message, opts UnmarshalOptions) error
 
 	// IsInitialized returns an error if any required fields in m are not set.
-	IsInitialized func(m protoreflect.ProtoMessage) error
+	IsInitialized func(m protoreflect.Message) error
 
 	pragma.NoUnkeyedLiterals
 }

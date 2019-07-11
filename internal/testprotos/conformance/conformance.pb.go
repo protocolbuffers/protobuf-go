@@ -6,7 +6,6 @@ package conformance
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	prototype "google.golang.org/protobuf/reflect/prototype"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sync "sync"
 )
@@ -159,10 +158,6 @@ func (x *FailureSet) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *FailureSet) XXX_Methods() *protoiface.Methods {
-	return file_conformance_conformance_proto_msgTypes[0].Methods()
-}
-
 // Deprecated: Use FailureSet.ProtoReflect.Type instead.
 func (*FailureSet) Descriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{0}
@@ -233,10 +228,6 @@ func (x *ConformanceRequest) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *ConformanceRequest) XXX_Methods() *protoiface.Methods {
-	return file_conformance_conformance_proto_msgTypes[1].Methods()
 }
 
 // Deprecated: Use ConformanceRequest.ProtoReflect.Type instead.
@@ -396,10 +387,6 @@ func (x *ConformanceResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *ConformanceResponse) XXX_Methods() *protoiface.Methods {
-	return file_conformance_conformance_proto_msgTypes[2].Methods()
-}
-
 // Deprecated: Use ConformanceResponse.ProtoReflect.Type instead.
 func (*ConformanceResponse) Descriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{2}
@@ -549,10 +536,6 @@ func (x *JspbEncodingConfig) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
-}
-
-func (x *JspbEncodingConfig) XXX_Methods() *protoiface.Methods {
-	return file_conformance_conformance_proto_msgTypes[3].Methods()
 }
 
 // Deprecated: Use JspbEncodingConfig.ProtoReflect.Type instead.
