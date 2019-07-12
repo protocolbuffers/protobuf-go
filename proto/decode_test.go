@@ -881,16 +881,18 @@ var testProtos = []testProto{
 		wire: pack.Message{pack.Tag{112, pack.BytesType}, pack.LengthPrefix(pack.Message{})}.Marshal(),
 	},
 	{
-		desc: "oneof (overridden message)",
+		desc: "oneof (merged message)",
 		decodeTo: []proto.Message{
 			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofNestedMessage{
 				&testpb.TestAllTypes_NestedMessage{
+					A: scalar.Int32(1),
 					Corecursive: &testpb.TestAllTypes{
 						OptionalInt32: scalar.Int32(43),
 					},
 				},
 			}}, &test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofNestedMessage{
 				&test3pb.TestAllTypes_NestedMessage{
+					A: 1,
 					Corecursive: &test3pb.TestAllTypes{
 						OptionalInt32: 43,
 					},

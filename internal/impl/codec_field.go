@@ -52,12 +52,18 @@ func makeOneofFieldCoder(si structInfo, fd pref.FieldDescriptor) pointerCoderFun
 			return funcs.marshal(b, v, wiretag, opts)
 		},
 		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
-			v := reflect.New(ot)
-			n, err := funcs.unmarshal(b, pointerOfValue(v).Apply(zeroOffset), wtyp, opts)
+			var vw reflect.Value         // pointer to wrapper type
+			vi := p.AsValueOf(ft).Elem() // oneof field value of interface kind
+			if !vi.IsNil() && !vi.Elem().IsNil() && vi.Elem().Elem().Type() == ot {
+				vw = vi.Elem()
+			} else {
+				vw = reflect.New(ot)
+			}
+			n, err := funcs.unmarshal(b, pointerOfValue(vw).Apply(zeroOffset), wtyp, opts)
 			if err != nil {
 				return 0, err
 			}
-			p.AsValueOf(ft).Elem().Set(v)
+			vi.Set(vw)
 			return n, nil
 		},
 	}

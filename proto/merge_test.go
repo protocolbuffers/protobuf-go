@@ -27,8 +27,6 @@ func TestMerge(t *testing.T) {
 		src     proto.Message
 		want    proto.Message
 		mutator func(proto.Message) // if provided, is run on src after merging
-
-		skipMarshalUnmarshal bool // TODO: Remove this when proto.Unmarshal is fixed for messages in oneofs
 	}{{
 		desc: "merge from nil message",
 		dst:  new(testpb.TestAllTypes),
@@ -258,7 +256,6 @@ func TestMerge(t *testing.T) {
 			m := mi.(*testpb.TestAllTypes)
 			*m.OneofField.(*testpb.TestAllTypes_OneofNestedMessage).OneofNestedMessage.Corecursive.OptionalInt64++
 		},
-		skipMarshalUnmarshal: true,
 	}, {
 		desc: "merge oneof scalar fields",
 		dst: &testpb.TestAllTypes{
@@ -382,7 +379,7 @@ func TestMerge(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Unmarshal() error: %v", err)
 			}
-			if !proto.Equal(dst, tt.want) && !tt.skipMarshalUnmarshal {
+			if !proto.Equal(dst, tt.want) {
 				t.Fatalf("Unmarshal(Marshal(dst)+Marshal(src)) mismatch: got %v, want %v", dst, tt.want)
 			}
 

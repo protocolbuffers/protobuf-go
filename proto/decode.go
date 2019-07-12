@@ -122,19 +122,7 @@ func (o UnmarshalOptions) unmarshalSingular(b []byte, wtyp wire.Type, m protoref
 	}
 	switch fd.Kind() {
 	case protoreflect.GroupKind, protoreflect.MessageKind:
-		// Messages are merged with any existing message value,
-		// unless the message is part of a oneof.
-		//
-		// TODO: C++ merges into oneofs, while v1 does not.
-		// Evaluate which behavior to pick.
-		var m2 protoreflect.Message
-		if m.Has(fd) && fd.ContainingOneof() == nil {
-			m2 = m.Mutable(fd).Message()
-		} else {
-			m2 = m.NewMessage(fd)
-			m.Set(fd, protoreflect.ValueOf(m2))
-		}
-		// Pass up errors (fatal and otherwise).
+		m2 := m.Mutable(fd).Message()
 		if err := o.unmarshalMessage(v.Bytes(), m2); err != nil {
 			return n, err
 		}
