@@ -9,10 +9,12 @@ import (
 	"sort"
 	"unicode/utf8"
 
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/text"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/fieldnum"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/mapsort"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/proto"
@@ -72,8 +74,10 @@ func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
 
 // marshalMessage converts a protoreflect.Message to a text.Value.
 func (o MarshalOptions) marshalMessage(m pref.Message) (text.Value, error) {
-	var msgFields [][2]text.Value
 	messageDesc := m.Descriptor()
+	if !flags.Proto1Legacy && messageset.IsMessageSet(messageDesc) {
+		return text.Value{}, errors.New("no support for proto1 MessageSets")
+	}
 
 	// Handle Any expansion.
 	if messageDesc.FullName() == "google.protobuf.Any" {
@@ -85,6 +89,7 @@ func (o MarshalOptions) marshalMessage(m pref.Message) (text.Value, error) {
 	}
 
 	// Handle known fields.
+	var msgFields [][2]text.Value
 	fieldDescs := messageDesc.Fields()
 	size := fieldDescs.Len()
 	for i := 0; i < size; i++ {
@@ -253,10 +258,10 @@ func (o MarshalOptions) appendExtensions(msgFields [][2]text.Value, m pref.Messa
 			return true
 		}
 
-		// If extended type is a MessageSet, set field name to be the message type name.
+		// For MessageSet extensions, the name used is the parent message.
 		name := fd.FullName()
-		if isMessageSetExtension(fd) {
-			name = fd.Message().FullName()
+		if messageset.IsMessageSetExtension(fd) {
+			name = name.Parent()
 		}
 
 		// Use string type to produce [name] format.
@@ -277,22 +282,6 @@ func (o MarshalOptions) appendExtensions(msgFields [][2]text.Value, m pref.Messa
 		return entries[i][0].String() < entries[j][0].String()
 	})
 	return append(msgFields, entries...), nil
-}
-
-// isMessageSetExtension reports whether extension extends a message set.
-func isMessageSetExtension(fd pref.FieldDescriptor) bool {
-	if fd.Name() != "message_set_extension" {
-		return false
-	}
-	md := fd.Message()
-	if md == nil {
-		return false
-	}
-	if fd.FullName().Parent() != md.FullName() {
-		return false
-	}
-	xmd, ok := fd.ContainingMessage().(interface{ IsMessageSet() bool })
-	return ok && xmd.IsMessageSet()
 }
 
 // appendUnknown parses the given []byte and appends field(s) into the given fields slice.

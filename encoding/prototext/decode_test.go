@@ -1310,6 +1310,7 @@ opt_int32: 42
 			})
 			return m
 		}(),
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc:         "not real MessageSet 1",
 		inputMessage: &pb2.FakeMessageSet{},
@@ -1325,6 +1326,7 @@ opt_int32: 42
 			})
 			return m
 		}(),
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc:         "not real MessageSet 2",
 		inputMessage: &pb2.FakeMessageSet{},
@@ -1334,6 +1336,7 @@ opt_int32: 42
 }
 `,
 		wantErr: true,
+		skip:    !flags.Proto1Legacy,
 	}, {
 		desc:         "not real MessageSet 3",
 		inputMessage: &pb2.MessageSet{},
@@ -1348,6 +1351,7 @@ opt_int32: 42
 			})
 			return m
 		}(),
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc:         "Any not expanded",
 		inputMessage: &anypb.Any{},

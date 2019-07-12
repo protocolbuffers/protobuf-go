@@ -9,9 +9,11 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/text"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/fieldnum"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/internal/set"
 	"google.golang.org/protobuf/proto"
@@ -74,17 +76,18 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {
 // unmarshalMessage unmarshals a [][2]text.Value message into the given protoreflect.Message.
 func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message) error {
 	messageDesc := m.Descriptor()
+	if !flags.Proto1Legacy && messageset.IsMessageSet(messageDesc) {
+		return errors.New("no support for proto1 MessageSets")
+	}
 
 	// Handle expanded Any message.
 	if messageDesc.FullName() == "google.protobuf.Any" && isExpandedAny(tmsg) {
 		return o.unmarshalAny(tmsg[0], m)
 	}
 
-	fieldDescs := messageDesc.Fields()
-	reservedNames := messageDesc.ReservedNames()
 	var seenNums set.Ints
 	var seenOneofs set.Ints
-
+	fieldDescs := messageDesc.Fields()
 	for _, tfield := range tmsg {
 		tkey := tfield[0]
 		tval := tfield[1]
@@ -128,7 +131,7 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 
 		if fd == nil {
 			// Ignore reserved names.
-			if reservedNames.Has(name) {
+			if messageDesc.ReservedNames().Has(name) {
 				continue
 			}
 			// TODO: Can provide option to ignore unknown message fields.
@@ -193,13 +196,7 @@ func (o UnmarshalOptions) findExtension(xtName pref.FullName) (pref.ExtensionTyp
 	if err == nil {
 		return xt, nil
 	}
-
-	// Check if this is a MessageSet extension field.
-	xt, err = o.Resolver.FindExtensionByName(xtName + ".message_set_extension")
-	if err == nil && isMessageSetExtension(xt) {
-		return xt, nil
-	}
-	return nil, protoregistry.NotFound
+	return messageset.FindMessageSetExtension(o.Resolver, xtName)
 }
 
 // unmarshalSingular unmarshals given text.Value into the non-repeated field.

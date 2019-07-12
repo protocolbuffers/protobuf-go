@@ -9,6 +9,7 @@ import (
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	preg "google.golang.org/protobuf/reflect/protoregistry"
 )
 
 // The MessageSet wire format is equivalent to a message defiend as follows,
@@ -28,10 +29,46 @@ const (
 	FieldMessage = wire.Number(3)
 )
 
+// ExtensionName is the field name for extensions of MessageSet.
+//
+// A valid MessageSet extension must be of the form:
+//	message MyMessage {
+//		extend proto2.bridge.MessageSet {
+//			optional MyMessage message_set_extension = 1234;
+//		}
+//		...
+//	}
+const ExtensionName = "message_set_extension"
+
 // IsMessageSet returns whether the message uses the MessageSet wire format.
 func IsMessageSet(md pref.MessageDescriptor) bool {
 	xmd, ok := md.(interface{ IsMessageSet() bool })
 	return ok && xmd.IsMessageSet()
+}
+
+// IsMessageSetExtension reports this field extends a MessageSet.
+func IsMessageSetExtension(fd pref.FieldDescriptor) bool {
+	if fd.Name() != ExtensionName {
+		return false
+	}
+	if fd.FullName().Parent() != fd.Message().FullName() {
+		return false
+	}
+	return IsMessageSet(fd.ContainingMessage())
+}
+
+// FindMessageSetExtension locates a MessageSet extension field by name.
+// In text and JSON formats, the extension name used is the message itself.
+// The extension field name is derived by appending ExtensionName.
+func FindMessageSetExtension(r preg.ExtensionTypeResolver, s pref.FullName) (pref.ExtensionType, error) {
+	xt, err := r.FindExtensionByName(s.Append(ExtensionName))
+	if err != nil {
+		return nil, err
+	}
+	if !IsMessageSetExtension(xt) {
+		return nil, preg.NotFound
+	}
+	return xt, nil
 }
 
 // SizeField returns the size of a MessageSet item field containing an extension

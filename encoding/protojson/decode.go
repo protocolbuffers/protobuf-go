@@ -12,7 +12,9 @@ import (
 	"strings"
 
 	"google.golang.org/protobuf/internal/encoding/json"
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/internal/set"
 	"google.golang.org/protobuf/proto"
@@ -136,13 +138,14 @@ func (o UnmarshalOptions) unmarshalMessage(m pref.Message, skipTypeURL bool) err
 
 // unmarshalFields unmarshals the fields into the given protoreflect.Message.
 func (o UnmarshalOptions) unmarshalFields(m pref.Message, skipTypeURL bool) error {
+	messageDesc := m.Descriptor()
+	if !flags.Proto1Legacy && messageset.IsMessageSet(messageDesc) {
+		return errors.New("no support for proto1 MessageSets")
+	}
+
 	var seenNums set.Ints
 	var seenOneofs set.Ints
-
-	messageDesc := m.Descriptor()
 	fieldDescs := messageDesc.Fields()
-
-Loop:
 	for {
 		// Read field name.
 		jval, err := o.decoder.Read()
@@ -153,7 +156,7 @@ Loop:
 		default:
 			return unexpectedJSONError{jval}
 		case json.EndObject:
-			break Loop
+			return nil
 		case json.Name:
 			// Continue below.
 		}
@@ -243,8 +246,6 @@ Loop:
 			}
 		}
 	}
-
-	return nil
 }
 
 // findExtension returns protoreflect.ExtensionType from the resolver if found.
@@ -253,13 +254,7 @@ func (o UnmarshalOptions) findExtension(xtName pref.FullName) (pref.ExtensionTyp
 	if err == nil {
 		return xt, nil
 	}
-
-	// Check if this is a MessageSet extension field.
-	xt, err = o.Resolver.FindExtensionByName(xtName + ".message_set_extension")
-	if err == nil && isMessageSetExtension(xt) {
-		return xt, nil
-	}
-	return nil, protoregistry.NotFound
+	return messageset.FindMessageSetExtension(o.Resolver, xtName)
 }
 
 func isKnownValue(fd pref.FieldDescriptor) bool {

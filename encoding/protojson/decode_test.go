@@ -1297,6 +1297,17 @@ func TestUnmarshal(t *testing.T) {
 		inputText:    `{ "[pb2.invalid_message_field]": true }`,
 		wantErr:      true,
 	}, {
+		desc:         "extensions of repeated field contains null",
+		inputMessage: &pb2.Extensions{},
+		inputText: `{
+  "[pb2.ExtensionsContainer.rpt_ext_nested]": [
+    {"optString": "one"},
+	null,
+    {"optString": "three"}
+  ],
+}`,
+		wantErr: true,
+	}, {
 		desc:         "MessageSet",
 		inputMessage: &pb2.MessageSet{},
 		inputText: `{
@@ -1323,17 +1334,7 @@ func TestUnmarshal(t *testing.T) {
 			})
 			return m
 		}(),
-	}, {
-		desc:         "extensions of repeated field contains null",
-		inputMessage: &pb2.Extensions{},
-		inputText: `{
-  "[pb2.ExtensionsContainer.rpt_ext_nested]": [
-    {"optString": "one"},
-	null,
-    {"optString": "three"}
-  ],
-}`,
-		wantErr: true,
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc:         "not real MessageSet 1",
 		inputMessage: &pb2.FakeMessageSet{},
@@ -1349,6 +1350,7 @@ func TestUnmarshal(t *testing.T) {
 			})
 			return m
 		}(),
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc:         "not real MessageSet 2",
 		inputMessage: &pb2.FakeMessageSet{},
@@ -1358,6 +1360,7 @@ func TestUnmarshal(t *testing.T) {
   }
 }`,
 		wantErr: true,
+		skip:    !flags.Proto1Legacy,
 	}, {
 		desc:         "not real MessageSet 3",
 		inputMessage: &pb2.MessageSet{},
@@ -1373,6 +1376,7 @@ func TestUnmarshal(t *testing.T) {
 			})
 			return m
 		}(),
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc:         "Empty",
 		inputMessage: &emptypb.Empty{},

@@ -10,6 +10,9 @@ import (
 	"sort"
 
 	"google.golang.org/protobuf/internal/encoding/json"
+	"google.golang.org/protobuf/internal/encoding/messageset"
+	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -84,8 +87,13 @@ func (o MarshalOptions) marshalMessage(m pref.Message) error {
 
 // marshalFields marshals the fields in the given protoreflect.Message.
 func (o MarshalOptions) marshalFields(m pref.Message) error {
+	messageDesc := m.Descriptor()
+	if !flags.Proto1Legacy && messageset.IsMessageSet(messageDesc) {
+		return errors.New("no support for proto1 MessageSets")
+	}
+
 	// Marshal out known fields.
-	fieldDescs := m.Descriptor().Fields()
+	fieldDescs := messageDesc.Fields()
 	for i := 0; i < fieldDescs.Len(); i++ {
 		fd := fieldDescs.Get(i)
 		if !m.Has(fd) {
@@ -257,10 +265,10 @@ func (o MarshalOptions) marshalExtensions(m pref.Message) error {
 			return true
 		}
 
-		// If extended type is a MessageSet, set field name to be the message type name.
+		// For MessageSet extensions, the name used is the parent message.
 		name := fd.FullName()
-		if isMessageSetExtension(fd) {
-			name = fd.Message().FullName()
+		if messageset.IsMessageSetExtension(fd) {
+			name = name.Parent()
 		}
 
 		// Use [name] format for JSON field name.
@@ -290,20 +298,4 @@ func (o MarshalOptions) marshalExtensions(m pref.Message) error {
 		}
 	}
 	return nil
-}
-
-// isMessageSetExtension reports whether extension extends a message set.
-func isMessageSetExtension(fd pref.FieldDescriptor) bool {
-	if fd.Name() != "message_set_extension" {
-		return false
-	}
-	md := fd.Message()
-	if md == nil {
-		return false
-	}
-	if fd.FullName().Parent() != md.FullName() {
-		return false
-	}
-	xmd, ok := fd.ContainingMessage().(interface{ IsMessageSet() bool })
-	return ok && xmd.IsMessageSet()
 }

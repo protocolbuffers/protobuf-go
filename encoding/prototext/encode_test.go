@@ -12,6 +12,7 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/encoding/pack"
+	"google.golang.org/protobuf/internal/flags"
 	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
@@ -39,6 +40,7 @@ func TestMarshal(t *testing.T) {
 		input   proto.Message
 		want    string
 		wantErr bool // TODO: Verify error message content.
+		skip    bool
 	}{{
 		desc:  "proto2 optional scalars not set",
 		input: &pb2.Scalars{},
@@ -1082,6 +1084,7 @@ opt_int32: 42
   opt_string: "not a messageset extension"
 }
 `,
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc: "not real MessageSet 1",
 		input: func() proto.Message {
@@ -1095,6 +1098,7 @@ opt_int32: 42
   opt_string: "not a messageset extension"
 }
 `,
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc: "not real MessageSet 2",
 		input: func() proto.Message {
@@ -1108,6 +1112,7 @@ opt_int32: 42
   opt_string: "another not a messageset extension"
 }
 `,
+		skip: !flags.Proto1Legacy,
 	}, {
 		desc: "Any not expanded",
 		mo: prototext.MarshalOptions{
@@ -1201,6 +1206,9 @@ value: "\x80"
 
 	for _, tt := range tests {
 		tt := tt
+		if tt.skip {
+			continue
+		}
 		t.Run(tt.desc, func(t *testing.T) {
 			// Use 2-space indentation on all MarshalOptions.
 			tt.mo.Indent = "  "
