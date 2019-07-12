@@ -18,6 +18,8 @@ import (
 // Example usage:
 //   err := UnmarshalOptions{DiscardUnknown: true}.Unmarshal(b, m)
 type UnmarshalOptions struct {
+	pragma.NoUnkeyedLiterals
+
 	// AllowPartial accepts input for messages that will result in missing
 	// required fields. If AllowPartial is false (the default), Unmarshal will
 	// return an error if there are any missing required fields.
@@ -31,8 +33,6 @@ type UnmarshalOptions struct {
 	Resolver interface {
 		protoregistry.ExtensionTypeResolver
 	}
-
-	pragma.NoUnkeyedLiterals
 }
 
 var _ = protoiface.UnmarshalOptions(UnmarshalOptions{})
@@ -60,7 +60,8 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m Message) error {
 }
 
 func (o UnmarshalOptions) unmarshalMessage(b []byte, m protoreflect.Message) error {
-	if methods := protoMethods(m); methods != nil && methods.Unmarshal != nil {
+	if methods := protoMethods(m); methods != nil && methods.Unmarshal != nil &&
+		!(o.DiscardUnknown && methods.Flags&protoiface.SupportUnmarshalDiscardUnknown == 0) {
 		return methods.Unmarshal(b, m, protoiface.UnmarshalOptions(o))
 	}
 	return o.unmarshalMessageSlow(b, m)

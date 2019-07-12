@@ -19,6 +19,8 @@ import (
 // Example usage:
 //   b, err := MarshalOptions{Deterministic: true}.Marshal(m)
 type MarshalOptions struct {
+	pragma.NoUnkeyedLiterals
+
 	// AllowPartial allows messages that have missing required fields to marshal
 	// without returning an error. If AllowPartial is false (the default),
 	// Marshal will return an error if there are any missing required fields.
@@ -31,6 +33,8 @@ type MarshalOptions struct {
 	// the same message will return the same bytes, and that different
 	// processes of the same binary (which may be executing on different
 	// machines) will serialize equal messages to the same bytes.
+	// It has no effect on the resulting size of the encoded message compared
+	// to a non-deterministic marshal.
 	//
 	// Note that the deterministic serialization is NOT canonical across
 	// languages. It is not guaranteed to remain stable over time. It is
@@ -64,8 +68,6 @@ type MarshalOptions struct {
 	// There is absolutely no guarantee that Size followed by Marshal with
 	// UseCachedSize set will perform equivalently to Marshal alone.
 	UseCachedSize bool
-
-	pragma.NoUnkeyedLiterals
 }
 
 var _ = protoiface.MarshalOptions(MarshalOptions{})
@@ -83,15 +85,11 @@ func (o MarshalOptions) Marshal(m Message) ([]byte, error) {
 // MarshalAppend appends the wire-format encoding of m to b,
 // returning the result.
 func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
-	// Set AllowPartial in recursive calls to marshal to avoid duplicating
-	// effort with the single initialization check below.
-	allowPartial := o.AllowPartial
-	o.AllowPartial = true
 	out, err := o.marshalMessage(b, m.ProtoReflect())
 	if err != nil {
 		return nil, err
 	}
-	if allowPartial {
+	if o.AllowPartial {
 		return out, nil
 	}
 	return out, IsInitialized(m)
@@ -99,16 +97,14 @@ func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
 
 func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte, error) {
 	if methods := protoMethods(m); methods != nil && methods.MarshalAppend != nil &&
-		!(o.Deterministic && methods.Flags&protoiface.MethodFlagDeterministicMarshal == 0) {
-		if methods.Size != nil {
-			sz := methods.Size(m)
-			if cap(b) < len(b)+sz {
-				x := make([]byte, len(b), len(b)+sz)
-				copy(x, b)
-				b = x
-			}
-			o.UseCachedSize = true
+		!(o.Deterministic && methods.Flags&protoiface.SupportMarshalDeterministic == 0) {
+		sz := methods.Size(m, protoiface.MarshalOptions(o))
+		if cap(b) < len(b)+sz {
+			x := make([]byte, len(b), len(b)+sz)
+			copy(x, b)
+			b = x
 		}
+		o.UseCachedSize = true
 		return methods.MarshalAppend(b, m, protoiface.MarshalOptions(o))
 	}
 	return o.marshalMessageSlow(b, m)

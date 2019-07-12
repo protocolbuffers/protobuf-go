@@ -47,14 +47,14 @@ func (o marshalOptions) Deterministic() bool { return o&marshalDeterministic != 
 func (o marshalOptions) UseCachedSize() bool { return o&marshalUseCachedSize != 0 }
 
 // size is protoreflect.Methods.Size.
-func (mi *MessageInfo) size(m pref.Message) (size int) {
+func (mi *MessageInfo) size(m pref.Message, opts piface.MarshalOptions) (size int) {
 	var p pointer
 	if ms, ok := m.(*messageState); ok {
 		p = ms.pointer()
 	} else {
 		p = m.(*messageReflectWrapper).pointer()
 	}
-	return mi.sizePointer(p, 0)
+	return mi.sizePointer(p, newMarshalOptions(opts))
 }
 
 func (mi *MessageInfo) sizePointer(p pointer, opts marshalOptions) (size int) {

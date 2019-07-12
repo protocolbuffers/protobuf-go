@@ -7,6 +7,7 @@ package proto
 import (
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/runtime/protoiface"
 )
 
 // Size returns the size in bytes of the wire-format encoding of m.
@@ -21,7 +22,7 @@ func (o MarshalOptions) Size(m Message) int {
 
 func sizeMessage(m protoreflect.Message) (size int) {
 	if methods := protoMethods(m); methods != nil && methods.Size != nil {
-		return methods.Size(m)
+		return methods.Size(m, protoiface.MarshalOptions{})
 	}
 	return sizeMessageSlow(m)
 }

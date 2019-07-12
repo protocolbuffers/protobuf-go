@@ -17,60 +17,65 @@ import (
 
 // Methoder is an optional interface implemented by protoreflect.Message to
 // provide fast-path implementations of various operations.
+// The returned Methods struct must not be mutated.
 type Methoder interface {
 	ProtoMethods() *Methods // may return nil
 }
 
 // Methods is a set of optional fast-path implementations of various operations.
 type Methods struct {
-	// Flags indicate support for optional features.
-	Flags MethodFlag
+	pragma.NoUnkeyedLiterals
 
-	// MarshalAppend appends the wire-format encoding of m to b, returning the result.
-	// It does not perform required field checks.
-	MarshalAppend func(b []byte, m protoreflect.Message, opts MarshalOptions) ([]byte, error)
+	// Flags indicate support for optional features.
+	Flags SupportFlags
 
 	// Size returns the size in bytes of the wire-format encoding of m.
-	Size func(m protoreflect.Message) int
+	// MarshalAppend must be provided if a custom Size is provided.
+	Size func(m protoreflect.Message, opts MarshalOptions) int
 
-	// Unmarshal parses the wire-format message in b and places the result in m.
-	// It does not reset m or perform required field checks.
+	// MarshalAppend appends the wire-format encoding of m to b, returning the result.
+	// Size must be provided if a custom MarshalAppend is provided.
+	// It must not perform required field checks.
+	MarshalAppend func(b []byte, m protoreflect.Message, opts MarshalOptions) ([]byte, error)
+
+	// Unmarshal parses the wire-format message in b and merges the result in m.
+	// It must not reset m or perform required field checks.
 	Unmarshal func(b []byte, m protoreflect.Message, opts UnmarshalOptions) error
 
 	// IsInitialized returns an error if any required fields in m are not set.
 	IsInitialized func(m protoreflect.Message) error
-
-	pragma.NoUnkeyedLiterals
 }
 
-// MethodFlag indicates support for optional fast-path features.
-type MethodFlag int64
+type SupportFlags uint64
 
 const (
-	// MethodFlagDeterministicMarshal indicates support for deterministic marshaling.
-	MethodFlagDeterministicMarshal MethodFlag = 1 << iota
+	// SupportMarshalDeterministic reports whether MarshalOptions.Deterministic is supported.
+	SupportMarshalDeterministic SupportFlags = 1 << iota
+
+	// SupportUnmarshalDiscardUnknown reports whether UnmarshalOptions.DiscardUnknown is supported.
+	SupportUnmarshalDiscardUnknown
 )
 
 // MarshalOptions configure the marshaler.
 //
 // This type is identical to the one in package proto.
 type MarshalOptions struct {
-	AllowPartial  bool
+	pragma.NoUnkeyedLiterals
+
+	AllowPartial  bool // must be treated as true by method implementations
 	Deterministic bool
 	UseCachedSize bool
-
-	pragma.NoUnkeyedLiterals
 }
 
 // UnmarshalOptions configures the unmarshaler.
 //
 // This type is identical to the one in package proto.
 type UnmarshalOptions struct {
-	AllowPartial   bool
+	pragma.NoUnkeyedLiterals
+
+	AllowPartial   bool // must be treated as true by method implementations
 	DiscardUnknown bool
 	Resolver       interface {
 		protoregistry.ExtensionTypeResolver
 	}
-
-	pragma.NoUnkeyedLiterals
 }

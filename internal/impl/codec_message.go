@@ -98,7 +98,7 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 
 	mi.needsInitCheck = needsInitCheck(mi.PBType)
 	mi.methods = piface.Methods{
-		Flags:         piface.MethodFlagDeterministicMarshal,
+		Flags:         piface.SupportMarshalDeterministic | piface.SupportUnmarshalDiscardUnknown,
 		MarshalAppend: mi.marshalAppend,
 		Unmarshal:     mi.unmarshal,
 		Size:          mi.size,
