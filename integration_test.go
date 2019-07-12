@@ -22,6 +22,7 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 )
@@ -55,26 +56,35 @@ func Test(t *testing.T) {
 		t.SkipNow()
 	}
 
-	for _, v := range golangVersions {
-		t.Run("Go"+v, func(t *testing.T) {
-			runGo := func(label, workDir string, args ...string) {
-				args[0] += v
-				t.Run(label, func(t *testing.T) {
-					t.Parallel()
+	var wg sync.WaitGroup
+	sema := make(chan bool, (runtime.NumCPU()+1)/2)
+	for i := range golangVersions {
+		goVersion := golangVersions[i]
+		goLabel := "Go" + goVersion
+		runGo := func(label, workDir string, args ...string) {
+			wg.Add(1)
+			sema <- true
+			go func() {
+				defer wg.Done()
+				defer func() { <-sema }()
+				t.Run(goLabel+"/"+label, func(t *testing.T) {
+					args[0] += goVersion
 					mustRunCommand(t, workDir, args...)
 				})
-			}
-			workDir := filepath.Join(goPath, "src", modulePath)
-			runGo("TestNormal", workDir, "go", "test", "-race", "./...")
-			runGo("TestPureGo", workDir, "go", "test", "-race", "-tags", "purego", "./...")
-			runGo("TestReflect", workDir, "go", "test", "-race", "-tags", "protoreflect", "./...")
-			if v == golangLatest {
-				runGo("TestProto1Legacy", workDir, "go", "test", "-race", "-tags", "proto1_legacy", "./...")
-				runGo("TestProtocGenGo", "cmd/protoc-gen-go/testdata", "go", "test")
-				runGo("TestProtocGenGoGRPC", "cmd/protoc-gen-go-grpc/testdata", "go", "test")
-			}
-		})
+			}()
+		}
+
+		workDir := filepath.Join(goPath, "src", modulePath)
+		runGo("Normal", workDir, "go", "test", "-race", "./...")
+		runGo("PureGo", workDir, "go", "test", "-race", "-tags", "purego", "./...")
+		runGo("Reflect", workDir, "go", "test", "-race", "-tags", "protoreflect", "./...")
+		if goVersion == golangLatest {
+			runGo("Proto1Legacy", workDir, "go", "test", "-race", "-tags", "proto1_legacy", "./...")
+			runGo("ProtocGenGo", "cmd/protoc-gen-go/testdata", "go", "test")
+			runGo("ProtocGenGoGRPC", "cmd/protoc-gen-go-grpc/testdata", "go", "test")
+		}
 	}
+	wg.Wait()
 
 	t.Run("ConformanceTests", func(t *testing.T) {
 		driverPath := filepath.Join("internal", "cmd", "conformance")
