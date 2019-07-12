@@ -40,11 +40,6 @@ func TestEncode(t *testing.T) {
 					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, marshalText(want))
 					return
 				}
-
-				if test.invalidExtensions {
-					// Equal doesn't work on messages containing invalid extension data.
-					return
-				}
 				if !proto.Equal(got, want) {
 					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", marshalText(got), marshalText(want))
 				}
@@ -79,11 +74,6 @@ func TestEncodeDeterministic(t *testing.T) {
 				}
 				if err := uopts.Unmarshal(wire, got); err != nil {
 					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, marshalText(want))
-					return
-				}
-
-				if test.invalidExtensions {
-					// Equal doesn't work on messages containing invalid extension data.
 					return
 				}
 				if !proto.Equal(got, want) {

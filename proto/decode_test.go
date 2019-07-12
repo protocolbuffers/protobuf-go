@@ -23,11 +23,10 @@ import (
 )
 
 type testProto struct {
-	desc              string
-	decodeTo          []proto.Message
-	wire              []byte
-	partial           bool
-	invalidExtensions bool
+	desc     string
+	decodeTo []proto.Message
+	wire     []byte
+	partial  bool
 }
 
 func TestDecode(t *testing.T) {
@@ -49,11 +48,6 @@ func TestDecode(t *testing.T) {
 				for i := range wire {
 					wire[i] = 0
 				}
-
-				if test.invalidExtensions {
-					// Equal doesn't work on messages containing invalid extension data.
-					return
-				}
 				if !proto.Equal(got, want) {
 					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", marshalText(got), marshalText(want))
 				}
@@ -65,10 +59,6 @@ func TestDecode(t *testing.T) {
 func TestDecodeRequiredFieldChecks(t *testing.T) {
 	for _, test := range testProtos {
 		if !test.partial {
-			continue
-		}
-		if test.invalidExtensions {
-			// Missing required fields in extensions just end up in the unknown fields.
 			continue
 		}
 		for _, m := range test.decodeTo {
@@ -1255,9 +1245,8 @@ var testProtos = []testProto{
 		})}.Marshal(),
 	},
 	{
-		desc:              "required field in extension message unset",
-		partial:           true,
-		invalidExtensions: true,
+		desc:    "required field in extension message unset",
+		partial: true,
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Single, &testpb.TestRequired{}),
@@ -1281,9 +1270,8 @@ var testProtos = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:              "required field in repeated extension message unset",
-		partial:           true,
-		invalidExtensions: true,
+		desc:    "required field in repeated extension message unset",
+		partial: true,
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Multi, []*testpb.TestRequired{
