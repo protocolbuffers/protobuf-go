@@ -191,6 +191,7 @@ func writeSource(file, src string) {
 		"google.golang.org/protobuf/internal/descfmt",
 		"google.golang.org/protobuf/internal/encoding/wire",
 		"google.golang.org/protobuf/internal/errors",
+		"google.golang.org/protobuf/internal/strs",
 		"google.golang.org/protobuf/internal/pragma",
 		"google.golang.org/protobuf/reflect/protoreflect",
 		"google.golang.org/protobuf/runtime/protoiface",

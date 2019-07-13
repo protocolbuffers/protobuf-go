@@ -200,6 +200,8 @@ type (
 		IsWeak          bool // promoted from google.protobuf.FieldOptions
 		HasPacked       bool // promoted from google.protobuf.FieldOptions
 		IsPacked        bool // promoted from google.protobuf.FieldOptions
+		HasEnforceUTF8  bool // promoted from google.protobuf.FieldOptions
+		EnforceUTF8     bool // promoted from google.protobuf.FieldOptions
 		Default         defaultValue
 		ContainingOneof pref.OneofDescriptor // must be consistent with Message.Oneofs.Fields
 		Enum            pref.EnumDescriptor
@@ -302,6 +304,20 @@ func (fd *Field) Enum() pref.EnumDescriptor       { return fd.L1.Enum }
 func (fd *Field) Message() pref.MessageDescriptor { return fd.L1.Message }
 func (fd *Field) Format(s fmt.State, r rune)      { descfmt.FormatDesc(s, r, fd) }
 func (fd *Field) ProtoType(pref.FieldDescriptor)  {}
+
+// EnforceUTF8 is a pseudo-internal API to determine whether to enforce UTF-8
+// validation for the string field. This exists for Google-internal use only
+// since proto3 did not enforce UTF-8 validity prior to the open-source release.
+// If this method does not exist, the default is to enforce valid UTF-8.
+//
+// WARNING: This method is exempt from the compatibility promise and may be
+// removed in the future without warning.
+func (fd *Field) EnforceUTF8() bool {
+	if fd.L1.HasEnforceUTF8 {
+		return fd.L1.EnforceUTF8
+	}
+	return fd.L0.ParentFile.L1.Syntax == pref.Proto3
+}
 
 func (od *Oneof) Options() pref.ProtoMessage {
 	if f := od.L1.Options; f != nil {

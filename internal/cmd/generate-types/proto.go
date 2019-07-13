@@ -276,7 +276,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 			return val, 0, wire.ParseError(n)
 		}
 		{{if (eq .Name "String") -}}
-		if fd.Syntax() == protoreflect.Proto3 && !utf8.Valid(v) {
+		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
 			return protoreflect.Value{}, 0, errors.InvalidUTF8(string(fd.FullName()))
 		}
 		{{end -}}
@@ -320,7 +320,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 			return 0, wire.ParseError(n)
 		}
 		{{if (eq .Name "String") -}}
-		if fd.Syntax() == protoreflect.Proto3 && !utf8.Valid(v) {
+		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
 			return 0, errors.InvalidUTF8(string(fd.FullName()))
 		}
 		{{end -}}
@@ -357,7 +357,7 @@ func (o MarshalOptions) marshalSingular(b []byte, fd protoreflect.FieldDescripto
 	{{- range .}}
 	case {{.Expr}}:
 		{{- if (eq .Name "String") }}
-		if fd.Syntax() == protoreflect.Proto3 && !utf8.ValidString(v.String()) {
+		if strs.EnforceUTF8(fd) && !utf8.ValidString(v.String()) {
 			return b, errors.InvalidUTF8(string(fd.FullName()))
 		}
 		b = wire.AppendString(b, {{.FromValue}})

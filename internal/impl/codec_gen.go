@@ -8,6 +8,7 @@ package impl
 
 import (
 	"math"
+	"unicode/utf8"
 
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -46,7 +47,7 @@ var coderBool = pointerCoderFuncs{
 	unmarshal: consumeBool,
 }
 
-// sizeBool returns the size of wire encoding a bool pointer as a Bool.
+// sizeBoolNoZero returns the size of wire encoding a bool pointer as a Bool.
 // The zero value is not encoded.
 func sizeBoolNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Bool()
@@ -56,7 +57,7 @@ func sizeBoolNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(wire.EncodeBool(v))
 }
 
-// appendBool wire encodes a bool pointer as a Bool.
+// appendBoolNoZero wire encodes a bool pointer as a Bool.
 // The zero value is not encoded.
 func appendBoolNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Bool()
@@ -364,7 +365,7 @@ var coderInt32 = pointerCoderFuncs{
 	unmarshal: consumeInt32,
 }
 
-// sizeInt32 returns the size of wire encoding a int32 pointer as a Int32.
+// sizeInt32NoZero returns the size of wire encoding a int32 pointer as a Int32.
 // The zero value is not encoded.
 func sizeInt32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Int32()
@@ -374,7 +375,7 @@ func sizeInt32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(uint64(v))
 }
 
-// appendInt32 wire encodes a int32 pointer as a Int32.
+// appendInt32NoZero wire encodes a int32 pointer as a Int32.
 // The zero value is not encoded.
 func appendInt32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Int32()
@@ -682,7 +683,7 @@ var coderSint32 = pointerCoderFuncs{
 	unmarshal: consumeSint32,
 }
 
-// sizeSint32 returns the size of wire encoding a int32 pointer as a Sint32.
+// sizeSint32NoZero returns the size of wire encoding a int32 pointer as a Sint32.
 // The zero value is not encoded.
 func sizeSint32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Int32()
@@ -692,7 +693,7 @@ func sizeSint32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(v)))
 }
 
-// appendSint32 wire encodes a int32 pointer as a Sint32.
+// appendSint32NoZero wire encodes a int32 pointer as a Sint32.
 // The zero value is not encoded.
 func appendSint32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Int32()
@@ -1000,7 +1001,7 @@ var coderUint32 = pointerCoderFuncs{
 	unmarshal: consumeUint32,
 }
 
-// sizeUint32 returns the size of wire encoding a uint32 pointer as a Uint32.
+// sizeUint32NoZero returns the size of wire encoding a uint32 pointer as a Uint32.
 // The zero value is not encoded.
 func sizeUint32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Uint32()
@@ -1010,7 +1011,7 @@ func sizeUint32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(uint64(v))
 }
 
-// appendUint32 wire encodes a uint32 pointer as a Uint32.
+// appendUint32NoZero wire encodes a uint32 pointer as a Uint32.
 // The zero value is not encoded.
 func appendUint32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Uint32()
@@ -1318,7 +1319,7 @@ var coderInt64 = pointerCoderFuncs{
 	unmarshal: consumeInt64,
 }
 
-// sizeInt64 returns the size of wire encoding a int64 pointer as a Int64.
+// sizeInt64NoZero returns the size of wire encoding a int64 pointer as a Int64.
 // The zero value is not encoded.
 func sizeInt64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Int64()
@@ -1328,7 +1329,7 @@ func sizeInt64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(uint64(v))
 }
 
-// appendInt64 wire encodes a int64 pointer as a Int64.
+// appendInt64NoZero wire encodes a int64 pointer as a Int64.
 // The zero value is not encoded.
 func appendInt64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Int64()
@@ -1636,7 +1637,7 @@ var coderSint64 = pointerCoderFuncs{
 	unmarshal: consumeSint64,
 }
 
-// sizeSint64 returns the size of wire encoding a int64 pointer as a Sint64.
+// sizeSint64NoZero returns the size of wire encoding a int64 pointer as a Sint64.
 // The zero value is not encoded.
 func sizeSint64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Int64()
@@ -1646,7 +1647,7 @@ func sizeSint64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(wire.EncodeZigZag(v))
 }
 
-// appendSint64 wire encodes a int64 pointer as a Sint64.
+// appendSint64NoZero wire encodes a int64 pointer as a Sint64.
 // The zero value is not encoded.
 func appendSint64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Int64()
@@ -1954,7 +1955,7 @@ var coderUint64 = pointerCoderFuncs{
 	unmarshal: consumeUint64,
 }
 
-// sizeUint64 returns the size of wire encoding a uint64 pointer as a Uint64.
+// sizeUint64NoZero returns the size of wire encoding a uint64 pointer as a Uint64.
 // The zero value is not encoded.
 func sizeUint64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Uint64()
@@ -1964,7 +1965,7 @@ func sizeUint64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeVarint(v)
 }
 
-// appendUint64 wire encodes a uint64 pointer as a Uint64.
+// appendUint64NoZero wire encodes a uint64 pointer as a Uint64.
 // The zero value is not encoded.
 func appendUint64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Uint64()
@@ -2272,7 +2273,7 @@ var coderSfixed32 = pointerCoderFuncs{
 	unmarshal: consumeSfixed32,
 }
 
-// sizeSfixed32 returns the size of wire encoding a int32 pointer as a Sfixed32.
+// sizeSfixed32NoZero returns the size of wire encoding a int32 pointer as a Sfixed32.
 // The zero value is not encoded.
 func sizeSfixed32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Int32()
@@ -2282,7 +2283,7 @@ func sizeSfixed32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendSfixed32 wire encodes a int32 pointer as a Sfixed32.
+// appendSfixed32NoZero wire encodes a int32 pointer as a Sfixed32.
 // The zero value is not encoded.
 func appendSfixed32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Int32()
@@ -2572,7 +2573,7 @@ var coderFixed32 = pointerCoderFuncs{
 	unmarshal: consumeFixed32,
 }
 
-// sizeFixed32 returns the size of wire encoding a uint32 pointer as a Fixed32.
+// sizeFixed32NoZero returns the size of wire encoding a uint32 pointer as a Fixed32.
 // The zero value is not encoded.
 func sizeFixed32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Uint32()
@@ -2582,7 +2583,7 @@ func sizeFixed32NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendFixed32 wire encodes a uint32 pointer as a Fixed32.
+// appendFixed32NoZero wire encodes a uint32 pointer as a Fixed32.
 // The zero value is not encoded.
 func appendFixed32NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Uint32()
@@ -2872,7 +2873,7 @@ var coderFloat = pointerCoderFuncs{
 	unmarshal: consumeFloat,
 }
 
-// sizeFloat returns the size of wire encoding a float32 pointer as a Float.
+// sizeFloatNoZero returns the size of wire encoding a float32 pointer as a Float.
 // The zero value is not encoded.
 func sizeFloatNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Float32()
@@ -2882,7 +2883,7 @@ func sizeFloatNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendFloat wire encodes a float32 pointer as a Float.
+// appendFloatNoZero wire encodes a float32 pointer as a Float.
 // The zero value is not encoded.
 func appendFloatNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Float32()
@@ -3172,7 +3173,7 @@ var coderSfixed64 = pointerCoderFuncs{
 	unmarshal: consumeSfixed64,
 }
 
-// sizeSfixed64 returns the size of wire encoding a int64 pointer as a Sfixed64.
+// sizeSfixed64NoZero returns the size of wire encoding a int64 pointer as a Sfixed64.
 // The zero value is not encoded.
 func sizeSfixed64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Int64()
@@ -3182,7 +3183,7 @@ func sizeSfixed64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendSfixed64 wire encodes a int64 pointer as a Sfixed64.
+// appendSfixed64NoZero wire encodes a int64 pointer as a Sfixed64.
 // The zero value is not encoded.
 func appendSfixed64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Int64()
@@ -3472,7 +3473,7 @@ var coderFixed64 = pointerCoderFuncs{
 	unmarshal: consumeFixed64,
 }
 
-// sizeFixed64 returns the size of wire encoding a uint64 pointer as a Fixed64.
+// sizeFixed64NoZero returns the size of wire encoding a uint64 pointer as a Fixed64.
 // The zero value is not encoded.
 func sizeFixed64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Uint64()
@@ -3482,7 +3483,7 @@ func sizeFixed64NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendFixed64 wire encodes a uint64 pointer as a Fixed64.
+// appendFixed64NoZero wire encodes a uint64 pointer as a Fixed64.
 // The zero value is not encoded.
 func appendFixed64NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Uint64()
@@ -3772,7 +3773,7 @@ var coderDouble = pointerCoderFuncs{
 	unmarshal: consumeDouble,
 }
 
-// sizeDouble returns the size of wire encoding a float64 pointer as a Double.
+// sizeDoubleNoZero returns the size of wire encoding a float64 pointer as a Double.
 // The zero value is not encoded.
 func sizeDoubleNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Float64()
@@ -3782,7 +3783,7 @@ func sizeDoubleNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendDouble wire encodes a float64 pointer as a Double.
+// appendDoubleNoZero wire encodes a float64 pointer as a Double.
 // The zero value is not encoded.
 func appendDoubleNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Float64()
@@ -4072,7 +4073,40 @@ var coderString = pointerCoderFuncs{
 	unmarshal: consumeString,
 }
 
-// sizeString returns the size of wire encoding a string pointer as a String.
+// appendStringValidateUTF8 wire encodes a string pointer as a String.
+func appendStringValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := *p.String()
+	b = wire.AppendVarint(b, wiretag)
+	b = wire.AppendString(b, v)
+	if !utf8.ValidString(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+// consumeStringValidateUTF8 wire decodes a string pointer as a String.
+func consumeStringValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeString(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	if !utf8.ValidString(v) {
+		return 0, errInvalidUTF8{}
+	}
+	*p.String() = v
+	return n, nil
+}
+
+var coderStringValidateUTF8 = pointerCoderFuncs{
+	size:      sizeString,
+	marshal:   appendStringValidateUTF8,
+	unmarshal: consumeStringValidateUTF8,
+}
+
+// sizeStringNoZero returns the size of wire encoding a string pointer as a String.
 // The zero value is not encoded.
 func sizeStringNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.String()
@@ -4082,7 +4116,7 @@ func sizeStringNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeBytes(len(v))
 }
 
-// appendString wire encodes a string pointer as a String.
+// appendStringNoZero wire encodes a string pointer as a String.
 // The zero value is not encoded.
 func appendStringNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.String()
@@ -4098,6 +4132,27 @@ var coderStringNoZero = pointerCoderFuncs{
 	size:      sizeStringNoZero,
 	marshal:   appendStringNoZero,
 	unmarshal: consumeString,
+}
+
+// appendStringNoZeroValidateUTF8 wire encodes a string pointer as a String.
+// The zero value is not encoded.
+func appendStringNoZeroValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := *p.String()
+	if len(v) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	b = wire.AppendString(b, v)
+	if !utf8.ValidString(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+var coderStringNoZeroValidateUTF8 = pointerCoderFuncs{
+	size:      sizeStringNoZero,
+	marshal:   appendStringNoZeroValidateUTF8,
+	unmarshal: consumeStringValidateUTF8,
 }
 
 // sizeStringPtr returns the size of wire encoding a *string pointer as a String.
@@ -4178,6 +4233,42 @@ var coderStringSlice = pointerCoderFuncs{
 	unmarshal: consumeStringSlice,
 }
 
+// appendStringSliceValidateUTF8 encodes a []string pointer as a repeated String.
+func appendStringSliceValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *p.StringSlice()
+	for _, v := range s {
+		b = wire.AppendVarint(b, wiretag)
+		b = wire.AppendString(b, v)
+		if !utf8.ValidString(v) {
+			return b, errInvalidUTF8{}
+		}
+	}
+	return b, nil
+}
+
+// consumeStringSliceValidateUTF8 wire decodes a []string pointer as a repeated String.
+func consumeStringSliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.StringSlice()
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeString(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	if !utf8.ValidString(v) {
+		return 0, errInvalidUTF8{}
+	}
+	*sp = append(*sp, v)
+	return n, nil
+}
+
+var coderStringSliceValidateUTF8 = pointerCoderFuncs{
+	size:      sizeStringSlice,
+	marshal:   appendStringSliceValidateUTF8,
+	unmarshal: consumeStringSliceValidateUTF8,
+}
+
 // sizeStringIface returns the size of wire encoding a string value as a String.
 func sizeStringIface(ival interface{}, tagsize int, _ marshalOptions) int {
 	v := ival.(string)
@@ -4208,6 +4299,38 @@ var coderStringIface = ifaceCoderFuncs{
 	size:      sizeStringIface,
 	marshal:   appendStringIface,
 	unmarshal: consumeStringIface,
+}
+
+// appendStringIfaceValidateUTF8 encodes a string value as a String.
+func appendStringIfaceValidateUTF8(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := ival.(string)
+	b = wire.AppendVarint(b, wiretag)
+	b = wire.AppendString(b, v)
+	if !utf8.ValidString(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+// consumeStringIfaceValidateUTF8 decodes a string value as a String.
+func consumeStringIfaceValidateUTF8(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.BytesType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeString(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	if !utf8.ValidString(v) {
+		return nil, 0, errInvalidUTF8{}
+	}
+	return v, n, nil
+}
+
+var coderStringIfaceValidateUTF8 = ifaceCoderFuncs{
+	size:      sizeStringIface,
+	marshal:   appendStringIfaceValidateUTF8,
+	unmarshal: consumeStringIfaceValidateUTF8,
 }
 
 // sizeStringSliceIface returns the size of wire encoding a []string value as a repeated String.
@@ -4282,7 +4405,40 @@ var coderBytes = pointerCoderFuncs{
 	unmarshal: consumeBytes,
 }
 
-// sizeBytes returns the size of wire encoding a []byte pointer as a Bytes.
+// appendBytesValidateUTF8 wire encodes a []byte pointer as a Bytes.
+func appendBytesValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := *p.Bytes()
+	b = wire.AppendVarint(b, wiretag)
+	b = wire.AppendBytes(b, v)
+	if !utf8.Valid(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+// consumeBytesValidateUTF8 wire decodes a []byte pointer as a Bytes.
+func consumeBytesValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	if !utf8.Valid(v) {
+		return 0, errInvalidUTF8{}
+	}
+	*p.Bytes() = append(([]byte)(nil), v...)
+	return n, nil
+}
+
+var coderBytesValidateUTF8 = pointerCoderFuncs{
+	size:      sizeBytes,
+	marshal:   appendBytesValidateUTF8,
+	unmarshal: consumeBytesValidateUTF8,
+}
+
+// sizeBytesNoZero returns the size of wire encoding a []byte pointer as a Bytes.
 // The zero value is not encoded.
 func sizeBytesNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.Bytes()
@@ -4292,7 +4448,7 @@ func sizeBytesNoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + wire.SizeBytes(len(v))
 }
 
-// appendBytes wire encodes a []byte pointer as a Bytes.
+// appendBytesNoZero wire encodes a []byte pointer as a Bytes.
 // The zero value is not encoded.
 func appendBytesNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.Bytes()
@@ -4308,6 +4464,27 @@ var coderBytesNoZero = pointerCoderFuncs{
 	size:      sizeBytesNoZero,
 	marshal:   appendBytesNoZero,
 	unmarshal: consumeBytes,
+}
+
+// appendBytesNoZeroValidateUTF8 wire encodes a []byte pointer as a Bytes.
+// The zero value is not encoded.
+func appendBytesNoZeroValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := *p.Bytes()
+	if len(v) == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	b = wire.AppendBytes(b, v)
+	if !utf8.Valid(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+var coderBytesNoZeroValidateUTF8 = pointerCoderFuncs{
+	size:      sizeBytesNoZero,
+	marshal:   appendBytesNoZeroValidateUTF8,
+	unmarshal: consumeBytesValidateUTF8,
 }
 
 // sizeBytesSlice returns the size of wire encoding a [][]byte pointer as a repeated Bytes.
@@ -4349,6 +4526,42 @@ var coderBytesSlice = pointerCoderFuncs{
 	unmarshal: consumeBytesSlice,
 }
 
+// appendBytesSliceValidateUTF8 encodes a [][]byte pointer as a repeated Bytes.
+func appendBytesSliceValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *p.BytesSlice()
+	for _, v := range s {
+		b = wire.AppendVarint(b, wiretag)
+		b = wire.AppendBytes(b, v)
+		if !utf8.Valid(v) {
+			return b, errInvalidUTF8{}
+		}
+	}
+	return b, nil
+}
+
+// consumeBytesSliceValidateUTF8 wire decodes a [][]byte pointer as a repeated Bytes.
+func consumeBytesSliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.BytesSlice()
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	if !utf8.Valid(v) {
+		return 0, errInvalidUTF8{}
+	}
+	*sp = append(*sp, append(([]byte)(nil), v...))
+	return n, nil
+}
+
+var coderBytesSliceValidateUTF8 = pointerCoderFuncs{
+	size:      sizeBytesSlice,
+	marshal:   appendBytesSliceValidateUTF8,
+	unmarshal: consumeBytesSliceValidateUTF8,
+}
+
 // sizeBytesIface returns the size of wire encoding a []byte value as a Bytes.
 func sizeBytesIface(ival interface{}, tagsize int, _ marshalOptions) int {
 	v := ival.([]byte)
@@ -4379,6 +4592,38 @@ var coderBytesIface = ifaceCoderFuncs{
 	size:      sizeBytesIface,
 	marshal:   appendBytesIface,
 	unmarshal: consumeBytesIface,
+}
+
+// appendBytesIfaceValidateUTF8 encodes a []byte value as a Bytes.
+func appendBytesIfaceValidateUTF8(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := ival.([]byte)
+	b = wire.AppendVarint(b, wiretag)
+	b = wire.AppendBytes(b, v)
+	if !utf8.Valid(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+// consumeBytesIfaceValidateUTF8 decodes a []byte value as a Bytes.
+func consumeBytesIfaceValidateUTF8(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != wire.BytesType {
+		return nil, 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	if !utf8.Valid(v) {
+		return nil, 0, errInvalidUTF8{}
+	}
+	return append(([]byte)(nil), v...), n, nil
+}
+
+var coderBytesIfaceValidateUTF8 = ifaceCoderFuncs{
+	size:      sizeBytesIface,
+	marshal:   appendBytesIfaceValidateUTF8,
+	unmarshal: consumeBytesIfaceValidateUTF8,
 }
 
 // sizeBytesSliceIface returns the size of wire encoding a [][]byte value as a repeated Bytes.

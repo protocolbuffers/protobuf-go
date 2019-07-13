@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -154,7 +155,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		if fd.Syntax() == protoreflect.Proto3 && !utf8.Valid(v) {
+		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
 			return protoreflect.Value{}, 0, errors.InvalidUTF8(string(fd.FullName()))
 		}
 		return protoreflect.ValueOf(string(v)), n, nil
@@ -550,7 +551,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		if fd.Syntax() == protoreflect.Proto3 && !utf8.Valid(v) {
+		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
 			return 0, errors.InvalidUTF8(string(fd.FullName()))
 		}
 		list.Append(protoreflect.ValueOf(string(v)))

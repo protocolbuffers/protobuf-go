@@ -480,6 +480,8 @@ func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 }
 
 func (fd *Field) unmarshalOptions(b []byte) {
+	const FieldOptions_EnforceUTF8 = 13
+
 	for len(b) > 0 {
 		num, typ, n := wire.ConsumeTag(b)
 		b = b[n:]
@@ -493,6 +495,9 @@ func (fd *Field) unmarshalOptions(b []byte) {
 				fd.L1.IsPacked = wire.DecodeBool(v)
 			case fieldnum.FieldOptions_Weak:
 				fd.L1.IsWeak = wire.DecodeBool(v)
+			case FieldOptions_EnforceUTF8:
+				fd.L1.HasEnforceUTF8 = true
+				fd.L1.EnforceUTF8 = !wire.DecodeBool(v)
 			}
 		default:
 			m := wire.ConsumeFieldValue(num, typ, b)

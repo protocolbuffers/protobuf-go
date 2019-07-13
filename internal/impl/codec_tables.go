@@ -9,6 +9,7 @@ import (
 	"reflect"
 
 	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -98,11 +99,14 @@ func fieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 				return coderDoubleSlice
 			}
 		case pref.StringKind:
-			if ft.Kind() == reflect.String && fd.Syntax() == pref.Proto3 {
+			if ft.Kind() == reflect.String && strs.EnforceUTF8(fd) {
 				return coderStringSliceValidateUTF8
 			}
 			if ft.Kind() == reflect.String {
 				return coderStringSlice
+			}
+			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 && strs.EnforceUTF8(fd) {
+				return coderBytesSliceValidateUTF8
 			}
 			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
 				return coderBytesSlice
@@ -251,8 +255,14 @@ func fieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 				return coderDoubleNoZero
 			}
 		case pref.StringKind:
-			if ft.Kind() == reflect.String {
+			if ft.Kind() == reflect.String && strs.EnforceUTF8(fd) {
 				return coderStringNoZeroValidateUTF8
+			}
+			if ft.Kind() == reflect.String {
+				return coderStringNoZero
+			}
+			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 && strs.EnforceUTF8(fd) {
+				return coderBytesNoZeroValidateUTF8
 			}
 			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
 				return coderBytesNoZero
@@ -392,11 +402,14 @@ func fieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 				return coderDouble
 			}
 		case pref.StringKind:
-			if fd.Syntax() == pref.Proto3 && ft.Kind() == reflect.String {
+			if ft.Kind() == reflect.String && strs.EnforceUTF8(fd) {
 				return coderStringValidateUTF8
 			}
 			if ft.Kind() == reflect.String {
 				return coderString
+			}
+			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 && strs.EnforceUTF8(fd) {
+				return coderBytesValidateUTF8
 			}
 			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
 				return coderBytes
@@ -620,11 +633,14 @@ func encoderFuncsForValue(fd pref.FieldDescriptor, ft reflect.Type) ifaceCoderFu
 				return coderDoubleIface
 			}
 		case pref.StringKind:
-			if fd.Syntax() == pref.Proto3 && ft.Kind() == reflect.String {
+			if ft.Kind() == reflect.String && strs.EnforceUTF8(fd) {
 				return coderStringIfaceValidateUTF8
 			}
 			if ft.Kind() == reflect.String {
 				return coderStringIface
+			}
+			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 && strs.EnforceUTF8(fd) {
+				return coderBytesIfaceValidateUTF8
 			}
 			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
 				return coderBytesIface

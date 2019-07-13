@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
@@ -90,6 +91,22 @@ func TestEncodeInvalidUTF8(t *testing.T) {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
 				_, err := proto.Marshal(want)
 				if err == nil {
+					t.Errorf("Marshal did not return expected error for invalid UTF8: %v\nMessage:\n%v", err, marshalText(want))
+				}
+			})
+		}
+	}
+}
+
+func TestEncodeNoEnforceUTF8(t *testing.T) {
+	for _, test := range noEnforceUTF8TestProtos {
+		for _, want := range test.decodeTo {
+			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
+				_, err := proto.Marshal(want)
+				switch {
+				case flags.Proto1Legacy && err != nil:
+					t.Errorf("Marshal returned unexpected error: %v\nMessage:\n%v", err, marshalText(want))
+				case !flags.Proto1Legacy && err == nil:
 					t.Errorf("Marshal did not return expected error for invalid UTF8: %v\nMessage:\n%v", err, marshalText(want))
 				}
 			})

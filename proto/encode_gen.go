@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -67,7 +68,7 @@ func (o MarshalOptions) marshalSingular(b []byte, fd protoreflect.FieldDescripto
 	case protoreflect.DoubleKind:
 		b = wire.AppendFixed64(b, math.Float64bits(v.Float()))
 	case protoreflect.StringKind:
-		if fd.Syntax() == protoreflect.Proto3 && !utf8.ValidString(v.String()) {
+		if strs.EnforceUTF8(fd) && !utf8.ValidString(v.String()) {
 			return b, errors.InvalidUTF8(string(fd.FullName()))
 		}
 		b = wire.AppendString(b, v.String())

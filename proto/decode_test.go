@@ -12,13 +12,20 @@ import (
 	protoV1 "github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/encoding/pack"
+	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protodesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/prototype"
+	"google.golang.org/protobuf/runtime/protoimpl"
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2.v0.0.0-20160225-2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 type testProto struct {
@@ -78,6 +85,23 @@ func TestDecodeInvalidUTF8(t *testing.T) {
 				got := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
 				err := proto.Unmarshal(test.wire, got)
 				if err == nil {
+					t.Errorf("Unmarshal did not return expected error for invalid UTF8: %v\nMessage:\n%v", err, marshalText(want))
+				}
+			})
+		}
+	}
+}
+
+func TestDecodeNoEnforceUTF8(t *testing.T) {
+	for _, test := range noEnforceUTF8TestProtos {
+		for _, want := range test.decodeTo {
+			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
+				got := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
+				err := proto.Unmarshal(test.wire, got)
+				switch {
+				case flags.Proto1Legacy && err != nil:
+					t.Errorf("Unmarshal returned unexpected error: %v\nMessage:\n%v", err, marshalText(want))
+				case !flags.Proto1Legacy && err == nil:
 					t.Errorf("Unmarshal did not return expected error for invalid UTF8: %v\nMessage:\n%v", err, marshalText(want))
 				}
 			})
@@ -1439,6 +1463,129 @@ var invalidUTF8TestProtos = []testProto{
 				pack.Tag{2, pack.BytesType}, pack.String("val\xff"),
 			}),
 		}.Marshal(),
+	},
+}
+
+var noEnforceUTF8TestProtos = []testProto{
+	{
+		desc: "invalid UTF-8 in optional string field",
+		decodeTo: []proto.Message{&TestNoEnforceUTF8{
+			OptionalString: string("abc\xff"),
+		}},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.String("abc\xff"),
+		}.Marshal(),
+	},
+	{
+		desc: "invalid UTF-8 in optional string field of Go bytes",
+		decodeTo: []proto.Message{&TestNoEnforceUTF8{
+			OptionalBytes: []byte("abc\xff"),
+		}},
+		wire: pack.Message{
+			pack.Tag{2, pack.BytesType}, pack.String("abc\xff"),
+		}.Marshal(),
+	},
+	{
+		desc: "invalid UTF-8 in repeated string field",
+		decodeTo: []proto.Message{&TestNoEnforceUTF8{
+			RepeatedString: []string{string("foo"), string("abc\xff")},
+		}},
+		wire: pack.Message{
+			pack.Tag{3, pack.BytesType}, pack.String("foo"),
+			pack.Tag{3, pack.BytesType}, pack.String("abc\xff"),
+		}.Marshal(),
+	},
+	{
+		desc: "invalid UTF-8 in repeated string field of Go bytes",
+		decodeTo: []proto.Message{&TestNoEnforceUTF8{
+			RepeatedBytes: [][]byte{[]byte("foo"), []byte("abc\xff")},
+		}},
+		wire: pack.Message{
+			pack.Tag{4, pack.BytesType}, pack.String("foo"),
+			pack.Tag{4, pack.BytesType}, pack.String("abc\xff"),
+		}.Marshal(),
+	},
+	{
+		desc: "invalid UTF-8 in oneof string field",
+		decodeTo: []proto.Message{
+			&TestNoEnforceUTF8{OneofField: &TestNoEnforceUTF8_OneofString{string("abc\xff")}},
+		},
+		wire: pack.Message{pack.Tag{5, pack.BytesType}, pack.String("abc\xff")}.Marshal(),
+	},
+	{
+		desc: "invalid UTF-8 in oneof string field of Go bytes",
+		decodeTo: []proto.Message{
+			&TestNoEnforceUTF8{OneofField: &TestNoEnforceUTF8_OneofBytes{[]byte("abc\xff")}},
+		},
+		wire: pack.Message{pack.Tag{6, pack.BytesType}, pack.String("abc\xff")}.Marshal(),
+	},
+}
+
+type TestNoEnforceUTF8 struct {
+	OptionalString string       `protobuf:"bytes,1,opt,name=optional_string"`
+	OptionalBytes  []byte       `protobuf:"bytes,2,opt,name=optional_bytes"`
+	RepeatedString []string     `protobuf:"bytes,3,rep,name=repeated_string"`
+	RepeatedBytes  [][]byte     `protobuf:"bytes,4,rep,name=repeated_bytes"`
+	OneofField     isOneofField `protobuf_oneof:"oneof_field"`
+}
+
+type isOneofField interface{ isOneofField() }
+
+type TestNoEnforceUTF8_OneofString struct {
+	OneofString string `protobuf:"bytes,5,opt,name=oneof_string,oneof"`
+}
+type TestNoEnforceUTF8_OneofBytes struct {
+	OneofBytes []byte `protobuf:"bytes,6,opt,name=oneof_bytes,oneof"`
+}
+
+func (*TestNoEnforceUTF8_OneofString) isOneofField() {}
+func (*TestNoEnforceUTF8_OneofBytes) isOneofField()  {}
+
+func (m *TestNoEnforceUTF8) ProtoReflect() pref.Message {
+	return messageInfo_TestNoEnforceUTF8.MessageOf(m)
+}
+
+var messageInfo_TestNoEnforceUTF8 = protoimpl.MessageInfo{
+	GoType: reflect.TypeOf((*TestNoEnforceUTF8)(nil)),
+	PBType: &prototype.Message{
+		MessageDescriptor: func() protoreflect.MessageDescriptor {
+			pb := new(descriptorpb.FileDescriptorProto)
+			if err := prototext.Unmarshal([]byte(`
+				syntax:  "proto3"
+				name:    "test.proto"
+				message_type: [{
+					name: "TestNoEnforceUTF8"
+					field: [
+						{name:"optional_string" number:1 label:LABEL_OPTIONAL type:TYPE_STRING},
+						{name:"optional_bytes"  number:2 label:LABEL_OPTIONAL type:TYPE_STRING},
+						{name:"repeated_string" number:3 label:LABEL_REPEATED type:TYPE_STRING},
+						{name:"repeated_bytes"  number:4 label:LABEL_REPEATED type:TYPE_STRING},
+						{name:"oneof_string"    number:5 label:LABEL_OPTIONAL type:TYPE_STRING, oneof_index:0},
+						{name:"oneof_bytes"     number:6 label:LABEL_OPTIONAL type:TYPE_STRING, oneof_index:0}
+					]
+					oneof_decl: [{name:"oneof_field"}]
+				}]
+			`), pb); err != nil {
+				panic(err)
+			}
+			fd, err := protodesc.NewFile(pb, nil)
+			if err != nil {
+				panic(err)
+			}
+			md := fd.Messages().Get(0)
+			for i := 0; i < md.Fields().Len(); i++ {
+				md.Fields().Get(i).(*filedesc.Field).L1.HasEnforceUTF8 = true
+				md.Fields().Get(i).(*filedesc.Field).L1.EnforceUTF8 = false
+			}
+			return md
+		}(),
+		NewMessage: func() pref.Message {
+			return pref.ProtoMessage(new(TestNoEnforceUTF8)).ProtoReflect()
+		},
+	},
+	OneofWrappers: []interface{}{
+		(*TestNoEnforceUTF8_OneofString)(nil),
+		(*TestNoEnforceUTF8_OneofBytes)(nil),
 	},
 }
 

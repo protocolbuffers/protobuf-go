@@ -95,7 +95,42 @@ var coder{{.Name}} = pointerCoderFuncs{
 	unmarshal: consume{{.Name}},
 }
 
-// size{{.Name}} returns the size of wire encoding a {{.GoType}} pointer as a {{.Name}}.
+{{if or (eq .Name "Bytes") (eq .Name "String")}}
+// append{{.Name}}ValidateUTF8 wire encodes a {{.GoType}} pointer as a {{.Name}}.
+func append{{.Name}}ValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := *p.{{.GoType.PointerMethod}}()
+	b = wire.AppendVarint(b, wiretag)
+	{{template "Append" .}}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+// consume{{.Name}}ValidateUTF8 wire decodes a {{.GoType}} pointer as a {{.Name}}.
+func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != {{.WireType.Expr}} {
+		return 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return 0, errInvalidUTF8{}
+	}
+	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
+	return n, nil
+}
+
+var coder{{.Name}}ValidateUTF8 = pointerCoderFuncs{
+	size:      size{{.Name}},
+	marshal:   append{{.Name}}ValidateUTF8,
+	unmarshal: consume{{.Name}}ValidateUTF8,
+}
+{{end}}
+
+// size{{.Name}}NoZero returns the size of wire encoding a {{.GoType}} pointer as a {{.Name}}.
 // The zero value is not encoded.
 func size{{.Name}}NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	v := *p.{{.GoType.PointerMethod}}()
@@ -105,7 +140,7 @@ func size{{.Name}}NoZero(p pointer, tagsize int, _ marshalOptions) (size int) {
 	return tagsize + {{template "Size" .}}
 }
 
-// append{{.Name}} wire encodes a {{.GoType}} pointer as a {{.Name}}.
+// append{{.Name}}NoZero wire encodes a {{.GoType}} pointer as a {{.Name}}.
 // The zero value is not encoded.
 func append{{.Name}}NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	v := *p.{{.GoType.PointerMethod}}()
@@ -122,6 +157,29 @@ var coder{{.Name}}NoZero = pointerCoderFuncs{
 	marshal:   append{{.Name}}NoZero,
 	unmarshal: consume{{.Name}},
 }
+
+{{if or (eq .Name "Bytes") (eq .Name "String")}}
+// append{{.Name}}NoZeroValidateUTF8 wire encodes a {{.GoType}} pointer as a {{.Name}}.
+// The zero value is not encoded.
+func append{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := *p.{{.GoType.PointerMethod}}()
+	if {{template "IsZero" .}} {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	{{template "Append" .}}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+var coder{{.Name}}NoZeroValidateUTF8 = pointerCoderFuncs{
+	size:      size{{.Name}}NoZero,
+	marshal:   append{{.Name}}NoZeroValidateUTF8,
+	unmarshal: consume{{.Name}}ValidateUTF8,
+}
+{{end}}
 
 {{- if not .NoPointer}}
 // size{{.Name}}Ptr returns the size of wire encoding a *{{.GoType}} pointer as a {{.Name}}.
@@ -228,6 +286,44 @@ var coder{{.Name}}Slice = pointerCoderFuncs{
 	unmarshal: consume{{.Name}}Slice,
 }
 
+{{if or (eq .Name "Bytes") (eq .Name "String")}}
+// append{{.Name}}SliceValidateUTF8 encodes a []{{.GoType}} pointer as a repeated {{.Name}}.
+func append{{.Name}}SliceValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	s := *p.{{.GoType.PointerMethod}}Slice()
+	for _, v := range s {
+		b = wire.AppendVarint(b, wiretag)
+		{{template "Append" .}}
+		if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+			return b, errInvalidUTF8{}
+		}
+	}
+	return b, nil
+}
+
+// consume{{.Name}}SliceValidateUTF8 wire decodes a []{{.GoType}} pointer as a repeated {{.Name}}.
+func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	sp := p.{{.GoType.PointerMethod}}Slice()
+	if wtyp != {{.WireType.Expr}} {
+		return 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return 0, errInvalidUTF8{}
+	}
+	*sp = append(*sp, {{.ToGoType}})
+	return n, nil
+}
+
+var coder{{.Name}}SliceValidateUTF8 = pointerCoderFuncs{
+	size:      size{{.Name}}Slice,
+	marshal:   append{{.Name}}SliceValidateUTF8,
+	unmarshal: consume{{.Name}}SliceValidateUTF8,
+}
+{{end}}
+
 {{if or (eq .WireType "Varint") (eq .WireType "Fixed32") (eq .WireType "Fixed64")}}
 // size{{.Name}}PackedSlice returns the size of wire encoding a []{{.GoType}} pointer as a packed repeated {{.Name}}.
 func size{{.Name}}PackedSlice(p pointer, tagsize int, _ marshalOptions) (size int) {
@@ -308,6 +404,40 @@ var coder{{.Name}}Iface = ifaceCoderFuncs{
 	marshal: append{{.Name}}Iface,
 	unmarshal: consume{{.Name}}Iface,
 }
+
+{{if or (eq .Name "Bytes") (eq .Name "String")}}
+// append{{.Name}}IfaceValidateUTF8 encodes a {{.GoType}} value as a {{.Name}}.
+func append{{.Name}}IfaceValidateUTF8(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	v := ival.({{.GoType}})
+	b = wire.AppendVarint(b, wiretag)
+	{{template "Append" .}}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+// consume{{.Name}}IfaceValidateUTF8 decodes a {{.GoType}} value as a {{.Name}}.
+func consume{{.Name}}IfaceValidateUTF8(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+	if wtyp != {{.WireType.Expr}} {
+		return nil, 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return nil, 0, wire.ParseError(n)
+	}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return nil, 0, errInvalidUTF8{}
+	}
+	return {{.ToGoType}}, n, nil
+}
+
+var coder{{.Name}}IfaceValidateUTF8 = ifaceCoderFuncs{
+	size:    size{{.Name}}Iface,
+	marshal: append{{.Name}}IfaceValidateUTF8,
+	unmarshal: consume{{.Name}}IfaceValidateUTF8,
+}
+{{end}}
 
 // size{{.Name}}SliceIface returns the size of wire encoding a []{{.GoType}} value as a repeated {{.Name}}.
 func size{{.Name}}SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
