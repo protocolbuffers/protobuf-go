@@ -1134,12 +1134,12 @@ const (
 // for details.
 type Location struct {
 	SourceFile string
-	Path       []int32
+	Path       protoreflect.SourcePath
 }
 
 // appendPath add elements to a Location's path, returning a new Location.
 func (loc Location) appendPath(a ...int32) Location {
-	var n []int32
+	var n protoreflect.SourcePath
 	n = append(n, loc.Path...)
 	n = append(n, a...)
 	return Location{
