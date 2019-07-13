@@ -159,7 +159,7 @@ func validateMessageDeclarations(ms []filedesc.Message, mds []*descriptorpb.Desc
 				if f.Cardinality() == protoreflect.Required {
 					return errors.New("message field %q using proto3 semantics cannot be required", f.FullName())
 				}
-				if f.Enum() != nil && f.Enum().Syntax() != protoreflect.Proto3 {
+				if f.Enum() != nil && !f.Enum().IsPlaceholder() && f.Enum().Syntax() != protoreflect.Proto3 {
 					return errors.New("message field %q using proto3 semantics may only depend on a proto3 enum", f.FullName())
 				}
 			}

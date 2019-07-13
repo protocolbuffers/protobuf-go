@@ -831,6 +831,20 @@ func TestNewFile(t *testing.T) {
 				]
 			}]}]
 		`),
+	}, {
+		label: "proto3 message with unresolved enum",
+		inDesc: mustParseFile(`
+			name:    "test.proto"
+			package: ""
+			syntax:  "proto3"
+			message_type: [{
+				name: "M"
+				field: [
+					{name:"enum" number:1 label:LABEL_OPTIONAL type:TYPE_ENUM type_name:".fizz.buzz.Enum"}
+				]
+			}]
+		`),
+		inOpts: []option{allowUnresolvable()},
 		// TODO: Test field and oneof handling in validateMessageDeclarations
 		// TODO: Test unmarshalDefault
 		// TODO: Test validateExtensionDeclarations
