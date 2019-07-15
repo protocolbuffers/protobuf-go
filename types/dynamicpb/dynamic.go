@@ -122,16 +122,22 @@ func (m *Message) Clear(fd pref.FieldDescriptor) {
 func (m *Message) Get(fd pref.FieldDescriptor) pref.Value {
 	m.checkField(fd)
 	num := fd.Number()
-	if v, ok := m.known[num]; ok {
-		if !fd.IsExtension() || fd == m.ext[num] {
-			return v
+	if fd.IsExtension() {
+		if fd != m.ext[num] {
+			return fd.(pref.ExtensionTypeDescriptor).Type().Zero()
 		}
+		return m.known[num]
+	}
+	if v, ok := m.known[num]; ok {
+		return v
 	}
 	switch {
 	case fd.IsMap():
 		return pref.ValueOf(&dynamicMap{desc: fd})
-	case fd.Cardinality() == pref.Repeated:
+	case fd.IsList():
 		return pref.ValueOf(emptyList{desc: fd})
+	case fd.Message() != nil:
+		return pref.ValueOf(&Message{desc: fd.Message()})
 	case fd.Kind() == pref.BytesKind:
 		return pref.ValueOf(append([]byte(nil), fd.Default().Bytes()...))
 	default:
@@ -143,14 +149,22 @@ func (m *Message) Get(fd pref.FieldDescriptor) pref.Value {
 // See protoreflect.Message for details.
 func (m *Message) Mutable(fd pref.FieldDescriptor) pref.Value {
 	m.checkField(fd)
-	num := fd.Number()
-	if v, ok := m.known[num]; ok {
-		if !fd.IsExtension() || fd == m.ext[num] {
-			return v
-		}
-	}
 	if !fd.IsMap() && !fd.IsList() && fd.Message() == nil {
 		panic(errors.New("%v: getting mutable reference to non-composite type", fd.FullName()))
+	}
+	if m.known == nil {
+		panic(errors.New("%v: modification of read-only message", fd.FullName()))
+	}
+	num := fd.Number()
+	if fd.IsExtension() {
+		if fd != m.ext[num] {
+			m.ext[num] = fd
+			m.known[num] = fd.(pref.ExtensionTypeDescriptor).Type().New()
+		}
+		return m.known[num]
+	}
+	if v, ok := m.known[num]; ok {
+		return v
 	}
 	m.clearOtherOneofFields(fd)
 	m.known[num] = m.NewField(fd)
@@ -164,22 +178,16 @@ func (m *Message) Mutable(fd pref.FieldDescriptor) pref.Value {
 // See protoreflect.Message for details.
 func (m *Message) Set(fd pref.FieldDescriptor, v pref.Value) {
 	m.checkField(fd)
-	switch {
-	case fd.IsExtension():
+	if m.known == nil {
+		panic(errors.New("%v: modification of read-only message", fd.FullName()))
+	}
+	if fd.IsExtension() {
 		if !fd.(pref.ExtensionTypeDescriptor).Type().IsValidValue(v) {
 			panic(errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface()))
 		}
 		m.ext[fd.Number()] = fd
-	case fd.IsMap():
-		if mapv, ok := v.Interface().(*dynamicMap); !ok || mapv.desc != fd {
-			panic(errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface()))
-		}
-	case fd.IsList():
-		if list, ok := v.Interface().(*dynamicList); !ok || list.desc != fd {
-			panic(errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface()))
-		}
-	default:
-		typecheckSingular(fd, v)
+	} else {
+		typecheck(fd, v)
 	}
 	m.clearOtherOneofFields(fd)
 	m.known[fd.Number()] = v
@@ -251,6 +259,9 @@ func (m *Message) GetUnknown() pref.RawFields {
 // SetUnknown sets the raw unknown fields.
 // See protoreflect.Message for details.
 func (m *Message) SetUnknown(r pref.RawFields) {
+	if m.known == nil {
+		panic(errors.New("%v: modification of read-only message", m.desc.FullName()))
+	}
 	m.unknown = r
 }
 
@@ -406,7 +417,43 @@ func isSet(fd pref.FieldDescriptor, v pref.Value) bool {
 	return true
 }
 
+func typecheck(fd pref.FieldDescriptor, v pref.Value) {
+	if err := typeIsValid(fd, v); err != nil {
+		panic(err)
+	}
+}
+
+func typeIsValid(fd pref.FieldDescriptor, v pref.Value) error {
+	switch {
+	case fd.IsMap():
+		if mapv, ok := v.Interface().(*dynamicMap); !ok || mapv.desc != fd {
+			return errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface())
+		}
+		return nil
+	case fd.IsList():
+		switch list := v.Interface().(type) {
+		case *dynamicList:
+			if list.desc == fd {
+				return nil
+			}
+		case emptyList:
+			if list.desc == fd {
+				return nil
+			}
+		}
+		return errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface())
+	default:
+		return singularTypeIsValid(fd, v)
+	}
+}
+
 func typecheckSingular(fd pref.FieldDescriptor, v pref.Value) {
+	if err := singularTypeIsValid(fd, v); err != nil {
+		panic(err)
+	}
+}
+
+func singularTypeIsValid(fd pref.FieldDescriptor, v pref.Value) error {
 	vi := v.Interface()
 	var ok bool
 	switch fd.Kind() {
@@ -435,12 +482,16 @@ func typecheckSingular(fd pref.FieldDescriptor, v pref.Value) {
 		var m pref.Message
 		m, ok = vi.(pref.Message)
 		if ok && m.Descriptor().FullName() != fd.Message().FullName() {
-			panic(errors.New("%v: assigning invalid message type %v", fd.FullName(), m.Descriptor().FullName()))
+			return errors.New("%v: assigning invalid message type %v", fd.FullName(), m.Descriptor().FullName())
+		}
+		if dm, ok := vi.(*Message); ok && dm.known == nil {
+			return errors.New("%v: assigning invalid zero-value message", fd.FullName())
 		}
 	}
 	if !ok {
-		panic(errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface()))
+		return errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface())
 	}
+	return nil
 }
 
 func newListEntry(fd pref.FieldDescriptor) pref.Value {
@@ -469,4 +520,103 @@ func newListEntry(fd pref.FieldDescriptor) pref.Value {
 		return pref.ValueOf(New(fd.Message()).ProtoReflect())
 	}
 	panic(errors.New("%v: unknown kind %v", fd.FullName(), fd.Kind()))
+}
+
+// extensionType is a dynamic protoreflect.ExtensionType.
+type extensionType struct {
+	desc extensionTypeDescriptor
+}
+
+// NewExtensionType creates a new ExtensionType with the provided descriptor.
+//
+// Dynamic ExtensionTypes with the same descriptor compare as equal. That is,
+// if xd1 == xd2, then NewExtensionType(xd1) == NewExtensionType(xd2).
+//
+// The InterfaceOf and ValueOf methods of the extension type are defined as:
+//
+//	func (xt extensionType) ValueOf(iv interface{}) protoreflect.Value {
+//		return protoreflect.ValueOf(iv)
+//	}
+//
+//	func (xt extensionType) InterfaceOf(v protoreflect.Value) interface{} {
+//		return v.Interface()
+//	}
+//
+// The Go type used by the proto.GetExtension and proto.SetExtension functions
+// is determined by these methods, and is therefore equivalent to the Go type
+// used to represent a protoreflect.Value. See the protoreflect.Value
+// documentation for more details.
+func NewExtensionType(desc pref.ExtensionDescriptor) pref.ExtensionType {
+	if xt, ok := desc.(pref.ExtensionTypeDescriptor); ok {
+		desc = xt.Descriptor()
+	}
+	return extensionType{extensionTypeDescriptor{desc}}
+}
+
+func (xt extensionType) New() pref.Value {
+	switch {
+	case xt.desc.IsMap():
+		return pref.ValueOf(&dynamicMap{
+			desc: xt.desc,
+			mapv: make(map[interface{}]pref.Value),
+		})
+	case xt.desc.IsList():
+		return pref.ValueOf(&dynamicList{desc: xt.desc})
+	case xt.desc.Message() != nil:
+		return pref.ValueOf(New(xt.desc.Message()))
+	default:
+		return xt.desc.Default()
+	}
+}
+
+func (xt extensionType) Zero() pref.Value {
+	switch {
+	case xt.desc.IsMap():
+		return pref.ValueOf(&dynamicMap{desc: xt.desc})
+	case xt.desc.Cardinality() == pref.Repeated:
+		return pref.ValueOf(emptyList{desc: xt.desc})
+	case xt.desc.Message() != nil:
+		return pref.ValueOf(&Message{desc: xt.desc.Message()})
+	default:
+		return xt.desc.Default()
+	}
+}
+
+func (xt extensionType) GoType() reflect.Type {
+	return reflect.TypeOf(xt.InterfaceOf(xt.New()))
+}
+
+func (xt extensionType) TypeDescriptor() pref.ExtensionTypeDescriptor {
+	return xt.desc
+}
+
+func (xt extensionType) ValueOf(iv interface{}) pref.Value {
+	v := pref.ValueOf(iv)
+	typecheck(xt.desc, v)
+	return v
+}
+
+func (xt extensionType) InterfaceOf(v pref.Value) interface{} {
+	typecheck(xt.desc, v)
+	return v.Interface()
+}
+
+func (xt extensionType) IsValidInterface(iv interface{}) bool {
+	return typeIsValid(xt.desc, pref.ValueOf(iv)) == nil
+}
+
+func (xt extensionType) IsValidValue(v pref.Value) bool {
+	return typeIsValid(xt.desc, v) == nil
+}
+
+type extensionTypeDescriptor struct {
+	pref.ExtensionDescriptor
+}
+
+func (xt extensionTypeDescriptor) Type() pref.ExtensionType {
+	return extensionType{xt}
+}
+
+func (xt extensionTypeDescriptor) Descriptor() pref.ExtensionDescriptor {
+	return xt.ExtensionDescriptor
 }
