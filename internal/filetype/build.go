@@ -155,7 +155,7 @@ func (tb TypeBuilder) Build() (out struct {
 
 			// Register enum types.
 			if err := tb.TypeRegistry.Register(&out.Enums[i]); err != nil {
-				panic(err)
+				fdesc.CheckRegistryError(err)
 			}
 		}
 	}
@@ -183,7 +183,7 @@ func (tb TypeBuilder) Build() (out struct {
 
 			// Register message types.
 			if err := tb.TypeRegistry.Register(&out.Messages[i]); err != nil {
-				panic(err)
+				fdesc.CheckRegistryError(err)
 			}
 		}
 
@@ -251,7 +251,7 @@ func (tb TypeBuilder) Build() (out struct {
 
 			// Register extension types.
 			if err := tb.TypeRegistry.Register(&out.Extensions[i]); err != nil {
-				panic(err)
+				fdesc.CheckRegistryError(err)
 			}
 		}
 	}

@@ -617,7 +617,7 @@ func amendErrorWithCaller(err error, prev, curr interface{}) error {
 	if prevPkg == "" || currPkg == "" || prevPkg == currPkg {
 		return err
 	}
-	return errors.New("%s; previously from %q, currently from %q", err, prevPkg, currPkg)
+	return errors.New("%s\n\tpreviously from: %q\n\tcurrently from:  %q", err, prevPkg, currPkg)
 }
 
 func goPackage(v interface{}) string {
