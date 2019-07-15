@@ -5,6 +5,7 @@
 package proto_test
 
 import (
+	"math"
 	"testing"
 
 	"google.golang.org/protobuf/internal/encoding/pack"
@@ -73,6 +74,14 @@ var inequalities = []struct{ a, b proto.Message }{
 	{
 		&testpb.TestAllTypes{OptionalDouble: proto.Float64(1)},
 		&testpb.TestAllTypes{OptionalDouble: proto.Float64(2)},
+	},
+	{
+		&testpb.TestAllTypes{OptionalFloat: proto.Float32(float32(math.NaN()))},
+		&testpb.TestAllTypes{OptionalFloat: proto.Float32(0)},
+	},
+	{
+		&testpb.TestAllTypes{OptionalDouble: proto.Float64(float64(math.NaN()))},
+		&testpb.TestAllTypes{OptionalDouble: proto.Float64(0)},
 	},
 	{
 		&testpb.TestAllTypes{OptionalBool: proto.Bool(true)},

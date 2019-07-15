@@ -6,6 +6,7 @@ package proto
 
 import (
 	"bytes"
+	"math"
 	"reflect"
 
 	"google.golang.org/protobuf/internal/encoding/wire"
@@ -13,14 +14,16 @@ import (
 )
 
 // Equal reports whether two messages are equal.
+// If two messages marshal to the same bytes under deterministic serialization,
+// then Equal is guaranteed to report true.
 //
 // Two messages are equal if they belong to the same message descriptor,
 // have the same set of populated known and extension field values,
 // and the same set of unknown fields values.
 //
 // Scalar values are compared with the equivalent of the == operator in Go,
-// except bytes values which are compared using bytes.Equal.
-// Note that this means that floating point NaNs are considered inequal.
+// except bytes values which are compared using bytes.Equal and
+// floating point values which specially treat NaNs as equal.
 // Message values are compared by recursively calling Equal.
 // Lists are equal if each element value is also equal.
 // Maps are equal if they have the same set of keys, where the pair of values
@@ -104,6 +107,13 @@ func equalValue(fd pref.FieldDescriptor, x, y pref.Value) bool {
 		return equalMessage(x.Message(), y.Message())
 	case fd.Kind() == pref.BytesKind:
 		return bytes.Equal(x.Bytes(), y.Bytes())
+	case fd.Kind() == pref.FloatKind, fd.Kind() == pref.DoubleKind:
+		fx := x.Float()
+		fy := y.Float()
+		if math.IsNaN(fx) || math.IsNaN(fy) {
+			return math.IsNaN(fx) && math.IsNaN(fy)
+		}
+		return fx == fy
 	default:
 		return x.Interface() == y.Interface()
 	}
