@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"testing"
 
-	protoV1 "github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/filedesc"
@@ -17,8 +16,8 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/prototype"
+	"google.golang.org/protobuf/runtime/protoiface"
 	"google.golang.org/protobuf/runtime/protoimpl"
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
@@ -1541,7 +1540,7 @@ type TestNoEnforceUTF8_OneofBytes struct {
 func (*TestNoEnforceUTF8_OneofString) isOneofField() {}
 func (*TestNoEnforceUTF8_OneofBytes) isOneofField()  {}
 
-func (m *TestNoEnforceUTF8) ProtoReflect() pref.Message {
+func (m *TestNoEnforceUTF8) ProtoReflect() protoreflect.Message {
 	return messageInfo_TestNoEnforceUTF8.MessageOf(m)
 }
 
@@ -1579,8 +1578,8 @@ var messageInfo_TestNoEnforceUTF8 = protoimpl.MessageInfo{
 			}
 			return md
 		}(),
-		NewMessage: func() pref.Message {
-			return pref.ProtoMessage(new(TestNoEnforceUTF8)).ProtoReflect()
+		NewMessage: func() protoreflect.Message {
+			return protoreflect.ProtoMessage(new(TestNoEnforceUTF8)).ProtoReflect()
 		},
 	},
 	OneofWrappers: []interface{}{
@@ -1598,13 +1597,13 @@ func build(m proto.Message, opts ...buildOpt) proto.Message {
 
 type buildOpt func(proto.Message)
 
-func unknown(raw pref.RawFields) buildOpt {
+func unknown(raw protoreflect.RawFields) buildOpt {
 	return func(m proto.Message) {
 		m.ProtoReflect().SetUnknown(raw)
 	}
 }
 
-func extend(desc *protoV1.ExtensionDesc, value interface{}) buildOpt {
+func extend(desc *protoiface.ExtensionDescV1, value interface{}) buildOpt {
 	// TODO: Should ExtensionType.ValueOf accept []T instead of *[]T?
 	t := reflect.TypeOf(value)
 	if t.Kind() == reflect.Slice && t.Elem().Kind() != reflect.Uint8 {
