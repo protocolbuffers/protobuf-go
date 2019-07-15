@@ -8,6 +8,7 @@ import (
 	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	math "math"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -1827,8 +1828,10 @@ func file_proto2_fields_proto_init() {
 		(*FieldTestMessage_OneofTwo_1)(nil),
 		(*FieldTestMessage_OneofTwo_2)(nil),
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto2_fields_proto_rawDesc,
 			NumEnums:      1,
 			NumMessages:   9,

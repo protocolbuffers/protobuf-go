@@ -193,8 +193,10 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 		}
 	}
 
+	g.P("type x struct{}")
 	g.P("out := ", protoimplPackage.Ident("TypeBuilder"), "{")
 	g.P("File: ", protoimplPackage.Ident("DescBuilder"), "{")
+	g.P("GoPackagePath: ", reflectPackage.Ident("TypeOf"), "(x{}).PkgPath(),")
 	g.P("RawDescriptor: ", rawDescVarName(f), ",")
 	g.P("NumEnums: ", len(f.allEnums), ",")
 	g.P("NumMessages: ", len(f.allMessages), ",")

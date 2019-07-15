@@ -6,6 +6,7 @@ package proto3
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -753,8 +754,10 @@ func file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_init()
 			}
 		}
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   2,

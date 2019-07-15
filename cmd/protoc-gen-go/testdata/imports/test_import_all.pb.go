@@ -10,6 +10,7 @@ import (
 	test_b_1 "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports/test_b_1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -180,8 +181,10 @@ func file_imports_test_import_all_proto_init() {
 			}
 		}
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_imports_test_import_all_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,

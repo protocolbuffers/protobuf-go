@@ -106,6 +106,15 @@ func (fd *File) ProtoLegacyRawDesc() []byte {
 	return fd.builder.RawDescriptor
 }
 
+// GoPackagePath is a pseudo-internal API for determining the Go package path
+// that this file descriptor is declared in.
+//
+// WARNING: This method is exempt from the compatibility promise and may be
+// removed in the future without warning.
+func (fd *File) GoPackagePath() string {
+	return fd.builder.GoPackagePath
+}
+
 type (
 	Enum struct {
 		Base

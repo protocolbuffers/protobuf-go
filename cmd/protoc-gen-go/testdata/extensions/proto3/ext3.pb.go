@@ -9,6 +9,7 @@ import (
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -764,8 +765,10 @@ func file_extensions_proto3_ext3_proto_init() {
 			}
 		}
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_extensions_proto3_ext3_proto_rawDesc,
 			NumEnums:      1,
 			NumMessages:   1,

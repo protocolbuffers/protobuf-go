@@ -15,6 +15,9 @@ import (
 
 // DescBuilder construct a protoreflect.FileDescriptor from the raw descriptor.
 type DescBuilder struct {
+	// GoPackagePath is the Go package path that is invoking this builder.
+	GoPackagePath string
+
 	// RawDescriptor is the wire-encoded bytes of FileDescriptorProto
 	// and must be populated.
 	RawDescriptor []byte

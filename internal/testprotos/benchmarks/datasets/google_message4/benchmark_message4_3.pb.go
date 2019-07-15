@@ -7,6 +7,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -4782,8 +4783,10 @@ func file_datasets_google_message4_benchmark_message4_3_proto_init() {
 	if File_datasets_google_message4_benchmark_message4_3_proto != nil {
 		return
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_datasets_google_message4_benchmark_message4_3_proto_rawDesc,
 			NumEnums:      42,
 			NumMessages:   0,

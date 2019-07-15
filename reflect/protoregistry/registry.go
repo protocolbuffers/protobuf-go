@@ -24,11 +24,6 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// TODO: Perhaps Register should record the frame of where the function was
-// called and surface that in the error? That would help users debug duplicate
-// registration issues. This presumes that we provide a way to disable automatic
-// registration in generated code.
-
 // GlobalFiles is a global registry of file descriptors.
 var GlobalFiles *Files = new(Files)
 
@@ -95,21 +90,24 @@ func (r *Files) Register(files ...protoreflect.FileDescriptor) error {
 }
 func (r *Files) registerFile(fd protoreflect.FileDescriptor) error {
 	path := fd.Path()
-	if r.filesByPath[path] != nil {
-		return errors.New("file %q is already registered", fd.Path())
+	if prev := r.filesByPath[path]; prev != nil {
+		err := errors.New("file %q is already registered", fd.Path())
+		return amendErrorWithCaller(err, prev, fd)
 	}
 
 	for name := fd.Package(); name != ""; name = name.Parent() {
-		switch r.descsByName[name].(type) {
+		switch prev := r.descsByName[name]; prev.(type) {
 		case nil, *packageDescriptor:
 		default:
-			return errors.New("file %q has a name conflict over %v", fd.Path(), name)
+			err := errors.New("file %q has a name conflict over %v", fd.Path(), name)
+			return amendErrorWithCaller(err, prev, fd)
 		}
 	}
 	var err error
 	rangeTopLevelDescriptors(fd, func(d protoreflect.Descriptor) {
-		if r.descsByName[d.FullName()] != nil {
+		if prev := r.descsByName[d.FullName()]; prev != nil {
 			err = errors.New("file %q has a name conflict over %v", fd.Path(), d.FullName())
+			err = amendErrorWithCaller(err, prev, fd)
 		}
 	})
 	if err != nil {
@@ -414,9 +412,10 @@ typeLoop:
 			default:
 				panic(fmt.Sprintf("invalid type: %T", t))
 			}
-			if r.typesByName[name] != nil {
+			if prev := r.typesByName[name]; prev != nil {
 				if firstErr == nil {
-					firstErr = errors.New("%v %v is already registered", typeName(typ), name)
+					err := errors.New("%v %v is already registered", typeName(typ), name)
+					firstErr = amendErrorWithCaller(err, prev, typ)
 				}
 				continue typeLoop
 			}
@@ -425,9 +424,10 @@ typeLoop:
 			if xt, _ := typ.(protoreflect.ExtensionType); xt != nil {
 				field := xt.Number()
 				message := xt.ContainingMessage().FullName()
-				if r.extensionsByMessage[message][field] != nil {
+				if prev := r.extensionsByMessage[message][field]; prev != nil {
 					if firstErr == nil {
-						firstErr = errors.New("extension %v is already registered on message %v", name, message)
+						err := errors.New("extension number %d is already registered on message %v", field, message)
+						firstErr = amendErrorWithCaller(err, prev, typ)
 					}
 					continue typeLoop
 				}
@@ -609,4 +609,31 @@ func typeName(t Type) string {
 	default:
 		return fmt.Sprintf("%T", t)
 	}
+}
+
+func amendErrorWithCaller(err error, prev, curr interface{}) error {
+	prevPkg := goPackage(prev)
+	currPkg := goPackage(curr)
+	if prevPkg == "" || currPkg == "" || prevPkg == currPkg {
+		return err
+	}
+	return errors.New("%s; previously from %q, currently from %q", err, prevPkg, currPkg)
+}
+
+func goPackage(v interface{}) string {
+	switch d := v.(type) {
+	case protoreflect.EnumType:
+		v = d.Descriptor()
+	case protoreflect.MessageType:
+		v = d.Descriptor()
+	case protoreflect.ExtensionType:
+		v = d.Descriptor()
+	}
+	if d, ok := v.(protoreflect.Descriptor); ok {
+		v = d.ParentFile()
+	}
+	if d, ok := v.(interface{ GoPackagePath() string }); ok {
+		return d.GoPackagePath()
+	}
+	return ""
 }

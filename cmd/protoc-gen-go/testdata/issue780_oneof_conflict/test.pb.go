@@ -6,6 +6,7 @@ package oneoftest
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -133,8 +134,10 @@ func file_issue780_oneof_conflict_test_proto_init() {
 	file_issue780_oneof_conflict_test_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*Foo_GetBar)(nil),
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_issue780_oneof_conflict_test_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,

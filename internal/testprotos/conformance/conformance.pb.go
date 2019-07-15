@@ -7,6 +7,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -748,8 +749,10 @@ func file_conformance_conformance_proto_init() {
 		(*ConformanceResponse_JspbPayload)(nil),
 		(*ConformanceResponse_TextPayload)(nil),
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_conformance_conformance_proto_rawDesc,
 			NumEnums:      2,
 			NumMessages:   4,

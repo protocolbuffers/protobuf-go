@@ -15,6 +15,7 @@ import (
 	structpb "google.golang.org/protobuf/types/known/structpb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -2382,8 +2383,10 @@ func file_pb2_test_proto_init() {
 	file_pb2_test_proto_msgTypes[8].OneofWrappers = []interface{}{
 		(*IndirectRequired_OneofNested)(nil),
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_pb2_test_proto_rawDesc,
 			NumEnums:      2,
 			NumMessages:   20,

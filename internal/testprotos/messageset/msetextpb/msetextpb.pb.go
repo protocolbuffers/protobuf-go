@@ -8,6 +8,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -233,8 +234,10 @@ func file_messageset_msetextpb_msetextpb_proto_init() {
 			}
 		}
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_messageset_msetextpb_msetextpb_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   2,

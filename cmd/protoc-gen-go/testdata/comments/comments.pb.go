@@ -8,6 +8,7 @@ package comments
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -394,8 +395,10 @@ func file_comments_comments_proto_init() {
 	file_comments_comments_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*Message1_Oneof1AField1)(nil),
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_comments_comments_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   6,

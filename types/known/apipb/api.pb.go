@@ -8,6 +8,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sourcecontextpb "google.golang.org/protobuf/types/known/sourcecontextpb"
 	typepb "google.golang.org/protobuf/types/known/typepb"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -514,8 +515,10 @@ func file_google_protobuf_api_proto_init() {
 			}
 		}
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_google_protobuf_api_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   3,

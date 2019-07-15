@@ -74,8 +74,9 @@ const (
 )
 
 const (
-	syncPackage          = protogen.GoImportPath("sync")
 	mathPackage          = protogen.GoImportPath("math")
+	reflectPackage       = protogen.GoImportPath("reflect")
+	syncPackage          = protogen.GoImportPath("sync")
 	protoifacePackage    = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoiface")
 	protoimplPackage     = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoimpl")
 	protoreflectPackage  = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")

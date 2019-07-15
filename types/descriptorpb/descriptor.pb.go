@@ -8,6 +8,7 @@ import (
 	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -3754,8 +3755,10 @@ func file_google_protobuf_descriptor_proto_init() {
 			}
 		}
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_google_protobuf_descriptor_proto_rawDesc,
 			NumEnums:      6,
 			NumMessages:   27,

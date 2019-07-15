@@ -13,6 +13,7 @@ import (
 	structpb "google.golang.org/protobuf/types/known/structpb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -2205,8 +2206,10 @@ func file_google_protobuf_test_messages_proto3_proto_init() {
 		(*TestAllTypesProto3_OneofDouble)(nil),
 		(*TestAllTypesProto3_OneofEnum)(nil),
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_google_protobuf_test_messages_proto3_proto_rawDesc,
 			NumEnums:      3,
 			NumMessages:   22,

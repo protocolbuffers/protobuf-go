@@ -18,6 +18,7 @@ import (
 	proto3_v1_21 "google.golang.org/protobuf/internal/testprotos/legacy/proto3.v1.2.1-20181126-8d0c54c1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -320,8 +321,10 @@ func file_legacy_legacy_proto_init() {
 			}
 		}
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_legacy_legacy_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,

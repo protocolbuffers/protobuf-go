@@ -10,6 +10,7 @@ import (
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	math "math"
+	reflect "reflect"
 	sync "sync"
 )
 
@@ -512,8 +513,10 @@ func file_import_public_sub_a_proto_init() {
 		(*M_Submessage_SubmessageOneofInt32)(nil),
 		(*M_Submessage_SubmessageOneofInt64)(nil),
 	}
+	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
+			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_import_public_sub_a_proto_rawDesc,
 			NumEnums:      3,
 			NumMessages:   2,
