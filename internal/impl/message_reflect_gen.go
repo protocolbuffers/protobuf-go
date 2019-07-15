@@ -31,6 +31,15 @@ func (m *messageState) ProtoMethods() *protoiface.Methods {
 	return &m.mi.methods
 }
 
+// ProtoMessageInfo is a pseudo-internal API for allowing the v1 code
+// to be able to retrieve a v2 MessageInfo struct.
+//
+// WARNING: This method is exempt from the compatibility promise and
+// may be removed in the future without warning.
+func (m *messageState) ProtoMessageInfo() *MessageInfo {
+	return m.mi
+}
+
 func (m *messageState) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	m.mi.init()
 	for _, fi := range m.mi.fields {
@@ -127,6 +136,15 @@ func (m *messageReflectWrapper) ProtoUnwrap() interface{} {
 func (m *messageReflectWrapper) ProtoMethods() *protoiface.Methods {
 	m.mi.init()
 	return &m.mi.methods
+}
+
+// ProtoMessageInfo is a pseudo-internal API for allowing the v1 code
+// to be able to retrieve a v2 MessageInfo struct.
+//
+// WARNING: This method is exempt from the compatibility promise and
+// may be removed in the future without warning.
+func (m *messageReflectWrapper) ProtoMessageInfo() *MessageInfo {
+	return m.mi
 }
 
 func (m *messageReflectWrapper) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
