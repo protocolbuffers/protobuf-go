@@ -2,74 +2,80 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package value
+package impl
 
 import (
+	"fmt"
 	"reflect"
 
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// MapOf returns a protoreflect.Map view of p, which must a *map[K]V.
-// If p is nil, this returns an empty, read-only map.
-func MapOf(p interface{}, kc, kv Converter) interface {
-	pref.Map
-	Unwrapper
-} {
-	// TODO: Validate that p is a *map[K]V?
-	rv := reflect.ValueOf(p)
-	return &mapReflect{rv, kc, kv}
+type mapConverter struct {
+	goType           reflect.Type
+	keyConv, valConv Converter
+}
+
+func newMapConverter(t reflect.Type, fd pref.FieldDescriptor) Converter {
+	if t.Kind() != reflect.Map {
+		panic(fmt.Sprintf("invalid Go type %v for field %v", t, fd.FullName()))
+	}
+	return &mapConverter{
+		goType:  t,
+		keyConv: newSingularConverter(t.Key(), fd.MapKey()),
+		valConv: newSingularConverter(t.Elem(), fd.MapValue()),
+	}
+}
+
+func (c *mapConverter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
+	}
+	return pref.ValueOf(&mapReflect{v, c.keyConv, c.valConv})
+}
+
+func (c *mapConverter) GoValueOf(v pref.Value) reflect.Value {
+	return v.Map().(*mapReflect).v
+}
+
+func (c *mapConverter) New() pref.Value {
+	return c.PBValueOf(reflect.MakeMap(c.goType))
 }
 
 type mapReflect struct {
-	v       reflect.Value // *map[K]V
+	v       reflect.Value // map[K]V
 	keyConv Converter
 	valConv Converter
 }
 
 func (ms *mapReflect) Len() int {
-	if ms.v.IsNil() {
-		return 0
-	}
-	return ms.v.Elem().Len()
+	return ms.v.Len()
 }
 func (ms *mapReflect) Has(k pref.MapKey) bool {
-	if ms.v.IsNil() {
-		return false
-	}
 	rk := ms.keyConv.GoValueOf(k.Value())
-	rv := ms.v.Elem().MapIndex(rk)
+	rv := ms.v.MapIndex(rk)
 	return rv.IsValid()
 }
 func (ms *mapReflect) Get(k pref.MapKey) pref.Value {
-	if ms.v.IsNil() {
-		return pref.Value{}
-	}
 	rk := ms.keyConv.GoValueOf(k.Value())
-	rv := ms.v.Elem().MapIndex(rk)
+	rv := ms.v.MapIndex(rk)
 	if !rv.IsValid() {
 		return pref.Value{}
 	}
 	return ms.valConv.PBValueOf(rv)
 }
 func (ms *mapReflect) Set(k pref.MapKey, v pref.Value) {
-	if ms.v.Elem().IsNil() {
-		ms.v.Elem().Set(reflect.MakeMap(ms.v.Elem().Type()))
-	}
 	rk := ms.keyConv.GoValueOf(k.Value())
 	rv := ms.valConv.GoValueOf(v)
-	ms.v.Elem().SetMapIndex(rk, rv)
+	ms.v.SetMapIndex(rk, rv)
 }
 func (ms *mapReflect) Clear(k pref.MapKey) {
 	rk := ms.keyConv.GoValueOf(k.Value())
-	ms.v.Elem().SetMapIndex(rk, reflect.Value{})
+	ms.v.SetMapIndex(rk, reflect.Value{})
 }
 func (ms *mapReflect) Range(f func(pref.MapKey, pref.Value) bool) {
-	if ms.v.IsNil() {
-		return
-	}
-	for _, k := range ms.v.Elem().MapKeys() {
-		if v := ms.v.Elem().MapIndex(k); v.IsValid() {
+	for _, k := range ms.v.MapKeys() {
+		if v := ms.v.MapIndex(k); v.IsValid() {
 			pk := ms.keyConv.PBValueOf(k).MapKey()
 			pv := ms.valConv.PBValueOf(v)
 			if !f(pk, pv) {
@@ -79,7 +85,7 @@ func (ms *mapReflect) Range(f func(pref.MapKey, pref.Value) bool) {
 	}
 }
 func (ms *mapReflect) NewMessage() pref.Message {
-	return ms.valConv.NewMessage()
+	return ms.valConv.New().Message()
 }
 func (ms *mapReflect) ProtoUnwrap() interface{} {
 	return ms.v.Interface()

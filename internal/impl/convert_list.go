@@ -2,23 +2,40 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package value
+package impl
 
 import (
+	"fmt"
 	"reflect"
 
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// ListOf returns a protoreflect.List view of p, which must be a *[]T.
-// If p is nil, this returns an empty, read-only list.
-func ListOf(p interface{}, c Converter) interface {
-	pref.List
-	Unwrapper
-} {
-	// TODO: Validate that p is a *[]T?
-	rv := reflect.ValueOf(p)
-	return &listReflect{rv, c}
+type listConverter struct {
+	goType reflect.Type
+	c      Converter
+}
+
+func newListConverter(t reflect.Type, fd pref.FieldDescriptor) Converter {
+	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Slice {
+		panic(fmt.Sprintf("invalid Go type %v for field %v", t, fd.FullName()))
+	}
+	return &listConverter{t, newSingularConverter(t.Elem().Elem(), fd)}
+}
+
+func (c *listConverter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
+	}
+	return pref.ValueOf(&listReflect{v, c.c})
+}
+
+func (c *listConverter) GoValueOf(v pref.Value) reflect.Value {
+	return v.List().(*listReflect).v
+}
+
+func (c *listConverter) New() pref.Value {
+	return c.PBValueOf(reflect.New(c.goType.Elem()))
 }
 
 type listReflect struct {
@@ -45,7 +62,7 @@ func (ls *listReflect) Truncate(i int) {
 	ls.v.Elem().Set(ls.v.Elem().Slice(0, i))
 }
 func (ls *listReflect) NewMessage() pref.Message {
-	return ls.conv.NewMessage()
+	return ls.conv.New().Message()
 }
 func (ls *listReflect) ProtoUnwrap() interface{} {
 	return ls.v.Interface()

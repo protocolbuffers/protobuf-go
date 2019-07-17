@@ -5,63 +5,64 @@
 package mapsort_test
 
 import (
-	"reflect"
+	"strconv"
 	"testing"
 
 	"google.golang.org/protobuf/internal/mapsort"
-	"google.golang.org/protobuf/internal/value"
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
 func TestRange(t *testing.T) {
-	for _, test := range []struct {
-		mapv interface{}
-		kind pref.Kind
-	}{
-		{
-			mapv: &map[bool]int32{
-				false: 0,
-				true:  1,
-			},
-			kind: pref.BoolKind,
+	m := (&testpb.TestAllTypes{
+		MapBoolBool: map[bool]bool{
+			false: false,
+			true:  true,
 		},
-		{
-			mapv: &map[int32]int32{
-				0: 0,
-				1: 1,
-				2: 2,
-			},
-			kind: pref.Int32Kind,
+		MapInt32Int32: map[int32]int32{
+			0: 0,
+			1: 1,
+			2: 2,
 		},
-		{
-			mapv: &map[uint64]int32{
-				0: 0,
-				1: 1,
-				2: 2,
-			},
-			kind: pref.Uint64Kind,
+		MapUint64Uint64: map[uint64]uint64{
+			0: 0,
+			1: 1,
+			2: 2,
 		},
-		{
-			mapv: &map[string]int32{
-				"a": 0,
-				"b": 1,
-				"c": 2,
-			},
-			kind: pref.StringKind,
+		MapStringString: map[string]string{
+			"0": "0",
+			"1": "1",
+			"2": "2",
 		},
-	} {
-		rv := reflect.TypeOf(test.mapv).Elem()
-		mapv := value.MapOf(test.mapv, value.NewConverter(rv.Key(), test.kind), value.NewConverter(rv.Elem(), pref.Int32Kind))
+	}).ProtoReflect()
+	m.Range(func(fd pref.FieldDescriptor, v pref.Value) bool {
+		mapv := v.Map()
 		var got []pref.MapKey
-		mapsort.Range(mapv, test.kind, func(key pref.MapKey, _ pref.Value) bool {
+		mapsort.Range(mapv, fd.MapKey().Kind(), func(key pref.MapKey, _ pref.Value) bool {
 			got = append(got, key)
 			return true
 		})
-		for i, key := range got {
-			if int64(i) != mapv.Get(key).Int() {
-				t.Errorf("out of order range over map: %v", got)
+		for wanti, key := range got {
+			var goti int
+			switch x := mapv.Get(key).Interface().(type) {
+			case bool:
+				if x {
+					goti = 1
+				}
+			case int32:
+				goti = int(x)
+			case uint64:
+				goti = int(x)
+			case string:
+				goti, _ = strconv.Atoi(x)
+			default:
+				t.Fatalf("unhandled map value type %T", x)
+			}
+			if wanti != goti {
+				t.Errorf("out of order range over map field %v: %v", fd.FullName(), got)
 				break
 			}
 		}
-	}
+		return true
+	})
 }

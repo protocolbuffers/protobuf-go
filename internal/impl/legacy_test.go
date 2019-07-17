@@ -56,10 +56,10 @@ func init() {
 	preg.GlobalTypes.Register(mt)
 }
 
-func mustMakeExtensionType(fileDesc, extDesc string, t interface{}, r pdesc.Resolver) pref.ExtensionType {
+func mustMakeExtensionType(fileDesc, extDesc string, t reflect.Type, r pdesc.Resolver) pref.ExtensionType {
 	s := fmt.Sprintf(`name:"test.proto" syntax:"proto2" %s extension:[{%s}]`, fileDesc, extDesc)
 	xd := mustMakeFileDesc(s, r).Extensions().Get(0)
-	return pimpl.LegacyExtensionTypeOf(xd, reflect.TypeOf(t))
+	return pimpl.LegacyExtensionTypeOf(xd, t)
 }
 
 func mustMakeFileDesc(s string, r pdesc.Resolver) pref.FileDescriptor {
@@ -92,102 +92,102 @@ var (
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"optional_bool" number:10000 label:LABEL_OPTIONAL type:TYPE_BOOL default_value:"true" extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf(false), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"optional_int32" number:10001 label:LABEL_OPTIONAL type:TYPE_INT32 default_value:"-12345" extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf(int32(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"optional_uint32" number:10002 label:LABEL_OPTIONAL type:TYPE_UINT32 default_value:"3200" extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf(uint32(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"optional_float" number:10003 label:LABEL_OPTIONAL type:TYPE_FLOAT default_value:"3.14159" extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf(float32(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"optional_string" number:10004 label:LABEL_OPTIONAL type:TYPE_STRING default_value:"hello, \"world!\"\n" extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf(""), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"optional_bytes" number:10005 label:LABEL_OPTIONAL type:TYPE_BYTES default_value:"dead\\336\\255\\276\\357beef" extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf(([]byte)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
 			`name:"optional_enum_v1" number:10006 label:LABEL_OPTIONAL type:TYPE_ENUM type_name:".google.golang.org.proto2_20180125.Message.ChildEnum" default_value:"ALPHA" extendee:".LegacyTestMessage"`,
-			proto2_20180125.Message_ChildEnum(0), depReg,
+			reflect.TypeOf(proto2_20180125.Message_ChildEnum(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
 			`name:"optional_message_v1" number:10007 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".google.golang.org.proto2_20180125.Message.ChildMessage" extendee:".LegacyTestMessage"`,
-			(*proto2_20180125.Message_ChildMessage)(nil), depReg,
+			reflect.TypeOf((*proto2_20180125.Message_ChildMessage)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "enum2.proto"]`,
 			`name:"optional_enum_v2" number:10008 label:LABEL_OPTIONAL type:TYPE_ENUM type_name:".EnumProto2" default_value:"DEAD" extendee:".LegacyTestMessage"`,
-			EnumProto2(0), depReg,
+			reflect.TypeOf(EnumProto2(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "enum-messages.proto"]`,
 			`name:"optional_message_v2" number:10009 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".EnumMessages" extendee:".LegacyTestMessage"`,
-			(*EnumMessages)(nil), depReg,
+			reflect.TypeOf((*EnumMessages)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_bool" number:10010 label:LABEL_REPEATED type:TYPE_BOOL extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf((*[]bool)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_int32" number:10011 label:LABEL_REPEATED type:TYPE_INT32 extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf((*[]int32)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_uint32" number:10012 label:LABEL_REPEATED type:TYPE_UINT32 extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf((*[]uint32)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_float" number:10013 label:LABEL_REPEATED type:TYPE_FLOAT extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf((*[]float32)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_string" number:10014 label:LABEL_REPEATED type:TYPE_STRING extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf((*[]string)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_bytes" number:10015 label:LABEL_REPEATED type:TYPE_BYTES extendee:".LegacyTestMessage"`,
-			nil, depReg,
+			reflect.TypeOf((*[][]byte)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
 			`name:"repeated_enum_v1" number:10016 label:LABEL_REPEATED type:TYPE_ENUM type_name:".google.golang.org.proto2_20180125.Message.ChildEnum" extendee:".LegacyTestMessage"`,
-			proto2_20180125.Message_ChildEnum(0), depReg,
+			reflect.TypeOf((*[]proto2_20180125.Message_ChildEnum)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
 			`name:"repeated_message_v1" number:10017 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.proto2_20180125.Message.ChildMessage" extendee:".LegacyTestMessage"`,
-			(*proto2_20180125.Message_ChildMessage)(nil), depReg,
+			reflect.TypeOf((*[]*proto2_20180125.Message_ChildMessage)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "enum2.proto"]`,
 			`name:"repeated_enum_v2" number:10018 label:LABEL_REPEATED type:TYPE_ENUM type_name:".EnumProto2" extendee:".LegacyTestMessage"`,
-			EnumProto2(0), depReg,
+			reflect.TypeOf((*[]EnumProto2)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "enum-messages.proto"]`,
 			`name:"repeated_message_v2" number:10019 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".EnumMessages" extendee:".LegacyTestMessage"`,
-			(*EnumMessages)(nil), depReg,
+			reflect.TypeOf((*[](*EnumMessages))(nil)), depReg,
 		),
 	}
 

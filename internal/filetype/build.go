@@ -7,8 +7,11 @@
 package filetype
 
 import (
+	"fmt"
 	"reflect"
+	"sync"
 
+	"google.golang.org/protobuf/internal/descfmt"
 	"google.golang.org/protobuf/internal/descopts"
 	fdesc "google.golang.org/protobuf/internal/filedesc"
 	pimpl "google.golang.org/protobuf/internal/impl"
@@ -223,24 +226,26 @@ func (tb TypeBuilder) Build() (out struct {
 		var depIdx int32
 		out.Extensions = make([]Extension, len(fbOut.Extensions))
 		for i := range fbOut.Extensions {
-			out.Extensions[i] = Extension{Extension: ptype.Extension{
-				ExtensionDescriptor: &fbOut.Extensions[i],
-			}}
-
 			// For enum and message kinds, determine the referent Go type so
 			// that we can construct their constructors.
 			const listExtDeps = 2
+			var goType reflect.Type
 			switch fbOut.Extensions[i].L1.Kind {
 			case pref.EnumKind:
 				j := depIdxs.Get(tb.DependencyIndexes, listExtDeps, depIdx)
-				goType := reflect.TypeOf(tb.GoTypes[j])
-				out.Extensions[i].NewEnum = enumMaker(goType)
+				goType = reflect.TypeOf(tb.GoTypes[j])
 				depIdx++
 			case pref.MessageKind, pref.GroupKind:
 				j := depIdxs.Get(tb.DependencyIndexes, listExtDeps, depIdx)
-				goType := reflect.TypeOf(tb.GoTypes[j])
-				out.Extensions[i].NewMessage = messageMaker(goType)
+				goType = reflect.TypeOf(tb.GoTypes[j])
 				depIdx++
+			default:
+				goType = goTypeForPBKind[fbOut.Extensions[i].L1.Kind]
+			}
+
+			out.Extensions[i] = Extension{
+				ExtensionDescriptor: &fbOut.Extensions[i],
+				goType:              goType,
 			}
 
 			// Keep v1 and v2 extensions in sync.
@@ -257,6 +262,24 @@ func (tb TypeBuilder) Build() (out struct {
 	}
 
 	return out
+}
+
+var goTypeForPBKind = map[pref.Kind]reflect.Type{
+	pref.BoolKind:     reflect.TypeOf(bool(false)),
+	pref.Int32Kind:    reflect.TypeOf(int32(0)),
+	pref.Sint32Kind:   reflect.TypeOf(int32(0)),
+	pref.Sfixed32Kind: reflect.TypeOf(int32(0)),
+	pref.Int64Kind:    reflect.TypeOf(int64(0)),
+	pref.Sint64Kind:   reflect.TypeOf(int64(0)),
+	pref.Sfixed64Kind: reflect.TypeOf(int64(0)),
+	pref.Uint32Kind:   reflect.TypeOf(uint32(0)),
+	pref.Fixed32Kind:  reflect.TypeOf(uint32(0)),
+	pref.Uint64Kind:   reflect.TypeOf(uint64(0)),
+	pref.Fixed64Kind:  reflect.TypeOf(uint64(0)),
+	pref.FloatKind:    reflect.TypeOf(float32(0)),
+	pref.DoubleKind:   reflect.TypeOf(float64(0)),
+	pref.StringKind:   reflect.TypeOf(string("")),
+	pref.BytesKind:    reflect.TypeOf([]byte(nil)),
 }
 
 type depIdxs []int32
@@ -310,13 +333,32 @@ func messageMaker(t reflect.Type) func() pref.Message {
 }
 
 type (
-	Enum      = ptype.Enum
-	Message   = ptype.Message
-	Extension struct {
-		ptype.Extension
-		legacyDesc *piface.ExtensionDescV1
-	}
+	Enum    = ptype.Enum
+	Message = ptype.Message
 )
+
+type Extension struct {
+	pref.ExtensionDescriptor
+	legacyDesc *piface.ExtensionDescV1
+
+	once   sync.Once
+	goType reflect.Type
+	conv   pimpl.Converter
+}
+
+func (t *Extension) New() pref.Value { return t.lazyInit().New() }
+func (t *Extension) ValueOf(v interface{}) pref.Value {
+	return t.lazyInit().PBValueOf(reflect.ValueOf(v))
+}
+func (t *Extension) InterfaceOf(v pref.Value) interface{} {
+	return t.lazyInit().GoValueOf(v).Interface()
+}
+func (t *Extension) GoType() reflect.Type {
+	t.lazyInit()
+	return t.goType
+}
+func (t *Extension) Descriptor() pref.ExtensionDescriptor { return t.ExtensionDescriptor }
+func (t *Extension) Format(s fmt.State, r rune)           { descfmt.FormatDesc(s, r, t) }
 
 // ProtoLegacyExtensionDesc is a pseudo-internal API for allowing the v1 code
 // to be able to retrieve a v1 ExtensionDesc.
@@ -325,4 +367,14 @@ type (
 // removed in the future without warning.
 func (x *Extension) ProtoLegacyExtensionDesc() *piface.ExtensionDescV1 {
 	return x.legacyDesc
+}
+
+func (t *Extension) lazyInit() pimpl.Converter {
+	t.once.Do(func() {
+		if t.ExtensionDescriptor.Cardinality() == pref.Repeated {
+			t.goType = reflect.PtrTo(reflect.SliceOf(t.goType))
+		}
+		t.conv = pimpl.NewConverter(t.goType, t.ExtensionDescriptor)
+	})
+	return t.conv
 }

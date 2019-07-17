@@ -12,10 +12,8 @@ import (
 	"google.golang.org/protobuf/internal/descfmt"
 	ptag "google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/filedesc"
-	pvalue "google.golang.org/protobuf/internal/value"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/reflect/prototype"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
@@ -70,7 +68,7 @@ func legacyExtensionDescFromType(xt pref.ExtensionType) *piface.ExtensionDescV1 
 		// Create a new parent message and unwrap it if possible.
 		mv := mt.New().Interface()
 		t := reflect.TypeOf(mv)
-		if mv, ok := mv.(pvalue.Unwrapper); ok {
+		if mv, ok := mv.(Unwrapper); ok {
 			t = reflect.TypeOf(mv.ProtoUnwrap())
 		}
 
@@ -198,7 +196,13 @@ func legacyExtensionTypeFromDesc(d *piface.ExtensionDescV1) pref.ExtensionType {
 	xd.L1.Extendee = Export{}.MessageDescriptorOf(d.ExtendedType)
 	xd.L2.Enum = ed
 	xd.L2.Message = md
-	xt := LegacyExtensionTypeOf(xd, t)
+	tt := reflect.TypeOf(d.ExtensionType)
+	if isOptional {
+		tt = tt.Elem()
+	} else if isRepeated {
+		tt = reflect.PtrTo(tt)
+	}
+	xt := LegacyExtensionTypeOf(xd, tt)
 
 	// Cache the conversion for both directions.
 	legacyExtensionDescCache.LoadOrStore(xt, d)
@@ -209,82 +213,30 @@ func legacyExtensionTypeFromDesc(d *piface.ExtensionDescV1) pref.ExtensionType {
 }
 
 // LegacyExtensionTypeOf returns a protoreflect.ExtensionType where the
-// element type of the field is t. The type t must be provided if the field
-// is an enum or message.
+// element type of the field is t.
 //
 // This is exported for testing purposes.
 func LegacyExtensionTypeOf(xd pref.ExtensionDescriptor, t reflect.Type) pref.ExtensionType {
-	var conv pvalue.Converter
-	var isLegacy bool
-	xt := &prototype.Extension{ExtensionDescriptor: xd}
-	switch xd.Kind() {
-	case pref.EnumKind:
-		conv, isLegacy = newConverter(t, xd.Kind())
-		xt.NewEnum = conv.NewEnum
-	case pref.MessageKind, pref.GroupKind:
-		conv, isLegacy = newConverter(t, xd.Kind())
-		xt.NewMessage = conv.NewMessage
-	default:
-		// Extension types for non-enums and non-messages are simple.
-		return &prototype.Extension{ExtensionDescriptor: xd}
+	return &legacyExtensionType{
+		ExtensionDescriptor: xd,
+		typ:                 t,
+		conv:                NewConverter(t, xd),
 	}
-	if !isLegacy {
-		return xt
-	}
-
-	// Wrap ExtensionType such that GoType presents the legacy Go type.
-	xt2 := &legacyExtensionType{ExtensionType: xt}
-	if xd.Cardinality() != pref.Repeated {
-		xt2.typ = t
-		xt2.new = func() pref.Value {
-			return xt.New()
-		}
-		xt2.valueOf = func(v interface{}) pref.Value {
-			if reflect.TypeOf(v) != xt2.typ {
-				panic(fmt.Sprintf("invalid type: got %T, want %v", v, xt2.typ))
-			}
-			if xd.Kind() == pref.EnumKind {
-				return xt.ValueOf(Export{}.EnumOf(v))
-			} else {
-				return xt.ValueOf(Export{}.MessageOf(v).Interface())
-			}
-		}
-		xt2.interfaceOf = func(v pref.Value) interface{} {
-			return xt.InterfaceOf(v).(pvalue.Unwrapper).ProtoUnwrap()
-		}
-	} else {
-		xt2.typ = reflect.PtrTo(reflect.SliceOf(t))
-		xt2.new = func() pref.Value {
-			v := reflect.New(xt2.typ.Elem()).Interface()
-			return pref.ValueOf(pvalue.ListOf(v, conv))
-		}
-		xt2.valueOf = func(v interface{}) pref.Value {
-			if reflect.TypeOf(v) != xt2.typ {
-				panic(fmt.Sprintf("invalid type: got %T, want %v", v, xt2.typ))
-			}
-			return pref.ValueOf(pvalue.ListOf(v, conv))
-		}
-		xt2.interfaceOf = func(pv pref.Value) interface{} {
-			v := pv.List().(pvalue.Unwrapper).ProtoUnwrap()
-			if reflect.TypeOf(v) != xt2.typ {
-				panic(fmt.Sprintf("invalid type: got %T, want %v", v, xt2.typ))
-			}
-			return v
-		}
-	}
-	return xt2
 }
 
 type legacyExtensionType struct {
-	pref.ExtensionType
-	typ         reflect.Type
-	new         func() pref.Value
-	valueOf     func(interface{}) pref.Value
-	interfaceOf func(pref.Value) interface{}
+	pref.ExtensionDescriptor
+	typ  reflect.Type
+	conv Converter
 }
 
-func (x *legacyExtensionType) GoType() reflect.Type                 { return x.typ }
-func (x *legacyExtensionType) New() pref.Value                      { return x.new() }
-func (x *legacyExtensionType) ValueOf(v interface{}) pref.Value     { return x.valueOf(v) }
-func (x *legacyExtensionType) InterfaceOf(v pref.Value) interface{} { return x.interfaceOf(v) }
+func (x *legacyExtensionType) GoType() reflect.Type { return x.typ }
+func (x *legacyExtensionType) New() pref.Value      { return x.conv.New() }
+func (x *legacyExtensionType) ValueOf(v interface{}) pref.Value {
+	return x.conv.PBValueOf(reflect.ValueOf(v))
+}
+func (x *legacyExtensionType) InterfaceOf(v pref.Value) interface{} {
+	return x.conv.GoValueOf(v).Interface()
+}
+func (x *legacyExtensionType) Descriptor() pref.ExtensionDescriptor { return x.ExtensionDescriptor }
 func (x *legacyExtensionType) Format(s fmt.State, r rune)           { descfmt.FormatDesc(s, r, x) }

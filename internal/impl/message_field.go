@@ -11,7 +11,6 @@ import (
 	"sync"
 
 	"google.golang.org/protobuf/internal/flags"
-	pvalue "google.golang.org/protobuf/internal/value"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 	piface "google.golang.org/protobuf/runtime/protoiface"
@@ -40,10 +39,11 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 	if !reflect.PtrTo(ot).Implements(ft) {
 		panic(fmt.Sprintf("invalid type: %v does not implement %v", ot, ft))
 	}
-	conv, _ := newConverter(ot.Field(0).Type, fd.Kind())
+	conv := NewConverter(ot.Field(0).Type, fd)
+	isMessage := fd.Message() != nil
 	var frozenEmpty pref.Value
-	if conv.NewMessage != nil {
-		frozenEmpty = pref.ValueOf(frozenMessage{conv.NewMessage()})
+	if isMessage {
+		frozenEmpty = pref.ValueOf(frozenMessage{conv.New().Message()})
 	}
 
 	// TODO: Implement unsafe fast path?
@@ -97,7 +97,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 			rv.Set(conv.GoValueOf(v))
 		},
 		mutable: func(p pointer) pref.Value {
-			if conv.NewMessage == nil {
+			if !isMessage {
 				panic("invalid Mutable on field with non-composite type")
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
@@ -106,11 +106,13 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 			}
 			rv = rv.Elem().Elem().Field(0)
 			if rv.IsNil() {
-				rv.Set(conv.GoValueOf(pref.ValueOf(conv.NewMessage())))
+				rv.Set(conv.GoValueOf(pref.ValueOf(conv.New().Message())))
 			}
 			return conv.PBValueOf(rv)
 		},
-		newMessage: conv.NewMessage,
+		newMessage: func() pref.Message {
+			return conv.New().Message()
+		},
 	}
 }
 
@@ -119,57 +121,8 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter
 	if ft.Kind() != reflect.Map {
 		panic(fmt.Sprintf("invalid type: got %v, want map kind", ft))
 	}
-	keyConv, _ := newConverter(ft.Key(), fd.MapKey().Kind())
-	valConv, _ := newConverter(ft.Elem(), fd.MapValue().Kind())
-	frozenEmpty := pref.ValueOf(frozenMap{
-		pvalue.MapOf(reflect.Zero(reflect.PtrTo(fs.Type)).Interface(), keyConv, valConv),
-	})
-
-	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs, x)
-	return fieldInfo{
-		fieldDesc: fd,
-		has: func(p pointer) bool {
-			if p.IsNil() {
-				return false
-			}
-			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			return rv.Len() > 0
-		},
-		clear: func(p pointer) {
-			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			rv.Set(reflect.Zero(rv.Type()))
-		},
-		get: func(p pointer) pref.Value {
-			if p.IsNil() {
-				return frozenEmpty
-			}
-			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			if rv.IsNil() {
-				return frozenEmpty
-			}
-			return pref.ValueOf(pvalue.MapOf(rv.Addr().Interface(), keyConv, valConv))
-		},
-		set: func(p pointer, v pref.Value) {
-			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			rv.Set(reflect.ValueOf(v.Map().(pvalue.Unwrapper).ProtoUnwrap()).Elem())
-		},
-		mutable: func(p pointer) pref.Value {
-			v := p.Apply(fieldOffset).AsIfaceOf(fs.Type)
-			return pref.ValueOf(pvalue.MapOf(v, keyConv, valConv))
-		},
-	}
-}
-
-func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
-	ft := fs.Type
-	if ft.Kind() != reflect.Slice {
-		panic(fmt.Sprintf("invalid type: got %v, want slice kind", ft))
-	}
-	conv, _ := newConverter(ft.Elem(), fd.Kind())
-	frozenEmpty := pref.ValueOf(frozenList{
-		pvalue.ListOf(reflect.Zero(reflect.PtrTo(fs.Type)).Interface(), conv),
-	})
+	conv := NewConverter(ft, fd)
+	frozenEmpty := pref.ValueOf(frozenMap{conv.New().Map()})
 
 	// TODO: Implement unsafe fast path?
 	fieldOffset := offsetOf(fs, x)
@@ -194,15 +147,62 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporte
 			if rv.Len() == 0 {
 				return frozenEmpty
 			}
-			return pref.ValueOf(pvalue.ListOf(rv.Addr().Interface(), conv))
+			return conv.PBValueOf(rv)
 		},
 		set: func(p pointer, v pref.Value) {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			rv.Set(reflect.ValueOf(v.List().(pvalue.Unwrapper).ProtoUnwrap()).Elem())
+			rv.Set(conv.GoValueOf(v))
 		},
 		mutable: func(p pointer) pref.Value {
-			v := p.Apply(fieldOffset).AsIfaceOf(fs.Type)
-			return pref.ValueOf(pvalue.ListOf(v, conv))
+			v := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			if v.IsNil() {
+				v.Set(reflect.MakeMap(fs.Type))
+			}
+			return conv.PBValueOf(v)
+		},
+	}
+}
+
+func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
+	ft := fs.Type
+	if ft.Kind() != reflect.Slice {
+		panic(fmt.Sprintf("invalid type: got %v, want slice kind", ft))
+	}
+	conv := NewConverter(reflect.PtrTo(ft), fd)
+	frozenEmpty := pref.ValueOf(frozenList{conv.New().List()})
+
+	// TODO: Implement unsafe fast path?
+	fieldOffset := offsetOf(fs, x)
+	return fieldInfo{
+		fieldDesc: fd,
+		has: func(p pointer) bool {
+			if p.IsNil() {
+				return false
+			}
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			return rv.Len() > 0
+		},
+		clear: func(p pointer) {
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			rv.Set(reflect.Zero(rv.Type()))
+		},
+		get: func(p pointer) pref.Value {
+			if p.IsNil() {
+				return frozenEmpty
+			}
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type)
+			if rv.Elem().Len() == 0 {
+				return frozenEmpty
+			}
+			return conv.PBValueOf(rv)
+		},
+		set: func(p pointer, v pref.Value) {
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			rv.Set(reflect.ValueOf(v.List().(Unwrapper).ProtoUnwrap()).Elem())
+		},
+		mutable: func(p pointer) pref.Value {
+			v := p.Apply(fieldOffset).AsValueOf(fs.Type)
+			return conv.PBValueOf(v)
 		},
 	}
 }
@@ -224,7 +224,7 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x expor
 			ft = ft.Elem()
 		}
 	}
-	conv, _ := newConverter(ft, fd.Kind())
+	conv := NewConverter(ft, fd)
 
 	// TODO: Implement unsafe fast path?
 	fieldOffset := offsetOf(fs, x)
@@ -372,8 +372,8 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 
 func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
-	conv, _ := newConverter(ft, fd.Kind())
-	frozenEmpty := pref.ValueOf(frozenMessage{conv.NewMessage()})
+	conv := NewConverter(ft, fd)
+	frozenEmpty := pref.ValueOf(frozenMessage{conv.New().Message()})
 
 	// TODO: Implement unsafe fast path?
 	fieldOffset := offsetOf(fs, x)
@@ -410,11 +410,13 @@ func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField, x expo
 		mutable: func(p pointer) pref.Value {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
 			if rv.IsNil() {
-				rv.Set(conv.GoValueOf(pref.ValueOf(conv.NewMessage())))
+				rv.Set(conv.GoValueOf(conv.New()))
 			}
 			return conv.PBValueOf(rv)
 		},
-		newMessage: conv.NewMessage,
+		newMessage: func() pref.Message {
+			return conv.New().Message()
+		},
 	}
 }
 
@@ -445,50 +447,6 @@ var (
 	messageIfaceV1 = reflect.TypeOf((*piface.MessageV1)(nil)).Elem()
 	messageIfaceV2 = reflect.TypeOf((*pref.ProtoMessage)(nil)).Elem()
 )
-
-func newConverter(t reflect.Type, k pref.Kind) (conv pvalue.Converter, isLegacy bool) {
-	switch k {
-	case pref.EnumKind:
-		if t.Kind() == reflect.Int32 && !t.Implements(enumIfaceV2) {
-			return pvalue.Converter{
-				PBValueOf: func(v reflect.Value) pref.Value {
-					if v.Type() != t {
-						panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), t))
-					}
-					return pref.ValueOf(pref.EnumNumber(v.Int()))
-				},
-				GoValueOf: func(v pref.Value) reflect.Value {
-					return reflect.ValueOf(v.Enum()).Convert(t)
-				},
-				NewEnum: func(n pref.EnumNumber) pref.Enum {
-					return legacyWrapEnum(reflect.ValueOf(n).Convert(t))
-				},
-			}, true
-		}
-	case pref.MessageKind, pref.GroupKind:
-		if t.Kind() == reflect.Ptr && t.Implements(messageIfaceV1) && !t.Implements(messageIfaceV2) {
-			return pvalue.Converter{
-				PBValueOf: func(v reflect.Value) pref.Value {
-					if v.Type() != t {
-						panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), t))
-					}
-					return pref.ValueOf(Export{}.MessageOf(v.Interface()))
-				},
-				GoValueOf: func(v pref.Value) reflect.Value {
-					rv := reflect.ValueOf(v.Message().(pvalue.Unwrapper).ProtoUnwrap())
-					if rv.Type() != t {
-						panic(fmt.Sprintf("invalid type: got %v, want %v", rv.Type(), t))
-					}
-					return rv
-				},
-				NewMessage: func() pref.Message {
-					return legacyWrapMessage(reflect.New(t.Elem())).ProtoReflect()
-				},
-			}, true
-		}
-	}
-	return pvalue.NewConverter(t, k), false
-}
 
 // defaultValueOf returns the default value for the field.
 func defaultValueOf(fd pref.FieldDescriptor) pref.Value {

@@ -11,7 +11,6 @@ import (
 	"sync"
 
 	"google.golang.org/protobuf/internal/filedesc"
-	pvalue "google.golang.org/protobuf/internal/value"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/prototype"
@@ -80,8 +79,8 @@ func (e *legacyEnumWrapper) ProtoUnwrap() interface{} {
 }
 
 var (
-	_ pref.Enum        = (*legacyEnumWrapper)(nil)
-	_ pvalue.Unwrapper = (*legacyEnumWrapper)(nil)
+	_ pref.Enum = (*legacyEnumWrapper)(nil)
+	_ Unwrapper = (*legacyEnumWrapper)(nil)
 )
 
 var legacyEnumDescCache sync.Map // map[reflect.Type]protoreflect.EnumDescriptor
