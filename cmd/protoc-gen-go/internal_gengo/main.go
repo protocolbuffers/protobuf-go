@@ -73,16 +73,30 @@ const (
 	generateExportedExtensionFields = false
 )
 
+// Standard library dependencies.
 const (
-	mathPackage          = protogen.GoImportPath("math")
-	reflectPackage       = protogen.GoImportPath("reflect")
-	syncPackage          = protogen.GoImportPath("sync")
-	protoifacePackage    = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoiface")
-	protoimplPackage     = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoimpl")
-	protoreflectPackage  = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
-	protoregistryPackage = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoregistry")
-	prototypePackage     = protogen.GoImportPath("google.golang.org/protobuf/reflect/prototype")
+	mathPackage    = protogen.GoImportPath("math")
+	reflectPackage = protogen.GoImportPath("reflect")
+	syncPackage    = protogen.GoImportPath("sync")
 )
+
+// Protobuf library dependencies.
+//
+// These are declared as an interface type so that they can be more easily
+// patched to support unique build environments that impose restrictions
+// on the dependencies of generated source code.
+var (
+	protoifacePackage    goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoiface")
+	protoimplPackage     goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoimpl")
+	protoreflectPackage  goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
+	protoregistryPackage goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoregistry")
+	prototypePackage     goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/prototype")
+)
+
+type goImportPath interface {
+	String() string
+	Ident(string) protogen.GoIdent
+}
 
 type fileInfo struct {
 	*protogen.File
