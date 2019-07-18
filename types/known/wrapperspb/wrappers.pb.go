@@ -50,7 +50,7 @@ func (x *DoubleValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DoubleValue.ProtoReflect.Type instead.
+// Deprecated: Use DoubleValue.ProtoReflect.Descriptor instead.
 func (*DoubleValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{0}
 }
@@ -95,7 +95,7 @@ func (x *FloatValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FloatValue.ProtoReflect.Type instead.
+// Deprecated: Use FloatValue.ProtoReflect.Descriptor instead.
 func (*FloatValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{1}
 }
@@ -140,7 +140,7 @@ func (x *Int64Value) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Int64Value.ProtoReflect.Type instead.
+// Deprecated: Use Int64Value.ProtoReflect.Descriptor instead.
 func (*Int64Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{2}
 }
@@ -185,7 +185,7 @@ func (x *UInt64Value) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UInt64Value.ProtoReflect.Type instead.
+// Deprecated: Use UInt64Value.ProtoReflect.Descriptor instead.
 func (*UInt64Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{3}
 }
@@ -230,7 +230,7 @@ func (x *Int32Value) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Int32Value.ProtoReflect.Type instead.
+// Deprecated: Use Int32Value.ProtoReflect.Descriptor instead.
 func (*Int32Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{4}
 }
@@ -275,7 +275,7 @@ func (x *UInt32Value) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UInt32Value.ProtoReflect.Type instead.
+// Deprecated: Use UInt32Value.ProtoReflect.Descriptor instead.
 func (*UInt32Value) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{5}
 }
@@ -320,7 +320,7 @@ func (x *BoolValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BoolValue.ProtoReflect.Type instead.
+// Deprecated: Use BoolValue.ProtoReflect.Descriptor instead.
 func (*BoolValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{6}
 }
@@ -365,7 +365,7 @@ func (x *StringValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StringValue.ProtoReflect.Type instead.
+// Deprecated: Use StringValue.ProtoReflect.Descriptor instead.
 func (*StringValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{7}
 }
@@ -410,7 +410,7 @@ func (x *BytesValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BytesValue.ProtoReflect.Type instead.
+// Deprecated: Use BytesValue.ProtoReflect.Descriptor instead.
 func (*BytesValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_wrappers_proto_rawDescGZIP(), []int{8}
 }

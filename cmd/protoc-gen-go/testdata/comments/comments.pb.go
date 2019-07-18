@@ -56,7 +56,7 @@ func (x *Message1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message1.ProtoReflect.Type instead.
+// Deprecated: Use Message1.ProtoReflect.Descriptor instead.
 func (*Message1) Descriptor() ([]byte, []int) {
 	return file_comments_comments_proto_rawDescGZIP(), []int{0}
 }
@@ -121,7 +121,7 @@ func (x *Message2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message2.ProtoReflect.Type instead.
+// Deprecated: Use Message2.ProtoReflect.Descriptor instead.
 func (*Message2) Descriptor() ([]byte, []int) {
 	return file_comments_comments_proto_rawDescGZIP(), []int{1}
 }
@@ -155,7 +155,7 @@ func (x *Message1_Message1A) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message1_Message1A.ProtoReflect.Type instead.
+// Deprecated: Use Message1_Message1A.ProtoReflect.Descriptor instead.
 func (*Message1_Message1A) Descriptor() ([]byte, []int) {
 	return file_comments_comments_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -189,7 +189,7 @@ func (x *Message1_Message1B) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message1_Message1B.ProtoReflect.Type instead.
+// Deprecated: Use Message1_Message1B.ProtoReflect.Descriptor instead.
 func (*Message1_Message1B) Descriptor() ([]byte, []int) {
 	return file_comments_comments_proto_rawDescGZIP(), []int{0, 1}
 }
@@ -223,7 +223,7 @@ func (x *Message2_Message2A) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message2_Message2A.ProtoReflect.Type instead.
+// Deprecated: Use Message2_Message2A.ProtoReflect.Descriptor instead.
 func (*Message2_Message2A) Descriptor() ([]byte, []int) {
 	return file_comments_comments_proto_rawDescGZIP(), []int{1, 0}
 }
@@ -257,7 +257,7 @@ func (x *Message2_Message2B) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message2_Message2B.ProtoReflect.Type instead.
+// Deprecated: Use Message2_Message2B.ProtoReflect.Descriptor instead.
 func (*Message2_Message2B) Descriptor() ([]byte, []int) {
 	return file_comments_comments_proto_rawDescGZIP(), []int{1, 1}
 }

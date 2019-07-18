@@ -70,7 +70,7 @@ func (x *BenchmarkDataset) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BenchmarkDataset.ProtoReflect.Type instead.
+// Deprecated: Use BenchmarkDataset.ProtoReflect.Descriptor instead.
 func (*BenchmarkDataset) Descriptor() ([]byte, []int) {
 	return file_benchmarks_proto_rawDescGZIP(), []int{0}
 }

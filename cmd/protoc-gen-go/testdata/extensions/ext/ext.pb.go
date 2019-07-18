@@ -67,7 +67,7 @@ func (x *Enum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum.Type instead.
+// Deprecated: Use Enum.Descriptor instead.
 func (Enum) EnumDescriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{0}
 }
@@ -101,7 +101,7 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message.ProtoReflect.Type instead.
+// Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{0}
 }
@@ -142,7 +142,7 @@ func (x *ExtensionGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ExtensionGroup.ProtoReflect.Type instead.
+// Deprecated: Use ExtensionGroup.ProtoReflect.Descriptor instead.
 func (*ExtensionGroup) Descriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{1}
 }
@@ -183,7 +183,7 @@ func (x *ExtendingMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ExtendingMessage.ProtoReflect.Type instead.
+// Deprecated: Use ExtendingMessage.ProtoReflect.Descriptor instead.
 func (*ExtendingMessage) Descriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{2}
 }
@@ -217,7 +217,7 @@ func (x *RepeatedGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RepeatedGroup.ProtoReflect.Type instead.
+// Deprecated: Use RepeatedGroup.ProtoReflect.Descriptor instead.
 func (*RepeatedGroup) Descriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{3}
 }
@@ -259,7 +259,7 @@ func (x *Extendable) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Extendable.ProtoReflect.Type instead.
+// Deprecated: Use Extendable.ProtoReflect.Descriptor instead.
 func (*Extendable) Descriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{4}
 }
@@ -268,7 +268,7 @@ var extRange_Extendable = []protoiface.ExtensionRangeV1{
 	{Start: 1, End: 536870911},
 }
 
-// Deprecated: Use Extendable.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use Extendable.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*Extendable) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_Extendable
 }
@@ -302,7 +302,7 @@ func (x *MessageSetWireFormatExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MessageSetWireFormatExtension.ProtoReflect.Type instead.
+// Deprecated: Use MessageSetWireFormatExtension.ProtoReflect.Descriptor instead.
 func (*MessageSetWireFormatExtension) Descriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{5}
 }
@@ -335,7 +335,7 @@ func (x *Message_M) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message_M.ProtoReflect.Type instead.
+// Deprecated: Use Message_M.ProtoReflect.Descriptor instead.
 func (*Message_M) Descriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -368,7 +368,7 @@ func (x *ExtendingMessage_ExtendingMessageSubmessage) ProtoReflect() protoreflec
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ExtendingMessage_ExtendingMessageSubmessage.ProtoReflect.Type instead.
+// Deprecated: Use ExtendingMessage_ExtendingMessageSubmessage.ProtoReflect.Descriptor instead.
 func (*ExtendingMessage_ExtendingMessageSubmessage) Descriptor() ([]byte, []int) {
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{2, 0}
 }

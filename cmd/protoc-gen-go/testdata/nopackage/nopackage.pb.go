@@ -64,7 +64,7 @@ func (x *Enum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum.Type instead.
+// Deprecated: Use Enum.Descriptor instead.
 func (Enum) EnumDescriptor() ([]byte, []int) {
 	return file_nopackage_nopackage_proto_rawDescGZIP(), []int{0}
 }
@@ -99,7 +99,7 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message.ProtoReflect.Type instead.
+// Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
 	return file_nopackage_nopackage_proto_rawDescGZIP(), []int{0}
 }

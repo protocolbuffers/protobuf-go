@@ -63,7 +63,7 @@ func (x ForeignEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use ForeignEnum.Type instead.
+// Deprecated: Use ForeignEnum.Descriptor instead.
 func (ForeignEnum) EnumDescriptor() ([]byte, []int) {
 	return file_test3_test_proto_rawDescGZIP(), []int{0}
 }
@@ -113,7 +113,7 @@ func (x TestAllTypes_NestedEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use TestAllTypes_NestedEnum.Type instead.
+// Deprecated: Use TestAllTypes_NestedEnum.Descriptor instead.
 func (TestAllTypes_NestedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_test3_test_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -216,7 +216,7 @@ func (x *TestAllTypes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypes.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypes.ProtoReflect.Descriptor instead.
 func (*TestAllTypes) Descriptor() ([]byte, []int) {
 	return file_test3_test_proto_rawDescGZIP(), []int{0}
 }
@@ -792,7 +792,7 @@ func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ForeignMessage.ProtoReflect.Type instead.
+// Deprecated: Use ForeignMessage.ProtoReflect.Descriptor instead.
 func (*ForeignMessage) Descriptor() ([]byte, []int) {
 	return file_test3_test_proto_rawDescGZIP(), []int{1}
 }
@@ -841,7 +841,7 @@ func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypes_NestedMessage.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypes_NestedMessage.ProtoReflect.Descriptor instead.
 func (*TestAllTypes_NestedMessage) Descriptor() ([]byte, []int) {
 	return file_test3_test_proto_rawDescGZIP(), []int{0, 0}
 }

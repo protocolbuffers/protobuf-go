@@ -50,7 +50,7 @@ func (x *SourceContext) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SourceContext.ProtoReflect.Type instead.
+// Deprecated: Use SourceContext.ProtoReflect.Descriptor instead.
 func (*SourceContext) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_source_context_proto_rawDescGZIP(), []int{0}
 }

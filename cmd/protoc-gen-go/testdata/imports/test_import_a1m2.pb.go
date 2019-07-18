@@ -47,7 +47,7 @@ func (x *A1M2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use A1M2.ProtoReflect.Type instead.
+// Deprecated: Use A1M2.ProtoReflect.Descriptor instead.
 func (*A1M2) Descriptor() ([]byte, []int) {
 	return file_imports_test_import_a1m2_proto_rawDescGZIP(), []int{0}
 }

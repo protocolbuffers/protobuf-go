@@ -53,7 +53,7 @@ func (x DeprecatedEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use DeprecatedEnum.Type instead.
+// Deprecated: Use DeprecatedEnum.Descriptor instead.
 func (DeprecatedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_comments_deprecated_proto_rawDescGZIP(), []int{0}
 }
@@ -88,7 +88,7 @@ func (x *DeprecatedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeprecatedMessage.ProtoReflect.Type instead.
+// Deprecated: Use DeprecatedMessage.ProtoReflect.Descriptor instead.
 func (*DeprecatedMessage) Descriptor() ([]byte, []int) {
 	return file_comments_deprecated_proto_rawDescGZIP(), []int{0}
 }

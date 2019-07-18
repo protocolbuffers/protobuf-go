@@ -68,7 +68,7 @@ func (x *FieldTestMessage_Enum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use FieldTestMessage_Enum.Type instead.
+// Deprecated: Use FieldTestMessage_Enum.Descriptor instead.
 func (FieldTestMessage_Enum) EnumDescriptor() ([]byte, []int) {
 	return file_proto2_fields_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -207,7 +207,7 @@ func (x *FieldTestMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldTestMessage.ProtoReflect.Type instead.
+// Deprecated: Use FieldTestMessage.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage) Descriptor() ([]byte, []int) {
 	return file_proto2_fields_proto_rawDescGZIP(), []int{0}
 }
@@ -1131,7 +1131,7 @@ func (x *FieldTestMessage_OptionalGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldTestMessage_OptionalGroup.ProtoReflect.Type instead.
+// Deprecated: Use FieldTestMessage_OptionalGroup.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage_OptionalGroup) Descriptor() ([]byte, []int) {
 	return file_proto2_fields_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -1172,7 +1172,7 @@ func (x *FieldTestMessage_RequiredGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldTestMessage_RequiredGroup.ProtoReflect.Type instead.
+// Deprecated: Use FieldTestMessage_RequiredGroup.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage_RequiredGroup) Descriptor() ([]byte, []int) {
 	return file_proto2_fields_proto_rawDescGZIP(), []int{0, 1}
 }
@@ -1213,7 +1213,7 @@ func (x *FieldTestMessage_RepeatedGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldTestMessage_RepeatedGroup.ProtoReflect.Type instead.
+// Deprecated: Use FieldTestMessage_RepeatedGroup.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage_RepeatedGroup) Descriptor() ([]byte, []int) {
 	return file_proto2_fields_proto_rawDescGZIP(), []int{0, 2}
 }
@@ -1254,7 +1254,7 @@ func (x *FieldTestMessage_OneofGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldTestMessage_OneofGroup.ProtoReflect.Type instead.
+// Deprecated: Use FieldTestMessage_OneofGroup.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage_OneofGroup) Descriptor() ([]byte, []int) {
 	return file_proto2_fields_proto_rawDescGZIP(), []int{0, 6}
 }
@@ -1294,7 +1294,7 @@ func (x *FieldTestMessage_Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldTestMessage_Message.ProtoReflect.Type instead.
+// Deprecated: Use FieldTestMessage_Message.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage_Message) Descriptor() ([]byte, []int) {
 	return file_proto2_fields_proto_rawDescGZIP(), []int{0, 7}
 }

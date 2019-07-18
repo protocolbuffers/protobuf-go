@@ -156,7 +156,7 @@ func (x *Any) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Any.ProtoReflect.Type instead.
+// Deprecated: Use Any.ProtoReflect.Descriptor instead.
 func (*Any) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_any_proto_rawDescGZIP(), []int{0}
 }

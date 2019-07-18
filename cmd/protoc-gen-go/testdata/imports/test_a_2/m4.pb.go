@@ -45,7 +45,7 @@ func (x *M4) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use M4.ProtoReflect.Type instead.
+// Deprecated: Use M4.ProtoReflect.Descriptor instead.
 func (*M4) Descriptor() ([]byte, []int) {
 	return file_imports_test_a_2_m4_proto_rawDescGZIP(), []int{0}
 }

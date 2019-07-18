@@ -60,7 +60,7 @@ func (x Enum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Enum.Type instead.
+// Deprecated: Use Enum.Descriptor instead.
 func (Enum) EnumDescriptor() ([]byte, []int) {
 	return file_proto3_enum_proto_rawDescGZIP(), []int{0}
 }

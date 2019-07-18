@@ -49,7 +49,7 @@ func (x *Ext1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Ext1.ProtoReflect.Type instead.
+// Deprecated: Use Ext1.ProtoReflect.Descriptor instead.
 func (*Ext1) Descriptor() ([]byte, []int) {
 	return file_messageset_msetextpb_msetextpb_proto_rawDescGZIP(), []int{0}
 }
@@ -97,7 +97,7 @@ func (x *Ext2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Ext2.ProtoReflect.Type instead.
+// Deprecated: Use Ext2.ProtoReflect.Descriptor instead.
 func (*Ext2) Descriptor() ([]byte, []int) {
 	return file_messageset_msetextpb_msetextpb_proto_rawDescGZIP(), []int{1}
 }

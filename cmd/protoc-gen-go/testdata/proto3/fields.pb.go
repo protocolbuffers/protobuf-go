@@ -54,7 +54,7 @@ func (x FieldTestMessage_Enum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use FieldTestMessage_Enum.Type instead.
+// Deprecated: Use FieldTestMessage_Enum.Descriptor instead.
 func (FieldTestMessage_Enum) EnumDescriptor() ([]byte, []int) {
 	return file_proto3_fields_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -124,7 +124,7 @@ func (x *FieldTestMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldTestMessage.ProtoReflect.Type instead.
+// Deprecated: Use FieldTestMessage.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage) Descriptor() ([]byte, []int) {
 	return file_proto3_fields_proto_rawDescGZIP(), []int{0}
 }
@@ -416,7 +416,7 @@ func (x *FieldTestMessage_Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldTestMessage_Message.ProtoReflect.Type instead.
+// Deprecated: Use FieldTestMessage_Message.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage_Message) Descriptor() ([]byte, []int) {
 	return file_proto3_fields_proto_rawDescGZIP(), []int{0, 3}
 }

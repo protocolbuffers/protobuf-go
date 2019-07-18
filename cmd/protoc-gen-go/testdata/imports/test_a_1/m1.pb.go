@@ -54,7 +54,7 @@ func (x E1) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use E1.Type instead.
+// Deprecated: Use E1.Descriptor instead.
 func (E1) EnumDescriptor() ([]byte, []int) {
 	return file_imports_test_a_1_m1_proto_rawDescGZIP(), []int{0}
 }
@@ -87,7 +87,7 @@ func (x *M1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use M1.ProtoReflect.Type instead.
+// Deprecated: Use M1.ProtoReflect.Descriptor instead.
 func (*M1) Descriptor() ([]byte, []int) {
 	return file_imports_test_a_1_m1_proto_rawDescGZIP(), []int{0}
 }
@@ -121,7 +121,7 @@ func (x *M1_1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use M1_1.ProtoReflect.Type instead.
+// Deprecated: Use M1_1.ProtoReflect.Descriptor instead.
 func (*M1_1) Descriptor() ([]byte, []int) {
 	return file_imports_test_a_1_m1_proto_rawDescGZIP(), []int{1}
 }

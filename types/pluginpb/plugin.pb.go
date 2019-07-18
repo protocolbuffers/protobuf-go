@@ -53,7 +53,7 @@ func (x *Version) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Version.ProtoReflect.Type instead.
+// Deprecated: Use Version.ProtoReflect.Descriptor instead.
 func (*Version) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_compiler_plugin_proto_rawDescGZIP(), []int{0}
 }
@@ -138,7 +138,7 @@ func (x *CodeGeneratorRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CodeGeneratorRequest.ProtoReflect.Type instead.
+// Deprecated: Use CodeGeneratorRequest.ProtoReflect.Descriptor instead.
 func (*CodeGeneratorRequest) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_compiler_plugin_proto_rawDescGZIP(), []int{1}
 }
@@ -210,7 +210,7 @@ func (x *CodeGeneratorResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CodeGeneratorResponse.ProtoReflect.Type instead.
+// Deprecated: Use CodeGeneratorResponse.ProtoReflect.Descriptor instead.
 func (*CodeGeneratorResponse) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_compiler_plugin_proto_rawDescGZIP(), []int{2}
 }
@@ -310,7 +310,7 @@ func (x *CodeGeneratorResponse_File) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CodeGeneratorResponse_File.ProtoReflect.Type instead.
+// Deprecated: Use CodeGeneratorResponse_File.ProtoReflect.Descriptor instead.
 func (*CodeGeneratorResponse_File) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_compiler_plugin_proto_rawDescGZIP(), []int{2, 0}
 }

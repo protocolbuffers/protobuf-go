@@ -48,7 +48,7 @@ func (x *Foo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Foo.ProtoReflect.Type instead.
+// Deprecated: Use Foo.ProtoReflect.Descriptor instead.
 func (*Foo) Descriptor() ([]byte, []int) {
 	return file_issue780_oneof_conflict_test_proto_rawDescGZIP(), []int{0}
 }

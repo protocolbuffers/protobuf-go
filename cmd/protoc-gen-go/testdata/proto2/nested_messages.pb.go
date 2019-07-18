@@ -47,7 +47,7 @@ func (x *Layer1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Layer1.ProtoReflect.Type instead.
+// Deprecated: Use Layer1.ProtoReflect.Descriptor instead.
 func (*Layer1) Descriptor() ([]byte, []int) {
 	return file_proto2_nested_messages_proto_rawDescGZIP(), []int{0}
 }
@@ -95,7 +95,7 @@ func (x *Layer1_Layer2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Layer1_Layer2.ProtoReflect.Type instead.
+// Deprecated: Use Layer1_Layer2.ProtoReflect.Descriptor instead.
 func (*Layer1_Layer2) Descriptor() ([]byte, []int) {
 	return file_proto2_nested_messages_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -135,7 +135,7 @@ func (x *Layer1_Layer2_Layer3) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Layer1_Layer2_Layer3.ProtoReflect.Type instead.
+// Deprecated: Use Layer1_Layer2_Layer3.ProtoReflect.Descriptor instead.
 func (*Layer1_Layer2_Layer3) Descriptor() ([]byte, []int) {
 	return file_proto2_nested_messages_proto_rawDescGZIP(), []int{0, 0, 0}
 }

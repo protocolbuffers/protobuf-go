@@ -116,7 +116,7 @@ func (x *Duration) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Duration.ProtoReflect.Type instead.
+// Deprecated: Use Duration.ProtoReflect.Descriptor instead.
 func (*Duration) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_duration_proto_rawDescGZIP(), []int{0}
 }

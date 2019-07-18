@@ -78,7 +78,7 @@ func (x *Enum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum.Type instead.
+// Deprecated: Use Enum.Descriptor instead.
 func (Enum) EnumDescriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{0}
 }
@@ -135,7 +135,7 @@ func (x *Enums_NestedEnum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enums_NestedEnum.Type instead.
+// Deprecated: Use Enums_NestedEnum.Descriptor instead.
 func (Enums_NestedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{1, 0}
 }
@@ -184,7 +184,7 @@ func (x *Scalars) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Scalars.ProtoReflect.Type instead.
+// Deprecated: Use Scalars.ProtoReflect.Descriptor instead.
 func (*Scalars) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{0}
 }
@@ -327,7 +327,7 @@ func (x *Enums) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Enums.ProtoReflect.Type instead.
+// Deprecated: Use Enums.ProtoReflect.Descriptor instead.
 func (*Enums) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{1}
 }
@@ -398,7 +398,7 @@ func (x *Repeats) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Repeats.ProtoReflect.Type instead.
+// Deprecated: Use Repeats.ProtoReflect.Descriptor instead.
 func (*Repeats) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{2}
 }
@@ -497,7 +497,7 @@ func (x *Nested) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Nested.ProtoReflect.Type instead.
+// Deprecated: Use Nested.ProtoReflect.Descriptor instead.
 func (*Nested) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{3}
 }
@@ -549,7 +549,7 @@ func (x *Nests) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Nests.ProtoReflect.Type instead.
+// Deprecated: Use Nests.ProtoReflect.Descriptor instead.
 func (*Nests) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{4}
 }
@@ -617,7 +617,7 @@ func (x *Requireds) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Requireds.ProtoReflect.Type instead.
+// Deprecated: Use Requireds.ProtoReflect.Descriptor instead.
 func (*Requireds) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{5}
 }
@@ -695,7 +695,7 @@ func (x *PartialRequired) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PartialRequired.ProtoReflect.Type instead.
+// Deprecated: Use PartialRequired.ProtoReflect.Descriptor instead.
 func (*PartialRequired) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{6}
 }
@@ -743,7 +743,7 @@ func (x *NestedWithRequired) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use NestedWithRequired.ProtoReflect.Type instead.
+// Deprecated: Use NestedWithRequired.ProtoReflect.Descriptor instead.
 func (*NestedWithRequired) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{7}
 }
@@ -789,7 +789,7 @@ func (x *IndirectRequired) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use IndirectRequired.ProtoReflect.Type instead.
+// Deprecated: Use IndirectRequired.ProtoReflect.Descriptor instead.
 func (*IndirectRequired) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{8}
 }
@@ -871,7 +871,7 @@ func (x *Extensions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Extensions.ProtoReflect.Type instead.
+// Deprecated: Use Extensions.ProtoReflect.Descriptor instead.
 func (*Extensions) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{9}
 }
@@ -880,7 +880,7 @@ var extRange_Extensions = []protoiface.ExtensionRangeV1{
 	{Start: 20, End: 100},
 }
 
-// Deprecated: Use Extensions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use Extensions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*Extensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_Extensions
 }
@@ -934,7 +934,7 @@ func (x *ExtensionsContainer) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ExtensionsContainer.ProtoReflect.Type instead.
+// Deprecated: Use ExtensionsContainer.ProtoReflect.Descriptor instead.
 func (*ExtensionsContainer) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{10}
 }
@@ -968,7 +968,7 @@ func (x *MessageSet) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MessageSet.ProtoReflect.Type instead.
+// Deprecated: Use MessageSet.ProtoReflect.Descriptor instead.
 func (*MessageSet) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{11}
 }
@@ -977,7 +977,7 @@ var extRange_MessageSet = []protoiface.ExtensionRangeV1{
 	{Start: 4, End: 2147483646},
 }
 
-// Deprecated: Use MessageSet.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use MessageSet.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*MessageSet) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_MessageSet
 }
@@ -1011,7 +1011,7 @@ func (x *MessageSetExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MessageSetExtension.ProtoReflect.Type instead.
+// Deprecated: Use MessageSetExtension.ProtoReflect.Descriptor instead.
 func (*MessageSetExtension) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{12}
 }
@@ -1052,7 +1052,7 @@ func (x *FakeMessageSet) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FakeMessageSet.ProtoReflect.Type instead.
+// Deprecated: Use FakeMessageSet.ProtoReflect.Descriptor instead.
 func (*FakeMessageSet) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{13}
 }
@@ -1061,7 +1061,7 @@ var extRange_FakeMessageSet = []protoiface.ExtensionRangeV1{
 	{Start: 4, End: 536870911},
 }
 
-// Deprecated: Use FakeMessageSet.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use FakeMessageSet.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*FakeMessageSet) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_FakeMessageSet
 }
@@ -1095,7 +1095,7 @@ func (x *FakeMessageSetExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FakeMessageSetExtension.ProtoReflect.Type instead.
+// Deprecated: Use FakeMessageSetExtension.ProtoReflect.Descriptor instead.
 func (*FakeMessageSetExtension) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{14}
 }
@@ -1154,7 +1154,7 @@ func (x *KnownTypes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use KnownTypes.ProtoReflect.Type instead.
+// Deprecated: Use KnownTypes.ProtoReflect.Descriptor instead.
 func (*KnownTypes) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{15}
 }
@@ -1316,7 +1316,7 @@ func (x *Nests_OptGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Nests_OptGroup.ProtoReflect.Type instead.
+// Deprecated: Use Nests_OptGroup.ProtoReflect.Descriptor instead.
 func (*Nests_OptGroup) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{4, 0}
 }
@@ -1371,7 +1371,7 @@ func (x *Nests_RptGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Nests_RptGroup.ProtoReflect.Type instead.
+// Deprecated: Use Nests_RptGroup.ProtoReflect.Descriptor instead.
 func (*Nests_RptGroup) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{4, 1}
 }
@@ -1412,7 +1412,7 @@ func (x *Nests_OptGroup_OptNestedGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Nests_OptGroup_OptNestedGroup.ProtoReflect.Type instead.
+// Deprecated: Use Nests_OptGroup_OptNestedGroup.ProtoReflect.Descriptor instead.
 func (*Nests_OptGroup_OptNestedGroup) Descriptor() ([]byte, []int) {
 	return file_pb2_test_proto_rawDescGZIP(), []int{4, 0, 0}
 }

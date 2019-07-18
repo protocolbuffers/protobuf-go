@@ -67,7 +67,7 @@ func (x *Enum720) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum720.Type instead.
+// Deprecated: Use Enum720.Descriptor instead.
 func (Enum720) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{0}
 }
@@ -667,7 +667,7 @@ func (x *Enum3476) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum3476.Type instead.
+// Deprecated: Use Enum3476.Descriptor instead.
 func (Enum3476) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{1}
 }
@@ -751,7 +751,7 @@ func (x *Enum3805) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum3805.Type instead.
+// Deprecated: Use Enum3805.Descriptor instead.
 func (Enum3805) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{2}
 }
@@ -859,7 +859,7 @@ func (x *Enum3783) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum3783.Type instead.
+// Deprecated: Use Enum3783.Descriptor instead.
 func (Enum3783) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{3}
 }
@@ -961,7 +961,7 @@ func (x *Enum3851) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum3851.Type instead.
+// Deprecated: Use Enum3851.Descriptor instead.
 func (Enum3851) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{4}
 }
@@ -1015,7 +1015,7 @@ func (x *UnusedEnum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use UnusedEnum.Type instead.
+// Deprecated: Use UnusedEnum.Descriptor instead.
 func (UnusedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{5}
 }
@@ -1078,7 +1078,7 @@ func (x *Enum4146) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum4146.Type instead.
+// Deprecated: Use Enum4146.Descriptor instead.
 func (Enum4146) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{6}
 }
@@ -1132,7 +1132,7 @@ func (x *Enum4160) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum4160.Type instead.
+// Deprecated: Use Enum4160.Descriptor instead.
 func (Enum4160) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{7}
 }
@@ -1201,7 +1201,7 @@ func (x *Enum4152) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum4152.Type instead.
+// Deprecated: Use Enum4152.Descriptor instead.
 func (Enum4152) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{8}
 }
@@ -1315,7 +1315,7 @@ func (x *Enum6025) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6025.Type instead.
+// Deprecated: Use Enum6025.Descriptor instead.
 func (Enum6025) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{9}
 }
@@ -1408,7 +1408,7 @@ func (x *Enum6065) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6065.Type instead.
+// Deprecated: Use Enum6065.Descriptor instead.
 func (Enum6065) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{10}
 }
@@ -1480,7 +1480,7 @@ func (x *Enum6579) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6579.Type instead.
+// Deprecated: Use Enum6579.Descriptor instead.
 func (Enum6579) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{11}
 }
@@ -1630,7 +1630,7 @@ func (x *Enum6588) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6588.Type instead.
+// Deprecated: Use Enum6588.Descriptor instead.
 func (Enum6588) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{12}
 }
@@ -1687,7 +1687,7 @@ func (x *Enum6769) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6769.Type instead.
+// Deprecated: Use Enum6769.Descriptor instead.
 func (Enum6769) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{13}
 }
@@ -1756,7 +1756,7 @@ func (x *Enum6774) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6774.Type instead.
+// Deprecated: Use Enum6774.Descriptor instead.
 func (Enum6774) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{14}
 }
@@ -1822,7 +1822,7 @@ func (x *Enum6782) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6782.Type instead.
+// Deprecated: Use Enum6782.Descriptor instead.
 func (Enum6782) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{15}
 }
@@ -1882,7 +1882,7 @@ func (x *Enum6858) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6858.Type instead.
+// Deprecated: Use Enum6858.Descriptor instead.
 func (Enum6858) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{16}
 }
@@ -1948,7 +1948,7 @@ func (x *Enum6815) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6815.Type instead.
+// Deprecated: Use Enum6815.Descriptor instead.
 func (Enum6815) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{17}
 }
@@ -2008,7 +2008,7 @@ func (x *Enum6822) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum6822.Type instead.
+// Deprecated: Use Enum6822.Descriptor instead.
 func (Enum6822) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{18}
 }
@@ -2065,7 +2065,7 @@ func (x *Enum7654) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum7654.Type instead.
+// Deprecated: Use Enum7654.Descriptor instead.
 func (Enum7654) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{19}
 }
@@ -2122,7 +2122,7 @@ func (x *Enum8292) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum8292.Type instead.
+// Deprecated: Use Enum8292.Descriptor instead.
 func (Enum8292) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{20}
 }
@@ -2179,7 +2179,7 @@ func (x *Enum8450) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum8450.Type instead.
+// Deprecated: Use Enum8450.Descriptor instead.
 func (Enum8450) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{21}
 }
@@ -2242,7 +2242,7 @@ func (x *Enum8900) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum8900.Type instead.
+// Deprecated: Use Enum8900.Descriptor instead.
 func (Enum8900) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{22}
 }
@@ -2305,7 +2305,7 @@ func (x *Enum8945) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum8945.Type instead.
+// Deprecated: Use Enum8945.Descriptor instead.
 func (Enum8945) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{23}
 }
@@ -2377,7 +2377,7 @@ func (x *Enum8951) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum8951.Type instead.
+// Deprecated: Use Enum8951.Descriptor instead.
 func (Enum8951) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{24}
 }
@@ -2674,7 +2674,7 @@ func (x *Enum9243) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum9243.Type instead.
+// Deprecated: Use Enum9243.Descriptor instead.
 func (Enum9243) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{25}
 }
@@ -2749,7 +2749,7 @@ func (x *Enum10157) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum10157.Type instead.
+// Deprecated: Use Enum10157.Descriptor instead.
 func (Enum10157) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{26}
 }
@@ -2824,7 +2824,7 @@ func (x *Enum10167) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum10167.Type instead.
+// Deprecated: Use Enum10167.Descriptor instead.
 func (Enum10167) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{27}
 }
@@ -2920,7 +2920,7 @@ func (x *Enum8862) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum8862.Type instead.
+// Deprecated: Use Enum8862.Descriptor instead.
 func (Enum8862) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{28}
 }
@@ -2995,7 +2995,7 @@ func (x *Enum10325) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum10325.Type instead.
+// Deprecated: Use Enum10325.Descriptor instead.
 func (Enum10325) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{29}
 }
@@ -3046,7 +3046,7 @@ func (x *Enum10335) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum10335.Type instead.
+// Deprecated: Use Enum10335.Descriptor instead.
 func (Enum10335) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{30}
 }
@@ -3100,7 +3100,7 @@ func (x *Enum10337) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum10337.Type instead.
+// Deprecated: Use Enum10337.Descriptor instead.
 func (Enum10337) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{31}
 }
@@ -3202,7 +3202,7 @@ func (x *Enum10392) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum10392.Type instead.
+// Deprecated: Use Enum10392.Descriptor instead.
 func (Enum10392) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{32}
 }
@@ -4330,7 +4330,7 @@ func (x *Enum11107) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum11107.Type instead.
+// Deprecated: Use Enum11107.Descriptor instead.
 func (Enum11107) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{33}
 }
@@ -4951,7 +4951,7 @@ func (x *Enum11541) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum11541.Type instead.
+// Deprecated: Use Enum11541.Descriptor instead.
 func (Enum11541) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{34}
 }
@@ -5071,7 +5071,7 @@ func (x *Enum11468) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum11468.Type instead.
+// Deprecated: Use Enum11468.Descriptor instead.
 func (Enum11468) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{35}
 }
@@ -5371,7 +5371,7 @@ func (x *Enum11022) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum11022.Type instead.
+// Deprecated: Use Enum11022.Descriptor instead.
 func (Enum11022) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{36}
 }
@@ -5428,7 +5428,7 @@ func (x *Enum12670) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum12670.Type instead.
+// Deprecated: Use Enum12670.Descriptor instead.
 func (Enum12670) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{37}
 }
@@ -5494,7 +5494,7 @@ func (x *Enum12871) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum12871.Type instead.
+// Deprecated: Use Enum12871.Descriptor instead.
 func (Enum12871) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{38}
 }
@@ -5551,7 +5551,7 @@ func (x *Enum13092) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum13092.Type instead.
+// Deprecated: Use Enum13092.Descriptor instead.
 func (Enum13092) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{39}
 }
@@ -5611,7 +5611,7 @@ func (x *Enum13146) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum13146.Type instead.
+// Deprecated: Use Enum13146.Descriptor instead.
 func (Enum13146) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{40}
 }
@@ -6745,7 +6745,7 @@ func (x *Enum16042) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16042.Type instead.
+// Deprecated: Use Enum16042.Descriptor instead.
 func (Enum16042) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{41}
 }
@@ -6823,7 +6823,7 @@ func (x *Enum16553) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16553.Type instead.
+// Deprecated: Use Enum16553.Descriptor instead.
 func (Enum16553) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{42}
 }
@@ -6880,7 +6880,7 @@ func (x *Enum16728) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16728.Type instead.
+// Deprecated: Use Enum16728.Descriptor instead.
 func (Enum16728) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{43}
 }
@@ -6943,7 +6943,7 @@ func (x *Enum16732) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16732.Type instead.
+// Deprecated: Use Enum16732.Descriptor instead.
 func (Enum16732) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{44}
 }
@@ -7012,7 +7012,7 @@ func (x *Enum16738) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16738.Type instead.
+// Deprecated: Use Enum16738.Descriptor instead.
 func (Enum16738) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{45}
 }
@@ -7129,7 +7129,7 @@ func (x *Enum16698) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16698.Type instead.
+// Deprecated: Use Enum16698.Descriptor instead.
 func (Enum16698) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{46}
 }
@@ -7195,7 +7195,7 @@ func (x *Enum16819) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16819.Type instead.
+// Deprecated: Use Enum16819.Descriptor instead.
 func (Enum16819) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{47}
 }
@@ -7285,7 +7285,7 @@ func (x *Enum16925) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16925.Type instead.
+// Deprecated: Use Enum16925.Descriptor instead.
 func (Enum16925) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{48}
 }
@@ -7339,7 +7339,7 @@ func (x *Enum22854) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum22854.Type instead.
+// Deprecated: Use Enum22854.Descriptor instead.
 func (Enum22854) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{49}
 }
@@ -7399,7 +7399,7 @@ func (x *Enum24361) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum24361.Type instead.
+// Deprecated: Use Enum24361.Descriptor instead.
 func (Enum24361) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{50}
 }
@@ -7543,7 +7543,7 @@ func (x *Enum16891) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum16891.Type instead.
+// Deprecated: Use Enum16891.Descriptor instead.
 func (Enum16891) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{51}
 }
@@ -7606,7 +7606,7 @@ func (x *Enum27361) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum27361.Type instead.
+// Deprecated: Use Enum27361.Descriptor instead.
 func (Enum27361) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{52}
 }
@@ -7675,7 +7675,7 @@ func (x *Enum33960) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum33960.Type instead.
+// Deprecated: Use Enum33960.Descriptor instead.
 func (Enum33960) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{53}
 }
@@ -7726,7 +7726,7 @@ func (x *Enum34388) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum34388.Type instead.
+// Deprecated: Use Enum34388.Descriptor instead.
 func (Enum34388) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{54}
 }
@@ -7789,7 +7789,7 @@ func (x *Enum35477) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum35477.Type instead.
+// Deprecated: Use Enum35477.Descriptor instead.
 func (Enum35477) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{55}
 }
@@ -7867,7 +7867,7 @@ func (x *Enum35507) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum35507.Type instead.
+// Deprecated: Use Enum35507.Descriptor instead.
 func (Enum35507) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{56}
 }
@@ -7939,7 +7939,7 @@ func (x *Enum36860) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum36860.Type instead.
+// Deprecated: Use Enum36860.Descriptor instead.
 func (Enum36860) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{57}
 }
@@ -7993,7 +7993,7 @@ func (x *Enum36890) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum36890.Type instead.
+// Deprecated: Use Enum36890.Descriptor instead.
 func (Enum36890) EnumDescriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_8_proto_rawDescGZIP(), []int{58}
 }

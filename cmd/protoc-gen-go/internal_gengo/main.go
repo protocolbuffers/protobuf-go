@@ -361,7 +361,7 @@ func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum 
 		for i := 1; i < len(enum.Location.Path); i += 2 {
 			indexes = append(indexes, strconv.Itoa(int(enum.Location.Path[i])))
 		}
-		g.P("// Deprecated: Use ", enum.GoIdent, ".Type instead.")
+		g.P("// Deprecated: Use ", enum.GoIdent, ".Descriptor instead.")
 		g.P("func (", enum.GoIdent, ") EnumDescriptor() ([]byte, []int) {")
 		g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
 		g.P("}")
@@ -513,7 +513,7 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 		for i := 1; i < len(message.Location.Path); i += 2 {
 			indexes = append(indexes, strconv.Itoa(int(message.Location.Path[i])))
 		}
-		g.P("// Deprecated: Use ", message.GoIdent, ".ProtoReflect.Type instead.")
+		g.P("// Deprecated: Use ", message.GoIdent, ".ProtoReflect.Descriptor instead.")
 		g.P("func (*", message.GoIdent, ") Descriptor() ([]byte, []int) {")
 		g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
 		g.P("}")
@@ -532,7 +532,7 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 			}
 			g.P("}")
 			g.P()
-			g.P("// Deprecated: Use ", message.GoIdent, ".ProtoReflect.Type.ExtensionRanges instead.")
+			g.P("// Deprecated: Use ", message.GoIdent, ".ProtoReflect.Descriptor.ExtensionRanges instead.")
 			g.P("func (*", message.GoIdent, ") ExtensionRangeArray() []", protoExtRange, " {")
 			g.P("return ", extRangeVar)
 			g.P("}")

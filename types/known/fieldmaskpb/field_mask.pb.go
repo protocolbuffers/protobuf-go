@@ -246,7 +246,7 @@ func (x *FieldMask) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldMask.ProtoReflect.Type instead.
+// Deprecated: Use FieldMask.ProtoReflect.Descriptor instead.
 func (*FieldMask) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_field_mask_proto_rawDescGZIP(), []int{0}
 }

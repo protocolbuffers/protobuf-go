@@ -71,7 +71,7 @@ func (x *ForeignEnum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use ForeignEnum.Type instead.
+// Deprecated: Use ForeignEnum.Descriptor instead.
 func (ForeignEnum) EnumDescriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0}
 }
@@ -122,7 +122,7 @@ func (x *TestReservedEnumFields) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use TestReservedEnumFields.Type instead.
+// Deprecated: Use TestReservedEnumFields.Descriptor instead.
 func (TestReservedEnumFields) EnumDescriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{1}
 }
@@ -182,7 +182,7 @@ func (x *TestAllTypes_NestedEnum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use TestAllTypes_NestedEnum.Type instead.
+// Deprecated: Use TestAllTypes_NestedEnum.Descriptor instead.
 func (TestAllTypes_NestedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -232,7 +232,7 @@ func (x *TestDeprecatedMessage_DeprecatedEnum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use TestDeprecatedMessage_DeprecatedEnum.Type instead.
+// Deprecated: Use TestDeprecatedMessage_DeprecatedEnum.Descriptor instead.
 func (TestDeprecatedMessage_DeprecatedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{1, 0}
 }
@@ -355,7 +355,7 @@ func (x *TestAllTypes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypes.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypes.ProtoReflect.Descriptor instead.
 func (*TestAllTypes) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0}
 }
@@ -1087,7 +1087,7 @@ func (x *TestDeprecatedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestDeprecatedMessage.ProtoReflect.Type instead.
+// Deprecated: Use TestDeprecatedMessage.ProtoReflect.Descriptor instead.
 func (*TestDeprecatedMessage) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{1}
 }
@@ -1155,7 +1155,7 @@ func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ForeignMessage.ProtoReflect.Type instead.
+// Deprecated: Use ForeignMessage.ProtoReflect.Descriptor instead.
 func (*ForeignMessage) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{2}
 }
@@ -1202,7 +1202,7 @@ func (x *TestReservedFields) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestReservedFields.ProtoReflect.Type instead.
+// Deprecated: Use TestReservedFields.ProtoReflect.Descriptor instead.
 func (*TestReservedFields) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{3}
 }
@@ -1236,7 +1236,7 @@ func (x *TestAllExtensions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllExtensions.ProtoReflect.Type instead.
+// Deprecated: Use TestAllExtensions.ProtoReflect.Descriptor instead.
 func (*TestAllExtensions) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{4}
 }
@@ -1245,7 +1245,7 @@ var extRange_TestAllExtensions = []protoiface.ExtensionRangeV1{
 	{Start: 1, End: 536870911},
 }
 
-// Deprecated: Use TestAllExtensions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use TestAllExtensions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*TestAllExtensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_TestAllExtensions
 }
@@ -1279,7 +1279,7 @@ func (x *OptionalGroupExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use OptionalGroupExtension.ProtoReflect.Type instead.
+// Deprecated: Use OptionalGroupExtension.ProtoReflect.Descriptor instead.
 func (*OptionalGroupExtension) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{5}
 }
@@ -1320,7 +1320,7 @@ func (x *RepeatedGroupExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RepeatedGroupExtension.ProtoReflect.Type instead.
+// Deprecated: Use RepeatedGroupExtension.ProtoReflect.Descriptor instead.
 func (*RepeatedGroupExtension) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{6}
 }
@@ -1360,7 +1360,7 @@ func (x *TestNestedExtension) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestNestedExtension.ProtoReflect.Type instead.
+// Deprecated: Use TestNestedExtension.ProtoReflect.Descriptor instead.
 func (*TestNestedExtension) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{7}
 }
@@ -1394,7 +1394,7 @@ func (x *TestRequired) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestRequired.ProtoReflect.Type instead.
+// Deprecated: Use TestRequired.ProtoReflect.Descriptor instead.
 func (*TestRequired) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{8}
 }
@@ -1440,7 +1440,7 @@ func (x *TestRequiredForeign) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestRequiredForeign.ProtoReflect.Type instead.
+// Deprecated: Use TestRequiredForeign.ProtoReflect.Descriptor instead.
 func (*TestRequiredForeign) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{9}
 }
@@ -1520,7 +1520,7 @@ func (x *TestRequiredGroupFields) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestRequiredGroupFields.ProtoReflect.Type instead.
+// Deprecated: Use TestRequiredGroupFields.ProtoReflect.Descriptor instead.
 func (*TestRequiredGroupFields) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{10}
 }
@@ -1570,7 +1570,7 @@ func (x *TestWeak) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestWeak.ProtoReflect.Type instead.
+// Deprecated: Use TestWeak.ProtoReflect.Descriptor instead.
 func (*TestWeak) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{11}
 }
@@ -1661,7 +1661,7 @@ func (x *TestPackedTypes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestPackedTypes.ProtoReflect.Type instead.
+// Deprecated: Use TestPackedTypes.ProtoReflect.Descriptor instead.
 func (*TestPackedTypes) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{12}
 }
@@ -1806,7 +1806,7 @@ func (x *TestUnpackedTypes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestUnpackedTypes.ProtoReflect.Type instead.
+// Deprecated: Use TestUnpackedTypes.ProtoReflect.Descriptor instead.
 func (*TestUnpackedTypes) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{13}
 }
@@ -1938,7 +1938,7 @@ func (x *TestPackedExtensions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestPackedExtensions.ProtoReflect.Type instead.
+// Deprecated: Use TestPackedExtensions.ProtoReflect.Descriptor instead.
 func (*TestPackedExtensions) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{14}
 }
@@ -1947,7 +1947,7 @@ var extRange_TestPackedExtensions = []protoiface.ExtensionRangeV1{
 	{Start: 1, End: 536870911},
 }
 
-// Deprecated: Use TestPackedExtensions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use TestPackedExtensions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*TestPackedExtensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_TestPackedExtensions
 }
@@ -1981,7 +1981,7 @@ func (x *TestUnpackedExtensions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestUnpackedExtensions.ProtoReflect.Type instead.
+// Deprecated: Use TestUnpackedExtensions.ProtoReflect.Descriptor instead.
 func (*TestUnpackedExtensions) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{15}
 }
@@ -1990,7 +1990,7 @@ var extRange_TestUnpackedExtensions = []protoiface.ExtensionRangeV1{
 	{Start: 1, End: 536870911},
 }
 
-// Deprecated: Use TestUnpackedExtensions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use TestUnpackedExtensions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*TestUnpackedExtensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_TestUnpackedExtensions
 }
@@ -2024,7 +2024,7 @@ func (x *FooRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FooRequest.ProtoReflect.Type instead.
+// Deprecated: Use FooRequest.ProtoReflect.Descriptor instead.
 func (*FooRequest) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{16}
 }
@@ -2057,7 +2057,7 @@ func (x *FooResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FooResponse.ProtoReflect.Type instead.
+// Deprecated: Use FooResponse.ProtoReflect.Descriptor instead.
 func (*FooResponse) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{17}
 }
@@ -2092,7 +2092,7 @@ func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypes_NestedMessage.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypes_NestedMessage.ProtoReflect.Descriptor instead.
 func (*TestAllTypes_NestedMessage) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -2140,7 +2140,7 @@ func (x *TestAllTypes_OptionalGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypes_OptionalGroup.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypes_OptionalGroup.ProtoReflect.Descriptor instead.
 func (*TestAllTypes_OptionalGroup) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0, 1}
 }
@@ -2181,7 +2181,7 @@ func (x *TestAllTypes_RepeatedGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypes_RepeatedGroup.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypes_RepeatedGroup.ProtoReflect.Descriptor instead.
 func (*TestAllTypes_RepeatedGroup) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0, 2}
 }
@@ -2222,7 +2222,7 @@ func (x *TestRequiredGroupFields_OptionalGroup) ProtoReflect() protoreflect.Mess
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestRequiredGroupFields_OptionalGroup.ProtoReflect.Type instead.
+// Deprecated: Use TestRequiredGroupFields_OptionalGroup.ProtoReflect.Descriptor instead.
 func (*TestRequiredGroupFields_OptionalGroup) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{10, 0}
 }
@@ -2263,7 +2263,7 @@ func (x *TestRequiredGroupFields_RepeatedGroup) ProtoReflect() protoreflect.Mess
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestRequiredGroupFields_RepeatedGroup.ProtoReflect.Type instead.
+// Deprecated: Use TestRequiredGroupFields_RepeatedGroup.ProtoReflect.Descriptor instead.
 func (*TestRequiredGroupFields_RepeatedGroup) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{10, 1}
 }

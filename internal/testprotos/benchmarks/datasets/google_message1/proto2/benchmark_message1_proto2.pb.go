@@ -86,7 +86,7 @@ func (x *GoogleMessage1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GoogleMessage1.ProtoReflect.Type instead.
+// Deprecated: Use GoogleMessage1.ProtoReflect.Descriptor instead.
 func (*GoogleMessage1) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message1_proto2_benchmark_message1_proto2_proto_rawDescGZIP(), []int{0}
 }
@@ -451,7 +451,7 @@ func (x *GoogleMessage1SubMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GoogleMessage1SubMessage.ProtoReflect.Type instead.
+// Deprecated: Use GoogleMessage1SubMessage.ProtoReflect.Descriptor instead.
 func (*GoogleMessage1SubMessage) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message1_proto2_benchmark_message1_proto2_proto_rawDescGZIP(), []int{1}
 }

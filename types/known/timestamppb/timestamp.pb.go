@@ -136,7 +136,7 @@ func (x *Timestamp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Timestamp.ProtoReflect.Type instead.
+// Deprecated: Use Timestamp.ProtoReflect.Descriptor instead.
 func (*Timestamp) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_timestamp_proto_rawDescGZIP(), []int{0}
 }

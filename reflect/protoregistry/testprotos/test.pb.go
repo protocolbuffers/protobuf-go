@@ -65,7 +65,7 @@ func (x *Enum1) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum1.Type instead.
+// Deprecated: Use Enum1.Descriptor instead.
 func (Enum1) EnumDescriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{0}
 }
@@ -116,7 +116,7 @@ func (x *Enum2) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum2.Type instead.
+// Deprecated: Use Enum2.Descriptor instead.
 func (Enum2) EnumDescriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{1}
 }
@@ -167,7 +167,7 @@ func (x *Enum3) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use Enum3.Type instead.
+// Deprecated: Use Enum3.Descriptor instead.
 func (Enum3) EnumDescriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{2}
 }
@@ -201,7 +201,7 @@ func (x *Message1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message1.ProtoReflect.Type instead.
+// Deprecated: Use Message1.ProtoReflect.Descriptor instead.
 func (*Message1) Descriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{0}
 }
@@ -210,7 +210,7 @@ var extRange_Message1 = []protoiface.ExtensionRangeV1{
 	{Start: 10, End: 536870911},
 }
 
-// Deprecated: Use Message1.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use Message1.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*Message1) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_Message1
 }
@@ -243,7 +243,7 @@ func (x *Message2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message2.ProtoReflect.Type instead.
+// Deprecated: Use Message2.ProtoReflect.Descriptor instead.
 func (*Message2) Descriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{1}
 }
@@ -276,7 +276,7 @@ func (x *Message3) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message3.ProtoReflect.Type instead.
+// Deprecated: Use Message3.ProtoReflect.Descriptor instead.
 func (*Message3) Descriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{2}
 }
@@ -310,7 +310,7 @@ func (x *Message4) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message4.ProtoReflect.Type instead.
+// Deprecated: Use Message4.ProtoReflect.Descriptor instead.
 func (*Message4) Descriptor() ([]byte, []int) {
 	return file_test_proto_rawDescGZIP(), []int{3}
 }

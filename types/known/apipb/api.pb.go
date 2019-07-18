@@ -92,7 +92,7 @@ func (x *Api) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Api.ProtoReflect.Type instead.
+// Deprecated: Use Api.ProtoReflect.Descriptor instead.
 func (*Api) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_api_proto_rawDescGZIP(), []int{0}
 }
@@ -189,7 +189,7 @@ func (x *Method) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Method.ProtoReflect.Type instead.
+// Deprecated: Use Method.ProtoReflect.Descriptor instead.
 func (*Method) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_api_proto_rawDescGZIP(), []int{1}
 }
@@ -354,7 +354,7 @@ func (x *Mixin) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Mixin.ProtoReflect.Type instead.
+// Deprecated: Use Mixin.ProtoReflect.Descriptor instead.
 func (*Mixin) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_api_proto_rawDescGZIP(), []int{2}
 }

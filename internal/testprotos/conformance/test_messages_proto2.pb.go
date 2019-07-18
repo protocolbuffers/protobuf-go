@@ -71,7 +71,7 @@ func (x *ForeignEnumProto2) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use ForeignEnumProto2.Type instead.
+// Deprecated: Use ForeignEnumProto2.Descriptor instead.
 func (ForeignEnumProto2) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0}
 }
@@ -131,7 +131,7 @@ func (x *TestAllTypesProto2_NestedEnum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use TestAllTypesProto2_NestedEnum.Type instead.
+// Deprecated: Use TestAllTypesProto2_NestedEnum.Descriptor instead.
 func (TestAllTypesProto2_NestedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -269,7 +269,7 @@ func (x *TestAllTypesProto2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypesProto2.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypesProto2.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0}
 }
@@ -278,7 +278,7 @@ var extRange_TestAllTypesProto2 = []protoiface.ExtensionRangeV1{
 	{Start: 120, End: 200},
 }
 
-// Deprecated: Use TestAllTypesProto2.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use TestAllTypesProto2.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*TestAllTypesProto2) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_TestAllTypesProto2
 }
@@ -1007,7 +1007,7 @@ func (x *ForeignMessageProto2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ForeignMessageProto2.ProtoReflect.Type instead.
+// Deprecated: Use ForeignMessageProto2.ProtoReflect.Descriptor instead.
 func (*ForeignMessageProto2) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{1}
 }
@@ -1049,7 +1049,7 @@ func (x *TestAllTypesProto2_NestedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypesProto2_NestedMessage.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypesProto2_NestedMessage.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2_NestedMessage) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -1099,7 +1099,7 @@ func (x *TestAllTypesProto2_Data) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypesProto2_Data.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypesProto2_Data.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2_Data) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 20}
 }
@@ -1148,7 +1148,7 @@ func (x *TestAllTypesProto2_MessageSetCorrect) ProtoReflect() protoreflect.Messa
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypesProto2_MessageSetCorrect.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypesProto2_MessageSetCorrect.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2_MessageSetCorrect) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 21}
 }
@@ -1157,7 +1157,7 @@ var extRange_TestAllTypesProto2_MessageSetCorrect = []protoiface.ExtensionRangeV
 	{Start: 4, End: 2147483646},
 }
 
-// Deprecated: Use TestAllTypesProto2_MessageSetCorrect.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use TestAllTypesProto2_MessageSetCorrect.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*TestAllTypesProto2_MessageSetCorrect) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_TestAllTypesProto2_MessageSetCorrect
 }
@@ -1191,7 +1191,7 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension1) ProtoReflect() protoref
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypesProto2_MessageSetCorrectExtension1.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypesProto2_MessageSetCorrectExtension1.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2_MessageSetCorrectExtension1) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 22}
 }
@@ -1232,7 +1232,7 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension2) ProtoReflect() protoref
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypesProto2_MessageSetCorrectExtension2.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypesProto2_MessageSetCorrectExtension2.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2_MessageSetCorrectExtension2) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 23}
 }

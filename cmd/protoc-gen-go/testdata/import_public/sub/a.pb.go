@@ -71,7 +71,7 @@ func (x *E) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use E.Type instead.
+// Deprecated: Use E.Descriptor instead.
 func (E) EnumDescriptor() ([]byte, []int) {
 	return file_import_public_sub_a_proto_rawDescGZIP(), []int{0}
 }
@@ -122,7 +122,7 @@ func (x *M_Subenum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use M_Subenum.Type instead.
+// Deprecated: Use M_Subenum.Descriptor instead.
 func (M_Subenum) EnumDescriptor() ([]byte, []int) {
 	return file_import_public_sub_a_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -173,7 +173,7 @@ func (x *M_Submessage_Submessage_Subenum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use M_Submessage_Submessage_Subenum.Type instead.
+// Deprecated: Use M_Submessage_Submessage_Subenum.Descriptor instead.
 func (M_Submessage_Submessage_Subenum) EnumDescriptor() ([]byte, []int) {
 	return file_import_public_sub_a_proto_rawDescGZIP(), []int{0, 0, 0}
 }
@@ -216,7 +216,7 @@ func (x *M) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use M.ProtoReflect.Type instead.
+// Deprecated: Use M.ProtoReflect.Descriptor instead.
 func (*M) Descriptor() ([]byte, []int) {
 	return file_import_public_sub_a_proto_rawDescGZIP(), []int{0}
 }
@@ -225,7 +225,7 @@ var extRange_M = []protoiface.ExtensionRangeV1{
 	{Start: 100, End: 536870911},
 }
 
-// Deprecated: Use M.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use M.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*M) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_M
 }
@@ -332,7 +332,7 @@ func (x *M_Submessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use M_Submessage.ProtoReflect.Type instead.
+// Deprecated: Use M_Submessage.ProtoReflect.Descriptor instead.
 func (*M_Submessage) Descriptor() ([]byte, []int) {
 	return file_import_public_sub_a_proto_rawDescGZIP(), []int{0, 0}
 }

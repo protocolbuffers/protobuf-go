@@ -62,7 +62,7 @@ func (x Syntax) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Syntax.Type instead.
+// Deprecated: Use Syntax.Descriptor instead.
 func (Syntax) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{0}
 }
@@ -177,7 +177,7 @@ func (x Field_Kind) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Field_Kind.Type instead.
+// Deprecated: Use Field_Kind.Descriptor instead.
 func (Field_Kind) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{1, 0}
 }
@@ -232,7 +232,7 @@ func (x Field_Cardinality) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Field_Cardinality.Type instead.
+// Deprecated: Use Field_Cardinality.Descriptor instead.
 func (Field_Cardinality) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{1, 1}
 }
@@ -278,7 +278,7 @@ func (x *Type) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Type.ProtoReflect.Type instead.
+// Deprecated: Use Type.ProtoReflect.Descriptor instead.
 func (*Type) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{0}
 }
@@ -376,7 +376,7 @@ func (x *Field) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Field.ProtoReflect.Type instead.
+// Deprecated: Use Field.ProtoReflect.Descriptor instead.
 func (*Field) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{1}
 }
@@ -490,7 +490,7 @@ func (x *Enum) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Enum.ProtoReflect.Type instead.
+// Deprecated: Use Enum.ProtoReflect.Descriptor instead.
 func (*Enum) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{2}
 }
@@ -565,7 +565,7 @@ func (x *EnumValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnumValue.ProtoReflect.Type instead.
+// Deprecated: Use EnumValue.ProtoReflect.Descriptor instead.
 func (*EnumValue) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{3}
 }
@@ -631,7 +631,7 @@ func (x *Option) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Option.ProtoReflect.Type instead.
+// Deprecated: Use Option.ProtoReflect.Descriptor instead.
 func (*Option) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_type_proto_rawDescGZIP(), []int{4}
 }

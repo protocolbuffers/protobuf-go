@@ -46,7 +46,7 @@ func (x *WeakImportMessage2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use WeakImportMessage2.ProtoReflect.Type instead.
+// Deprecated: Use WeakImportMessage2.ProtoReflect.Descriptor instead.
 func (*WeakImportMessage2) Descriptor() ([]byte, []int) {
 	return file_test_weak2_test_weak_proto_rawDescGZIP(), []int{0}
 }

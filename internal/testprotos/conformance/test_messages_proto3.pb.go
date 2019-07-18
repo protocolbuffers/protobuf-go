@@ -66,7 +66,7 @@ func (x ForeignEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use ForeignEnum.Type instead.
+// Deprecated: Use ForeignEnum.Descriptor instead.
 func (ForeignEnum) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{0}
 }
@@ -116,7 +116,7 @@ func (x TestAllTypesProto3_NestedEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use TestAllTypesProto3_NestedEnum.Type instead.
+// Deprecated: Use TestAllTypesProto3_NestedEnum.Descriptor instead.
 func (TestAllTypesProto3_NestedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -172,7 +172,7 @@ func (x TestAllTypesProto3_AliasedEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use TestAllTypesProto3_AliasedEnum.Type instead.
+// Deprecated: Use TestAllTypesProto3_AliasedEnum.Descriptor instead.
 func (TestAllTypesProto3_AliasedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{0, 1}
 }
@@ -341,7 +341,7 @@ func (x *TestAllTypesProto3) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypesProto3.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypesProto3.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto3) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{0}
 }
@@ -1287,7 +1287,7 @@ func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ForeignMessage.ProtoReflect.Type instead.
+// Deprecated: Use ForeignMessage.ProtoReflect.Descriptor instead.
 func (*ForeignMessage) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{1}
 }
@@ -1329,7 +1329,7 @@ func (x *TestAllTypesProto3_NestedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TestAllTypesProto3_NestedMessage.ProtoReflect.Type instead.
+// Deprecated: Use TestAllTypesProto3_NestedMessage.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto3_NestedMessage) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{0, 0}
 }

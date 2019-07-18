@@ -70,7 +70,7 @@ func (x *EnumType1) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use EnumType1.Type instead.
+// Deprecated: Use EnumType1.Descriptor instead.
 func (EnumType1) EnumDescriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{0}
 }
@@ -124,7 +124,7 @@ func (x *EnumType2) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use EnumType2.Type instead.
+// Deprecated: Use EnumType2.Descriptor instead.
 func (EnumType2) EnumDescriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{1}
 }
@@ -177,7 +177,7 @@ func (x *EnumContainerMessage1_NestedEnumType1A) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use EnumContainerMessage1_NestedEnumType1A.Type instead.
+// Deprecated: Use EnumContainerMessage1_NestedEnumType1A.Descriptor instead.
 func (EnumContainerMessage1_NestedEnumType1A) EnumDescriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{0, 0}
 }
@@ -228,7 +228,7 @@ func (x *EnumContainerMessage1_NestedEnumType1B) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use EnumContainerMessage1_NestedEnumType1B.Type instead.
+// Deprecated: Use EnumContainerMessage1_NestedEnumType1B.Descriptor instead.
 func (EnumContainerMessage1_NestedEnumType1B) EnumDescriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{0, 1}
 }
@@ -281,7 +281,7 @@ func (x *EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A) Unmarshal
 	return nil
 }
 
-// Deprecated: Use EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A.Type instead.
+// Deprecated: Use EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A.Descriptor instead.
 func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A) EnumDescriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{0, 0, 0}
 }
@@ -332,7 +332,7 @@ func (x *EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) Unmarshal
 	return nil
 }
 
-// Deprecated: Use EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B.Type instead.
+// Deprecated: Use EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B.Descriptor instead.
 func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) EnumDescriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{0, 0, 1}
 }
@@ -367,7 +367,7 @@ func (x *EnumContainerMessage1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnumContainerMessage1.ProtoReflect.Type instead.
+// Deprecated: Use EnumContainerMessage1.ProtoReflect.Descriptor instead.
 func (*EnumContainerMessage1) Descriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{0}
 }
@@ -417,7 +417,7 @@ func (x *EnumContainerMessage1_EnumContainerMessage2) ProtoReflect() protoreflec
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnumContainerMessage1_EnumContainerMessage2.ProtoReflect.Type instead.
+// Deprecated: Use EnumContainerMessage1_EnumContainerMessage2.ProtoReflect.Descriptor instead.
 func (*EnumContainerMessage1_EnumContainerMessage2) Descriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{0, 0}
 }

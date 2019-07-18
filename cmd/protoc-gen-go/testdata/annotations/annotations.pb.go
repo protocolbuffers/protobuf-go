@@ -64,7 +64,7 @@ func (x *AnnotationsTestEnum) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use AnnotationsTestEnum.Type instead.
+// Deprecated: Use AnnotationsTestEnum.Descriptor instead.
 func (AnnotationsTestEnum) EnumDescriptor() ([]byte, []int) {
 	return file_annotations_annotations_proto_rawDescGZIP(), []int{0}
 }
@@ -98,7 +98,7 @@ func (x *AnnotationsTestMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AnnotationsTestMessage.ProtoReflect.Type instead.
+// Deprecated: Use AnnotationsTestMessage.ProtoReflect.Descriptor instead.
 func (*AnnotationsTestMessage) Descriptor() ([]byte, []int) {
 	return file_annotations_annotations_proto_rawDescGZIP(), []int{0}
 }

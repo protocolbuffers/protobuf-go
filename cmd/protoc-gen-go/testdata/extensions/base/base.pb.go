@@ -48,7 +48,7 @@ func (x *BaseMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BaseMessage.ProtoReflect.Type instead.
+// Deprecated: Use BaseMessage.ProtoReflect.Descriptor instead.
 func (*BaseMessage) Descriptor() ([]byte, []int) {
 	return file_extensions_base_base_proto_rawDescGZIP(), []int{0}
 }
@@ -58,7 +58,7 @@ var extRange_BaseMessage = []protoiface.ExtensionRangeV1{
 	{Start: 16, End: 536870911},
 }
 
-// Deprecated: Use BaseMessage.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use BaseMessage.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*BaseMessage) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_BaseMessage
 }
@@ -99,7 +99,7 @@ func (x *MessageSetWireFormatMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MessageSetWireFormatMessage.ProtoReflect.Type instead.
+// Deprecated: Use MessageSetWireFormatMessage.ProtoReflect.Descriptor instead.
 func (*MessageSetWireFormatMessage) Descriptor() ([]byte, []int) {
 	return file_extensions_base_base_proto_rawDescGZIP(), []int{1}
 }
@@ -108,7 +108,7 @@ var extRange_MessageSetWireFormatMessage = []protoiface.ExtensionRangeV1{
 	{Start: 100, End: 2147483646},
 }
 
-// Deprecated: Use MessageSetWireFormatMessage.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use MessageSetWireFormatMessage.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*MessageSetWireFormatMessage) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_MessageSetWireFormatMessage
 }

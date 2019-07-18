@@ -87,7 +87,7 @@ func (x *Public) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Public.ProtoReflect.Type instead.
+// Deprecated: Use Public.ProtoReflect.Descriptor instead.
 func (*Public) Descriptor() ([]byte, []int) {
 	return file_import_public_a_proto_rawDescGZIP(), []int{0}
 }

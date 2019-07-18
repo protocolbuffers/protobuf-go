@@ -47,7 +47,7 @@ func (x *MessageSet) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MessageSet.ProtoReflect.Type instead.
+// Deprecated: Use MessageSet.ProtoReflect.Descriptor instead.
 func (*MessageSet) Descriptor() ([]byte, []int) {
 	return file_messageset_messagesetpb_message_set_proto_rawDescGZIP(), []int{0}
 }
@@ -56,7 +56,7 @@ var extRange_MessageSet = []protoiface.ExtensionRangeV1{
 	{Start: 4, End: 2147483646},
 }
 
-// Deprecated: Use MessageSet.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use MessageSet.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*MessageSet) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_MessageSet
 }

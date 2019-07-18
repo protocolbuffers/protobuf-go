@@ -66,7 +66,7 @@ func (x WireFormat) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use WireFormat.Type instead.
+// Deprecated: Use WireFormat.Descriptor instead.
 func (WireFormat) EnumDescriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{0}
 }
@@ -130,7 +130,7 @@ func (x TestCategory) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use TestCategory.Type instead.
+// Deprecated: Use TestCategory.Descriptor instead.
 func (TestCategory) EnumDescriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{1}
 }
@@ -167,7 +167,7 @@ func (x *FailureSet) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FailureSet.ProtoReflect.Type instead.
+// Deprecated: Use FailureSet.ProtoReflect.Descriptor instead.
 func (*FailureSet) Descriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{0}
 }
@@ -239,7 +239,7 @@ func (x *ConformanceRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ConformanceRequest.ProtoReflect.Type instead.
+// Deprecated: Use ConformanceRequest.ProtoReflect.Descriptor instead.
 func (*ConformanceRequest) Descriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{1}
 }
@@ -396,7 +396,7 @@ func (x *ConformanceResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ConformanceResponse.ProtoReflect.Type instead.
+// Deprecated: Use ConformanceResponse.ProtoReflect.Descriptor instead.
 func (*ConformanceResponse) Descriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{2}
 }
@@ -547,7 +547,7 @@ func (x *JspbEncodingConfig) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use JspbEncodingConfig.ProtoReflect.Type instead.
+// Deprecated: Use JspbEncodingConfig.ProtoReflect.Descriptor instead.
 func (*JspbEncodingConfig) Descriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{3}
 }

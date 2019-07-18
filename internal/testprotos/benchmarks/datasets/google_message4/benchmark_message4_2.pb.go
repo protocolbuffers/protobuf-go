@@ -51,7 +51,7 @@ func (x *Message12774) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message12774.ProtoReflect.Type instead.
+// Deprecated: Use Message12774.ProtoReflect.Descriptor instead.
 func (*Message12774) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{0}
 }
@@ -128,7 +128,7 @@ func (x *Message12796) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message12796.ProtoReflect.Type instead.
+// Deprecated: Use Message12796.ProtoReflect.Descriptor instead.
 func (*Message12796) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{1}
 }
@@ -180,7 +180,7 @@ func (x *Message12821) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message12821.ProtoReflect.Type instead.
+// Deprecated: Use Message12821.ProtoReflect.Descriptor instead.
 func (*Message12821) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{2}
 }
@@ -256,7 +256,7 @@ func (x *Message12820) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message12820.ProtoReflect.Type instead.
+// Deprecated: Use Message12820.ProtoReflect.Descriptor instead.
 func (*Message12820) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{3}
 }
@@ -351,7 +351,7 @@ func (x *Message12819) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message12819.ProtoReflect.Type instead.
+// Deprecated: Use Message12819.ProtoReflect.Descriptor instead.
 func (*Message12819) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{4}
 }
@@ -431,7 +431,7 @@ func (x *Message12818) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message12818.ProtoReflect.Type instead.
+// Deprecated: Use Message12818.ProtoReflect.Descriptor instead.
 func (*Message12818) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{5}
 }
@@ -506,7 +506,7 @@ func (x *Message10319) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message10319.ProtoReflect.Type instead.
+// Deprecated: Use Message10319.ProtoReflect.Descriptor instead.
 func (*Message10319) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{6}
 }
@@ -590,7 +590,7 @@ func (x *Message6578) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6578.ProtoReflect.Type instead.
+// Deprecated: Use Message6578.ProtoReflect.Descriptor instead.
 func (*Message6578) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{7}
 }
@@ -656,7 +656,7 @@ func (x *Message6126) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6126.ProtoReflect.Type instead.
+// Deprecated: Use Message6126.ProtoReflect.Descriptor instead.
 func (*Message6126) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{8}
 }
@@ -828,7 +828,7 @@ func (x *Message5881) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message5881.ProtoReflect.Type instead.
+// Deprecated: Use Message5881.ProtoReflect.Descriptor instead.
 func (*Message5881) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{9}
 }
@@ -903,7 +903,7 @@ func (x *Message6110) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6110.ProtoReflect.Type instead.
+// Deprecated: Use Message6110.ProtoReflect.Descriptor instead.
 func (*Message6110) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{10}
 }
@@ -942,7 +942,7 @@ func (x *Message6107) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6107.ProtoReflect.Type instead.
+// Deprecated: Use Message6107.ProtoReflect.Descriptor instead.
 func (*Message6107) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{11}
 }
@@ -1019,7 +1019,7 @@ func (x *Message6129) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6129.ProtoReflect.Type instead.
+// Deprecated: Use Message6129.ProtoReflect.Descriptor instead.
 func (*Message6129) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{12}
 }
@@ -1116,7 +1116,7 @@ func (x *Message5908) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message5908.ProtoReflect.Type instead.
+// Deprecated: Use Message5908.ProtoReflect.Descriptor instead.
 func (*Message5908) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{13}
 }
@@ -1505,7 +1505,7 @@ func (x *Message3850) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message3850.ProtoReflect.Type instead.
+// Deprecated: Use Message3850.ProtoReflect.Descriptor instead.
 func (*Message3850) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{14}
 }
@@ -1580,7 +1580,7 @@ func (x *Message7865) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message7865.ProtoReflect.Type instead.
+// Deprecated: Use Message7865.ProtoReflect.Descriptor instead.
 func (*Message7865) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{15}
 }
@@ -1620,7 +1620,7 @@ func (x *Message7511) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message7511.ProtoReflect.Type instead.
+// Deprecated: Use Message7511.ProtoReflect.Descriptor instead.
 func (*Message7511) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{16}
 }
@@ -1702,7 +1702,7 @@ func (x *Message3920) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message3920.ProtoReflect.Type instead.
+// Deprecated: Use Message3920.ProtoReflect.Descriptor instead.
 func (*Message3920) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{17}
 }
@@ -1737,7 +1737,7 @@ func (x *Message7928) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message7928.ProtoReflect.Type instead.
+// Deprecated: Use Message7928.ProtoReflect.Descriptor instead.
 func (*Message7928) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{18}
 }
@@ -1788,7 +1788,7 @@ func (x *Message7921) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message7921.ProtoReflect.Type instead.
+// Deprecated: Use Message7921.ProtoReflect.Descriptor instead.
 func (*Message7921) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{19}
 }
@@ -1851,7 +1851,7 @@ func (x *Message7920) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message7920.ProtoReflect.Type instead.
+// Deprecated: Use Message7920.ProtoReflect.Descriptor instead.
 func (*Message7920) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{20}
 }
@@ -1901,7 +1901,7 @@ func (x *Message7919) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message7919.ProtoReflect.Type instead.
+// Deprecated: Use Message7919.ProtoReflect.Descriptor instead.
 func (*Message7919) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{21}
 }
@@ -1958,7 +1958,7 @@ func (x *Message12817) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message12817.ProtoReflect.Type instead.
+// Deprecated: Use Message12817.ProtoReflect.Descriptor instead.
 func (*Message12817) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{22}
 }
@@ -2014,7 +2014,7 @@ func (x *Message6054) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6054.ProtoReflect.Type instead.
+// Deprecated: Use Message6054.ProtoReflect.Descriptor instead.
 func (*Message6054) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{23}
 }
@@ -2061,7 +2061,7 @@ func (x *Message6127) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6127.ProtoReflect.Type instead.
+// Deprecated: Use Message6127.ProtoReflect.Descriptor instead.
 func (*Message6127) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{24}
 }
@@ -2096,7 +2096,7 @@ func (x *Message6052) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6052.ProtoReflect.Type instead.
+// Deprecated: Use Message6052.ProtoReflect.Descriptor instead.
 func (*Message6052) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{25}
 }
@@ -2146,7 +2146,7 @@ func (x *Message6024) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6024.ProtoReflect.Type instead.
+// Deprecated: Use Message6024.ProtoReflect.Descriptor instead.
 func (*Message6024) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{26}
 }
@@ -2204,7 +2204,7 @@ func (x *Message5861) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message5861.ProtoReflect.Type instead.
+// Deprecated: Use Message5861.ProtoReflect.Descriptor instead.
 func (*Message5861) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{27}
 }
@@ -2266,7 +2266,7 @@ func (x *Message5880) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message5880.ProtoReflect.Type instead.
+// Deprecated: Use Message5880.ProtoReflect.Descriptor instead.
 func (*Message5880) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{28}
 }
@@ -2312,7 +2312,7 @@ func (x *Message5867) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message5867.ProtoReflect.Type instead.
+// Deprecated: Use Message5867.ProtoReflect.Descriptor instead.
 func (*Message5867) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{29}
 }
@@ -2391,7 +2391,7 @@ func (x *Message4016) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message4016.ProtoReflect.Type instead.
+// Deprecated: Use Message4016.ProtoReflect.Descriptor instead.
 func (*Message4016) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{30}
 }
@@ -2452,7 +2452,7 @@ func (x *Message6108) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message6108.ProtoReflect.Type instead.
+// Deprecated: Use Message6108.ProtoReflect.Descriptor instead.
 func (*Message6108) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{31}
 }
@@ -2489,7 +2489,7 @@ func (x *Message5907) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message5907.ProtoReflect.Type instead.
+// Deprecated: Use Message5907.ProtoReflect.Descriptor instead.
 func (*Message5907) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{32}
 }
@@ -2550,7 +2550,7 @@ func (x *UnusedEmptyMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UnusedEmptyMessage.ProtoReflect.Type instead.
+// Deprecated: Use UnusedEmptyMessage.ProtoReflect.Descriptor instead.
 func (*UnusedEmptyMessage) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{33}
 }
@@ -2585,7 +2585,7 @@ func (x *Message5903) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message5903.ProtoReflect.Type instead.
+// Deprecated: Use Message5903.ProtoReflect.Descriptor instead.
 func (*Message5903) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message4_benchmark_message4_2_proto_rawDescGZIP(), []int{34}
 }

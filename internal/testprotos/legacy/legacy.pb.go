@@ -69,7 +69,7 @@ func (x *Legacy) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Legacy.ProtoReflect.Type instead.
+// Deprecated: Use Legacy.ProtoReflect.Descriptor instead.
 func (*Legacy) Descriptor() ([]byte, []int) {
 	return file_legacy_legacy_proto_rawDescGZIP(), []int{0}
 }

@@ -54,7 +54,7 @@ func (x *All) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use All.ProtoReflect.Type instead.
+// Deprecated: Use All.ProtoReflect.Descriptor instead.
 func (*All) Descriptor() ([]byte, []int) {
 	return file_imports_test_import_all_proto_rawDescGZIP(), []int{0}
 }

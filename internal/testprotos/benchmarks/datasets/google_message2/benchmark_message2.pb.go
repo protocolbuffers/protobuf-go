@@ -75,7 +75,7 @@ func (x *GoogleMessage2) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GoogleMessage2.ProtoReflect.Type instead.
+// Deprecated: Use GoogleMessage2.ProtoReflect.Descriptor instead.
 func (*GoogleMessage2) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message2_benchmark_message2_proto_rawDescGZIP(), []int{0}
 }
@@ -345,7 +345,7 @@ func (x *GoogleMessage2GroupedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GoogleMessage2GroupedMessage.ProtoReflect.Type instead.
+// Deprecated: Use GoogleMessage2GroupedMessage.ProtoReflect.Descriptor instead.
 func (*GoogleMessage2GroupedMessage) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message2_benchmark_message2_proto_rawDescGZIP(), []int{1}
 }
@@ -475,7 +475,7 @@ func (x *GoogleMessage2_Group1) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GoogleMessage2_Group1.ProtoReflect.Type instead.
+// Deprecated: Use GoogleMessage2_Group1.ProtoReflect.Descriptor instead.
 func (*GoogleMessage2_Group1) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message2_benchmark_message2_proto_rawDescGZIP(), []int{0, 0}
 }

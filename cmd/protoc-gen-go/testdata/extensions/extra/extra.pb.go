@@ -46,7 +46,7 @@ func (x *ExtraMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ExtraMessage.ProtoReflect.Type instead.
+// Deprecated: Use ExtraMessage.ProtoReflect.Descriptor instead.
 func (*ExtraMessage) Descriptor() ([]byte, []int) {
 	return file_extensions_extra_extra_proto_rawDescGZIP(), []int{0}
 }

@@ -84,7 +84,7 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message.ProtoReflect.Type instead.
+// Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
 	return file_fieldnames_fieldnames_proto_rawDescGZIP(), []int{0}
 }
@@ -300,7 +300,7 @@ func (x *Message_OneofMessageConflict) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message_OneofMessageConflict.ProtoReflect.Type instead.
+// Deprecated: Use Message_OneofMessageConflict.ProtoReflect.Descriptor instead.
 func (*Message_OneofMessageConflict) Descriptor() ([]byte, []int) {
 	return file_fieldnames_fieldnames_proto_rawDescGZIP(), []int{0, 0}
 }

@@ -127,7 +127,7 @@ func (x *FieldDescriptorProto_Type) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use FieldDescriptorProto_Type.Type instead.
+// Deprecated: Use FieldDescriptorProto_Type.Descriptor instead.
 func (FieldDescriptorProto_Type) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{4, 0}
 }
@@ -185,7 +185,7 @@ func (x *FieldDescriptorProto_Label) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use FieldDescriptorProto_Label.Type instead.
+// Deprecated: Use FieldDescriptorProto_Label.Descriptor instead.
 func (FieldDescriptorProto_Label) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{4, 1}
 }
@@ -244,7 +244,7 @@ func (x *FileOptions_OptimizeMode) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use FileOptions_OptimizeMode.Type instead.
+// Deprecated: Use FileOptions_OptimizeMode.Descriptor instead.
 func (FileOptions_OptimizeMode) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{10, 0}
 }
@@ -302,7 +302,7 @@ func (x *FieldOptions_CType) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use FieldOptions_CType.Type instead.
+// Deprecated: Use FieldOptions_CType.Descriptor instead.
 func (FieldOptions_CType) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{12, 0}
 }
@@ -362,7 +362,7 @@ func (x *FieldOptions_JSType) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use FieldOptions_JSType.Type instead.
+// Deprecated: Use FieldOptions_JSType.Descriptor instead.
 func (FieldOptions_JSType) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{12, 1}
 }
@@ -422,7 +422,7 @@ func (x *MethodOptions_IdempotencyLevel) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Deprecated: Use MethodOptions_IdempotencyLevel.Type instead.
+// Deprecated: Use MethodOptions_IdempotencyLevel.Descriptor instead.
 func (MethodOptions_IdempotencyLevel) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{17, 0}
 }
@@ -458,7 +458,7 @@ func (x *FileDescriptorSet) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FileDescriptorSet.ProtoReflect.Type instead.
+// Deprecated: Use FileDescriptorSet.ProtoReflect.Descriptor instead.
 func (*FileDescriptorSet) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{0}
 }
@@ -522,7 +522,7 @@ func (x *FileDescriptorProto) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FileDescriptorProto.ProtoReflect.Type instead.
+// Deprecated: Use FileDescriptorProto.ProtoReflect.Descriptor instead.
 func (*FileDescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{1}
 }
@@ -652,7 +652,7 @@ func (x *DescriptorProto) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DescriptorProto.ProtoReflect.Type instead.
+// Deprecated: Use DescriptorProto.ProtoReflect.Descriptor instead.
 func (*DescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{2}
 }
@@ -758,7 +758,7 @@ func (x *ExtensionRangeOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ExtensionRangeOptions.ProtoReflect.Type instead.
+// Deprecated: Use ExtensionRangeOptions.ProtoReflect.Descriptor instead.
 func (*ExtensionRangeOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{3}
 }
@@ -767,7 +767,7 @@ var extRange_ExtensionRangeOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use ExtensionRangeOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use ExtensionRangeOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*ExtensionRangeOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_ExtensionRangeOptions
 }
@@ -838,7 +838,7 @@ func (x *FieldDescriptorProto) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldDescriptorProto.ProtoReflect.Type instead.
+// Deprecated: Use FieldDescriptorProto.ProtoReflect.Descriptor instead.
 func (*FieldDescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{4}
 }
@@ -944,7 +944,7 @@ func (x *OneofDescriptorProto) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use OneofDescriptorProto.ProtoReflect.Type instead.
+// Deprecated: Use OneofDescriptorProto.ProtoReflect.Descriptor instead.
 func (*OneofDescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{5}
 }
@@ -1002,7 +1002,7 @@ func (x *EnumDescriptorProto) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnumDescriptorProto.ProtoReflect.Type instead.
+// Deprecated: Use EnumDescriptorProto.ProtoReflect.Descriptor instead.
 func (*EnumDescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{6}
 }
@@ -1074,7 +1074,7 @@ func (x *EnumValueDescriptorProto) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnumValueDescriptorProto.ProtoReflect.Type instead.
+// Deprecated: Use EnumValueDescriptorProto.ProtoReflect.Descriptor instead.
 func (*EnumValueDescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{7}
 }
@@ -1132,7 +1132,7 @@ func (x *ServiceDescriptorProto) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ServiceDescriptorProto.ProtoReflect.Type instead.
+// Deprecated: Use ServiceDescriptorProto.ProtoReflect.Descriptor instead.
 func (*ServiceDescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{8}
 }
@@ -1197,7 +1197,7 @@ func (x *MethodDescriptorProto) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MethodDescriptorProto.ProtoReflect.Type instead.
+// Deprecated: Use MethodDescriptorProto.ProtoReflect.Descriptor instead.
 func (*MethodDescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{9}
 }
@@ -1360,7 +1360,7 @@ func (x *FileOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FileOptions.ProtoReflect.Type instead.
+// Deprecated: Use FileOptions.ProtoReflect.Descriptor instead.
 func (*FileOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{10}
 }
@@ -1369,7 +1369,7 @@ var extRange_FileOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use FileOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use FileOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*FileOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_FileOptions
 }
@@ -1613,7 +1613,7 @@ func (x *MessageOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MessageOptions.ProtoReflect.Type instead.
+// Deprecated: Use MessageOptions.ProtoReflect.Descriptor instead.
 func (*MessageOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{11}
 }
@@ -1622,7 +1622,7 @@ var extRange_MessageOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use MessageOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use MessageOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*MessageOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_MessageOptions
 }
@@ -1756,7 +1756,7 @@ func (x *FieldOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FieldOptions.ProtoReflect.Type instead.
+// Deprecated: Use FieldOptions.ProtoReflect.Descriptor instead.
 func (*FieldOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{12}
 }
@@ -1765,7 +1765,7 @@ var extRange_FieldOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use FieldOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use FieldOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*FieldOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_FieldOptions
 }
@@ -1856,7 +1856,7 @@ func (x *OneofOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use OneofOptions.ProtoReflect.Type instead.
+// Deprecated: Use OneofOptions.ProtoReflect.Descriptor instead.
 func (*OneofOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{13}
 }
@@ -1865,7 +1865,7 @@ var extRange_OneofOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use OneofOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use OneofOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*OneofOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_OneofOptions
 }
@@ -1916,7 +1916,7 @@ func (x *EnumOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnumOptions.ProtoReflect.Type instead.
+// Deprecated: Use EnumOptions.ProtoReflect.Descriptor instead.
 func (*EnumOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{14}
 }
@@ -1925,7 +1925,7 @@ var extRange_EnumOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use EnumOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use EnumOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*EnumOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_EnumOptions
 }
@@ -1989,7 +1989,7 @@ func (x *EnumValueOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnumValueOptions.ProtoReflect.Type instead.
+// Deprecated: Use EnumValueOptions.ProtoReflect.Descriptor instead.
 func (*EnumValueOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{15}
 }
@@ -1998,7 +1998,7 @@ var extRange_EnumValueOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use EnumValueOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use EnumValueOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*EnumValueOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_EnumValueOptions
 }
@@ -2055,7 +2055,7 @@ func (x *ServiceOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ServiceOptions.ProtoReflect.Type instead.
+// Deprecated: Use ServiceOptions.ProtoReflect.Descriptor instead.
 func (*ServiceOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{16}
 }
@@ -2064,7 +2064,7 @@ var extRange_ServiceOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use ServiceOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use ServiceOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*ServiceOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_ServiceOptions
 }
@@ -2122,7 +2122,7 @@ func (x *MethodOptions) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MethodOptions.ProtoReflect.Type instead.
+// Deprecated: Use MethodOptions.ProtoReflect.Descriptor instead.
 func (*MethodOptions) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{17}
 }
@@ -2131,7 +2131,7 @@ var extRange_MethodOptions = []protoiface.ExtensionRangeV1{
 	{Start: 1000, End: 536870911},
 }
 
-// Deprecated: Use MethodOptions.ProtoReflect.Type.ExtensionRanges instead.
+// Deprecated: Use MethodOptions.ProtoReflect.Descriptor.ExtensionRanges instead.
 func (*MethodOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_MethodOptions
 }
@@ -2203,7 +2203,7 @@ func (x *UninterpretedOption) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UninterpretedOption.ProtoReflect.Type instead.
+// Deprecated: Use UninterpretedOption.ProtoReflect.Descriptor instead.
 func (*UninterpretedOption) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{18}
 }
@@ -2331,7 +2331,7 @@ func (x *SourceCodeInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SourceCodeInfo.ProtoReflect.Type instead.
+// Deprecated: Use SourceCodeInfo.ProtoReflect.Descriptor instead.
 func (*SourceCodeInfo) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{19}
 }
@@ -2377,7 +2377,7 @@ func (x *GeneratedCodeInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GeneratedCodeInfo.ProtoReflect.Type instead.
+// Deprecated: Use GeneratedCodeInfo.ProtoReflect.Descriptor instead.
 func (*GeneratedCodeInfo) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{20}
 }
@@ -2420,7 +2420,7 @@ func (x *DescriptorProto_ExtensionRange) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DescriptorProto_ExtensionRange.ProtoReflect.Type instead.
+// Deprecated: Use DescriptorProto_ExtensionRange.ProtoReflect.Descriptor instead.
 func (*DescriptorProto_ExtensionRange) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{2, 0}
 }
@@ -2479,7 +2479,7 @@ func (x *DescriptorProto_ReservedRange) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DescriptorProto_ReservedRange.ProtoReflect.Type instead.
+// Deprecated: Use DescriptorProto_ReservedRange.ProtoReflect.Descriptor instead.
 func (*DescriptorProto_ReservedRange) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{2, 1}
 }
@@ -2534,7 +2534,7 @@ func (x *EnumDescriptorProto_EnumReservedRange) ProtoReflect() protoreflect.Mess
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnumDescriptorProto_EnumReservedRange.ProtoReflect.Type instead.
+// Deprecated: Use EnumDescriptorProto_EnumReservedRange.ProtoReflect.Descriptor instead.
 func (*EnumDescriptorProto_EnumReservedRange) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{6, 0}
 }
@@ -2588,7 +2588,7 @@ func (x *UninterpretedOption_NamePart) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UninterpretedOption_NamePart.ProtoReflect.Type instead.
+// Deprecated: Use UninterpretedOption_NamePart.ProtoReflect.Descriptor instead.
 func (*UninterpretedOption_NamePart) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{18, 0}
 }
@@ -2715,7 +2715,7 @@ func (x *SourceCodeInfo_Location) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SourceCodeInfo_Location.ProtoReflect.Type instead.
+// Deprecated: Use SourceCodeInfo_Location.ProtoReflect.Descriptor instead.
 func (*SourceCodeInfo_Location) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{19, 0}
 }
@@ -2795,7 +2795,7 @@ func (x *GeneratedCodeInfo_Annotation) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GeneratedCodeInfo_Annotation.ProtoReflect.Type instead.
+// Deprecated: Use GeneratedCodeInfo_Annotation.ProtoReflect.Descriptor instead.
 func (*GeneratedCodeInfo_Annotation) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{20, 0}
 }

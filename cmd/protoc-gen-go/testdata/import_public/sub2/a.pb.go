@@ -45,7 +45,7 @@ func (x *Sub2Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Sub2Message.ProtoReflect.Type instead.
+// Deprecated: Use Sub2Message.ProtoReflect.Descriptor instead.
 func (*Sub2Message) Descriptor() ([]byte, []int) {
 	return file_import_public_sub2_a_proto_rawDescGZIP(), []int{0}
 }

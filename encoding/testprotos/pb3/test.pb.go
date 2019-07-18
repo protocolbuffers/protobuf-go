@@ -63,7 +63,7 @@ func (x Enum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Enum.Type instead.
+// Deprecated: Use Enum.Descriptor instead.
 func (Enum) EnumDescriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{0}
 }
@@ -113,7 +113,7 @@ func (x Enums_NestedEnum) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Enums_NestedEnum.Type instead.
+// Deprecated: Use Enums_NestedEnum.Descriptor instead.
 func (Enums_NestedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{1, 0}
 }
@@ -162,7 +162,7 @@ func (x *Scalars) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Scalars.ProtoReflect.Type instead.
+// Deprecated: Use Scalars.ProtoReflect.Descriptor instead.
 func (*Scalars) Descriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{0}
 }
@@ -303,7 +303,7 @@ func (x *Enums) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Enums.ProtoReflect.Type instead.
+// Deprecated: Use Enums.ProtoReflect.Descriptor instead.
 func (*Enums) Descriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{1}
 }
@@ -352,7 +352,7 @@ func (x *Nests) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Nests.ProtoReflect.Type instead.
+// Deprecated: Use Nests.ProtoReflect.Descriptor instead.
 func (*Nests) Descriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{2}
 }
@@ -395,7 +395,7 @@ func (x *Nested) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Nested.ProtoReflect.Type instead.
+// Deprecated: Use Nested.ProtoReflect.Descriptor instead.
 func (*Nested) Descriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{3}
 }
@@ -448,7 +448,7 @@ func (x *Oneofs) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Oneofs.ProtoReflect.Type instead.
+// Deprecated: Use Oneofs.ProtoReflect.Descriptor instead.
 func (*Oneofs) Descriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{4}
 }
@@ -537,7 +537,7 @@ func (x *Maps) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Maps.ProtoReflect.Type instead.
+// Deprecated: Use Maps.ProtoReflect.Descriptor instead.
 func (*Maps) Descriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{5}
 }
@@ -607,7 +607,7 @@ func (x *JSONNames) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use JSONNames.ProtoReflect.Type instead.
+// Deprecated: Use JSONNames.ProtoReflect.Descriptor instead.
 func (*JSONNames) Descriptor() ([]byte, []int) {
 	return file_pb3_test_proto_rawDescGZIP(), []int{6}
 }
