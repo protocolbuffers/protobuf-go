@@ -129,7 +129,7 @@ func TestFiles(t *testing.T) {
 			inFile: mustMakeFile(`syntax:"proto2" name:"test2a.proto" enum_type:[{name:"foo" value:[{name:"VALUE" number:0}]}]`),
 		}, {
 			inFile:  mustMakeFile(`syntax:"proto2" name:"test2b.proto" package:"foo.bar.baz"`),
-			wantErr: `file "test2b.proto" has a name conflict over foo`,
+			wantErr: `file "test2b.proto" has a package name conflict over foo`,
 		}},
 	}, {
 		// Test when new enum conflicts with existing enum in same package.

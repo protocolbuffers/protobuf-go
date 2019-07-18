@@ -17,12 +17,25 @@ package protoregistry
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
+
+// ignoreConflict reports whether to ignore a registration conflict
+// given the descriptor being registered and the error.
+// It is a variable so that the behavior is easily overridden in another file.
+var ignoreConflict = func(d protoreflect.Descriptor, err error) bool {
+	log.Printf(""+
+		"WARNING: %v\n"+
+		"A future release will panic on registration conflicts.\n"+
+		// TODO: Add a URL pointing to documentation on how to resolve conflicts.
+		"\n", err)
+	return true
+}
 
 // GlobalFiles is a global registry of file descriptors.
 var GlobalFiles *Files = new(Files)
@@ -92,25 +105,38 @@ func (r *Files) registerFile(fd protoreflect.FileDescriptor) error {
 	path := fd.Path()
 	if prev := r.filesByPath[path]; prev != nil {
 		err := errors.New("file %q is already registered", fd.Path())
-		return amendErrorWithCaller(err, prev, fd)
+		err = amendErrorWithCaller(err, prev, fd)
+		if r == GlobalFiles && ignoreConflict(fd, err) {
+			err = nil
+		}
+		return err
 	}
 
 	for name := fd.Package(); name != ""; name = name.Parent() {
 		switch prev := r.descsByName[name]; prev.(type) {
 		case nil, *packageDescriptor:
 		default:
-			err := errors.New("file %q has a name conflict over %v", fd.Path(), name)
-			return amendErrorWithCaller(err, prev, fd)
+			err := errors.New("file %q has a package name conflict over %v", fd.Path(), name)
+			err = amendErrorWithCaller(err, prev, fd)
+			if r == GlobalFiles && ignoreConflict(fd, err) {
+				err = nil
+			}
+			return err
 		}
 	}
 	var err error
+	var hasConflict bool
 	rangeTopLevelDescriptors(fd, func(d protoreflect.Descriptor) {
 		if prev := r.descsByName[d.FullName()]; prev != nil {
+			hasConflict = true
 			err = errors.New("file %q has a name conflict over %v", fd.Path(), d.FullName())
 			err = amendErrorWithCaller(err, prev, fd)
+			if r == GlobalFiles && ignoreConflict(d, err) {
+				err = nil
+			}
 		}
 	})
-	if err != nil {
+	if hasConflict {
 		return err
 	}
 
@@ -291,6 +317,7 @@ func rangeTopLevelDescriptors(fd protoreflect.FileDescriptor, f func(protoreflec
 // Type is an interface satisfied by protoreflect.EnumType,
 // protoreflect.MessageType, or protoreflect.ExtensionType.
 type Type interface {
+	protoreflect.Descriptor
 	GoType() reflect.Type
 }
 
@@ -413,9 +440,13 @@ typeLoop:
 				panic(fmt.Sprintf("invalid type: %T", t))
 			}
 			if prev := r.typesByName[name]; prev != nil {
+				err := errors.New("%v %v is already registered", typeName(typ), name)
+				err = amendErrorWithCaller(err, prev, typ)
+				if r == GlobalTypes && ignoreConflict(typ, err) {
+					err = nil
+				}
 				if firstErr == nil {
-					err := errors.New("%v %v is already registered", typeName(typ), name)
-					firstErr = amendErrorWithCaller(err, prev, typ)
+					firstErr = err
 				}
 				continue typeLoop
 			}
@@ -425,9 +456,13 @@ typeLoop:
 				field := xt.Number()
 				message := xt.ContainingMessage().FullName()
 				if prev := r.extensionsByMessage[message][field]; prev != nil {
+					err := errors.New("extension number %d is already registered on message %v", field, message)
+					err = amendErrorWithCaller(err, prev, typ)
+					if r == GlobalTypes && ignoreConflict(typ, err) {
+						err = nil
+					}
 					if firstErr == nil {
-						err := errors.New("extension number %d is already registered on message %v", field, message)
-						firstErr = amendErrorWithCaller(err, prev, typ)
+						firstErr = err
 					}
 					continue typeLoop
 				}

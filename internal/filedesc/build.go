@@ -6,8 +6,6 @@
 package filedesc
 
 import (
-	"log"
-
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/fieldnum"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -107,7 +105,7 @@ func (db DescBuilder) Build() (out struct {
 	out.Services = fd.allServices
 
 	if err := db.FileRegistry.Register(fd); err != nil {
-		CheckRegistryError(err)
+		panic(err)
 	}
 	return out
 }
@@ -151,14 +149,4 @@ func (db *DescBuilder) unmarshalCounts(b []byte, isFile bool) {
 			b = b[m:]
 		}
 	}
-}
-
-// CheckRegistryError handles registration errors.
-// It is a variable so that its behavior can be replaced in another source file.
-var CheckRegistryError = func(err error) {
-	log.Printf(""+
-		"WARNING: %v\n"+
-		"A future release will panic on registration conflicts.\n"+
-		// TODO: Add a URL pointing to documentation on how to resolve conflicts.
-		"\n", err)
 }
