@@ -345,6 +345,9 @@ type EnumContainerMessage1 struct {
 	unknownFields     protoimpl.UnknownFields
 }
 
+const Default_EnumContainerMessage1_DefaultDuplicate1 EnumType2 = EnumType2_duplicate1
+const Default_EnumContainerMessage1_DefaultDuplicate2 EnumType2 = EnumType2_duplicate2
+
 func (x *EnumContainerMessage1) Reset() {
 	*x = EnumContainerMessage1{}
 }
@@ -371,9 +374,6 @@ func (x *EnumContainerMessage1) ProtoReflect() protoreflect.Message {
 func (*EnumContainerMessage1) Descriptor() ([]byte, []int) {
 	return file_proto2_enum_proto_rawDescGZIP(), []int{0}
 }
-
-const Default_EnumContainerMessage1_DefaultDuplicate1 EnumType2 = EnumType2_duplicate1
-const Default_EnumContainerMessage1_DefaultDuplicate2 EnumType2 = EnumType2_duplicate2
 
 func (x *EnumContainerMessage1) GetDefaultDuplicate1() EnumType2 {
 	if x != nil && x.DefaultDuplicate1 != nil {

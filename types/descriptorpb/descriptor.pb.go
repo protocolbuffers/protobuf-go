@@ -1175,6 +1175,9 @@ type MethodDescriptorProto struct {
 	unknownFields   protoimpl.UnknownFields
 }
 
+const Default_MethodDescriptorProto_ClientStreaming bool = false
+const Default_MethodDescriptorProto_ServerStreaming bool = false
+
 func (x *MethodDescriptorProto) Reset() {
 	*x = MethodDescriptorProto{}
 }
@@ -1201,9 +1204,6 @@ func (x *MethodDescriptorProto) ProtoReflect() protoreflect.Message {
 func (*MethodDescriptorProto) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_descriptor_proto_rawDescGZIP(), []int{9}
 }
-
-const Default_MethodDescriptorProto_ClientStreaming bool = false
-const Default_MethodDescriptorProto_ServerStreaming bool = false
 
 func (x *MethodDescriptorProto) GetName() string {
 	if x != nil && x.Name != nil {
@@ -1338,6 +1338,16 @@ type FileOptions struct {
 	extensionFields     protoimpl.ExtensionFields
 }
 
+const Default_FileOptions_JavaMultipleFiles bool = false
+const Default_FileOptions_JavaStringCheckUtf8 bool = false
+const Default_FileOptions_OptimizeFor FileOptions_OptimizeMode = FileOptions_SPEED
+const Default_FileOptions_CcGenericServices bool = false
+const Default_FileOptions_JavaGenericServices bool = false
+const Default_FileOptions_PyGenericServices bool = false
+const Default_FileOptions_PhpGenericServices bool = false
+const Default_FileOptions_Deprecated bool = false
+const Default_FileOptions_CcEnableArenas bool = false
+
 func (x *FileOptions) Reset() {
 	*x = FileOptions{}
 }
@@ -1373,16 +1383,6 @@ var extRange_FileOptions = []protoiface.ExtensionRangeV1{
 func (*FileOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_FileOptions
 }
-
-const Default_FileOptions_JavaMultipleFiles bool = false
-const Default_FileOptions_JavaStringCheckUtf8 bool = false
-const Default_FileOptions_OptimizeFor FileOptions_OptimizeMode = FileOptions_SPEED
-const Default_FileOptions_CcGenericServices bool = false
-const Default_FileOptions_JavaGenericServices bool = false
-const Default_FileOptions_PyGenericServices bool = false
-const Default_FileOptions_PhpGenericServices bool = false
-const Default_FileOptions_Deprecated bool = false
-const Default_FileOptions_CcEnableArenas bool = false
 
 func (x *FileOptions) GetJavaPackage() string {
 	if x != nil && x.JavaPackage != nil {
@@ -1591,6 +1591,10 @@ type MessageOptions struct {
 	extensionFields     protoimpl.ExtensionFields
 }
 
+const Default_MessageOptions_MessageSetWireFormat bool = false
+const Default_MessageOptions_NoStandardDescriptorAccessor bool = false
+const Default_MessageOptions_Deprecated bool = false
+
 func (x *MessageOptions) Reset() {
 	*x = MessageOptions{}
 }
@@ -1626,10 +1630,6 @@ var extRange_MessageOptions = []protoiface.ExtensionRangeV1{
 func (*MessageOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_MessageOptions
 }
-
-const Default_MessageOptions_MessageSetWireFormat bool = false
-const Default_MessageOptions_NoStandardDescriptorAccessor bool = false
-const Default_MessageOptions_Deprecated bool = false
 
 func (x *MessageOptions) GetMessageSetWireFormat() bool {
 	if x != nil && x.MessageSetWireFormat != nil {
@@ -1734,6 +1734,12 @@ type FieldOptions struct {
 	extensionFields     protoimpl.ExtensionFields
 }
 
+const Default_FieldOptions_Ctype FieldOptions_CType = FieldOptions_STRING
+const Default_FieldOptions_Jstype FieldOptions_JSType = FieldOptions_JS_NORMAL
+const Default_FieldOptions_Lazy bool = false
+const Default_FieldOptions_Deprecated bool = false
+const Default_FieldOptions_Weak bool = false
+
 func (x *FieldOptions) Reset() {
 	*x = FieldOptions{}
 }
@@ -1769,12 +1775,6 @@ var extRange_FieldOptions = []protoiface.ExtensionRangeV1{
 func (*FieldOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_FieldOptions
 }
-
-const Default_FieldOptions_Ctype FieldOptions_CType = FieldOptions_STRING
-const Default_FieldOptions_Jstype FieldOptions_JSType = FieldOptions_JS_NORMAL
-const Default_FieldOptions_Lazy bool = false
-const Default_FieldOptions_Deprecated bool = false
-const Default_FieldOptions_Weak bool = false
 
 func (x *FieldOptions) GetCtype() FieldOptions_CType {
 	if x != nil && x.Ctype != nil {
@@ -1894,6 +1894,8 @@ type EnumOptions struct {
 	extensionFields     protoimpl.ExtensionFields
 }
 
+const Default_EnumOptions_Deprecated bool = false
+
 func (x *EnumOptions) Reset() {
 	*x = EnumOptions{}
 }
@@ -1930,8 +1932,6 @@ func (*EnumOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_EnumOptions
 }
 
-const Default_EnumOptions_Deprecated bool = false
-
 func (x *EnumOptions) GetAllowAlias() bool {
 	if x != nil && x.AllowAlias != nil {
 		return *x.AllowAlias
@@ -1966,6 +1966,8 @@ type EnumValueOptions struct {
 	unknownFields       protoimpl.UnknownFields
 	extensionFields     protoimpl.ExtensionFields
 }
+
+const Default_EnumValueOptions_Deprecated bool = false
 
 func (x *EnumValueOptions) Reset() {
 	*x = EnumValueOptions{}
@@ -2003,8 +2005,6 @@ func (*EnumValueOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_EnumValueOptions
 }
 
-const Default_EnumValueOptions_Deprecated bool = false
-
 func (x *EnumValueOptions) GetDeprecated() bool {
 	if x != nil && x.Deprecated != nil {
 		return *x.Deprecated
@@ -2032,6 +2032,8 @@ type ServiceOptions struct {
 	unknownFields       protoimpl.UnknownFields
 	extensionFields     protoimpl.ExtensionFields
 }
+
+const Default_ServiceOptions_Deprecated bool = false
 
 func (x *ServiceOptions) Reset() {
 	*x = ServiceOptions{}
@@ -2069,8 +2071,6 @@ func (*ServiceOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_ServiceOptions
 }
 
-const Default_ServiceOptions_Deprecated bool = false
-
 func (x *ServiceOptions) GetDeprecated() bool {
 	if x != nil && x.Deprecated != nil {
 		return *x.Deprecated
@@ -2099,6 +2099,9 @@ type MethodOptions struct {
 	unknownFields       protoimpl.UnknownFields
 	extensionFields     protoimpl.ExtensionFields
 }
+
+const Default_MethodOptions_Deprecated bool = false
+const Default_MethodOptions_IdempotencyLevel MethodOptions_IdempotencyLevel = MethodOptions_IDEMPOTENCY_UNKNOWN
 
 func (x *MethodOptions) Reset() {
 	*x = MethodOptions{}
@@ -2135,9 +2138,6 @@ var extRange_MethodOptions = []protoiface.ExtensionRangeV1{
 func (*MethodOptions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_MethodOptions
 }
-
-const Default_MethodOptions_Deprecated bool = false
-const Default_MethodOptions_IdempotencyLevel MethodOptions_IdempotencyLevel = MethodOptions_IDEMPOTENCY_UNKNOWN
 
 func (x *MethodOptions) GetDeprecated() bool {
 	if x != nil && x.Deprecated != nil {

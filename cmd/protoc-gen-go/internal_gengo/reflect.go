@@ -272,7 +272,7 @@ func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 	}
 }
 
-func genReflectEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum *protogen.Enum) {
+func genEnumReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum *protogen.Enum) {
 	idx := f.allEnumsByPtr[enum]
 	typesVar := enumTypesVarName(f)
 
@@ -295,14 +295,14 @@ func genReflectEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo
 	g.P()
 }
 
-func genReflectMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
+func genMessageReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
 	idx := f.allMessagesByPtr[message]
 	typesVar := messageTypesVarName(f)
 
 	// ProtoReflect method.
 	g.P("func (x *", message.GoIdent, ") ProtoReflect() ", protoreflectPackage.Ident("Message"), " {")
 	g.P("mi := &", typesVar, "[", idx, "]")
-	if generateMessateStateFields {
+	if generateMessageStateFields {
 		g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " && x != nil {")
 		g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
 		g.P("if ms.LoadMessageInfo() == nil {")

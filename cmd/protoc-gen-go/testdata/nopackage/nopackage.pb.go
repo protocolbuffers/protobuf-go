@@ -77,6 +77,8 @@ type Message struct {
 	unknownFields protoimpl.UnknownFields
 }
 
+const Default_Message_EnumField Enum = Enum_ZERO
+
 func (x *Message) Reset() {
 	*x = Message{}
 }
@@ -103,8 +105,6 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 func (*Message) Descriptor() ([]byte, []int) {
 	return file_nopackage_nopackage_proto_rawDescGZIP(), []int{0}
 }
-
-const Default_Message_EnumField Enum = Enum_ZERO
 
 func (x *Message) GetStringField() string {
 	if x != nil && x.StringField != nil {

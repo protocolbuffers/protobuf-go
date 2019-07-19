@@ -185,33 +185,6 @@ type FieldTestMessage struct {
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *FieldTestMessage) Reset() {
-	*x = FieldTestMessage{}
-}
-
-func (x *FieldTestMessage) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*FieldTestMessage) ProtoMessage() {}
-
-func (x *FieldTestMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_proto2_fields_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use FieldTestMessage.ProtoReflect.Descriptor instead.
-func (*FieldTestMessage) Descriptor() ([]byte, []int) {
-	return file_proto2_fields_proto_rawDescGZIP(), []int{0}
-}
-
 const Default_FieldTestMessage_DefaultBool bool = true
 const Default_FieldTestMessage_DefaultEnum FieldTestMessage_Enum = FieldTestMessage_ONE
 const Default_FieldTestMessage_DefaultInt32 int32 = 1
@@ -239,6 +212,33 @@ var Default_FieldTestMessage_DefaultFloatNan float32 = float32(math.NaN())
 var Default_FieldTestMessage_DefaultDoubleNeginf float64 = math.Inf(-1)
 var Default_FieldTestMessage_DefaultDoublePosinf float64 = math.Inf(1)
 var Default_FieldTestMessage_DefaultDoubleNan float64 = math.NaN()
+
+func (x *FieldTestMessage) Reset() {
+	*x = FieldTestMessage{}
+}
+
+func (x *FieldTestMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FieldTestMessage) ProtoMessage() {}
+
+func (x *FieldTestMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_proto2_fields_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FieldTestMessage.ProtoReflect.Descriptor instead.
+func (*FieldTestMessage) Descriptor() ([]byte, []int) {
+	return file_proto2_fields_proto_rawDescGZIP(), []int{0}
+}
 
 func (x *FieldTestMessage) GetOptionalBool() bool {
 	if x != nil && x.OptionalBool != nil {

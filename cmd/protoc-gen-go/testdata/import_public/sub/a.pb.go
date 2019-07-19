@@ -194,6 +194,11 @@ type M struct {
 	extensionFields protoimpl.ExtensionFields
 }
 
+const Default_M_S string = "default"
+
+var Default_M_B []byte = []byte("default")
+var Default_M_F float64 = math.NaN()
+
 func (x *M) Reset() {
 	*x = M{}
 }
@@ -229,11 +234,6 @@ var extRange_M = []protoiface.ExtensionRangeV1{
 func (*M) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return extRange_M
 }
-
-const Default_M_S string = "default"
-
-var Default_M_B []byte = []byte("default")
-var Default_M_F float64 = math.NaN()
 
 func (x *M) GetM2() *M2 {
 	if x != nil {

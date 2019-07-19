@@ -64,6 +64,31 @@ type GoogleMessage1 struct {
 	unknownFields protoimpl.UnknownFields
 }
 
+const Default_GoogleMessage1_Field80 bool = false
+const Default_GoogleMessage1_Field81 bool = true
+const Default_GoogleMessage1_Field6 int32 = 0
+const Default_GoogleMessage1_Field59 bool = false
+const Default_GoogleMessage1_Field130 int32 = 0
+const Default_GoogleMessage1_Field12 bool = true
+const Default_GoogleMessage1_Field17 bool = true
+const Default_GoogleMessage1_Field13 bool = true
+const Default_GoogleMessage1_Field14 bool = true
+const Default_GoogleMessage1_Field104 int32 = 0
+const Default_GoogleMessage1_Field100 int32 = 0
+const Default_GoogleMessage1_Field101 int32 = 0
+const Default_GoogleMessage1_Field29 int32 = 0
+const Default_GoogleMessage1_Field30 bool = false
+const Default_GoogleMessage1_Field60 int32 = -1
+const Default_GoogleMessage1_Field271 int32 = -1
+const Default_GoogleMessage1_Field272 int32 = -1
+const Default_GoogleMessage1_Field23 int32 = 0
+const Default_GoogleMessage1_Field24 bool = false
+const Default_GoogleMessage1_Field25 int32 = 0
+const Default_GoogleMessage1_Field67 int32 = 0
+const Default_GoogleMessage1_Field128 int32 = 0
+const Default_GoogleMessage1_Field129 string = "xxxxxxxxxxxxxxxxxxxxx"
+const Default_GoogleMessage1_Field131 int32 = 0
+
 func (x *GoogleMessage1) Reset() {
 	*x = GoogleMessage1{}
 }
@@ -90,31 +115,6 @@ func (x *GoogleMessage1) ProtoReflect() protoreflect.Message {
 func (*GoogleMessage1) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message1_proto2_benchmark_message1_proto2_proto_rawDescGZIP(), []int{0}
 }
-
-const Default_GoogleMessage1_Field80 bool = false
-const Default_GoogleMessage1_Field81 bool = true
-const Default_GoogleMessage1_Field6 int32 = 0
-const Default_GoogleMessage1_Field59 bool = false
-const Default_GoogleMessage1_Field130 int32 = 0
-const Default_GoogleMessage1_Field12 bool = true
-const Default_GoogleMessage1_Field17 bool = true
-const Default_GoogleMessage1_Field13 bool = true
-const Default_GoogleMessage1_Field14 bool = true
-const Default_GoogleMessage1_Field104 int32 = 0
-const Default_GoogleMessage1_Field100 int32 = 0
-const Default_GoogleMessage1_Field101 int32 = 0
-const Default_GoogleMessage1_Field29 int32 = 0
-const Default_GoogleMessage1_Field30 bool = false
-const Default_GoogleMessage1_Field60 int32 = -1
-const Default_GoogleMessage1_Field271 int32 = -1
-const Default_GoogleMessage1_Field272 int32 = -1
-const Default_GoogleMessage1_Field23 int32 = 0
-const Default_GoogleMessage1_Field24 bool = false
-const Default_GoogleMessage1_Field25 int32 = 0
-const Default_GoogleMessage1_Field67 int32 = 0
-const Default_GoogleMessage1_Field128 int32 = 0
-const Default_GoogleMessage1_Field129 string = "xxxxxxxxxxxxxxxxxxxxx"
-const Default_GoogleMessage1_Field131 int32 = 0
 
 func (x *GoogleMessage1) GetField1() string {
 	if x != nil && x.Field1 != nil {
@@ -429,6 +429,16 @@ type GoogleMessage1SubMessage struct {
 	unknownFields protoimpl.UnknownFields
 }
 
+const Default_GoogleMessage1SubMessage_Field1 int32 = 0
+const Default_GoogleMessage1SubMessage_Field2 int32 = 0
+const Default_GoogleMessage1SubMessage_Field3 int32 = 0
+const Default_GoogleMessage1SubMessage_Field12 bool = true
+const Default_GoogleMessage1SubMessage_Field19 int32 = 2
+const Default_GoogleMessage1SubMessage_Field20 bool = true
+const Default_GoogleMessage1SubMessage_Field28 bool = true
+const Default_GoogleMessage1SubMessage_Field23 bool = false
+const Default_GoogleMessage1SubMessage_Field206 bool = false
+
 func (x *GoogleMessage1SubMessage) Reset() {
 	*x = GoogleMessage1SubMessage{}
 }
@@ -455,16 +465,6 @@ func (x *GoogleMessage1SubMessage) ProtoReflect() protoreflect.Message {
 func (*GoogleMessage1SubMessage) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message1_proto2_benchmark_message1_proto2_proto_rawDescGZIP(), []int{1}
 }
-
-const Default_GoogleMessage1SubMessage_Field1 int32 = 0
-const Default_GoogleMessage1SubMessage_Field2 int32 = 0
-const Default_GoogleMessage1SubMessage_Field3 int32 = 0
-const Default_GoogleMessage1SubMessage_Field12 bool = true
-const Default_GoogleMessage1SubMessage_Field19 int32 = 2
-const Default_GoogleMessage1SubMessage_Field20 bool = true
-const Default_GoogleMessage1SubMessage_Field28 bool = true
-const Default_GoogleMessage1SubMessage_Field23 bool = false
-const Default_GoogleMessage1SubMessage_Field206 bool = false
 
 func (x *GoogleMessage1SubMessage) GetField1() int32 {
 	if x != nil && x.Field1 != nil {

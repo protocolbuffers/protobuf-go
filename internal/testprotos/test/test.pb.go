@@ -333,6 +333,26 @@ type TestAllTypes struct {
 	unknownFields protoimpl.UnknownFields
 }
 
+const Default_TestAllTypes_DefaultInt32 int32 = 81
+const Default_TestAllTypes_DefaultInt64 int64 = 82
+const Default_TestAllTypes_DefaultUint32 uint32 = 83
+const Default_TestAllTypes_DefaultUint64 uint64 = 84
+const Default_TestAllTypes_DefaultSint32 int32 = -85
+const Default_TestAllTypes_DefaultSint64 int64 = 86
+const Default_TestAllTypes_DefaultFixed32 uint32 = 87
+const Default_TestAllTypes_DefaultFixed64 uint64 = 88
+const Default_TestAllTypes_DefaultSfixed32 int32 = 89
+const Default_TestAllTypes_DefaultSfixed64 int64 = -90
+const Default_TestAllTypes_DefaultFloat float32 = 91.5
+const Default_TestAllTypes_DefaultDouble float64 = 92000
+const Default_TestAllTypes_DefaultBool bool = true
+const Default_TestAllTypes_DefaultString string = "hello"
+
+var Default_TestAllTypes_DefaultBytes []byte = []byte("world")
+
+const Default_TestAllTypes_DefaultNestedEnum TestAllTypes_NestedEnum = TestAllTypes_BAR
+const Default_TestAllTypes_DefaultForeignEnum ForeignEnum = ForeignEnum_FOREIGN_BAR
+
 func (x *TestAllTypes) Reset() {
 	*x = TestAllTypes{}
 }
@@ -359,26 +379,6 @@ func (x *TestAllTypes) ProtoReflect() protoreflect.Message {
 func (*TestAllTypes) Descriptor() ([]byte, []int) {
 	return file_test_test_proto_rawDescGZIP(), []int{0}
 }
-
-const Default_TestAllTypes_DefaultInt32 int32 = 81
-const Default_TestAllTypes_DefaultInt64 int64 = 82
-const Default_TestAllTypes_DefaultUint32 uint32 = 83
-const Default_TestAllTypes_DefaultUint64 uint64 = 84
-const Default_TestAllTypes_DefaultSint32 int32 = -85
-const Default_TestAllTypes_DefaultSint64 int64 = 86
-const Default_TestAllTypes_DefaultFixed32 uint32 = 87
-const Default_TestAllTypes_DefaultFixed64 uint64 = 88
-const Default_TestAllTypes_DefaultSfixed32 int32 = 89
-const Default_TestAllTypes_DefaultSfixed64 int64 = -90
-const Default_TestAllTypes_DefaultFloat float32 = 91.5
-const Default_TestAllTypes_DefaultDouble float64 = 92000
-const Default_TestAllTypes_DefaultBool bool = true
-const Default_TestAllTypes_DefaultString string = "hello"
-
-var Default_TestAllTypes_DefaultBytes []byte = []byte("world")
-
-const Default_TestAllTypes_DefaultNestedEnum TestAllTypes_NestedEnum = TestAllTypes_BAR
-const Default_TestAllTypes_DefaultForeignEnum ForeignEnum = ForeignEnum_FOREIGN_BAR
 
 func (x *TestAllTypes) GetOptionalInt32() int32 {
 	if x != nil && x.OptionalInt32 != nil {
@@ -1585,6 +1585,7 @@ func (x *TestWeak) GetWeakMessage1() protoiface.MessageV1 {
 	}
 	return protoimpl.X.WeakNil("goproto.proto.test.weak.WeakImportMessage1")
 }
+
 func (x *TestWeak) GetWeakMessage2() protoiface.MessageV1 {
 	if x != nil {
 		v := x.XXX_weak[2]
@@ -1595,6 +1596,7 @@ func (x *TestWeak) GetWeakMessage2() protoiface.MessageV1 {
 	}
 	return protoimpl.X.WeakNil("goproto.proto.test.weak.WeakImportMessage2")
 }
+
 func (x *TestWeak) SetWeakMessage1(v protoiface.MessageV1) {
 	if x.XXX_weak == nil {
 		x.XXX_weak = make(protoimpl.WeakFields)

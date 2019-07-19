@@ -53,6 +53,22 @@ type GoogleMessage2 struct {
 	unknownFields protoimpl.UnknownFields
 }
 
+const Default_GoogleMessage2_Field75 bool = false
+const Default_GoogleMessage2_Field21 int32 = 0
+const Default_GoogleMessage2_Field109 int32 = 0
+const Default_GoogleMessage2_Field210 int32 = 0
+const Default_GoogleMessage2_Field211 int32 = 0
+const Default_GoogleMessage2_Field212 int32 = 0
+const Default_GoogleMessage2_Field213 int32 = 0
+const Default_GoogleMessage2_Field216 int32 = 0
+const Default_GoogleMessage2_Field217 int32 = 0
+const Default_GoogleMessage2_Field218 int32 = 0
+const Default_GoogleMessage2_Field220 int32 = 0
+const Default_GoogleMessage2_Field221 int32 = 0
+const Default_GoogleMessage2_Field222 float32 = 0
+const Default_GoogleMessage2_Field205 bool = false
+const Default_GoogleMessage2_Field206 bool = false
+
 func (x *GoogleMessage2) Reset() {
 	*x = GoogleMessage2{}
 }
@@ -79,22 +95,6 @@ func (x *GoogleMessage2) ProtoReflect() protoreflect.Message {
 func (*GoogleMessage2) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message2_benchmark_message2_proto_rawDescGZIP(), []int{0}
 }
-
-const Default_GoogleMessage2_Field75 bool = false
-const Default_GoogleMessage2_Field21 int32 = 0
-const Default_GoogleMessage2_Field109 int32 = 0
-const Default_GoogleMessage2_Field210 int32 = 0
-const Default_GoogleMessage2_Field211 int32 = 0
-const Default_GoogleMessage2_Field212 int32 = 0
-const Default_GoogleMessage2_Field213 int32 = 0
-const Default_GoogleMessage2_Field216 int32 = 0
-const Default_GoogleMessage2_Field217 int32 = 0
-const Default_GoogleMessage2_Field218 int32 = 0
-const Default_GoogleMessage2_Field220 int32 = 0
-const Default_GoogleMessage2_Field221 int32 = 0
-const Default_GoogleMessage2_Field222 float32 = 0
-const Default_GoogleMessage2_Field205 bool = false
-const Default_GoogleMessage2_Field206 bool = false
 
 func (x *GoogleMessage2) GetField1() string {
 	if x != nil && x.Field1 != nil {
@@ -323,6 +323,10 @@ type GoogleMessage2GroupedMessage struct {
 	unknownFields protoimpl.UnknownFields
 }
 
+const Default_GoogleMessage2GroupedMessage_Field3 float32 = 0
+const Default_GoogleMessage2GroupedMessage_Field6 bool = true
+const Default_GoogleMessage2GroupedMessage_Field7 bool = false
+
 func (x *GoogleMessage2GroupedMessage) Reset() {
 	*x = GoogleMessage2GroupedMessage{}
 }
@@ -349,10 +353,6 @@ func (x *GoogleMessage2GroupedMessage) ProtoReflect() protoreflect.Message {
 func (*GoogleMessage2GroupedMessage) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message2_benchmark_message2_proto_rawDescGZIP(), []int{1}
 }
-
-const Default_GoogleMessage2GroupedMessage_Field3 float32 = 0
-const Default_GoogleMessage2GroupedMessage_Field6 bool = true
-const Default_GoogleMessage2GroupedMessage_Field7 bool = false
 
 func (x *GoogleMessage2GroupedMessage) GetField1() float32 {
 	if x != nil && x.Field1 != nil {
@@ -453,6 +453,8 @@ type GoogleMessage2_Group1 struct {
 	unknownFields protoimpl.UnknownFields
 }
 
+const Default_GoogleMessage2_Group1_Field20 int32 = 0
+
 func (x *GoogleMessage2_Group1) Reset() {
 	*x = GoogleMessage2_Group1{}
 }
@@ -479,8 +481,6 @@ func (x *GoogleMessage2_Group1) ProtoReflect() protoreflect.Message {
 func (*GoogleMessage2_Group1) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message2_benchmark_message2_proto_rawDescGZIP(), []int{0, 0}
 }
-
-const Default_GoogleMessage2_Group1_Field20 int32 = 0
 
 func (x *GoogleMessage2_Group1) GetField11() float32 {
 	if x != nil && x.Field11 != nil {
