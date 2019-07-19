@@ -52,10 +52,6 @@ const (
 	// protoimpl.MessageState as the first field.
 	generateMessageStateFields = true
 
-	// generateNoUnkeyedLiteralFields specifies whether to generate
-	// the XXX_NoUnkeyedLiteral field.
-	generateNoUnkeyedLiteralFields = false
-
 	// generateExportedSizeCacheFields specifies whether to generate an exported
 	// XXX_sizecache field instead of an unexported sizeCache field.
 	generateExportedSizeCacheFields = false
@@ -428,10 +424,6 @@ func genMessageInternalFields(g *protogen.GeneratedFile, message *protogen.Messa
 	if generateMessageStateFields {
 		g.P("state ", protoimplPackage.Ident("MessageState"))
 		sf.append("state")
-	}
-	if generateNoUnkeyedLiteralFields {
-		g.P("XXX_NoUnkeyedLiteral", " struct{} `json:\"-\"`")
-		sf.append("XXX_NoUnkeyedLiteral")
 	}
 	if generateExportedSizeCacheFields {
 		g.P("XXX_sizecache", " ", protoimplPackage.Ident("SizeCache"), " `json:\"-\"`")
