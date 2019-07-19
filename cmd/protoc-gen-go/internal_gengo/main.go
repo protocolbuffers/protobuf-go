@@ -48,10 +48,6 @@ const (
 	// ExtensionRangeArray method for messages that support extensions.
 	generateExtensionRangeMethods = true
 
-	// generateWKTMarkerMethods specifies whether to generate
-	// XXX_WellKnownType methods on well-known types.
-	generateWKTMarkerMethods = false
-
 	// generateMessageStateFields specifies whether to generate an unexported
 	// protoimpl.MessageState as the first field.
 	generateMessageStateFields = true
@@ -96,28 +92,6 @@ var (
 type goImportPath interface {
 	String() string
 	Ident(string) protogen.GoIdent
-}
-
-// Names of messages and enums for which we will generate XXX_WellKnownType methods.
-var wellKnownTypes = map[protoreflect.FullName]bool{
-	"google.protobuf.Any":       true,
-	"google.protobuf.Duration":  true,
-	"google.protobuf.Empty":     true,
-	"google.protobuf.Struct":    true,
-	"google.protobuf.Timestamp": true,
-
-	"google.protobuf.BoolValue":   true,
-	"google.protobuf.BytesValue":  true,
-	"google.protobuf.DoubleValue": true,
-	"google.protobuf.FloatValue":  true,
-	"google.protobuf.Int32Value":  true,
-	"google.protobuf.Int64Value":  true,
-	"google.protobuf.ListValue":   true,
-	"google.protobuf.NullValue":   true,
-	"google.protobuf.StringValue": true,
-	"google.protobuf.UInt32Value": true,
-	"google.protobuf.UInt64Value": true,
-	"google.protobuf.Value":       true,
 }
 
 type fileInfo struct {
@@ -403,12 +377,6 @@ func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum 
 		g.P("}")
 		g.P()
 	}
-
-	// XXX_WellKnownType method.
-	if generateWKTMarkerMethods && wellKnownTypes[enum.Desc.FullName()] {
-		g.P("func (", enum.GoIdent, `) XXX_WellKnownType() string { return "`, enum.Desc.Name(), `" }`)
-		g.P()
-	}
 }
 
 // enumLegacyName returns the name used by the v1 proto package.
@@ -664,12 +632,6 @@ func genMessageBaseMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 		g.P("func (*", message.GoIdent.GoName, ") XXX_OneofWrappers() []interface{} {")
 		g.P("return ", typesVar, "[", idx, "].OneofWrappers")
 		g.P("}")
-		g.P()
-	}
-
-	// XXX_WellKnownType method.
-	if generateWKTMarkerMethods && wellKnownTypes[message.Desc.FullName()] {
-		g.P("func (*", message.GoIdent, `) XXX_WellKnownType() string { return "`, message.Desc.Name(), `" }`)
 		g.P()
 	}
 }
