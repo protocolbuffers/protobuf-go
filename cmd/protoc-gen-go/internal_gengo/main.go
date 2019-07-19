@@ -40,10 +40,6 @@ const (
 	// to the given enum or message descriptor.
 	generateRawDescMethods = true
 
-	// generateOneofWrapperMethods specifies whether to generate
-	// XXX_OneofWrappers methods on messages with oneofs.
-	generateOneofWrapperMethods = false
-
 	// generateExtensionRangeMethods specifies whether to generate the
 	// ExtensionRangeArray method for messages that support extensions.
 	generateExtensionRangeMethods = true
@@ -614,17 +610,6 @@ func genMessageBaseMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 			g.P("}")
 			g.P()
 		}
-	}
-
-	// XXX_OneofWrappers method.
-	if generateOneofWrapperMethods && len(message.Oneofs) > 0 {
-		idx := f.allMessagesByPtr[message]
-		typesVar := messageTypesVarName(f)
-		g.P("// XXX_OneofWrappers is for the internal use of the proto package.")
-		g.P("func (*", message.GoIdent.GoName, ") XXX_OneofWrappers() []interface{} {")
-		g.P("return ", typesVar, "[", idx, "].OneofWrappers")
-		g.P("}")
-		g.P()
 	}
 }
 
