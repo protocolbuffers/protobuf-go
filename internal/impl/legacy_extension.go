@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"sync"
 
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	ptag "google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/filedesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -109,10 +110,16 @@ func (xi *ExtensionInfo) initToLegacy() {
 		filename = fd.Path()
 	}
 
+	// For MessageSet extensions, the name used is the parent message.
+	name := xd.FullName()
+	if messageset.IsMessageSetExtension(xd) {
+		name = name.Parent()
+	}
+
 	xi.ExtendedType = parent
 	xi.ExtensionType = reflect.Zero(extType).Interface()
 	xi.Field = int32(xd.Number())
-	xi.Name = string(xd.FullName())
+	xi.Name = string(name)
 	xi.Tag = ptag.Marshal(xd, enumName)
 	xi.Filename = filename
 }
@@ -159,13 +166,18 @@ func (xi *ExtensionInfo) initFromLegacy() {
 	xd.L1.Extendee = Export{}.MessageDescriptorOf(xi.ExtendedType)
 	xd.L2.Enum = ed
 	xd.L2.Message = md
+
+	// Derive real extension field name for MessageSets.
+	if messageset.IsMessageSet(xd.L1.Extendee) && md.FullName() == xd.L0.FullName {
+		xd.L0.FullName = xd.L0.FullName.Append(messageset.ExtensionName)
+	}
+
 	tt := reflect.TypeOf(xi.ExtensionType)
 	if isOptional {
 		tt = tt.Elem()
 	} else if isRepeated {
 		tt = reflect.PtrTo(tt)
 	}
-
 	xi.desc = xd
 	xi.goType = tt
 }

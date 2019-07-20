@@ -1583,7 +1583,7 @@ var file_pb2_test_proto_extTypes = []protoimpl.ExtensionInfo{
 		ExtendedType:  (*MessageSet)(nil),
 		ExtensionType: (*MessageSetExtension)(nil),
 		Field:         10,
-		Name:          "pb2.MessageSetExtension.message_set_extension",
+		Name:          "pb2.MessageSetExtension",
 		Tag:           "bytes,10,opt,name=message_set_extension",
 		Filename:      "pb2/test.proto",
 	},

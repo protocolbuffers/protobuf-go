@@ -18,6 +18,7 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/compiler/protogen"
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/fieldnum"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -833,6 +834,12 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 
 	g.P("var ", extensionTypesVarName(f), " = []", protoimplPackage.Ident("ExtensionInfo"), "{")
 	for _, extension := range f.allExtensions {
+		// For MessageSet extensions, the name used is the parent message.
+		name := extension.Desc.FullName()
+		if messageset.IsMessageSetExtension(extension.Desc) {
+			name = name.Parent()
+		}
+
 		g.P("{")
 		g.P("ExtendedType: (*", extension.Extendee.GoIdent, ")(nil),")
 		goType, pointer := fieldGoType(g, f, extension)
@@ -841,7 +848,7 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 		}
 		g.P("ExtensionType: (", goType, ")(nil),")
 		g.P("Field: ", extension.Desc.Number(), ",")
-		g.P("Name: ", strconv.Quote(string(extension.Desc.FullName())), ",")
+		g.P("Name: ", strconv.Quote(string(name)), ",")
 		g.P("Tag: ", strconv.Quote(fieldProtobufTagValue(extension)), ",")
 		g.P("Filename: ", strconv.Quote(f.Desc.Path()), ",")
 		g.P("},")

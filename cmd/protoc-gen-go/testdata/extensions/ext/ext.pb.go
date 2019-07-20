@@ -723,7 +723,7 @@ var file_extensions_ext_ext_proto_extTypes = []protoimpl.ExtensionInfo{
 		ExtendedType:  (*base.MessageSetWireFormatMessage)(nil),
 		ExtensionType: (*MessageSetWireFormatExtension)(nil),
 		Field:         100,
-		Name:          "goproto.protoc.extension.ext.MessageSetWireFormatExtension.message_set_extension",
+		Name:          "goproto.protoc.extension.ext.MessageSetWireFormatExtension",
 		Tag:           "bytes,100,opt,name=message_set_extension",
 		Filename:      "extensions/ext/ext.proto",
 	},
