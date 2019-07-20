@@ -411,7 +411,7 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 	g.P("}")
 	g.P()
 
-	genDefaultConsts(g, message)
+	genDefaultConsts(g, f, message)
 	genMessageMethods(gen, g, f, message)
 	genOneofWrapperTypes(gen, g, f, message)
 }
@@ -423,12 +423,12 @@ func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, message *protogen.
 		sf.append("state")
 	}
 	for _, field := range message.Fields {
-		genMessageField(g, message, field, sf)
+		genMessageField(g, f, message, field, sf)
 	}
 	genMessageInternalFields(g, message, sf)
 }
 
-func genMessageField(g *protogen.GeneratedFile, message *protogen.Message, field *protogen.Field, sf *structFields) {
+func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message, field *protogen.Field, sf *structFields) {
 	if oneof := field.Oneof; oneof != nil {
 		// It would be a bit simpler to iterate over the oneofs below,
 		// but generating the field here keeps the contents of the Go
@@ -451,7 +451,7 @@ func genMessageField(g *protogen.GeneratedFile, message *protogen.Message, field
 		return
 	}
 	g.PrintLeadingComments(field.Location)
-	goType, pointer := fieldGoType(g, field)
+	goType, pointer := fieldGoType(g, f, field)
 	if pointer {
 		goType = "*" + goType
 	}
@@ -514,7 +514,7 @@ func genMessageInternalFields(g *protogen.GeneratedFile, message *protogen.Messa
 
 // genDefaultConsts generates consts and vars holding the default
 // values of fields.
-func genDefaultConsts(g *protogen.GeneratedFile, message *protogen.Message) {
+func genDefaultConsts(g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
 	for _, field := range message.Fields {
 		if !field.Desc.HasDefault() {
 			continue
@@ -558,7 +558,7 @@ func genDefaultConsts(g *protogen.GeneratedFile, message *protogen.Message) {
 				g.P("const ", defVarName, " ", goType, " = ", field.Desc.Default().Interface())
 			}
 		default:
-			goType, _ := fieldGoType(g, field)
+			goType, _ := fieldGoType(g, f, field)
 			g.P("const ", defVarName, " ", goType, " = ", def.Interface())
 		}
 	}
@@ -651,7 +651,7 @@ func genMessageGetterMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f 
 		}
 
 		// Getter for message field.
-		goType, pointer := fieldGoType(g, field)
+		goType, pointer := fieldGoType(g, f, field)
 		defaultValue := fieldDefaultValue(g, message, field)
 		if field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated() {
 			g.P(deprecationComment(true))
@@ -719,7 +719,7 @@ func genMessageSetterMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f 
 // fieldGoType returns the Go type used for a field.
 //
 // If it returns pointer=true, the struct field is a pointer to the type.
-func fieldGoType(g *protogen.GeneratedFile, field *protogen.Field) (goType string, pointer bool) {
+func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) (goType string, pointer bool) {
 	if field.Desc.IsWeak() {
 		return "struct{}", false
 	}
@@ -756,8 +756,8 @@ func fieldGoType(g *protogen.GeneratedFile, field *protogen.Field) (goType strin
 		goType = "[]" + goType
 		pointer = false
 	case field.Desc.IsMap():
-		keyType, _ := fieldGoType(g, field.Message.Fields[0])
-		valType, _ := fieldGoType(g, field.Message.Fields[1])
+		keyType, _ := fieldGoType(g, f, field.Message.Fields[0])
+		valType, _ := fieldGoType(g, f, field.Message.Fields[1])
 		return fmt.Sprintf("map[%v]%v", keyType, valType), false
 	}
 
@@ -814,7 +814,7 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 	for _, extension := range f.allExtensions {
 		g.P("{")
 		g.P("ExtendedType: (*", extension.Extendee.GoIdent, ")(nil),")
-		goType, pointer := fieldGoType(g, extension)
+		goType, pointer := fieldGoType(g, f, extension)
 		if pointer {
 			goType = "*" + goType
 		}
@@ -878,7 +878,7 @@ func genOneofWrapperTypes(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fi
 			g.Annotate(name.GoName, field.Location)
 			g.Annotate(name.GoName+"."+field.GoName, field.Location)
 			g.P("type ", name, " struct {")
-			goType, _ := fieldGoType(g, field)
+			goType, _ := fieldGoType(g, f, field)
 			tags := []string{
 				fmt.Sprintf("protobuf:%q", fieldProtobufTag(field)),
 			}
