@@ -79,19 +79,19 @@ func makeOneofFieldCoder(si structInfo, fd pref.FieldDescriptor) pointerCoderFun
 }
 
 func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
-	if fi, ok := getMessageInfo(ft); ok {
+	if mi := getMessageInfo(ft); mi != nil {
 		return pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
-				return sizeMessageInfo(p, fi, tagsize, opts)
+				return sizeMessageInfo(p, mi, tagsize, opts)
 			},
 			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-				return appendMessageInfo(b, p, wiretag, fi, opts)
+				return appendMessageInfo(b, p, wiretag, mi, opts)
 			},
 			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
-				return consumeMessageInfo(b, p, fi, wtyp, opts)
+				return consumeMessageInfo(b, p, mi, wtyp, opts)
 			},
 			isInit: func(p pointer) error {
-				return fi.isInitializedPointer(p.Elem())
+				return mi.isInitializedPointer(p.Elem())
 			},
 		}
 	} else {
@@ -200,19 +200,19 @@ var coderMessageIface = ifaceCoderFuncs{
 
 func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	num := fd.Number()
-	if fi, ok := getMessageInfo(ft); ok {
+	if mi := getMessageInfo(ft); mi != nil {
 		return pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
-				return sizeGroupType(p, fi, tagsize, opts)
+				return sizeGroupType(p, mi, tagsize, opts)
 			},
 			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-				return appendGroupType(b, p, wiretag, fi, opts)
+				return appendGroupType(b, p, wiretag, mi, opts)
 			},
 			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
-				return consumeGroupType(b, p, fi, num, wtyp, opts)
+				return consumeGroupType(b, p, mi, num, wtyp, opts)
 			},
 			isInit: func(p pointer) error {
-				return fi.isInitializedPointer(p.Elem())
+				return mi.isInitializedPointer(p.Elem())
 			},
 		}
 	} else {
@@ -303,19 +303,19 @@ func makeGroupValueCoder(fd pref.FieldDescriptor, ft reflect.Type) ifaceCoderFun
 }
 
 func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
-	if fi, ok := getMessageInfo(ft); ok {
+	if mi := getMessageInfo(ft); mi != nil {
 		return pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
-				return sizeMessageSliceInfo(p, fi, tagsize, opts)
+				return sizeMessageSliceInfo(p, mi, tagsize, opts)
 			},
 			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-				return appendMessageSliceInfo(b, p, wiretag, fi, opts)
+				return appendMessageSliceInfo(b, p, wiretag, mi, opts)
 			},
 			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
-				return consumeMessageSliceInfo(b, p, fi, wtyp, opts)
+				return consumeMessageSliceInfo(b, p, mi, wtyp, opts)
 			},
 			isInit: func(p pointer) error {
-				return isInitMessageSliceInfo(p, fi)
+				return isInitMessageSliceInfo(p, mi)
 			},
 		}
 	}
@@ -471,19 +471,19 @@ var coderMessageSliceIface = ifaceCoderFuncs{
 
 func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	num := fd.Number()
-	if fi, ok := getMessageInfo(ft); ok {
+	if mi := getMessageInfo(ft); mi != nil {
 		return pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
-				return sizeGroupSliceInfo(p, fi, tagsize, opts)
+				return sizeGroupSliceInfo(p, mi, tagsize, opts)
 			},
 			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-				return appendGroupSliceInfo(b, p, wiretag, fi, opts)
+				return appendGroupSliceInfo(b, p, wiretag, mi, opts)
 			},
 			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
-				return consumeGroupSliceInfo(b, p, num, wtyp, fi, opts)
+				return consumeGroupSliceInfo(b, p, num, wtyp, mi, opts)
 			},
 			isInit: func(p pointer) error {
-				return isInitMessageSliceInfo(p, fi)
+				return isInitMessageSliceInfo(p, mi)
 			},
 		}
 	}
