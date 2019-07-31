@@ -497,7 +497,7 @@ func (fd *Field) unmarshalOptions(b []byte) {
 				fd.L1.IsWeak = wire.DecodeBool(v)
 			case FieldOptions_EnforceUTF8:
 				fd.L1.HasEnforceUTF8 = true
-				fd.L1.EnforceUTF8 = !wire.DecodeBool(v)
+				fd.L1.EnforceUTF8 = wire.DecodeBool(v)
 			}
 		default:
 			m := wire.ConsumeFieldValue(num, typ, b)
