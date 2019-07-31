@@ -106,7 +106,8 @@ func (mi *MessageInfo) MessageOf(m interface{}) pref.Message {
 	return &messageReflectWrapper{p, mi}
 }
 
-func (m *messageReflectWrapper) pointer() pointer { return m.p }
+func (m *messageReflectWrapper) pointer() pointer          { return m.p }
+func (m *messageReflectWrapper) messageInfo() *MessageInfo { return m.mi }
 
 func (m *messageIfaceWrapper) ProtoReflect() pref.Message {
 	return (*messageReflectWrapper)(m)

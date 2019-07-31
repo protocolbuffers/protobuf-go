@@ -147,6 +147,9 @@ func (ms *messageState) pointer() pointer {
 	// Super-tricky - see documentation on MessageState.
 	return pointer{p: unsafe.Pointer(ms)}
 }
+func (ms *messageState) messageInfo() *MessageInfo {
+	return ms.LoadMessageInfo()
+}
 func (ms *messageState) LoadMessageInfo() *MessageInfo {
 	return (*MessageInfo)(atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&ms.mi))))
 }

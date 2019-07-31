@@ -159,6 +159,7 @@ func (p pointer) SetPointer(v pointer) {
 
 func (Export) MessageStateOf(p Pointer) *messageState     { panic("not supported") }
 func (ms *messageState) pointer() pointer                 { panic("not supported") }
+func (ms *messageState) messageInfo() *MessageInfo        { panic("not supported") }
 func (ms *messageState) LoadMessageInfo() *MessageInfo    { panic("not supported") }
 func (ms *messageState) StoreMessageInfo(mi *MessageInfo) { panic("not supported") }
 

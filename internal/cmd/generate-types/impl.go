@@ -565,13 +565,13 @@ func generateImplMessage() string {
 var implMessageTemplate = template.Must(template.New("").Parse(`
 {{range . -}}
 func (m *{{.}}) Descriptor() protoreflect.MessageDescriptor {
-	return m.mi.PBType.Descriptor()
+	return m.messageInfo().PBType.Descriptor()
 }
 func (m *{{.}}) Type() protoreflect.MessageType {
-	return m.mi.PBType
+	return m.messageInfo().PBType
 }
 func (m *{{.}}) New() protoreflect.Message {
-	return m.mi.PBType.New()
+	return m.messageInfo().PBType.New()
 }
 func (m *{{.}}) Interface() protoreflect.ProtoMessage {
 	{{if eq . "messageState" -}}
@@ -584,11 +584,11 @@ func (m *{{.}}) Interface() protoreflect.ProtoMessage {
 	{{- end -}}
 }
 func (m *{{.}}) ProtoUnwrap() interface{} {
-	return m.pointer().AsIfaceOf(m.mi.GoType.Elem())
+	return m.pointer().AsIfaceOf(m.messageInfo().GoType.Elem())
 }
 func (m *{{.}}) ProtoMethods() *protoiface.Methods {
-	m.mi.init()
-	return &m.mi.methods
+	m.messageInfo().init()
+	return &m.messageInfo().methods
 }
 
 // ProtoMessageInfo is a pseudo-internal API for allowing the v1 code
@@ -597,82 +597,82 @@ func (m *{{.}}) ProtoMethods() *protoiface.Methods {
 // WARNING: This method is exempt from the compatibility promise and
 // may be removed in the future without warning.
 func (m *{{.}}) ProtoMessageInfo() *MessageInfo {
-	return m.mi
+	return m.messageInfo()
 }
 
 func (m *{{.}}) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	m.mi.init()
-	for _, fi := range m.mi.fields {
+	m.messageInfo().init()
+	for _, fi := range m.messageInfo().fields {
 		if fi.has(m.pointer()) {
 			if !f(fi.fieldDesc, fi.get(m.pointer())) {
 				return
 			}
 		}
 	}
-	m.mi.extensionMap(m.pointer()).Range(f)
+	m.messageInfo().extensionMap(m.pointer()).Range(f)
 }
 func (m *{{.}}) Has(fd protoreflect.FieldDescriptor) bool {
-	m.mi.init()
-	if fi, xt := m.mi.checkField(fd); fi != nil {
+	m.messageInfo().init()
+	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
 		return fi.has(m.pointer())
 	} else {
-		return m.mi.extensionMap(m.pointer()).Has(xt)
+		return m.messageInfo().extensionMap(m.pointer()).Has(xt)
 	}
 }
 func (m *{{.}}) Clear(fd protoreflect.FieldDescriptor) {
-	m.mi.init()
-	if fi, xt := m.mi.checkField(fd); fi != nil {
+	m.messageInfo().init()
+	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
 		fi.clear(m.pointer())
 	} else {
-		m.mi.extensionMap(m.pointer()).Clear(xt)
+		m.messageInfo().extensionMap(m.pointer()).Clear(xt)
 	}
 }
 func (m *{{.}}) Get(fd protoreflect.FieldDescriptor) protoreflect.Value {
-	m.mi.init()
-	if fi, xt := m.mi.checkField(fd); fi != nil {
+	m.messageInfo().init()
+	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
 		return fi.get(m.pointer())
 	} else {
-		return m.mi.extensionMap(m.pointer()).Get(xt)
+		return m.messageInfo().extensionMap(m.pointer()).Get(xt)
 	}
 }
 func (m *{{.}}) Set(fd protoreflect.FieldDescriptor, v protoreflect.Value) {
-	m.mi.init()
-	if fi, xt := m.mi.checkField(fd); fi != nil {
+	m.messageInfo().init()
+	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
 		fi.set(m.pointer(), v)
 	} else {
-		m.mi.extensionMap(m.pointer()).Set(xt, v)
+		m.messageInfo().extensionMap(m.pointer()).Set(xt, v)
 	}
 }
 func (m *{{.}}) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
-	m.mi.init()
-	if fi, xt := m.mi.checkField(fd); fi != nil {
+	m.messageInfo().init()
+	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
 		return fi.mutable(m.pointer())
 	} else {
-		return m.mi.extensionMap(m.pointer()).Mutable(xt)
+		return m.messageInfo().extensionMap(m.pointer()).Mutable(xt)
 	}
 }
 func (m *{{.}}) NewMessage(fd protoreflect.FieldDescriptor) protoreflect.Message {
-	m.mi.init()
-	if fi, xt := m.mi.checkField(fd); fi != nil {
+	m.messageInfo().init()
+	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
 		return fi.newMessage()
 	} else {
 		return xt.New().Message()
 	}
 }
 func (m *{{.}}) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
-	m.mi.init()
-	if oi := m.mi.oneofs[od.Name()]; oi != nil && oi.oneofDesc == od {
+	m.messageInfo().init()
+	if oi := m.messageInfo().oneofs[od.Name()]; oi != nil && oi.oneofDesc == od {
 		return od.Fields().ByNumber(oi.which(m.pointer()))
 	}
 	panic("invalid oneof descriptor")
 }
 func (m *{{.}}) GetUnknown() protoreflect.RawFields {
-	m.mi.init()
-	return m.mi.getUnknown(m.pointer())
+	m.messageInfo().init()
+	return m.messageInfo().getUnknown(m.pointer())
 }
 func (m *{{.}}) SetUnknown(b protoreflect.RawFields) {
-	m.mi.init()
-	m.mi.setUnknown(m.pointer(), b)
+	m.messageInfo().init()
+	m.messageInfo().setUnknown(m.pointer(), b)
 }
 
 {{end}}
