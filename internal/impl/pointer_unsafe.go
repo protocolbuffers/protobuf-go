@@ -154,11 +154,13 @@ func (ms *messageState) StoreMessageInfo(mi *MessageInfo) {
 	atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&ms.mi)), unsafe.Pointer(mi))
 }
 
-type atomicNilMessage struct{ m messageReflectWrapper }
+type atomicNilMessage struct{ p unsafe.Pointer } // p is a *messageReflectWrapper
 
 func (m *atomicNilMessage) Init(mi *MessageInfo) *messageReflectWrapper {
-	if (*messageReflectWrapper)(atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&m.m.mi)))) == nil {
-		atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&m.m.mi)), unsafe.Pointer(mi))
+	if p := atomic.LoadPointer(&m.p); p != nil {
+		return (*messageReflectWrapper)(p)
 	}
-	return &m.m
+	w := &messageReflectWrapper{mi: mi}
+	atomic.CompareAndSwapPointer(&m.p, nil, (unsafe.Pointer)(w))
+	return (*messageReflectWrapper)(atomic.LoadPointer(&m.p))
 }
