@@ -183,7 +183,7 @@ func (fd *File) unmarshalFull(b []byte) {
 			b = b[m:]
 		}
 	}
-	fd.L2.Options = fd.builder.optionsUnmarshaler(descopts.File, rawOptions)
+	fd.L2.Options = fd.builder.optionsUnmarshaler(&descopts.File, rawOptions)
 }
 
 func (ed *Enum) unmarshalFull(b []byte, sb *strs.Builder) {
@@ -220,7 +220,7 @@ func (ed *Enum) unmarshalFull(b []byte, sb *strs.Builder) {
 			ed.L2.Values.List[i].unmarshalFull(b, sb, ed.L0.ParentFile, ed, i)
 		}
 	}
-	ed.L2.Options = ed.L0.ParentFile.builder.optionsUnmarshaler(descopts.Enum, rawOptions)
+	ed.L2.Options = ed.L0.ParentFile.builder.optionsUnmarshaler(&descopts.Enum, rawOptions)
 }
 
 func unmarshalEnumReservedRange(b []byte) (r [2]pref.EnumNumber) {
@@ -277,7 +277,7 @@ func (vd *EnumValue) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref
 			b = b[m:]
 		}
 	}
-	vd.L1.Options = pf.builder.optionsUnmarshaler(descopts.EnumValue, rawOptions)
+	vd.L1.Options = pf.builder.optionsUnmarshaler(&descopts.EnumValue, rawOptions)
 }
 
 func (md *Message) unmarshalFull(b []byte, sb *strs.Builder) {
@@ -303,7 +303,7 @@ func (md *Message) unmarshalFull(b []byte, sb *strs.Builder) {
 				md.L2.ReservedRanges.List = append(md.L2.ReservedRanges.List, unmarshalMessageReservedRange(v))
 			case fieldnum.DescriptorProto_ExtensionRange:
 				r, rawOptions := unmarshalMessageExtensionRange(v)
-				opts := md.L0.ParentFile.builder.optionsUnmarshaler(descopts.ExtensionRange, rawOptions)
+				opts := md.L0.ParentFile.builder.optionsUnmarshaler(&descopts.ExtensionRange, rawOptions)
 				md.L2.ExtensionRanges.List = append(md.L2.ExtensionRanges.List, r)
 				md.L2.ExtensionRangeOptions = append(md.L2.ExtensionRangeOptions, opts)
 			case fieldnum.DescriptorProto_EnumType:
@@ -339,7 +339,7 @@ func (md *Message) unmarshalFull(b []byte, sb *strs.Builder) {
 			od.unmarshalFull(b, sb, md.L0.ParentFile, md, i)
 		}
 	}
-	md.L2.Options = md.L0.ParentFile.builder.optionsUnmarshaler(descopts.Message, rawOptions)
+	md.L2.Options = md.L0.ParentFile.builder.optionsUnmarshaler(&descopts.Message, rawOptions)
 }
 
 func (md *Message) unmarshalOptions(b []byte) {
@@ -476,7 +476,7 @@ func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 			fd.L1.Message = PlaceholderMessage(name)
 		}
 	}
-	fd.L1.Options = pf.builder.optionsUnmarshaler(descopts.Field, rawOptions)
+	fd.L1.Options = pf.builder.optionsUnmarshaler(&descopts.Field, rawOptions)
 }
 
 func (fd *Field) unmarshalOptions(b []byte) {
@@ -530,7 +530,7 @@ func (od *Oneof) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 			b = b[m:]
 		}
 	}
-	od.L1.Options = pf.builder.optionsUnmarshaler(descopts.Oneof, rawOptions)
+	od.L1.Options = pf.builder.optionsUnmarshaler(&descopts.Oneof, rawOptions)
 }
 
 func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
@@ -576,7 +576,7 @@ func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 			xd.L2.Message = PlaceholderMessage(name)
 		}
 	}
-	xd.L2.Options = xd.L0.ParentFile.builder.optionsUnmarshaler(descopts.Field, rawOptions)
+	xd.L2.Options = xd.L0.ParentFile.builder.optionsUnmarshaler(&descopts.Field, rawOptions)
 }
 
 func (xd *Extension) unmarshalOptions(b []byte) {
@@ -626,7 +626,7 @@ func (sd *Service) unmarshalFull(b []byte, sb *strs.Builder) {
 			sd.L2.Methods.List[i].unmarshalFull(b, sb, sd.L0.ParentFile, sd, i)
 		}
 	}
-	sd.L2.Options = sd.L0.ParentFile.builder.optionsUnmarshaler(descopts.Service, rawOptions)
+	sd.L2.Options = sd.L0.ParentFile.builder.optionsUnmarshaler(&descopts.Service, rawOptions)
 }
 
 func (md *Method) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Descriptor, i int) {
@@ -666,7 +666,7 @@ func (md *Method) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.De
 			b = b[m:]
 		}
 	}
-	md.L1.Options = pf.builder.optionsUnmarshaler(descopts.Method, rawOptions)
+	md.L1.Options = pf.builder.optionsUnmarshaler(&descopts.Method, rawOptions)
 }
 
 // appendOptions appends src to dst, where the returned slice is never nil.
@@ -678,7 +678,11 @@ func appendOptions(dst, src []byte) []byte {
 	return append(dst, src...)
 }
 
-func (db *DescBuilder) optionsUnmarshaler(p pref.ProtoMessage, b []byte) func() pref.ProtoMessage {
+// optionsUnmarshaler constructs a lazy unmarshal function for an options message.
+//
+// The type of message to unmarshal to is passed as a pointer since the
+// vars in descopts may not yet be populated at the time this function is called.
+func (db *DescBuilder) optionsUnmarshaler(p *pref.ProtoMessage, b []byte) func() pref.ProtoMessage {
 	if b == nil {
 		return nil
 	}
@@ -686,7 +690,10 @@ func (db *DescBuilder) optionsUnmarshaler(p pref.ProtoMessage, b []byte) func() 
 	var once sync.Once
 	return func() pref.ProtoMessage {
 		once.Do(func() {
-			opts = reflect.New(reflect.TypeOf(p).Elem()).Interface().(pref.ProtoMessage)
+			if *p == nil {
+				panic("Descriptor.Options called without importing the descriptor package")
+			}
+			opts = reflect.New(reflect.TypeOf(*p).Elem()).Interface().(pref.ProtoMessage)
 			if err := (proto.UnmarshalOptions{
 				AllowPartial: true,
 				Resolver:     db.TypeResolver,
