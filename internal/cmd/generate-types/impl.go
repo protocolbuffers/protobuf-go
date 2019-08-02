@@ -152,10 +152,26 @@ func append{{.Name}}NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions
 	return b, nil
 }
 
+{{if .ToGoTypeNoZero}}
+// consume{{.Name}}NoZero wire decodes a {{.GoType}} pointer as a {{.Name}}.
+// The zero value is not decoded.
+func consume{{.Name}}NoZero(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != {{.WireType.Expr}} {
+		return 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
+	return n, nil
+}
+{{end}}
+
 var coder{{.Name}}NoZero = pointerCoderFuncs{
 	size:      size{{.Name}}NoZero,
 	marshal:   append{{.Name}}NoZero,
-	unmarshal: consume{{.Name}},
+	unmarshal: consume{{.Name}}{{if .ToGoTypeNoZero}}NoZero{{end}},
 }
 
 {{if or (eq .Name "Bytes") (eq .Name "String")}}
@@ -174,10 +190,28 @@ func append{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wiretag uint64, _ ma
 	return b, nil
 }
 
+{{if .ToGoTypeNoZero}}
+// consume{{.Name}}NoZeroValidateUTF8 wire decodes a {{.GoType}} pointer as a {{.Name}}.
+func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != {{.WireType.Expr}} {
+		return 0, errUnknown
+	}
+	v, n := {{template "Consume" .}}
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return 0, errInvalidUTF8{}
+	}
+	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
+	return n, nil
+}
+{{end}}
+
 var coder{{.Name}}NoZeroValidateUTF8 = pointerCoderFuncs{
 	size:      size{{.Name}}NoZero,
 	marshal:   append{{.Name}}NoZeroValidateUTF8,
-	unmarshal: consume{{.Name}}ValidateUTF8,
+	unmarshal: consume{{.Name}}{{if .ToGoTypeNoZero}}NoZero{{end}}ValidateUTF8,
 }
 {{end}}
 
@@ -550,6 +584,9 @@ var coder{{.Name}}PackedSliceIface = ifaceCoderFuncs{
 
 {{end -}}
 {{end -}}
+
+// We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.
+var emptyBuf [0]byte
 
 var wireTypes = map[protoreflect.Kind]wire.Type{
 {{range . -}}

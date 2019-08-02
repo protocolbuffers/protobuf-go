@@ -85,10 +85,11 @@ type ProtoKind struct {
 	FromValue Expr
 
 	// Conversions to/from generated structures.
-	GoType     GoType
-	ToGoType   Expr
-	FromGoType Expr
-	NoPointer  bool
+	GoType         GoType
+	ToGoType       Expr
+	ToGoTypeNoZero Expr
+	FromGoType     Expr
+	NoPointer      bool
 }
 
 func (k ProtoKind) Expr() Expr {
@@ -229,14 +230,15 @@ var ProtoKinds = []ProtoKind{
 		FromGoType: "v",
 	},
 	{
-		Name:       "Bytes",
-		WireType:   WireBytes,
-		ToValue:    "append(([]byte)(nil), v...)",
-		FromValue:  "v.Bytes()",
-		GoType:     GoBytes,
-		ToGoType:   "append(([]byte)(nil), v...)",
-		FromGoType: "v",
-		NoPointer:  true,
+		Name:           "Bytes",
+		WireType:       WireBytes,
+		ToValue:        "append(([]byte)(nil), v...)",
+		FromValue:      "v.Bytes()",
+		GoType:         GoBytes,
+		ToGoType:       "append(emptyBuf[:], v...)",
+		ToGoTypeNoZero: "append(([]byte)(nil), v...)",
+		FromGoType:     "v",
+		NoPointer:      true,
 	},
 	{
 		Name:      "Message",

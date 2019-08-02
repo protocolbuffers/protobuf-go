@@ -4395,7 +4395,7 @@ func consumeBytes(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n in
 	if n < 0 {
 		return 0, wire.ParseError(n)
 	}
-	*p.Bytes() = append(([]byte)(nil), v...)
+	*p.Bytes() = append(emptyBuf[:], v...)
 	return n, nil
 }
 
@@ -4428,7 +4428,7 @@ func consumeBytesValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOp
 	if !utf8.Valid(v) {
 		return 0, errInvalidUTF8{}
 	}
-	*p.Bytes() = append(([]byte)(nil), v...)
+	*p.Bytes() = append(emptyBuf[:], v...)
 	return n, nil
 }
 
@@ -4460,10 +4460,24 @@ func appendBytesNoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([
 	return b, nil
 }
 
+// consumeBytesNoZero wire decodes a []byte pointer as a Bytes.
+// The zero value is not decoded.
+func consumeBytesNoZero(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	*p.Bytes() = append(([]byte)(nil), v...)
+	return n, nil
+}
+
 var coderBytesNoZero = pointerCoderFuncs{
 	size:      sizeBytesNoZero,
 	marshal:   appendBytesNoZero,
-	unmarshal: consumeBytes,
+	unmarshal: consumeBytesNoZero,
 }
 
 // appendBytesNoZeroValidateUTF8 wire encodes a []byte pointer as a Bytes.
@@ -4481,10 +4495,26 @@ func appendBytesNoZeroValidateUTF8(b []byte, p pointer, wiretag uint64, _ marsha
 	return b, nil
 }
 
+// consumeBytesNoZeroValidateUTF8 wire decodes a []byte pointer as a Bytes.
+func consumeBytesNoZeroValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+	if wtyp != wire.BytesType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	if !utf8.Valid(v) {
+		return 0, errInvalidUTF8{}
+	}
+	*p.Bytes() = append(([]byte)(nil), v...)
+	return n, nil
+}
+
 var coderBytesNoZeroValidateUTF8 = pointerCoderFuncs{
 	size:      sizeBytesNoZero,
 	marshal:   appendBytesNoZeroValidateUTF8,
-	unmarshal: consumeBytesValidateUTF8,
+	unmarshal: consumeBytesNoZeroValidateUTF8,
 }
 
 // sizeBytesSlice returns the size of wire encoding a [][]byte pointer as a repeated Bytes.
@@ -4516,7 +4546,7 @@ func consumeBytesSlice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) 
 	if n < 0 {
 		return 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, append(([]byte)(nil), v...))
+	*sp = append(*sp, append(emptyBuf[:], v...))
 	return n, nil
 }
 
@@ -4552,7 +4582,7 @@ func consumeBytesSliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmars
 	if !utf8.Valid(v) {
 		return 0, errInvalidUTF8{}
 	}
-	*sp = append(*sp, append(([]byte)(nil), v...))
+	*sp = append(*sp, append(emptyBuf[:], v...))
 	return n, nil
 }
 
@@ -4585,7 +4615,7 @@ func consumeBytesIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _
 	if n < 0 {
 		return nil, 0, wire.ParseError(n)
 	}
-	return append(([]byte)(nil), v...), n, nil
+	return append(emptyBuf[:], v...), n, nil
 }
 
 var coderBytesIface = ifaceCoderFuncs{
@@ -4617,7 +4647,7 @@ func consumeBytesIfaceValidateUTF8(b []byte, _ interface{}, _ wire.Number, wtyp 
 	if !utf8.Valid(v) {
 		return nil, 0, errInvalidUTF8{}
 	}
-	return append(([]byte)(nil), v...), n, nil
+	return append(emptyBuf[:], v...), n, nil
 }
 
 var coderBytesIfaceValidateUTF8 = ifaceCoderFuncs{
@@ -4655,7 +4685,7 @@ func consumeBytesSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire
 	if n < 0 {
 		return nil, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, append(([]byte)(nil), v...))
+	*sp = append(*sp, append(emptyBuf[:], v...))
 	return ival, n, nil
 }
 
@@ -4664,6 +4694,9 @@ var coderBytesSliceIface = ifaceCoderFuncs{
 	marshal:   appendBytesSliceIface,
 	unmarshal: consumeBytesSliceIface,
 }
+
+// We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.
+var emptyBuf [0]byte
 
 var wireTypes = map[protoreflect.Kind]wire.Type{
 	protoreflect.BoolKind:     wire.VarintType,

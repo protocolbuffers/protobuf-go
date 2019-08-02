@@ -108,6 +108,21 @@ func TestDecodeNoEnforceUTF8(t *testing.T) {
 	}
 }
 
+func TestDecodeZeroLengthBytes(t *testing.T) {
+	// Verify that proto3 bytes fields don't give the mistaken
+	// impression that they preserve presence.
+	wire := pack.Message{
+		pack.Tag{15, pack.BytesType}, pack.Bytes(nil),
+	}.Marshal()
+	m := &test3pb.TestAllTypes{}
+	if err := proto.Unmarshal(wire, m); err != nil {
+		t.Fatal(err)
+	}
+	if m.OptionalBytes != nil {
+		t.Errorf("unmarshal zero-length proto3 bytes field: got %v, want nil", m.OptionalBytes)
+	}
+}
+
 var testProtos = []testProto{
 	{
 		desc: "basic scalar types",
@@ -181,6 +196,60 @@ var testProtos = []testProto{
 			pack.Tag{14, pack.BytesType}, pack.String("string"),
 			pack.Tag{15, pack.BytesType}, pack.Bytes([]byte("bytes")),
 			pack.Tag{21, pack.VarintType}, pack.Varint(int(testpb.TestAllTypes_BAR)),
+		}.Marshal(),
+	},
+	{
+		desc: "zero values",
+		decodeTo: []proto.Message{&testpb.TestAllTypes{
+			OptionalInt32:    proto.Int32(0),
+			OptionalInt64:    proto.Int64(0),
+			OptionalUint32:   proto.Uint32(0),
+			OptionalUint64:   proto.Uint64(0),
+			OptionalSint32:   proto.Int32(0),
+			OptionalSint64:   proto.Int64(0),
+			OptionalFixed32:  proto.Uint32(0),
+			OptionalFixed64:  proto.Uint64(0),
+			OptionalSfixed32: proto.Int32(0),
+			OptionalSfixed64: proto.Int64(0),
+			OptionalFloat:    proto.Float32(0),
+			OptionalDouble:   proto.Float64(0),
+			OptionalBool:     proto.Bool(false),
+			OptionalString:   proto.String(""),
+			OptionalBytes:    []byte{},
+		}, &test3pb.TestAllTypes{}, build(
+			&testpb.TestAllExtensions{},
+			extend(testpb.E_OptionalInt32Extension, int32(0)),
+			extend(testpb.E_OptionalInt64Extension, int64(0)),
+			extend(testpb.E_OptionalUint32Extension, uint32(0)),
+			extend(testpb.E_OptionalUint64Extension, uint64(0)),
+			extend(testpb.E_OptionalSint32Extension, int32(0)),
+			extend(testpb.E_OptionalSint64Extension, int64(0)),
+			extend(testpb.E_OptionalFixed32Extension, uint32(0)),
+			extend(testpb.E_OptionalFixed64Extension, uint64(0)),
+			extend(testpb.E_OptionalSfixed32Extension, int32(0)),
+			extend(testpb.E_OptionalSfixed64Extension, int64(0)),
+			extend(testpb.E_OptionalFloatExtension, float32(0)),
+			extend(testpb.E_OptionalDoubleExtension, float64(0)),
+			extend(testpb.E_OptionalBoolExtension, bool(false)),
+			extend(testpb.E_OptionalStringExtension, string("")),
+			extend(testpb.E_OptionalBytesExtension, []byte{}),
+		)},
+		wire: pack.Message{
+			pack.Tag{1, pack.VarintType}, pack.Varint(0),
+			pack.Tag{2, pack.VarintType}, pack.Varint(0),
+			pack.Tag{3, pack.VarintType}, pack.Uvarint(0),
+			pack.Tag{4, pack.VarintType}, pack.Uvarint(0),
+			pack.Tag{5, pack.VarintType}, pack.Svarint(0),
+			pack.Tag{6, pack.VarintType}, pack.Svarint(0),
+			pack.Tag{7, pack.Fixed32Type}, pack.Uint32(0),
+			pack.Tag{8, pack.Fixed64Type}, pack.Uint64(0),
+			pack.Tag{9, pack.Fixed32Type}, pack.Int32(0),
+			pack.Tag{10, pack.Fixed64Type}, pack.Int64(0),
+			pack.Tag{11, pack.Fixed32Type}, pack.Float32(0),
+			pack.Tag{12, pack.Fixed64Type}, pack.Float64(0),
+			pack.Tag{13, pack.VarintType}, pack.Bool(false),
+			pack.Tag{14, pack.BytesType}, pack.String(""),
+			pack.Tag{15, pack.BytesType}, pack.Bytes(nil),
 		}.Marshal(),
 	},
 	{
