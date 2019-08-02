@@ -7,11 +7,9 @@
 package filetype
 
 import (
-	"fmt"
 	"reflect"
 	"sync"
 
-	"google.golang.org/protobuf/internal/descfmt"
 	"google.golang.org/protobuf/internal/descopts"
 	fdesc "google.golang.org/protobuf/internal/filedesc"
 	pimpl "google.golang.org/protobuf/internal/impl"
@@ -358,8 +356,7 @@ func (t *Extension) GoType() reflect.Type {
 	t.lazyInit()
 	return t.goType
 }
-func (t *Extension) Descriptor() pref.ExtensionDescriptor { return t.ExtensionDescriptor }
-func (t *Extension) Format(s fmt.State, r rune)           { descfmt.FormatDesc(s, r, t) }
+func (t *Extension) Descriptor() pref.ExtensionTypeDescriptor { return (*extDesc)(t) }
 
 // ProtoLegacyExtensionDesc is a pseudo-internal API for allowing the v1 code
 // to be able to retrieve a v1 ExtensionDesc.
@@ -379,3 +376,8 @@ func (t *Extension) lazyInit() pimpl.Converter {
 	})
 	return t.conv
 }
+
+type extDesc Extension
+
+func (t *extDesc) Type() pref.ExtensionType             { return (*Extension)(t) }
+func (t *extDesc) Descriptor() pref.ExtensionDescriptor { return t.ExtensionDescriptor }

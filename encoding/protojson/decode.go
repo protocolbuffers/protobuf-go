@@ -182,7 +182,9 @@ func (o UnmarshalOptions) unmarshalFields(m pref.Message, skipTypeURL bool) erro
 			if err != nil && err != protoregistry.NotFound {
 				return errors.New("unable to resolve [%v]: %v", extName, err)
 			}
-			fd = extType
+			if extType != nil {
+				fd = extType.Descriptor()
+			}
 		} else {
 			// The name can either be the JSON name or the proto field name.
 			fd = fieldDescs.ByJSONName(name)

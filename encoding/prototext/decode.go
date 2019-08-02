@@ -126,7 +126,9 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 			if err != nil && err != protoregistry.NotFound {
 				return errors.New("unable to resolve [%v]: %v", extName, err)
 			}
-			fd = xt
+			if xt != nil {
+				fd = xt.Descriptor()
+			}
 		}
 
 		if fd == nil {

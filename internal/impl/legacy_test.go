@@ -52,7 +52,7 @@ var legacyFD = func() []byte {
 
 func init() {
 	mt := pimpl.Export{}.MessageTypeOf((*LegacyTestMessage)(nil))
-	preg.GlobalFiles.Register(mt.ParentFile())
+	preg.GlobalFiles.Register(mt.Descriptor().ParentFile())
 	preg.GlobalTypes.Register(mt)
 }
 
@@ -357,19 +357,21 @@ func TestLegacyExtensions(t *testing.T) {
 	}
 	for i, xt := range extensionTypes {
 		var got interface{}
-		if !(xt.IsList() || xt.IsMap() || xt.Message() != nil) {
-			got = xt.InterfaceOf(m.Get(xt))
+		xd := xt.Descriptor()
+		if !(xd.IsList() || xd.IsMap() || xd.Message() != nil) {
+			got = xt.InterfaceOf(m.Get(xd))
 		}
 		want := defaultValues[i]
 		if diff := cmp.Diff(want, got, opts); diff != "" {
-			t.Errorf("Message.Get(%d) mismatch (-want +got):\n%v", xt.Number(), diff)
+			t.Errorf("Message.Get(%d) mismatch (-want +got):\n%v", xd.Number(), diff)
 		}
 	}
 
 	// All fields should be unpopulated.
 	for _, xt := range extensionTypes {
-		if m.Has(xt) {
-			t.Errorf("Message.Has(%d) = true, want false", xt.Number())
+		xd := xt.Descriptor()
+		if m.Has(xd) {
+			t.Errorf("Message.Has(%d) = true, want false", xd.Number())
 		}
 	}
 
@@ -401,11 +403,11 @@ func TestLegacyExtensions(t *testing.T) {
 		19: &[]*EnumMessages{m2b},
 	}
 	for i, xt := range extensionTypes {
-		m.Set(xt, xt.ValueOf(setValues[i]))
+		m.Set(xt.Descriptor(), xt.ValueOf(setValues[i]))
 	}
 	for i, xt := range extensionTypes[len(extensionTypes)/2:] {
 		v := extensionTypes[i].ValueOf(setValues[i])
-		m.Get(xt).List().Append(v)
+		m.Get(xt.Descriptor()).List().Append(v)
 	}
 
 	// Get the values and check for equality.
@@ -432,24 +434,25 @@ func TestLegacyExtensions(t *testing.T) {
 		19: &[]*EnumMessages{m2b, m2a},
 	}
 	for i, xt := range extensionTypes {
-		got := xt.InterfaceOf(m.Get(xt))
+		xd := xt.Descriptor()
+		got := xt.InterfaceOf(m.Get(xd))
 		want := getValues[i]
 		if diff := cmp.Diff(want, got, opts); diff != "" {
-			t.Errorf("Message.Get(%d) mismatch (-want +got):\n%v", xt.Number(), diff)
+			t.Errorf("Message.Get(%d) mismatch (-want +got):\n%v", xd.Number(), diff)
 		}
 	}
 
 	// Clear all singular fields and truncate all repeated fields.
 	for _, xt := range extensionTypes[:len(extensionTypes)/2] {
-		m.Clear(xt)
+		m.Clear(xt.Descriptor())
 	}
 	for _, xt := range extensionTypes[len(extensionTypes)/2:] {
-		m.Get(xt).List().Truncate(0)
+		m.Get(xt.Descriptor()).List().Truncate(0)
 	}
 
 	// Clear all repeated fields.
 	for _, xt := range extensionTypes[len(extensionTypes)/2:] {
-		m.Clear(xt)
+		m.Clear(xt.Descriptor())
 	}
 }
 
@@ -491,8 +494,6 @@ func TestExtensionConvert(t *testing.T) {
 							switch name {
 							case "ParentFile", "Parent":
 							// Ignore parents to avoid recursive cycle.
-							case "New", "Zero":
-								// Ignore constructors.
 							case "Options":
 								// Ignore descriptor options since protos are not cmperable.
 							case "ContainingOneof", "ContainingMessage", "Enum", "Message":
@@ -504,12 +505,20 @@ func TestExtensionConvert(t *testing.T) {
 								if !v.IsNil() {
 									out[name] = v.Interface().(pref.Descriptor).FullName()
 								}
+							case "Type":
+								// Ignore ExtensionTypeDescriptor.Type method to avoid cycle.
 							default:
 								out[name] = m.Call(nil)[0].Interface()
 							}
 						}
 					}
 					return out
+				}),
+				cmp.Transformer("", func(xt pref.ExtensionType) map[string]interface{} {
+					return map[string]interface{}{
+						"Descriptor": xt.Descriptor(),
+						"GoType":     xt.GoType(),
+					}
 				}),
 				cmp.Transformer("", func(v pref.Value) interface{} {
 					return v.Interface()
@@ -605,23 +614,23 @@ func TestConcurrentInit(t *testing.T) {
 
 	var (
 		wantMTA = messageATypes[0]
-		wantMDA = messageATypes[0].Fields().ByNumber(1).Message()
+		wantMDA = messageATypes[0].Descriptor().Fields().ByNumber(1).Message()
 		wantMTB = messageBTypes[0]
-		wantMDB = messageBTypes[0].Fields().ByNumber(2).Message()
-		wantED  = messageATypes[0].Fields().ByNumber(3).Enum()
+		wantMDB = messageBTypes[0].Descriptor().Fields().ByNumber(2).Message()
+		wantED  = messageATypes[0].Descriptor().Fields().ByNumber(3).Enum()
 	)
 
 	for _, gotMT := range messageATypes[1:] {
 		if gotMT != wantMTA {
 			t.Error("MessageType(MessageA) mismatch")
 		}
-		if gotMDA := gotMT.Fields().ByNumber(1).Message(); gotMDA != wantMDA {
+		if gotMDA := gotMT.Descriptor().Fields().ByNumber(1).Message(); gotMDA != wantMDA {
 			t.Error("MessageDescriptor(MessageA) mismatch")
 		}
-		if gotMDB := gotMT.Fields().ByNumber(2).Message(); gotMDB != wantMDB {
+		if gotMDB := gotMT.Descriptor().Fields().ByNumber(2).Message(); gotMDB != wantMDB {
 			t.Error("MessageDescriptor(MessageB) mismatch")
 		}
-		if gotED := gotMT.Fields().ByNumber(3).Enum(); gotED != wantED {
+		if gotED := gotMT.Descriptor().Fields().ByNumber(3).Enum(); gotED != wantED {
 			t.Error("EnumDescriptor(Enum) mismatch")
 		}
 	}
@@ -629,13 +638,13 @@ func TestConcurrentInit(t *testing.T) {
 		if gotMT != wantMTB {
 			t.Error("MessageType(MessageB) mismatch")
 		}
-		if gotMDA := gotMT.Fields().ByNumber(1).Message(); gotMDA != wantMDA {
+		if gotMDA := gotMT.Descriptor().Fields().ByNumber(1).Message(); gotMDA != wantMDA {
 			t.Error("MessageDescriptor(MessageA) mismatch")
 		}
-		if gotMDB := gotMT.Fields().ByNumber(2).Message(); gotMDB != wantMDB {
+		if gotMDB := gotMT.Descriptor().Fields().ByNumber(2).Message(); gotMDB != wantMDB {
 			t.Error("MessageDescriptor(MessageB) mismatch")
 		}
-		if gotED := gotMT.Fields().ByNumber(3).Enum(); gotED != wantED {
+		if gotED := gotMT.Descriptor().Fields().ByNumber(3).Enum(); gotED != wantED {
 			t.Error("EnumDescriptor(Enum) mismatch")
 		}
 	}

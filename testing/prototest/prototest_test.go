@@ -10,9 +10,12 @@ import (
 
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/runtime/protoimpl"
 	"google.golang.org/protobuf/testing/prototest"
 
 	irregularpb "google.golang.org/protobuf/internal/testprotos/irregular"
+	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
+	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2.v0.0.0-20160225-2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	_ "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	_ "google.golang.org/protobuf/internal/testprotos/test/weak2"
@@ -26,6 +29,8 @@ func Test(t *testing.T) {
 		(*testpb.TestRequired)(nil),
 		(*irregularpb.Message)(nil),
 		(*testpb.TestAllExtensions)(nil),
+		(*legacypb.Legacy)(nil),
+		protoimpl.X.MessageOf((*legacy1pb.Message)(nil)).Interface(),
 	}
 	if flags.Proto1Legacy {
 		ms = append(ms, (*testpb.TestWeak)(nil))

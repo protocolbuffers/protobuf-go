@@ -88,7 +88,9 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 			if err != nil && err != protoregistry.NotFound {
 				return err
 			}
-			fd = extType
+			if extType != nil {
+				fd = extType.Descriptor()
+			}
 		}
 		var err error
 		var valLen int

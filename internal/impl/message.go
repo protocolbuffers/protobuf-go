@@ -222,8 +222,9 @@ fieldLoop:
 // any discrepancies.
 func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	mi.fields = map[pref.FieldNumber]*fieldInfo{}
-	for i := 0; i < mi.PBType.Fields().Len(); i++ {
-		fd := mi.PBType.Fields().Get(i)
+	md := mi.PBType.Descriptor()
+	for i := 0; i < md.Fields().Len(); i++ {
+		fd := md.Fields().Get(i)
 		fs := si.fieldsByNumber[fd.Number()]
 		var fi fieldInfo
 		switch {
@@ -244,8 +245,8 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	}
 
 	mi.oneofs = map[pref.Name]*oneofInfo{}
-	for i := 0; i < mi.PBType.Oneofs().Len(); i++ {
-		od := mi.PBType.Oneofs().Get(i)
+	for i := 0; i < md.Oneofs().Len(); i++ {
+		od := md.Oneofs().Get(i)
 		mi.oneofs[od.Name()] = makeOneofInfo(od, si.oneofsByName[od.Name()], mi.Exporter, si.oneofWrappersByType)
 	}
 }

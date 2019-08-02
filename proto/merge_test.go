@@ -274,65 +274,41 @@ func TestMerge(t *testing.T) {
 		desc: "merge extension fields",
 		dst: func() proto.Message {
 			m := new(testpb.TestAllExtensions)
-			m.ProtoReflect().Set(
-				testpb.E_OptionalInt32Extension.Type,
-				testpb.E_OptionalInt32Extension.Type.ValueOf(int32(32)),
-			)
-			m.ProtoReflect().Set(
-				testpb.E_OptionalNestedMessageExtension.Type,
-				testpb.E_OptionalNestedMessageExtension.Type.ValueOf(&testpb.TestAllTypes_NestedMessage{
+			proto.SetExtension(m, testpb.E_OptionalInt32Extension.Type, int32(32))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension.Type,
+				&testpb.TestAllTypes_NestedMessage{
 					A: proto.Int32(50),
-				}),
+				},
 			)
-			m.ProtoReflect().Set(
-				testpb.E_RepeatedFixed32Extension.Type,
-				testpb.E_RepeatedFixed32Extension.Type.ValueOf(&[]uint32{1, 2, 3}),
-			)
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension.Type, &[]uint32{1, 2, 3})
 			return m
 		}(),
 		src: func() proto.Message {
 			m := new(testpb.TestAllExtensions)
-			m.ProtoReflect().Set(
-				testpb.E_OptionalInt64Extension.Type,
-				testpb.E_OptionalInt64Extension.Type.ValueOf(int64(64)),
-			)
-			m.ProtoReflect().Set(
-				testpb.E_OptionalNestedMessageExtension.Type,
-				testpb.E_OptionalNestedMessageExtension.Type.ValueOf(&testpb.TestAllTypes_NestedMessage{
+			proto.SetExtension(m, testpb.E_OptionalInt64Extension.Type, int64(64))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension.Type,
+				&testpb.TestAllTypes_NestedMessage{
 					Corecursive: &testpb.TestAllTypes{
 						OptionalInt64: proto.Int64(1000),
 					},
-				}),
+				},
 			)
-			m.ProtoReflect().Set(
-				testpb.E_RepeatedFixed32Extension.Type,
-				testpb.E_RepeatedFixed32Extension.Type.ValueOf(&[]uint32{4, 5, 6}),
-			)
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension.Type, &[]uint32{4, 5, 6})
 			return m
 		}(),
 		want: func() proto.Message {
 			m := new(testpb.TestAllExtensions)
-			m.ProtoReflect().Set(
-				testpb.E_OptionalInt32Extension.Type,
-				testpb.E_OptionalInt32Extension.Type.ValueOf(int32(32)),
-			)
-			m.ProtoReflect().Set(
-				testpb.E_OptionalInt64Extension.Type,
-				testpb.E_OptionalInt64Extension.Type.ValueOf(int64(64)),
-			)
-			m.ProtoReflect().Set(
-				testpb.E_OptionalNestedMessageExtension.Type,
-				testpb.E_OptionalNestedMessageExtension.Type.ValueOf(&testpb.TestAllTypes_NestedMessage{
+			proto.SetExtension(m, testpb.E_OptionalInt32Extension.Type, int32(32))
+			proto.SetExtension(m, testpb.E_OptionalInt64Extension.Type, int64(64))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension.Type,
+				&testpb.TestAllTypes_NestedMessage{
 					A: proto.Int32(50),
 					Corecursive: &testpb.TestAllTypes{
 						OptionalInt64: proto.Int64(1000),
 					},
-				}),
+				},
 			)
-			m.ProtoReflect().Set(
-				testpb.E_RepeatedFixed32Extension.Type,
-				testpb.E_RepeatedFixed32Extension.Type.ValueOf(&[]uint32{1, 2, 3, 4, 5, 6}),
-			)
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension.Type, &[]uint32{1, 2, 3, 4, 5, 6})
 			return m
 		}(),
 	}, {

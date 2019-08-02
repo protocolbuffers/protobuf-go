@@ -170,7 +170,7 @@ func (m *Message) Set(fd pref.FieldDescriptor, v pref.Value) {
 	switch {
 	case fd.IsExtension():
 		// Call InterfaceOf just to let the extension typecheck the value.
-		_ = fd.(pref.ExtensionType).InterfaceOf(v)
+		_ = fd.(pref.ExtensionTypeDescriptor).Type().InterfaceOf(v)
 		m.ext[fd.Number()] = fd
 	case fd.IsMap():
 		if mapv, ok := v.Interface().(*dynamicMap); !ok || mapv.desc != fd {
@@ -217,7 +217,7 @@ func (m *Message) NewField(fd pref.FieldDescriptor) pref.Value {
 	m.checkField(fd)
 	switch {
 	case fd.IsExtension():
-		return fd.(pref.ExtensionType).New()
+		return fd.(pref.ExtensionTypeDescriptor).Type().New()
 	case fd.IsMap():
 		return pref.ValueOf(&dynamicMap{
 			desc: fd,
@@ -258,8 +258,8 @@ func (m *Message) SetUnknown(r pref.RawFields) {
 
 func (m *Message) checkField(fd pref.FieldDescriptor) {
 	if fd.IsExtension() && fd.ContainingMessage().FullName() == m.Descriptor().FullName() {
-		if _, ok := fd.(pref.ExtensionType); !ok {
-			panic(errors.New("%v: extension field descriptor does not implement ExtensionType", fd.FullName()))
+		if _, ok := fd.(pref.ExtensionTypeDescriptor); !ok {
+			panic(errors.New("%v: extension field descriptor does not implement ExtensionTypeDescriptor", fd.FullName()))
 		}
 		return
 	}

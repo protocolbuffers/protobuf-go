@@ -29,25 +29,26 @@ func (mi *MessageInfo) extensionFieldInfo(xt pref.ExtensionType) *extensionField
 		return e
 	}
 
+	xd := xt.Descriptor()
 	var wiretag uint64
-	if !xt.IsPacked() {
-		wiretag = wire.EncodeTag(xt.Number(), wireTypes[xt.Kind()])
+	if !xd.IsPacked() {
+		wiretag = wire.EncodeTag(xd.Number(), wireTypes[xd.Kind()])
 	} else {
-		wiretag = wire.EncodeTag(xt.Number(), wire.BytesType)
+		wiretag = wire.EncodeTag(xd.Number(), wire.BytesType)
 	}
 	e = &extensionFieldInfo{
 		wiretag: wiretag,
 		tagsize: wire.SizeVarint(wiretag),
-		funcs:   encoderFuncsForValue(xt, xt.GoType()),
+		funcs:   encoderFuncsForValue(xd, xt.GoType()),
 	}
 	// Does the unmarshal function need a value passed to it?
 	// This is true for composite types, where we pass in a message, list, or map to fill in,
 	// and for enums, where we pass in a prototype value to specify the concrete enum type.
-	switch xt.Kind() {
+	switch xd.Kind() {
 	case pref.MessageKind, pref.GroupKind, pref.EnumKind:
 		e.unmarshalNeedsValue = true
 	default:
-		if xt.Cardinality() == pref.Repeated {
+		if xd.Cardinality() == pref.Repeated {
 			e.unmarshalNeedsValue = true
 		}
 	}

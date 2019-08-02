@@ -5,6 +5,8 @@
 package protoiface
 
 import (
+	"reflect"
+
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -63,4 +65,32 @@ type ExtensionDescV1 struct {
 	// Deprecated: Use Type.Parent to ascend to the top-most parent and use
 	// protoreflect.FileDescriptor.Path.
 	Filename string
+}
+
+func (e ExtensionDescV1) getType() protoreflect.ExtensionType {
+	if e.Type != nil {
+		return e.Type
+	}
+	// All ExtensionDescV1 instances in generated code should have
+	// an Type field initialized at init time, so this case only
+	// occurs for non-standard generated code and hand-written
+	// ExtensionDescs.
+	panic(`proto: ExtensionDesc.Type is not set.
+
+This error probably indicates that you are trying to use a non-standard
+"github.com/golang/protobuf/proto".ExtensionDesc with the
+"google.golang.org/golang/protobuf" API. Use a protoreflect.ExtensionType
+instead.
+`)
+}
+
+func (e ExtensionDescV1) New() protoreflect.Value  { return e.getType().New() }
+func (e ExtensionDescV1) Zero() protoreflect.Value { return e.getType().Zero() }
+func (e ExtensionDescV1) GoType() reflect.Type     { return e.getType().GoType() }
+func (e ExtensionDescV1) Descriptor() protoreflect.ExtensionTypeDescriptor {
+	return e.getType().Descriptor()
+}
+func (e ExtensionDescV1) ValueOf(x interface{}) protoreflect.Value { return e.getType().ValueOf(x) }
+func (e ExtensionDescV1) InterfaceOf(x protoreflect.Value) interface{} {
+	return e.getType().InterfaceOf(x)
 }

@@ -29,7 +29,7 @@ func (mi *MessageInfo) isInitializedPointer(p pointer) error {
 	if p.IsNil() {
 		for _, f := range mi.orderedCoderFields {
 			if f.isRequired {
-				return errors.RequiredNotSet(string(mi.PBType.Fields().ByNumber(f.num).FullName()))
+				return errors.RequiredNotSet(string(mi.PBType.Descriptor().Fields().ByNumber(f.num).FullName()))
 			}
 		}
 		return nil
@@ -47,7 +47,7 @@ func (mi *MessageInfo) isInitializedPointer(p pointer) error {
 		fptr := p.Apply(f.offset)
 		if f.isPointer && fptr.Elem().IsNil() {
 			if f.isRequired {
-				return errors.RequiredNotSet(string(mi.PBType.Fields().ByNumber(f.num).FullName()))
+				return errors.RequiredNotSet(string(mi.PBType.Descriptor().Fields().ByNumber(f.num).FullName()))
 			}
 			continue
 		}

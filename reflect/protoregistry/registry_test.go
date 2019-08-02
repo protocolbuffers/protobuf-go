@@ -536,11 +536,11 @@ func TestTypes(t *testing.T) {
 	fullName := func(t preg.Type) pref.FullName {
 		switch t := t.(type) {
 		case pref.EnumType:
-			return t.FullName()
+			return t.Descriptor().FullName()
 		case pref.MessageType:
-			return t.FullName()
+			return t.Descriptor().FullName()
 		case pref.ExtensionType:
-			return t.FullName()
+			return t.Descriptor().FullName()
 		default:
 			panic("invalid type")
 		}

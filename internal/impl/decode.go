@@ -138,7 +138,7 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	xt := x.GetType()
 	if xt == nil {
 		var err error
-		xt, err = opts.Resolver().FindExtensionByNumber(mi.PBType.FullName(), num)
+		xt, err = opts.Resolver().FindExtensionByNumber(mi.PBType.Descriptor().FullName(), num)
 		if err != nil {
 			if err == preg.NotFound {
 				return 0, errUnknown

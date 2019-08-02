@@ -65,7 +65,7 @@ func FindMessageSetExtension(r preg.ExtensionTypeResolver, s pref.FullName) (pre
 	if err != nil {
 		return nil, err
 	}
-	if !IsMessageSetExtension(xt) {
+	if !IsMessageSetExtension(xt.Descriptor()) {
 		return nil, preg.NotFound
 	}
 	return xt, nil

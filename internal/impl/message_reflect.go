@@ -121,7 +121,7 @@ func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 	if m != nil {
 		for _, x := range *m {
 			xt := x.GetType()
-			if !f(xt, xt.ValueOf(x.GetValue())) {
+			if !f(xt.Descriptor(), xt.ValueOf(x.GetValue())) {
 				return
 			}
 		}
@@ -129,16 +129,17 @@ func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 }
 func (m *extensionMap) Has(xt pref.ExtensionType) (ok bool) {
 	if m != nil {
-		_, ok = (*m)[int32(xt.Number())]
+		_, ok = (*m)[int32(xt.Descriptor().Number())]
 	}
 	return ok
 }
 func (m *extensionMap) Clear(xt pref.ExtensionType) {
-	delete(*m, int32(xt.Number()))
+	delete(*m, int32(xt.Descriptor().Number()))
 }
 func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
+	xd := xt.Descriptor()
 	if m != nil {
-		if x, ok := (*m)[int32(xt.Number())]; ok {
+		if x, ok := (*m)[int32(xd.Number())]; ok {
 			return xt.ValueOf(x.GetValue())
 		}
 	}
@@ -151,13 +152,14 @@ func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
 	var x ExtensionField
 	x.SetType(xt)
 	x.SetEagerValue(xt.InterfaceOf(v))
-	(*m)[int32(xt.Number())] = x
+	(*m)[int32(xt.Descriptor().Number())] = x
 }
 func (m *extensionMap) Mutable(xt pref.ExtensionType) pref.Value {
-	if !isComposite(xt) {
+	xd := xt.Descriptor()
+	if !isComposite(xd) {
 		panic("invalid Mutable on field with non-composite type")
 	}
-	if x, ok := (*m)[int32(xt.Number())]; ok {
+	if x, ok := (*m)[int32(xd.Number())]; ok {
 		return xt.ValueOf(x.GetValue())
 	}
 	v := xt.New()
@@ -179,14 +181,18 @@ func (mi *MessageInfo) checkField(fd pref.FieldDescriptor) (*fieldInfo, pref.Ext
 		return fi, nil
 	}
 	if fd.IsExtension() {
-		if fd.ContainingMessage().FullName() != mi.PBType.FullName() {
+		if fd.ContainingMessage().FullName() != mi.PBType.Descriptor().FullName() {
 			// TODO: Should this be exact containing message descriptor match?
 			panic("mismatching containing message")
 		}
-		if !mi.PBType.ExtensionRanges().Has(fd.Number()) {
+		if !mi.PBType.Descriptor().ExtensionRanges().Has(fd.Number()) {
 			panic("invalid extension field")
 		}
-		return nil, fd.(pref.ExtensionType)
+		xtd, ok := fd.(pref.ExtensionTypeDescriptor)
+		if !ok {
+			panic("extension descriptor does not implement ExtensionTypeDescriptor")
+		}
+		return nil, xtd.Type()
 	}
 	panic("invalid field descriptor")
 }

@@ -30,7 +30,7 @@ type Enum interface {
 // Accessor/mutators for individual fields are keyed by FieldDescriptor.
 // For non-extension fields, the descriptor must exactly match the
 // field known by the parent message.
-// For extension fields, the descriptor must implement ExtensionType,
+// For extension fields, the descriptor must implement ExtensionTypeDescriptor,
 // extend the parent message (i.e., have the same message FullName), and
 // be within the parent's extension range.
 //

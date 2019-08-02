@@ -5,11 +5,9 @@
 package impl
 
 import (
-	"fmt"
 	"reflect"
 	"sync"
 
-	"google.golang.org/protobuf/internal/descfmt"
 	ptag "google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/filedesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -62,8 +60,9 @@ func legacyExtensionDescFromType(xt pref.ExtensionType) *piface.ExtensionDescV1 
 	}
 
 	// Determine the parent type if possible.
+	xd := xt.Descriptor()
 	var parent piface.MessageV1
-	messageName := xt.ContainingMessage().FullName()
+	messageName := xd.ContainingMessage().FullName()
 	if mt, _ := preg.GlobalTypes.FindMessageByName(messageName); mt != nil {
 		// Create a new parent message and unwrap it if possible.
 		mv := mt.New().Interface()
@@ -94,7 +93,7 @@ func legacyExtensionDescFromType(xt pref.ExtensionType) *piface.ExtensionDescV1 
 	// Reconstruct the legacy enum full name, which is an odd mixture of the
 	// proto package name with the Go type name.
 	var enumName string
-	if xt.Kind() == pref.EnumKind {
+	if xd.Kind() == pref.EnumKind {
 		// Derive Go type name.
 		t := extType
 		if t.Kind() == reflect.Ptr || t.Kind() == reflect.Slice {
@@ -105,7 +104,7 @@ func legacyExtensionDescFromType(xt pref.ExtensionType) *piface.ExtensionDescV1 
 		// Derive the proto package name.
 		// For legacy enums, obtain the proto package from the raw descriptor.
 		var protoPkg string
-		if fd := xt.Enum().ParentFile(); fd != nil {
+		if fd := xd.Enum().ParentFile(); fd != nil {
 			protoPkg = string(fd.Package())
 		}
 		if ed, ok := reflect.Zero(t).Interface().(enumV1); ok && protoPkg == "" {
@@ -120,7 +119,7 @@ func legacyExtensionDescFromType(xt pref.ExtensionType) *piface.ExtensionDescV1 
 
 	// Derive the proto file that the extension was declared within.
 	var filename string
-	if fd := xt.ParentFile(); fd != nil {
+	if fd := xd.ParentFile(); fd != nil {
 		filename = fd.Path()
 	}
 
@@ -129,9 +128,9 @@ func legacyExtensionDescFromType(xt pref.ExtensionType) *piface.ExtensionDescV1 
 		Type:          xt,
 		ExtendedType:  parent,
 		ExtensionType: reflect.Zero(extType).Interface(),
-		Field:         int32(xt.Number()),
-		Name:          string(xt.FullName()),
-		Tag:           ptag.Marshal(xt, enumName),
+		Field:         int32(xd.Number()),
+		Name:          string(xd.FullName()),
+		Tag:           ptag.Marshal(xd, enumName),
 		Filename:      filename,
 	}
 	if d, ok := legacyExtensionDescCache.LoadOrStore(xt, d); ok {
@@ -217,15 +216,16 @@ func legacyExtensionTypeFromDesc(d *piface.ExtensionDescV1) pref.ExtensionType {
 //
 // This is exported for testing purposes.
 func LegacyExtensionTypeOf(xd pref.ExtensionDescriptor, t reflect.Type) pref.ExtensionType {
-	return &legacyExtensionType{
-		ExtensionDescriptor: xd,
-		typ:                 t,
-		conv:                NewConverter(t, xd),
+	xt := &legacyExtensionType{
+		typ:  t,
+		conv: NewConverter(t, xd),
 	}
+	xt.desc = &extDesc{xd, xt}
+	return xt
 }
 
 type legacyExtensionType struct {
-	pref.ExtensionDescriptor
+	desc pref.ExtensionTypeDescriptor
 	typ  reflect.Type
 	conv Converter
 }
@@ -239,5 +239,12 @@ func (x *legacyExtensionType) ValueOf(v interface{}) pref.Value {
 func (x *legacyExtensionType) InterfaceOf(v pref.Value) interface{} {
 	return x.conv.GoValueOf(v).Interface()
 }
-func (x *legacyExtensionType) Descriptor() pref.ExtensionDescriptor { return x.ExtensionDescriptor }
-func (x *legacyExtensionType) Format(s fmt.State, r rune)           { descfmt.FormatDesc(s, r, x) }
+func (x *legacyExtensionType) Descriptor() pref.ExtensionTypeDescriptor { return x.desc }
+
+type extDesc struct {
+	pref.ExtensionDescriptor
+	xt *legacyExtensionType
+}
+
+func (t *extDesc) Type() pref.ExtensionType             { return t.xt }
+func (t *extDesc) Descriptor() pref.ExtensionDescriptor { return t.ExtensionDescriptor }

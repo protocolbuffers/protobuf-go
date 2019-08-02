@@ -317,7 +317,6 @@ func rangeTopLevelDescriptors(fd protoreflect.FileDescriptor, f func(protoreflec
 // Type is an interface satisfied by protoreflect.EnumType,
 // protoreflect.MessageType, or protoreflect.ExtensionType.
 type Type interface {
-	protoreflect.Descriptor
 	GoType() reflect.Type
 }
 
@@ -428,21 +427,22 @@ typeLoop:
 		switch typ.(type) {
 		case protoreflect.EnumType, protoreflect.MessageType, protoreflect.ExtensionType:
 			// Check for conflicts in typesByName.
-			var name protoreflect.FullName
+			var desc protoreflect.Descriptor
 			switch t := typ.(type) {
 			case protoreflect.EnumType:
-				name = t.FullName()
+				desc = t.Descriptor()
 			case protoreflect.MessageType:
-				name = t.FullName()
+				desc = t.Descriptor()
 			case protoreflect.ExtensionType:
-				name = t.FullName()
+				desc = t.Descriptor()
 			default:
 				panic(fmt.Sprintf("invalid type: %T", t))
 			}
+			name := desc.FullName()
 			if prev := r.typesByName[name]; prev != nil {
 				err := errors.New("%v %v is already registered", typeName(typ), name)
 				err = amendErrorWithCaller(err, prev, typ)
-				if r == GlobalTypes && ignoreConflict(typ, err) {
+				if r == GlobalTypes && ignoreConflict(desc, err) {
 					err = nil
 				}
 				if firstErr == nil {
@@ -453,12 +453,13 @@ typeLoop:
 
 			// Check for conflicts in extensionsByMessage.
 			if xt, _ := typ.(protoreflect.ExtensionType); xt != nil {
-				field := xt.Number()
-				message := xt.ContainingMessage().FullName()
+				xd := xt.Descriptor()
+				field := xd.Number()
+				message := xd.ContainingMessage().FullName()
 				if prev := r.extensionsByMessage[message][field]; prev != nil {
 					err := errors.New("extension number %d is already registered on message %v", field, message)
 					err = amendErrorWithCaller(err, prev, typ)
-					if r == GlobalTypes && ignoreConflict(typ, err) {
+					if r == GlobalTypes && ignoreConflict(xd, err) {
 						err = nil
 					}
 					if firstErr == nil {

@@ -71,14 +71,15 @@ func unmarshalMessageSet(b []byte, m protoreflect.Message, o UnmarshalOptions) e
 			if !md.ExtensionRanges().Has(num) {
 				return errUnknown
 			}
-			fd, err := o.Resolver.FindExtensionByNumber(md.FullName(), num)
+			xt, err := o.Resolver.FindExtensionByNumber(md.FullName(), num)
 			if err == protoregistry.NotFound {
 				return errUnknown
 			}
 			if err != nil {
 				return err
 			}
-			if err := o.unmarshalMessage(v, m.Mutable(fd).Message()); err != nil {
+			xd := xt.Descriptor()
+			if err := o.unmarshalMessage(v, m.Mutable(xd).Message()); err != nil {
 				// Contents cannot be unmarshaled.
 				return err
 			}

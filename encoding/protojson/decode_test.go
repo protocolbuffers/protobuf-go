@@ -1200,10 +1200,10 @@ func TestUnmarshal(t *testing.T) {
 				OptBool:   proto.Bool(true),
 				OptInt32:  proto.Int32(42),
 			}
-			setExtension(m, pb2.E_OptExtBool, true)
-			setExtension(m, pb2.E_OptExtString, "extension field")
-			setExtension(m, pb2.E_OptExtEnum, pb2.Enum_TEN)
-			setExtension(m, pb2.E_OptExtNested, &pb2.Nested{
+			proto.SetExtension(m, pb2.E_OptExtBool, true)
+			proto.SetExtension(m, pb2.E_OptExtString, "extension field")
+			proto.SetExtension(m, pb2.E_OptExtEnum, pb2.Enum_TEN)
+			proto.SetExtension(m, pb2.E_OptExtNested, &pb2.Nested{
 				OptString: proto.String("nested in an extension"),
 				OptNested: &pb2.Nested{
 					OptString: proto.String("another nested in an extension"),
@@ -1225,9 +1225,9 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantMessage: func() proto.Message {
 			m := &pb2.Extensions{}
-			setExtension(m, pb2.E_RptExtEnum, &[]pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
-			setExtension(m, pb2.E_RptExtFixed32, &[]uint32{42, 47})
-			setExtension(m, pb2.E_RptExtNested, &[]*pb2.Nested{
+			proto.SetExtension(m, pb2.E_RptExtEnum, &[]pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
+			proto.SetExtension(m, pb2.E_RptExtFixed32, &[]uint32{42, 47})
+			proto.SetExtension(m, pb2.E_RptExtNested, &[]*pb2.Nested{
 				&pb2.Nested{OptString: proto.String("one")},
 				&pb2.Nested{OptString: proto.String("two")},
 				&pb2.Nested{OptString: proto.String("three")},
@@ -1250,10 +1250,10 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantMessage: func() proto.Message {
 			m := &pb2.Extensions{}
-			setExtension(m, pb2.E_ExtensionsContainer_OptExtBool, true)
-			setExtension(m, pb2.E_ExtensionsContainer_OptExtString, "extension field")
-			setExtension(m, pb2.E_ExtensionsContainer_OptExtEnum, pb2.Enum_TEN)
-			setExtension(m, pb2.E_ExtensionsContainer_OptExtNested, &pb2.Nested{
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_OptExtBool, true)
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_OptExtString, "extension field")
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_OptExtEnum, pb2.Enum_TEN)
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_OptExtNested, &pb2.Nested{
 				OptString: proto.String("nested in an extension"),
 				OptNested: &pb2.Nested{
 					OptString: proto.String("another nested in an extension"),
@@ -1282,9 +1282,9 @@ func TestUnmarshal(t *testing.T) {
 				OptBool:   proto.Bool(true),
 				OptInt32:  proto.Int32(42),
 			}
-			setExtension(m, pb2.E_ExtensionsContainer_RptExtEnum, &[]pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
-			setExtension(m, pb2.E_ExtensionsContainer_RptExtString, &[]string{"hello", "world"})
-			setExtension(m, pb2.E_ExtensionsContainer_RptExtNested, &[]*pb2.Nested{
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtEnum, &[]pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtString, &[]string{"hello", "world"})
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtNested, &[]*pb2.Nested{
 				&pb2.Nested{OptString: proto.String("one")},
 				&pb2.Nested{OptString: proto.String("two")},
 				&pb2.Nested{OptString: proto.String("three")},
@@ -1323,13 +1323,13 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantMessage: func() proto.Message {
 			m := &pb2.MessageSet{}
-			setExtension(m, pb2.E_MessageSetExtension_MessageSetExtension, &pb2.MessageSetExtension{
+			proto.SetExtension(m, pb2.E_MessageSetExtension_MessageSetExtension, &pb2.MessageSetExtension{
 				OptString: proto.String("a messageset extension"),
 			})
-			setExtension(m, pb2.E_MessageSetExtension_NotMessageSetExtension, &pb2.MessageSetExtension{
+			proto.SetExtension(m, pb2.E_MessageSetExtension_NotMessageSetExtension, &pb2.MessageSetExtension{
 				OptString: proto.String("not a messageset extension"),
 			})
-			setExtension(m, pb2.E_MessageSetExtension_ExtNested, &pb2.Nested{
+			proto.SetExtension(m, pb2.E_MessageSetExtension_ExtNested, &pb2.Nested{
 				OptString: proto.String("just a regular extension"),
 			})
 			return m
@@ -1345,7 +1345,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantMessage: func() proto.Message {
 			m := &pb2.FakeMessageSet{}
-			setExtension(m, pb2.E_FakeMessageSetExtension_MessageSetExtension, &pb2.FakeMessageSetExtension{
+			proto.SetExtension(m, pb2.E_FakeMessageSetExtension_MessageSetExtension, &pb2.FakeMessageSetExtension{
 				OptString: proto.String("not a messageset extension"),
 			})
 			return m
@@ -1371,7 +1371,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantMessage: func() proto.Message {
 			m := &pb2.MessageSet{}
-			setExtension(m, pb2.E_MessageSetExtension, &pb2.FakeMessageSetExtension{
+			proto.SetExtension(m, pb2.E_MessageSetExtension, &pb2.FakeMessageSetExtension{
 				OptString: proto.String("another not a messageset extension"),
 			})
 			return m
@@ -2402,7 +2402,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantMessage: func() proto.Message {
 			m := &pb2.Extensions{}
-			setExtension(m, pb2.E_OptExtNested, &pb2.Nested{})
+			proto.SetExtension(m, pb2.E_OptExtNested, &pb2.Nested{})
 			return m
 		}(),
 	}, {

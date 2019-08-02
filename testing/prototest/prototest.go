@@ -47,7 +47,7 @@ func TestMessage(t testing.TB, m proto.Message, opts MessageOptions) {
 		})
 	}
 	for _, xt := range opts.ExtensionTypes {
-		testField(t, m1, xt)
+		testField(t, m1, xt.Descriptor())
 	}
 	for i := 0; i < md.Oneofs().Len(); i++ {
 		testOneof(t, m1, md.Oneofs().Get(i))
@@ -57,12 +57,12 @@ func TestMessage(t testing.TB, m proto.Message, opts MessageOptions) {
 	// Test round-trip marshal/unmarshal.
 	m2 := m.ProtoReflect().New().Interface()
 	populateMessage(m2.ProtoReflect(), 1, nil)
-	b, err := proto.Marshal(m2)
+	b, err := (proto.MarshalOptions{AllowPartial: true}).Marshal(m2)
 	if err != nil {
 		t.Errorf("Marshal() = %v, want nil\n%v", err, marshalText(m2))
 	}
 	m3 := m.ProtoReflect().New().Interface()
-	if err := proto.Unmarshal(b, m3); err != nil {
+	if err := (proto.UnmarshalOptions{AllowPartial: true}).Unmarshal(b, m3); err != nil {
 		t.Errorf("Unmarshal() = %v, want nil\n%v", err, marshalText(m2))
 	}
 	if !proto.Equal(m2, m3) {

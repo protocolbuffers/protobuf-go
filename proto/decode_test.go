@@ -1680,10 +1680,8 @@ func extend(desc *protoiface.ExtensionDescV1, value interface{}) buildOpt {
 		v.Elem().Set(reflect.ValueOf(value))
 		value = v.Interface()
 	}
-
 	return func(m proto.Message) {
-		xt := desc.Type
-		m.ProtoReflect().Set(xt, xt.ValueOf(value))
+		proto.SetExtension(m, desc, value)
 	}
 }
 

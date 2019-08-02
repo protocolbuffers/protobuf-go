@@ -229,8 +229,6 @@ type isMessageDescriptor interface{ ProtoType(MessageDescriptor) }
 
 // MessageType encapsulates a MessageDescriptor with a concrete Go implementation.
 type MessageType interface {
-	MessageDescriptor
-
 	// New returns a newly allocated empty message.
 	New() Message
 
@@ -401,6 +399,18 @@ type OneofDescriptors interface {
 // ExtensionDescriptor is an alias of FieldDescriptor for documentation.
 type ExtensionDescriptor = FieldDescriptor
 
+// ExtensionTypeDescriptor is an ExtensionDescriptor with an associated ExtensionType.
+type ExtensionTypeDescriptor interface {
+	ExtensionDescriptor
+
+	// Type returns the associated ExtensionType.
+	Type() ExtensionType
+
+	// Descriptor returns the plain ExtensionDescriptor without the
+	// associated ExtensionType.
+	Descriptor() ExtensionDescriptor
+}
+
 // ExtensionDescriptors is a list of field declarations.
 type ExtensionDescriptors interface {
 	// Len reports the number of fields.
@@ -436,8 +446,6 @@ type ExtensionDescriptors interface {
 // Field "bar_field" is an extension of FooMessage, but its full name is
 // "example.BarMessage.bar_field" instead of "example.FooMessage.bar_field".
 type ExtensionType interface {
-	ExtensionDescriptor
-
 	// New returns a new value for the field.
 	// For scalars, this returns the default value in native Go form.
 	New() Value
@@ -454,7 +462,7 @@ type ExtensionType interface {
 	GoType() reflect.Type
 
 	// Descriptor returns the extension descriptor.
-	Descriptor() ExtensionDescriptor
+	Descriptor() ExtensionTypeDescriptor
 
 	// TODO: What to do with nil?
 	//	Should ValueOf(nil) return Value{}?
@@ -500,8 +508,6 @@ type isEnumDescriptor interface{ ProtoType(EnumDescriptor) }
 
 // EnumType encapsulates an EnumDescriptor with a concrete Go implementation.
 type EnumType interface {
-	EnumDescriptor
-
 	// New returns an instance of this enum type with its value set to n.
 	New(n EnumNumber) Enum
 
