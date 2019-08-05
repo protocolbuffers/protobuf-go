@@ -22,7 +22,9 @@ import (
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
-// Marshal writes the given proto.Message in textproto format using default options.
+// Marshal writes the given proto.Message in textproto format using default
+// options. Do not depend on the output being stable. It may change over time
+// across different versions of the program.
 func Marshal(m proto.Message) ([]byte, error) {
 	return MarshalOptions{}.Marshal(m)
 }
@@ -49,7 +51,9 @@ type MarshalOptions struct {
 	}
 }
 
-// Marshal writes the given proto.Message in textproto format using options in MarshalOptions object.
+// Marshal writes the given proto.Message in textproto format using options in
+// MarshalOptions object. Do not depend on the output being stable. It may
+// change over time across different versions of the program.
 func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
 	if o.Resolver == nil {
 		o.Resolver = protoregistry.GlobalTypes
