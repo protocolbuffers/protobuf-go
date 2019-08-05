@@ -20,10 +20,10 @@ const (
 
 type Local struct {
 	state         protoimpl.MessageState
-	M             *sub.M `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
-	E             *sub.E `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	M             *sub.M `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
+	E             *sub.E `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
 }
 
 func (x *Local) Reset() {
@@ -127,9 +127,9 @@ func file_import_public_b_proto_init() {
 			switch v := v.(*Local); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

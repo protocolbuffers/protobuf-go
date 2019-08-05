@@ -20,12 +20,12 @@ const (
 // `SourceContext` represents information about the source of a
 // protobuf element, like the file in which it is defined.
 type SourceContext struct {
-	state protoimpl.MessageState
-	// The path-qualified name of the .proto file that contained the associated
-	// protobuf element.  For example: `"google/protobuf/source_context.proto"`.
-	FileName      string `protobuf:"bytes,1,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	// The path-qualified name of the .proto file that contained the associated
+	// protobuf element.  For example: `"google/protobuf/source_context.proto"`.
+	FileName string `protobuf:"bytes,1,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
 }
 
 func (x *SourceContext) Reset() {
@@ -117,9 +117,9 @@ func file_google_protobuf_source_context_proto_init() {
 			switch v := v.(*SourceContext); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

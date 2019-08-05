@@ -339,10 +339,10 @@ func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) EnumDescript
 
 type EnumContainerMessage1 struct {
 	state             protoimpl.MessageState
-	DefaultDuplicate1 *EnumType2 `protobuf:"varint,1,opt,name=default_duplicate1,json=defaultDuplicate1,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate1,omitempty"`
-	DefaultDuplicate2 *EnumType2 `protobuf:"varint,2,opt,name=default_duplicate2,json=defaultDuplicate2,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate2,omitempty"`
 	sizeCache         protoimpl.SizeCache
 	unknownFields     protoimpl.UnknownFields
+	DefaultDuplicate1 *EnumType2 `protobuf:"varint,1,opt,name=default_duplicate1,json=defaultDuplicate1,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate1,omitempty"`
+	DefaultDuplicate2 *EnumType2 `protobuf:"varint,2,opt,name=default_duplicate2,json=defaultDuplicate2,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate2,omitempty"`
 }
 
 const Default_EnumContainerMessage1_DefaultDuplicate1 EnumType2 = EnumType2_duplicate1
@@ -510,9 +510,9 @@ func file_proto2_enum_proto_init() {
 			switch v := v.(*EnumContainerMessage1); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

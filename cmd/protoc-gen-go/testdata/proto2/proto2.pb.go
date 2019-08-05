@@ -19,10 +19,10 @@ const (
 
 type Message struct {
 	state         protoimpl.MessageState
-	I32           *int32   `protobuf:"varint,1,opt,name=i32" json:"i32,omitempty"`
-	M             *Message `protobuf:"bytes,2,opt,name=m" json:"m,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	I32           *int32   `protobuf:"varint,1,opt,name=i32" json:"i32,omitempty"`
+	M             *Message `protobuf:"bytes,2,opt,name=m" json:"m,omitempty"`
 }
 
 func (x *Message) Reset() {
@@ -118,9 +118,9 @@ func file_proto2_proto2_proto_init() {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

@@ -20,15 +20,15 @@ const (
 
 // The version number of protocol compiler.
 type Version struct {
-	state protoimpl.MessageState
-	Major *int32 `protobuf:"varint,1,opt,name=major" json:"major,omitempty"`
-	Minor *int32 `protobuf:"varint,2,opt,name=minor" json:"minor,omitempty"`
-	Patch *int32 `protobuf:"varint,3,opt,name=patch" json:"patch,omitempty"`
-	// A suffix for alpha, beta or rc release, e.g., "alpha-1", "rc2". It should
-	// be empty for mainline stable releases.
-	Suffix        *string `protobuf:"bytes,4,opt,name=suffix" json:"suffix,omitempty"`
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Major         *int32 `protobuf:"varint,1,opt,name=major" json:"major,omitempty"`
+	Minor         *int32 `protobuf:"varint,2,opt,name=minor" json:"minor,omitempty"`
+	Patch         *int32 `protobuf:"varint,3,opt,name=patch" json:"patch,omitempty"`
+	// A suffix for alpha, beta or rc release, e.g., "alpha-1", "rc2". It should
+	// be empty for mainline stable releases.
+	Suffix *string `protobuf:"bytes,4,opt,name=suffix" json:"suffix,omitempty"`
 }
 
 func (x *Version) Reset() {
@@ -88,7 +88,9 @@ func (x *Version) GetSuffix() string {
 
 // An encoded CodeGeneratorRequest is written to the plugin's stdin.
 type CodeGeneratorRequest struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// The .proto files that were explicitly listed on the command-line.  The
 	// code generator should generate code only for these files.  Each file's
 	// descriptor will be included in proto_file, below.
@@ -112,8 +114,6 @@ type CodeGeneratorRequest struct {
 	ProtoFile []*descriptorpb.FileDescriptorProto `protobuf:"bytes,15,rep,name=proto_file,json=protoFile" json:"proto_file,omitempty"`
 	// The version number of protocol compiler.
 	CompilerVersion *Version `protobuf:"bytes,3,opt,name=compiler_version,json=compilerVersion" json:"compiler_version,omitempty"`
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
 }
 
 func (x *CodeGeneratorRequest) Reset() {
@@ -173,7 +173,9 @@ func (x *CodeGeneratorRequest) GetCompilerVersion() *Version {
 
 // The plugin writes an encoded CodeGeneratorResponse to stdout.
 type CodeGeneratorResponse struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// Error message.  If non-empty, code generation failed.  The plugin process
 	// should exit with status code zero even if it reports an error in this way.
 	//
@@ -182,10 +184,8 @@ type CodeGeneratorResponse struct {
 	// problem in protoc itself -- such as the input CodeGeneratorRequest being
 	// unparseable -- should be reported by writing a message to stderr and
 	// exiting with a non-zero status code.
-	Error         *string                       `protobuf:"bytes,1,opt,name=error" json:"error,omitempty"`
-	File          []*CodeGeneratorResponse_File `protobuf:"bytes,15,rep,name=file" json:"file,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Error *string                       `protobuf:"bytes,1,opt,name=error" json:"error,omitempty"`
+	File  []*CodeGeneratorResponse_File `protobuf:"bytes,15,rep,name=file" json:"file,omitempty"`
 }
 
 func (x *CodeGeneratorResponse) Reset() {
@@ -231,7 +231,9 @@ func (x *CodeGeneratorResponse) GetFile() []*CodeGeneratorResponse_File {
 
 // Represents a single generated file.
 type CodeGeneratorResponse_File struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// The file name, relative to the output directory.  The name must not
 	// contain "." or ".." components and must be relative, not be absolute (so,
 	// the file cannot lie outside the output directory).  "/" must be used as
@@ -283,9 +285,7 @@ type CodeGeneratorResponse_File struct {
 	// If |insertion_point| is present, |name| must also be present.
 	InsertionPoint *string `protobuf:"bytes,2,opt,name=insertion_point,json=insertionPoint" json:"insertion_point,omitempty"`
 	// The file contents.
-	Content       *string `protobuf:"bytes,15,opt,name=content" json:"content,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Content *string `protobuf:"bytes,15,opt,name=content" json:"content,omitempty"`
 }
 
 func (x *CodeGeneratorResponse_File) Reset() {
@@ -429,9 +429,9 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 			switch v := v.(*Version); i {
 			case 0:
 				return &v.state
-			case 5:
+			case 1:
 				return &v.sizeCache
-			case 6:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -441,9 +441,9 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 			switch v := v.(*CodeGeneratorRequest); i {
 			case 0:
 				return &v.state
-			case 5:
+			case 1:
 				return &v.sizeCache
-			case 6:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -453,9 +453,9 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 			switch v := v.(*CodeGeneratorResponse); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -465,9 +465,9 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 			switch v := v.(*CodeGeneratorResponse_File); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

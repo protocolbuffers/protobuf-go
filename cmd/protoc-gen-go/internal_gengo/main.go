@@ -418,14 +418,48 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 
 func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
 	sf := f.allMessageFieldsByPtr[message]
+	genMessageInternalFields(g, message, sf)
+	for _, field := range message.Fields {
+		genMessageField(g, f, message, field, sf)
+	}
+}
+
+func genMessageInternalFields(g *protogen.GeneratedFile, message *protogen.Message, sf *structFields) {
 	if generateMessageStateFields {
 		g.P("state ", protoimplPackage.Ident("MessageState"))
 		sf.append("state")
 	}
-	for _, field := range message.Fields {
-		genMessageField(g, f, message, field, sf)
+	if generateNoUnkeyedLiteralFields {
+		g.P("XXX_NoUnkeyedLiteral", " struct{} `json:\"-\"`")
+		sf.append("XXX_NoUnkeyedLiteral")
 	}
-	genMessageInternalFields(g, message, sf)
+	if generateExportedSizeCacheFields {
+		g.P("XXX_sizecache", " ", protoimplPackage.Ident("SizeCache"), " `json:\"-\"`")
+		sf.append("XXX_sizecache")
+	} else {
+		g.P("sizeCache", " ", protoimplPackage.Ident("SizeCache"))
+		sf.append("sizeCache")
+	}
+	if loadMessageAPIFlags(message).WeakMapField {
+		g.P("XXX_weak", " ", protoimplPackage.Ident("WeakFields"), " `json:\"-\"`")
+		sf.append("XXX_weak")
+	}
+	if generateExportedUnknownFields {
+		g.P("XXX_unrecognized", " ", protoimplPackage.Ident("UnknownFields"), " `json:\"-\"`")
+		sf.append("XXX_unrecognized")
+	} else {
+		g.P("unknownFields", " ", protoimplPackage.Ident("UnknownFields"))
+		sf.append("unknownFields")
+	}
+	if message.Desc.ExtensionRanges().Len() > 0 {
+		if generateExportedExtensionFields {
+			g.P("XXX_InternalExtensions", " ", protoimplPackage.Ident("ExtensionFields"), " `json:\"-\"`")
+			sf.append("XXX_InternalExtensions")
+		} else {
+			g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"))
+			sf.append("extensionFields")
+		}
+	}
 }
 
 func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message, field *protogen.Field, sf *structFields) {
@@ -476,40 +510,6 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 	g.P(name, " ", goType, " `", strings.Join(tags, " "), "`",
 		deprecationComment(field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated()))
 	sf.append(field.GoName)
-}
-
-func genMessageInternalFields(g *protogen.GeneratedFile, message *protogen.Message, sf *structFields) {
-	if generateNoUnkeyedLiteralFields {
-		g.P("XXX_NoUnkeyedLiteral", " struct{} `json:\"-\"`")
-		sf.append("XXX_NoUnkeyedLiteral")
-	}
-	if generateExportedSizeCacheFields {
-		g.P("XXX_sizecache", " ", protoimplPackage.Ident("SizeCache"), " `json:\"-\"`")
-		sf.append("XXX_sizecache")
-	} else {
-		g.P("sizeCache", " ", protoimplPackage.Ident("SizeCache"))
-		sf.append("sizeCache")
-	}
-	if loadMessageAPIFlags(message).WeakMapField {
-		g.P("XXX_weak", " ", protoimplPackage.Ident("WeakFields"), " `json:\"-\"`")
-		sf.append("XXX_weak")
-	}
-	if generateExportedUnknownFields {
-		g.P("XXX_unrecognized", " ", protoimplPackage.Ident("UnknownFields"), " `json:\"-\"`")
-		sf.append("XXX_unrecognized")
-	} else {
-		g.P("unknownFields", " ", protoimplPackage.Ident("UnknownFields"))
-		sf.append("unknownFields")
-	}
-	if message.Desc.ExtensionRanges().Len() > 0 {
-		if generateExportedExtensionFields {
-			g.P("XXX_InternalExtensions", " ", protoimplPackage.Ident("ExtensionFields"), " `json:\"-\"`")
-			sf.append("XXX_InternalExtensions")
-		} else {
-			g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"))
-			sf.append("extensionFields")
-		}
-	}
 }
 
 // genDefaultConsts generates consts and vars holding the default

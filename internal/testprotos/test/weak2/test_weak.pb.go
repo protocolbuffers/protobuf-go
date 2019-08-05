@@ -19,9 +19,9 @@ const (
 
 type WeakImportMessage2 struct {
 	state         protoimpl.MessageState
-	A             *int32 `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32 `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
 }
 
 func (x *WeakImportMessage2) Reset() {
@@ -107,9 +107,9 @@ func file_test_weak2_test_weak_proto_init() {
 			switch v := v.(*WeakImportMessage2); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

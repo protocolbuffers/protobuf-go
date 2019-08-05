@@ -19,15 +19,15 @@ const (
 
 type Message struct {
 	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
 	OptionalMessage *IrregularMessage            `protobuf:"bytes,1,opt,name=optional_message,json=optionalMessage" json:"optional_message,omitempty"`
 	RepeatedMessage []*IrregularMessage          `protobuf:"bytes,2,rep,name=repeated_message,json=repeatedMessage" json:"repeated_message,omitempty"`
 	RequiredMessage *IrregularMessage            `protobuf:"bytes,3,req,name=required_message,json=requiredMessage" json:"required_message,omitempty"`
 	MapMessage      map[string]*IrregularMessage `protobuf:"bytes,4,rep,name=map_message,json=mapMessage" json:"map_message,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Types that are valid to be assigned to Union:
 	//	*Message_OneofMessage
-	Union         isMessage_Union `protobuf_oneof:"union"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Union isMessage_Union `protobuf_oneof:"union"`
 }
 
 func (x *Message) Reset() {
@@ -200,9 +200,9 @@ func file_irregular_test_proto_init() {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state
-			case 6:
+			case 1:
 				return &v.sizeCache
-			case 7:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

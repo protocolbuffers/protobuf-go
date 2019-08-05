@@ -140,9 +140,9 @@ func (TestCategory) EnumDescriptor() ([]byte, []int) {
 // test should return a serialized FailureSet in protobuf_payload.
 type FailureSet struct {
 	state         protoimpl.MessageState
-	Failure       []string `protobuf:"bytes,1,rep,name=failure,proto3" json:"failure,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Failure       []string `protobuf:"bytes,1,rep,name=failure,proto3" json:"failure,omitempty"`
 }
 
 func (x *FailureSet) Reset() {
@@ -185,7 +185,9 @@ func (x *FailureSet) GetFailure() []string {
 //   2. parse the protobuf or JSON payload in "payload" (which may fail)
 //   3. if the parse succeeded, serialize the message in the requested format.
 type ConformanceRequest struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// The payload (whether protobuf of JSON) is always for a
 	// protobuf_test_messages.proto3.TestAllTypes proto (as defined in
 	// src/google/protobuf/proto3_test_messages.proto).
@@ -213,8 +215,6 @@ type ConformanceRequest struct {
 	TestCategory TestCategory `protobuf:"varint,5,opt,name=test_category,json=testCategory,proto3,enum=conformance.TestCategory" json:"test_category,omitempty"`
 	// Specify details for how to encode jspb.
 	JspbEncodingOptions *JspbEncodingConfig `protobuf:"bytes,6,opt,name=jspb_encoding_options,json=jspbEncodingOptions,proto3" json:"jspb_encoding_options,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
 }
 
 func (x *ConformanceRequest) Reset() {
@@ -337,7 +337,9 @@ func (*ConformanceRequest_TextPayload) isConformanceRequest_Payload() {}
 
 // Represents a single test case's output.
 type ConformanceResponse struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// Types that are valid to be assigned to Result:
 	// This string should be set to indicate parsing failed.  The string can
 	// provide more information about the parse error if it is available.
@@ -369,9 +371,7 @@ type ConformanceResponse struct {
 	// If the input was successfully parsed and the requested output was
 	// TEXT_FORMAT, serialize to TEXT_FORMAT and set it in this field.
 	//	*ConformanceResponse_TextPayload
-	Result        isConformanceResponse_Result `protobuf_oneof:"result"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Result isConformanceResponse_Result `protobuf_oneof:"result"`
 }
 
 func (x *ConformanceResponse) Reset() {
@@ -518,11 +518,11 @@ func (*ConformanceResponse_TextPayload) isConformanceResponse_Result() {}
 
 // Encoding options for jspb format.
 type JspbEncodingConfig struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// Encode the value field of Any as jspb array if ture, otherwise binary.
 	UseJspbArrayAnyFormat bool `protobuf:"varint,1,opt,name=use_jspb_array_any_format,json=useJspbArrayAnyFormat,proto3" json:"use_jspb_array_any_format,omitempty"`
-	sizeCache             protoimpl.SizeCache
-	unknownFields         protoimpl.UnknownFields
 }
 
 func (x *JspbEncodingConfig) Reset() {
@@ -688,9 +688,9 @@ func file_conformance_conformance_proto_init() {
 			switch v := v.(*FailureSet); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -700,9 +700,9 @@ func file_conformance_conformance_proto_init() {
 			switch v := v.(*ConformanceRequest); i {
 			case 0:
 				return &v.state
-			case 6:
+			case 1:
 				return &v.sizeCache
-			case 7:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -712,9 +712,9 @@ func file_conformance_conformance_proto_init() {
 			switch v := v.(*ConformanceResponse); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -724,9 +724,9 @@ func file_conformance_conformance_proto_init() {
 			switch v := v.(*JspbEncodingConfig); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

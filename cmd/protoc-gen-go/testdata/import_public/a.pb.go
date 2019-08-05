@@ -58,11 +58,11 @@ var E_ExtensionField = sub.E_ExtensionField
 
 type Public struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	M             *sub.M `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
 	E             *sub.E `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
 	Local         *Local `protobuf:"bytes,3,opt,name=local" json:"local,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Public) Reset() {
@@ -181,9 +181,9 @@ func file_import_public_a_proto_init() {
 			switch v := v.(*Public); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

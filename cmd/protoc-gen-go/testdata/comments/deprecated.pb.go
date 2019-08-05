@@ -61,9 +61,9 @@ func (DeprecatedEnum) EnumDescriptor() ([]byte, []int) {
 // Deprecated: Do not use.
 type DeprecatedMessage struct {
 	state           protoimpl.MessageState
-	DeprecatedField string `protobuf:"bytes,1,opt,name=deprecated_field,json=deprecatedField,proto3" json:"deprecated_field,omitempty"` // Deprecated: Do not use.
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
+	DeprecatedField string `protobuf:"bytes,1,opt,name=deprecated_field,json=deprecatedField,proto3" json:"deprecated_field,omitempty"` // Deprecated: Do not use.
 }
 
 func (x *DeprecatedMessage) Reset() {
@@ -158,9 +158,9 @@ func file_comments_deprecated_proto_init() {
 			switch v := v.(*DeprecatedMessage); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

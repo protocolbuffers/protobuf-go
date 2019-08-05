@@ -61,6 +61,8 @@ func (FieldTestMessage_Enum) EnumDescriptor() ([]byte, []int) {
 
 type FieldTestMessage struct {
 	state            protoimpl.MessageState
+	sizeCache        protoimpl.SizeCache
+	unknownFields    protoimpl.UnknownFields
 	OptionalBool     string                               `protobuf:"bytes,1,opt,name=optional_bool,json=optionalBool,proto3" json:"optional_bool,omitempty"`
 	OptionalEnum     FieldTestMessage_Enum                `protobuf:"varint,2,opt,name=optional_enum,json=optionalEnum,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum" json:"optional_enum,omitempty"`
 	OptionalInt32    int32                                `protobuf:"varint,3,opt,name=optional_int32,json=optionalInt32,proto3" json:"optional_int32,omitempty"`
@@ -98,8 +100,6 @@ type FieldTestMessage struct {
 	MapInt32Int64    map[int32]int64                      `protobuf:"bytes,500,rep,name=map_int32_int64,json=mapInt32Int64,proto3" json:"map_int32_int64,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
 	MapStringMessage map[string]*FieldTestMessage_Message `protobuf:"bytes,501,rep,name=map_string_message,json=mapStringMessage,proto3" json:"map_string_message,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	MapFixed64Enum   map[uint64]FieldTestMessage_Enum     `protobuf:"bytes,502,rep,name=map_fixed64_enum,json=mapFixed64Enum,proto3" json:"map_fixed64_enum,omitempty" protobuf_key:"fixed64,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=goproto.protoc.proto3.FieldTestMessage_Enum"`
-	sizeCache        protoimpl.SizeCache
-	unknownFields    protoimpl.UnknownFields
 }
 
 func (x *FieldTestMessage) Reset() {
@@ -624,9 +624,9 @@ func file_proto3_fields_proto_init() {
 			switch v := v.(*FieldTestMessage); i {
 			case 0:
 				return &v.state
-			case 38:
+			case 1:
 				return &v.sizeCache
-			case 39:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

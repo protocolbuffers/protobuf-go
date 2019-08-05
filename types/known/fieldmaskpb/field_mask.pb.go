@@ -217,11 +217,11 @@ const (
 // request should verify the included field paths, and return an
 // `INVALID_ARGUMENT` error if any path is duplicated or unmappable.
 type FieldMask struct {
-	state protoimpl.MessageState
-	// The set of field mask paths.
-	Paths         []string `protobuf:"bytes,1,rep,name=paths,proto3" json:"paths,omitempty"`
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	// The set of field mask paths.
+	Paths []string `protobuf:"bytes,1,rep,name=paths,proto3" json:"paths,omitempty"`
 }
 
 func (x *FieldMask) Reset() {
@@ -312,9 +312,9 @@ func file_google_protobuf_field_mask_proto_init() {
 			switch v := v.(*FieldMask); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

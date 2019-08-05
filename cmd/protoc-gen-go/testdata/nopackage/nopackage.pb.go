@@ -71,10 +71,10 @@ func (Enum) EnumDescriptor() ([]byte, []int) {
 
 type Message struct {
 	state         protoimpl.MessageState
-	StringField   *string `protobuf:"bytes,1,opt,name=string_field,json=stringField" json:"string_field,omitempty"`
-	EnumField     *Enum   `protobuf:"varint,2,opt,name=enum_field,json=enumField,enum=Enum,def=0" json:"enum_field,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	StringField   *string `protobuf:"bytes,1,opt,name=string_field,json=stringField" json:"string_field,omitempty"`
+	EnumField     *Enum   `protobuf:"varint,2,opt,name=enum_field,json=enumField,enum=Enum,def=0" json:"enum_field,omitempty"`
 }
 
 const Default_Message_EnumField Enum = Enum_ZERO
@@ -171,9 +171,9 @@ func file_nopackage_nopackage_proto_init() {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

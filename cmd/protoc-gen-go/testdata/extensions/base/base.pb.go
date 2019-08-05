@@ -20,10 +20,10 @@ const (
 
 type BaseMessage struct {
 	state           protoimpl.MessageState
-	Field           *string `protobuf:"bytes,1,opt,name=field" json:"field,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
 	extensionFields protoimpl.ExtensionFields
+	Field           *string `protobuf:"bytes,1,opt,name=field" json:"field,omitempty"`
 }
 
 func (x *BaseMessage) Reset() {
@@ -168,11 +168,11 @@ func file_extensions_base_base_proto_init() {
 			switch v := v.(*BaseMessage); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
-			case 4:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil

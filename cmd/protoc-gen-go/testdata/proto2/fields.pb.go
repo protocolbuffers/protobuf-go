@@ -75,6 +75,8 @@ func (FieldTestMessage_Enum) EnumDescriptor() ([]byte, []int) {
 
 type FieldTestMessage struct {
 	state               protoimpl.MessageState
+	sizeCache           protoimpl.SizeCache
+	unknownFields       protoimpl.UnknownFields
 	OptionalBool        *bool                                `protobuf:"varint,1,opt,name=optional_bool,json=optionalBool" json:"optional_bool,omitempty"`
 	OptionalEnum        *FieldTestMessage_Enum               `protobuf:"varint,2,opt,name=optional_enum,json=optionalEnum,enum=goproto.protoc.proto2.FieldTestMessage_Enum" json:"optional_enum,omitempty"`
 	OptionalInt32       *int32                               `protobuf:"varint,3,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty"`
@@ -180,9 +182,7 @@ type FieldTestMessage struct {
 	// Types that are valid to be assigned to OneofTwo:
 	//	*FieldTestMessage_OneofTwo_1
 	//	*FieldTestMessage_OneofTwo_2
-	OneofTwo      isFieldTestMessage_OneofTwo `protobuf_oneof:"oneof_two"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	OneofTwo isFieldTestMessage_OneofTwo `protobuf_oneof:"oneof_two"`
 }
 
 const Default_FieldTestMessage_DefaultBool bool = true
@@ -1104,9 +1104,9 @@ func (*FieldTestMessage_OneofTwo_2) isFieldTestMessage_OneofTwo() {}
 
 type FieldTestMessage_OptionalGroup struct {
 	state         protoimpl.MessageState
-	OptionalGroup *string `protobuf:"bytes,19,opt,name=optional_group,json=optionalGroup" json:"optional_group,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	OptionalGroup *string `protobuf:"bytes,19,opt,name=optional_group,json=optionalGroup" json:"optional_group,omitempty"`
 }
 
 func (x *FieldTestMessage_OptionalGroup) Reset() {
@@ -1145,9 +1145,9 @@ func (x *FieldTestMessage_OptionalGroup) GetOptionalGroup() string {
 
 type FieldTestMessage_RequiredGroup struct {
 	state         protoimpl.MessageState
-	RequiredGroup *string `protobuf:"bytes,119,req,name=required_group,json=requiredGroup" json:"required_group,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	RequiredGroup *string `protobuf:"bytes,119,req,name=required_group,json=requiredGroup" json:"required_group,omitempty"`
 }
 
 func (x *FieldTestMessage_RequiredGroup) Reset() {
@@ -1186,9 +1186,9 @@ func (x *FieldTestMessage_RequiredGroup) GetRequiredGroup() string {
 
 type FieldTestMessage_RepeatedGroup struct {
 	state         protoimpl.MessageState
-	RepeatedGroup []string `protobuf:"bytes,219,rep,name=repeated_group,json=repeatedGroup" json:"repeated_group,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	RepeatedGroup []string `protobuf:"bytes,219,rep,name=repeated_group,json=repeatedGroup" json:"repeated_group,omitempty"`
 }
 
 func (x *FieldTestMessage_RepeatedGroup) Reset() {
@@ -1227,9 +1227,9 @@ func (x *FieldTestMessage_RepeatedGroup) GetRepeatedGroup() []string {
 
 type FieldTestMessage_OneofGroup struct {
 	state           protoimpl.MessageState
-	OneofGroupField *string `protobuf:"bytes,619,opt,name=oneof_group_field,json=oneofGroupField" json:"oneof_group_field,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
+	OneofGroupField *string `protobuf:"bytes,619,opt,name=oneof_group_field,json=oneofGroupField" json:"oneof_group_field,omitempty"`
 }
 
 func (x *FieldTestMessage_OneofGroup) Reset() {
@@ -1736,9 +1736,9 @@ func file_proto2_fields_proto_init() {
 			switch v := v.(*FieldTestMessage); i {
 			case 0:
 				return &v.state
-			case 84:
+			case 1:
 				return &v.sizeCache
-			case 85:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1748,9 +1748,9 @@ func file_proto2_fields_proto_init() {
 			switch v := v.(*FieldTestMessage_OptionalGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1760,9 +1760,9 @@ func file_proto2_fields_proto_init() {
 			switch v := v.(*FieldTestMessage_RequiredGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1772,9 +1772,9 @@ func file_proto2_fields_proto_init() {
 			switch v := v.(*FieldTestMessage_RepeatedGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1784,9 +1784,9 @@ func file_proto2_fields_proto_init() {
 			switch v := v.(*FieldTestMessage_OneofGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

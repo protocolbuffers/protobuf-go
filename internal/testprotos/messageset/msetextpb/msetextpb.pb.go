@@ -21,10 +21,10 @@ const (
 
 type Ext1 struct {
 	state         protoimpl.MessageState
-	Ext1Field1    *int32 `protobuf:"varint,1,opt,name=ext1_field1,json=ext1Field1" json:"ext1_field1,omitempty"`
-	Ext1Field2    *int32 `protobuf:"varint,2,opt,name=ext1_field2,json=ext1Field2" json:"ext1_field2,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Ext1Field1    *int32 `protobuf:"varint,1,opt,name=ext1_field1,json=ext1Field1" json:"ext1_field1,omitempty"`
+	Ext1Field2    *int32 `protobuf:"varint,2,opt,name=ext1_field2,json=ext1Field2" json:"ext1_field2,omitempty"`
 }
 
 func (x *Ext1) Reset() {
@@ -70,9 +70,9 @@ func (x *Ext1) GetExt1Field2() int32 {
 
 type Ext2 struct {
 	state         protoimpl.MessageState
-	Ext2Field1    *int32 `protobuf:"varint,1,opt,name=ext2_field1,json=ext2Field1" json:"ext2_field1,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Ext2Field1    *int32 `protobuf:"varint,1,opt,name=ext2_field1,json=ext2Field1" json:"ext2_field1,omitempty"`
 }
 
 func (x *Ext2) Reset() {
@@ -213,9 +213,9 @@ func file_messageset_msetextpb_msetextpb_proto_init() {
 			switch v := v.(*Ext1); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -225,9 +225,9 @@ func file_messageset_msetextpb_msetextpb_proto_init() {
 			switch v := v.(*Ext2); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

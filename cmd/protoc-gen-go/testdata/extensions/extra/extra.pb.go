@@ -19,9 +19,9 @@ const (
 
 type ExtraMessage struct {
 	state         protoimpl.MessageState
-	Data          []byte `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Data          []byte `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
 }
 
 func (x *ExtraMessage) Reset() {
@@ -108,9 +108,9 @@ func file_extensions_extra_extra_proto_init() {
 			switch v := v.(*ExtraMessage); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

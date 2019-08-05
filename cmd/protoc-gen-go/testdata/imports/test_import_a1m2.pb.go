@@ -20,9 +20,9 @@ const (
 
 type A1M2 struct {
 	state         protoimpl.MessageState
-	F             *test_a_1.M2 `protobuf:"bytes,1,opt,name=f,proto3" json:"f,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	F             *test_a_1.M2 `protobuf:"bytes,1,opt,name=f,proto3" json:"f,omitempty"`
 }
 
 func (x *A1M2) Reset() {
@@ -111,9 +111,9 @@ func file_imports_test_import_a1m2_proto_init() {
 			switch v := v.(*A1M2); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

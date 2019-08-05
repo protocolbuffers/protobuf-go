@@ -29,7 +29,9 @@ const (
 // this message itself. See https://cloud.google.com/apis/design/glossary for
 // detailed terminology.
 type Api struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// The fully qualified name of this interface, including package name
 	// followed by the interface's simple name.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -65,9 +67,7 @@ type Api struct {
 	// Included interfaces. See [Mixin][].
 	Mixins []*Mixin `protobuf:"bytes,6,rep,name=mixins,proto3" json:"mixins,omitempty"`
 	// The source syntax of the service.
-	Syntax        typepb.Syntax `protobuf:"varint,7,opt,name=syntax,proto3,enum=google.protobuf.Syntax" json:"syntax,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Syntax typepb.Syntax `protobuf:"varint,7,opt,name=syntax,proto3,enum=google.protobuf.Syntax" json:"syntax,omitempty"`
 }
 
 func (x *Api) Reset() {
@@ -148,7 +148,9 @@ func (x *Api) GetSyntax() typepb.Syntax {
 
 // Method represents a method of an API interface.
 type Method struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// The simple name of this method.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// A URL of the input message type.
@@ -162,9 +164,7 @@ type Method struct {
 	// Any metadata attached to the method.
 	Options []*typepb.Option `protobuf:"bytes,6,rep,name=options,proto3" json:"options,omitempty"`
 	// The source syntax of this method.
-	Syntax        typepb.Syntax `protobuf:"varint,7,opt,name=syntax,proto3,enum=google.protobuf.Syntax" json:"syntax,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Syntax typepb.Syntax `protobuf:"varint,7,opt,name=syntax,proto3,enum=google.protobuf.Syntax" json:"syntax,omitempty"`
 }
 
 func (x *Method) Reset() {
@@ -322,14 +322,14 @@ func (x *Method) GetSyntax() typepb.Syntax {
 //       ...
 //     }
 type Mixin struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// The fully qualified name of the interface which is included.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// If non-empty specifies a path under which inherited HTTP paths
 	// are rooted.
-	Root          string `protobuf:"bytes,2,opt,name=root,proto3" json:"root,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Root string `protobuf:"bytes,2,opt,name=root,proto3" json:"root,omitempty"`
 }
 
 func (x *Mixin) Reset() {
@@ -482,9 +482,9 @@ func file_google_protobuf_api_proto_init() {
 			switch v := v.(*Api); i {
 			case 0:
 				return &v.state
-			case 8:
+			case 1:
 				return &v.sizeCache
-			case 9:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -494,9 +494,9 @@ func file_google_protobuf_api_proto_init() {
 			switch v := v.(*Method); i {
 			case 0:
 				return &v.state
-			case 8:
+			case 1:
 				return &v.sizeCache
-			case 9:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -506,9 +506,9 @@ func file_google_protobuf_api_proto_init() {
 			switch v := v.(*Mixin); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

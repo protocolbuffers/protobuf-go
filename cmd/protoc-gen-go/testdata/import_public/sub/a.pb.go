@@ -179,7 +179,10 @@ func (M_Submessage_Submessage_Subenum) EnumDescriptor() ([]byte, []int) {
 }
 
 type M struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// Field using a type in the same Go package, but a different source file.
 	M2 *M2      `protobuf:"bytes,1,opt,name=m2" json:"m2,omitempty"`
 	S  *string  `protobuf:"bytes,4,opt,name=s,def=default" json:"s,omitempty"`
@@ -188,10 +191,7 @@ type M struct {
 	// Types that are valid to be assigned to OneofField:
 	//	*M_OneofInt32
 	//	*M_OneofInt64
-	OneofField      isM_OneofField `protobuf_oneof:"oneof_field"`
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields
+	OneofField isM_OneofField `protobuf_oneof:"oneof_field"`
 }
 
 const Default_M_S string = "default"
@@ -301,13 +301,13 @@ func (*M_OneofInt32) isM_OneofField() {}
 func (*M_OneofInt64) isM_OneofField() {}
 
 type M_Submessage struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// Types that are valid to be assigned to SubmessageOneofField:
 	//	*M_Submessage_SubmessageOneofInt32
 	//	*M_Submessage_SubmessageOneofInt64
 	SubmessageOneofField isM_Submessage_SubmessageOneofField `protobuf_oneof:"submessage_oneof_field"`
-	sizeCache            protoimpl.SizeCache
-	unknownFields        protoimpl.UnknownFields
 }
 
 func (x *M_Submessage) Reset() {
@@ -482,11 +482,11 @@ func file_import_public_sub_a_proto_init() {
 			switch v := v.(*M); i {
 			case 0:
 				return &v.state
-			case 6:
+			case 1:
 				return &v.sizeCache
-			case 7:
+			case 2:
 				return &v.unknownFields
-			case 8:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -496,9 +496,9 @@ func file_import_public_sub_a_proto_init() {
 			switch v := v.(*M_Submessage); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

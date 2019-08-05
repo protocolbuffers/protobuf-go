@@ -283,9 +283,9 @@ func (*Message3) Descriptor() ([]byte, []int) {
 
 type Message4 struct {
 	state         protoimpl.MessageState
-	BoolField     *bool `protobuf:"varint,30,opt,name=bool_field,json=boolField" json:"bool_field,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	BoolField     *bool `protobuf:"varint,30,opt,name=bool_field,json=boolField" json:"bool_field,omitempty"`
 }
 
 func (x *Message4) Reset() {
@@ -526,9 +526,9 @@ func file_test_proto_init() {
 			switch v := v.(*Message4); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

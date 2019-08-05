@@ -31,6 +31,8 @@ const (
 
 type Legacy struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	F1            *proto2_v0_0.Message  `protobuf:"bytes,1,opt,name=f1,proto3" json:"f1,omitempty"`
 	F2            *proto3_v0_0.Message  `protobuf:"bytes,2,opt,name=f2,proto3" json:"f2,omitempty"`
 	F3            *proto2_v0_01.Message `protobuf:"bytes,3,opt,name=f3,proto3" json:"f3,omitempty"`
@@ -43,8 +45,6 @@ type Legacy struct {
 	F10           *proto3_v1_2.Message  `protobuf:"bytes,10,opt,name=f10,proto3" json:"f10,omitempty"`
 	F11           *proto2_v1_21.Message `protobuf:"bytes,11,opt,name=f11,proto3" json:"f11,omitempty"`
 	F12           *proto3_v1_21.Message `protobuf:"bytes,12,opt,name=f12,proto3" json:"f12,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Legacy) Reset() {
@@ -312,9 +312,9 @@ func file_legacy_legacy_proto_init() {
 			switch v := v.(*Legacy); i {
 			case 0:
 				return &v.state
-			case 13:
+			case 1:
 				return &v.sizeCache
-			case 14:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

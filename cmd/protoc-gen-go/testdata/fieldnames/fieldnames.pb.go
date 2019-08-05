@@ -23,7 +23,9 @@ const (
 // This exists to demonstrate the current behavior and catch unintended
 // changes in it.
 type Message struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// Various CamelCase conversions.
 	FieldOne   *string `protobuf:"bytes,1,opt,name=field_one,json=fieldOne" json:"field_one,omitempty"`
 	FieldTwo   *string `protobuf:"bytes,2,opt,name=FieldTwo" json:"FieldTwo,omitempty"`
@@ -58,8 +60,6 @@ type Message struct {
 	// Types that are valid to be assigned to OneofConflictC:
 	//	*Message_OneofMessageConflict_
 	OneofConflictC isMessage_OneofConflictC `protobuf_oneof:"oneof_conflict_c"`
-	sizeCache      protoimpl.SizeCache
-	unknownFields  protoimpl.UnknownFields
 }
 
 func (x *Message) Reset() {
@@ -397,9 +397,9 @@ func file_fieldnames_fieldnames_proto_init() {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state
-			case 18:
+			case 1:
 				return &v.sizeCache
-			case 19:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

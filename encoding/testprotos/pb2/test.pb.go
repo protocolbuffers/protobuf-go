@@ -143,6 +143,8 @@ func (Enums_NestedEnum) EnumDescriptor() ([]byte, []int) {
 // Scalars contains optional scalar fields.
 type Scalars struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	OptBool       *bool    `protobuf:"varint,1,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
 	OptInt32      *int32   `protobuf:"varint,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
 	OptInt64      *int64   `protobuf:"varint,3,opt,name=opt_int64,json=optInt64" json:"opt_int64,omitempty"`
@@ -158,8 +160,6 @@ type Scalars struct {
 	OptDouble     *float64 `protobuf:"fixed64,21,opt,name=opt_double,json=optDouble" json:"opt_double,omitempty"`
 	OptBytes      []byte   `protobuf:"bytes,14,opt,name=opt_bytes,json=optBytes" json:"opt_bytes,omitempty"`
 	OptString     *string  `protobuf:"bytes,13,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Scalars) Reset() {
@@ -297,12 +297,12 @@ func (x *Scalars) GetOptString() string {
 // Message contains enum fields.
 type Enums struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	OptEnum       *Enum              `protobuf:"varint,1,opt,name=opt_enum,json=optEnum,enum=pb2.Enum" json:"opt_enum,omitempty"`
 	RptEnum       []Enum             `protobuf:"varint,2,rep,name=rpt_enum,json=rptEnum,enum=pb2.Enum" json:"rpt_enum,omitempty"`
 	OptNestedEnum *Enums_NestedEnum  `protobuf:"varint,3,opt,name=opt_nested_enum,json=optNestedEnum,enum=pb2.Enums_NestedEnum" json:"opt_nested_enum,omitempty"`
 	RptNestedEnum []Enums_NestedEnum `protobuf:"varint,4,rep,name=rpt_nested_enum,json=rptNestedEnum,enum=pb2.Enums_NestedEnum" json:"rpt_nested_enum,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Enums) Reset() {
@@ -363,6 +363,8 @@ func (x *Enums) GetRptNestedEnum() []Enums_NestedEnum {
 // Message contains repeated fields.
 type Repeats struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	RptBool       []bool    `protobuf:"varint,1,rep,name=rpt_bool,json=rptBool" json:"rpt_bool,omitempty"`
 	RptInt32      []int32   `protobuf:"varint,2,rep,name=rpt_int32,json=rptInt32" json:"rpt_int32,omitempty"`
 	RptInt64      []int64   `protobuf:"varint,3,rep,name=rpt_int64,json=rptInt64" json:"rpt_int64,omitempty"`
@@ -372,8 +374,6 @@ type Repeats struct {
 	RptDouble     []float64 `protobuf:"fixed64,7,rep,name=rpt_double,json=rptDouble" json:"rpt_double,omitempty"`
 	RptString     []string  `protobuf:"bytes,8,rep,name=rpt_string,json=rptString" json:"rpt_string,omitempty"`
 	RptBytes      [][]byte  `protobuf:"bytes,9,rep,name=rpt_bytes,json=rptBytes" json:"rpt_bytes,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Repeats) Reset() {
@@ -469,10 +469,10 @@ func (x *Repeats) GetRptBytes() [][]byte {
 // Message type used as submessage.
 type Nested struct {
 	state         protoimpl.MessageState
-	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
-	OptNested     *Nested `protobuf:"bytes,2,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
+	OptNested     *Nested `protobuf:"bytes,2,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
 }
 
 func (x *Nested) Reset() {
@@ -519,12 +519,12 @@ func (x *Nested) GetOptNested() *Nested {
 // Message contains message and group fields.
 type Nests struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	OptNested     *Nested           `protobuf:"bytes,1,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
 	Optgroup      *Nests_OptGroup   `protobuf:"group,2,opt,name=OptGroup,json=optgroup" json:"optgroup,omitempty"`
 	RptNested     []*Nested         `protobuf:"bytes,4,rep,name=rpt_nested,json=rptNested" json:"rpt_nested,omitempty"`
 	Rptgroup      []*Nests_RptGroup `protobuf:"group,5,rep,name=RptGroup,json=rptgroup" json:"rptgroup,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Nests) Reset() {
@@ -585,14 +585,14 @@ func (x *Nests) GetRptgroup() []*Nests_RptGroup {
 // Message contains required fields.
 type Requireds struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	ReqBool       *bool    `protobuf:"varint,1,req,name=req_bool,json=reqBool" json:"req_bool,omitempty"`
 	ReqSfixed64   *int64   `protobuf:"fixed64,2,req,name=req_sfixed64,json=reqSfixed64" json:"req_sfixed64,omitempty"`
 	ReqDouble     *float64 `protobuf:"fixed64,3,req,name=req_double,json=reqDouble" json:"req_double,omitempty"`
 	ReqString     *string  `protobuf:"bytes,4,req,name=req_string,json=reqString" json:"req_string,omitempty"`
 	ReqEnum       *Enum    `protobuf:"varint,5,req,name=req_enum,json=reqEnum,enum=pb2.Enum" json:"req_enum,omitempty"`
 	ReqNested     *Nested  `protobuf:"bytes,6,req,name=req_nested,json=reqNested" json:"req_nested,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *Requireds) Reset() {
@@ -667,10 +667,10 @@ func (x *Requireds) GetReqNested() *Nested {
 // Message contains both required and optional fields.
 type PartialRequired struct {
 	state         protoimpl.MessageState
-	ReqString     *string `protobuf:"bytes,1,req,name=req_string,json=reqString" json:"req_string,omitempty"`
-	OptString     *string `protobuf:"bytes,2,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	ReqString     *string `protobuf:"bytes,1,req,name=req_string,json=reqString" json:"req_string,omitempty"`
+	OptString     *string `protobuf:"bytes,2,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 }
 
 func (x *PartialRequired) Reset() {
@@ -716,9 +716,9 @@ func (x *PartialRequired) GetOptString() string {
 
 type NestedWithRequired struct {
 	state         protoimpl.MessageState
-	ReqString     *string `protobuf:"bytes,1,req,name=req_string,json=reqString" json:"req_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	ReqString     *string `protobuf:"bytes,1,req,name=req_string,json=reqString" json:"req_string,omitempty"`
 }
 
 func (x *NestedWithRequired) Reset() {
@@ -756,15 +756,15 @@ func (x *NestedWithRequired) GetReqString() string {
 }
 
 type IndirectRequired struct {
-	state       protoimpl.MessageState
-	OptNested   *NestedWithRequired            `protobuf:"bytes,1,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
-	RptNested   []*NestedWithRequired          `protobuf:"bytes,2,rep,name=rpt_nested,json=rptNested" json:"rpt_nested,omitempty"`
-	StrToNested map[string]*NestedWithRequired `protobuf:"bytes,3,rep,name=str_to_nested,json=strToNested" json:"str_to_nested,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Types that are valid to be assigned to Union:
-	//	*IndirectRequired_OneofNested
-	Union         isIndirectRequired_Union `protobuf_oneof:"union"`
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	OptNested     *NestedWithRequired            `protobuf:"bytes,1,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
+	RptNested     []*NestedWithRequired          `protobuf:"bytes,2,rep,name=rpt_nested,json=rptNested" json:"rpt_nested,omitempty"`
+	StrToNested   map[string]*NestedWithRequired `protobuf:"bytes,3,rep,name=str_to_nested,json=strToNested" json:"str_to_nested,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Types that are valid to be assigned to Union:
+	//	*IndirectRequired_OneofNested
+	Union isIndirectRequired_Union `protobuf_oneof:"union"`
 }
 
 func (x *IndirectRequired) Reset() {
@@ -841,12 +841,12 @@ func (*IndirectRequired_OneofNested) isIndirectRequired_Union() {}
 
 type Extensions struct {
 	state           protoimpl.MessageState
-	OptString       *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
-	OptBool         *bool   `protobuf:"varint,101,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
-	OptInt32        *int32  `protobuf:"varint,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
 	sizeCache       protoimpl.SizeCache
 	unknownFields   protoimpl.UnknownFields
 	extensionFields protoimpl.ExtensionFields
+	OptString       *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
+	OptBool         *bool   `protobuf:"varint,101,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
+	OptInt32        *int32  `protobuf:"varint,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
 }
 
 func (x *Extensions) Reset() {
@@ -984,9 +984,9 @@ func (*MessageSet) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 
 type MessageSetExtension struct {
 	state         protoimpl.MessageState
-	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 }
 
 func (x *MessageSetExtension) Reset() {
@@ -1068,9 +1068,9 @@ func (*FakeMessageSet) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 
 type FakeMessageSetExtension struct {
 	state         protoimpl.MessageState
-	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	OptString     *string `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 }
 
 func (x *FakeMessageSetExtension) Reset() {
@@ -1110,6 +1110,8 @@ func (x *FakeMessageSetExtension) GetOptString() string {
 // Message contains well-known type fields.
 type KnownTypes struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	OptBool       *wrapperspb.BoolValue   `protobuf:"bytes,1,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
 	OptInt32      *wrapperspb.Int32Value  `protobuf:"bytes,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
 	OptInt64      *wrapperspb.Int64Value  `protobuf:"bytes,3,opt,name=opt_int64,json=optInt64" json:"opt_int64,omitempty"`
@@ -1128,8 +1130,6 @@ type KnownTypes struct {
 	OptEmpty      *emptypb.Empty          `protobuf:"bytes,30,opt,name=opt_empty,json=optEmpty" json:"opt_empty,omitempty"`
 	OptAny        *anypb.Any              `protobuf:"bytes,32,opt,name=opt_any,json=optAny" json:"opt_any,omitempty"`
 	OptFieldmask  *fieldmaskpb.FieldMask  `protobuf:"bytes,40,opt,name=opt_fieldmask,json=optFieldmask" json:"opt_fieldmask,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *KnownTypes) Reset() {
@@ -1287,11 +1287,11 @@ func (x *KnownTypes) GetOptFieldmask() *fieldmaskpb.FieldMask {
 
 type Nests_OptGroup struct {
 	state          protoimpl.MessageState
+	sizeCache      protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
 	OptString      *string                        `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
 	OptNested      *Nested                        `protobuf:"bytes,2,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
 	Optnestedgroup *Nests_OptGroup_OptNestedGroup `protobuf:"group,3,opt,name=OptNestedGroup,json=optnestedgroup" json:"optnestedgroup,omitempty"`
-	sizeCache      protoimpl.SizeCache
-	unknownFields  protoimpl.UnknownFields
 }
 
 func (x *Nests_OptGroup) Reset() {
@@ -1344,9 +1344,9 @@ func (x *Nests_OptGroup) GetOptnestedgroup() *Nests_OptGroup_OptNestedGroup {
 
 type Nests_RptGroup struct {
 	state         protoimpl.MessageState
-	RptString     []string `protobuf:"bytes,1,rep,name=rpt_string,json=rptString" json:"rpt_string,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	RptString     []string `protobuf:"bytes,1,rep,name=rpt_string,json=rptString" json:"rpt_string,omitempty"`
 }
 
 func (x *Nests_RptGroup) Reset() {
@@ -1385,9 +1385,9 @@ func (x *Nests_RptGroup) GetRptString() []string {
 
 type Nests_OptGroup_OptNestedGroup struct {
 	state         protoimpl.MessageState
-	OptFixed32    *uint32 `protobuf:"fixed32,1,opt,name=opt_fixed32,json=optFixed32" json:"opt_fixed32,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	OptFixed32    *uint32 `protobuf:"fixed32,1,opt,name=opt_fixed32,json=optFixed32" json:"opt_fixed32,omitempty"`
 }
 
 func (x *Nests_OptGroup_OptNestedGroup) Reset() {
@@ -2149,9 +2149,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Scalars); i {
 			case 0:
 				return &v.state
-			case 16:
+			case 1:
 				return &v.sizeCache
-			case 17:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2161,9 +2161,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Enums); i {
 			case 0:
 				return &v.state
-			case 5:
+			case 1:
 				return &v.sizeCache
-			case 6:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2173,9 +2173,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Repeats); i {
 			case 0:
 				return &v.state
-			case 10:
+			case 1:
 				return &v.sizeCache
-			case 11:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2185,9 +2185,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Nested); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2197,9 +2197,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Nests); i {
 			case 0:
 				return &v.state
-			case 5:
+			case 1:
 				return &v.sizeCache
-			case 6:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2209,9 +2209,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Requireds); i {
 			case 0:
 				return &v.state
-			case 7:
+			case 1:
 				return &v.sizeCache
-			case 8:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2221,9 +2221,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*PartialRequired); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2233,9 +2233,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*NestedWithRequired); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2245,9 +2245,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*IndirectRequired); i {
 			case 0:
 				return &v.state
-			case 5:
+			case 1:
 				return &v.sizeCache
-			case 6:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2257,11 +2257,11 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Extensions); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
-			case 6:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -2297,9 +2297,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*MessageSetExtension); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2323,9 +2323,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*FakeMessageSetExtension); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2335,9 +2335,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*KnownTypes); i {
 			case 0:
 				return &v.state
-			case 19:
+			case 1:
 				return &v.sizeCache
-			case 20:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2347,9 +2347,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Nests_OptGroup); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2359,9 +2359,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Nests_RptGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2371,9 +2371,9 @@ func file_pb2_test_proto_init() {
 			switch v := v.(*Nests_OptGroup_OptNestedGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

@@ -21,7 +21,9 @@ const (
 
 // COMMENT: Message1
 type Message1 struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// COMMENT: Field1A
 	Field1A *string `protobuf:"bytes,1,opt,name=Field1A" json:"Field1A,omitempty"`
 	// COMMENT: Oneof1A
@@ -29,9 +31,7 @@ type Message1 struct {
 	// Types that are valid to be assigned to Oneof1A:
 	// COMMENT: Oneof1AField1
 	//	*Message1_Oneof1AField1
-	Oneof1A       isMessage1_Oneof1A `protobuf_oneof:"Oneof1a"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Oneof1A isMessage1_Oneof1A `protobuf_oneof:"Oneof1a"`
 }
 
 func (x *Message1) Reset() {
@@ -323,9 +323,9 @@ func file_comments_comments_proto_init() {
 			switch v := v.(*Message1); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

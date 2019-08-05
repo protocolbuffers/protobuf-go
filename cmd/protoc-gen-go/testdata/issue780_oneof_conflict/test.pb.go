@@ -18,12 +18,12 @@ const (
 )
 
 type Foo struct {
-	state protoimpl.MessageState
-	// Types that are valid to be assigned to Bar:
-	//	*Foo_GetBar
-	Bar           isFoo_Bar `protobuf_oneof:"bar"`
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	// Types that are valid to be assigned to Bar:
+	//	*Foo_GetBar
+	Bar isFoo_Bar `protobuf_oneof:"bar"`
 }
 
 func (x *Foo) Reset() {
@@ -122,9 +122,9 @@ func file_issue780_oneof_conflict_test_proto_init() {
 			switch v := v.(*Foo); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

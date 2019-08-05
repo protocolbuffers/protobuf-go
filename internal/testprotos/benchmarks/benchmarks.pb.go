@@ -18,7 +18,9 @@ const (
 )
 
 type BenchmarkDataset struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// Name of the benchmark dataset.  This should be unique across all datasets.
 	// Should only contain word characters: [a-zA-Z0-9_]
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -43,9 +45,7 @@ type BenchmarkDataset struct {
 	// potentially more realistic results than just parsing the same message
 	// over and over.  A single message parsed repeatedly could yield unusually
 	// good branch prediction performance.
-	Payload       [][]byte `protobuf:"bytes,3,rep,name=payload,proto3" json:"payload,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Payload [][]byte `protobuf:"bytes,3,rep,name=payload,proto3" json:"payload,omitempty"`
 }
 
 func (x *BenchmarkDataset) Reset() {
@@ -150,9 +150,9 @@ func file_benchmarks_proto_init() {
 			switch v := v.(*BenchmarkDataset); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

@@ -144,7 +144,10 @@ func (TestAllTypesProto2_NestedEnum) EnumDescriptor() ([]byte, []int) {
 // could trigger bugs that occur in any message type in this file.  We verify
 // this stays true in a unit test.
 type TestAllTypesProto2 struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// Singular
 	OptionalInt32          *int32                            `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty"`
 	OptionalInt64          *int64                            `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64" json:"optional_int64,omitempty"`
@@ -224,27 +227,24 @@ type TestAllTypesProto2 struct {
 	Data       *TestAllTypesProto2_Data        `protobuf:"group,201,opt,name=Data,json=data" json:"data,omitempty"`
 	// Test field-name-to-JSON-name convention.
 	// (protobuf says names can be any valid C/C++ identifier.)
-	Fieldname1      *int32 `protobuf:"varint,401,opt,name=fieldname1" json:"fieldname1,omitempty"`
-	FieldName2      *int32 `protobuf:"varint,402,opt,name=field_name2,json=fieldName2" json:"field_name2,omitempty"`
-	XFieldName3     *int32 `protobuf:"varint,403,opt,name=_field_name3,json=FieldName3" json:"_field_name3,omitempty"`
-	Field_Name4_    *int32 `protobuf:"varint,404,opt,name=field__name4_,json=fieldName4" json:"field__name4_,omitempty"`
-	Field0Name5     *int32 `protobuf:"varint,405,opt,name=field0name5" json:"field0name5,omitempty"`
-	Field_0Name6    *int32 `protobuf:"varint,406,opt,name=field_0_name6,json=field0Name6" json:"field_0_name6,omitempty"`
-	FieldName7      *int32 `protobuf:"varint,407,opt,name=fieldName7" json:"fieldName7,omitempty"`
-	FieldName8      *int32 `protobuf:"varint,408,opt,name=FieldName8" json:"FieldName8,omitempty"`
-	Field_Name9     *int32 `protobuf:"varint,409,opt,name=field_Name9,json=fieldName9" json:"field_Name9,omitempty"`
-	Field_Name10    *int32 `protobuf:"varint,410,opt,name=Field_Name10,json=FieldName10" json:"Field_Name10,omitempty"`
-	FIELD_NAME11    *int32 `protobuf:"varint,411,opt,name=FIELD_NAME11,json=FIELDNAME11" json:"FIELD_NAME11,omitempty"`
-	FIELDName12     *int32 `protobuf:"varint,412,opt,name=FIELD_name12,json=FIELDName12" json:"FIELD_name12,omitempty"`
-	XFieldName13    *int32 `protobuf:"varint,413,opt,name=__field_name13,json=FieldName13" json:"__field_name13,omitempty"`
-	X_FieldName14   *int32 `protobuf:"varint,414,opt,name=__Field_name14,json=FieldName14" json:"__Field_name14,omitempty"`
-	Field_Name15    *int32 `protobuf:"varint,415,opt,name=field__name15,json=fieldName15" json:"field__name15,omitempty"`
-	Field__Name16   *int32 `protobuf:"varint,416,opt,name=field__Name16,json=fieldName16" json:"field__Name16,omitempty"`
-	FieldName17__   *int32 `protobuf:"varint,417,opt,name=field_name17__,json=fieldName17" json:"field_name17__,omitempty"`
-	FieldName18__   *int32 `protobuf:"varint,418,opt,name=Field_name18__,json=FieldName18" json:"Field_name18__,omitempty"`
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields
+	Fieldname1    *int32 `protobuf:"varint,401,opt,name=fieldname1" json:"fieldname1,omitempty"`
+	FieldName2    *int32 `protobuf:"varint,402,opt,name=field_name2,json=fieldName2" json:"field_name2,omitempty"`
+	XFieldName3   *int32 `protobuf:"varint,403,opt,name=_field_name3,json=FieldName3" json:"_field_name3,omitempty"`
+	Field_Name4_  *int32 `protobuf:"varint,404,opt,name=field__name4_,json=fieldName4" json:"field__name4_,omitempty"`
+	Field0Name5   *int32 `protobuf:"varint,405,opt,name=field0name5" json:"field0name5,omitempty"`
+	Field_0Name6  *int32 `protobuf:"varint,406,opt,name=field_0_name6,json=field0Name6" json:"field_0_name6,omitempty"`
+	FieldName7    *int32 `protobuf:"varint,407,opt,name=fieldName7" json:"fieldName7,omitempty"`
+	FieldName8    *int32 `protobuf:"varint,408,opt,name=FieldName8" json:"FieldName8,omitempty"`
+	Field_Name9   *int32 `protobuf:"varint,409,opt,name=field_Name9,json=fieldName9" json:"field_Name9,omitempty"`
+	Field_Name10  *int32 `protobuf:"varint,410,opt,name=Field_Name10,json=FieldName10" json:"Field_Name10,omitempty"`
+	FIELD_NAME11  *int32 `protobuf:"varint,411,opt,name=FIELD_NAME11,json=FIELDNAME11" json:"FIELD_NAME11,omitempty"`
+	FIELDName12   *int32 `protobuf:"varint,412,opt,name=FIELD_name12,json=FIELDName12" json:"FIELD_name12,omitempty"`
+	XFieldName13  *int32 `protobuf:"varint,413,opt,name=__field_name13,json=FieldName13" json:"__field_name13,omitempty"`
+	X_FieldName14 *int32 `protobuf:"varint,414,opt,name=__Field_name14,json=FieldName14" json:"__Field_name14,omitempty"`
+	Field_Name15  *int32 `protobuf:"varint,415,opt,name=field__name15,json=fieldName15" json:"field__name15,omitempty"`
+	Field__Name16 *int32 `protobuf:"varint,416,opt,name=field__Name16,json=fieldName16" json:"field__Name16,omitempty"`
+	FieldName17__ *int32 `protobuf:"varint,417,opt,name=field_name17__,json=fieldName17" json:"field_name17__,omitempty"`
+	FieldName18__ *int32 `protobuf:"varint,418,opt,name=Field_name18__,json=FieldName18" json:"Field_name18__,omitempty"`
 }
 
 func (x *TestAllTypesProto2) Reset() {
@@ -980,9 +980,9 @@ func (*TestAllTypesProto2_OneofEnum) isTestAllTypesProto2_OneofField() {}
 
 type ForeignMessageProto2 struct {
 	state         protoimpl.MessageState
-	C             *int32 `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	C             *int32 `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
 }
 
 func (x *ForeignMessageProto2) Reset() {
@@ -1021,10 +1021,10 @@ func (x *ForeignMessageProto2) GetC() int32 {
 
 type TestAllTypesProto2_NestedMessage struct {
 	state         protoimpl.MessageState
-	A             *int32              `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
-	Corecursive   *TestAllTypesProto2 `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32              `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
+	Corecursive   *TestAllTypesProto2 `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
 }
 
 func (x *TestAllTypesProto2_NestedMessage) Reset() {
@@ -1071,10 +1071,10 @@ func (x *TestAllTypesProto2_NestedMessage) GetCorecursive() *TestAllTypesProto2 
 // groups
 type TestAllTypesProto2_Data struct {
 	state         protoimpl.MessageState
-	GroupInt32    *int32  `protobuf:"varint,202,opt,name=group_int32,json=groupInt32" json:"group_int32,omitempty"`
-	GroupUint32   *uint32 `protobuf:"varint,203,opt,name=group_uint32,json=groupUint32" json:"group_uint32,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	GroupInt32    *int32  `protobuf:"varint,202,opt,name=group_int32,json=groupInt32" json:"group_int32,omitempty"`
+	GroupUint32   *uint32 `protobuf:"varint,203,opt,name=group_uint32,json=groupUint32" json:"group_uint32,omitempty"`
 }
 
 func (x *TestAllTypesProto2_Data) Reset() {
@@ -1164,9 +1164,9 @@ func (*TestAllTypesProto2_MessageSetCorrect) ExtensionRangeArray() []protoiface.
 
 type TestAllTypesProto2_MessageSetCorrectExtension1 struct {
 	state         protoimpl.MessageState
-	Str           *string `protobuf:"bytes,25,opt,name=str" json:"str,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Str           *string `protobuf:"bytes,25,opt,name=str" json:"str,omitempty"`
 }
 
 func (x *TestAllTypesProto2_MessageSetCorrectExtension1) Reset() {
@@ -1205,9 +1205,9 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension1) GetStr() string {
 
 type TestAllTypesProto2_MessageSetCorrectExtension2 struct {
 	state         protoimpl.MessageState
-	I             *int32 `protobuf:"varint,9,opt,name=i" json:"i,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	I             *int32 `protobuf:"varint,9,opt,name=i" json:"i,omitempty"`
 }
 
 func (x *TestAllTypesProto2_MessageSetCorrectExtension2) Reset() {
@@ -1929,11 +1929,11 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 			switch v := v.(*TestAllTypesProto2); i {
 			case 0:
 				return &v.state
-			case 83:
+			case 1:
 				return &v.sizeCache
-			case 84:
+			case 2:
 				return &v.unknownFields
-			case 85:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -1943,9 +1943,9 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 			switch v := v.(*ForeignMessageProto2); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1955,9 +1955,9 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 			switch v := v.(*TestAllTypesProto2_NestedMessage); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1967,9 +1967,9 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 			switch v := v.(*TestAllTypesProto2_Data); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1993,9 +1993,9 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 			switch v := v.(*TestAllTypesProto2_MessageSetCorrectExtension1); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -2005,9 +2005,9 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 			switch v := v.(*TestAllTypesProto2_MessageSetCorrectExtension2); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

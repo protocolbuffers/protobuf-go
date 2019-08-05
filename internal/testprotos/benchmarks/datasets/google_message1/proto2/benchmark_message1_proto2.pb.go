@@ -19,6 +19,8 @@ const (
 
 type GoogleMessage1 struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	Field1        *string                   `protobuf:"bytes,1,req,name=field1" json:"field1,omitempty"`
 	Field9        *string                   `protobuf:"bytes,9,opt,name=field9" json:"field9,omitempty"`
 	Field18       *string                   `protobuf:"bytes,18,opt,name=field18" json:"field18,omitempty"`
@@ -60,8 +62,6 @@ type GoogleMessage1 struct {
 	Field128      *int32                    `protobuf:"varint,128,opt,name=field128,def=0" json:"field128,omitempty"`
 	Field129      *string                   `protobuf:"bytes,129,opt,name=field129,def=xxxxxxxxxxxxxxxxxxxxx" json:"field129,omitempty"`
 	Field131      *int32                    `protobuf:"varint,131,opt,name=field131,def=0" json:"field131,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 const Default_GoogleMessage1_Field80 bool = false
@@ -405,6 +405,8 @@ func (x *GoogleMessage1) GetField131() int32 {
 
 type GoogleMessage1SubMessage struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	Field1        *int32  `protobuf:"varint,1,opt,name=field1,def=0" json:"field1,omitempty"`
 	Field2        *int32  `protobuf:"varint,2,opt,name=field2,def=0" json:"field2,omitempty"`
 	Field3        *int32  `protobuf:"varint,3,opt,name=field3,def=0" json:"field3,omitempty"`
@@ -425,8 +427,6 @@ type GoogleMessage1SubMessage struct {
 	Field205      *string `protobuf:"bytes,205,opt,name=field205" json:"field205,omitempty"`
 	Field207      *uint64 `protobuf:"varint,207,opt,name=field207" json:"field207,omitempty"`
 	Field300      *uint64 `protobuf:"varint,300,opt,name=field300" json:"field300,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 const Default_GoogleMessage1SubMessage_Field1 int32 = 0
@@ -778,9 +778,9 @@ func file_datasets_google_message1_proto2_benchmark_message1_proto2_proto_init()
 			switch v := v.(*GoogleMessage1); i {
 			case 0:
 				return &v.state
-			case 42:
+			case 1:
 				return &v.sizeCache
-			case 43:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -790,9 +790,9 @@ func file_datasets_google_message1_proto2_benchmark_message1_proto2_proto_init()
 			switch v := v.(*GoogleMessage1SubMessage); i {
 			case 0:
 				return &v.state
-			case 21:
+			case 1:
 				return &v.sizeCache
-			case 22:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

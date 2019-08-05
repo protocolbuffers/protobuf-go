@@ -71,9 +71,9 @@ func (AnnotationsTestEnum) EnumDescriptor() ([]byte, []int) {
 
 type AnnotationsTestMessage struct {
 	state                protoimpl.MessageState
-	AnnotationsTestField *string `protobuf:"bytes,1,opt,name=AnnotationsTestField" json:"AnnotationsTestField,omitempty"`
 	sizeCache            protoimpl.SizeCache
 	unknownFields        protoimpl.UnknownFields
+	AnnotationsTestField *string `protobuf:"bytes,1,opt,name=AnnotationsTestField" json:"AnnotationsTestField,omitempty"`
 }
 
 func (x *AnnotationsTestMessage) Reset() {
@@ -168,9 +168,9 @@ func file_annotations_annotations_proto_init() {
 			switch v := v.(*AnnotationsTestMessage); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

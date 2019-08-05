@@ -239,6 +239,8 @@ func (TestDeprecatedMessage_DeprecatedEnum) EnumDescriptor() ([]byte, []int) {
 
 type TestAllTypes struct {
 	state                  protoimpl.MessageState
+	sizeCache              protoimpl.SizeCache
+	unknownFields          protoimpl.UnknownFields
 	OptionalInt32          *int32                                 `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty"`
 	OptionalInt64          *int64                                 `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64" json:"optional_int64,omitempty"`
 	OptionalUint32         *uint32                                `protobuf:"varint,3,opt,name=optional_uint32,json=optionalUint32" json:"optional_uint32,omitempty"`
@@ -328,9 +330,7 @@ type TestAllTypes struct {
 	//	*TestAllTypes_OneofFloat
 	//	*TestAllTypes_OneofDouble
 	//	*TestAllTypes_OneofEnum
-	OneofField    isTestAllTypes_OneofField `protobuf_oneof:"oneof_field"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	OneofField isTestAllTypes_OneofField `protobuf_oneof:"oneof_field"`
 }
 
 const Default_TestAllTypes_DefaultInt32 int32 = 81
@@ -1057,12 +1057,12 @@ func (*TestAllTypes_OneofEnum) isTestAllTypes_OneofField() {}
 // Deprecated: Do not use.
 type TestDeprecatedMessage struct {
 	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
 	DeprecatedInt32 *int32 `protobuf:"varint,1,opt,name=deprecated_int32,json=deprecatedInt32" json:"deprecated_int32,omitempty"` // Deprecated: Do not use.
 	// Types that are valid to be assigned to DeprecatedOneof:
 	//	*TestDeprecatedMessage_DeprecatedOneofField
 	DeprecatedOneof isTestDeprecatedMessage_DeprecatedOneof `protobuf_oneof:"deprecated_oneof"`
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
 }
 
 func (x *TestDeprecatedMessage) Reset() {
@@ -1127,10 +1127,10 @@ func (*TestDeprecatedMessage_DeprecatedOneofField) isTestDeprecatedMessage_Depre
 
 type ForeignMessage struct {
 	state         protoimpl.MessageState
-	C             *int32 `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
-	D             *int32 `protobuf:"varint,2,opt,name=d" json:"d,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	C             *int32 `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
+	D             *int32 `protobuf:"varint,2,opt,name=d" json:"d,omitempty"`
 }
 
 func (x *ForeignMessage) Reset() {
@@ -1252,9 +1252,9 @@ func (*TestAllExtensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 
 type OptionalGroupExtension struct {
 	state         protoimpl.MessageState
-	A             *int32 `protobuf:"varint,17,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32 `protobuf:"varint,17,opt,name=a" json:"a,omitempty"`
 }
 
 func (x *OptionalGroupExtension) Reset() {
@@ -1293,9 +1293,9 @@ func (x *OptionalGroupExtension) GetA() int32 {
 
 type RepeatedGroupExtension struct {
 	state         protoimpl.MessageState
-	A             *int32 `protobuf:"varint,47,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32 `protobuf:"varint,47,opt,name=a" json:"a,omitempty"`
 }
 
 func (x *RepeatedGroupExtension) Reset() {
@@ -1367,9 +1367,9 @@ func (*TestNestedExtension) Descriptor() ([]byte, []int) {
 
 type TestRequired struct {
 	state         protoimpl.MessageState
-	RequiredField *int32 `protobuf:"varint,1,req,name=required_field,json=requiredField" json:"required_field,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	RequiredField *int32 `protobuf:"varint,1,req,name=required_field,json=requiredField" json:"required_field,omitempty"`
 }
 
 func (x *TestRequired) Reset() {
@@ -1408,14 +1408,14 @@ func (x *TestRequired) GetRequiredField() int32 {
 
 type TestRequiredForeign struct {
 	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
 	OptionalMessage *TestRequired           `protobuf:"bytes,1,opt,name=optional_message,json=optionalMessage" json:"optional_message,omitempty"`
 	RepeatedMessage []*TestRequired         `protobuf:"bytes,2,rep,name=repeated_message,json=repeatedMessage" json:"repeated_message,omitempty"`
 	MapMessage      map[int32]*TestRequired `protobuf:"bytes,3,rep,name=map_message,json=mapMessage" json:"map_message,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Types that are valid to be assigned to OneofField:
 	//	*TestRequiredForeign_OneofMessage
-	OneofField    isTestRequiredForeign_OneofField `protobuf_oneof:"oneof_field"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	OneofField isTestRequiredForeign_OneofField `protobuf_oneof:"oneof_field"`
 }
 
 func (x *TestRequiredForeign) Reset() {
@@ -1492,10 +1492,10 @@ func (*TestRequiredForeign_OneofMessage) isTestRequiredForeign_OneofField() {}
 
 type TestRequiredGroupFields struct {
 	state         protoimpl.MessageState
-	Optionalgroup *TestRequiredGroupFields_OptionalGroup   `protobuf:"group,1,opt,name=OptionalGroup,json=optionalgroup" json:"optionalgroup,omitempty"`
-	Repeatedgroup []*TestRequiredGroupFields_RepeatedGroup `protobuf:"group,3,rep,name=RepeatedGroup,json=repeatedgroup" json:"repeatedgroup,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Optionalgroup *TestRequiredGroupFields_OptionalGroup   `protobuf:"group,1,opt,name=OptionalGroup,json=optionalgroup" json:"optionalgroup,omitempty"`
+	Repeatedgroup []*TestRequiredGroupFields_RepeatedGroup `protobuf:"group,3,rep,name=RepeatedGroup,json=repeatedgroup" json:"repeatedgroup,omitempty"`
 }
 
 func (x *TestRequiredGroupFields) Reset() {
@@ -1541,11 +1541,11 @@ func (x *TestRequiredGroupFields) GetRepeatedgroup() []*TestRequiredGroupFields_
 
 type TestWeak struct {
 	state                 protoimpl.MessageState
-	XXX_weak_WeakMessage1 struct{} `protobuf:"bytes,1,opt,name=weak_message1,json=weakMessage1,weak=goproto.proto.test.weak.WeakImportMessage1" json:"weak_message1,omitempty"`
-	XXX_weak_WeakMessage2 struct{} `protobuf:"bytes,2,opt,name=weak_message2,json=weakMessage2,weak=goproto.proto.test.weak.WeakImportMessage2" json:"weak_message2,omitempty"`
 	sizeCache             protoimpl.SizeCache
 	XXX_weak              protoimpl.WeakFields `json:"-"`
 	unknownFields         protoimpl.UnknownFields
+	XXX_weak_WeakMessage1 struct{} `protobuf:"bytes,1,opt,name=weak_message1,json=weakMessage1,weak=goproto.proto.test.weak.WeakImportMessage1" json:"weak_message1,omitempty"`
+	XXX_weak_WeakMessage2 struct{} `protobuf:"bytes,2,opt,name=weak_message2,json=weakMessage2,weak=goproto.proto.test.weak.WeakImportMessage2" json:"weak_message2,omitempty"`
 }
 
 func (x *TestWeak) Reset() {
@@ -1623,6 +1623,8 @@ func (x *TestWeak) SetWeakMessage2(v protoiface.MessageV1) {
 
 type TestPackedTypes struct {
 	state          protoimpl.MessageState
+	sizeCache      protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
 	PackedInt32    []int32       `protobuf:"varint,90,rep,packed,name=packed_int32,json=packedInt32" json:"packed_int32,omitempty"`
 	PackedInt64    []int64       `protobuf:"varint,91,rep,packed,name=packed_int64,json=packedInt64" json:"packed_int64,omitempty"`
 	PackedUint32   []uint32      `protobuf:"varint,92,rep,packed,name=packed_uint32,json=packedUint32" json:"packed_uint32,omitempty"`
@@ -1637,8 +1639,6 @@ type TestPackedTypes struct {
 	PackedDouble   []float64     `protobuf:"fixed64,101,rep,packed,name=packed_double,json=packedDouble" json:"packed_double,omitempty"`
 	PackedBool     []bool        `protobuf:"varint,102,rep,packed,name=packed_bool,json=packedBool" json:"packed_bool,omitempty"`
 	PackedEnum     []ForeignEnum `protobuf:"varint,103,rep,packed,name=packed_enum,json=packedEnum,enum=goproto.proto.test.ForeignEnum" json:"packed_enum,omitempty"`
-	sizeCache      protoimpl.SizeCache
-	unknownFields  protoimpl.UnknownFields
 }
 
 func (x *TestPackedTypes) Reset() {
@@ -1768,6 +1768,8 @@ func (x *TestPackedTypes) GetPackedEnum() []ForeignEnum {
 
 type TestUnpackedTypes struct {
 	state            protoimpl.MessageState
+	sizeCache        protoimpl.SizeCache
+	unknownFields    protoimpl.UnknownFields
 	UnpackedInt32    []int32       `protobuf:"varint,90,rep,name=unpacked_int32,json=unpackedInt32" json:"unpacked_int32,omitempty"`
 	UnpackedInt64    []int64       `protobuf:"varint,91,rep,name=unpacked_int64,json=unpackedInt64" json:"unpacked_int64,omitempty"`
 	UnpackedUint32   []uint32      `protobuf:"varint,92,rep,name=unpacked_uint32,json=unpackedUint32" json:"unpacked_uint32,omitempty"`
@@ -1782,8 +1784,6 @@ type TestUnpackedTypes struct {
 	UnpackedDouble   []float64     `protobuf:"fixed64,101,rep,name=unpacked_double,json=unpackedDouble" json:"unpacked_double,omitempty"`
 	UnpackedBool     []bool        `protobuf:"varint,102,rep,name=unpacked_bool,json=unpackedBool" json:"unpacked_bool,omitempty"`
 	UnpackedEnum     []ForeignEnum `protobuf:"varint,103,rep,name=unpacked_enum,json=unpackedEnum,enum=goproto.proto.test.ForeignEnum" json:"unpacked_enum,omitempty"`
-	sizeCache        protoimpl.SizeCache
-	unknownFields    protoimpl.UnknownFields
 }
 
 func (x *TestUnpackedTypes) Reset() {
@@ -2066,10 +2066,10 @@ func (*FooResponse) Descriptor() ([]byte, []int) {
 
 type TestAllTypes_NestedMessage struct {
 	state         protoimpl.MessageState
-	A             *int32        `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
-	Corecursive   *TestAllTypes `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32        `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
+	Corecursive   *TestAllTypes `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
 }
 
 func (x *TestAllTypes_NestedMessage) Reset() {
@@ -2115,9 +2115,9 @@ func (x *TestAllTypes_NestedMessage) GetCorecursive() *TestAllTypes {
 
 type TestAllTypes_OptionalGroup struct {
 	state         protoimpl.MessageState
-	A             *int32 `protobuf:"varint,17,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32 `protobuf:"varint,17,opt,name=a" json:"a,omitempty"`
 }
 
 func (x *TestAllTypes_OptionalGroup) Reset() {
@@ -2156,9 +2156,9 @@ func (x *TestAllTypes_OptionalGroup) GetA() int32 {
 
 type TestAllTypes_RepeatedGroup struct {
 	state         protoimpl.MessageState
-	A             *int32 `protobuf:"varint,47,opt,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32 `protobuf:"varint,47,opt,name=a" json:"a,omitempty"`
 }
 
 func (x *TestAllTypes_RepeatedGroup) Reset() {
@@ -2197,9 +2197,9 @@ func (x *TestAllTypes_RepeatedGroup) GetA() int32 {
 
 type TestRequiredGroupFields_OptionalGroup struct {
 	state         protoimpl.MessageState
-	A             *int32 `protobuf:"varint,2,req,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32 `protobuf:"varint,2,req,name=a" json:"a,omitempty"`
 }
 
 func (x *TestRequiredGroupFields_OptionalGroup) Reset() {
@@ -2238,9 +2238,9 @@ func (x *TestRequiredGroupFields_OptionalGroup) GetA() int32 {
 
 type TestRequiredGroupFields_RepeatedGroup struct {
 	state         protoimpl.MessageState
-	A             *int32 `protobuf:"varint,4,req,name=a" json:"a,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             *int32 `protobuf:"varint,4,req,name=a" json:"a,omitempty"`
 }
 
 func (x *TestRequiredGroupFields_RepeatedGroup) Reset() {
@@ -4615,9 +4615,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestAllTypes); i {
 			case 0:
 				return &v.state
-			case 80:
+			case 1:
 				return &v.sizeCache
-			case 81:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4627,9 +4627,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestDeprecatedMessage); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4639,9 +4639,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*ForeignMessage); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4677,9 +4677,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*OptionalGroupExtension); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4689,9 +4689,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*RepeatedGroupExtension); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4713,9 +4713,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestRequired); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4725,9 +4725,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestRequiredForeign); i {
 			case 0:
 				return &v.state
-			case 5:
+			case 1:
 				return &v.sizeCache
-			case 6:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4737,9 +4737,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestRequiredGroupFields); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4749,9 +4749,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestWeak); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 3:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4761,9 +4761,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestPackedTypes); i {
 			case 0:
 				return &v.state
-			case 15:
+			case 1:
 				return &v.sizeCache
-			case 16:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4773,9 +4773,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestUnpackedTypes); i {
 			case 0:
 				return &v.state
-			case 15:
+			case 1:
 				return &v.sizeCache
-			case 16:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4837,9 +4837,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestAllTypes_NestedMessage); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4849,9 +4849,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestAllTypes_OptionalGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4861,9 +4861,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestAllTypes_RepeatedGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4873,9 +4873,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestRequiredGroupFields_OptionalGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -4885,9 +4885,9 @@ func file_test_test_proto_init() {
 			switch v := v.(*TestRequiredGroupFields_RepeatedGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

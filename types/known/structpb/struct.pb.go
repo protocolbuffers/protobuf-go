@@ -73,11 +73,11 @@ func (NullValue) EnumDescriptor() ([]byte, []int) {
 //
 // The JSON representation for `Struct` is JSON object.
 type Struct struct {
-	state protoimpl.MessageState
-	// Unordered map of dynamically typed values.
-	Fields        map[string]*Value `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	// Unordered map of dynamically typed values.
+	Fields map[string]*Value `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *Struct) Reset() {
@@ -121,7 +121,9 @@ func (x *Struct) GetFields() map[string]*Value {
 //
 // The JSON representation for `Value` is JSON value.
 type Value struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// The kind of value.
 	//
 	// Types that are valid to be assigned to Kind:
@@ -137,9 +139,7 @@ type Value struct {
 	//	*Value_StructValue
 	// Represents a repeated `Value`.
 	//	*Value_ListValue
-	Kind          isValue_Kind `protobuf_oneof:"kind"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Kind isValue_Kind `protobuf_oneof:"kind"`
 }
 
 func (x *Value) Reset() {
@@ -262,11 +262,11 @@ func (*Value_ListValue) isValue_Kind() {}
 //
 // The JSON representation for `ListValue` is JSON array.
 type ListValue struct {
-	state protoimpl.MessageState
-	// Repeated field of dynamically typed values.
-	Values        []*Value `protobuf:"bytes,1,rep,name=values,proto3" json:"values,omitempty"`
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	// Repeated field of dynamically typed values.
+	Values []*Value `protobuf:"bytes,1,rep,name=values,proto3" json:"values,omitempty"`
 }
 
 func (x *ListValue) Reset() {
@@ -400,9 +400,9 @@ func file_google_protobuf_struct_proto_init() {
 			switch v := v.(*Struct); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -412,9 +412,9 @@ func file_google_protobuf_struct_proto_init() {
 			switch v := v.(*Value); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -424,9 +424,9 @@ func file_google_protobuf_struct_proto_init() {
 			switch v := v.(*ListValue); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

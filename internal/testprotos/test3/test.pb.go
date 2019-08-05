@@ -120,6 +120,8 @@ func (TestAllTypes_NestedEnum) EnumDescriptor() ([]byte, []int) {
 
 type TestAllTypes struct {
 	state                  protoimpl.MessageState
+	sizeCache              protoimpl.SizeCache
+	unknownFields          protoimpl.UnknownFields
 	OptionalInt32          int32                                  `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32,proto3" json:"optional_int32,omitempty"`
 	OptionalInt64          int64                                  `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64,proto3" json:"optional_int64,omitempty"`
 	OptionalUint32         uint32                                 `protobuf:"varint,3,opt,name=optional_uint32,json=optionalUint32,proto3" json:"optional_uint32,omitempty"`
@@ -189,9 +191,7 @@ type TestAllTypes struct {
 	//	*TestAllTypes_OneofFloat
 	//	*TestAllTypes_OneofDouble
 	//	*TestAllTypes_OneofEnum
-	OneofField    isTestAllTypes_OneofField `protobuf_oneof:"oneof_field"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	OneofField isTestAllTypes_OneofField `protobuf_oneof:"oneof_field"`
 }
 
 func (x *TestAllTypes) Reset() {
@@ -764,10 +764,10 @@ func (*TestAllTypes_OneofEnum) isTestAllTypes_OneofField() {}
 
 type ForeignMessage struct {
 	state         protoimpl.MessageState
-	C             int32 `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
-	D             int32 `protobuf:"varint,2,opt,name=d,proto3" json:"d,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	C             int32 `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
+	D             int32 `protobuf:"varint,2,opt,name=d,proto3" json:"d,omitempty"`
 }
 
 func (x *ForeignMessage) Reset() {
@@ -813,10 +813,10 @@ func (x *ForeignMessage) GetD() int32 {
 
 type TestAllTypes_NestedMessage struct {
 	state         protoimpl.MessageState
-	A             int32         `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
-	Corecursive   *TestAllTypes `protobuf:"bytes,2,opt,name=corecursive,proto3" json:"corecursive,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	A             int32         `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
+	Corecursive   *TestAllTypes `protobuf:"bytes,2,opt,name=corecursive,proto3" json:"corecursive,omitempty"`
 }
 
 func (x *TestAllTypes_NestedMessage) Reset() {
@@ -1347,9 +1347,9 @@ func file_test3_test_proto_init() {
 			switch v := v.(*TestAllTypes); i {
 			case 0:
 				return &v.state
-			case 61:
+			case 1:
 				return &v.sizeCache
-			case 62:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1359,9 +1359,9 @@ func file_test3_test_proto_init() {
 			switch v := v.(*ForeignMessage); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1371,9 +1371,9 @@ func file_test3_test_proto_init() {
 			switch v := v.(*TestAllTypes_NestedMessage); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

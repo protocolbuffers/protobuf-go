@@ -74,9 +74,9 @@ func (Enum) EnumDescriptor() ([]byte, []int) {
 
 type Message struct {
 	state         protoimpl.MessageState
-	Data          []byte `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Data          []byte `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
 }
 
 func (x *Message) Reset() {
@@ -115,9 +115,9 @@ func (x *Message) GetData() []byte {
 
 type ExtensionGroup struct {
 	state          protoimpl.MessageState
-	ExtensionGroup *string `protobuf:"bytes,120,opt,name=extension_group,json=extensionGroup" json:"extension_group,omitempty"`
 	sizeCache      protoimpl.SizeCache
 	unknownFields  protoimpl.UnknownFields
+	ExtensionGroup *string `protobuf:"bytes,120,opt,name=extension_group,json=extensionGroup" json:"extension_group,omitempty"`
 }
 
 func (x *ExtensionGroup) Reset() {
@@ -190,9 +190,9 @@ func (*ExtendingMessage) Descriptor() ([]byte, []int) {
 
 type RepeatedGroup struct {
 	state          protoimpl.MessageState
-	RepeatedXGroup []string `protobuf:"bytes,319,rep,name=repeated_x_group,json=repeatedXGroup" json:"repeated_x_group,omitempty"`
 	sizeCache      protoimpl.SizeCache
 	unknownFields  protoimpl.UnknownFields
+	RepeatedXGroup []string `protobuf:"bytes,319,rep,name=repeated_x_group,json=repeatedXGroup" json:"repeated_x_group,omitempty"`
 }
 
 func (x *RepeatedGroup) Reset() {
@@ -1280,9 +1280,9 @@ func file_extensions_ext_ext_proto_init() {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1292,9 +1292,9 @@ func file_extensions_ext_ext_proto_init() {
 			switch v := v.(*ExtensionGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -1316,9 +1316,9 @@ func file_extensions_ext_ext_proto_init() {
 			switch v := v.(*RepeatedGroup); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

@@ -94,9 +94,9 @@ func (*M1) Descriptor() ([]byte, []int) {
 
 type M1_1 struct {
 	state         protoimpl.MessageState
-	M1            *M1 `protobuf:"bytes,1,opt,name=m1,proto3" json:"m1,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	M1            *M1 `protobuf:"bytes,1,opt,name=m1,proto3" json:"m1,omitempty"`
 }
 
 func (x *M1_1) Reset() {
@@ -200,9 +200,9 @@ func file_imports_test_a_1_m1_proto_init() {
 			switch v := v.(*M1_1); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

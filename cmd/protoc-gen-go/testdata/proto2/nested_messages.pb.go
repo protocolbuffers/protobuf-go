@@ -19,10 +19,10 @@ const (
 
 type Layer1 struct {
 	state         protoimpl.MessageState
-	L2            *Layer1_Layer2        `protobuf:"bytes,1,opt,name=l2" json:"l2,omitempty"`
-	L3            *Layer1_Layer2_Layer3 `protobuf:"bytes,2,opt,name=l3" json:"l3,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	L2            *Layer1_Layer2        `protobuf:"bytes,1,opt,name=l2" json:"l2,omitempty"`
+	L3            *Layer1_Layer2_Layer3 `protobuf:"bytes,2,opt,name=l3" json:"l3,omitempty"`
 }
 
 func (x *Layer1) Reset() {
@@ -68,9 +68,9 @@ func (x *Layer1) GetL3() *Layer1_Layer2_Layer3 {
 
 type Layer1_Layer2 struct {
 	state         protoimpl.MessageState
-	L3            *Layer1_Layer2_Layer3 `protobuf:"bytes,1,opt,name=l3" json:"l3,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	L3            *Layer1_Layer2_Layer3 `protobuf:"bytes,1,opt,name=l3" json:"l3,omitempty"`
 }
 
 func (x *Layer1_Layer2) Reset() {
@@ -205,9 +205,9 @@ func file_proto2_nested_messages_proto_init() {
 			switch v := v.(*Layer1); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -217,9 +217,9 @@ func file_proto2_nested_messages_proto_init() {
 			switch v := v.(*Layer1_Layer2); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil

@@ -431,9 +431,9 @@ func (MethodOptions_IdempotencyLevel) EnumDescriptor() ([]byte, []int) {
 // files it parses.
 type FileDescriptorSet struct {
 	state         protoimpl.MessageState
-	File          []*FileDescriptorProto `protobuf:"bytes,1,rep,name=file" json:"file,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	File          []*FileDescriptorProto `protobuf:"bytes,1,rep,name=file" json:"file,omitempty"`
 }
 
 func (x *FileDescriptorSet) Reset() {
@@ -472,9 +472,11 @@ func (x *FileDescriptorSet) GetFile() []*FileDescriptorProto {
 
 // Describes a complete .proto file.
 type FileDescriptorProto struct {
-	state   protoimpl.MessageState
-	Name    *string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
-	Package *string `protobuf:"bytes,2,opt,name=package" json:"package,omitempty"`
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+	Name          *string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Package       *string `protobuf:"bytes,2,opt,name=package" json:"package,omitempty"`
 	// Names of files imported by this file.
 	Dependency []string `protobuf:"bytes,3,rep,name=dependency" json:"dependency,omitempty"`
 	// Indexes of the public imported files in the dependency list above.
@@ -495,9 +497,7 @@ type FileDescriptorProto struct {
 	SourceCodeInfo *SourceCodeInfo `protobuf:"bytes,9,opt,name=source_code_info,json=sourceCodeInfo" json:"source_code_info,omitempty"`
 	// The syntax of the proto file.
 	// The supported values are "proto2" and "proto3".
-	Syntax        *string `protobuf:"bytes,12,opt,name=syntax" json:"syntax,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Syntax *string `protobuf:"bytes,12,opt,name=syntax" json:"syntax,omitempty"`
 }
 
 func (x *FileDescriptorProto) Reset() {
@@ -614,6 +614,8 @@ func (x *FileDescriptorProto) GetSyntax() string {
 // Describes a message type.
 type DescriptorProto struct {
 	state          protoimpl.MessageState
+	sizeCache      protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
 	Name           *string                           `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Field          []*FieldDescriptorProto           `protobuf:"bytes,2,rep,name=field" json:"field,omitempty"`
 	Extension      []*FieldDescriptorProto           `protobuf:"bytes,6,rep,name=extension" json:"extension,omitempty"`
@@ -625,9 +627,7 @@ type DescriptorProto struct {
 	ReservedRange  []*DescriptorProto_ReservedRange  `protobuf:"bytes,9,rep,name=reserved_range,json=reservedRange" json:"reserved_range,omitempty"`
 	// Reserved field names, which may not be used by fields in the same message.
 	// A given name may only be reserved once.
-	ReservedName  []string `protobuf:"bytes,10,rep,name=reserved_name,json=reservedName" json:"reserved_name,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	ReservedName []string `protobuf:"bytes,10,rep,name=reserved_name,json=reservedName" json:"reserved_name,omitempty"`
 }
 
 func (x *DescriptorProto) Reset() {
@@ -728,12 +728,12 @@ func (x *DescriptorProto) GetReservedName() []string {
 }
 
 type ExtensionRangeOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *ExtensionRangeOptions) Reset() {
@@ -781,10 +781,12 @@ func (x *ExtensionRangeOptions) GetUninterpretedOption() []*UninterpretedOption 
 
 // Describes a field within a message.
 type FieldDescriptorProto struct {
-	state  protoimpl.MessageState
-	Name   *string                     `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
-	Number *int32                      `protobuf:"varint,3,opt,name=number" json:"number,omitempty"`
-	Label  *FieldDescriptorProto_Label `protobuf:"varint,4,opt,name=label,enum=google.protobuf.FieldDescriptorProto_Label" json:"label,omitempty"`
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+	Name          *string                     `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Number        *int32                      `protobuf:"varint,3,opt,name=number" json:"number,omitempty"`
+	Label         *FieldDescriptorProto_Label `protobuf:"varint,4,opt,name=label,enum=google.protobuf.FieldDescriptorProto_Label" json:"label,omitempty"`
 	// If type_name is set, this need not be set.  If both this and type_name
 	// are set, this must be one of TYPE_ENUM, TYPE_MESSAGE or TYPE_GROUP.
 	Type *FieldDescriptorProto_Type `protobuf:"varint,5,opt,name=type,enum=google.protobuf.FieldDescriptorProto_Type" json:"type,omitempty"`
@@ -810,10 +812,8 @@ type FieldDescriptorProto struct {
 	// user has set a "json_name" option on this field, that option's value
 	// will be used. Otherwise, it's deduced from the field's name by converting
 	// it to camelCase.
-	JsonName      *string       `protobuf:"bytes,10,opt,name=json_name,json=jsonName" json:"json_name,omitempty"`
-	Options       *FieldOptions `protobuf:"bytes,8,opt,name=options" json:"options,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	JsonName *string       `protobuf:"bytes,10,opt,name=json_name,json=jsonName" json:"json_name,omitempty"`
+	Options  *FieldOptions `protobuf:"bytes,8,opt,name=options" json:"options,omitempty"`
 }
 
 func (x *FieldDescriptorProto) Reset() {
@@ -916,10 +916,10 @@ func (x *FieldDescriptorProto) GetOptions() *FieldOptions {
 // Describes a oneof.
 type OneofDescriptorProto struct {
 	state         protoimpl.MessageState
-	Name          *string       `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
-	Options       *OneofOptions `protobuf:"bytes,2,opt,name=options" json:"options,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Name          *string       `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Options       *OneofOptions `protobuf:"bytes,2,opt,name=options" json:"options,omitempty"`
 }
 
 func (x *OneofDescriptorProto) Reset() {
@@ -965,19 +965,19 @@ func (x *OneofDescriptorProto) GetOptions() *OneofOptions {
 
 // Describes an enum type.
 type EnumDescriptorProto struct {
-	state   protoimpl.MessageState
-	Name    *string                     `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
-	Value   []*EnumValueDescriptorProto `protobuf:"bytes,2,rep,name=value" json:"value,omitempty"`
-	Options *EnumOptions                `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+	Name          *string                     `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Value         []*EnumValueDescriptorProto `protobuf:"bytes,2,rep,name=value" json:"value,omitempty"`
+	Options       *EnumOptions                `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
 	// Range of reserved numeric values. Reserved numeric values may not be used
 	// by enum values in the same enum declaration. Reserved ranges may not
 	// overlap.
 	ReservedRange []*EnumDescriptorProto_EnumReservedRange `protobuf:"bytes,4,rep,name=reserved_range,json=reservedRange" json:"reserved_range,omitempty"`
 	// Reserved enum value names, which may not be reused. A given name may only
 	// be reserved once.
-	ReservedName  []string `protobuf:"bytes,5,rep,name=reserved_name,json=reservedName" json:"reserved_name,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	ReservedName []string `protobuf:"bytes,5,rep,name=reserved_name,json=reservedName" json:"reserved_name,omitempty"`
 }
 
 func (x *EnumDescriptorProto) Reset() {
@@ -1045,11 +1045,11 @@ func (x *EnumDescriptorProto) GetReservedName() []string {
 // Describes a value within an enum.
 type EnumValueDescriptorProto struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	Name          *string           `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Number        *int32            `protobuf:"varint,2,opt,name=number" json:"number,omitempty"`
 	Options       *EnumValueOptions `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *EnumValueDescriptorProto) Reset() {
@@ -1103,11 +1103,11 @@ func (x *EnumValueDescriptorProto) GetOptions() *EnumValueOptions {
 // Describes a service.
 type ServiceDescriptorProto struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	Name          *string                  `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Method        []*MethodDescriptorProto `protobuf:"bytes,2,rep,name=method" json:"method,omitempty"`
 	Options       *ServiceOptions          `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *ServiceDescriptorProto) Reset() {
@@ -1160,8 +1160,10 @@ func (x *ServiceDescriptorProto) GetOptions() *ServiceOptions {
 
 // Describes a method of a service.
 type MethodDescriptorProto struct {
-	state protoimpl.MessageState
-	Name  *string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+	Name          *string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	// Input and output type names.  These are resolved in the same way as
 	// FieldDescriptorProto.type_name, but must refer to a message type.
 	InputType  *string        `protobuf:"bytes,2,opt,name=input_type,json=inputType" json:"input_type,omitempty"`
@@ -1171,8 +1173,6 @@ type MethodDescriptorProto struct {
 	ClientStreaming *bool `protobuf:"varint,5,opt,name=client_streaming,json=clientStreaming,def=0" json:"client_streaming,omitempty"`
 	// Identifies if server streams multiple server messages
 	ServerStreaming *bool `protobuf:"varint,6,opt,name=server_streaming,json=serverStreaming,def=0" json:"server_streaming,omitempty"`
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
 }
 
 const Default_MethodDescriptorProto_ClientStreaming bool = false
@@ -1248,7 +1248,10 @@ func (x *MethodDescriptorProto) GetServerStreaming() bool {
 }
 
 type FileOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// Sets the Java package where classes generated from this .proto will be
 	// placed.  By default, the proto package is used, but this is often
 	// inappropriate because proto packages do not normally start with backwards
@@ -1333,9 +1336,6 @@ type FileOptions struct {
 	// The parser stores options it doesn't recognize here.
 	// See the documentation for the "Options" section above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 const Default_FileOptions_JavaMultipleFiles bool = false
@@ -1533,7 +1533,10 @@ func (x *FileOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type MessageOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// Set true to use the old proto1 MessageSet wire format for extensions.
 	// This is provided for backwards-compatibility with the MessageSet wire
 	// format.  You should not use this for any other reason:  It's less
@@ -1586,9 +1589,6 @@ type MessageOptions struct {
 	MapEntry *bool `protobuf:"varint,7,opt,name=map_entry,json=mapEntry" json:"map_entry,omitempty"`
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 const Default_MessageOptions_MessageSetWireFormat bool = false
@@ -1667,7 +1667,10 @@ func (x *MessageOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type FieldOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// The ctype option instructs the C++ code generator to use a different
 	// representation of the field than it normally would.  See the specific
 	// options below.  This option is not yet implemented in the open source
@@ -1729,9 +1732,6 @@ type FieldOptions struct {
 	Weak *bool `protobuf:"varint,10,opt,name=weak,def=0" json:"weak,omitempty"`
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 const Default_FieldOptions_Ctype FieldOptions_CType = FieldOptions_STRING
@@ -1826,12 +1826,12 @@ func (x *FieldOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type OneofOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 func (x *OneofOptions) Reset() {
@@ -1878,7 +1878,10 @@ func (x *OneofOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type EnumOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// Set this option to true to allow mapping different tag names to the same
 	// value.
 	AllowAlias *bool `protobuf:"varint,2,opt,name=allow_alias,json=allowAlias" json:"allow_alias,omitempty"`
@@ -1889,9 +1892,6 @@ type EnumOptions struct {
 	Deprecated *bool `protobuf:"varint,3,opt,name=deprecated,def=0" json:"deprecated,omitempty"`
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 const Default_EnumOptions_Deprecated bool = false
@@ -1954,7 +1954,10 @@ func (x *EnumOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type EnumValueOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// Is this enum value deprecated?
 	// Depending on the target platform, this can emit Deprecated annotations
 	// for the enum value, or it will be completely ignored; in the very least,
@@ -1962,9 +1965,6 @@ type EnumValueOptions struct {
 	Deprecated *bool `protobuf:"varint,1,opt,name=deprecated,def=0" json:"deprecated,omitempty"`
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 const Default_EnumValueOptions_Deprecated bool = false
@@ -2020,7 +2020,10 @@ func (x *EnumValueOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type ServiceOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// Is this service deprecated?
 	// Depending on the target platform, this can emit Deprecated annotations
 	// for the service, or it will be completely ignored; in the very least,
@@ -2028,9 +2031,6 @@ type ServiceOptions struct {
 	Deprecated *bool `protobuf:"varint,33,opt,name=deprecated,def=0" json:"deprecated,omitempty"`
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 const Default_ServiceOptions_Deprecated bool = false
@@ -2086,7 +2086,10 @@ func (x *ServiceOptions) GetUninterpretedOption() []*UninterpretedOption {
 }
 
 type MethodOptions struct {
-	state protoimpl.MessageState
+	state           protoimpl.MessageState
+	sizeCache       protoimpl.SizeCache
+	unknownFields   protoimpl.UnknownFields
+	extensionFields protoimpl.ExtensionFields
 	// Is this method deprecated?
 	// Depending on the target platform, this can emit Deprecated annotations
 	// for the method, or it will be completely ignored; in the very least,
@@ -2095,9 +2098,6 @@ type MethodOptions struct {
 	IdempotencyLevel *MethodOptions_IdempotencyLevel `protobuf:"varint,34,opt,name=idempotency_level,json=idempotencyLevel,enum=google.protobuf.MethodOptions_IdempotencyLevel,def=0" json:"idempotency_level,omitempty"`
 	// The parser stores options it doesn't recognize here. See above.
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
-	sizeCache           protoimpl.SizeCache
-	unknownFields       protoimpl.UnknownFields
-	extensionFields     protoimpl.ExtensionFields
 }
 
 const Default_MethodOptions_Deprecated bool = false
@@ -2167,8 +2167,10 @@ func (x *MethodOptions) GetUninterpretedOption() []*UninterpretedOption {
 // or produced by Descriptor::CopyTo()) will never have UninterpretedOptions
 // in them.
 type UninterpretedOption struct {
-	state protoimpl.MessageState
-	Name  []*UninterpretedOption_NamePart `protobuf:"bytes,2,rep,name=name" json:"name,omitempty"`
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+	Name          []*UninterpretedOption_NamePart `protobuf:"bytes,2,rep,name=name" json:"name,omitempty"`
 	// The value of the uninterpreted option, in whatever type the tokenizer
 	// identified it as during parsing. Exactly one of these should be set.
 	IdentifierValue  *string  `protobuf:"bytes,3,opt,name=identifier_value,json=identifierValue" json:"identifier_value,omitempty"`
@@ -2177,8 +2179,6 @@ type UninterpretedOption struct {
 	DoubleValue      *float64 `protobuf:"fixed64,6,opt,name=double_value,json=doubleValue" json:"double_value,omitempty"`
 	StringValue      []byte   `protobuf:"bytes,7,opt,name=string_value,json=stringValue" json:"string_value,omitempty"`
 	AggregateValue   *string  `protobuf:"bytes,8,opt,name=aggregate_value,json=aggregateValue" json:"aggregate_value,omitempty"`
-	sizeCache        protoimpl.SizeCache
-	unknownFields    protoimpl.UnknownFields
 }
 
 func (x *UninterpretedOption) Reset() {
@@ -2260,7 +2260,9 @@ func (x *UninterpretedOption) GetAggregateValue() string {
 // Encapsulates information about the original source file from which a
 // FileDescriptorProto was generated.
 type SourceCodeInfo struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// A Location identifies a piece of source code in a .proto file which
 	// corresponds to a particular definition.  This information is intended
 	// to be useful to IDEs, code indexers, documentation generators, and similar
@@ -2304,9 +2306,7 @@ type SourceCodeInfo struct {
 	// - Code which tries to interpret locations should probably be designed to
 	//   ignore those that it doesn't understand, as more types of locations could
 	//   be recorded in the future.
-	Location      []*SourceCodeInfo_Location `protobuf:"bytes,1,rep,name=location" json:"location,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	Location []*SourceCodeInfo_Location `protobuf:"bytes,1,rep,name=location" json:"location,omitempty"`
 }
 
 func (x *SourceCodeInfo) Reset() {
@@ -2347,12 +2347,12 @@ func (x *SourceCodeInfo) GetLocation() []*SourceCodeInfo_Location {
 // file. A GeneratedCodeInfo message is associated with only one generated
 // source file, but may contain references to different source .proto files.
 type GeneratedCodeInfo struct {
-	state protoimpl.MessageState
-	// An Annotation connects some span of text in generated code to an element
-	// of its generating .proto file.
-	Annotation    []*GeneratedCodeInfo_Annotation `protobuf:"bytes,1,rep,name=annotation" json:"annotation,omitempty"`
+	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	// An Annotation connects some span of text in generated code to an element
+	// of its generating .proto file.
+	Annotation []*GeneratedCodeInfo_Annotation `protobuf:"bytes,1,rep,name=annotation" json:"annotation,omitempty"`
 }
 
 func (x *GeneratedCodeInfo) Reset() {
@@ -2391,11 +2391,11 @@ func (x *GeneratedCodeInfo) GetAnnotation() []*GeneratedCodeInfo_Annotation {
 
 type DescriptorProto_ExtensionRange struct {
 	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	Start         *int32                 `protobuf:"varint,1,opt,name=start" json:"start,omitempty"`
 	End           *int32                 `protobuf:"varint,2,opt,name=end" json:"end,omitempty"`
 	Options       *ExtensionRangeOptions `protobuf:"bytes,3,opt,name=options" json:"options,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 }
 
 func (x *DescriptorProto_ExtensionRange) Reset() {
@@ -2451,10 +2451,10 @@ func (x *DescriptorProto_ExtensionRange) GetOptions() *ExtensionRangeOptions {
 // not overlap.
 type DescriptorProto_ReservedRange struct {
 	state         protoimpl.MessageState
-	Start         *int32 `protobuf:"varint,1,opt,name=start" json:"start,omitempty"`
-	End           *int32 `protobuf:"varint,2,opt,name=end" json:"end,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Start         *int32 `protobuf:"varint,1,opt,name=start" json:"start,omitempty"`
+	End           *int32 `protobuf:"varint,2,opt,name=end" json:"end,omitempty"`
 }
 
 func (x *DescriptorProto_ReservedRange) Reset() {
@@ -2506,10 +2506,10 @@ func (x *DescriptorProto_ReservedRange) GetEnd() int32 {
 // domain.
 type EnumDescriptorProto_EnumReservedRange struct {
 	state         protoimpl.MessageState
-	Start         *int32 `protobuf:"varint,1,opt,name=start" json:"start,omitempty"`
-	End           *int32 `protobuf:"varint,2,opt,name=end" json:"end,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	Start         *int32 `protobuf:"varint,1,opt,name=start" json:"start,omitempty"`
+	End           *int32 `protobuf:"varint,2,opt,name=end" json:"end,omitempty"`
 }
 
 func (x *EnumDescriptorProto_EnumReservedRange) Reset() {
@@ -2560,10 +2560,10 @@ func (x *EnumDescriptorProto_EnumReservedRange) GetEnd() int32 {
 // "foo.(bar.baz).qux".
 type UninterpretedOption_NamePart struct {
 	state         protoimpl.MessageState
-	NamePart      *string `protobuf:"bytes,1,req,name=name_part,json=namePart" json:"name_part,omitempty"`
-	IsExtension   *bool   `protobuf:"varint,2,req,name=is_extension,json=isExtension" json:"is_extension,omitempty"`
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+	NamePart      *string `protobuf:"bytes,1,req,name=name_part,json=namePart" json:"name_part,omitempty"`
+	IsExtension   *bool   `protobuf:"varint,2,req,name=is_extension,json=isExtension" json:"is_extension,omitempty"`
 }
 
 func (x *UninterpretedOption_NamePart) Reset() {
@@ -2608,7 +2608,9 @@ func (x *UninterpretedOption_NamePart) GetIsExtension() bool {
 }
 
 type SourceCodeInfo_Location struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// Identifies which part of the FileDescriptorProto was defined at this
 	// location.
 	//
@@ -2689,8 +2691,6 @@ type SourceCodeInfo_Location struct {
 	LeadingComments         *string  `protobuf:"bytes,3,opt,name=leading_comments,json=leadingComments" json:"leading_comments,omitempty"`
 	TrailingComments        *string  `protobuf:"bytes,4,opt,name=trailing_comments,json=trailingComments" json:"trailing_comments,omitempty"`
 	LeadingDetachedComments []string `protobuf:"bytes,6,rep,name=leading_detached_comments,json=leadingDetachedComments" json:"leading_detached_comments,omitempty"`
-	sizeCache               protoimpl.SizeCache
-	unknownFields           protoimpl.UnknownFields
 }
 
 func (x *SourceCodeInfo_Location) Reset() {
@@ -2756,7 +2756,9 @@ func (x *SourceCodeInfo_Location) GetLeadingDetachedComments() []string {
 }
 
 type GeneratedCodeInfo_Annotation struct {
-	state protoimpl.MessageState
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 	// Identifies the element in the original source .proto file. This field
 	// is formatted the same as SourceCodeInfo.Location.path.
 	Path []int32 `protobuf:"varint,1,rep,packed,name=path" json:"path,omitempty"`
@@ -2768,9 +2770,7 @@ type GeneratedCodeInfo_Annotation struct {
 	// Identifies the ending offset in bytes in the generated code that
 	// relates to the identified offset. The end offset should be one past
 	// the last relevant byte (so the length of the text = end - begin).
-	End           *int32 `protobuf:"varint,4,opt,name=end" json:"end,omitempty"`
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	End *int32 `protobuf:"varint,4,opt,name=end" json:"end,omitempty"`
 }
 
 func (x *GeneratedCodeInfo_Annotation) Reset() {
@@ -3416,9 +3416,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*FileDescriptorSet); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3428,9 +3428,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*FileDescriptorProto); i {
 			case 0:
 				return &v.state
-			case 13:
+			case 1:
 				return &v.sizeCache
-			case 14:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3440,9 +3440,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*DescriptorProto); i {
 			case 0:
 				return &v.state
-			case 11:
+			case 1:
 				return &v.sizeCache
-			case 12:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3452,11 +3452,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*ExtensionRangeOptions); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
-			case 4:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3466,9 +3466,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*FieldDescriptorProto); i {
 			case 0:
 				return &v.state
-			case 11:
+			case 1:
 				return &v.sizeCache
-			case 12:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3478,9 +3478,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*OneofDescriptorProto); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3490,9 +3490,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*EnumDescriptorProto); i {
 			case 0:
 				return &v.state
-			case 6:
+			case 1:
 				return &v.sizeCache
-			case 7:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3502,9 +3502,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*EnumValueDescriptorProto); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3514,9 +3514,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*ServiceDescriptorProto); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3526,9 +3526,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*MethodDescriptorProto); i {
 			case 0:
 				return &v.state
-			case 7:
+			case 1:
 				return &v.sizeCache
-			case 8:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3538,11 +3538,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*FileOptions); i {
 			case 0:
 				return &v.state
-			case 22:
+			case 1:
 				return &v.sizeCache
-			case 23:
+			case 2:
 				return &v.unknownFields
-			case 24:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3552,11 +3552,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*MessageOptions); i {
 			case 0:
 				return &v.state
-			case 6:
+			case 1:
 				return &v.sizeCache
-			case 7:
+			case 2:
 				return &v.unknownFields
-			case 8:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3566,11 +3566,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*FieldOptions); i {
 			case 0:
 				return &v.state
-			case 8:
+			case 1:
 				return &v.sizeCache
-			case 9:
+			case 2:
 				return &v.unknownFields
-			case 10:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3580,11 +3580,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*OneofOptions); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
-			case 4:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3594,11 +3594,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*EnumOptions); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
-			case 6:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3608,11 +3608,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*EnumValueOptions); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
-			case 5:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3622,11 +3622,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*ServiceOptions); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
-			case 5:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3636,11 +3636,11 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*MethodOptions); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
-			case 6:
+			case 3:
 				return &v.extensionFields
 			default:
 				return nil
@@ -3650,9 +3650,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*UninterpretedOption); i {
 			case 0:
 				return &v.state
-			case 8:
+			case 1:
 				return &v.sizeCache
-			case 9:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3662,9 +3662,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*SourceCodeInfo); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3674,9 +3674,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*GeneratedCodeInfo); i {
 			case 0:
 				return &v.state
-			case 2:
+			case 1:
 				return &v.sizeCache
-			case 3:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3686,9 +3686,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*DescriptorProto_ExtensionRange); i {
 			case 0:
 				return &v.state
-			case 4:
+			case 1:
 				return &v.sizeCache
-			case 5:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3698,9 +3698,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*DescriptorProto_ReservedRange); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3710,9 +3710,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*EnumDescriptorProto_EnumReservedRange); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3722,9 +3722,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*UninterpretedOption_NamePart); i {
 			case 0:
 				return &v.state
-			case 3:
+			case 1:
 				return &v.sizeCache
-			case 4:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3734,9 +3734,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*SourceCodeInfo_Location); i {
 			case 0:
 				return &v.state
-			case 6:
+			case 1:
 				return &v.sizeCache
-			case 7:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
@@ -3746,9 +3746,9 @@ func file_google_protobuf_descriptor_proto_init() {
 			switch v := v.(*GeneratedCodeInfo_Annotation); i {
 			case 0:
 				return &v.state
-			case 5:
+			case 1:
 				return &v.sizeCache
-			case 6:
+			case 2:
 				return &v.unknownFields
 			default:
 				return nil
