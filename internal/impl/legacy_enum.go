@@ -85,8 +85,6 @@ var (
 
 var legacyEnumDescCache sync.Map // map[reflect.Type]protoreflect.EnumDescriptor
 
-var legacyEnumNumberType = reflect.TypeOf(pref.EnumNumber(0))
-
 // LegacyLoadEnumDesc returns an EnumDescriptor derived from the Go type,
 // which must be an int32 kind and not implement the v2 API already.
 //

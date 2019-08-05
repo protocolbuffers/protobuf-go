@@ -131,7 +131,7 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 		}
 		imps[imp.Path()] = true
 	}
-	for i, _ := range fd.GetDependency() {
+	for i := range fd.GetDependency() {
 		imp := &f.L2.Imports[i]
 		imps.importPublic(imp.Imports())
 	}

@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"strings"
 	"sync"
-	"unicode"
 
 	"google.golang.org/protobuf/internal/descopts"
 	ptag "google.golang.org/protobuf/internal/encoding/tag"
@@ -278,24 +277,4 @@ type placeholderEnumValues struct {
 
 func (placeholderEnumValues) ByNumber(n pref.EnumNumber) pref.EnumValueDescriptor {
 	return filedesc.PlaceholderEnumValue(pref.FullName(fmt.Sprintf("UNKNOWN_%d", n)))
-}
-
-// aberrantMapEntryName derives the name for a map entry message.
-// See protoc v3.8.0: src/google/protobuf/descriptor.cc:254-276,6057
-func aberrantMapEntryName(s pref.Name) pref.Name {
-	var b []byte
-	upperNext := true
-	for _, c := range s {
-		switch {
-		case c == '_':
-			upperNext = true
-		case upperNext:
-			b = append(b, byte(unicode.ToUpper(c)))
-			upperNext = false
-		default:
-			b = append(b, byte(c))
-		}
-	}
-	b = append(b, "Entry"...)
-	return pref.Name(b)
 }

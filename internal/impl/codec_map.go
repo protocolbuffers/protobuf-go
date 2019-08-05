@@ -10,11 +10,8 @@ import (
 	"sort"
 
 	"google.golang.org/protobuf/internal/encoding/wire"
-	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
-
-var protoMessageType = reflect.TypeOf((*proto.Message)(nil)).Elem()
 
 type mapInfo struct {
 	goType     reflect.Type

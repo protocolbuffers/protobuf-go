@@ -171,7 +171,7 @@ func validateMessageDeclarations(ms []filedesc.Message, mds []*descriptorpb.Desc
 				}
 			}
 		}
-		for j, _ := range md.GetOneofDecl() {
+		for j := range md.GetOneofDecl() {
 			o := &m.L2.Oneofs.List[j]
 			if o.Fields().Len() == 0 {
 				return errors.New("message oneof %q must contain at least one field declaration", o.FullName())

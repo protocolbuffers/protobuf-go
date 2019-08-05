@@ -442,12 +442,6 @@ func makeOneofInfo(od pref.OneofDescriptor, fs reflect.StructField, x exporter, 
 	}
 }
 
-var (
-	enumIfaceV2    = reflect.TypeOf((*pref.Enum)(nil)).Elem()
-	messageIfaceV1 = reflect.TypeOf((*piface.MessageV1)(nil)).Elem()
-	messageIfaceV2 = reflect.TypeOf((*pref.ProtoMessage)(nil)).Elem()
-)
-
 // defaultValueOf returns the default value for the field.
 func defaultValueOf(fd pref.FieldDescriptor) pref.Value {
 	if fd == nil {

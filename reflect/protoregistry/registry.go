@@ -499,8 +499,7 @@ func (r *Types) FindEnumByName(enum protoreflect.FullName) (protoreflect.EnumTyp
 	if r == nil {
 		return nil, NotFound
 	}
-	v, _ := r.typesByName[enum]
-	if v != nil {
+	if v := r.typesByName[enum]; v != nil {
 		if et, _ := v.(protoreflect.EnumType); et != nil {
 			return et, nil
 		}
@@ -531,8 +530,7 @@ func (r *Types) FindMessageByURL(url string) (protoreflect.MessageType, error) {
 		message = message[i+len("/"):]
 	}
 
-	v, _ := r.typesByName[message]
-	if v != nil {
+	if v := r.typesByName[message]; v != nil {
 		if mt, _ := v.(protoreflect.MessageType); mt != nil {
 			return mt, nil
 		}
@@ -551,8 +549,7 @@ func (r *Types) FindExtensionByName(field protoreflect.FullName) (protoreflect.E
 	if r == nil {
 		return nil, NotFound
 	}
-	v, _ := r.typesByName[field]
-	if v != nil {
+	if v := r.typesByName[field]; v != nil {
 		if xt, _ := v.(protoreflect.ExtensionType); xt != nil {
 			return xt, nil
 		}
