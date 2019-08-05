@@ -57,48 +57,67 @@ var (
 	byteType    = reflect.TypeOf(byte(0))
 )
 
+var (
+	boolZero    = pref.ValueOf(bool(false))
+	int32Zero   = pref.ValueOf(int32(0))
+	int64Zero   = pref.ValueOf(int64(0))
+	uint32Zero  = pref.ValueOf(uint32(0))
+	uint64Zero  = pref.ValueOf(uint64(0))
+	float32Zero = pref.ValueOf(float32(0))
+	float64Zero = pref.ValueOf(float64(0))
+	stringZero  = pref.ValueOf(string(""))
+	bytesZero   = pref.ValueOf([]byte(nil))
+)
+
 type scalarConverter struct {
 	goType, pbType reflect.Type
 	def            pref.Value
 }
 
 func newSingularConverter(t reflect.Type, fd pref.FieldDescriptor) Converter {
+	defVal := func(fd pref.FieldDescriptor, zero pref.Value) pref.Value {
+		if fd.Cardinality() == pref.Repeated {
+			// Default isn't defined for repeated fields.
+			return zero
+		}
+		return fd.Default()
+	}
 	switch fd.Kind() {
 	case pref.BoolKind:
 		if t.Kind() == reflect.Bool {
-			return &scalarConverter{t, boolType, fd.Default()}
+			return &scalarConverter{t, boolType, defVal(fd, boolZero)}
 		}
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
 		if t.Kind() == reflect.Int32 {
-			return &scalarConverter{t, int32Type, fd.Default()}
+			return &scalarConverter{t, int32Type, defVal(fd, int32Zero)}
 		}
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
 		if t.Kind() == reflect.Int64 {
-			return &scalarConverter{t, int64Type, fd.Default()}
+			return &scalarConverter{t, int64Type, defVal(fd, int64Zero)}
 		}
 	case pref.Uint32Kind, pref.Fixed32Kind:
 		if t.Kind() == reflect.Uint32 {
-			return &scalarConverter{t, uint32Type, fd.Default()}
+			return &scalarConverter{t, uint32Type, defVal(fd, uint32Zero)}
 		}
 	case pref.Uint64Kind, pref.Fixed64Kind:
 		if t.Kind() == reflect.Uint64 {
-			return &scalarConverter{t, uint64Type, fd.Default()}
+			return &scalarConverter{t, uint64Type, defVal(fd, uint64Zero)}
 		}
 	case pref.FloatKind:
 		if t.Kind() == reflect.Float32 {
-			return &scalarConverter{t, float32Type, fd.Default()}
+			return &scalarConverter{t, float32Type, defVal(fd, float32Zero)}
 		}
 	case pref.DoubleKind:
 		if t.Kind() == reflect.Float64 {
-			return &scalarConverter{t, float64Type, fd.Default()}
+			return &scalarConverter{t, float64Type, defVal(fd, float64Zero)}
 		}
 	case pref.StringKind:
 		if t.Kind() == reflect.String || (t.Kind() == reflect.Slice && t.Elem() == byteType) {
-			return &scalarConverter{t, stringType, fd.Default()}
+			return &scalarConverter{t, stringType, defVal(fd, stringZero)}
 		}
 	case pref.BytesKind:
 		if t.Kind() == reflect.String || (t.Kind() == reflect.Slice && t.Elem() == byteType) {
-			return &scalarConverter{t, bytesType, fd.Default()}
+			return &scalarConverter{t, bytesType, defVal(fd, bytesZero)}
 		}
 	case pref.EnumKind:
 		// Handle enums, which must be a named int32 type.
@@ -133,6 +152,9 @@ func (c *scalarConverter) GoValueOf(v pref.Value) reflect.Value {
 }
 
 func (c *scalarConverter) New() pref.Value {
+	if c.pbType == bytesType {
+		return pref.ValueOf(append(([]byte)(nil), c.def.Bytes()...))
+	}
 	return c.def
 }
 
@@ -142,7 +164,13 @@ type enumConverter struct {
 }
 
 func newEnumConverter(goType reflect.Type, fd pref.FieldDescriptor) Converter {
-	return &enumConverter{goType, fd.Default()}
+	var def pref.Value
+	if fd.Cardinality() == pref.Repeated {
+		def = pref.ValueOf(fd.Enum().Values().Get(0).Number())
+	} else {
+		def = fd.Default()
+	}
+	return &enumConverter{goType, def}
 }
 
 func (c *enumConverter) PBValueOf(v reflect.Value) pref.Value {

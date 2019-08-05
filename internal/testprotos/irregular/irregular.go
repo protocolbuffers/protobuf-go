@@ -82,6 +82,10 @@ func (m *message) NewMessage(pref.FieldDescriptor) pref.Message {
 	panic("invalid field descriptor")
 }
 
+func (m *message) NewField(pref.FieldDescriptor) pref.Value {
+	panic("invalid field descriptor")
+}
+
 func (m *message) WhichOneof(pref.OneofDescriptor) pref.FieldDescriptor {
 	panic("invalid oneof descriptor")
 }

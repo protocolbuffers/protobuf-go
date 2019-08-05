@@ -26,6 +26,7 @@ type fieldInfo struct {
 	set        func(pointer, pref.Value)
 	mutable    func(pointer) pref.Value
 	newMessage func() pref.Message
+	newField   func() pref.Value
 }
 
 func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x exporter, ot reflect.Type) fieldInfo {
@@ -113,6 +114,9 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 		newMessage: func() pref.Message {
 			return conv.New().Message()
 		},
+		newField: func() pref.Value {
+			return conv.New()
+		},
 	}
 }
 
@@ -160,6 +164,9 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter
 			}
 			return conv.PBValueOf(v)
 		},
+		newField: func() pref.Value {
+			return conv.New()
+		},
 	}
 }
 
@@ -203,6 +210,9 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporte
 		mutable: func(p pointer) pref.Value {
 			v := p.Apply(fieldOffset).AsValueOf(fs.Type)
 			return conv.PBValueOf(v)
+		},
+		newField: func() pref.Value {
+			return conv.New()
 		},
 	}
 }
@@ -289,6 +299,9 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x expor
 				}
 			}
 		},
+		newField: func() pref.Value {
+			return conv.New()
+		},
 	}
 }
 
@@ -367,6 +380,10 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			lazyInit()
 			return messageType.New()
 		},
+		newField: func() pref.Value {
+			lazyInit()
+			return pref.ValueOf(messageType.New())
+		},
 	}
 }
 
@@ -416,6 +433,9 @@ func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField, x expo
 		},
 		newMessage: func() pref.Message {
 			return conv.New().Message()
+		},
+		newField: func() pref.Value {
+			return conv.New()
 		},
 	}
 }

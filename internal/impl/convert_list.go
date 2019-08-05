@@ -62,7 +62,10 @@ func (ls *listReflect) Truncate(i int) {
 	ls.v.Elem().Set(ls.v.Elem().Slice(0, i))
 }
 func (ls *listReflect) NewMessage() pref.Message {
-	return ls.conv.New().Message()
+	return ls.NewElement().Message()
+}
+func (ls *listReflect) NewElement() pref.Value {
+	return ls.conv.New()
 }
 func (ls *listReflect) ProtoUnwrap() interface{} {
 	return ls.v.Interface()

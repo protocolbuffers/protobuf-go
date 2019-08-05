@@ -23,7 +23,7 @@ import (
 // package documentation for that interface for how to get and set fields and
 // otherwise interact with the contents of a Message.
 //
-// Reflection API functions which construct messages, such as NewMessage,
+// Reflection API functions which construct messages, such as NewField,
 // return new dynamic messages of the appropriate type. Functions which take
 // messages, such as Set for a message-value field, will accept any message
 // with a compatible type.
@@ -156,19 +156,9 @@ func (m *Message) Mutable(fd pref.FieldDescriptor) pref.Value {
 		panic(errors.New("%v: getting mutable reference to non-composite type", fd.FullName()))
 	}
 	m.clearOtherOneofFields(fd)
-	switch {
-	case fd.IsExtension():
-		m.known[num] = fd.(pref.ExtensionType).New()
+	m.known[num] = m.NewField(fd)
+	if fd.IsExtension() {
 		m.ext[num] = fd
-	case fd.IsMap():
-		m.known[num] = pref.ValueOf(&dynamicMap{
-			desc: fd,
-			mapv: make(map[interface{}]pref.Value),
-		})
-	case fd.IsList():
-		m.known[num] = pref.ValueOf(&dynamicList{desc: fd})
-	case fd.Message() != nil:
-		m.known[num] = pref.ValueOf(m.NewMessage(fd))
 	}
 	return m.known[num]
 }
@@ -219,6 +209,27 @@ func (m *Message) NewMessage(fd pref.FieldDescriptor) pref.Message {
 		panic(errors.New("%v: field is not of non-repeated message type", fd.FullName()))
 	}
 	return New(md).ProtoReflect()
+}
+
+// NewField returns a new value for assignable to the field of a given descriptor.
+// See protoreflect.Message for details.
+func (m *Message) NewField(fd pref.FieldDescriptor) pref.Value {
+	m.checkField(fd)
+	switch {
+	case fd.IsExtension():
+		return fd.(pref.ExtensionType).New()
+	case fd.IsMap():
+		return pref.ValueOf(&dynamicMap{
+			desc: fd,
+			mapv: make(map[interface{}]pref.Value),
+		})
+	case fd.IsList():
+		return pref.ValueOf(&dynamicList{desc: fd})
+	case fd.Message() != nil:
+		return pref.ValueOf(New(fd.Message()).ProtoReflect())
+	default:
+		return fd.Default()
+	}
 }
 
 // WhichOneof reports which field in a oneof is populated, returning nil if none are populated.
@@ -278,6 +289,9 @@ func (x emptyList) NewMessage() pref.Message {
 	}
 	return New(md).ProtoReflect()
 }
+func (x emptyList) NewElement() pref.Value {
+	return newListEntry(x.desc)
+}
 
 type dynamicList struct {
 	desc pref.FieldDescriptor
@@ -318,6 +332,10 @@ func (x *dynamicList) NewMessage() pref.Message {
 	return New(md).ProtoReflect()
 }
 
+func (x *dynamicList) NewElement() pref.Value {
+	return newListEntry(x.desc)
+}
+
 type dynamicMap struct {
 	desc pref.FieldDescriptor
 	mapv map[interface{}]pref.Value
@@ -339,6 +357,13 @@ func (x *dynamicMap) NewMessage() pref.Message {
 	}
 	return New(md).ProtoReflect()
 }
+func (x *dynamicMap) NewValue() pref.Value {
+	if md := x.desc.MapValue().Message(); md != nil {
+		return pref.ValueOf(New(md).ProtoReflect())
+	}
+	return x.desc.MapValue().Default()
+}
+
 func (x *dynamicMap) Range(f func(pref.MapKey, pref.Value) bool) {
 	for k, v := range x.mapv {
 		if !f(pref.ValueOf(k).MapKey(), v) {
@@ -411,4 +436,32 @@ func typecheckSingular(fd pref.FieldDescriptor, v pref.Value) {
 	if !ok {
 		panic(errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface()))
 	}
+}
+
+func newListEntry(fd pref.FieldDescriptor) pref.Value {
+	switch fd.Kind() {
+	case pref.BoolKind:
+		return pref.ValueOf(false)
+	case pref.EnumKind:
+		return pref.ValueOf(fd.Enum().Values().Get(0).Number())
+	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
+		return pref.ValueOf(int32(0))
+	case pref.Uint32Kind, pref.Fixed32Kind:
+		return pref.ValueOf(uint32(0))
+	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
+		return pref.ValueOf(int64(0))
+	case pref.Uint64Kind, pref.Fixed64Kind:
+		return pref.ValueOf(uint64(0))
+	case pref.FloatKind:
+		return pref.ValueOf(float32(0))
+	case pref.DoubleKind:
+		return pref.ValueOf(float64(0))
+	case pref.StringKind:
+		return pref.ValueOf("")
+	case pref.BytesKind:
+		return pref.ValueOf(([]byte)(nil))
+	case pref.MessageKind, pref.GroupKind:
+		return pref.ValueOf(New(fd.Message()).ProtoReflect())
+	}
+	panic(errors.New("%v: unknown kind %v", fd.FullName(), fd.Kind()))
 }

@@ -689,11 +689,14 @@ func (m *{{.}}) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	}
 }
 func (m *{{.}}) NewMessage(fd protoreflect.FieldDescriptor) protoreflect.Message {
+	return m.NewField(fd).Message()
+}
+func (m *{{.}}) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
-		return fi.newMessage()
+		return fi.newField()
 	} else {
-		return xt.New().Message()
+		return xt.New()
 	}
 }
 func (m *{{.}}) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {

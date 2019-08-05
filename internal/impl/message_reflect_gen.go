@@ -92,11 +92,14 @@ func (m *messageState) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Val
 	}
 }
 func (m *messageState) NewMessage(fd protoreflect.FieldDescriptor) protoreflect.Message {
+	return m.NewField(fd).Message()
+}
+func (m *messageState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
-		return fi.newMessage()
+		return fi.newField()
 	} else {
-		return xt.New().Message()
+		return xt.New()
 	}
 }
 func (m *messageState) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
@@ -199,11 +202,14 @@ func (m *messageReflectWrapper) Mutable(fd protoreflect.FieldDescriptor) protore
 	}
 }
 func (m *messageReflectWrapper) NewMessage(fd protoreflect.FieldDescriptor) protoreflect.Message {
+	return m.NewField(fd).Message()
+}
+func (m *messageReflectWrapper) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
-		return fi.newMessage()
+		return fi.newField()
 	} else {
-		return xt.New().Message()
+		return xt.New()
 	}
 }
 func (m *messageReflectWrapper) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {

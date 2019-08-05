@@ -85,8 +85,14 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		testFieldList(t, m, fd)
 	case fd.IsMap():
 		testFieldMap(t, m, fd)
-	case fd.Kind() == pref.FloatKind || fd.Kind() == pref.DoubleKind:
-		testFieldFloat(t, m, fd)
+	case fd.Message() != nil:
+	default:
+		if got, want := m.NewField(fd), fd.Default(); !valueEqual(got, want) {
+			t.Errorf("Message.NewField(%v) = %v, want default value %v", name, formatValue(got), formatValue(want))
+		}
+		if fd.Kind() == pref.FloatKind || fd.Kind() == pref.DoubleKind {
+			testFieldFloat(t, m, fd)
+		}
 	}
 
 	// Set to a non-zero value, the zero value, different non-zero values.
@@ -107,6 +113,9 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 			if fd.ContainingOneof() != nil {
 				wantHas = true
 			}
+		}
+		if fd.Syntax() == pref.Proto3 && fd.Cardinality() != pref.Repeated && fd.ContainingOneof() == nil && fd.Kind() == pref.EnumKind && v.Enum() == 0 {
+			wantHas = false
 		}
 		if got, want := m.Has(fd), wantHas; got != want {
 			t.Errorf("after setting %q to %v:\nMessage.Has(%v) = %v, want %v", name, formatValue(v), num, got, want)
@@ -166,8 +175,16 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	name := fd.FullName()
 	num := fd.Number()
 
+	// New values.
 	m.Clear(fd) // start with an empty map
-	mapv := m.Mutable(fd).Map()
+	mapv := m.Get(fd).Map()
+	if got, want := mapv.NewValue(), newMapValue(fd, mapv, 0, nil); !valueEqual(got, want) {
+		t.Errorf("message.Get(%v).NewValue() = %v, want %v", name, formatValue(got), formatValue(want))
+	}
+	mapv = m.Mutable(fd).Map() // mutable map
+	if got, want := mapv.NewValue(), newMapValue(fd, mapv, 0, nil); !valueEqual(got, want) {
+		t.Errorf("message.Mutable(%v).NewValue() = %v, want %v", name, formatValue(got), formatValue(want))
+	}
 
 	// Add values.
 	want := make(testMap)
@@ -228,6 +245,7 @@ func (m testMap) Has(k pref.MapKey) bool          { return m.Get(k).IsValid() }
 func (m testMap) Clear(k pref.MapKey)             { delete(m, k.Interface()) }
 func (m testMap) Len() int                        { return len(m) }
 func (m testMap) NewMessage() pref.Message        { panic("unimplemented") }
+func (m testMap) NewValue() pref.Value            { panic("unimplemented") }
 func (m testMap) Range(f func(pref.MapKey, pref.Value) bool) {
 	for k, v := range m {
 		if !f(pref.ValueOf(k).MapKey(), v) {
@@ -242,7 +260,14 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	num := fd.Number()
 
 	m.Clear(fd) // start with an empty list
-	list := m.Mutable(fd).List()
+	list := m.Get(fd).List()
+	if got, want := list.NewElement(), newListElement(fd, list, 0, nil); !valueEqual(got, want) {
+		t.Errorf("message.Get(%v).NewElement() = %v, want %v", name, formatValue(got), formatValue(want))
+	}
+	list = m.Mutable(fd).List() // mutable list
+	if got, want := list.NewElement(), newListElement(fd, list, 0, nil); !valueEqual(got, want) {
+		t.Errorf("message.Mutable(%v).NewElement() = %v, want %v", name, formatValue(got), formatValue(want))
+	}
 
 	// Append values.
 	var want pref.List = &testList{}
@@ -293,6 +318,7 @@ func (l *testList) Len() int                 { return len(l.a) }
 func (l *testList) Set(n int, v pref.Value)  { l.a[n] = v }
 func (l *testList) Truncate(n int)           { l.a = l.a[:n] }
 func (l *testList) NewMessage() pref.Message { panic("unimplemented") }
+func (l *testList) NewElement() pref.Value   { panic("unimplemented") }
 
 // testFieldFloat exercises some interesting floating-point scalar field values.
 func testFieldFloat(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
@@ -462,6 +488,19 @@ const (
 	maxVal seed = -2
 )
 
+// newSeed creates new seed values from a base, for example to create seeds for the
+// elements in a list. If the input seed is minVal or maxVal, so is the output.
+func newSeed(n seed, adjust ...int) seed {
+	switch n {
+	case minVal, maxVal:
+		return n
+	}
+	for _, a := range adjust {
+		n = 10*n + seed(a)
+	}
+	return n
+}
+
 // newValue returns a new value assignable to a field.
 //
 // The stack parameter is used to avoid infinite recursion when populating circular
@@ -469,7 +508,7 @@ const (
 func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.MessageDescriptor) pref.Value {
 	switch {
 	case fd.IsList():
-		list := m.New().Mutable(fd).List()
+		list := m.NewField(fd).List()
 		if n == 0 {
 			return pref.ValueOf(list)
 		}
@@ -479,17 +518,17 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 		list.Append(newListElement(fd, list, n, stack))
 		return pref.ValueOf(list)
 	case fd.IsMap():
-		mapv := m.New().Mutable(fd).Map()
+		mapv := m.NewField(fd).Map()
 		if n == 0 {
 			return pref.ValueOf(mapv)
 		}
 		mapv.Set(newMapKey(fd, 0), newMapValue(fd, mapv, 0, stack))
 		mapv.Set(newMapKey(fd, minVal), newMapValue(fd, mapv, minVal, stack))
 		mapv.Set(newMapKey(fd, maxVal), newMapValue(fd, mapv, maxVal, stack))
-		mapv.Set(newMapKey(fd, n), newMapValue(fd, mapv, 10*n, stack))
+		mapv.Set(newMapKey(fd, n), newMapValue(fd, mapv, newSeed(n, 0), stack))
 		return pref.ValueOf(mapv)
 	case fd.Message() != nil:
-		return populateMessage(m.Mutable(fd).Message(), n, stack)
+		return populateMessage(m.NewField(fd).Message(), n, stack)
 	default:
 		return newScalarValue(fd, n)
 	}
@@ -499,7 +538,7 @@ func newListElement(fd pref.FieldDescriptor, list pref.List, n seed, stack []pre
 	if fd.Message() == nil {
 		return newScalarValue(fd, n)
 	}
-	return populateMessage(list.NewMessage(), n, stack)
+	return populateMessage(list.NewElement().Message(), n, stack)
 }
 
 func newMapKey(fd pref.FieldDescriptor, n seed) pref.MapKey {
@@ -512,7 +551,7 @@ func newMapValue(fd pref.FieldDescriptor, mapv pref.Map, n seed, stack []pref.Me
 	if vd.Message() == nil {
 		return newScalarValue(vd, n)
 	}
-	return populateMessage(mapv.NewMessage(), n, stack)
+	return populateMessage(mapv.NewValue().Message(), n, stack)
 }
 
 func newScalarValue(fd pref.FieldDescriptor, n seed) pref.Value {
@@ -520,8 +559,17 @@ func newScalarValue(fd pref.FieldDescriptor, n seed) pref.Value {
 	case pref.BoolKind:
 		return pref.ValueOf(n != 0)
 	case pref.EnumKind:
-		// TODO: use actual value
-		return pref.ValueOf(pref.EnumNumber(n))
+		vals := fd.Enum().Values()
+		var i int
+		switch n {
+		case minVal:
+			i = 0
+		case maxVal:
+			i = vals.Len() - 1
+		default:
+			i = int(n) % vals.Len()
+		}
+		return pref.ValueOf(vals.Get(i).Number())
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
 		switch n {
 		case minVal:
@@ -608,7 +656,7 @@ func populateMessage(m pref.Message, n seed, stack []pref.MessageDescriptor) pre
 		if fd.IsWeak() {
 			continue
 		}
-		m.Set(fd, newValue(m, fd, 10*n+seed(i), stack))
+		m.Set(fd, newValue(m, fd, newSeed(n, i), stack))
 	}
 	return pref.ValueOf(m)
 }
