@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"reflect"
+	"sync"
 
 	"google.golang.org/protobuf/internal/flags"
 	pvalue "google.golang.org/protobuf/internal/value"
@@ -296,30 +297,21 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 		panic("no support for proto1 weak fields")
 	}
 
-	messageName := fd.Message().FullName()
-	messageType, _ := preg.GlobalTypes.FindMessageByName(messageName)
-	if messageType == nil {
-		return fieldInfo{
-			fieldDesc: fd,
-			has:       func(p pointer) bool { return false },
-			clear:     func(p pointer) {},
-			get: func(p pointer) pref.Value {
+	var once sync.Once
+	var messageType pref.MessageType
+	var frozenEmpty pref.Value
+	lazyInit := func() {
+		once.Do(func() {
+			messageName := fd.Message().FullName()
+			messageType, _ = preg.GlobalTypes.FindMessageByName(messageName)
+			if messageType == nil {
 				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
-			},
-			set: func(p pointer, v pref.Value) {
-				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
-			},
-			mutable: func(p pointer) pref.Value {
-				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
-			},
-			newMessage: func() pref.Message {
-				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
-			},
-		}
+			}
+			frozenEmpty = pref.ValueOf(frozenMessage{messageType.New()})
+		})
 	}
 
 	num := int32(fd.Number())
-	frozenEmpty := pref.ValueOf(frozenMessage{messageType.New()})
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
@@ -335,6 +327,7 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			delete(*fs, num)
 		},
 		get: func(p pointer) pref.Value {
+			lazyInit()
 			if p.IsNil() {
 				return frozenEmpty
 			}
@@ -346,6 +339,7 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			return pref.ValueOf(m.(pref.ProtoMessage).ProtoReflect())
 		},
 		set: func(p pointer, v pref.Value) {
+			lazyInit()
 			m := v.Message()
 			if m.Descriptor() != messageType.Descriptor() {
 				panic("mismatching message descriptor")
@@ -357,6 +351,7 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			(*fs)[num] = m.Interface().(piface.MessageV1)
 		},
 		mutable: func(p pointer) pref.Value {
+			lazyInit()
 			fs := p.Apply(weakOffset).WeakFields()
 			if *fs == nil {
 				*fs = make(WeakFields)
@@ -369,6 +364,7 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			return pref.ValueOf(m.(pref.ProtoMessage).ProtoReflect())
 		},
 		newMessage: func() pref.Message {
+			lazyInit()
 			return messageType.New()
 		},
 	}
