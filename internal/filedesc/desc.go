@@ -16,6 +16,7 @@ import (
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 // The types in this file may have a suffix:
@@ -309,10 +310,19 @@ func (fd *Field) ContainingOneof() pref.OneofDescriptor      { return fd.L1.Cont
 func (fd *Field) ContainingMessage() pref.MessageDescriptor {
 	return fd.L0.Parent.(pref.MessageDescriptor)
 }
-func (fd *Field) Enum() pref.EnumDescriptor       { return fd.L1.Enum }
-func (fd *Field) Message() pref.MessageDescriptor { return fd.L1.Message }
-func (fd *Field) Format(s fmt.State, r rune)      { descfmt.FormatDesc(s, r, fd) }
-func (fd *Field) ProtoType(pref.FieldDescriptor)  {}
+func (fd *Field) Enum() pref.EnumDescriptor {
+	return fd.L1.Enum
+}
+func (fd *Field) Message() pref.MessageDescriptor {
+	if fd.L1.IsWeak {
+		if d, _ := protoregistry.GlobalFiles.FindDescriptorByName(fd.L1.Message.FullName()); d != nil {
+			return d.(pref.MessageDescriptor)
+		}
+	}
+	return fd.L1.Message
+}
+func (fd *Field) Format(s fmt.State, r rune)     { descfmt.FormatDesc(s, r, fd) }
+func (fd *Field) ProtoType(pref.FieldDescriptor) {}
 
 // EnforceUTF8 is a pseudo-internal API to determine whether to enforce UTF-8
 // validation for the string field. This exists for Google-internal use only
