@@ -62,8 +62,8 @@ type (
 	// being a compilation failure (guaranteed by the Go specification).
 	EnforceVersion uint
 
-	DescBuilder      = filedesc.DescBuilder
-	TypeBuilder      = filetype.TypeBuilder
+	DescBuilder      = filedesc.Builder
+	TypeBuilder      = filetype.Builder
 	Pointer          = impl.Pointer
 	MessageInfo      = impl.MessageInfo
 	MessageState     = impl.MessageState

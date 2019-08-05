@@ -13,8 +13,8 @@ import (
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 )
 
-// DescBuilder construct a protoreflect.FileDescriptor from the raw descriptor.
-type DescBuilder struct {
+// Builder construct a protoreflect.FileDescriptor from the raw descriptor.
+type Builder struct {
 	// GoPackagePath is the Go package path that is invoking this builder.
 	GoPackagePath string
 
@@ -48,15 +48,15 @@ type DescBuilder struct {
 	}
 }
 
-// resolverByIndex is an interface DescBuilder.FileRegistry may implement.
+// resolverByIndex is an interface Builder.FileRegistry may implement.
 // If so, it permits looking up an enum or message dependency based on the
-// sub-list and element index into filetype.TypeBuilder.DependencyIndexes.
+// sub-list and element index into filetype.Builder.DependencyIndexes.
 type resolverByIndex interface {
 	FindEnumByIndex(int32, int32, []Enum, []Message) pref.EnumDescriptor
 	FindMessageByIndex(int32, int32, []Enum, []Message) pref.MessageDescriptor
 }
 
-// Indexes of each sub-list in filetype.TypeBuilder.DependencyIndexes.
+// Indexes of each sub-list in filetype.Builder.DependencyIndexes.
 const (
 	listFieldDeps int32 = iota
 	listExtTargets
@@ -65,13 +65,13 @@ const (
 	listMethOutDeps
 )
 
-// Build constructs a FileDescriptor given the parameters set in DescBuilder.
+// Build constructs a FileDescriptor given the parameters set in Builder.
 // It assumes that the inputs are well-formed and panics if any inconsistencies
 // are encountered.
 //
 // If NumEnums+NumMessages+NumExtensions+NumServices is zero,
 // then Build automatically derives them from the raw descriptor.
-func (db DescBuilder) Build() (out struct {
+func (db Builder) Build() (out struct {
 	File pref.FileDescriptor
 
 	// Enums is all enum descriptors in "flattened ordering".
@@ -113,7 +113,7 @@ func (db DescBuilder) Build() (out struct {
 // unmarshalCounts counts the number of enum, message, extension, and service
 // declarations in the raw message, which is either a FileDescriptorProto
 // or a MessageDescriptorProto depending on whether isFile is set.
-func (db *DescBuilder) unmarshalCounts(b []byte, isFile bool) {
+func (db *Builder) unmarshalCounts(b []byte, isFile bool) {
 	for len(b) > 0 {
 		num, typ, n := wire.ConsumeTag(b)
 		b = b[n:]

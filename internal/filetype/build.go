@@ -21,7 +21,7 @@ import (
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-// TypeBuilder constructs type descriptors from a raw file descriptor
+// Builder constructs type descriptors from a raw file descriptor
 // and associated Go types for each enum and message declaration.
 //
 //
@@ -55,9 +55,9 @@ import (
 // The traversal starts at the root file descriptor and yields each direct
 // declaration within each node before traversing into sub-declarations
 // that children themselves may have.
-type TypeBuilder struct {
+type Builder struct {
 	// File is the underlying file descriptor builder.
-	File fdesc.DescBuilder
+	File fdesc.Builder
 
 	// GoTypes is a unique set of the Go types for all declarations and
 	// dependencies. Each type is represented as a zero value of the Go type.
@@ -116,7 +116,7 @@ type TypeBuilder struct {
 	}
 }
 
-func (tb TypeBuilder) Build() (out struct {
+func (tb Builder) Build() (out struct {
 	File pref.FileDescriptor
 
 	// Enums is all enum types in "flattened ordering".

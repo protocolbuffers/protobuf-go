@@ -678,7 +678,7 @@ func appendOptions(dst, src []byte) []byte {
 //
 // The type of message to unmarshal to is passed as a pointer since the
 // vars in descopts may not yet be populated at the time this function is called.
-func (db *DescBuilder) optionsUnmarshaler(p *pref.ProtoMessage, b []byte) func() pref.ProtoMessage {
+func (db *Builder) optionsUnmarshaler(p *pref.ProtoMessage, b []byte) func() pref.ProtoMessage {
 	if b == nil {
 		return nil
 	}

@@ -198,14 +198,14 @@ func TestFile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("proto.Marshal() error: %v", err)
 	}
-	fd2 := filedesc.DescBuilder{RawDescriptor: b}.Build().File
+	fd2 := filedesc.Builder{RawDescriptor: b}.Build().File
 
 	tests := []struct {
 		name string
 		desc pref.FileDescriptor
 	}{
 		{"protodesc.NewFile", fd1},
-		{"filedesc.DescBuilder.Build", fd2},
+		{"filedesc.Builder.Build", fd2},
 	}
 	for _, tt := range tests {
 		tt := tt

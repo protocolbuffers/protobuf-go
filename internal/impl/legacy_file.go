@@ -56,7 +56,7 @@ func legacyLoadFileDesc(b []byte) protoreflect.FileDescriptor {
 		panic(err)
 	}
 
-	fd := filedesc.DescBuilder{
+	fd := filedesc.Builder{
 		RawDescriptor: b2,
 		FileRegistry:  resolverOnly{protoregistry.GlobalFiles}, // do not register back to global registry
 	}.Build().File

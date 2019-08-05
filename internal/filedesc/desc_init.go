@@ -16,14 +16,14 @@ import (
 // fileRaw is a data struct used when initializing a file descriptor from
 // a raw FileDescriptorProto.
 type fileRaw struct {
-	builder       DescBuilder
+	builder       Builder
 	allEnums      []Enum
 	allMessages   []Message
 	allExtensions []Extension
 	allServices   []Service
 }
 
-func newRawFile(db DescBuilder) *File {
+func newRawFile(db Builder) *File {
 	fd := &File{fileRaw: fileRaw{builder: db}}
 	fd.initDecls(db.NumEnums, db.NumMessages, db.NumExtensions, db.NumServices)
 	fd.unmarshalSeed(db.RawDescriptor)
