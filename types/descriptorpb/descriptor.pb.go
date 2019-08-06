@@ -53,47 +53,49 @@ const (
 	FieldDescriptorProto_TYPE_SINT64   FieldDescriptorProto_Type = 18
 )
 
-var FieldDescriptorProto_Type_name = map[int32]string{
-	1:  "TYPE_DOUBLE",
-	2:  "TYPE_FLOAT",
-	3:  "TYPE_INT64",
-	4:  "TYPE_UINT64",
-	5:  "TYPE_INT32",
-	6:  "TYPE_FIXED64",
-	7:  "TYPE_FIXED32",
-	8:  "TYPE_BOOL",
-	9:  "TYPE_STRING",
-	10: "TYPE_GROUP",
-	11: "TYPE_MESSAGE",
-	12: "TYPE_BYTES",
-	13: "TYPE_UINT32",
-	14: "TYPE_ENUM",
-	15: "TYPE_SFIXED32",
-	16: "TYPE_SFIXED64",
-	17: "TYPE_SINT32",
-	18: "TYPE_SINT64",
-}
-
-var FieldDescriptorProto_Type_value = map[string]int32{
-	"TYPE_DOUBLE":   1,
-	"TYPE_FLOAT":    2,
-	"TYPE_INT64":    3,
-	"TYPE_UINT64":   4,
-	"TYPE_INT32":    5,
-	"TYPE_FIXED64":  6,
-	"TYPE_FIXED32":  7,
-	"TYPE_BOOL":     8,
-	"TYPE_STRING":   9,
-	"TYPE_GROUP":    10,
-	"TYPE_MESSAGE":  11,
-	"TYPE_BYTES":    12,
-	"TYPE_UINT32":   13,
-	"TYPE_ENUM":     14,
-	"TYPE_SFIXED32": 15,
-	"TYPE_SFIXED64": 16,
-	"TYPE_SINT32":   17,
-	"TYPE_SINT64":   18,
-}
+// Enum value maps for FieldDescriptorProto_Type.
+var (
+	FieldDescriptorProto_Type_name = map[int32]string{
+		1:  "TYPE_DOUBLE",
+		2:  "TYPE_FLOAT",
+		3:  "TYPE_INT64",
+		4:  "TYPE_UINT64",
+		5:  "TYPE_INT32",
+		6:  "TYPE_FIXED64",
+		7:  "TYPE_FIXED32",
+		8:  "TYPE_BOOL",
+		9:  "TYPE_STRING",
+		10: "TYPE_GROUP",
+		11: "TYPE_MESSAGE",
+		12: "TYPE_BYTES",
+		13: "TYPE_UINT32",
+		14: "TYPE_ENUM",
+		15: "TYPE_SFIXED32",
+		16: "TYPE_SFIXED64",
+		17: "TYPE_SINT32",
+		18: "TYPE_SINT64",
+	}
+	FieldDescriptorProto_Type_value = map[string]int32{
+		"TYPE_DOUBLE":   1,
+		"TYPE_FLOAT":    2,
+		"TYPE_INT64":    3,
+		"TYPE_UINT64":   4,
+		"TYPE_INT32":    5,
+		"TYPE_FIXED64":  6,
+		"TYPE_FIXED32":  7,
+		"TYPE_BOOL":     8,
+		"TYPE_STRING":   9,
+		"TYPE_GROUP":    10,
+		"TYPE_MESSAGE":  11,
+		"TYPE_BYTES":    12,
+		"TYPE_UINT32":   13,
+		"TYPE_ENUM":     14,
+		"TYPE_SFIXED32": 15,
+		"TYPE_SFIXED64": 16,
+		"TYPE_SINT32":   17,
+		"TYPE_SINT64":   18,
+	}
+)
 
 func (x FieldDescriptorProto_Type) Enum() *FieldDescriptorProto_Type {
 	p := new(FieldDescriptorProto_Type)
@@ -141,17 +143,19 @@ const (
 	FieldDescriptorProto_LABEL_REPEATED FieldDescriptorProto_Label = 3
 )
 
-var FieldDescriptorProto_Label_name = map[int32]string{
-	1: "LABEL_OPTIONAL",
-	2: "LABEL_REQUIRED",
-	3: "LABEL_REPEATED",
-}
-
-var FieldDescriptorProto_Label_value = map[string]int32{
-	"LABEL_OPTIONAL": 1,
-	"LABEL_REQUIRED": 2,
-	"LABEL_REPEATED": 3,
-}
+// Enum value maps for FieldDescriptorProto_Label.
+var (
+	FieldDescriptorProto_Label_name = map[int32]string{
+		1: "LABEL_OPTIONAL",
+		2: "LABEL_REQUIRED",
+		3: "LABEL_REPEATED",
+	}
+	FieldDescriptorProto_Label_value = map[string]int32{
+		"LABEL_OPTIONAL": 1,
+		"LABEL_REQUIRED": 2,
+		"LABEL_REPEATED": 3,
+	}
+)
 
 func (x FieldDescriptorProto_Label) Enum() *FieldDescriptorProto_Label {
 	p := new(FieldDescriptorProto_Label)
@@ -200,17 +204,19 @@ const (
 	FileOptions_LITE_RUNTIME FileOptions_OptimizeMode = 3
 )
 
-var FileOptions_OptimizeMode_name = map[int32]string{
-	1: "SPEED",
-	2: "CODE_SIZE",
-	3: "LITE_RUNTIME",
-}
-
-var FileOptions_OptimizeMode_value = map[string]int32{
-	"SPEED":        1,
-	"CODE_SIZE":    2,
-	"LITE_RUNTIME": 3,
-}
+// Enum value maps for FileOptions_OptimizeMode.
+var (
+	FileOptions_OptimizeMode_name = map[int32]string{
+		1: "SPEED",
+		2: "CODE_SIZE",
+		3: "LITE_RUNTIME",
+	}
+	FileOptions_OptimizeMode_value = map[string]int32{
+		"SPEED":        1,
+		"CODE_SIZE":    2,
+		"LITE_RUNTIME": 3,
+	}
+)
 
 func (x FileOptions_OptimizeMode) Enum() *FileOptions_OptimizeMode {
 	p := new(FileOptions_OptimizeMode)
@@ -258,17 +264,19 @@ const (
 	FieldOptions_STRING_PIECE FieldOptions_CType = 2
 )
 
-var FieldOptions_CType_name = map[int32]string{
-	0: "STRING",
-	1: "CORD",
-	2: "STRING_PIECE",
-}
-
-var FieldOptions_CType_value = map[string]int32{
-	"STRING":       0,
-	"CORD":         1,
-	"STRING_PIECE": 2,
-}
+// Enum value maps for FieldOptions_CType.
+var (
+	FieldOptions_CType_name = map[int32]string{
+		0: "STRING",
+		1: "CORD",
+		2: "STRING_PIECE",
+	}
+	FieldOptions_CType_value = map[string]int32{
+		"STRING":       0,
+		"CORD":         1,
+		"STRING_PIECE": 2,
+	}
+)
 
 func (x FieldOptions_CType) Enum() *FieldOptions_CType {
 	p := new(FieldOptions_CType)
@@ -318,17 +326,19 @@ const (
 	FieldOptions_JS_NUMBER FieldOptions_JSType = 2
 )
 
-var FieldOptions_JSType_name = map[int32]string{
-	0: "JS_NORMAL",
-	1: "JS_STRING",
-	2: "JS_NUMBER",
-}
-
-var FieldOptions_JSType_value = map[string]int32{
-	"JS_NORMAL": 0,
-	"JS_STRING": 1,
-	"JS_NUMBER": 2,
-}
+// Enum value maps for FieldOptions_JSType.
+var (
+	FieldOptions_JSType_name = map[int32]string{
+		0: "JS_NORMAL",
+		1: "JS_STRING",
+		2: "JS_NUMBER",
+	}
+	FieldOptions_JSType_value = map[string]int32{
+		"JS_NORMAL": 0,
+		"JS_STRING": 1,
+		"JS_NUMBER": 2,
+	}
+)
 
 func (x FieldOptions_JSType) Enum() *FieldOptions_JSType {
 	p := new(FieldOptions_JSType)
@@ -378,17 +388,19 @@ const (
 	MethodOptions_IDEMPOTENT          MethodOptions_IdempotencyLevel = 2
 )
 
-var MethodOptions_IdempotencyLevel_name = map[int32]string{
-	0: "IDEMPOTENCY_UNKNOWN",
-	1: "NO_SIDE_EFFECTS",
-	2: "IDEMPOTENT",
-}
-
-var MethodOptions_IdempotencyLevel_value = map[string]int32{
-	"IDEMPOTENCY_UNKNOWN": 0,
-	"NO_SIDE_EFFECTS":     1,
-	"IDEMPOTENT":          2,
-}
+// Enum value maps for MethodOptions_IdempotencyLevel.
+var (
+	MethodOptions_IdempotencyLevel_name = map[int32]string{
+		0: "IDEMPOTENCY_UNKNOWN",
+		1: "NO_SIDE_EFFECTS",
+		2: "IDEMPOTENT",
+	}
+	MethodOptions_IdempotencyLevel_value = map[string]int32{
+		"IDEMPOTENCY_UNKNOWN": 0,
+		"NO_SIDE_EFFECTS":     1,
+		"IDEMPOTENT":          2,
+	}
+)
 
 func (x MethodOptions_IdempotencyLevel) Enum() *MethodOptions_IdempotencyLevel {
 	p := new(MethodOptions_IdempotencyLevel)

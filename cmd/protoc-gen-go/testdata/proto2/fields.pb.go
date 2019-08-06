@@ -26,15 +26,17 @@ const (
 	FieldTestMessage_ONE  FieldTestMessage_Enum = 1
 )
 
-var FieldTestMessage_Enum_name = map[int32]string{
-	0: "ZERO",
-	1: "ONE",
-}
-
-var FieldTestMessage_Enum_value = map[string]int32{
-	"ZERO": 0,
-	"ONE":  1,
-}
+// Enum value maps for FieldTestMessage_Enum.
+var (
+	FieldTestMessage_Enum_name = map[int32]string{
+		0: "ZERO",
+		1: "ONE",
+	}
+	FieldTestMessage_Enum_value = map[string]int32{
+		"ZERO": 0,
+		"ONE":  1,
+	}
+)
 
 func (x FieldTestMessage_Enum) Enum() *FieldTestMessage_Enum {
 	p := new(FieldTestMessage_Enum)

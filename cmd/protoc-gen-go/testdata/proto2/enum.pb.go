@@ -28,15 +28,17 @@ const (
 	EnumType1_TWO EnumType1 = 2
 )
 
-var EnumType1_name = map[int32]string{
-	1: "ONE",
-	2: "TWO",
-}
-
-var EnumType1_value = map[string]int32{
-	"ONE": 1,
-	"TWO": 2,
-}
+// Enum value maps for EnumType1.
+var (
+	EnumType1_name = map[int32]string{
+		1: "ONE",
+		2: "TWO",
+	}
+	EnumType1_value = map[string]int32{
+		"ONE": 1,
+		"TWO": 2,
+	}
+)
 
 func (x EnumType1) Enum() *EnumType1 {
 	p := new(EnumType1)
@@ -82,15 +84,17 @@ const (
 	EnumType2_duplicate2 EnumType2 = 1
 )
 
-var EnumType2_name = map[int32]string{
-	1: "duplicate1",
-	// Duplicate value: 1: "duplicate2",
-}
-
-var EnumType2_value = map[string]int32{
-	"duplicate1": 1,
-	"duplicate2": 1,
-}
+// Enum value maps for EnumType2.
+var (
+	EnumType2_name = map[int32]string{
+		1: "duplicate1",
+		// Duplicate value: 1: "duplicate2",
+	}
+	EnumType2_value = map[string]int32{
+		"duplicate1": 1,
+		"duplicate2": 1,
+	}
+)
 
 func (x EnumType2) Enum() *EnumType2 {
 	p := new(EnumType2)
@@ -137,13 +141,15 @@ const (
 	EnumContainerMessage1_NESTED_1A_VALUE EnumContainerMessage1_NestedEnumType1A = 0
 )
 
-var EnumContainerMessage1_NestedEnumType1A_name = map[int32]string{
-	0: "NESTED_1A_VALUE",
-}
-
-var EnumContainerMessage1_NestedEnumType1A_value = map[string]int32{
-	"NESTED_1A_VALUE": 0,
-}
+// Enum value maps for EnumContainerMessage1_NestedEnumType1A.
+var (
+	EnumContainerMessage1_NestedEnumType1A_name = map[int32]string{
+		0: "NESTED_1A_VALUE",
+	}
+	EnumContainerMessage1_NestedEnumType1A_value = map[string]int32{
+		"NESTED_1A_VALUE": 0,
+	}
+)
 
 func (x EnumContainerMessage1_NestedEnumType1A) Enum() *EnumContainerMessage1_NestedEnumType1A {
 	p := new(EnumContainerMessage1_NestedEnumType1A)
@@ -188,13 +194,15 @@ const (
 	EnumContainerMessage1_NESTED_1B_VALUE EnumContainerMessage1_NestedEnumType1B = 0
 )
 
-var EnumContainerMessage1_NestedEnumType1B_name = map[int32]string{
-	0: "NESTED_1B_VALUE",
-}
-
-var EnumContainerMessage1_NestedEnumType1B_value = map[string]int32{
-	"NESTED_1B_VALUE": 0,
-}
+// Enum value maps for EnumContainerMessage1_NestedEnumType1B.
+var (
+	EnumContainerMessage1_NestedEnumType1B_name = map[int32]string{
+		0: "NESTED_1B_VALUE",
+	}
+	EnumContainerMessage1_NestedEnumType1B_value = map[string]int32{
+		"NESTED_1B_VALUE": 0,
+	}
+)
 
 func (x EnumContainerMessage1_NestedEnumType1B) Enum() *EnumContainerMessage1_NestedEnumType1B {
 	p := new(EnumContainerMessage1_NestedEnumType1B)
@@ -241,13 +249,15 @@ const (
 	EnumContainerMessage1_EnumContainerMessage2_NESTED_2A_VALUE EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A = 0
 )
 
-var EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A_name = map[int32]string{
-	0: "NESTED_2A_VALUE",
-}
-
-var EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A_value = map[string]int32{
-	"NESTED_2A_VALUE": 0,
-}
+// Enum value maps for EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A.
+var (
+	EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A_name = map[int32]string{
+		0: "NESTED_2A_VALUE",
+	}
+	EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A_value = map[string]int32{
+		"NESTED_2A_VALUE": 0,
+	}
+)
 
 func (x EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A) Enum() *EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A {
 	p := new(EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2A)
@@ -292,13 +302,15 @@ const (
 	EnumContainerMessage1_EnumContainerMessage2_NESTED_2B_VALUE EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B = 0
 )
 
-var EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B_name = map[int32]string{
-	0: "NESTED_2B_VALUE",
-}
-
-var EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B_value = map[string]int32{
-	"NESTED_2B_VALUE": 0,
-}
+// Enum value maps for EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B.
+var (
+	EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B_name = map[int32]string{
+		0: "NESTED_2B_VALUE",
+	}
+	EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B_value = map[string]int32{
+		"NESTED_2B_VALUE": 0,
+	}
+)
 
 func (x EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) Enum() *EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B {
 	p := new(EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B)

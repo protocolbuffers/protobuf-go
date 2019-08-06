@@ -26,10 +26,6 @@ import (
 )
 
 const (
-	// generateEnumMapVars specifies whether to generate enum maps,
-	// which provide a bi-directional mapping between enum numbers and names.
-	generateEnumMapVars = true
-
 	// generateEnumJSONMethods specifies whether to generate the UnmarshalJSON
 	// method for proto2 enums.
 	generateEnumJSONMethods = true
@@ -294,33 +290,25 @@ func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum 
 	g.P(")")
 	g.P()
 
-	// Enum value mapping (number -> name).
-	if generateEnumMapVars {
-		nameMap := enum.GoIdent.GoName + "_name"
-		g.P("var ", nameMap, " = map[int32]string{")
-		generated := make(map[protoreflect.EnumNumber]bool)
-		for _, value := range enum.Values {
-			duplicate := ""
-			if _, present := generated[value.Desc.Number()]; present {
-				duplicate = "// Duplicate value: "
-			}
-			g.P(duplicate, value.Desc.Number(), ": ", strconv.Quote(string(value.Desc.Name())), ",")
-			generated[value.Desc.Number()] = true
+	// Enum value maps.
+	g.P("// Enum value maps for ", enum.GoIdent, ".")
+	g.P("var (")
+	g.P(enum.GoIdent.GoName+"_name", " = map[int32]string{")
+	for _, value := range enum.Values {
+		duplicate := ""
+		if value.Desc != enum.Desc.Values().ByNumber(value.Desc.Number()) {
+			duplicate = "// Duplicate value: "
 		}
-		g.P("}")
-		g.P()
+		g.P(duplicate, value.Desc.Number(), ": ", strconv.Quote(string(value.Desc.Name())), ",")
 	}
-
-	// Enum value mapping (name -> number).
-	if generateEnumMapVars {
-		valueMap := enum.GoIdent.GoName + "_value"
-		g.P("var ", valueMap, " = map[string]int32{")
-		for _, value := range enum.Values {
-			g.P(strconv.Quote(string(value.Desc.Name())), ": ", value.Desc.Number(), ",")
-		}
-		g.P("}")
-		g.P()
+	g.P("}")
+	g.P(enum.GoIdent.GoName+"_value", " = map[string]int32{")
+	for _, value := range enum.Values {
+		g.P(strconv.Quote(string(value.Desc.Name())), ": ", value.Desc.Number(), ",")
 	}
+	g.P("}")
+	g.P(")")
+	g.P()
 
 	// Enum method.
 	//

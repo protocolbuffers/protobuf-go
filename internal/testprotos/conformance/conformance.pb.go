@@ -28,21 +28,23 @@ const (
 	WireFormat_TEXT_FORMAT WireFormat = 4
 )
 
-var WireFormat_name = map[int32]string{
-	0: "UNSPECIFIED",
-	1: "PROTOBUF",
-	2: "JSON",
-	3: "JSPB",
-	4: "TEXT_FORMAT",
-}
-
-var WireFormat_value = map[string]int32{
-	"UNSPECIFIED": 0,
-	"PROTOBUF":    1,
-	"JSON":        2,
-	"JSPB":        3,
-	"TEXT_FORMAT": 4,
-}
+// Enum value maps for WireFormat.
+var (
+	WireFormat_name = map[int32]string{
+		0: "UNSPECIFIED",
+		1: "PROTOBUF",
+		2: "JSON",
+		3: "JSPB",
+		4: "TEXT_FORMAT",
+	}
+	WireFormat_value = map[string]int32{
+		"UNSPECIFIED": 0,
+		"PROTOBUF":    1,
+		"JSON":        2,
+		"JSPB":        3,
+		"TEXT_FORMAT": 4,
+	}
+)
 
 func (x WireFormat) Enum() *WireFormat {
 	p := new(WireFormat)
@@ -90,23 +92,25 @@ const (
 	TestCategory_TEXT_FORMAT_TEST TestCategory = 5
 )
 
-var TestCategory_name = map[int32]string{
-	0: "UNSPECIFIED_TEST",
-	1: "BINARY_TEST",
-	2: "JSON_TEST",
-	3: "JSON_IGNORE_UNKNOWN_PARSING_TEST",
-	4: "JSPB_TEST",
-	5: "TEXT_FORMAT_TEST",
-}
-
-var TestCategory_value = map[string]int32{
-	"UNSPECIFIED_TEST":                 0,
-	"BINARY_TEST":                      1,
-	"JSON_TEST":                        2,
-	"JSON_IGNORE_UNKNOWN_PARSING_TEST": 3,
-	"JSPB_TEST":                        4,
-	"TEXT_FORMAT_TEST":                 5,
-}
+// Enum value maps for TestCategory.
+var (
+	TestCategory_name = map[int32]string{
+		0: "UNSPECIFIED_TEST",
+		1: "BINARY_TEST",
+		2: "JSON_TEST",
+		3: "JSON_IGNORE_UNKNOWN_PARSING_TEST",
+		4: "JSPB_TEST",
+		5: "TEXT_FORMAT_TEST",
+	}
+	TestCategory_value = map[string]int32{
+		"UNSPECIFIED_TEST":                 0,
+		"BINARY_TEST":                      1,
+		"JSON_TEST":                        2,
+		"JSON_IGNORE_UNKNOWN_PARSING_TEST": 3,
+		"JSPB_TEST":                        4,
+		"TEXT_FORMAT_TEST":                 5,
+	}
+)
 
 func (x TestCategory) Enum() *TestCategory {
 	p := new(TestCategory)

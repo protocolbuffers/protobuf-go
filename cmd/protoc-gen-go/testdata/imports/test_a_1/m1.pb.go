@@ -24,13 +24,15 @@ const (
 	E1_E1_ZERO E1 = 0
 )
 
-var E1_name = map[int32]string{
-	0: "E1_ZERO",
-}
-
-var E1_value = map[string]int32{
-	"E1_ZERO": 0,
-}
+// Enum value maps for E1.
+var (
+	E1_name = map[int32]string{
+		0: "E1_ZERO",
+	}
+	E1_value = map[string]int32{
+		"E1_ZERO": 0,
+	}
+)
 
 func (x E1) Enum() *E1 {
 	p := new(E1)

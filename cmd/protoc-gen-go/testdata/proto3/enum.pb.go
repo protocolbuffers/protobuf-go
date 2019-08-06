@@ -26,17 +26,19 @@ const (
 	Enum_TWO  Enum = 2
 )
 
-var Enum_name = map[int32]string{
-	0: "ZERO",
-	1: "ONE",
-	2: "TWO",
-}
-
-var Enum_value = map[string]int32{
-	"ZERO": 0,
-	"ONE":  1,
-	"TWO":  2,
-}
+// Enum value maps for Enum.
+var (
+	Enum_name = map[int32]string{
+		0: "ZERO",
+		1: "ONE",
+		2: "TWO",
+	}
+	Enum_value = map[string]int32{
+		"ZERO": 0,
+		"ONE":  1,
+		"TWO":  2,
+	}
+)
 
 func (x Enum) Enum() *Enum {
 	p := new(Enum)

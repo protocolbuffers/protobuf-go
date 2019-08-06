@@ -25,13 +25,15 @@ const (
 	Enum1_ONE Enum1 = 1
 )
 
-var Enum1_name = map[int32]string{
-	1: "ONE",
-}
-
-var Enum1_value = map[string]int32{
-	"ONE": 1,
-}
+// Enum value maps for Enum1.
+var (
+	Enum1_name = map[int32]string{
+		1: "ONE",
+	}
+	Enum1_value = map[string]int32{
+		"ONE": 1,
+	}
+)
 
 func (x Enum1) Enum() *Enum1 {
 	p := new(Enum1)
@@ -76,13 +78,15 @@ const (
 	Enum2_UNO Enum2 = 1
 )
 
-var Enum2_name = map[int32]string{
-	1: "UNO",
-}
-
-var Enum2_value = map[string]int32{
-	"UNO": 1,
-}
+// Enum value maps for Enum2.
+var (
+	Enum2_name = map[int32]string{
+		1: "UNO",
+	}
+	Enum2_value = map[string]int32{
+		"UNO": 1,
+	}
+)
 
 func (x Enum2) Enum() *Enum2 {
 	p := new(Enum2)
@@ -127,13 +131,15 @@ const (
 	Enum3_YI Enum3 = 1
 )
 
-var Enum3_name = map[int32]string{
-	1: "YI",
-}
-
-var Enum3_value = map[string]int32{
-	"YI": 1,
-}
+// Enum value maps for Enum3.
+var (
+	Enum3_name = map[int32]string{
+		1: "YI",
+	}
+	Enum3_value = map[string]int32{
+		"YI": 1,
+	}
+)
 
 func (x Enum3) Enum() *Enum3 {
 	p := new(Enum3)

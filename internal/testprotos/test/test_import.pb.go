@@ -24,13 +24,15 @@ const (
 	ImportEnum_IMPORT_ZERO ImportEnum = 0
 )
 
-var ImportEnum_name = map[int32]string{
-	0: "IMPORT_ZERO",
-}
-
-var ImportEnum_value = map[string]int32{
-	"IMPORT_ZERO": 0,
-}
+// Enum value maps for ImportEnum.
+var (
+	ImportEnum_name = map[int32]string{
+		0: "IMPORT_ZERO",
+	}
+	ImportEnum_value = map[string]int32{
+		"IMPORT_ZERO": 0,
+	}
+)
 
 func (x ImportEnum) Enum() *ImportEnum {
 	p := new(ImportEnum)

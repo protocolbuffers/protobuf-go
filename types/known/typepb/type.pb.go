@@ -30,15 +30,17 @@ const (
 	Syntax_SYNTAX_PROTO3 Syntax = 1
 )
 
-var Syntax_name = map[int32]string{
-	0: "SYNTAX_PROTO2",
-	1: "SYNTAX_PROTO3",
-}
-
-var Syntax_value = map[string]int32{
-	"SYNTAX_PROTO2": 0,
-	"SYNTAX_PROTO3": 1,
-}
+// Enum value maps for Syntax.
+var (
+	Syntax_name = map[int32]string{
+		0: "SYNTAX_PROTO2",
+		1: "SYNTAX_PROTO3",
+	}
+	Syntax_value = map[string]int32{
+		"SYNTAX_PROTO2": 0,
+		"SYNTAX_PROTO3": 1,
+	}
+)
 
 func (x Syntax) Enum() *Syntax {
 	p := new(Syntax)
@@ -111,49 +113,51 @@ const (
 	Field_TYPE_SINT64 Field_Kind = 18
 )
 
-var Field_Kind_name = map[int32]string{
-	0:  "TYPE_UNKNOWN",
-	1:  "TYPE_DOUBLE",
-	2:  "TYPE_FLOAT",
-	3:  "TYPE_INT64",
-	4:  "TYPE_UINT64",
-	5:  "TYPE_INT32",
-	6:  "TYPE_FIXED64",
-	7:  "TYPE_FIXED32",
-	8:  "TYPE_BOOL",
-	9:  "TYPE_STRING",
-	10: "TYPE_GROUP",
-	11: "TYPE_MESSAGE",
-	12: "TYPE_BYTES",
-	13: "TYPE_UINT32",
-	14: "TYPE_ENUM",
-	15: "TYPE_SFIXED32",
-	16: "TYPE_SFIXED64",
-	17: "TYPE_SINT32",
-	18: "TYPE_SINT64",
-}
-
-var Field_Kind_value = map[string]int32{
-	"TYPE_UNKNOWN":  0,
-	"TYPE_DOUBLE":   1,
-	"TYPE_FLOAT":    2,
-	"TYPE_INT64":    3,
-	"TYPE_UINT64":   4,
-	"TYPE_INT32":    5,
-	"TYPE_FIXED64":  6,
-	"TYPE_FIXED32":  7,
-	"TYPE_BOOL":     8,
-	"TYPE_STRING":   9,
-	"TYPE_GROUP":    10,
-	"TYPE_MESSAGE":  11,
-	"TYPE_BYTES":    12,
-	"TYPE_UINT32":   13,
-	"TYPE_ENUM":     14,
-	"TYPE_SFIXED32": 15,
-	"TYPE_SFIXED64": 16,
-	"TYPE_SINT32":   17,
-	"TYPE_SINT64":   18,
-}
+// Enum value maps for Field_Kind.
+var (
+	Field_Kind_name = map[int32]string{
+		0:  "TYPE_UNKNOWN",
+		1:  "TYPE_DOUBLE",
+		2:  "TYPE_FLOAT",
+		3:  "TYPE_INT64",
+		4:  "TYPE_UINT64",
+		5:  "TYPE_INT32",
+		6:  "TYPE_FIXED64",
+		7:  "TYPE_FIXED32",
+		8:  "TYPE_BOOL",
+		9:  "TYPE_STRING",
+		10: "TYPE_GROUP",
+		11: "TYPE_MESSAGE",
+		12: "TYPE_BYTES",
+		13: "TYPE_UINT32",
+		14: "TYPE_ENUM",
+		15: "TYPE_SFIXED32",
+		16: "TYPE_SFIXED64",
+		17: "TYPE_SINT32",
+		18: "TYPE_SINT64",
+	}
+	Field_Kind_value = map[string]int32{
+		"TYPE_UNKNOWN":  0,
+		"TYPE_DOUBLE":   1,
+		"TYPE_FLOAT":    2,
+		"TYPE_INT64":    3,
+		"TYPE_UINT64":   4,
+		"TYPE_INT32":    5,
+		"TYPE_FIXED64":  6,
+		"TYPE_FIXED32":  7,
+		"TYPE_BOOL":     8,
+		"TYPE_STRING":   9,
+		"TYPE_GROUP":    10,
+		"TYPE_MESSAGE":  11,
+		"TYPE_BYTES":    12,
+		"TYPE_UINT32":   13,
+		"TYPE_ENUM":     14,
+		"TYPE_SFIXED32": 15,
+		"TYPE_SFIXED64": 16,
+		"TYPE_SINT32":   17,
+		"TYPE_SINT64":   18,
+	}
+)
 
 func (x Field_Kind) Enum() *Field_Kind {
 	p := new(Field_Kind)
@@ -196,19 +200,21 @@ const (
 	Field_CARDINALITY_REPEATED Field_Cardinality = 3
 )
 
-var Field_Cardinality_name = map[int32]string{
-	0: "CARDINALITY_UNKNOWN",
-	1: "CARDINALITY_OPTIONAL",
-	2: "CARDINALITY_REQUIRED",
-	3: "CARDINALITY_REPEATED",
-}
-
-var Field_Cardinality_value = map[string]int32{
-	"CARDINALITY_UNKNOWN":  0,
-	"CARDINALITY_OPTIONAL": 1,
-	"CARDINALITY_REQUIRED": 2,
-	"CARDINALITY_REPEATED": 3,
-}
+// Enum value maps for Field_Cardinality.
+var (
+	Field_Cardinality_name = map[int32]string{
+		0: "CARDINALITY_UNKNOWN",
+		1: "CARDINALITY_OPTIONAL",
+		2: "CARDINALITY_REQUIRED",
+		3: "CARDINALITY_REPEATED",
+	}
+	Field_Cardinality_value = map[string]int32{
+		"CARDINALITY_UNKNOWN":  0,
+		"CARDINALITY_OPTIONAL": 1,
+		"CARDINALITY_REQUIRED": 2,
+		"CARDINALITY_REPEATED": 3,
+	}
+)
 
 func (x Field_Cardinality) Enum() *Field_Cardinality {
 	p := new(Field_Cardinality)

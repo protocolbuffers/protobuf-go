@@ -23,13 +23,15 @@ const (
 	DeprecatedEnum_DEPRECATED DeprecatedEnum = 0 // Deprecated: Do not use.
 )
 
-var DeprecatedEnum_name = map[int32]string{
-	0: "DEPRECATED",
-}
-
-var DeprecatedEnum_value = map[string]int32{
-	"DEPRECATED": 0,
-}
+// Enum value maps for DeprecatedEnum.
+var (
+	DeprecatedEnum_name = map[int32]string{
+		0: "DEPRECATED",
+	}
+	DeprecatedEnum_value = map[string]int32{
+		"DEPRECATED": 0,
+	}
+)
 
 func (x DeprecatedEnum) Enum() *DeprecatedEnum {
 	p := new(DeprecatedEnum)

@@ -29,13 +29,15 @@ const (
 	NullValue_NULL_VALUE NullValue = 0
 )
 
-var NullValue_name = map[int32]string{
-	0: "NULL_VALUE",
-}
-
-var NullValue_value = map[string]int32{
-	"NULL_VALUE": 0,
-}
+// Enum value maps for NullValue.
+var (
+	NullValue_name = map[int32]string{
+		0: "NULL_VALUE",
+	}
+	NullValue_value = map[string]int32{
+		"NULL_VALUE": 0,
+	}
+)
 
 func (x NullValue) Enum() *NullValue {
 	p := new(NullValue)

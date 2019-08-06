@@ -27,17 +27,19 @@ const (
 	ForeignEnum_FOREIGN_BAZ ForeignEnum = 6
 )
 
-var ForeignEnum_name = map[int32]string{
-	4: "FOREIGN_FOO",
-	5: "FOREIGN_BAR",
-	6: "FOREIGN_BAZ",
-}
-
-var ForeignEnum_value = map[string]int32{
-	"FOREIGN_FOO": 4,
-	"FOREIGN_BAR": 5,
-	"FOREIGN_BAZ": 6,
-}
+// Enum value maps for ForeignEnum.
+var (
+	ForeignEnum_name = map[int32]string{
+		4: "FOREIGN_FOO",
+		5: "FOREIGN_BAR",
+		6: "FOREIGN_BAZ",
+	}
+	ForeignEnum_value = map[string]int32{
+		"FOREIGN_FOO": 4,
+		"FOREIGN_BAR": 5,
+		"FOREIGN_BAZ": 6,
+	}
+)
 
 func (x ForeignEnum) Enum() *ForeignEnum {
 	p := new(ForeignEnum)
@@ -82,13 +84,15 @@ const (
 	TestReservedEnumFields_RESERVED_ENUM TestReservedEnumFields = 0
 )
 
-var TestReservedEnumFields_name = map[int32]string{
-	0: "RESERVED_ENUM",
-}
-
-var TestReservedEnumFields_value = map[string]int32{
-	"RESERVED_ENUM": 0,
-}
+// Enum value maps for TestReservedEnumFields.
+var (
+	TestReservedEnumFields_name = map[int32]string{
+		0: "RESERVED_ENUM",
+	}
+	TestReservedEnumFields_value = map[string]int32{
+		"RESERVED_ENUM": 0,
+	}
+)
 
 func (x TestReservedEnumFields) Enum() *TestReservedEnumFields {
 	p := new(TestReservedEnumFields)
@@ -136,19 +140,21 @@ const (
 	TestAllTypes_NEG TestAllTypes_NestedEnum = -1
 )
 
-var TestAllTypes_NestedEnum_name = map[int32]string{
-	0:  "FOO",
-	1:  "BAR",
-	2:  "BAZ",
-	-1: "NEG",
-}
-
-var TestAllTypes_NestedEnum_value = map[string]int32{
-	"FOO": 0,
-	"BAR": 1,
-	"BAZ": 2,
-	"NEG": -1,
-}
+// Enum value maps for TestAllTypes_NestedEnum.
+var (
+	TestAllTypes_NestedEnum_name = map[int32]string{
+		0:  "FOO",
+		1:  "BAR",
+		2:  "BAZ",
+		-1: "NEG",
+	}
+	TestAllTypes_NestedEnum_value = map[string]int32{
+		"FOO": 0,
+		"BAR": 1,
+		"BAZ": 2,
+		"NEG": -1,
+	}
+)
 
 func (x TestAllTypes_NestedEnum) Enum() *TestAllTypes_NestedEnum {
 	p := new(TestAllTypes_NestedEnum)
@@ -192,13 +198,15 @@ const (
 	TestDeprecatedMessage_DEPRECATED TestDeprecatedMessage_DeprecatedEnum = 0 // Deprecated: Do not use.
 )
 
-var TestDeprecatedMessage_DeprecatedEnum_name = map[int32]string{
-	0: "DEPRECATED",
-}
-
-var TestDeprecatedMessage_DeprecatedEnum_value = map[string]int32{
-	"DEPRECATED": 0,
-}
+// Enum value maps for TestDeprecatedMessage_DeprecatedEnum.
+var (
+	TestDeprecatedMessage_DeprecatedEnum_name = map[int32]string{
+		0: "DEPRECATED",
+	}
+	TestDeprecatedMessage_DeprecatedEnum_value = map[string]int32{
+		"DEPRECATED": 0,
+	}
+)
 
 func (x TestDeprecatedMessage_DeprecatedEnum) Enum() *TestDeprecatedMessage_DeprecatedEnum {
 	p := new(TestDeprecatedMessage_DeprecatedEnum)

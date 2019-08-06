@@ -27,17 +27,19 @@ const (
 	ForeignEnumProto2_FOREIGN_BAZ ForeignEnumProto2 = 2
 )
 
-var ForeignEnumProto2_name = map[int32]string{
-	0: "FOREIGN_FOO",
-	1: "FOREIGN_BAR",
-	2: "FOREIGN_BAZ",
-}
-
-var ForeignEnumProto2_value = map[string]int32{
-	"FOREIGN_FOO": 0,
-	"FOREIGN_BAR": 1,
-	"FOREIGN_BAZ": 2,
-}
+// Enum value maps for ForeignEnumProto2.
+var (
+	ForeignEnumProto2_name = map[int32]string{
+		0: "FOREIGN_FOO",
+		1: "FOREIGN_BAR",
+		2: "FOREIGN_BAZ",
+	}
+	ForeignEnumProto2_value = map[string]int32{
+		"FOREIGN_FOO": 0,
+		"FOREIGN_BAR": 1,
+		"FOREIGN_BAZ": 2,
+	}
+)
 
 func (x ForeignEnumProto2) Enum() *ForeignEnumProto2 {
 	p := new(ForeignEnumProto2)
@@ -85,19 +87,21 @@ const (
 	TestAllTypesProto2_NEG TestAllTypesProto2_NestedEnum = -1
 )
 
-var TestAllTypesProto2_NestedEnum_name = map[int32]string{
-	0:  "FOO",
-	1:  "BAR",
-	2:  "BAZ",
-	-1: "NEG",
-}
-
-var TestAllTypesProto2_NestedEnum_value = map[string]int32{
-	"FOO": 0,
-	"BAR": 1,
-	"BAZ": 2,
-	"NEG": -1,
-}
+// Enum value maps for TestAllTypesProto2_NestedEnum.
+var (
+	TestAllTypesProto2_NestedEnum_name = map[int32]string{
+		0:  "FOO",
+		1:  "BAR",
+		2:  "BAZ",
+		-1: "NEG",
+	}
+	TestAllTypesProto2_NestedEnum_value = map[string]int32{
+		"FOO": 0,
+		"BAR": 1,
+		"BAZ": 2,
+		"NEG": -1,
+	}
+)
 
 func (x TestAllTypesProto2_NestedEnum) Enum() *TestAllTypesProto2_NestedEnum {
 	p := new(TestAllTypesProto2_NestedEnum)

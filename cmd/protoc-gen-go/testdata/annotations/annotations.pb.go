@@ -24,13 +24,15 @@ const (
 	AnnotationsTestEnum_ANNOTATIONS_TEST_ENUM_VALUE AnnotationsTestEnum = 0
 )
 
-var AnnotationsTestEnum_name = map[int32]string{
-	0: "ANNOTATIONS_TEST_ENUM_VALUE",
-}
-
-var AnnotationsTestEnum_value = map[string]int32{
-	"ANNOTATIONS_TEST_ENUM_VALUE": 0,
-}
+// Enum value maps for AnnotationsTestEnum.
+var (
+	AnnotationsTestEnum_name = map[int32]string{
+		0: "ANNOTATIONS_TEST_ENUM_VALUE",
+	}
+	AnnotationsTestEnum_value = map[string]int32{
+		"ANNOTATIONS_TEST_ENUM_VALUE": 0,
+	}
+)
 
 func (x AnnotationsTestEnum) Enum() *AnnotationsTestEnum {
 	p := new(AnnotationsTestEnum)

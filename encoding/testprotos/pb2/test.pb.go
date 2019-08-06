@@ -34,17 +34,19 @@ const (
 	Enum_TEN Enum = 10
 )
 
-var Enum_name = map[int32]string{
-	1:  "ONE",
-	2:  "TWO",
-	10: "TEN",
-}
-
-var Enum_value = map[string]int32{
-	"ONE": 1,
-	"TWO": 2,
-	"TEN": 10,
-}
+// Enum value maps for Enum.
+var (
+	Enum_name = map[int32]string{
+		1:  "ONE",
+		2:  "TWO",
+		10: "TEN",
+	}
+	Enum_value = map[string]int32{
+		"ONE": 1,
+		"TWO": 2,
+		"TEN": 10,
+	}
+)
 
 func (x Enum) Enum() *Enum {
 	p := new(Enum)
@@ -91,17 +93,19 @@ const (
 	Enums_DIEZ Enums_NestedEnum = 10
 )
 
-var Enums_NestedEnum_name = map[int32]string{
-	1:  "UNO",
-	2:  "DOS",
-	10: "DIEZ",
-}
-
-var Enums_NestedEnum_value = map[string]int32{
-	"UNO":  1,
-	"DOS":  2,
-	"DIEZ": 10,
-}
+// Enum value maps for Enums_NestedEnum.
+var (
+	Enums_NestedEnum_name = map[int32]string{
+		1:  "UNO",
+		2:  "DOS",
+		10: "DIEZ",
+	}
+	Enums_NestedEnum_value = map[string]int32{
+		"UNO":  1,
+		"DOS":  2,
+		"DIEZ": 10,
+	}
+)
 
 func (x Enums_NestedEnum) Enum() *Enums_NestedEnum {
 	p := new(Enums_NestedEnum)

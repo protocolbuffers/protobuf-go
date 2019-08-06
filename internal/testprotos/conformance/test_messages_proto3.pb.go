@@ -32,17 +32,19 @@ const (
 	ForeignEnum_FOREIGN_BAZ ForeignEnum = 2
 )
 
-var ForeignEnum_name = map[int32]string{
-	0: "FOREIGN_FOO",
-	1: "FOREIGN_BAR",
-	2: "FOREIGN_BAZ",
-}
-
-var ForeignEnum_value = map[string]int32{
-	"FOREIGN_FOO": 0,
-	"FOREIGN_BAR": 1,
-	"FOREIGN_BAZ": 2,
-}
+// Enum value maps for ForeignEnum.
+var (
+	ForeignEnum_name = map[int32]string{
+		0: "FOREIGN_FOO",
+		1: "FOREIGN_BAR",
+		2: "FOREIGN_BAZ",
+	}
+	ForeignEnum_value = map[string]int32{
+		"FOREIGN_FOO": 0,
+		"FOREIGN_BAR": 1,
+		"FOREIGN_BAZ": 2,
+	}
+)
 
 func (x ForeignEnum) Enum() *ForeignEnum {
 	p := new(ForeignEnum)
@@ -80,19 +82,21 @@ const (
 	TestAllTypesProto3_NEG TestAllTypesProto3_NestedEnum = -1
 )
 
-var TestAllTypesProto3_NestedEnum_name = map[int32]string{
-	0:  "FOO",
-	1:  "BAR",
-	2:  "BAZ",
-	-1: "NEG",
-}
-
-var TestAllTypesProto3_NestedEnum_value = map[string]int32{
-	"FOO": 0,
-	"BAR": 1,
-	"BAZ": 2,
-	"NEG": -1,
-}
+// Enum value maps for TestAllTypesProto3_NestedEnum.
+var (
+	TestAllTypesProto3_NestedEnum_name = map[int32]string{
+		0:  "FOO",
+		1:  "BAR",
+		2:  "BAZ",
+		-1: "NEG",
+	}
+	TestAllTypesProto3_NestedEnum_value = map[string]int32{
+		"FOO": 0,
+		"BAR": 1,
+		"BAZ": 2,
+		"NEG": -1,
+	}
+)
 
 func (x TestAllTypesProto3_NestedEnum) Enum() *TestAllTypesProto3_NestedEnum {
 	p := new(TestAllTypesProto3_NestedEnum)
@@ -132,23 +136,25 @@ const (
 	TestAllTypesProto3_bAz       TestAllTypesProto3_AliasedEnum = 2
 )
 
-var TestAllTypesProto3_AliasedEnum_name = map[int32]string{
-	0: "ALIAS_FOO",
-	1: "ALIAS_BAR",
-	2: "ALIAS_BAZ",
-	// Duplicate value: 2: "QUX",
-	// Duplicate value: 2: "qux",
-	// Duplicate value: 2: "bAz",
-}
-
-var TestAllTypesProto3_AliasedEnum_value = map[string]int32{
-	"ALIAS_FOO": 0,
-	"ALIAS_BAR": 1,
-	"ALIAS_BAZ": 2,
-	"QUX":       2,
-	"qux":       2,
-	"bAz":       2,
-}
+// Enum value maps for TestAllTypesProto3_AliasedEnum.
+var (
+	TestAllTypesProto3_AliasedEnum_name = map[int32]string{
+		0: "ALIAS_FOO",
+		1: "ALIAS_BAR",
+		2: "ALIAS_BAZ",
+		// Duplicate value: 2: "QUX",
+		// Duplicate value: 2: "qux",
+		// Duplicate value: 2: "bAz",
+	}
+	TestAllTypesProto3_AliasedEnum_value = map[string]int32{
+		"ALIAS_FOO": 0,
+		"ALIAS_BAR": 1,
+		"ALIAS_BAZ": 2,
+		"QUX":       2,
+		"qux":       2,
+		"bAz":       2,
+	}
+)
 
 func (x TestAllTypesProto3_AliasedEnum) Enum() *TestAllTypesProto3_AliasedEnum {
 	p := new(TestAllTypesProto3_AliasedEnum)

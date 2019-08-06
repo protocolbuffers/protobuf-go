@@ -31,13 +31,15 @@ const (
 	E_ZERO E = 0
 )
 
-var E_name = map[int32]string{
-	0: "ZERO",
-}
-
-var E_value = map[string]int32{
-	"ZERO": 0,
-}
+// Enum value maps for E.
+var (
+	E_name = map[int32]string{
+		0: "ZERO",
+	}
+	E_value = map[string]int32{
+		"ZERO": 0,
+	}
+)
 
 func (x E) Enum() *E {
 	p := new(E)
@@ -82,13 +84,15 @@ const (
 	M_M_ZERO M_Subenum = 0
 )
 
-var M_Subenum_name = map[int32]string{
-	0: "M_ZERO",
-}
-
-var M_Subenum_value = map[string]int32{
-	"M_ZERO": 0,
-}
+// Enum value maps for M_Subenum.
+var (
+	M_Subenum_name = map[int32]string{
+		0: "M_ZERO",
+	}
+	M_Subenum_value = map[string]int32{
+		"M_ZERO": 0,
+	}
+)
 
 func (x M_Subenum) Enum() *M_Subenum {
 	p := new(M_Subenum)
@@ -133,13 +137,15 @@ const (
 	M_Submessage_M_SUBMESSAGE_ZERO M_Submessage_Submessage_Subenum = 0
 )
 
-var M_Submessage_Submessage_Subenum_name = map[int32]string{
-	0: "M_SUBMESSAGE_ZERO",
-}
-
-var M_Submessage_Submessage_Subenum_value = map[string]int32{
-	"M_SUBMESSAGE_ZERO": 0,
-}
+// Enum value maps for M_Submessage_Submessage_Subenum.
+var (
+	M_Submessage_Submessage_Subenum_name = map[int32]string{
+		0: "M_SUBMESSAGE_ZERO",
+	}
+	M_Submessage_Submessage_Subenum_value = map[string]int32{
+		"M_SUBMESSAGE_ZERO": 0,
+	}
+)
 
 func (x M_Submessage_Submessage_Subenum) Enum() *M_Submessage_Submessage_Subenum {
 	p := new(M_Submessage_Submessage_Subenum)
