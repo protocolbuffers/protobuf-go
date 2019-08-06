@@ -1175,8 +1175,11 @@ type MethodDescriptorProto struct {
 	ServerStreaming *bool `protobuf:"varint,6,opt,name=server_streaming,json=serverStreaming,def=0" json:"server_streaming,omitempty"`
 }
 
-const Default_MethodDescriptorProto_ClientStreaming bool = false
-const Default_MethodDescriptorProto_ServerStreaming bool = false
+// Default values for MethodDescriptorProto fields.
+const (
+	Default_MethodDescriptorProto_ClientStreaming = bool(false)
+	Default_MethodDescriptorProto_ServerStreaming = bool(false)
+)
 
 func (x *MethodDescriptorProto) Reset() {
 	*x = MethodDescriptorProto{}
@@ -1338,15 +1341,18 @@ type FileOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 }
 
-const Default_FileOptions_JavaMultipleFiles bool = false
-const Default_FileOptions_JavaStringCheckUtf8 bool = false
-const Default_FileOptions_OptimizeFor FileOptions_OptimizeMode = FileOptions_SPEED
-const Default_FileOptions_CcGenericServices bool = false
-const Default_FileOptions_JavaGenericServices bool = false
-const Default_FileOptions_PyGenericServices bool = false
-const Default_FileOptions_PhpGenericServices bool = false
-const Default_FileOptions_Deprecated bool = false
-const Default_FileOptions_CcEnableArenas bool = false
+// Default values for FileOptions fields.
+const (
+	Default_FileOptions_JavaMultipleFiles   = bool(false)
+	Default_FileOptions_JavaStringCheckUtf8 = bool(false)
+	Default_FileOptions_OptimizeFor         = FileOptions_SPEED
+	Default_FileOptions_CcGenericServices   = bool(false)
+	Default_FileOptions_JavaGenericServices = bool(false)
+	Default_FileOptions_PyGenericServices   = bool(false)
+	Default_FileOptions_PhpGenericServices  = bool(false)
+	Default_FileOptions_Deprecated          = bool(false)
+	Default_FileOptions_CcEnableArenas      = bool(false)
+)
 
 func (x *FileOptions) Reset() {
 	*x = FileOptions{}
@@ -1591,9 +1597,12 @@ type MessageOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 }
 
-const Default_MessageOptions_MessageSetWireFormat bool = false
-const Default_MessageOptions_NoStandardDescriptorAccessor bool = false
-const Default_MessageOptions_Deprecated bool = false
+// Default values for MessageOptions fields.
+const (
+	Default_MessageOptions_MessageSetWireFormat         = bool(false)
+	Default_MessageOptions_NoStandardDescriptorAccessor = bool(false)
+	Default_MessageOptions_Deprecated                   = bool(false)
+)
 
 func (x *MessageOptions) Reset() {
 	*x = MessageOptions{}
@@ -1734,11 +1743,14 @@ type FieldOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 }
 
-const Default_FieldOptions_Ctype FieldOptions_CType = FieldOptions_STRING
-const Default_FieldOptions_Jstype FieldOptions_JSType = FieldOptions_JS_NORMAL
-const Default_FieldOptions_Lazy bool = false
-const Default_FieldOptions_Deprecated bool = false
-const Default_FieldOptions_Weak bool = false
+// Default values for FieldOptions fields.
+const (
+	Default_FieldOptions_Ctype      = FieldOptions_STRING
+	Default_FieldOptions_Jstype     = FieldOptions_JS_NORMAL
+	Default_FieldOptions_Lazy       = bool(false)
+	Default_FieldOptions_Deprecated = bool(false)
+	Default_FieldOptions_Weak       = bool(false)
+)
 
 func (x *FieldOptions) Reset() {
 	*x = FieldOptions{}
@@ -1894,7 +1906,10 @@ type EnumOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 }
 
-const Default_EnumOptions_Deprecated bool = false
+// Default values for EnumOptions fields.
+const (
+	Default_EnumOptions_Deprecated = bool(false)
+)
 
 func (x *EnumOptions) Reset() {
 	*x = EnumOptions{}
@@ -1967,7 +1982,10 @@ type EnumValueOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 }
 
-const Default_EnumValueOptions_Deprecated bool = false
+// Default values for EnumValueOptions fields.
+const (
+	Default_EnumValueOptions_Deprecated = bool(false)
+)
 
 func (x *EnumValueOptions) Reset() {
 	*x = EnumValueOptions{}
@@ -2033,7 +2051,10 @@ type ServiceOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 }
 
-const Default_ServiceOptions_Deprecated bool = false
+// Default values for ServiceOptions fields.
+const (
+	Default_ServiceOptions_Deprecated = bool(false)
+)
 
 func (x *ServiceOptions) Reset() {
 	*x = ServiceOptions{}
@@ -2100,8 +2121,11 @@ type MethodOptions struct {
 	UninterpretedOption []*UninterpretedOption `protobuf:"bytes,999,rep,name=uninterpreted_option,json=uninterpretedOption" json:"uninterpreted_option,omitempty"`
 }
 
-const Default_MethodOptions_Deprecated bool = false
-const Default_MethodOptions_IdempotencyLevel MethodOptions_IdempotencyLevel = MethodOptions_IDEMPOTENCY_UNKNOWN
+// Default values for MethodOptions fields.
+const (
+	Default_MethodOptions_Deprecated       = bool(false)
+	Default_MethodOptions_IdempotencyLevel = MethodOptions_IDEMPOTENCY_UNKNOWN
+)
 
 func (x *MethodOptions) Reset() {
 	*x = MethodOptions{}

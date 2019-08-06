@@ -345,8 +345,11 @@ type EnumContainerMessage1 struct {
 	DefaultDuplicate2 *EnumType2 `protobuf:"varint,2,opt,name=default_duplicate2,json=defaultDuplicate2,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate2,omitempty"`
 }
 
-const Default_EnumContainerMessage1_DefaultDuplicate1 EnumType2 = EnumType2_duplicate1
-const Default_EnumContainerMessage1_DefaultDuplicate2 EnumType2 = EnumType2_duplicate2
+// Default values for EnumContainerMessage1 fields.
+const (
+	Default_EnumContainerMessage1_DefaultDuplicate1 = EnumType2_duplicate1
+	Default_EnumContainerMessage1_DefaultDuplicate2 = EnumType2_duplicate2
+)
 
 func (x *EnumContainerMessage1) Reset() {
 	*x = EnumContainerMessage1{}

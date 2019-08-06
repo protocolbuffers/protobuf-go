@@ -77,7 +77,10 @@ type Message struct {
 	EnumField     *Enum   `protobuf:"varint,2,opt,name=enum_field,json=enumField,enum=Enum,def=0" json:"enum_field,omitempty"`
 }
 
-const Default_Message_EnumField Enum = Enum_ZERO
+// Default values for Message fields.
+const (
+	Default_Message_EnumField = Enum_ZERO
+)
 
 func (x *Message) Reset() {
 	*x = Message{}

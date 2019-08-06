@@ -194,10 +194,16 @@ type M struct {
 	OneofField isM_OneofField `protobuf_oneof:"oneof_field"`
 }
 
-const Default_M_S string = "default"
+// Default values for M fields.
+const (
+	Default_M_S = string("default")
+)
 
-var Default_M_B []byte = []byte("default")
-var Default_M_F float64 = math.NaN()
+// Default values for M fields.
+var (
+	Default_M_B = []byte("default")
+	Default_M_F = float64(math.NaN())
+)
 
 func (x *M) Reset() {
 	*x = M{}

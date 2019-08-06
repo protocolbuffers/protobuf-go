@@ -185,33 +185,37 @@ type FieldTestMessage struct {
 	OneofTwo isFieldTestMessage_OneofTwo `protobuf_oneof:"oneof_two"`
 }
 
-const Default_FieldTestMessage_DefaultBool bool = true
-const Default_FieldTestMessage_DefaultEnum FieldTestMessage_Enum = FieldTestMessage_ONE
-const Default_FieldTestMessage_DefaultInt32 int32 = 1
-const Default_FieldTestMessage_DefaultSint32 int32 = 1
-const Default_FieldTestMessage_DefaultUint32 uint32 = 1
-const Default_FieldTestMessage_DefaultInt64 int64 = 1
-const Default_FieldTestMessage_DefaultSint64 int64 = 1
-const Default_FieldTestMessage_DefaultUint64 uint64 = 1
-const Default_FieldTestMessage_DefaultSfixed32 int32 = 1
-const Default_FieldTestMessage_DefaultFixed32 uint32 = 1
-const Default_FieldTestMessage_DefaultFloat float32 = 3.14
-const Default_FieldTestMessage_DefaultSfixed64 int64 = 1
-const Default_FieldTestMessage_DefaultFixed64 uint64 = 1
-const Default_FieldTestMessage_DefaultDouble float64 = 3.1415
-const Default_FieldTestMessage_DefaultString string = "hello,\"world!\"\n"
+// Default values for FieldTestMessage fields.
+const (
+	Default_FieldTestMessage_DefaultBool       = bool(true)
+	Default_FieldTestMessage_DefaultEnum       = FieldTestMessage_ONE
+	Default_FieldTestMessage_DefaultInt32      = int32(1)
+	Default_FieldTestMessage_DefaultSint32     = int32(1)
+	Default_FieldTestMessage_DefaultUint32     = uint32(1)
+	Default_FieldTestMessage_DefaultInt64      = int64(1)
+	Default_FieldTestMessage_DefaultSint64     = int64(1)
+	Default_FieldTestMessage_DefaultUint64     = uint64(1)
+	Default_FieldTestMessage_DefaultSfixed32   = int32(1)
+	Default_FieldTestMessage_DefaultFixed32    = uint32(1)
+	Default_FieldTestMessage_DefaultFloat      = float32(3.140000104904175)
+	Default_FieldTestMessage_DefaultSfixed64   = int64(1)
+	Default_FieldTestMessage_DefaultFixed64    = uint64(1)
+	Default_FieldTestMessage_DefaultDouble     = float64(3.1415)
+	Default_FieldTestMessage_DefaultString     = string("hello,\"world!\"\n")
+	Default_FieldTestMessage_DefaultZeroString = string("")
+)
 
-var Default_FieldTestMessage_DefaultBytes []byte = []byte("hello,ޭ\xbe\xef")
-
-const Default_FieldTestMessage_DefaultZeroString string = ""
-
-var Default_FieldTestMessage_DefaultZeroBytes []byte = []byte("")
-var Default_FieldTestMessage_DefaultFloatNeginf float32 = float32(math.Inf(-1))
-var Default_FieldTestMessage_DefaultFloatPosinf float32 = float32(math.Inf(1))
-var Default_FieldTestMessage_DefaultFloatNan float32 = float32(math.NaN())
-var Default_FieldTestMessage_DefaultDoubleNeginf float64 = math.Inf(-1)
-var Default_FieldTestMessage_DefaultDoublePosinf float64 = math.Inf(1)
-var Default_FieldTestMessage_DefaultDoubleNan float64 = math.NaN()
+// Default values for FieldTestMessage fields.
+var (
+	Default_FieldTestMessage_DefaultBytes        = []byte("hello,ޭ\xbe\xef")
+	Default_FieldTestMessage_DefaultZeroBytes    = []byte("")
+	Default_FieldTestMessage_DefaultFloatNeginf  = float32(math.Inf(-1))
+	Default_FieldTestMessage_DefaultFloatPosinf  = float32(math.Inf(+1))
+	Default_FieldTestMessage_DefaultFloatNan     = float32(math.NaN())
+	Default_FieldTestMessage_DefaultDoubleNeginf = float64(math.Inf(-1))
+	Default_FieldTestMessage_DefaultDoublePosinf = float64(math.Inf(+1))
+	Default_FieldTestMessage_DefaultDoubleNan    = float64(math.NaN())
+)
 
 func (x *FieldTestMessage) Reset() {
 	*x = FieldTestMessage{}

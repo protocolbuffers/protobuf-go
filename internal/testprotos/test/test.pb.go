@@ -333,25 +333,30 @@ type TestAllTypes struct {
 	OneofField isTestAllTypes_OneofField `protobuf_oneof:"oneof_field"`
 }
 
-const Default_TestAllTypes_DefaultInt32 int32 = 81
-const Default_TestAllTypes_DefaultInt64 int64 = 82
-const Default_TestAllTypes_DefaultUint32 uint32 = 83
-const Default_TestAllTypes_DefaultUint64 uint64 = 84
-const Default_TestAllTypes_DefaultSint32 int32 = -85
-const Default_TestAllTypes_DefaultSint64 int64 = 86
-const Default_TestAllTypes_DefaultFixed32 uint32 = 87
-const Default_TestAllTypes_DefaultFixed64 uint64 = 88
-const Default_TestAllTypes_DefaultSfixed32 int32 = 89
-const Default_TestAllTypes_DefaultSfixed64 int64 = -90
-const Default_TestAllTypes_DefaultFloat float32 = 91.5
-const Default_TestAllTypes_DefaultDouble float64 = 92000
-const Default_TestAllTypes_DefaultBool bool = true
-const Default_TestAllTypes_DefaultString string = "hello"
+// Default values for TestAllTypes fields.
+const (
+	Default_TestAllTypes_DefaultInt32       = int32(81)
+	Default_TestAllTypes_DefaultInt64       = int64(82)
+	Default_TestAllTypes_DefaultUint32      = uint32(83)
+	Default_TestAllTypes_DefaultUint64      = uint64(84)
+	Default_TestAllTypes_DefaultSint32      = int32(-85)
+	Default_TestAllTypes_DefaultSint64      = int64(86)
+	Default_TestAllTypes_DefaultFixed32     = uint32(87)
+	Default_TestAllTypes_DefaultFixed64     = uint64(88)
+	Default_TestAllTypes_DefaultSfixed32    = int32(89)
+	Default_TestAllTypes_DefaultSfixed64    = int64(-90)
+	Default_TestAllTypes_DefaultFloat       = float32(91.5)
+	Default_TestAllTypes_DefaultDouble      = float64(92000)
+	Default_TestAllTypes_DefaultBool        = bool(true)
+	Default_TestAllTypes_DefaultString      = string("hello")
+	Default_TestAllTypes_DefaultNestedEnum  = TestAllTypes_BAR
+	Default_TestAllTypes_DefaultForeignEnum = ForeignEnum_FOREIGN_BAR
+)
 
-var Default_TestAllTypes_DefaultBytes []byte = []byte("world")
-
-const Default_TestAllTypes_DefaultNestedEnum TestAllTypes_NestedEnum = TestAllTypes_BAR
-const Default_TestAllTypes_DefaultForeignEnum ForeignEnum = ForeignEnum_FOREIGN_BAR
+// Default values for TestAllTypes fields.
+var (
+	Default_TestAllTypes_DefaultBytes = []byte("world")
+)
 
 func (x *TestAllTypes) Reset() {
 	*x = TestAllTypes{}

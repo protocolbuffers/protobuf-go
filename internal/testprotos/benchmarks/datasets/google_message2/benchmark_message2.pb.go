@@ -53,21 +53,24 @@ type GoogleMessage2 struct {
 	Field206      *bool                    `protobuf:"varint,206,opt,name=field206,def=0" json:"field206,omitempty"`
 }
 
-const Default_GoogleMessage2_Field75 bool = false
-const Default_GoogleMessage2_Field21 int32 = 0
-const Default_GoogleMessage2_Field109 int32 = 0
-const Default_GoogleMessage2_Field210 int32 = 0
-const Default_GoogleMessage2_Field211 int32 = 0
-const Default_GoogleMessage2_Field212 int32 = 0
-const Default_GoogleMessage2_Field213 int32 = 0
-const Default_GoogleMessage2_Field216 int32 = 0
-const Default_GoogleMessage2_Field217 int32 = 0
-const Default_GoogleMessage2_Field218 int32 = 0
-const Default_GoogleMessage2_Field220 int32 = 0
-const Default_GoogleMessage2_Field221 int32 = 0
-const Default_GoogleMessage2_Field222 float32 = 0
-const Default_GoogleMessage2_Field205 bool = false
-const Default_GoogleMessage2_Field206 bool = false
+// Default values for GoogleMessage2 fields.
+const (
+	Default_GoogleMessage2_Field75  = bool(false)
+	Default_GoogleMessage2_Field21  = int32(0)
+	Default_GoogleMessage2_Field109 = int32(0)
+	Default_GoogleMessage2_Field210 = int32(0)
+	Default_GoogleMessage2_Field211 = int32(0)
+	Default_GoogleMessage2_Field212 = int32(0)
+	Default_GoogleMessage2_Field213 = int32(0)
+	Default_GoogleMessage2_Field216 = int32(0)
+	Default_GoogleMessage2_Field217 = int32(0)
+	Default_GoogleMessage2_Field218 = int32(0)
+	Default_GoogleMessage2_Field220 = int32(0)
+	Default_GoogleMessage2_Field221 = int32(0)
+	Default_GoogleMessage2_Field222 = float32(0)
+	Default_GoogleMessage2_Field205 = bool(false)
+	Default_GoogleMessage2_Field206 = bool(false)
+)
 
 func (x *GoogleMessage2) Reset() {
 	*x = GoogleMessage2{}
@@ -323,9 +326,12 @@ type GoogleMessage2GroupedMessage struct {
 	Field11       *int64   `protobuf:"varint,11,opt,name=field11" json:"field11,omitempty"`
 }
 
-const Default_GoogleMessage2GroupedMessage_Field3 float32 = 0
-const Default_GoogleMessage2GroupedMessage_Field6 bool = true
-const Default_GoogleMessage2GroupedMessage_Field7 bool = false
+// Default values for GoogleMessage2GroupedMessage fields.
+const (
+	Default_GoogleMessage2GroupedMessage_Field3 = float32(0)
+	Default_GoogleMessage2GroupedMessage_Field6 = bool(true)
+	Default_GoogleMessage2GroupedMessage_Field7 = bool(false)
+)
 
 func (x *GoogleMessage2GroupedMessage) Reset() {
 	*x = GoogleMessage2GroupedMessage{}
@@ -453,7 +459,10 @@ type GoogleMessage2_Group1 struct {
 	Field31       *GoogleMessage2GroupedMessage `protobuf:"bytes,31,opt,name=field31" json:"field31,omitempty"`
 }
 
-const Default_GoogleMessage2_Group1_Field20 int32 = 0
+// Default values for GoogleMessage2_Group1 fields.
+const (
+	Default_GoogleMessage2_Group1_Field20 = int32(0)
+)
 
 func (x *GoogleMessage2_Group1) Reset() {
 	*x = GoogleMessage2_Group1{}

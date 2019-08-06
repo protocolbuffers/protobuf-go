@@ -64,30 +64,33 @@ type GoogleMessage1 struct {
 	Field131      *int32                    `protobuf:"varint,131,opt,name=field131,def=0" json:"field131,omitempty"`
 }
 
-const Default_GoogleMessage1_Field80 bool = false
-const Default_GoogleMessage1_Field81 bool = true
-const Default_GoogleMessage1_Field6 int32 = 0
-const Default_GoogleMessage1_Field59 bool = false
-const Default_GoogleMessage1_Field130 int32 = 0
-const Default_GoogleMessage1_Field12 bool = true
-const Default_GoogleMessage1_Field17 bool = true
-const Default_GoogleMessage1_Field13 bool = true
-const Default_GoogleMessage1_Field14 bool = true
-const Default_GoogleMessage1_Field104 int32 = 0
-const Default_GoogleMessage1_Field100 int32 = 0
-const Default_GoogleMessage1_Field101 int32 = 0
-const Default_GoogleMessage1_Field29 int32 = 0
-const Default_GoogleMessage1_Field30 bool = false
-const Default_GoogleMessage1_Field60 int32 = -1
-const Default_GoogleMessage1_Field271 int32 = -1
-const Default_GoogleMessage1_Field272 int32 = -1
-const Default_GoogleMessage1_Field23 int32 = 0
-const Default_GoogleMessage1_Field24 bool = false
-const Default_GoogleMessage1_Field25 int32 = 0
-const Default_GoogleMessage1_Field67 int32 = 0
-const Default_GoogleMessage1_Field128 int32 = 0
-const Default_GoogleMessage1_Field129 string = "xxxxxxxxxxxxxxxxxxxxx"
-const Default_GoogleMessage1_Field131 int32 = 0
+// Default values for GoogleMessage1 fields.
+const (
+	Default_GoogleMessage1_Field80  = bool(false)
+	Default_GoogleMessage1_Field81  = bool(true)
+	Default_GoogleMessage1_Field6   = int32(0)
+	Default_GoogleMessage1_Field59  = bool(false)
+	Default_GoogleMessage1_Field130 = int32(0)
+	Default_GoogleMessage1_Field12  = bool(true)
+	Default_GoogleMessage1_Field17  = bool(true)
+	Default_GoogleMessage1_Field13  = bool(true)
+	Default_GoogleMessage1_Field14  = bool(true)
+	Default_GoogleMessage1_Field104 = int32(0)
+	Default_GoogleMessage1_Field100 = int32(0)
+	Default_GoogleMessage1_Field101 = int32(0)
+	Default_GoogleMessage1_Field29  = int32(0)
+	Default_GoogleMessage1_Field30  = bool(false)
+	Default_GoogleMessage1_Field60  = int32(-1)
+	Default_GoogleMessage1_Field271 = int32(-1)
+	Default_GoogleMessage1_Field272 = int32(-1)
+	Default_GoogleMessage1_Field23  = int32(0)
+	Default_GoogleMessage1_Field24  = bool(false)
+	Default_GoogleMessage1_Field25  = int32(0)
+	Default_GoogleMessage1_Field67  = int32(0)
+	Default_GoogleMessage1_Field128 = int32(0)
+	Default_GoogleMessage1_Field129 = string("xxxxxxxxxxxxxxxxxxxxx")
+	Default_GoogleMessage1_Field131 = int32(0)
+)
 
 func (x *GoogleMessage1) Reset() {
 	*x = GoogleMessage1{}
@@ -429,15 +432,18 @@ type GoogleMessage1SubMessage struct {
 	Field300      *uint64 `protobuf:"varint,300,opt,name=field300" json:"field300,omitempty"`
 }
 
-const Default_GoogleMessage1SubMessage_Field1 int32 = 0
-const Default_GoogleMessage1SubMessage_Field2 int32 = 0
-const Default_GoogleMessage1SubMessage_Field3 int32 = 0
-const Default_GoogleMessage1SubMessage_Field12 bool = true
-const Default_GoogleMessage1SubMessage_Field19 int32 = 2
-const Default_GoogleMessage1SubMessage_Field20 bool = true
-const Default_GoogleMessage1SubMessage_Field28 bool = true
-const Default_GoogleMessage1SubMessage_Field23 bool = false
-const Default_GoogleMessage1SubMessage_Field206 bool = false
+// Default values for GoogleMessage1SubMessage fields.
+const (
+	Default_GoogleMessage1SubMessage_Field1   = int32(0)
+	Default_GoogleMessage1SubMessage_Field2   = int32(0)
+	Default_GoogleMessage1SubMessage_Field3   = int32(0)
+	Default_GoogleMessage1SubMessage_Field12  = bool(true)
+	Default_GoogleMessage1SubMessage_Field19  = int32(2)
+	Default_GoogleMessage1SubMessage_Field20  = bool(true)
+	Default_GoogleMessage1SubMessage_Field28  = bool(true)
+	Default_GoogleMessage1SubMessage_Field23  = bool(false)
+	Default_GoogleMessage1SubMessage_Field206 = bool(false)
+)
 
 func (x *GoogleMessage1SubMessage) Reset() {
 	*x = GoogleMessage1SubMessage{}

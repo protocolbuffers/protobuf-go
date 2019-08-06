@@ -402,7 +402,7 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 	g.P("}")
 	g.P()
 
-	genDefaultConsts(g, f, message)
+	genDefaultDecls(g, f, message)
 	genMessageMethods(gen, g, f, message)
 	genOneofWrapperTypes(gen, g, f, message)
 }
@@ -499,55 +499,60 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 	sf.append(field.GoName)
 }
 
-// genDefaultConsts generates consts and vars holding the default
+// genDefaultDecls generates consts and vars holding the default
 // values of fields.
-func genDefaultConsts(g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
+func genDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
+	var consts, vars []string
 	for _, field := range message.Fields {
 		if !field.Desc.HasDefault() {
 			continue
 		}
-		defVarName := "Default_" + message.GoIdent.GoName + "_" + field.GoName
-		def := field.Desc.Default()
+		name := "Default_" + message.GoIdent.GoName + "_" + field.GoName
+		goType, _ := fieldGoType(g, f, field)
+		defVal := field.Desc.Default()
 		switch field.Desc.Kind() {
 		case protoreflect.StringKind:
-			g.P("const ", defVarName, " string = ", strconv.Quote(def.String()))
+			consts = append(consts, fmt.Sprintf("%s = %s(%q)", name, goType, defVal.String()))
 		case protoreflect.BytesKind:
-			g.P("var ", defVarName, " []byte = []byte(", strconv.Quote(string(def.Bytes())), ")")
+			vars = append(vars, fmt.Sprintf("%s = %s(%q)", name, goType, defVal.Bytes()))
 		case protoreflect.EnumKind:
-			evalueDesc := field.Desc.DefaultEnumValue()
-			enum := field.Enum
-			evalue := enum.Values[evalueDesc.Index()]
-			g.P("const ", defVarName, " ", field.Enum.GoIdent, " = ", evalue.GoIdent)
+			idx := field.Desc.DefaultEnumValue().Index()
+			val := field.Enum.Values[idx]
+			consts = append(consts, fmt.Sprintf("%s = %s", name, g.QualifiedGoIdent(val.GoIdent)))
 		case protoreflect.FloatKind, protoreflect.DoubleKind:
-			// Floating point numbers need extra handling for -Inf/Inf/NaN.
-			f := field.Desc.Default().Float()
-			goType := "float64"
-			if field.Desc.Kind() == protoreflect.FloatKind {
-				goType = "float32"
-			}
-			// funcCall returns a call to a function in the math package,
-			// possibly converting the result to float32.
-			funcCall := func(fn, param string) string {
-				s := g.QualifiedGoIdent(mathPackage.Ident(fn)) + param
-				if goType != "float64" {
-					s = goType + "(" + s + ")"
+			if f := defVal.Float(); math.IsNaN(f) || math.IsInf(f, 0) {
+				var fn, arg string
+				switch f := defVal.Float(); {
+				case math.IsInf(f, -1):
+					fn, arg = g.QualifiedGoIdent(mathPackage.Ident("Inf")), "-1"
+				case math.IsInf(f, +1):
+					fn, arg = g.QualifiedGoIdent(mathPackage.Ident("Inf")), "+1"
+				case math.IsNaN(f):
+					fn, arg = g.QualifiedGoIdent(mathPackage.Ident("NaN")), ""
 				}
-				return s
-			}
-			switch {
-			case math.IsInf(f, -1):
-				g.P("var ", defVarName, " ", goType, " = ", funcCall("Inf", "(-1)"))
-			case math.IsInf(f, 1):
-				g.P("var ", defVarName, " ", goType, " = ", funcCall("Inf", "(1)"))
-			case math.IsNaN(f):
-				g.P("var ", defVarName, " ", goType, " = ", funcCall("NaN", "()"))
-			default:
-				g.P("const ", defVarName, " ", goType, " = ", field.Desc.Default().Interface())
+				vars = append(vars, fmt.Sprintf("%s = %s(%s(%s))", name, goType, fn, arg))
+			} else {
+				consts = append(consts, fmt.Sprintf("%s = %s(%v)", name, goType, f))
 			}
 		default:
-			goType, _ := fieldGoType(g, f, field)
-			g.P("const ", defVarName, " ", goType, " = ", def.Interface())
+			consts = append(consts, fmt.Sprintf("%s = %s(%v)", name, goType, defVal.Interface()))
 		}
+	}
+	if len(consts) > 0 {
+		g.P("// Default values for ", message.GoIdent, " fields.")
+		g.P("const (")
+		for _, s := range consts {
+			g.P(s)
+		}
+		g.P(")")
+	}
+	if len(vars) > 0 {
+		g.P("// Default values for ", message.GoIdent, " fields.")
+		g.P("var (")
+		for _, s := range vars {
+			g.P(s)
+		}
+		g.P(")")
 	}
 	g.P()
 }
