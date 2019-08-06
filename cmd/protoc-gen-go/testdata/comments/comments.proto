@@ -9,24 +9,44 @@ package goproto.protoc.comments;
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/comments";
 
-// COMMENT: Message1
+// COMMENT: Enum1.Leading
+enum Enum1 {
+  // COMMENT: FOO.Leading
+  FOO = 0; // COMMENT: FOO.InlineTrailing
+  // COMMENT: BAR.Leading
+  BAR = 1;
+  // COMMENT: BAR.Trailing1
+  // COMMENT: BAR.Trailing2
+
+  // COMMENT: Enum1.EndBody
+}
+
+// COMMENT: Message1.Leading
 message Message1 {
-  // COMMENT: Message1A
+  // COMMENT: Message1A.Leading
   message Message1A {
-  }
+  } // COMMENT: Message1A.Trailing
 
   // COMMENT: Message1B
   message Message1B {
   }
 
-  // COMMENT: Field1A
-  optional string Field1A = 1;
+  // COMMENT: Field1A.Leading
+  optional string Field1A = 1; // COMMENT: Field1A.Trailing
 
-  // COMMENT: Oneof1A
+  // COMMENT: Oneof1A.Leading
   oneof Oneof1a {
-    // COMMENT: Oneof1AField1
-    string Oneof1AField1 = 2;
-  }
+    // COMMENT: Oneof1AField1.Leading
+    string Oneof1AField1 = 2; // COMMENT: Oneof1AField1.Trailing
+  } // COMMENT: Oneof1A.Trailing
+
+  extensions 100 to max;
+} // COMMENT: Message1.Trailing
+
+// COMMENT: Extend
+extend Message1 {
+  // COMMENT: Extension.Leading
+  optional Message1 extension = 100; // COMMENT: Extension.Trailing
 }
 
 // COMMENT: Message2

@@ -21,7 +21,8 @@ type Foo struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
-	// Types that are valid to be assigned to Bar:
+
+	// Types that are assignable to Bar:
 	//	*Foo_GetBar
 	Bar isFoo_Bar `protobuf_oneof:"bar"`
 }

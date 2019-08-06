@@ -132,7 +132,6 @@ message TestDeprecatedMessage {
   enum DeprecatedEnum {
     option deprecated = true;
     DEPRECATED = 0 [deprecated=true];
-    //DEPRECATED = 0 [deprecated=true];
   }
   oneof deprecated_oneof {
     int32 deprecated_oneof_field = 2 [deprecated = true];
