@@ -399,7 +399,7 @@ type File struct {
 	// of "dir/foo". Appending ".pb.go" produces an output file of "dir/foo.pb.go".
 	GeneratedFilenamePrefix string
 
-	sourceInfo map[pathKey][]*descriptorpb.SourceCodeInfo_Location
+	comments map[pathKey]CommentSet
 }
 
 func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPackageName, importPath GoImportPath) (*File, error) {
@@ -415,7 +415,7 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 		Proto:         p,
 		GoPackageName: packageName,
 		GoImportPath:  importPath,
-		sourceInfo:    make(map[pathKey][]*descriptorpb.SourceCodeInfo_Location),
+		comments:      make(map[pathKey]CommentSet),
 	}
 
 	// Determine the prefix for generated Go files.
@@ -441,8 +441,17 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 	f.GeneratedFilenamePrefix = prefix
 
 	for _, loc := range p.GetSourceCodeInfo().GetLocation() {
-		key := newPathKey(loc.Path)
-		f.sourceInfo[key] = append(f.sourceInfo[key], loc)
+		// Descriptors declarations are guaranteed to have unique comment sets.
+		// Other locations may not be unique, but we don't use them.
+		var leadingDetached []Comments
+		for _, s := range loc.GetLeadingDetachedComments() {
+			leadingDetached = append(leadingDetached, Comments(s))
+		}
+		f.comments[newPathKey(loc.Path)] = CommentSet{
+			LeadingDetached: leadingDetached,
+			Leading:         Comments(loc.GetLeadingComments()),
+			Trailing:        Comments(loc.GetTrailingComments()),
+		}
 	}
 	for i, mdescs := 0, desc.Messages(); i < mdescs.Len(); i++ {
 		f.Messages = append(f.Messages, newMessage(gen, f, nil, mdescs.Get(i)))
@@ -514,6 +523,7 @@ type Message struct {
 	Enums      []*Enum      // nested enum declarations
 	Extensions []*Extension // nested extension declarations
 	Location   Location     // location of this message
+	Comments   CommentSet   // comments associated with this message
 }
 
 func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.MessageDescriptor) *Message {
@@ -527,6 +537,7 @@ func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.Message
 		Desc:     desc,
 		GoIdent:  newGoIdent(f, desc),
 		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
 	}
 	gen.messagesByName[desc.FullName()] = message
 	for i, mdescs := 0, desc.Messages(); i < mdescs.Len(); i++ {
@@ -625,12 +636,13 @@ type Field struct {
 	// '{{GoName}}' and a getter method named 'Get{{GoName}}'.
 	GoName string
 
-	Parent   *Message // message in which this field is defined; nil if top-level extension
-	Oneof    *Oneof   // containing oneof; nil if not part of a oneof
-	Extendee *Message // extended message for extension fields; nil otherwise
-	Enum     *Enum    // type for enum fields; nil otherwise
-	Message  *Message // type for message or group fields; nil otherwise
-	Location Location // location of this field
+	Parent   *Message   // message in which this field is defined; nil if top-level extension
+	Oneof    *Oneof     // containing oneof; nil if not part of a oneof
+	Extendee *Message   // extended message for extension fields; nil otherwise
+	Enum     *Enum      // type for enum fields; nil otherwise
+	Message  *Message   // type for message or group fields; nil otherwise
+	Location Location   // location of this field
+	Comments CommentSet // comments associated with this field
 }
 
 func newField(gen *Plugin, f *File, message *Message, desc protoreflect.FieldDescriptor) *Field {
@@ -648,6 +660,7 @@ func newField(gen *Plugin, f *File, message *Message, desc protoreflect.FieldDes
 		GoName:   camelCase(string(desc.Name())),
 		Parent:   message,
 		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
 	}
 	if desc.ContainingOneof() != nil {
 		field.Oneof = message.Oneofs[desc.ContainingOneof().Index()]
@@ -695,15 +708,18 @@ type Oneof struct {
 	Parent *Message // message in which this oneof occurs
 	Fields []*Field // fields that are part of this oneof
 
-	Location Location // location of this oneof
+	Location Location   // location of this oneof
+	Comments CommentSet // comments associated with this oneof
 }
 
 func newOneof(gen *Plugin, f *File, message *Message, desc protoreflect.OneofDescriptor) *Oneof {
+	loc := message.Location.appendPath(fieldnum.DescriptorProto_OneofDecl, int32(desc.Index()))
 	return &Oneof{
 		Desc:     desc,
 		Parent:   message,
 		GoName:   camelCase(string(desc.Name())),
-		Location: message.Location.appendPath(fieldnum.DescriptorProto_OneofDecl, int32(desc.Index())),
+		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
 	}
 }
 
@@ -720,7 +736,8 @@ type Enum struct {
 	GoIdent GoIdent      // name of the generated Go type
 	Values  []*EnumValue // enum values
 
-	Location Location // location of this enum
+	Location Location   // location of this enum
+	Comments CommentSet // comments associated with this enum
 }
 
 func newEnum(gen *Plugin, f *File, parent *Message, desc protoreflect.EnumDescriptor) *Enum {
@@ -734,6 +751,7 @@ func newEnum(gen *Plugin, f *File, parent *Message, desc protoreflect.EnumDescri
 		Desc:     desc,
 		GoIdent:  newGoIdent(f, desc),
 		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
 	}
 	gen.enumsByName[desc.FullName()] = enum
 	for i, evdescs := 0, enum.Desc.Values(); i < evdescs.Len(); i++ {
@@ -748,7 +766,8 @@ type EnumValue struct {
 
 	GoIdent GoIdent // name of the generated Go type
 
-	Location Location // location of this enum value
+	Location Location   // location of this enum value
+	Comments CommentSet // comments associated with this enum value
 }
 
 func newEnumValue(gen *Plugin, f *File, message *Message, enum *Enum, desc protoreflect.EnumValueDescriptor) *EnumValue {
@@ -761,10 +780,12 @@ func newEnumValue(gen *Plugin, f *File, message *Message, enum *Enum, desc proto
 		parentIdent = message.GoIdent
 	}
 	name := parentIdent.GoName + "_" + string(desc.Name())
+	loc := enum.Location.appendPath(fieldnum.EnumDescriptorProto_Value, int32(desc.Index()))
 	return &EnumValue{
 		Desc:     desc,
 		GoIdent:  f.GoImportPath.Ident(name),
-		Location: enum.Location.appendPath(fieldnum.EnumDescriptorProto_Value, int32(desc.Index())),
+		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
 	}
 }
 
@@ -775,14 +796,17 @@ type Service struct {
 	GoName  string
 	Methods []*Method // service method definitions
 
-	Location Location // location of this service
+	Location Location   // location of this service
+	Comments CommentSet // comments associated with this service
 }
 
 func newService(gen *Plugin, f *File, desc protoreflect.ServiceDescriptor) *Service {
+	loc := f.location(fieldnum.FileDescriptorProto_Service, int32(desc.Index()))
 	service := &Service{
 		Desc:     desc,
 		GoName:   camelCase(string(desc.Name())),
-		Location: f.location(fieldnum.FileDescriptorProto_Service, int32(desc.Index())),
+		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
 	}
 	for i, mdescs := 0, desc.Methods(); i < mdescs.Len(); i++ {
 		service.Methods = append(service.Methods, newMethod(gen, f, service, mdescs.Get(i)))
@@ -799,15 +823,18 @@ type Method struct {
 	Input  *Message
 	Output *Message
 
-	Location Location // location of this method
+	Location Location   // location of this method
+	Comments CommentSet // comments associated with this method
 }
 
 func newMethod(gen *Plugin, f *File, service *Service, desc protoreflect.MethodDescriptor) *Method {
+	loc := service.Location.appendPath(fieldnum.ServiceDescriptorProto_Method, int32(desc.Index()))
 	method := &Method{
 		Desc:     desc,
 		GoName:   camelCase(string(desc.Name())),
 		Parent:   service,
-		Location: service.Location.appendPath(fieldnum.ServiceDescriptorProto_Method, int32(desc.Index())),
+		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
 	}
 	return method
 }
@@ -880,29 +907,6 @@ func (g *GeneratedFile) P(v ...interface{}) {
 		}
 	}
 	fmt.Fprintln(&g.buf)
-}
-
-// PrintLeadingComments writes the comment appearing before a location in
-// the .proto source to the generated file.
-//
-// It returns true if a comment was present at the location.
-func (g *GeneratedFile) PrintLeadingComments(loc Location) (hasComment bool) {
-	f := g.gen.filesByName[loc.SourceFile]
-	if f == nil {
-		return false
-	}
-	for _, infoLoc := range f.sourceInfo[newPathKey(loc.Path)] {
-		if infoLoc.LeadingComments == nil {
-			continue
-		}
-		for _, line := range strings.Split(strings.TrimSuffix(infoLoc.GetLeadingComments(), "\n"), "\n") {
-			g.buf.WriteString("//")
-			g.buf.WriteString(line)
-			g.buf.WriteString("\n")
-		}
-		return true
-	}
-	return false
 }
 
 // QualifiedGoIdent returns the string to use for a Go identifier.
@@ -1160,4 +1164,31 @@ func newPathKey(idxPath []int32) pathKey {
 		binary.LittleEndian.PutUint32(buf[i*4:], uint32(x))
 	}
 	return pathKey{string(buf)}
+}
+
+// CommentSet is a set of leading and trailing comments associated
+// with a .proto descriptor declaration.
+type CommentSet struct {
+	LeadingDetached []Comments
+	Leading         Comments
+	Trailing        Comments
+}
+
+// Comments is a comments string as provided by protoc.
+type Comments string
+
+// String formats the comments by inserting // to the start of each line,
+// ensuring that there is a trailing newline.
+// An empty comment is formatted as an empty string.
+func (c Comments) String() string {
+	if c == "" {
+		return ""
+	}
+	var b []byte
+	for _, line := range strings.Split(strings.TrimSuffix(string(c), "\n"), "\n") {
+		b = append(b, "//"...)
+		b = append(b, line...)
+		b = append(b, "\n"...)
+	}
+	return string(b)
 }

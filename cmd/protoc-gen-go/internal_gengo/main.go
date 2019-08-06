@@ -151,11 +151,15 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 		g.P("// source: ", f.Desc.Path())
 	}
 	g.P()
-	g.PrintLeadingComments(protogen.Location{
-		SourceFile: f.Proto.GetName(),
-		Path:       []int32{fieldnum.FileDescriptorProto_Package},
-	})
-	g.P()
+
+	for _, loc := range f.Proto.GetSourceCodeInfo().GetLocation() {
+		if len(loc.Path) == 1 && loc.Path[0] == fieldnum.FileDescriptorProto_Package {
+			if s := loc.GetLeadingComments(); s != "" {
+				g.P(protogen.Comments(s))
+				g.P()
+			}
+		}
+	}
 	g.P("package ", f.GoPackageName)
 	g.P()
 
@@ -274,17 +278,17 @@ func genImport(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, imp
 
 func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum *protogen.Enum) {
 	// Enum type declaration.
-	g.PrintLeadingComments(enum.Location)
 	g.Annotate(enum.GoIdent.GoName, enum.Location)
-	g.P("type ", enum.GoIdent, " int32",
+	g.P(enum.Comments.Leading,
+		"type ", enum.GoIdent, " int32",
 		deprecationComment(enum.Desc.Options().(*descriptorpb.EnumOptions).GetDeprecated()))
 
 	// Enum value constants.
 	g.P("const (")
 	for _, value := range enum.Values {
-		g.PrintLeadingComments(value.Location)
 		g.Annotate(value.GoIdent.GoName, value.Location)
-		g.P(value.GoIdent, " ", enum.GoIdent, " = ", value.Desc.Number(),
+		g.P(value.Comments.Leading,
+			value.GoIdent, " ", enum.GoIdent, " = ", value.Desc.Number(),
 			deprecationComment(value.Desc.Options().(*descriptorpb.EnumValueOptions).GetDeprecated()))
 	}
 	g.P(")")
@@ -377,15 +381,17 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 	}
 
 	// Message type declaration.
-	hasComment := g.PrintLeadingComments(message.Location)
+	leadingComments := message.Comments.Leading
 	if message.Desc.Options().(*descriptorpb.MessageOptions).GetDeprecated() {
-		if hasComment {
-			g.P("//")
+		if leadingComments != "" {
+			g.P(leadingComments, "//")
+			leadingComments = "" // avoid printing them again later
 		}
 		g.P(deprecationComment(true))
 	}
 	g.Annotate(message.GoIdent.GoName, message.Location)
-	g.P("type ", message.GoIdent, " struct {")
+	g.P(leadingComments,
+		"type ", message.GoIdent, " struct {")
 	genMessageFields(g, f, message)
 	g.P("}")
 	g.P()
@@ -446,20 +452,19 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 		if oneof.Fields[0] != field {
 			return // only generate for first appearance
 		}
-		if g.PrintLeadingComments(oneof.Location) {
-			g.P("//")
+		if oneof.Comments.Leading != "" {
+			g.P(oneof.Comments.Leading, "//")
 		}
 		g.P("// Types that are valid to be assigned to ", oneof.GoName, ":")
 		for _, field := range oneof.Fields {
-			g.PrintLeadingComments(field.Location)
-			g.P("//\t*", fieldOneofType(field))
+			g.P(field.Comments.Leading,
+				"//\t*", fieldOneofType(field))
 		}
 		g.Annotate(message.GoIdent.GoName+"."+oneof.GoName, oneof.Location)
 		g.P(oneof.GoName, " ", oneofInterfaceName(oneof), " `protobuf_oneof:\"", oneof.Desc.Name(), "\"`")
 		sf.append(oneof.GoName)
 		return
 	}
-	g.PrintLeadingComments(field.Location)
 	goType, pointer := fieldGoType(g, f, field)
 	if pointer {
 		goType = "*" + goType
@@ -482,7 +487,8 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 		name = "XXX_weak_" + name
 	}
 	g.Annotate(message.GoIdent.GoName+"."+name, field.Location)
-	g.P(name, " ", goType, " `", strings.Join(tags, " "), "`",
+	g.P(field.Comments.Leading,
+		name, " ", goType, " `", strings.Join(tags, " "), "`",
 		deprecationComment(field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated()))
 	sf.append(field.GoName)
 }

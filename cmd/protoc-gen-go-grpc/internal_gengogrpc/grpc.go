@@ -71,9 +71,9 @@ func genService(gen *protogen.Plugin, file *protogen.File, g *protogen.Generated
 	g.Annotate(clientName, service.Location)
 	g.P("type ", clientName, " interface {")
 	for _, method := range service.Methods {
-		g.PrintLeadingComments(method.Location)
 		g.Annotate(clientName+"."+method.GoName, method.Location)
-		g.P(clientSignature(g, method))
+		g.P(method.Comments.Leading,
+			clientSignature(g, method))
 	}
 	g.P("}")
 	g.P()
@@ -117,9 +117,9 @@ func genService(gen *protogen.Plugin, file *protogen.File, g *protogen.Generated
 	g.Annotate(serverType, service.Location)
 	g.P("type ", serverType, " interface {")
 	for _, method := range service.Methods {
-		g.PrintLeadingComments(method.Location)
 		g.Annotate(serverType+"."+method.GoName, method.Location)
-		g.P(serverSignature(g, method))
+		g.P(method.Comments.Leading,
+			serverSignature(g, method))
 	}
 	g.P("}")
 	g.P()
