@@ -1598,70 +1598,61 @@ var file_pb2_test_proto_extDescs = []protoiface.ExtensionDescV1{
 		Filename:      "pb2/test.proto",
 	},
 }
+
+// Extension fields to Extensions.
 var (
-	// extend pb2.Extensions { optional bool opt_ext_bool = 21; }
+	// optional bool opt_ext_bool = 21;
 	E_OptExtBool = &file_pb2_test_proto_extDescs[0]
-
-	// extend pb2.Extensions { optional string opt_ext_string = 22; }
+	// optional string opt_ext_string = 22;
 	E_OptExtString = &file_pb2_test_proto_extDescs[1]
-
-	// extend pb2.Extensions { optional pb2.Enum opt_ext_enum = 23; }
+	// optional pb2.Enum opt_ext_enum = 23;
 	E_OptExtEnum = &file_pb2_test_proto_extDescs[2]
-
-	// extend pb2.Extensions { optional pb2.Nested opt_ext_nested = 24; }
+	// optional pb2.Nested opt_ext_nested = 24;
 	E_OptExtNested = &file_pb2_test_proto_extDescs[3]
-
-	// extend pb2.Extensions { optional pb2.PartialRequired opt_ext_partial = 25; }
+	// optional pb2.PartialRequired opt_ext_partial = 25;
 	E_OptExtPartial = &file_pb2_test_proto_extDescs[4]
-
-	// extend pb2.Extensions { repeated fixed32 rpt_ext_fixed32 = 31; }
+	// repeated fixed32 rpt_ext_fixed32 = 31;
 	E_RptExtFixed32 = &file_pb2_test_proto_extDescs[5]
-
-	// extend pb2.Extensions { repeated pb2.Enum rpt_ext_enum = 32; }
+	// repeated pb2.Enum rpt_ext_enum = 32;
 	E_RptExtEnum = &file_pb2_test_proto_extDescs[6]
-
-	// extend pb2.Extensions { repeated pb2.Nested rpt_ext_nested = 33; }
+	// repeated pb2.Nested rpt_ext_nested = 33;
 	E_RptExtNested = &file_pb2_test_proto_extDescs[7]
-
-	// extend pb2.MessageSet { optional pb2.FakeMessageSetExtension message_set_extension = 50; }
-	E_MessageSetExtension = &file_pb2_test_proto_extDescs[8]
-
-	// extend pb2.Extensions { optional bool opt_ext_bool = 51; }
+	// optional bool opt_ext_bool = 51;
 	E_ExtensionsContainer_OptExtBool = &file_pb2_test_proto_extDescs[9]
-
-	// extend pb2.Extensions { optional string opt_ext_string = 52; }
+	// optional string opt_ext_string = 52;
 	E_ExtensionsContainer_OptExtString = &file_pb2_test_proto_extDescs[10]
-
-	// extend pb2.Extensions { optional pb2.Enum opt_ext_enum = 53; }
+	// optional pb2.Enum opt_ext_enum = 53;
 	E_ExtensionsContainer_OptExtEnum = &file_pb2_test_proto_extDescs[11]
-
-	// extend pb2.Extensions { optional pb2.Nested opt_ext_nested = 54; }
+	// optional pb2.Nested opt_ext_nested = 54;
 	E_ExtensionsContainer_OptExtNested = &file_pb2_test_proto_extDescs[12]
-
-	// extend pb2.Extensions { optional pb2.PartialRequired opt_ext_partial = 55; }
+	// optional pb2.PartialRequired opt_ext_partial = 55;
 	E_ExtensionsContainer_OptExtPartial = &file_pb2_test_proto_extDescs[13]
-
-	// extend pb2.Extensions { repeated string rpt_ext_string = 61; }
+	// repeated string rpt_ext_string = 61;
 	E_ExtensionsContainer_RptExtString = &file_pb2_test_proto_extDescs[14]
-
-	// extend pb2.Extensions { repeated pb2.Enum rpt_ext_enum = 62; }
+	// repeated pb2.Enum rpt_ext_enum = 62;
 	E_ExtensionsContainer_RptExtEnum = &file_pb2_test_proto_extDescs[15]
-
-	// extend pb2.Extensions { repeated pb2.Nested rpt_ext_nested = 63; }
+	// repeated pb2.Nested rpt_ext_nested = 63;
 	E_ExtensionsContainer_RptExtNested = &file_pb2_test_proto_extDescs[16]
+)
 
-	// extend pb2.MessageSet { optional pb2.MessageSetExtension message_set_extension = 10; }
+// Extension fields to MessageSet.
+var (
+	// optional pb2.FakeMessageSetExtension message_set_extension = 50;
+	E_MessageSetExtension = &file_pb2_test_proto_extDescs[8]
+	// optional pb2.MessageSetExtension message_set_extension = 10;
 	E_MessageSetExtension_MessageSetExtension = &file_pb2_test_proto_extDescs[17]
-
-	// extend pb2.MessageSet { optional pb2.MessageSetExtension not_message_set_extension = 20; }
+	// optional pb2.MessageSetExtension not_message_set_extension = 20;
 	E_MessageSetExtension_NotMessageSetExtension = &file_pb2_test_proto_extDescs[18]
-
-	// extend pb2.MessageSet { optional pb2.Nested ext_nested = 30; }
+	// optional pb2.Nested ext_nested = 30;
 	E_MessageSetExtension_ExtNested = &file_pb2_test_proto_extDescs[19]
+)
 
-	// extend pb2.FakeMessageSet { optional pb2.FakeMessageSetExtension message_set_extension = 10; }
+// Extension fields to FakeMessageSet.
+var (
+	// optional pb2.FakeMessageSetExtension message_set_extension = 10;
 	E_FakeMessageSetExtension_MessageSetExtension = &file_pb2_test_proto_extDescs[20]
 )
+
 var File_pb2_test_proto protoreflect.FileDescriptor
 
 var file_pb2_test_proto_rawDesc = []byte{

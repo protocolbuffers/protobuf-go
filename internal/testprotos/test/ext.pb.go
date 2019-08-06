@@ -28,10 +28,13 @@ var file_test_ext_proto_extDescs = []protoiface.ExtensionDescV1{
 		Filename:      "test/ext.proto",
 	},
 }
+
+// Extension fields to TestAllExtensions.
 var (
-	// extend goproto.proto.test.TestAllExtensions { optional int32 foreign_int32_extension = 2000; }
+	// optional int32 foreign_int32_extension = 2000;
 	E_ForeignInt32Extension = &file_test_ext_proto_extDescs[0]
 )
+
 var File_test_ext_proto protoreflect.FileDescriptor
 
 var file_test_ext_proto_rawDesc = []byte{

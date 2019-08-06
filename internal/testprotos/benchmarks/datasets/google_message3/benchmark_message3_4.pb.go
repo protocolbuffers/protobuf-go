@@ -4418,16 +4418,25 @@ var file_datasets_google_message3_benchmark_message3_4_proto_extDescs = []protoi
 		Filename:      "datasets/google_message3/benchmark_message3_4.proto",
 	},
 }
+
+// Extension fields to Message0.
 var (
-	// extend benchmarks.google_message3.Message0 { optional benchmarks.google_message3.Message33958 field33981 = 10747482; }
+	// optional benchmarks.google_message3.Message33958 field33981 = 10747482;
 	E_Message33958_Field33981 = &file_datasets_google_message3_benchmark_message3_4_proto_extDescs[0]
+)
 
-	// extend benchmarks.google_message3.Message8301 { optional benchmarks.google_message3.Message8454 field8469 = 66; }
+// Extension fields to Message8301.
+var (
+	// optional benchmarks.google_message3.Message8454 field8469 = 66;
 	E_Message8454_Field8469 = &file_datasets_google_message3_benchmark_message3_4_proto_extDescs[1]
+)
 
-	// extend benchmarks.google_message3.Message8302 { optional benchmarks.google_message3.Message8455 field8474 = 66; }
+// Extension fields to Message8302.
+var (
+	// optional benchmarks.google_message3.Message8455 field8474 = 66;
 	E_Message8455_Field8474 = &file_datasets_google_message3_benchmark_message3_4_proto_extDescs[2]
 )
+
 var File_datasets_google_message3_benchmark_message3_4_proto protoreflect.FileDescriptor
 
 var file_datasets_google_message3_benchmark_message3_4_proto_rawDesc = []byte{

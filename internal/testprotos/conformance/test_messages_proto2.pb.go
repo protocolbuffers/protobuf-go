@@ -1274,16 +1274,21 @@ var file_google_protobuf_test_messages_proto2_proto_extDescs = []protoiface.Exte
 		Filename:      "google/protobuf/test_messages_proto2.proto",
 	},
 }
+
+// Extension fields to TestAllTypesProto2.
 var (
-	// extend protobuf_test_messages.proto2.TestAllTypesProto2 { optional int32 extension_int32 = 120; }
+	// optional int32 extension_int32 = 120;
 	E_ExtensionInt32 = &file_google_protobuf_test_messages_proto2_proto_extDescs[0]
+)
 
-	// extend protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrect { optional protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1 message_set_extension = 1547769; }
+// Extension fields to TestAllTypesProto2_MessageSetCorrect.
+var (
+	// optional protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1 message_set_extension = 1547769;
 	E_TestAllTypesProto2_MessageSetCorrectExtension1_MessageSetExtension = &file_google_protobuf_test_messages_proto2_proto_extDescs[1]
-
-	// extend protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrect { optional protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2 message_set_extension = 4135312; }
+	// optional protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2 message_set_extension = 4135312;
 	E_TestAllTypesProto2_MessageSetCorrectExtension2_MessageSetExtension = &file_google_protobuf_test_messages_proto2_proto_extDescs[2]
 )
+
 var File_google_protobuf_test_messages_proto2_proto protoreflect.FileDescriptor
 
 var file_google_protobuf_test_messages_proto2_proto_rawDesc = []byte{

@@ -127,13 +127,15 @@ var file_messageset_msetextpb_msetextpb_proto_extDescs = []protoiface.ExtensionD
 		Filename:      "messageset/msetextpb/msetextpb.proto",
 	},
 }
-var (
-	// extend goproto.proto.messageset.MessageSet { optional goproto.proto.messageset.Ext1 message_set_extension = 1000; }
-	E_Ext1_MessageSetExtension = &file_messageset_msetextpb_msetextpb_proto_extDescs[0]
 
-	// extend goproto.proto.messageset.MessageSet { optional goproto.proto.messageset.Ext2 message_set_extension = 1001; }
+// Extension fields to messagesetpb.MessageSet.
+var (
+	// optional goproto.proto.messageset.Ext1 message_set_extension = 1000;
+	E_Ext1_MessageSetExtension = &file_messageset_msetextpb_msetextpb_proto_extDescs[0]
+	// optional goproto.proto.messageset.Ext2 message_set_extension = 1001;
 	E_Ext2_MessageSetExtension = &file_messageset_msetextpb_msetextpb_proto_extDescs[1]
 )
+
 var File_messageset_msetextpb_msetextpb_proto protoreflect.FileDescriptor
 
 var file_messageset_msetextpb_msetextpb_proto_rawDesc = []byte{

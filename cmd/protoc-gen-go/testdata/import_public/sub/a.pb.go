@@ -396,10 +396,13 @@ var file_import_public_sub_a_proto_extDescs = []protoiface.ExtensionDescV1{
 		Filename:      "import_public/sub/a.proto",
 	},
 }
+
+// Extension fields to M.
 var (
-	// extend goproto.protoc.import_public.sub.M { optional string extension_field = 100; }
+	// optional string extension_field = 100;
 	E_ExtensionField = &file_import_public_sub_a_proto_extDescs[0]
 )
+
 var File_import_public_sub_a_proto protoreflect.FileDescriptor
 
 var file_import_public_sub_a_proto_rawDesc = []byte{

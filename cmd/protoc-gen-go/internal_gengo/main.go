@@ -796,23 +796,37 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 	}
 	g.P("}")
 
-	g.P("var (")
+	// Group extensions by the target message.
+	var orderedTargets []protogen.GoIdent
+	allExtensionsByTarget := make(map[protogen.GoIdent][]*protogen.Extension)
+	allExtensionsByPtr := make(map[*protogen.Extension]int)
 	for i, extension := range f.allExtensions {
-		ed := extension.Desc
-		targetName := string(ed.ContainingMessage().FullName())
-		typeName := ed.Kind().String()
-		switch ed.Kind() {
-		case protoreflect.EnumKind:
-			typeName = string(ed.Enum().FullName())
-		case protoreflect.MessageKind, protoreflect.GroupKind:
-			typeName = string(ed.Message().FullName())
+		target := extension.Extendee.GoIdent
+		if len(allExtensionsByTarget[target]) == 0 {
+			orderedTargets = append(orderedTargets, target)
 		}
-		fieldName := string(ed.Name())
-		g.P("// extend ", targetName, " { ", ed.Cardinality().String(), " ", typeName, " ", fieldName, " = ", ed.Number(), "; }")
-		g.P(extensionVar(f.File, extension), " = &", extDescsVarName(f), "[", i, "]")
+		allExtensionsByTarget[target] = append(allExtensionsByTarget[target], extension)
+		allExtensionsByPtr[extension] = i
+	}
+	for _, target := range orderedTargets {
+		g.P("// Extension fields to ", target, ".")
+		g.P("var (")
+		for _, extension := range allExtensionsByTarget[target] {
+			ed := extension.Desc
+			typeName := ed.Kind().String()
+			switch ed.Kind() {
+			case protoreflect.EnumKind:
+				typeName = string(ed.Enum().FullName())
+			case protoreflect.MessageKind, protoreflect.GroupKind:
+				typeName = string(ed.Message().FullName())
+			}
+			fieldName := string(ed.Name())
+			g.P("// ", ed.Cardinality().String(), " ", typeName, " ", fieldName, " = ", ed.Number(), ";")
+			g.P(extensionVar(f.File, extension), " = &", extDescsVarName(f), "[", allExtensionsByPtr[extension], "]")
+		}
+		g.P(")")
 		g.P()
 	}
-	g.P(")")
 }
 
 // extensionVar returns the var holding the ExtensionDesc for an extension.

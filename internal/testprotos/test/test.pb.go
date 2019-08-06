@@ -2948,253 +2948,183 @@ var file_test_test_proto_extDescs = []protoiface.ExtensionDescV1{
 		Filename:      "test/test.proto",
 	},
 }
+
+// Extension fields to TestAllExtensions.
 var (
-	// extend goproto.proto.test.TestAllExtensions { optional int32 optional_int32_extension = 1; }
+	// optional int32 optional_int32_extension = 1;
 	E_OptionalInt32Extension = &file_test_test_proto_extDescs[0]
-
-	// extend goproto.proto.test.TestAllExtensions { optional int64 optional_int64_extension = 2; }
+	// optional int64 optional_int64_extension = 2;
 	E_OptionalInt64Extension = &file_test_test_proto_extDescs[1]
-
-	// extend goproto.proto.test.TestAllExtensions { optional uint32 optional_uint32_extension = 3; }
+	// optional uint32 optional_uint32_extension = 3;
 	E_OptionalUint32Extension = &file_test_test_proto_extDescs[2]
-
-	// extend goproto.proto.test.TestAllExtensions { optional uint64 optional_uint64_extension = 4; }
+	// optional uint64 optional_uint64_extension = 4;
 	E_OptionalUint64Extension = &file_test_test_proto_extDescs[3]
-
-	// extend goproto.proto.test.TestAllExtensions { optional sint32 optional_sint32_extension = 5; }
+	// optional sint32 optional_sint32_extension = 5;
 	E_OptionalSint32Extension = &file_test_test_proto_extDescs[4]
-
-	// extend goproto.proto.test.TestAllExtensions { optional sint64 optional_sint64_extension = 6; }
+	// optional sint64 optional_sint64_extension = 6;
 	E_OptionalSint64Extension = &file_test_test_proto_extDescs[5]
-
-	// extend goproto.proto.test.TestAllExtensions { optional fixed32 optional_fixed32_extension = 7; }
+	// optional fixed32 optional_fixed32_extension = 7;
 	E_OptionalFixed32Extension = &file_test_test_proto_extDescs[6]
-
-	// extend goproto.proto.test.TestAllExtensions { optional fixed64 optional_fixed64_extension = 8; }
+	// optional fixed64 optional_fixed64_extension = 8;
 	E_OptionalFixed64Extension = &file_test_test_proto_extDescs[7]
-
-	// extend goproto.proto.test.TestAllExtensions { optional sfixed32 optional_sfixed32_extension = 9; }
+	// optional sfixed32 optional_sfixed32_extension = 9;
 	E_OptionalSfixed32Extension = &file_test_test_proto_extDescs[8]
-
-	// extend goproto.proto.test.TestAllExtensions { optional sfixed64 optional_sfixed64_extension = 10; }
+	// optional sfixed64 optional_sfixed64_extension = 10;
 	E_OptionalSfixed64Extension = &file_test_test_proto_extDescs[9]
-
-	// extend goproto.proto.test.TestAllExtensions { optional float optional_float_extension = 11; }
+	// optional float optional_float_extension = 11;
 	E_OptionalFloatExtension = &file_test_test_proto_extDescs[10]
-
-	// extend goproto.proto.test.TestAllExtensions { optional double optional_double_extension = 12; }
+	// optional double optional_double_extension = 12;
 	E_OptionalDoubleExtension = &file_test_test_proto_extDescs[11]
-
-	// extend goproto.proto.test.TestAllExtensions { optional bool optional_bool_extension = 13; }
+	// optional bool optional_bool_extension = 13;
 	E_OptionalBoolExtension = &file_test_test_proto_extDescs[12]
-
-	// extend goproto.proto.test.TestAllExtensions { optional string optional_string_extension = 14; }
+	// optional string optional_string_extension = 14;
 	E_OptionalStringExtension = &file_test_test_proto_extDescs[13]
-
-	// extend goproto.proto.test.TestAllExtensions { optional bytes optional_bytes_extension = 15; }
+	// optional bytes optional_bytes_extension = 15;
 	E_OptionalBytesExtension = &file_test_test_proto_extDescs[14]
-
-	// extend goproto.proto.test.TestAllExtensions { optional goproto.proto.test.OptionalGroup_extension optionalgroup_extension = 16; }
+	// optional goproto.proto.test.OptionalGroup_extension optionalgroup_extension = 16;
 	E_OptionalgroupExtension = &file_test_test_proto_extDescs[15]
-
-	// extend goproto.proto.test.TestAllExtensions { optional goproto.proto.test.TestAllTypes.NestedMessage optional_nested_message_extension = 18; }
+	// optional goproto.proto.test.TestAllTypes.NestedMessage optional_nested_message_extension = 18;
 	E_OptionalNestedMessageExtension = &file_test_test_proto_extDescs[16]
-
-	// extend goproto.proto.test.TestAllExtensions { optional goproto.proto.test.TestAllTypes.NestedEnum optional_nested_enum_extension = 21; }
+	// optional goproto.proto.test.TestAllTypes.NestedEnum optional_nested_enum_extension = 21;
 	E_OptionalNestedEnumExtension = &file_test_test_proto_extDescs[17]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated int32 repeated_int32_extension = 31; }
+	// repeated int32 repeated_int32_extension = 31;
 	E_RepeatedInt32Extension = &file_test_test_proto_extDescs[18]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated int64 repeated_int64_extension = 32; }
+	// repeated int64 repeated_int64_extension = 32;
 	E_RepeatedInt64Extension = &file_test_test_proto_extDescs[19]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated uint32 repeated_uint32_extension = 33; }
+	// repeated uint32 repeated_uint32_extension = 33;
 	E_RepeatedUint32Extension = &file_test_test_proto_extDescs[20]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated uint64 repeated_uint64_extension = 34; }
+	// repeated uint64 repeated_uint64_extension = 34;
 	E_RepeatedUint64Extension = &file_test_test_proto_extDescs[21]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated sint32 repeated_sint32_extension = 35; }
+	// repeated sint32 repeated_sint32_extension = 35;
 	E_RepeatedSint32Extension = &file_test_test_proto_extDescs[22]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated sint64 repeated_sint64_extension = 36; }
+	// repeated sint64 repeated_sint64_extension = 36;
 	E_RepeatedSint64Extension = &file_test_test_proto_extDescs[23]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated fixed32 repeated_fixed32_extension = 37; }
+	// repeated fixed32 repeated_fixed32_extension = 37;
 	E_RepeatedFixed32Extension = &file_test_test_proto_extDescs[24]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated fixed64 repeated_fixed64_extension = 38; }
+	// repeated fixed64 repeated_fixed64_extension = 38;
 	E_RepeatedFixed64Extension = &file_test_test_proto_extDescs[25]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated sfixed32 repeated_sfixed32_extension = 39; }
+	// repeated sfixed32 repeated_sfixed32_extension = 39;
 	E_RepeatedSfixed32Extension = &file_test_test_proto_extDescs[26]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated sfixed64 repeated_sfixed64_extension = 40; }
+	// repeated sfixed64 repeated_sfixed64_extension = 40;
 	E_RepeatedSfixed64Extension = &file_test_test_proto_extDescs[27]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated float repeated_float_extension = 41; }
+	// repeated float repeated_float_extension = 41;
 	E_RepeatedFloatExtension = &file_test_test_proto_extDescs[28]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated double repeated_double_extension = 42; }
+	// repeated double repeated_double_extension = 42;
 	E_RepeatedDoubleExtension = &file_test_test_proto_extDescs[29]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated bool repeated_bool_extension = 43; }
+	// repeated bool repeated_bool_extension = 43;
 	E_RepeatedBoolExtension = &file_test_test_proto_extDescs[30]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated string repeated_string_extension = 44; }
+	// repeated string repeated_string_extension = 44;
 	E_RepeatedStringExtension = &file_test_test_proto_extDescs[31]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated bytes repeated_bytes_extension = 45; }
+	// repeated bytes repeated_bytes_extension = 45;
 	E_RepeatedBytesExtension = &file_test_test_proto_extDescs[32]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated goproto.proto.test.RepeatedGroup_extension repeatedgroup_extension = 46; }
+	// repeated goproto.proto.test.RepeatedGroup_extension repeatedgroup_extension = 46;
 	E_RepeatedgroupExtension = &file_test_test_proto_extDescs[33]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated goproto.proto.test.TestAllTypes.NestedMessage repeated_nested_message_extension = 48; }
+	// repeated goproto.proto.test.TestAllTypes.NestedMessage repeated_nested_message_extension = 48;
 	E_RepeatedNestedMessageExtension = &file_test_test_proto_extDescs[34]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated goproto.proto.test.TestAllTypes.NestedEnum repeated_nested_enum_extension = 51; }
+	// repeated goproto.proto.test.TestAllTypes.NestedEnum repeated_nested_enum_extension = 51;
 	E_RepeatedNestedEnumExtension = &file_test_test_proto_extDescs[35]
-
-	// extend goproto.proto.test.TestAllExtensions { optional int32 default_int32_extension = 81; }
+	// optional int32 default_int32_extension = 81;
 	E_DefaultInt32Extension = &file_test_test_proto_extDescs[36]
-
-	// extend goproto.proto.test.TestAllExtensions { optional int64 default_int64_extension = 82; }
+	// optional int64 default_int64_extension = 82;
 	E_DefaultInt64Extension = &file_test_test_proto_extDescs[37]
-
-	// extend goproto.proto.test.TestAllExtensions { optional uint32 default_uint32_extension = 83; }
+	// optional uint32 default_uint32_extension = 83;
 	E_DefaultUint32Extension = &file_test_test_proto_extDescs[38]
-
-	// extend goproto.proto.test.TestAllExtensions { optional uint64 default_uint64_extension = 84; }
+	// optional uint64 default_uint64_extension = 84;
 	E_DefaultUint64Extension = &file_test_test_proto_extDescs[39]
-
-	// extend goproto.proto.test.TestAllExtensions { optional sint32 default_sint32_extension = 85; }
+	// optional sint32 default_sint32_extension = 85;
 	E_DefaultSint32Extension = &file_test_test_proto_extDescs[40]
-
-	// extend goproto.proto.test.TestAllExtensions { optional sint64 default_sint64_extension = 86; }
+	// optional sint64 default_sint64_extension = 86;
 	E_DefaultSint64Extension = &file_test_test_proto_extDescs[41]
-
-	// extend goproto.proto.test.TestAllExtensions { optional fixed32 default_fixed32_extension = 87; }
+	// optional fixed32 default_fixed32_extension = 87;
 	E_DefaultFixed32Extension = &file_test_test_proto_extDescs[42]
-
-	// extend goproto.proto.test.TestAllExtensions { optional fixed64 default_fixed64_extension = 88; }
+	// optional fixed64 default_fixed64_extension = 88;
 	E_DefaultFixed64Extension = &file_test_test_proto_extDescs[43]
-
-	// extend goproto.proto.test.TestAllExtensions { optional sfixed32 default_sfixed32_extension = 89; }
+	// optional sfixed32 default_sfixed32_extension = 89;
 	E_DefaultSfixed32Extension = &file_test_test_proto_extDescs[44]
-
-	// extend goproto.proto.test.TestAllExtensions { optional sfixed64 default_sfixed64_extension = 80; }
+	// optional sfixed64 default_sfixed64_extension = 80;
 	E_DefaultSfixed64Extension = &file_test_test_proto_extDescs[45]
-
-	// extend goproto.proto.test.TestAllExtensions { optional float default_float_extension = 91; }
+	// optional float default_float_extension = 91;
 	E_DefaultFloatExtension = &file_test_test_proto_extDescs[46]
-
-	// extend goproto.proto.test.TestAllExtensions { optional double default_double_extension = 92; }
+	// optional double default_double_extension = 92;
 	E_DefaultDoubleExtension = &file_test_test_proto_extDescs[47]
-
-	// extend goproto.proto.test.TestAllExtensions { optional bool default_bool_extension = 93; }
+	// optional bool default_bool_extension = 93;
 	E_DefaultBoolExtension = &file_test_test_proto_extDescs[48]
-
-	// extend goproto.proto.test.TestAllExtensions { optional string default_string_extension = 94; }
+	// optional string default_string_extension = 94;
 	E_DefaultStringExtension = &file_test_test_proto_extDescs[49]
-
-	// extend goproto.proto.test.TestAllExtensions { optional bytes default_bytes_extension = 95; }
+	// optional bytes default_bytes_extension = 95;
 	E_DefaultBytesExtension = &file_test_test_proto_extDescs[50]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated int32 packed_int32_extension = 90; }
-	E_PackedInt32Extension = &file_test_test_proto_extDescs[51]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated int64 packed_int64_extension = 91; }
-	E_PackedInt64Extension = &file_test_test_proto_extDescs[52]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated uint32 packed_uint32_extension = 92; }
-	E_PackedUint32Extension = &file_test_test_proto_extDescs[53]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated uint64 packed_uint64_extension = 93; }
-	E_PackedUint64Extension = &file_test_test_proto_extDescs[54]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated sint32 packed_sint32_extension = 94; }
-	E_PackedSint32Extension = &file_test_test_proto_extDescs[55]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated sint64 packed_sint64_extension = 95; }
-	E_PackedSint64Extension = &file_test_test_proto_extDescs[56]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated fixed32 packed_fixed32_extension = 96; }
-	E_PackedFixed32Extension = &file_test_test_proto_extDescs[57]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated fixed64 packed_fixed64_extension = 97; }
-	E_PackedFixed64Extension = &file_test_test_proto_extDescs[58]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated sfixed32 packed_sfixed32_extension = 98; }
-	E_PackedSfixed32Extension = &file_test_test_proto_extDescs[59]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated sfixed64 packed_sfixed64_extension = 99; }
-	E_PackedSfixed64Extension = &file_test_test_proto_extDescs[60]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated float packed_float_extension = 100; }
-	E_PackedFloatExtension = &file_test_test_proto_extDescs[61]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated double packed_double_extension = 101; }
-	E_PackedDoubleExtension = &file_test_test_proto_extDescs[62]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated bool packed_bool_extension = 102; }
-	E_PackedBoolExtension = &file_test_test_proto_extDescs[63]
-
-	// extend goproto.proto.test.TestPackedExtensions { repeated goproto.proto.test.ForeignEnum packed_enum_extension = 103; }
-	E_PackedEnumExtension = &file_test_test_proto_extDescs[64]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated int32 unpacked_int32_extension = 90; }
-	E_UnpackedInt32Extension = &file_test_test_proto_extDescs[65]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated int64 unpacked_int64_extension = 91; }
-	E_UnpackedInt64Extension = &file_test_test_proto_extDescs[66]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated uint32 unpacked_uint32_extension = 92; }
-	E_UnpackedUint32Extension = &file_test_test_proto_extDescs[67]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated uint64 unpacked_uint64_extension = 93; }
-	E_UnpackedUint64Extension = &file_test_test_proto_extDescs[68]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated sint32 unpacked_sint32_extension = 94; }
-	E_UnpackedSint32Extension = &file_test_test_proto_extDescs[69]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated sint64 unpacked_sint64_extension = 95; }
-	E_UnpackedSint64Extension = &file_test_test_proto_extDescs[70]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated fixed32 unpacked_fixed32_extension = 96; }
-	E_UnpackedFixed32Extension = &file_test_test_proto_extDescs[71]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated fixed64 unpacked_fixed64_extension = 97; }
-	E_UnpackedFixed64Extension = &file_test_test_proto_extDescs[72]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated sfixed32 unpacked_sfixed32_extension = 98; }
-	E_UnpackedSfixed32Extension = &file_test_test_proto_extDescs[73]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated sfixed64 unpacked_sfixed64_extension = 99; }
-	E_UnpackedSfixed64Extension = &file_test_test_proto_extDescs[74]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated float unpacked_float_extension = 100; }
-	E_UnpackedFloatExtension = &file_test_test_proto_extDescs[75]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated double unpacked_double_extension = 101; }
-	E_UnpackedDoubleExtension = &file_test_test_proto_extDescs[76]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated bool unpacked_bool_extension = 102; }
-	E_UnpackedBoolExtension = &file_test_test_proto_extDescs[77]
-
-	// extend goproto.proto.test.TestUnpackedExtensions { repeated goproto.proto.test.ForeignEnum unpacked_enum_extension = 103; }
-	E_UnpackedEnumExtension = &file_test_test_proto_extDescs[78]
-
-	// extend goproto.proto.test.TestAllExtensions { optional string nested_string_extension = 1003; }
+	// optional string nested_string_extension = 1003;
 	E_TestNestedExtension_NestedStringExtension = &file_test_test_proto_extDescs[79]
-
-	// extend goproto.proto.test.TestAllExtensions { optional goproto.proto.test.TestRequired single = 1000; }
+	// optional goproto.proto.test.TestRequired single = 1000;
 	E_TestRequired_Single = &file_test_test_proto_extDescs[80]
-
-	// extend goproto.proto.test.TestAllExtensions { repeated goproto.proto.test.TestRequired multi = 1001; }
+	// repeated goproto.proto.test.TestRequired multi = 1001;
 	E_TestRequired_Multi = &file_test_test_proto_extDescs[81]
 )
+
+// Extension fields to TestPackedExtensions.
+var (
+	// repeated int32 packed_int32_extension = 90;
+	E_PackedInt32Extension = &file_test_test_proto_extDescs[51]
+	// repeated int64 packed_int64_extension = 91;
+	E_PackedInt64Extension = &file_test_test_proto_extDescs[52]
+	// repeated uint32 packed_uint32_extension = 92;
+	E_PackedUint32Extension = &file_test_test_proto_extDescs[53]
+	// repeated uint64 packed_uint64_extension = 93;
+	E_PackedUint64Extension = &file_test_test_proto_extDescs[54]
+	// repeated sint32 packed_sint32_extension = 94;
+	E_PackedSint32Extension = &file_test_test_proto_extDescs[55]
+	// repeated sint64 packed_sint64_extension = 95;
+	E_PackedSint64Extension = &file_test_test_proto_extDescs[56]
+	// repeated fixed32 packed_fixed32_extension = 96;
+	E_PackedFixed32Extension = &file_test_test_proto_extDescs[57]
+	// repeated fixed64 packed_fixed64_extension = 97;
+	E_PackedFixed64Extension = &file_test_test_proto_extDescs[58]
+	// repeated sfixed32 packed_sfixed32_extension = 98;
+	E_PackedSfixed32Extension = &file_test_test_proto_extDescs[59]
+	// repeated sfixed64 packed_sfixed64_extension = 99;
+	E_PackedSfixed64Extension = &file_test_test_proto_extDescs[60]
+	// repeated float packed_float_extension = 100;
+	E_PackedFloatExtension = &file_test_test_proto_extDescs[61]
+	// repeated double packed_double_extension = 101;
+	E_PackedDoubleExtension = &file_test_test_proto_extDescs[62]
+	// repeated bool packed_bool_extension = 102;
+	E_PackedBoolExtension = &file_test_test_proto_extDescs[63]
+	// repeated goproto.proto.test.ForeignEnum packed_enum_extension = 103;
+	E_PackedEnumExtension = &file_test_test_proto_extDescs[64]
+)
+
+// Extension fields to TestUnpackedExtensions.
+var (
+	// repeated int32 unpacked_int32_extension = 90;
+	E_UnpackedInt32Extension = &file_test_test_proto_extDescs[65]
+	// repeated int64 unpacked_int64_extension = 91;
+	E_UnpackedInt64Extension = &file_test_test_proto_extDescs[66]
+	// repeated uint32 unpacked_uint32_extension = 92;
+	E_UnpackedUint32Extension = &file_test_test_proto_extDescs[67]
+	// repeated uint64 unpacked_uint64_extension = 93;
+	E_UnpackedUint64Extension = &file_test_test_proto_extDescs[68]
+	// repeated sint32 unpacked_sint32_extension = 94;
+	E_UnpackedSint32Extension = &file_test_test_proto_extDescs[69]
+	// repeated sint64 unpacked_sint64_extension = 95;
+	E_UnpackedSint64Extension = &file_test_test_proto_extDescs[70]
+	// repeated fixed32 unpacked_fixed32_extension = 96;
+	E_UnpackedFixed32Extension = &file_test_test_proto_extDescs[71]
+	// repeated fixed64 unpacked_fixed64_extension = 97;
+	E_UnpackedFixed64Extension = &file_test_test_proto_extDescs[72]
+	// repeated sfixed32 unpacked_sfixed32_extension = 98;
+	E_UnpackedSfixed32Extension = &file_test_test_proto_extDescs[73]
+	// repeated sfixed64 unpacked_sfixed64_extension = 99;
+	E_UnpackedSfixed64Extension = &file_test_test_proto_extDescs[74]
+	// repeated float unpacked_float_extension = 100;
+	E_UnpackedFloatExtension = &file_test_test_proto_extDescs[75]
+	// repeated double unpacked_double_extension = 101;
+	E_UnpackedDoubleExtension = &file_test_test_proto_extDescs[76]
+	// repeated bool unpacked_bool_extension = 102;
+	E_UnpackedBoolExtension = &file_test_test_proto_extDescs[77]
+	// repeated goproto.proto.test.ForeignEnum unpacked_enum_extension = 103;
+	E_UnpackedEnumExtension = &file_test_test_proto_extDescs[78]
+)
+
 var File_test_test_proto protoreflect.FileDescriptor
 
 var file_test_test_proto_rawDesc = []byte{

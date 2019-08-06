@@ -729,139 +729,107 @@ var file_extensions_ext_ext_proto_extDescs = []protoiface.ExtensionDescV1{
 		Filename:      "extensions/ext/ext.proto",
 	},
 }
+
+// Extension fields to base.BaseMessage.
 var (
-	// extend goproto.protoc.extension.base.BaseMessage { optional bool extension_bool = 101; }
+	// optional bool extension_bool = 101;
 	E_ExtensionBool = &file_extensions_ext_ext_proto_extDescs[0]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional goproto.protoc.extension.ext.Enum extension_enum = 102; }
+	// optional goproto.protoc.extension.ext.Enum extension_enum = 102;
 	E_ExtensionEnum = &file_extensions_ext_ext_proto_extDescs[1]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional int32 extension_int32 = 103; }
+	// optional int32 extension_int32 = 103;
 	E_ExtensionInt32 = &file_extensions_ext_ext_proto_extDescs[2]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional sint32 extension_sint32 = 104; }
+	// optional sint32 extension_sint32 = 104;
 	E_ExtensionSint32 = &file_extensions_ext_ext_proto_extDescs[3]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional uint32 extension_uint32 = 105; }
+	// optional uint32 extension_uint32 = 105;
 	E_ExtensionUint32 = &file_extensions_ext_ext_proto_extDescs[4]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional int64 extension_int64 = 106; }
+	// optional int64 extension_int64 = 106;
 	E_ExtensionInt64 = &file_extensions_ext_ext_proto_extDescs[5]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional sint64 extension_sint64 = 107; }
+	// optional sint64 extension_sint64 = 107;
 	E_ExtensionSint64 = &file_extensions_ext_ext_proto_extDescs[6]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional uint64 extension_uint64 = 108; }
+	// optional uint64 extension_uint64 = 108;
 	E_ExtensionUint64 = &file_extensions_ext_ext_proto_extDescs[7]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional sfixed32 extension_sfixed32 = 109; }
+	// optional sfixed32 extension_sfixed32 = 109;
 	E_ExtensionSfixed32 = &file_extensions_ext_ext_proto_extDescs[8]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional fixed32 extension_fixed32 = 110; }
+	// optional fixed32 extension_fixed32 = 110;
 	E_ExtensionFixed32 = &file_extensions_ext_ext_proto_extDescs[9]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional float extension_float = 111; }
+	// optional float extension_float = 111;
 	E_ExtensionFloat = &file_extensions_ext_ext_proto_extDescs[10]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional sfixed64 extension_sfixed64 = 112; }
+	// optional sfixed64 extension_sfixed64 = 112;
 	E_ExtensionSfixed64 = &file_extensions_ext_ext_proto_extDescs[11]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional fixed64 extension_fixed64 = 113; }
+	// optional fixed64 extension_fixed64 = 113;
 	E_ExtensionFixed64 = &file_extensions_ext_ext_proto_extDescs[12]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional double extension_double = 114; }
+	// optional double extension_double = 114;
 	E_ExtensionDouble = &file_extensions_ext_ext_proto_extDescs[13]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional string extension_string = 115; }
+	// optional string extension_string = 115;
 	E_ExtensionString = &file_extensions_ext_ext_proto_extDescs[14]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional bytes extension_bytes = 116; }
+	// optional bytes extension_bytes = 116;
 	E_ExtensionBytes = &file_extensions_ext_ext_proto_extDescs[15]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional goproto.protoc.extension.ext.Message extension_Message = 117; }
+	// optional goproto.protoc.extension.ext.Message extension_Message = 117;
 	E_Extension_Message = &file_extensions_ext_ext_proto_extDescs[16]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional goproto.protoc.extension.ext.Message.M extension_MessageM = 118; }
+	// optional goproto.protoc.extension.ext.Message.M extension_MessageM = 118;
 	E_Extension_MessageM = &file_extensions_ext_ext_proto_extDescs[17]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional goproto.protoc.extension.ext.ExtensionGroup extensiongroup = 119; }
+	// optional goproto.protoc.extension.ext.ExtensionGroup extensiongroup = 119;
 	E_Extensiongroup = &file_extensions_ext_ext_proto_extDescs[18]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional goproto.protoc.extension.extra.ExtraMessage extra_message = 9; }
+	// optional goproto.protoc.extension.extra.ExtraMessage extra_message = 9;
 	E_ExtraMessage = &file_extensions_ext_ext_proto_extDescs[19]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated bool repeated_x_bool = 301; }
+	// repeated bool repeated_x_bool = 301;
 	E_RepeatedXBool = &file_extensions_ext_ext_proto_extDescs[20]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated goproto.protoc.extension.ext.Enum repeated_x_enum = 302; }
+	// repeated goproto.protoc.extension.ext.Enum repeated_x_enum = 302;
 	E_RepeatedXEnum = &file_extensions_ext_ext_proto_extDescs[21]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated int32 repeated_x_int32 = 303; }
+	// repeated int32 repeated_x_int32 = 303;
 	E_RepeatedXInt32 = &file_extensions_ext_ext_proto_extDescs[22]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated sint32 repeated_x_sint32 = 304; }
+	// repeated sint32 repeated_x_sint32 = 304;
 	E_RepeatedXSint32 = &file_extensions_ext_ext_proto_extDescs[23]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated uint32 repeated_x_uint32 = 305; }
+	// repeated uint32 repeated_x_uint32 = 305;
 	E_RepeatedXUint32 = &file_extensions_ext_ext_proto_extDescs[24]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated int64 repeated_x_int64 = 306; }
+	// repeated int64 repeated_x_int64 = 306;
 	E_RepeatedXInt64 = &file_extensions_ext_ext_proto_extDescs[25]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated sint64 repeated_x_sint64 = 307; }
+	// repeated sint64 repeated_x_sint64 = 307;
 	E_RepeatedXSint64 = &file_extensions_ext_ext_proto_extDescs[26]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated uint64 repeated_x_uint64 = 308; }
+	// repeated uint64 repeated_x_uint64 = 308;
 	E_RepeatedXUint64 = &file_extensions_ext_ext_proto_extDescs[27]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated sfixed32 repeated_x_sfixed32 = 309; }
+	// repeated sfixed32 repeated_x_sfixed32 = 309;
 	E_RepeatedXSfixed32 = &file_extensions_ext_ext_proto_extDescs[28]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated fixed32 repeated_x_fixed32 = 310; }
+	// repeated fixed32 repeated_x_fixed32 = 310;
 	E_RepeatedXFixed32 = &file_extensions_ext_ext_proto_extDescs[29]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated float repeated_x_float = 311; }
+	// repeated float repeated_x_float = 311;
 	E_RepeatedXFloat = &file_extensions_ext_ext_proto_extDescs[30]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated sfixed64 repeated_x_sfixed64 = 312; }
+	// repeated sfixed64 repeated_x_sfixed64 = 312;
 	E_RepeatedXSfixed64 = &file_extensions_ext_ext_proto_extDescs[31]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated fixed64 repeated_x_fixed64 = 313; }
+	// repeated fixed64 repeated_x_fixed64 = 313;
 	E_RepeatedXFixed64 = &file_extensions_ext_ext_proto_extDescs[32]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated double repeated_x_double = 314; }
+	// repeated double repeated_x_double = 314;
 	E_RepeatedXDouble = &file_extensions_ext_ext_proto_extDescs[33]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated string repeated_x_string = 315; }
+	// repeated string repeated_x_string = 315;
 	E_RepeatedXString = &file_extensions_ext_ext_proto_extDescs[34]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated bytes repeated_x_bytes = 316; }
+	// repeated bytes repeated_x_bytes = 316;
 	E_RepeatedXBytes = &file_extensions_ext_ext_proto_extDescs[35]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated goproto.protoc.extension.ext.Message repeated_x_Message = 317; }
+	// repeated goproto.protoc.extension.ext.Message repeated_x_Message = 317;
 	E_RepeatedX_Message = &file_extensions_ext_ext_proto_extDescs[36]
-
-	// extend goproto.protoc.extension.base.BaseMessage { repeated goproto.protoc.extension.ext.RepeatedGroup repeatedgroup = 318; }
+	// repeated goproto.protoc.extension.ext.RepeatedGroup repeatedgroup = 318;
 	E_Repeatedgroup = &file_extensions_ext_ext_proto_extDescs[37]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional goproto.protoc.extension.ext.Extendable extendable_field = 400; }
+	// optional goproto.protoc.extension.ext.Extendable extendable_field = 400;
 	E_ExtendableField = &file_extensions_ext_ext_proto_extDescs[38]
-
-	// extend goproto.protoc.extension.ext.Extendable { optional string extendable_string_field = 1; }
-	E_ExtendableStringField = &file_extensions_ext_ext_proto_extDescs[39]
-
-	// extend goproto.protoc.extension.base.MessageSetWireFormatMessage { optional goproto.protoc.extension.ext.MessageSetWireFormatExtension message_set_extension = 101; }
-	E_MessageSetExtension = &file_extensions_ext_ext_proto_extDescs[40]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional string extending_message_string = 200; }
+	// optional string extending_message_string = 200;
 	E_ExtendingMessage_ExtendingMessageString = &file_extensions_ext_ext_proto_extDescs[41]
-
-	// extend goproto.protoc.extension.base.BaseMessage { optional goproto.protoc.extension.ext.ExtendingMessage.ExtendingMessageSubmessage extending_message_submessage = 201; }
+	// optional goproto.protoc.extension.ext.ExtendingMessage.ExtendingMessageSubmessage extending_message_submessage = 201;
 	E_ExtendingMessage_ExtendingMessageSubmessage = &file_extensions_ext_ext_proto_extDescs[42]
+)
 
-	// extend goproto.protoc.extension.base.MessageSetWireFormatMessage { optional goproto.protoc.extension.ext.MessageSetWireFormatExtension message_set_extension = 100; }
+// Extension fields to Extendable.
+var (
+	// optional string extendable_string_field = 1;
+	E_ExtendableStringField = &file_extensions_ext_ext_proto_extDescs[39]
+)
+
+// Extension fields to base.MessageSetWireFormatMessage.
+var (
+	// optional goproto.protoc.extension.ext.MessageSetWireFormatExtension message_set_extension = 101;
+	E_MessageSetExtension = &file_extensions_ext_ext_proto_extDescs[40]
+	// optional goproto.protoc.extension.ext.MessageSetWireFormatExtension message_set_extension = 100;
 	E_MessageSetWireFormatExtension_MessageSetExtension = &file_extensions_ext_ext_proto_extDescs[43]
 )
+
 var File_extensions_ext_ext_proto protoreflect.FileDescriptor
 
 var file_extensions_ext_ext_proto_rawDesc = []byte{

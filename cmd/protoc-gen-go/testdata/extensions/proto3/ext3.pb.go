@@ -370,109 +370,79 @@ var file_extensions_proto3_ext3_proto_extDescs = []protoiface.ExtensionDescV1{
 		Filename:      "extensions/proto3/ext3.proto",
 	},
 }
+
+// Extension fields to descriptorpb.MessageOptions.
 var (
-	// extend google.protobuf.MessageOptions { optional bool extension_bool = 1001; }
+	// optional bool extension_bool = 1001;
 	E_ExtensionBool = &file_extensions_proto3_ext3_proto_extDescs[0]
-
-	// extend google.protobuf.MessageOptions { optional goproto.protoc.extension.proto3.Enum extension_enum = 1002; }
+	// optional goproto.protoc.extension.proto3.Enum extension_enum = 1002;
 	E_ExtensionEnum = &file_extensions_proto3_ext3_proto_extDescs[1]
-
-	// extend google.protobuf.MessageOptions { optional int32 extension_int32 = 1003; }
+	// optional int32 extension_int32 = 1003;
 	E_ExtensionInt32 = &file_extensions_proto3_ext3_proto_extDescs[2]
-
-	// extend google.protobuf.MessageOptions { optional sint32 extension_sint32 = 1004; }
+	// optional sint32 extension_sint32 = 1004;
 	E_ExtensionSint32 = &file_extensions_proto3_ext3_proto_extDescs[3]
-
-	// extend google.protobuf.MessageOptions { optional uint32 extension_uint32 = 1005; }
+	// optional uint32 extension_uint32 = 1005;
 	E_ExtensionUint32 = &file_extensions_proto3_ext3_proto_extDescs[4]
-
-	// extend google.protobuf.MessageOptions { optional int64 extension_int64 = 1006; }
+	// optional int64 extension_int64 = 1006;
 	E_ExtensionInt64 = &file_extensions_proto3_ext3_proto_extDescs[5]
-
-	// extend google.protobuf.MessageOptions { optional sint64 extension_sint64 = 1007; }
+	// optional sint64 extension_sint64 = 1007;
 	E_ExtensionSint64 = &file_extensions_proto3_ext3_proto_extDescs[6]
-
-	// extend google.protobuf.MessageOptions { optional uint64 extension_uint64 = 1008; }
+	// optional uint64 extension_uint64 = 1008;
 	E_ExtensionUint64 = &file_extensions_proto3_ext3_proto_extDescs[7]
-
-	// extend google.protobuf.MessageOptions { optional sfixed32 extension_sfixed32 = 1009; }
+	// optional sfixed32 extension_sfixed32 = 1009;
 	E_ExtensionSfixed32 = &file_extensions_proto3_ext3_proto_extDescs[8]
-
-	// extend google.protobuf.MessageOptions { optional fixed32 extension_fixed32 = 1010; }
+	// optional fixed32 extension_fixed32 = 1010;
 	E_ExtensionFixed32 = &file_extensions_proto3_ext3_proto_extDescs[9]
-
-	// extend google.protobuf.MessageOptions { optional float extension_float = 1011; }
+	// optional float extension_float = 1011;
 	E_ExtensionFloat = &file_extensions_proto3_ext3_proto_extDescs[10]
-
-	// extend google.protobuf.MessageOptions { optional sfixed64 extension_sfixed64 = 1012; }
+	// optional sfixed64 extension_sfixed64 = 1012;
 	E_ExtensionSfixed64 = &file_extensions_proto3_ext3_proto_extDescs[11]
-
-	// extend google.protobuf.MessageOptions { optional fixed64 extension_fixed64 = 1013; }
+	// optional fixed64 extension_fixed64 = 1013;
 	E_ExtensionFixed64 = &file_extensions_proto3_ext3_proto_extDescs[12]
-
-	// extend google.protobuf.MessageOptions { optional double extension_double = 1014; }
+	// optional double extension_double = 1014;
 	E_ExtensionDouble = &file_extensions_proto3_ext3_proto_extDescs[13]
-
-	// extend google.protobuf.MessageOptions { optional string extension_string = 1015; }
+	// optional string extension_string = 1015;
 	E_ExtensionString = &file_extensions_proto3_ext3_proto_extDescs[14]
-
-	// extend google.protobuf.MessageOptions { optional bytes extension_bytes = 1016; }
+	// optional bytes extension_bytes = 1016;
 	E_ExtensionBytes = &file_extensions_proto3_ext3_proto_extDescs[15]
-
-	// extend google.protobuf.MessageOptions { optional goproto.protoc.extension.proto3.Message extension_Message = 1017; }
+	// optional goproto.protoc.extension.proto3.Message extension_Message = 1017;
 	E_Extension_Message = &file_extensions_proto3_ext3_proto_extDescs[16]
-
-	// extend google.protobuf.MessageOptions { repeated bool repeated_extension_bool = 2001; }
+	// repeated bool repeated_extension_bool = 2001;
 	E_RepeatedExtensionBool = &file_extensions_proto3_ext3_proto_extDescs[17]
-
-	// extend google.protobuf.MessageOptions { repeated goproto.protoc.extension.proto3.Enum repeated_extension_enum = 2002; }
+	// repeated goproto.protoc.extension.proto3.Enum repeated_extension_enum = 2002;
 	E_RepeatedExtensionEnum = &file_extensions_proto3_ext3_proto_extDescs[18]
-
-	// extend google.protobuf.MessageOptions { repeated int32 repeated_extension_int32 = 2003; }
+	// repeated int32 repeated_extension_int32 = 2003;
 	E_RepeatedExtensionInt32 = &file_extensions_proto3_ext3_proto_extDescs[19]
-
-	// extend google.protobuf.MessageOptions { repeated sint32 repeated_extension_sint32 = 2004; }
+	// repeated sint32 repeated_extension_sint32 = 2004;
 	E_RepeatedExtensionSint32 = &file_extensions_proto3_ext3_proto_extDescs[20]
-
-	// extend google.protobuf.MessageOptions { repeated uint32 repeated_extension_uint32 = 2005; }
+	// repeated uint32 repeated_extension_uint32 = 2005;
 	E_RepeatedExtensionUint32 = &file_extensions_proto3_ext3_proto_extDescs[21]
-
-	// extend google.protobuf.MessageOptions { repeated int64 repeated_extension_int64 = 2006; }
+	// repeated int64 repeated_extension_int64 = 2006;
 	E_RepeatedExtensionInt64 = &file_extensions_proto3_ext3_proto_extDescs[22]
-
-	// extend google.protobuf.MessageOptions { repeated sint64 repeated_extension_sint64 = 2007; }
+	// repeated sint64 repeated_extension_sint64 = 2007;
 	E_RepeatedExtensionSint64 = &file_extensions_proto3_ext3_proto_extDescs[23]
-
-	// extend google.protobuf.MessageOptions { repeated uint64 repeated_extension_uint64 = 2008; }
+	// repeated uint64 repeated_extension_uint64 = 2008;
 	E_RepeatedExtensionUint64 = &file_extensions_proto3_ext3_proto_extDescs[24]
-
-	// extend google.protobuf.MessageOptions { repeated sfixed32 repeated_extension_sfixed32 = 2009; }
+	// repeated sfixed32 repeated_extension_sfixed32 = 2009;
 	E_RepeatedExtensionSfixed32 = &file_extensions_proto3_ext3_proto_extDescs[25]
-
-	// extend google.protobuf.MessageOptions { repeated fixed32 repeated_extension_fixed32 = 2010; }
+	// repeated fixed32 repeated_extension_fixed32 = 2010;
 	E_RepeatedExtensionFixed32 = &file_extensions_proto3_ext3_proto_extDescs[26]
-
-	// extend google.protobuf.MessageOptions { repeated float repeated_extension_float = 2011; }
+	// repeated float repeated_extension_float = 2011;
 	E_RepeatedExtensionFloat = &file_extensions_proto3_ext3_proto_extDescs[27]
-
-	// extend google.protobuf.MessageOptions { repeated sfixed64 repeated_extension_sfixed64 = 2012; }
+	// repeated sfixed64 repeated_extension_sfixed64 = 2012;
 	E_RepeatedExtensionSfixed64 = &file_extensions_proto3_ext3_proto_extDescs[28]
-
-	// extend google.protobuf.MessageOptions { repeated fixed64 repeated_extension_fixed64 = 2013; }
+	// repeated fixed64 repeated_extension_fixed64 = 2013;
 	E_RepeatedExtensionFixed64 = &file_extensions_proto3_ext3_proto_extDescs[29]
-
-	// extend google.protobuf.MessageOptions { repeated double repeated_extension_double = 2014; }
+	// repeated double repeated_extension_double = 2014;
 	E_RepeatedExtensionDouble = &file_extensions_proto3_ext3_proto_extDescs[30]
-
-	// extend google.protobuf.MessageOptions { repeated string repeated_extension_string = 2015; }
+	// repeated string repeated_extension_string = 2015;
 	E_RepeatedExtensionString = &file_extensions_proto3_ext3_proto_extDescs[31]
-
-	// extend google.protobuf.MessageOptions { repeated bytes repeated_extension_bytes = 2016; }
+	// repeated bytes repeated_extension_bytes = 2016;
 	E_RepeatedExtensionBytes = &file_extensions_proto3_ext3_proto_extDescs[32]
-
-	// extend google.protobuf.MessageOptions { repeated goproto.protoc.extension.proto3.Message repeated_extension_Message = 2017; }
+	// repeated goproto.protoc.extension.proto3.Message repeated_extension_Message = 2017;
 	E_RepeatedExtension_Message = &file_extensions_proto3_ext3_proto_extDescs[33]
 )
+
 var File_extensions_proto3_ext3_proto protoreflect.FileDescriptor
 
 var file_extensions_proto3_ext3_proto_rawDesc = []byte{

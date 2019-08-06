@@ -6035,25 +6035,23 @@ var file_datasets_google_message3_benchmark_message3_1_proto_extDescs = []protoi
 		Filename:      "datasets/google_message3/benchmark_message3_1.proto",
 	},
 }
+
+// Extension fields to Message0.
 var (
-	// extend benchmarks.google_message3.Message0 { optional benchmarks.google_message3.Message34390 field34453 = 92144610; }
+	// optional benchmarks.google_message3.Message34390 field34453 = 92144610;
 	E_Message34390_Field34453 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[0]
-
-	// extend benchmarks.google_message3.Message0 { optional benchmarks.google_message3.Message34624 field34685 = 18178548; }
+	// optional benchmarks.google_message3.Message34624 field34685 = 18178548;
 	E_Message34624_Field34685 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[1]
-
-	// extend benchmarks.google_message3.Message0 { optional benchmarks.google_message3.Message34791 field34807 = 6330340; }
+	// optional benchmarks.google_message3.Message34791 field34807 = 6330340;
 	E_Message34791_Field34807 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[2]
-
-	// extend benchmarks.google_message3.Message0 { optional benchmarks.google_message3.Message35483 field35505 = 7913554; }
+	// optional benchmarks.google_message3.Message35483 field35505 = 7913554;
 	E_Message35483_Field35505 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[3]
-
-	// extend benchmarks.google_message3.Message0 { optional benchmarks.google_message3.Message35807 field35818 = 3803299; }
+	// optional benchmarks.google_message3.Message35807 field35818 = 3803299;
 	E_Message35807_Field35818 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[4]
-
-	// extend benchmarks.google_message3.Message0 { optional benchmarks.google_message3.Message16945 field17025 = 22068132; }
+	// optional benchmarks.google_message3.Message16945 field17025 = 22068132;
 	E_Message16945_Field17025 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[5]
 )
+
 var File_datasets_google_message3_benchmark_message3_1_proto protoreflect.FileDescriptor
 
 var file_datasets_google_message3_benchmark_message3_1_proto_rawDesc = []byte{

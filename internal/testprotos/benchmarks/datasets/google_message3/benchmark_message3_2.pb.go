@@ -4303,10 +4303,13 @@ var file_datasets_google_message3_benchmark_message3_2_proto_extDescs = []protoi
 		Filename:      "datasets/google_message3/benchmark_message3_2.proto",
 	},
 }
+
+// Extension fields to Message0.
 var (
-	// extend benchmarks.google_message3.Message0 { optional benchmarks.google_message3.Message34621 field34669 = 17562023; }
+	// optional benchmarks.google_message3.Message34621 field34669 = 17562023;
 	E_Message34621_Field34669 = &file_datasets_google_message3_benchmark_message3_2_proto_extDescs[0]
 )
+
 var File_datasets_google_message3_benchmark_message3_2_proto protoreflect.FileDescriptor
 
 var file_datasets_google_message3_benchmark_message3_2_proto_rawDesc = []byte{
