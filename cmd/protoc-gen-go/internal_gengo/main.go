@@ -77,7 +77,6 @@ var (
 	protoifacePackage   goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoiface")
 	protoimplPackage    goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoimpl")
 	protoreflectPackage goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
-	prototypePackage    goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/prototype")
 )
 
 type goImportPath interface {

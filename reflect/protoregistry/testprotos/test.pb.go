@@ -11,7 +11,6 @@ package testprotos
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -45,7 +44,7 @@ func (x Enum1) String() string {
 }
 
 func (Enum1) Descriptor() protoreflect.EnumDescriptor {
-	return file_test_proto_enumTypes[0].EnumDescriptor
+	return file_test_proto_enumTypes[0].Descriptor()
 }
 
 func (Enum1) Type() protoreflect.EnumType {
@@ -98,7 +97,7 @@ func (x Enum2) String() string {
 }
 
 func (Enum2) Descriptor() protoreflect.EnumDescriptor {
-	return file_test_proto_enumTypes[1].EnumDescriptor
+	return file_test_proto_enumTypes[1].Descriptor()
 }
 
 func (Enum2) Type() protoreflect.EnumType {
@@ -151,7 +150,7 @@ func (x Enum3) String() string {
 }
 
 func (Enum3) Descriptor() protoreflect.EnumDescriptor {
-	return file_test_proto_enumTypes[2].EnumDescriptor
+	return file_test_proto_enumTypes[2].Descriptor()
 }
 
 func (Enum3) Type() protoreflect.EnumType {
@@ -453,7 +452,7 @@ func file_test_proto_rawDescGZIP() []byte {
 	return file_test_proto_rawDescData
 }
 
-var file_test_proto_enumTypes = make([]prototype.Enum, 3)
+var file_test_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_test_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_test_proto_goTypes = []interface{}{
 	(Enum1)(0),       // 0: testprotos.Enum1
@@ -551,11 +550,11 @@ func file_test_proto_init() {
 		},
 		GoTypes:           file_test_proto_goTypes,
 		DependencyIndexes: file_test_proto_depIdxs,
+		EnumInfos:         file_test_proto_enumTypes,
 		MessageInfos:      file_test_proto_msgTypes,
 		LegacyExtensions:  file_test_proto_extDescs,
 	}.Build()
 	File_test_proto = out.File
-	file_test_proto_enumTypes = out.Enums
 	file_test_proto_rawDesc = nil
 	file_test_proto_goTypes = nil
 	file_test_proto_depIdxs = nil

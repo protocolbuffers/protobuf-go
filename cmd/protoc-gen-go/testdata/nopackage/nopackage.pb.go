@@ -9,7 +9,6 @@ package nopackage
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -42,7 +41,7 @@ func (x Enum) String() string {
 }
 
 func (Enum) Descriptor() protoreflect.EnumDescriptor {
-	return file_nopackage_nopackage_proto_enumTypes[0].EnumDescriptor
+	return file_nopackage_nopackage_proto_enumTypes[0].Descriptor()
 }
 
 func (Enum) Type() protoreflect.EnumType {
@@ -149,7 +148,7 @@ func file_nopackage_nopackage_proto_rawDescGZIP() []byte {
 	return file_nopackage_nopackage_proto_rawDescData
 }
 
-var file_nopackage_nopackage_proto_enumTypes = make([]prototype.Enum, 1)
+var file_nopackage_nopackage_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_nopackage_nopackage_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_nopackage_nopackage_proto_goTypes = []interface{}{
 	(Enum)(0),       // 0: Enum
@@ -195,10 +194,10 @@ func file_nopackage_nopackage_proto_init() {
 		},
 		GoTypes:           file_nopackage_nopackage_proto_goTypes,
 		DependencyIndexes: file_nopackage_nopackage_proto_depIdxs,
+		EnumInfos:         file_nopackage_nopackage_proto_enumTypes,
 		MessageInfos:      file_nopackage_nopackage_proto_msgTypes,
 	}.Build()
 	File_nopackage_nopackage_proto = out.File
-	file_nopackage_nopackage_proto_enumTypes = out.Enums
 	file_nopackage_nopackage_proto_rawDesc = nil
 	file_nopackage_nopackage_proto_goTypes = nil
 	file_nopackage_nopackage_proto_depIdxs = nil

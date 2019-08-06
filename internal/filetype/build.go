@@ -99,6 +99,9 @@ type Builder struct {
 	// Requirement: len(MessageInfos) == len(Build.Messages)
 	MessageInfos []pimpl.MessageInfo
 
+	// EnumInfos is a list of enum infos in "flattened ordering".
+	EnumInfos []EnumInfo
+
 	// LegacyExtensions is a list of legacy extensions in "flattened ordering".
 	// If provided, the pointer to the v1 ExtensionDesc will be stored into the
 	// associated v2 ExtensionType and accessible via a pseudo-internal API.
@@ -116,14 +119,6 @@ type Builder struct {
 
 func (tb Builder) Build() (out struct {
 	File pref.FileDescriptor
-
-	// Enums is all enum types in "flattened ordering".
-	Enums []Enum
-	// Messages is all message types in "flattened ordering".
-	// It includes a stub message type for map entries.
-	Messages []Message
-	// Extensions is all extension types in "flattened ordering".
-	Extensions []Extension
 }) {
 	// Replace the resolver with one that resolves dependencies by index,
 	// which is faster and more reliable than relying on the global registry.
@@ -146,16 +141,17 @@ func (tb Builder) Build() (out struct {
 
 	// Process enums.
 	enumGoTypes := tb.GoTypes[:len(fbOut.Enums)]
+	if len(tb.EnumInfos) != len(fbOut.Enums) {
+		panic("mismatching enum lengths")
+	}
 	if len(fbOut.Enums) > 0 {
-		out.Enums = make([]Enum, len(fbOut.Enums))
 		for i := range fbOut.Enums {
-			out.Enums[i] = Enum{
-				EnumDescriptor: &fbOut.Enums[i],
-				NewEnum:        enumMaker(reflect.TypeOf(enumGoTypes[i])),
+			tb.EnumInfos[i] = EnumInfo{
+				desc:   &fbOut.Enums[i],
+				goType: reflect.TypeOf(enumGoTypes[i]),
 			}
-
 			// Register enum types.
-			if err := tb.TypeRegistry.Register(&out.Enums[i]); err != nil {
+			if err := tb.TypeRegistry.Register(&tb.EnumInfos[i]); err != nil {
 				panic(err)
 			}
 		}
@@ -167,23 +163,23 @@ func (tb Builder) Build() (out struct {
 		panic("mismatching message lengths")
 	}
 	if len(fbOut.Messages) > 0 {
-		out.Messages = make([]Message, len(fbOut.Messages))
+		messages := make([]Message, len(fbOut.Messages))
 		for i := range fbOut.Messages {
 			if messageGoTypes[i] == nil {
 				continue // skip map entry
 			}
-			out.Messages[i] = Message{
+			messages[i] = Message{
 				MessageDescriptor: &fbOut.Messages[i],
 				NewMessage:        messageMaker(reflect.TypeOf(messageGoTypes[i])),
 			}
 
 			if tb.MessageInfos != nil {
 				tb.MessageInfos[i].GoType = reflect.TypeOf(messageGoTypes[i])
-				tb.MessageInfos[i].PBType = &out.Messages[i]
+				tb.MessageInfos[i].PBType = &messages[i]
 			}
 
 			// Register message types.
-			if err := tb.TypeRegistry.Register(&out.Messages[i]); err != nil {
+			if err := tb.TypeRegistry.Register(&messages[i]); err != nil {
 				panic(err)
 			}
 		}
@@ -222,7 +218,7 @@ func (tb Builder) Build() (out struct {
 	}
 	if len(fbOut.Extensions) > 0 {
 		var depIdx int32
-		out.Extensions = make([]Extension, len(fbOut.Extensions))
+		extensions := make([]Extension, len(fbOut.Extensions))
 		for i := range fbOut.Extensions {
 			// For enum and message kinds, determine the referent Go type so
 			// that we can construct their constructors.
@@ -241,19 +237,23 @@ func (tb Builder) Build() (out struct {
 				goType = goTypeForPBKind[fbOut.Extensions[i].L1.Kind]
 			}
 
-			out.Extensions[i] = Extension{
+			extensions[i] = Extension{
+				desc:   &fbOut.Extensions[i],
+				goType: goType,
+			}
+			extensions[i].tdesc = extensionTypeDescriptor{
 				ExtensionDescriptor: &fbOut.Extensions[i],
-				goType:              goType,
+				typ:                 &extensions[i],
 			}
 
 			// Keep v1 and v2 extensions in sync.
 			if tb.LegacyExtensions != nil {
-				out.Extensions[i].legacyDesc = &tb.LegacyExtensions[i]
-				tb.LegacyExtensions[i].Type = &out.Extensions[i]
+				extensions[i].legacyDesc = &tb.LegacyExtensions[i]
+				tb.LegacyExtensions[i].Type = &extensions[i]
 			}
 
 			// Register extension types.
-			if err := tb.TypeRegistry.Register(&out.Extensions[i]); err != nil {
+			if err := tb.TypeRegistry.Register(&extensions[i]); err != nil {
 				panic(err)
 			}
 		}
@@ -316,13 +316,18 @@ func (r *resolverByIndex) FindMessageByIndex(i, j int32, es []fdesc.Enum, ms []f
 	}
 }
 
-func enumMaker(t reflect.Type) func(pref.EnumNumber) pref.Enum {
-	return func(n pref.EnumNumber) pref.Enum {
-		v := reflect.New(t).Elem()
-		v.SetInt(int64(n))
-		return v.Interface().(pref.Enum)
-	}
+type EnumInfo struct {
+	desc   pref.EnumDescriptor
+	goType reflect.Type
 }
+
+func (t *EnumInfo) New(n pref.EnumNumber) pref.Enum {
+	v := reflect.New(t.goType)
+	v.SetInt(int64(n))
+	return v.Interface().(pref.Enum)
+}
+func (t *EnumInfo) GoType() reflect.Type            { return t.goType }
+func (t *EnumInfo) Descriptor() pref.EnumDescriptor { return t.desc }
 
 func messageMaker(t reflect.Type) func() pref.Message {
 	return func() pref.Message {
@@ -331,12 +336,12 @@ func messageMaker(t reflect.Type) func() pref.Message {
 }
 
 type (
-	Enum    = ptype.Enum
 	Message = ptype.Message
 )
 
 type Extension struct {
-	pref.ExtensionDescriptor
+	desc       pref.ExtensionDescriptor
+	tdesc      extensionTypeDescriptor
 	legacyDesc *piface.ExtensionDescV1
 
 	once   sync.Once
@@ -356,7 +361,7 @@ func (t *Extension) GoType() reflect.Type {
 	t.lazyInit()
 	return t.goType
 }
-func (t *Extension) Descriptor() pref.ExtensionTypeDescriptor { return (*extDesc)(t) }
+func (t *Extension) Descriptor() pref.ExtensionTypeDescriptor { return &t.tdesc }
 
 // ProtoLegacyExtensionDesc is a pseudo-internal API for allowing the v1 code
 // to be able to retrieve a v1 ExtensionDesc.
@@ -369,15 +374,18 @@ func (x *Extension) ProtoLegacyExtensionDesc() *piface.ExtensionDescV1 {
 
 func (t *Extension) lazyInit() pimpl.Converter {
 	t.once.Do(func() {
-		if t.ExtensionDescriptor.Cardinality() == pref.Repeated {
+		if t.desc.Cardinality() == pref.Repeated {
 			t.goType = reflect.PtrTo(reflect.SliceOf(t.goType))
 		}
-		t.conv = pimpl.NewConverter(t.goType, t.ExtensionDescriptor)
+		t.conv = pimpl.NewConverter(t.goType, t.desc)
 	})
 	return t.conv
 }
 
-type extDesc Extension
+type extensionTypeDescriptor struct {
+	pref.ExtensionDescriptor
+	typ pref.ExtensionType
+}
 
-func (t *extDesc) Type() pref.ExtensionType             { return (*Extension)(t) }
-func (t *extDesc) Descriptor() pref.ExtensionDescriptor { return t.ExtensionDescriptor }
+func (t *extensionTypeDescriptor) Type() pref.ExtensionType             { return t.typ }
+func (t *extensionTypeDescriptor) Descriptor() pref.ExtensionDescriptor { return t.ExtensionDescriptor }

@@ -9,7 +9,6 @@ package comments
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -44,7 +43,7 @@ func (x DeprecatedEnum) String() string {
 }
 
 func (DeprecatedEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_comments_deprecated_proto_enumTypes[0].EnumDescriptor
+	return file_comments_deprecated_proto_enumTypes[0].Descriptor()
 }
 
 func (DeprecatedEnum) Type() protoreflect.EnumType {
@@ -138,7 +137,7 @@ func file_comments_deprecated_proto_rawDescGZIP() []byte {
 	return file_comments_deprecated_proto_rawDescData
 }
 
-var file_comments_deprecated_proto_enumTypes = make([]prototype.Enum, 1)
+var file_comments_deprecated_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_comments_deprecated_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_comments_deprecated_proto_goTypes = []interface{}{
 	(DeprecatedEnum)(0),       // 0: goproto.protoc.comments.DeprecatedEnum
@@ -183,10 +182,10 @@ func file_comments_deprecated_proto_init() {
 		},
 		GoTypes:           file_comments_deprecated_proto_goTypes,
 		DependencyIndexes: file_comments_deprecated_proto_depIdxs,
+		EnumInfos:         file_comments_deprecated_proto_enumTypes,
 		MessageInfos:      file_comments_deprecated_proto_msgTypes,
 	}.Build()
 	File_comments_deprecated_proto = out.File
-	file_comments_deprecated_proto_enumTypes = out.Enums
 	file_comments_deprecated_proto_rawDesc = nil
 	file_comments_deprecated_proto_goTypes = nil
 	file_comments_deprecated_proto_depIdxs = nil

@@ -9,7 +9,6 @@ package proto3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -48,7 +47,7 @@ func (x Enum) String() string {
 }
 
 func (Enum) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto3_enum_proto_enumTypes[0].EnumDescriptor
+	return file_proto3_enum_proto_enumTypes[0].Descriptor()
 }
 
 func (Enum) Type() protoreflect.EnumType {
@@ -91,7 +90,7 @@ func file_proto3_enum_proto_rawDescGZIP() []byte {
 	return file_proto3_enum_proto_rawDescData
 }
 
-var file_proto3_enum_proto_enumTypes = make([]prototype.Enum, 1)
+var file_proto3_enum_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_proto3_enum_proto_goTypes = []interface{}{
 	(Enum)(0), // 0: goproto.protoc.proto3.Enum
 }
@@ -120,9 +119,9 @@ func file_proto3_enum_proto_init() {
 		},
 		GoTypes:           file_proto3_enum_proto_goTypes,
 		DependencyIndexes: file_proto3_enum_proto_depIdxs,
+		EnumInfos:         file_proto3_enum_proto_enumTypes,
 	}.Build()
 	File_proto3_enum_proto = out.File
-	file_proto3_enum_proto_enumTypes = out.Enums
 	file_proto3_enum_proto_rawDesc = nil
 	file_proto3_enum_proto_goTypes = nil
 	file_proto3_enum_proto_depIdxs = nil

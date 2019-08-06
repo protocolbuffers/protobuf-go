@@ -42,7 +42,6 @@ package conformance
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
@@ -87,7 +86,7 @@ func (x ForeignEnum) String() string {
 }
 
 func (ForeignEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_test_messages_proto3_proto_enumTypes[0].EnumDescriptor
+	return file_google_protobuf_test_messages_proto3_proto_enumTypes[0].Descriptor()
 }
 
 func (ForeignEnum) Type() protoreflect.EnumType {
@@ -139,7 +138,7 @@ func (x TestAllTypesProto3_NestedEnum) String() string {
 }
 
 func (TestAllTypesProto3_NestedEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_test_messages_proto3_proto_enumTypes[1].EnumDescriptor
+	return file_google_protobuf_test_messages_proto3_proto_enumTypes[1].Descriptor()
 }
 
 func (TestAllTypesProto3_NestedEnum) Type() protoreflect.EnumType {
@@ -197,7 +196,7 @@ func (x TestAllTypesProto3_AliasedEnum) String() string {
 }
 
 func (TestAllTypesProto3_AliasedEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_test_messages_proto3_proto_enumTypes[2].EnumDescriptor
+	return file_google_protobuf_test_messages_proto3_proto_enumTypes[2].Descriptor()
 }
 
 func (TestAllTypesProto3_AliasedEnum) Type() protoreflect.EnumType {
@@ -2071,7 +2070,7 @@ func file_google_protobuf_test_messages_proto3_proto_rawDescGZIP() []byte {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescData
 }
 
-var file_google_protobuf_test_messages_proto3_proto_enumTypes = make([]prototype.Enum, 3)
+var file_google_protobuf_test_messages_proto3_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_google_protobuf_test_messages_proto3_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_google_protobuf_test_messages_proto3_proto_goTypes = []interface{}{
 	(ForeignEnum)(0),                         // 0: protobuf_test_messages.proto3.ForeignEnum
@@ -2257,10 +2256,10 @@ func file_google_protobuf_test_messages_proto3_proto_init() {
 		},
 		GoTypes:           file_google_protobuf_test_messages_proto3_proto_goTypes,
 		DependencyIndexes: file_google_protobuf_test_messages_proto3_proto_depIdxs,
+		EnumInfos:         file_google_protobuf_test_messages_proto3_proto_enumTypes,
 		MessageInfos:      file_google_protobuf_test_messages_proto3_proto_msgTypes,
 	}.Build()
 	File_google_protobuf_test_messages_proto3_proto = out.File
-	file_google_protobuf_test_messages_proto3_proto_enumTypes = out.Enums
 	file_google_protobuf_test_messages_proto3_proto_rawDesc = nil
 	file_google_protobuf_test_messages_proto3_proto_goTypes = nil
 	file_google_protobuf_test_messages_proto3_proto_depIdxs = nil

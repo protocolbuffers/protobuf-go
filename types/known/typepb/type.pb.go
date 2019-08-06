@@ -35,7 +35,6 @@ package typepb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	sourcecontextpb "google.golang.org/protobuf/types/known/sourcecontextpb"
@@ -76,7 +75,7 @@ func (x Syntax) String() string {
 }
 
 func (Syntax) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_type_proto_enumTypes[0].EnumDescriptor
+	return file_google_protobuf_type_proto_enumTypes[0].Descriptor()
 }
 
 func (Syntax) Type() protoreflect.EnumType {
@@ -193,7 +192,7 @@ func (x Field_Kind) String() string {
 }
 
 func (Field_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_type_proto_enumTypes[1].EnumDescriptor
+	return file_google_protobuf_type_proto_enumTypes[1].Descriptor()
 }
 
 func (Field_Kind) Type() protoreflect.EnumType {
@@ -250,7 +249,7 @@ func (x Field_Cardinality) String() string {
 }
 
 func (Field_Cardinality) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_type_proto_enumTypes[2].EnumDescriptor
+	return file_google_protobuf_type_proto_enumTypes[2].Descriptor()
 }
 
 func (Field_Cardinality) Type() protoreflect.EnumType {
@@ -816,7 +815,7 @@ func file_google_protobuf_type_proto_rawDescGZIP() []byte {
 	return file_google_protobuf_type_proto_rawDescData
 }
 
-var file_google_protobuf_type_proto_enumTypes = make([]prototype.Enum, 3)
+var file_google_protobuf_type_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_google_protobuf_type_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_google_protobuf_type_proto_goTypes = []interface{}{
 	(Syntax)(0),                           // 0: google.protobuf.Syntax
@@ -930,10 +929,10 @@ func file_google_protobuf_type_proto_init() {
 		},
 		GoTypes:           file_google_protobuf_type_proto_goTypes,
 		DependencyIndexes: file_google_protobuf_type_proto_depIdxs,
+		EnumInfos:         file_google_protobuf_type_proto_enumTypes,
 		MessageInfos:      file_google_protobuf_type_proto_msgTypes,
 	}.Build()
 	File_google_protobuf_type_proto = out.File
-	file_google_protobuf_type_proto_enumTypes = out.Enums
 	file_google_protobuf_type_proto_rawDesc = nil
 	file_google_protobuf_type_proto_goTypes = nil
 	file_google_protobuf_type_proto_depIdxs = nil

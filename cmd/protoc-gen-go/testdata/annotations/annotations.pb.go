@@ -9,7 +9,6 @@ package annotations
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -42,7 +41,7 @@ func (x AnnotationsTestEnum) String() string {
 }
 
 func (AnnotationsTestEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_annotations_annotations_proto_enumTypes[0].EnumDescriptor
+	return file_annotations_annotations_proto_enumTypes[0].Descriptor()
 }
 
 func (AnnotationsTestEnum) Type() protoreflect.EnumType {
@@ -144,7 +143,7 @@ func file_annotations_annotations_proto_rawDescGZIP() []byte {
 	return file_annotations_annotations_proto_rawDescData
 }
 
-var file_annotations_annotations_proto_enumTypes = make([]prototype.Enum, 1)
+var file_annotations_annotations_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_annotations_annotations_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_annotations_annotations_proto_goTypes = []interface{}{
 	(AnnotationsTestEnum)(0),       // 0: goproto.protoc.annotations.AnnotationsTestEnum
@@ -189,10 +188,10 @@ func file_annotations_annotations_proto_init() {
 		},
 		GoTypes:           file_annotations_annotations_proto_goTypes,
 		DependencyIndexes: file_annotations_annotations_proto_depIdxs,
+		EnumInfos:         file_annotations_annotations_proto_enumTypes,
 		MessageInfos:      file_annotations_annotations_proto_msgTypes,
 	}.Build()
 	File_annotations_annotations_proto = out.File
-	file_annotations_annotations_proto_enumTypes = out.Enums
 	file_annotations_annotations_proto_rawDesc = nil
 	file_annotations_annotations_proto_goTypes = nil
 	file_annotations_annotations_proto_depIdxs = nil

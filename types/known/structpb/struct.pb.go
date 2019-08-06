@@ -35,7 +35,6 @@ package structpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -73,7 +72,7 @@ func (x NullValue) String() string {
 }
 
 func (NullValue) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_struct_proto_enumTypes[0].EnumDescriptor
+	return file_google_protobuf_struct_proto_enumTypes[0].Descriptor()
 }
 
 func (NullValue) Type() protoreflect.EnumType {
@@ -395,7 +394,7 @@ func file_google_protobuf_struct_proto_rawDescGZIP() []byte {
 	return file_google_protobuf_struct_proto_rawDescData
 }
 
-var file_google_protobuf_struct_proto_enumTypes = make([]prototype.Enum, 1)
+var file_google_protobuf_struct_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_google_protobuf_struct_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_google_protobuf_struct_proto_goTypes = []interface{}{
 	(NullValue)(0),    // 0: google.protobuf.NullValue
@@ -481,10 +480,10 @@ func file_google_protobuf_struct_proto_init() {
 		},
 		GoTypes:           file_google_protobuf_struct_proto_goTypes,
 		DependencyIndexes: file_google_protobuf_struct_proto_depIdxs,
+		EnumInfos:         file_google_protobuf_struct_proto_enumTypes,
 		MessageInfos:      file_google_protobuf_struct_proto_msgTypes,
 	}.Build()
 	File_google_protobuf_struct_proto = out.File
-	file_google_protobuf_struct_proto_enumTypes = out.Enums
 	file_google_protobuf_struct_proto_rawDesc = nil
 	file_google_protobuf_struct_proto_goTypes = nil
 	file_google_protobuf_struct_proto_depIdxs = nil

@@ -9,7 +9,6 @@ package test
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -42,7 +41,7 @@ func (x ImportEnum) String() string {
 }
 
 func (ImportEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_test_test_import_proto_enumTypes[0].EnumDescriptor
+	return file_test_test_import_proto_enumTypes[0].Descriptor()
 }
 
 func (ImportEnum) Type() protoreflect.EnumType {
@@ -128,7 +127,7 @@ func file_test_test_import_proto_rawDescGZIP() []byte {
 	return file_test_test_import_proto_rawDescData
 }
 
-var file_test_test_import_proto_enumTypes = make([]prototype.Enum, 1)
+var file_test_test_import_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_test_test_import_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_test_test_import_proto_goTypes = []interface{}{
 	(ImportEnum)(0),       // 0: goproto.proto.test.ImportEnum
@@ -173,10 +172,10 @@ func file_test_test_import_proto_init() {
 		},
 		GoTypes:           file_test_test_import_proto_goTypes,
 		DependencyIndexes: file_test_test_import_proto_depIdxs,
+		EnumInfos:         file_test_test_import_proto_enumTypes,
 		MessageInfos:      file_test_test_import_proto_msgTypes,
 	}.Build()
 	File_test_test_import_proto = out.File
-	file_test_test_import_proto_enumTypes = out.Enums
 	file_test_test_import_proto_rawDesc = nil
 	file_test_test_import_proto_goTypes = nil
 	file_test_test_import_proto_depIdxs = nil

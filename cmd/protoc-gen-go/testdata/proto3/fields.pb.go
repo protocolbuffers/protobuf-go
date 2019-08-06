@@ -9,7 +9,6 @@ package proto3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -42,7 +41,7 @@ func (x FieldTestMessage_Enum) String() string {
 }
 
 func (FieldTestMessage_Enum) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto3_fields_proto_enumTypes[0].EnumDescriptor
+	return file_proto3_fields_proto_enumTypes[0].Descriptor()
 }
 
 func (FieldTestMessage_Enum) Type() protoreflect.EnumType {
@@ -587,7 +586,7 @@ func file_proto3_fields_proto_rawDescGZIP() []byte {
 	return file_proto3_fields_proto_rawDescData
 }
 
-var file_proto3_fields_proto_enumTypes = make([]prototype.Enum, 1)
+var file_proto3_fields_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_proto3_fields_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto3_fields_proto_goTypes = []interface{}{
 	(FieldTestMessage_Enum)(0),       // 0: goproto.protoc.proto3.FieldTestMessage.Enum
@@ -657,10 +656,10 @@ func file_proto3_fields_proto_init() {
 		},
 		GoTypes:           file_proto3_fields_proto_goTypes,
 		DependencyIndexes: file_proto3_fields_proto_depIdxs,
+		EnumInfos:         file_proto3_fields_proto_enumTypes,
 		MessageInfos:      file_proto3_fields_proto_msgTypes,
 	}.Build()
 	File_proto3_fields_proto = out.File
-	file_proto3_fields_proto_enumTypes = out.Enums
 	file_proto3_fields_proto_rawDesc = nil
 	file_proto3_fields_proto_goTypes = nil
 	file_proto3_fields_proto_depIdxs = nil

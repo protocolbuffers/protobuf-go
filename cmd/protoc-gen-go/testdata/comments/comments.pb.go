@@ -11,7 +11,6 @@ package comments
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -51,7 +50,7 @@ func (x Enum1) String() string {
 }
 
 func (Enum1) Descriptor() protoreflect.EnumDescriptor {
-	return file_comments_comments_proto_enumTypes[0].EnumDescriptor
+	return file_comments_comments_proto_enumTypes[0].Descriptor()
 }
 
 func (Enum1) Type() protoreflect.EnumType {
@@ -393,7 +392,7 @@ func file_comments_comments_proto_rawDescGZIP() []byte {
 	return file_comments_comments_proto_rawDescData
 }
 
-var file_comments_comments_proto_enumTypes = make([]prototype.Enum, 1)
+var file_comments_comments_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_comments_comments_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_comments_comments_proto_goTypes = []interface{}{
 	(Enum1)(0),                 // 0: goproto.protoc.comments.Enum1
@@ -510,11 +509,11 @@ func file_comments_comments_proto_init() {
 		},
 		GoTypes:           file_comments_comments_proto_goTypes,
 		DependencyIndexes: file_comments_comments_proto_depIdxs,
+		EnumInfos:         file_comments_comments_proto_enumTypes,
 		MessageInfos:      file_comments_comments_proto_msgTypes,
 		LegacyExtensions:  file_comments_comments_proto_extDescs,
 	}.Build()
 	File_comments_comments_proto = out.File
-	file_comments_comments_proto_enumTypes = out.Enums
 	file_comments_comments_proto_rawDesc = nil
 	file_comments_comments_proto_goTypes = nil
 	file_comments_comments_proto_depIdxs = nil

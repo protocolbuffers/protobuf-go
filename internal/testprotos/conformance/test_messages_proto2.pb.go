@@ -40,7 +40,6 @@ package conformance
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -80,7 +79,7 @@ func (x ForeignEnumProto2) String() string {
 }
 
 func (ForeignEnumProto2) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_test_messages_proto2_proto_enumTypes[0].EnumDescriptor
+	return file_google_protobuf_test_messages_proto2_proto_enumTypes[0].Descriptor()
 }
 
 func (ForeignEnumProto2) Type() protoreflect.EnumType {
@@ -142,7 +141,7 @@ func (x TestAllTypesProto2_NestedEnum) String() string {
 }
 
 func (TestAllTypesProto2_NestedEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_google_protobuf_test_messages_proto2_proto_enumTypes[1].EnumDescriptor
+	return file_google_protobuf_test_messages_proto2_proto_enumTypes[1].Descriptor()
 }
 
 func (TestAllTypesProto2_NestedEnum) Type() protoreflect.EnumType {
@@ -1881,7 +1880,7 @@ func file_google_protobuf_test_messages_proto2_proto_rawDescGZIP() []byte {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescData
 }
 
-var file_google_protobuf_test_messages_proto2_proto_enumTypes = make([]prototype.Enum, 2)
+var file_google_protobuf_test_messages_proto2_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_google_protobuf_test_messages_proto2_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_google_protobuf_test_messages_proto2_proto_goTypes = []interface{}{
 	(ForeignEnumProto2)(0),                   // 0: protobuf_test_messages.proto2.ForeignEnumProto2
@@ -2080,11 +2079,11 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		},
 		GoTypes:           file_google_protobuf_test_messages_proto2_proto_goTypes,
 		DependencyIndexes: file_google_protobuf_test_messages_proto2_proto_depIdxs,
+		EnumInfos:         file_google_protobuf_test_messages_proto2_proto_enumTypes,
 		MessageInfos:      file_google_protobuf_test_messages_proto2_proto_msgTypes,
 		LegacyExtensions:  file_google_protobuf_test_messages_proto2_proto_extDescs,
 	}.Build()
 	File_google_protobuf_test_messages_proto2_proto = out.File
-	file_google_protobuf_test_messages_proto2_proto_enumTypes = out.Enums
 	file_google_protobuf_test_messages_proto2_proto_rawDesc = nil
 	file_google_protobuf_test_messages_proto2_proto_goTypes = nil
 	file_google_protobuf_test_messages_proto2_proto_depIdxs = nil

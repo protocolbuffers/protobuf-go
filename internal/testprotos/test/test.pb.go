@@ -9,7 +9,6 @@ package test
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -49,7 +48,7 @@ func (x ForeignEnum) String() string {
 }
 
 func (ForeignEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_test_test_proto_enumTypes[0].EnumDescriptor
+	return file_test_test_proto_enumTypes[0].Descriptor()
 }
 
 func (ForeignEnum) Type() protoreflect.EnumType {
@@ -102,7 +101,7 @@ func (x TestReservedEnumFields) String() string {
 }
 
 func (TestReservedEnumFields) Descriptor() protoreflect.EnumDescriptor {
-	return file_test_test_proto_enumTypes[1].EnumDescriptor
+	return file_test_test_proto_enumTypes[1].Descriptor()
 }
 
 func (TestReservedEnumFields) Type() protoreflect.EnumType {
@@ -164,7 +163,7 @@ func (x TestAllTypes_NestedEnum) String() string {
 }
 
 func (TestAllTypes_NestedEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_test_test_proto_enumTypes[2].EnumDescriptor
+	return file_test_test_proto_enumTypes[2].Descriptor()
 }
 
 func (TestAllTypes_NestedEnum) Type() protoreflect.EnumType {
@@ -219,7 +218,7 @@ func (x TestDeprecatedMessage_DeprecatedEnum) String() string {
 }
 
 func (TestDeprecatedMessage_DeprecatedEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_test_test_proto_enumTypes[3].EnumDescriptor
+	return file_test_test_proto_enumTypes[3].Descriptor()
 }
 
 func (TestDeprecatedMessage_DeprecatedEnum) Type() protoreflect.EnumType {
@@ -4360,7 +4359,7 @@ func file_test_test_proto_rawDescGZIP() []byte {
 	return file_test_test_proto_rawDescData
 }
 
-var file_test_test_proto_enumTypes = make([]prototype.Enum, 4)
+var file_test_test_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_test_test_proto_msgTypes = make([]protoimpl.MessageInfo, 41)
 var file_test_test_proto_goTypes = []interface{}{
 	(ForeignEnum)(0),                          // 0: goproto.proto.test.ForeignEnum
@@ -4884,11 +4883,11 @@ func file_test_test_proto_init() {
 		},
 		GoTypes:           file_test_test_proto_goTypes,
 		DependencyIndexes: file_test_test_proto_depIdxs,
+		EnumInfos:         file_test_test_proto_enumTypes,
 		MessageInfos:      file_test_test_proto_msgTypes,
 		LegacyExtensions:  file_test_test_proto_extDescs,
 	}.Build()
 	File_test_test_proto = out.File
-	file_test_test_proto_enumTypes = out.Enums
 	file_test_test_proto_rawDesc = nil
 	file_test_test_proto_goTypes = nil
 	file_test_test_proto_depIdxs = nil

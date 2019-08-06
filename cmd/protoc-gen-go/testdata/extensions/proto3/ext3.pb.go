@@ -9,7 +9,6 @@ package proto3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
@@ -44,7 +43,7 @@ func (x Enum) String() string {
 }
 
 func (Enum) Descriptor() protoreflect.EnumDescriptor {
-	return file_extensions_proto3_ext3_proto_enumTypes[0].EnumDescriptor
+	return file_extensions_proto3_ext3_proto_enumTypes[0].Descriptor()
 }
 
 func (Enum) Type() protoreflect.EnumType {
@@ -662,7 +661,7 @@ func file_extensions_proto3_ext3_proto_rawDescGZIP() []byte {
 	return file_extensions_proto3_ext3_proto_rawDescData
 }
 
-var file_extensions_proto3_ext3_proto_enumTypes = make([]prototype.Enum, 1)
+var file_extensions_proto3_ext3_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_extensions_proto3_ext3_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_extensions_proto3_ext3_proto_goTypes = []interface{}{
 	(Enum)(0),                           // 0: goproto.protoc.extension.proto3.Enum
@@ -746,11 +745,11 @@ func file_extensions_proto3_ext3_proto_init() {
 		},
 		GoTypes:           file_extensions_proto3_ext3_proto_goTypes,
 		DependencyIndexes: file_extensions_proto3_ext3_proto_depIdxs,
+		EnumInfos:         file_extensions_proto3_ext3_proto_enumTypes,
 		MessageInfos:      file_extensions_proto3_ext3_proto_msgTypes,
 		LegacyExtensions:  file_extensions_proto3_ext3_proto_extDescs,
 	}.Build()
 	File_extensions_proto3_ext3_proto = out.File
-	file_extensions_proto3_ext3_proto_enumTypes = out.Enums
 	file_extensions_proto3_ext3_proto_rawDesc = nil
 	file_extensions_proto3_ext3_proto_goTypes = nil
 	file_extensions_proto3_ext3_proto_depIdxs = nil

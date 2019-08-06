@@ -23,7 +23,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 
 	genFileDescriptor(gen, g, f)
 	if len(f.allEnums) > 0 {
-		g.P("var ", enumTypesVarName(f), " = make([]", prototypePackage.Ident("Enum"), ",", len(f.allEnums), ")")
+		g.P("var ", enumTypesVarName(f), " = make([]", protoimplPackage.Ident("EnumInfo"), ",", len(f.allEnums), ")")
 	}
 	if len(f.allMessages) > 0 {
 		g.P("var ", messageTypesVarName(f), " = make([]", protoimplPackage.Ident("MessageInfo"), ",", len(f.allMessages), ")")
@@ -205,6 +205,9 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	g.P("},")
 	g.P("GoTypes: ", goTypesVarName(f), ",")
 	g.P("DependencyIndexes: ", depIdxsVarName(f), ",")
+	if len(f.allEnums) > 0 {
+		g.P("EnumInfos: ", enumTypesVarName(f), ",")
+	}
 	if len(f.allMessages) > 0 {
 		g.P("MessageInfos: ", messageTypesVarName(f), ",")
 	}
@@ -213,9 +216,6 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	}
 	g.P("}.Build()")
 	g.P(f.GoDescriptorIdent, " = out.File")
-	if len(f.allEnums) > 0 {
-		g.P(enumTypesVarName(f), " = out.Enums")
-	}
 
 	// Set inputs to nil to allow GC to reclaim resources.
 	g.P(rawDescVarName(f), " = nil")
@@ -278,7 +278,7 @@ func genEnumReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 
 	// Descriptor method.
 	g.P("func (", enum.GoIdent, ") Descriptor() ", protoreflectPackage.Ident("EnumDescriptor"), " {")
-	g.P("return ", typesVar, "[", idx, "].EnumDescriptor")
+	g.P("return ", typesVar, "[", idx, "].Descriptor()")
 	g.P("}")
 	g.P()
 

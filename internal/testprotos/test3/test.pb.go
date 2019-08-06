@@ -9,7 +9,6 @@ package test3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	prototype "google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -51,7 +50,7 @@ func (x ForeignEnum) String() string {
 }
 
 func (ForeignEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_test3_test_proto_enumTypes[0].EnumDescriptor
+	return file_test3_test_proto_enumTypes[0].Descriptor()
 }
 
 func (ForeignEnum) Type() protoreflect.EnumType {
@@ -103,7 +102,7 @@ func (x TestAllTypes_NestedEnum) String() string {
 }
 
 func (TestAllTypes_NestedEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_test3_test_proto_enumTypes[1].EnumDescriptor
+	return file_test3_test_proto_enumTypes[1].Descriptor()
 }
 
 func (TestAllTypes_NestedEnum) Type() protoreflect.EnumType {
@@ -1270,7 +1269,7 @@ func file_test3_test_proto_rawDescGZIP() []byte {
 	return file_test3_test_proto_rawDescData
 }
 
-var file_test3_test_proto_enumTypes = make([]prototype.Enum, 2)
+var file_test3_test_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_test3_test_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_test3_test_proto_goTypes = []interface{}{
 	(ForeignEnum)(0),                   // 0: goproto.proto.test3.ForeignEnum
@@ -1407,10 +1406,10 @@ func file_test3_test_proto_init() {
 		},
 		GoTypes:           file_test3_test_proto_goTypes,
 		DependencyIndexes: file_test3_test_proto_depIdxs,
+		EnumInfos:         file_test3_test_proto_enumTypes,
 		MessageInfos:      file_test3_test_proto_msgTypes,
 	}.Build()
 	File_test3_test_proto = out.File
-	file_test3_test_proto_enumTypes = out.Enums
 	file_test3_test_proto_rawDesc = nil
 	file_test3_test_proto_goTypes = nil
 	file_test3_test_proto_depIdxs = nil

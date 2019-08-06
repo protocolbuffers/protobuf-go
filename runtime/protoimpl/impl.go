@@ -23,6 +23,7 @@ const UnsafeEnabled = impl.UnsafeEnabled
 type (
 	DescBuilder      = filedesc.Builder
 	TypeBuilder      = filetype.Builder
+	EnumInfo         = filetype.EnumInfo
 	Pointer          = impl.Pointer
 	MessageInfo      = impl.MessageInfo
 	MessageState     = impl.MessageState
