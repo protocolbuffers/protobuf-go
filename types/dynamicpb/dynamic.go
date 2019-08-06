@@ -7,10 +7,10 @@ package dynamicpb
 
 import (
 	"math"
+	"reflect"
 
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/prototype"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
@@ -30,7 +30,7 @@ import (
 //
 // Operations which modify a Message are not safe for concurrent use.
 type Message struct {
-	typ     prototype.Message
+	desc    pref.MessageDescriptor
 	known   map[pref.FieldNumber]pref.Value
 	ext     map[pref.FieldNumber]pref.FieldDescriptor
 	unknown pref.RawFields
@@ -39,10 +39,7 @@ type Message struct {
 // New creates a new message with the provided descriptor.
 func New(desc pref.MessageDescriptor) *Message {
 	return &Message{
-		typ: prototype.Message{
-			MessageDescriptor: desc,
-			NewMessage:        func() pref.Message { return New(desc) },
-		},
+		desc:  desc,
 		known: make(map[pref.FieldNumber]pref.Value),
 		ext:   make(map[pref.FieldNumber]pref.FieldDescriptor),
 	}
@@ -60,12 +57,12 @@ func (m *Message) String() string {
 
 // Descriptor returns the message descriptor.
 func (m *Message) Descriptor() pref.MessageDescriptor {
-	return m.typ.Descriptor()
+	return m.desc
 }
 
 // Type returns the message type.
 func (m *Message) Type() pref.MessageType {
-	return &m.typ
+	return (*messageType)(m)
 }
 
 // New returns a newly allocated empty message with the same descriptor.
@@ -272,6 +269,13 @@ func (m *Message) checkField(fd pref.FieldDescriptor) {
 		panic(errors.New("%v: field descriptor does not belong to this message", fd.FullName()))
 	}
 }
+
+type messageType Message
+
+func (mt *messageType) New() pref.Message                  { return New(mt.desc) }
+func (mt *messageType) Zero() pref.Message                 { return New(mt.desc) }
+func (mt *messageType) GoType() reflect.Type               { return reflect.TypeOf((*Message)(nil)) }
+func (mt *messageType) Descriptor() pref.MessageDescriptor { return mt.desc }
 
 type emptyList struct {
 	desc pref.FieldDescriptor

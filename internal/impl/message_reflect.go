@@ -95,8 +95,8 @@ var (
 // it must be implemented by calling this method.
 func (mi *MessageInfo) MessageOf(m interface{}) pref.Message {
 	// TODO: Switch the input to be an opaque Pointer.
-	if reflect.TypeOf(m) != mi.GoType {
-		panic(fmt.Sprintf("type mismatch: got %T, want %v", m, mi.GoType))
+	if reflect.TypeOf(m) != mi.GoReflectType {
+		panic(fmt.Sprintf("type mismatch: got %T, want %v", m, mi.GoReflectType))
 	}
 	p := pointerOfIface(m)
 	if p.IsNil() {
@@ -112,7 +112,7 @@ func (m *messageIfaceWrapper) ProtoReflect() pref.Message {
 	return (*messageReflectWrapper)(m)
 }
 func (m *messageIfaceWrapper) ProtoUnwrap() interface{} {
-	return m.p.AsIfaceOf(m.mi.GoType.Elem())
+	return m.p.AsIfaceOf(m.mi.GoReflectType.Elem())
 }
 
 type extensionMap map[int32]ExtensionField
@@ -181,11 +181,11 @@ func (mi *MessageInfo) checkField(fd pref.FieldDescriptor) (*fieldInfo, pref.Ext
 		return fi, nil
 	}
 	if fd.IsExtension() {
-		if fd.ContainingMessage().FullName() != mi.PBType.Descriptor().FullName() {
+		if fd.ContainingMessage().FullName() != mi.Desc.FullName() {
 			// TODO: Should this be exact containing message descriptor match?
 			panic("mismatching containing message")
 		}
-		if !mi.PBType.Descriptor().ExtensionRanges().Has(fd.Number()) {
+		if !mi.Desc.ExtensionRanges().Has(fd.Number()) {
 			panic("invalid extension field")
 		}
 		xtd, ok := fd.(pref.ExtensionTypeDescriptor)

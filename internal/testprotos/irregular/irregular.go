@@ -5,10 +5,11 @@
 package irregular
 
 import (
+	"reflect"
+
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/reflect/protodesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/prototype"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -22,16 +23,11 @@ func (m *IrregularMessage) ProtoReflect() pref.Message { return (*message)(m) }
 
 type message IrregularMessage
 
-var messageType = &prototype.Message{
-	MessageDescriptor: fileDesc.Messages().Get(0),
-	NewMessage: func() pref.Message {
-		return &message{}
-	},
-}
-
-func (m *message) Descriptor() pref.MessageDescriptor { return messageType.Descriptor() }
-func (m *message) Type() pref.MessageType             { return messageType }
+func (m *message) Descriptor() pref.MessageDescriptor { return fileDesc.Messages().Get(0) }
+func (m *message) Type() pref.MessageType             { return m }
 func (m *message) New() pref.Message                  { return &message{} }
+func (m *message) Zero() pref.Message                 { return (*message)(nil) }
+func (m *message) GoType() reflect.Type               { return reflect.TypeOf(&message{}) }
 func (m *message) Interface() pref.ProtoMessage       { return (*IrregularMessage)(m) }
 
 var fieldDescS = fileDesc.Messages().Get(0).Fields().Get(0)

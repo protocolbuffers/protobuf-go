@@ -44,7 +44,7 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 	mi.extensionOffset = si.extensionOffset
 
 	mi.coderFields = make(map[wire.Number]*coderFieldInfo)
-	fields := mi.PBType.Descriptor().Fields()
+	fields := mi.Desc.Fields()
 	for i := 0; i < fields.Len(); i++ {
 		fd := fields.Get(i)
 
@@ -80,9 +80,9 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 		mi.orderedCoderFields = append(mi.orderedCoderFields, cf)
 		mi.coderFields[cf.num] = cf
 	}
-	if messageset.IsMessageSet(mi.PBType.Descriptor()) {
+	if messageset.IsMessageSet(mi.Desc) {
 		if !mi.extensionOffset.IsValid() {
-			panic(fmt.Sprintf("%v: MessageSet with no extensions field", mi.PBType.Descriptor().FullName()))
+			panic(fmt.Sprintf("%v: MessageSet with no extensions field", mi.Desc.FullName()))
 		}
 		cf := &coderFieldInfo{
 			num:       messageset.FieldItem,
@@ -114,7 +114,7 @@ func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
 		mi.denseCoderFields[cf.num] = cf
 	}
 
-	mi.needsInitCheck = needsInitCheck(mi.PBType.Descriptor())
+	mi.needsInitCheck = needsInitCheck(mi.Desc)
 	mi.methods = piface.Methods{
 		Flags:         piface.SupportMarshalDeterministic | piface.SupportUnmarshalDiscardUnknown,
 		MarshalAppend: mi.marshalAppend,

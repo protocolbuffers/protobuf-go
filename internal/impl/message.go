@@ -12,6 +12,7 @@ import (
 	"sync"
 	"sync/atomic"
 
+	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
@@ -20,13 +21,13 @@ import (
 // that represents a message. A given instance of MessageInfo is tied to
 // exactly one Go type, which must be a pointer to a struct type.
 type MessageInfo struct {
-	// GoType is the underlying message Go type and must be populated.
+	// GoReflectType is the underlying message Go type and must be populated.
 	// Once set, this field must never be mutated.
-	GoType reflect.Type // pointer to struct
+	GoReflectType reflect.Type // pointer to struct
 
-	// PBType is the underlying message descriptor type and must be populated.
+	// Desc is the underlying message descriptor type and must be populated.
 	// Once set, this field must never be mutated.
-	PBType pref.MessageType
+	Desc pref.MessageDescriptor
 
 	// Exporter must be provided in a purego environment in order to provide
 	// access to unexported fields.
@@ -95,7 +96,7 @@ func (mi *MessageInfo) initOnce() {
 		return
 	}
 
-	t := mi.GoType
+	t := mi.GoReflectType
 	if t.Kind() != reflect.Ptr && t.Elem().Kind() != reflect.Struct {
 		panic(fmt.Sprintf("got %v, want *struct kind", t))
 	}
@@ -222,7 +223,7 @@ fieldLoop:
 // any discrepancies.
 func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	mi.fields = map[pref.FieldNumber]*fieldInfo{}
-	md := mi.PBType.Descriptor()
+	md := mi.Desc
 	for i := 0; i < md.Fields().Len(); i++ {
 		fd := md.Fields().Get(i)
 		fs := si.fieldsByNumber[fd.Number()]
@@ -296,3 +297,14 @@ func (mi *MessageInfo) makeExtensionFieldsFunc(t reflect.Type, si structInfo) {
 		}
 	}
 }
+
+func (mi *MessageInfo) GoType() reflect.Type {
+	return mi.GoReflectType
+}
+func (mi *MessageInfo) New() protoreflect.Message {
+	return mi.MessageOf(reflect.New(mi.GoReflectType.Elem()).Interface())
+}
+func (mi *MessageInfo) Zero() protoreflect.Message {
+	return mi.MessageOf(reflect.Zero(mi.GoReflectType).Interface())
+}
+func (mi *MessageInfo) Descriptor() protoreflect.MessageDescriptor { return mi.Desc }

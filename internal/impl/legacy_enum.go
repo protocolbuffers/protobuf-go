@@ -13,7 +13,6 @@ import (
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/prototype"
 )
 
 // legacyWrapEnum wraps v as a protoreflect.Enum,
@@ -35,23 +34,36 @@ func legacyLoadEnumType(t reflect.Type) pref.EnumType {
 
 	// Slow-path: derive enum descriptor and initialize EnumType.
 	var et pref.EnumType
-	var m sync.Map // map[protoreflect.EnumNumber]proto.Enum
 	ed := LegacyLoadEnumDesc(t)
-	et = &prototype.Enum{
-		EnumDescriptor: ed,
-		NewEnum: func(n pref.EnumNumber) pref.Enum {
-			if e, ok := m.Load(n); ok {
-				return e.(pref.Enum)
-			}
-			e := &legacyEnumWrapper{num: n, pbTyp: et, goTyp: t}
-			m.Store(n, e)
-			return e
-		},
+	et = &legacyEnumType{
+		desc:   ed,
+		goType: t,
 	}
 	if et, ok := legacyEnumTypeCache.LoadOrStore(t, et); ok {
 		return et.(pref.EnumType)
 	}
 	return et
+}
+
+type legacyEnumType struct {
+	desc   pref.EnumDescriptor
+	goType reflect.Type
+	m      sync.Map // map[protoreflect.EnumNumber]proto.Enum
+}
+
+func (t *legacyEnumType) New(n pref.EnumNumber) pref.Enum {
+	if e, ok := t.m.Load(n); ok {
+		return e.(pref.Enum)
+	}
+	e := &legacyEnumWrapper{num: n, pbTyp: t, goTyp: t.goType}
+	t.m.Store(n, e)
+	return e
+}
+func (t *legacyEnumType) GoType() reflect.Type {
+	return t.goType
+}
+func (t *legacyEnumType) Descriptor() pref.EnumDescriptor {
+	return t.desc
 }
 
 type legacyEnumWrapper struct {

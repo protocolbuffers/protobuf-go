@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/prototype"
 )
 
 // legacyWrapMessage wraps v as a protoreflect.ProtoMessage,
@@ -37,19 +36,14 @@ func legacyLoadMessageInfo(t reflect.Type) *MessageInfo {
 	}
 
 	// Slow-path: derive message descriptor and initialize MessageInfo.
-	md := LegacyLoadMessageDesc(t)
-	mt := new(MessageInfo)
-	mt.GoType = t
-	mt.PBType = &prototype.Message{
-		MessageDescriptor: md,
-		NewMessage: func() pref.Message {
-			return mt.MessageOf(reflect.New(t.Elem()).Interface())
-		},
+	mi := &MessageInfo{
+		Desc:          LegacyLoadMessageDesc(t),
+		GoReflectType: t,
 	}
-	if mt, ok := legacyMessageTypeCache.LoadOrStore(t, mt); ok {
-		return mt.(*MessageInfo)
+	if mi, ok := legacyMessageTypeCache.LoadOrStore(t, mi); ok {
+		return mi.(*MessageInfo)
 	}
-	return mt
+	return mi
 }
 
 var legacyMessageDescCache sync.Map // map[reflect.Type]protoreflect.MessageDescriptor

@@ -78,14 +78,13 @@ var (
 	testParentDesc    = pimpl.Export{}.MessageDescriptorOf((*LegacyTestMessage)(nil))
 	testEnumV1Desc    = pimpl.Export{}.EnumDescriptorOf(proto2_20180125.Message_ChildEnum(0))
 	testMessageV1Desc = pimpl.Export{}.MessageDescriptorOf((*proto2_20180125.Message_ChildMessage)(nil))
-	testEnumV2Desc    = enumProto2Type.Descriptor()
-	testMessageV2Desc = enumMessagesType.PBType.Descriptor()
+	testMessageV2Desc = enumMessagesType.Desc
 
 	depReg = preg.NewFiles(
 		testParentDesc.ParentFile(),
 		testEnumV1Desc.ParentFile(),
 		testMessageV1Desc.ParentFile(),
-		testEnumV2Desc.ParentFile(),
+		enumProto2Desc.ParentFile(),
 		testMessageV2Desc.ParentFile(),
 	)
 	extensionTypes = []pref.ExtensionType{

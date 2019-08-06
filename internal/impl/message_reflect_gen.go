@@ -12,19 +12,19 @@ import (
 )
 
 func (m *messageState) Descriptor() protoreflect.MessageDescriptor {
-	return m.messageInfo().PBType.Descriptor()
+	return m.messageInfo().Desc
 }
 func (m *messageState) Type() protoreflect.MessageType {
-	return m.messageInfo().PBType
+	return m.messageInfo()
 }
 func (m *messageState) New() protoreflect.Message {
-	return m.messageInfo().PBType.New()
+	return m.messageInfo().New()
 }
 func (m *messageState) Interface() protoreflect.ProtoMessage {
 	return m.ProtoUnwrap().(protoreflect.ProtoMessage)
 }
 func (m *messageState) ProtoUnwrap() interface{} {
-	return m.pointer().AsIfaceOf(m.messageInfo().GoType.Elem())
+	return m.pointer().AsIfaceOf(m.messageInfo().GoReflectType.Elem())
 }
 func (m *messageState) ProtoMethods() *protoiface.Methods {
 	m.messageInfo().init()
@@ -119,13 +119,13 @@ func (m *messageState) SetUnknown(b protoreflect.RawFields) {
 }
 
 func (m *messageReflectWrapper) Descriptor() protoreflect.MessageDescriptor {
-	return m.messageInfo().PBType.Descriptor()
+	return m.messageInfo().Desc
 }
 func (m *messageReflectWrapper) Type() protoreflect.MessageType {
-	return m.messageInfo().PBType
+	return m.messageInfo()
 }
 func (m *messageReflectWrapper) New() protoreflect.Message {
-	return m.messageInfo().PBType.New()
+	return m.messageInfo().New()
 }
 func (m *messageReflectWrapper) Interface() protoreflect.ProtoMessage {
 	if m, ok := m.ProtoUnwrap().(protoreflect.ProtoMessage); ok {
@@ -134,7 +134,7 @@ func (m *messageReflectWrapper) Interface() protoreflect.ProtoMessage {
 	return (*messageIfaceWrapper)(m)
 }
 func (m *messageReflectWrapper) ProtoUnwrap() interface{} {
-	return m.pointer().AsIfaceOf(m.messageInfo().GoType.Elem())
+	return m.pointer().AsIfaceOf(m.messageInfo().GoReflectType.Elem())
 }
 func (m *messageReflectWrapper) ProtoMethods() *protoiface.Methods {
 	m.messageInfo().init()

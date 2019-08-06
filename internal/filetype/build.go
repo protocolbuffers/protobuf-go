@@ -15,7 +15,6 @@ import (
 	pimpl "google.golang.org/protobuf/internal/impl"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
-	ptype "google.golang.org/protobuf/reflect/prototype"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
@@ -163,23 +162,18 @@ func (tb Builder) Build() (out struct {
 		panic("mismatching message lengths")
 	}
 	if len(fbOut.Messages) > 0 {
-		messages := make([]Message, len(fbOut.Messages))
 		for i := range fbOut.Messages {
 			if messageGoTypes[i] == nil {
 				continue // skip map entry
 			}
-			messages[i] = Message{
-				MessageDescriptor: &fbOut.Messages[i],
-				NewMessage:        messageMaker(reflect.TypeOf(messageGoTypes[i])),
-			}
 
 			if tb.MessageInfos != nil {
-				tb.MessageInfos[i].GoType = reflect.TypeOf(messageGoTypes[i])
-				tb.MessageInfos[i].PBType = &messages[i]
+				tb.MessageInfos[i].GoReflectType = reflect.TypeOf(messageGoTypes[i])
+				tb.MessageInfos[i].Desc = &fbOut.Messages[i]
 			}
 
 			// Register message types.
-			if err := tb.TypeRegistry.Register(&messages[i]); err != nil {
+			if err := tb.TypeRegistry.Register(&tb.MessageInfos[i]); err != nil {
 				panic(err)
 			}
 		}
@@ -334,10 +328,6 @@ func messageMaker(t reflect.Type) func() pref.Message {
 		return reflect.New(t.Elem()).Interface().(pref.ProtoMessage).ProtoReflect()
 	}
 }
-
-type (
-	Message = ptype.Message
-)
 
 type Extension struct {
 	desc       pref.ExtensionDescriptor

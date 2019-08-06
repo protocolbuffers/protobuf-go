@@ -170,7 +170,7 @@ type atomicNilMessage struct {
 
 func (m *atomicNilMessage) Init(mi *MessageInfo) *messageReflectWrapper {
 	m.once.Do(func() {
-		m.m.p = pointerOfIface(reflect.Zero(mi.GoType).Interface())
+		m.m.p = pointerOfIface(reflect.Zero(mi.GoReflectType).Interface())
 		m.m.mi = mi
 	})
 	return &m.m

@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/prototype"
 	"google.golang.org/protobuf/runtime/protoiface"
 	"google.golang.org/protobuf/runtime/protoimpl"
 
@@ -1614,11 +1613,10 @@ func (m *TestNoEnforceUTF8) ProtoReflect() protoreflect.Message {
 }
 
 var messageInfo_TestNoEnforceUTF8 = protoimpl.MessageInfo{
-	GoType: reflect.TypeOf((*TestNoEnforceUTF8)(nil)),
-	PBType: &prototype.Message{
-		MessageDescriptor: func() protoreflect.MessageDescriptor {
-			pb := new(descriptorpb.FileDescriptorProto)
-			if err := prototext.Unmarshal([]byte(`
+	GoReflectType: reflect.TypeOf((*TestNoEnforceUTF8)(nil)),
+	Desc: func() protoreflect.MessageDescriptor {
+		pb := new(descriptorpb.FileDescriptorProto)
+		if err := prototext.Unmarshal([]byte(`
 				syntax:  "proto3"
 				name:    "test.proto"
 				message_type: [{
@@ -1634,23 +1632,19 @@ var messageInfo_TestNoEnforceUTF8 = protoimpl.MessageInfo{
 					oneof_decl: [{name:"oneof_field"}]
 				}]
 			`), pb); err != nil {
-				panic(err)
-			}
-			fd, err := protodesc.NewFile(pb, nil)
-			if err != nil {
-				panic(err)
-			}
-			md := fd.Messages().Get(0)
-			for i := 0; i < md.Fields().Len(); i++ {
-				md.Fields().Get(i).(*filedesc.Field).L1.HasEnforceUTF8 = true
-				md.Fields().Get(i).(*filedesc.Field).L1.EnforceUTF8 = false
-			}
-			return md
-		}(),
-		NewMessage: func() protoreflect.Message {
-			return protoreflect.ProtoMessage(new(TestNoEnforceUTF8)).ProtoReflect()
-		},
-	},
+			panic(err)
+		}
+		fd, err := protodesc.NewFile(pb, nil)
+		if err != nil {
+			panic(err)
+		}
+		md := fd.Messages().Get(0)
+		for i := 0; i < md.Fields().Len(); i++ {
+			md.Fields().Get(i).(*filedesc.Field).L1.HasEnforceUTF8 = true
+			md.Fields().Get(i).(*filedesc.Field).L1.EnforceUTF8 = false
+		}
+		return md
+	}(),
 	OneofWrappers: []interface{}{
 		(*TestNoEnforceUTF8_OneofString)(nil),
 		(*TestNoEnforceUTF8_OneofBytes)(nil),

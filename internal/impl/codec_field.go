@@ -138,7 +138,7 @@ func consumeMessageInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Type, op
 		return 0, wire.ParseError(n)
 	}
 	if p.Elem().IsNil() {
-		p.SetPointer(pointerOfValue(reflect.New(mi.GoType.Elem())))
+		p.SetPointer(pointerOfValue(reflect.New(mi.GoReflectType.Elem())))
 	}
 	if _, err := mi.unmarshalPointer(v, p.Elem(), 0, opts); err != nil {
 		return 0, err
@@ -256,7 +256,7 @@ func consumeGroupType(b []byte, p pointer, mi *MessageInfo, num wire.Number, wty
 		return 0, errUnknown
 	}
 	if p.Elem().IsNil() {
-		p.SetPointer(pointerOfValue(reflect.New(mi.GoType.Elem())))
+		p.SetPointer(pointerOfValue(reflect.New(mi.GoReflectType.Elem())))
 	}
 	return mi.unmarshalPointer(b, p.Elem(), num, opts)
 }
@@ -367,7 +367,7 @@ func consumeMessageSliceInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Typ
 	if n < 0 {
 		return 0, wire.ParseError(n)
 	}
-	m := reflect.New(mi.GoType.Elem()).Interface()
+	m := reflect.New(mi.GoReflectType.Elem()).Interface()
 	mp := pointerOfIface(m)
 	if _, err := mi.unmarshalPointer(v, mp, 0, opts); err != nil {
 		return 0, err
@@ -571,7 +571,7 @@ func consumeGroupSliceInfo(b []byte, p pointer, num wire.Number, wtyp wire.Type,
 	if wtyp != wire.StartGroupType {
 		return 0, errUnknown
 	}
-	m := reflect.New(mi.GoType.Elem()).Interface()
+	m := reflect.New(mi.GoReflectType.Elem()).Interface()
 	mp := pointerOfIface(m)
 	n, err := mi.unmarshalPointer(b, mp, num, opts)
 	if err != nil {

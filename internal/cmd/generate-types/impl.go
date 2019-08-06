@@ -602,13 +602,13 @@ func generateImplMessage() string {
 var implMessageTemplate = template.Must(template.New("").Parse(`
 {{range . -}}
 func (m *{{.}}) Descriptor() protoreflect.MessageDescriptor {
-	return m.messageInfo().PBType.Descriptor()
+	return m.messageInfo().Desc
 }
 func (m *{{.}}) Type() protoreflect.MessageType {
-	return m.messageInfo().PBType
+	return m.messageInfo()
 }
 func (m *{{.}}) New() protoreflect.Message {
-	return m.messageInfo().PBType.New()
+	return m.messageInfo().New()
 }
 func (m *{{.}}) Interface() protoreflect.ProtoMessage {
 	{{if eq . "messageState" -}}
@@ -621,7 +621,7 @@ func (m *{{.}}) Interface() protoreflect.ProtoMessage {
 	{{- end -}}
 }
 func (m *{{.}}) ProtoUnwrap() interface{} {
-	return m.pointer().AsIfaceOf(m.messageInfo().GoType.Elem())
+	return m.pointer().AsIfaceOf(m.messageInfo().GoReflectType.Elem())
 }
 func (m *{{.}}) ProtoMethods() *protoiface.Methods {
 	m.messageInfo().init()

@@ -10,7 +10,6 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/prototype"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
@@ -33,12 +32,7 @@ func (Export) EnumOf(e enum) pref.Enum {
 // EnumTypeOf returns the protoreflect.EnumType for e.
 func (Export) EnumTypeOf(e enum) pref.EnumType {
 	if ev, ok := e.(pref.Enum); ok {
-		return &prototype.Enum{
-			EnumDescriptor: ev.Descriptor(),
-			NewEnum: func(n pref.EnumNumber) pref.Enum {
-				return reflect.ValueOf(n).Convert(reflect.TypeOf(e)).Interface().(pref.Enum)
-			},
-		}
+		return ev.Type()
 	}
 	return legacyLoadEnumType(reflect.TypeOf(e))
 }
@@ -76,14 +70,9 @@ func (Export) MessageOf(m message) pref.Message {
 // MessageTypeOf returns the protoreflect.MessageType for m.
 func (Export) MessageTypeOf(m message) pref.MessageType {
 	if mv, ok := m.(pref.ProtoMessage); ok {
-		return &prototype.Message{
-			MessageDescriptor: mv.ProtoReflect().Descriptor(),
-			NewMessage: func() pref.Message {
-				return reflect.New(reflect.TypeOf(m).Elem()).Interface().(pref.ProtoMessage).ProtoReflect()
-			},
-		}
+		return mv.ProtoReflect().Type()
 	}
-	return legacyLoadMessageInfo(reflect.TypeOf(m)).PBType
+	return legacyLoadMessageInfo(reflect.TypeOf(m))
 }
 
 // MessageDescriptorOf returns the protoreflect.MessageDescriptor for m.
