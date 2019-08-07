@@ -95,6 +95,10 @@ func (t *Message) New() protoreflect.Message {
 	return m
 }
 
+func (t *Message) Zero() protoreflect.Message {
+	return t.New() // TODO: return a read-only message instead
+}
+
 func (t *Message) GoType() reflect.Type {
 	t.New() // initialize t.goType
 	return t.goType

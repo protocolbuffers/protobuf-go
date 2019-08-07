@@ -19,9 +19,21 @@ type Unwrapper interface {
 
 // A Converter coverts to/from Go reflect.Value types and protobuf protoreflect.Value types.
 type Converter interface {
+	// PBValueOf converts a reflect.Value to a protoreflect.Value.
 	PBValueOf(reflect.Value) pref.Value
+
+	// GoValueOf converts a protoreflect.Value to a reflect.Value.
 	GoValueOf(pref.Value) reflect.Value
+
+	// New returns a new field value.
+	// For scalars, it returns the default value of the field.
+	// For composite types, it returns a new mutable value.
 	New() pref.Value
+
+	// Zero returns a new field value.
+	// For scalars, it returns the default value of the field.
+	// For composite types, it returns an immutable, empty value.
+	Zero() pref.Value
 }
 
 // NewConverter matches a Go type with a protobuf field and returns a Converter
@@ -158,6 +170,10 @@ func (c *scalarConverter) New() pref.Value {
 	return c.def
 }
 
+func (c *scalarConverter) Zero() pref.Value {
+	return c.New()
+}
+
 type enumConverter struct {
 	goType reflect.Type
 	def    pref.Value
@@ -185,6 +201,10 @@ func (c *enumConverter) GoValueOf(v pref.Value) reflect.Value {
 }
 
 func (c *enumConverter) New() pref.Value {
+	return c.def
+}
+
+func (c *enumConverter) Zero() pref.Value {
 	return c.def
 }
 
@@ -222,4 +242,8 @@ func (c *messageConverter) GoValueOf(v pref.Value) reflect.Value {
 
 func (c *messageConverter) New() pref.Value {
 	return c.PBValueOf(reflect.New(c.goType.Elem()))
+}
+
+func (c *messageConverter) Zero() pref.Value {
+	return c.PBValueOf(reflect.Zero(c.goType))
 }

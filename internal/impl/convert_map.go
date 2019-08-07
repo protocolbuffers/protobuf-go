@@ -42,6 +42,10 @@ func (c *mapConverter) New() pref.Value {
 	return c.PBValueOf(reflect.MakeMap(c.goType))
 }
 
+func (c *mapConverter) Zero() pref.Value {
+	return c.PBValueOf(reflect.Zero(c.goType))
+}
+
 type mapReflect struct {
 	v       reflect.Value // map[K]V
 	keyConv Converter

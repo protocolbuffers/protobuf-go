@@ -232,6 +232,7 @@ type legacyExtensionType struct {
 
 func (x *legacyExtensionType) GoType() reflect.Type { return x.typ }
 func (x *legacyExtensionType) New() pref.Value      { return x.conv.New() }
+func (x *legacyExtensionType) Zero() pref.Value     { return x.conv.Zero() }
 func (x *legacyExtensionType) ValueOf(v interface{}) pref.Value {
 	return x.conv.PBValueOf(reflect.ValueOf(v))
 }

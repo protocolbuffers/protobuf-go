@@ -42,10 +42,6 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 	}
 	conv := NewConverter(ot.Field(0).Type, fd)
 	isMessage := fd.Message() != nil
-	var frozenEmpty pref.Value
-	if isMessage {
-		frozenEmpty = pref.ValueOf(frozenMessage{conv.New().Message()})
-	}
 
 	// TODO: Implement unsafe fast path?
 	fieldOffset := offsetOf(fs, x)
@@ -74,17 +70,11 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 		},
 		get: func(p pointer) pref.Value {
 			if p.IsNil() {
-				if frozenEmpty.IsValid() {
-					return frozenEmpty
-				}
-				return defaultValueOf(fd)
+				return conv.Zero()
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
 			if rv.IsNil() || rv.Elem().Type().Elem() != ot {
-				if frozenEmpty.IsValid() {
-					return frozenEmpty
-				}
-				return defaultValueOf(fd)
+				return conv.Zero()
 			}
 			rv = rv.Elem().Elem().Field(0)
 			return conv.PBValueOf(rv)
@@ -126,7 +116,6 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter
 		panic(fmt.Sprintf("invalid type: got %v, want map kind", ft))
 	}
 	conv := NewConverter(ft, fd)
-	frozenEmpty := pref.ValueOf(frozenMap{conv.New().Map()})
 
 	// TODO: Implement unsafe fast path?
 	fieldOffset := offsetOf(fs, x)
@@ -145,12 +134,9 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter
 		},
 		get: func(p pointer) pref.Value {
 			if p.IsNil() {
-				return frozenEmpty
+				return conv.Zero()
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			if rv.Len() == 0 {
-				return frozenEmpty
-			}
 			return conv.PBValueOf(rv)
 		},
 		set: func(p pointer, v pref.Value) {
@@ -176,7 +162,6 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporte
 		panic(fmt.Sprintf("invalid type: got %v, want slice kind", ft))
 	}
 	conv := NewConverter(reflect.PtrTo(ft), fd)
-	frozenEmpty := pref.ValueOf(frozenList{conv.New().List()})
 
 	// TODO: Implement unsafe fast path?
 	fieldOffset := offsetOf(fs, x)
@@ -195,12 +180,9 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporte
 		},
 		get: func(p pointer) pref.Value {
 			if p.IsNil() {
-				return frozenEmpty
+				return conv.Zero()
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type)
-			if rv.Elem().Len() == 0 {
-				return frozenEmpty
-			}
 			return conv.PBValueOf(rv)
 		},
 		set: func(p pointer, v pref.Value) {
@@ -269,12 +251,12 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x expor
 		},
 		get: func(p pointer) pref.Value {
 			if p.IsNil() {
-				return defaultValueOf(fd)
+				return conv.Zero()
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
 			if nullable {
 				if rv.IsNil() {
-					return defaultValueOf(fd)
+					return conv.Zero()
 				}
 				if rv.Kind() == reflect.Ptr {
 					rv = rv.Elem()
@@ -312,7 +294,6 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 
 	var once sync.Once
 	var messageType pref.MessageType
-	var frozenEmpty pref.Value
 	lazyInit := func() {
 		once.Do(func() {
 			messageName := fd.Message().FullName()
@@ -320,7 +301,6 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			if messageType == nil {
 				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
 			}
-			frozenEmpty = pref.ValueOf(frozenMessage{messageType.New()})
 		})
 	}
 
@@ -342,12 +322,12 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 		get: func(p pointer) pref.Value {
 			lazyInit()
 			if p.IsNil() {
-				return frozenEmpty
+				return pref.ValueOf(messageType.Zero())
 			}
 			fs := p.Apply(weakOffset).WeakFields()
 			m, ok := (*fs)[num]
 			if !ok {
-				return frozenEmpty
+				return pref.ValueOf(messageType.Zero())
 			}
 			return pref.ValueOf(m.(pref.ProtoMessage).ProtoReflect())
 		},
@@ -390,7 +370,6 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
 	conv := NewConverter(ft, fd)
-	frozenEmpty := pref.ValueOf(frozenMessage{conv.New().Message()})
 
 	// TODO: Implement unsafe fast path?
 	fieldOffset := offsetOf(fs, x)
@@ -409,12 +388,9 @@ func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField, x expo
 		},
 		get: func(p pointer) pref.Value {
 			if p.IsNil() {
-				return frozenEmpty
+				return conv.Zero()
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			if rv.IsNil() {
-				return frozenEmpty
-			}
 			return conv.PBValueOf(rv)
 		},
 		set: func(p pointer, v pref.Value) {
@@ -461,76 +437,3 @@ func makeOneofInfo(od pref.OneofDescriptor, fs reflect.StructField, x exporter, 
 		},
 	}
 }
-
-// defaultValueOf returns the default value for the field.
-func defaultValueOf(fd pref.FieldDescriptor) pref.Value {
-	if fd == nil {
-		return pref.Value{}
-	}
-	pv := fd.Default() // invalid Value for messages and repeated fields
-	if fd.Kind() == pref.BytesKind && pv.IsValid() && len(pv.Bytes()) > 0 {
-		return pref.ValueOf(append([]byte(nil), pv.Bytes()...)) // copy default bytes for safety
-	}
-	return pv
-}
-
-// frozenValueOf returns a frozen version of any composite value.
-func frozenValueOf(v pref.Value) pref.Value {
-	switch v := v.Interface().(type) {
-	case pref.Message:
-		if _, ok := v.(frozenMessage); !ok {
-			return pref.ValueOf(frozenMessage{v})
-		}
-	case pref.List:
-		if _, ok := v.(frozenList); !ok {
-			return pref.ValueOf(frozenList{v})
-		}
-	case pref.Map:
-		if _, ok := v.(frozenMap); !ok {
-			return pref.ValueOf(frozenMap{v})
-		}
-	}
-	return v
-}
-
-type frozenMessage struct{ pref.Message }
-
-func (m frozenMessage) ProtoReflect() pref.Message   { return m }
-func (m frozenMessage) Interface() pref.ProtoMessage { return m }
-func (m frozenMessage) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
-	m.Message.Range(func(fd pref.FieldDescriptor, v pref.Value) bool {
-		return f(fd, frozenValueOf(v))
-	})
-}
-func (m frozenMessage) Get(fd pref.FieldDescriptor) pref.Value {
-	v := m.Message.Get(fd)
-	return frozenValueOf(v)
-}
-func (frozenMessage) Clear(pref.FieldDescriptor)              { panic("invalid on read-only Message") }
-func (frozenMessage) Set(pref.FieldDescriptor, pref.Value)    { panic("invalid on read-only Message") }
-func (frozenMessage) Mutable(pref.FieldDescriptor) pref.Value { panic("invalid on read-only Message") }
-func (frozenMessage) SetUnknown(pref.RawFields)               { panic("invalid on read-only Message") }
-
-type frozenList struct{ pref.List }
-
-func (ls frozenList) Get(i int) pref.Value {
-	v := ls.List.Get(i)
-	return frozenValueOf(v)
-}
-func (frozenList) Set(i int, v pref.Value) { panic("invalid on read-only List") }
-func (frozenList) Append(v pref.Value)     { panic("invalid on read-only List") }
-func (frozenList) Truncate(i int)          { panic("invalid on read-only List") }
-
-type frozenMap struct{ pref.Map }
-
-func (ms frozenMap) Get(k pref.MapKey) pref.Value {
-	v := ms.Map.Get(k)
-	return frozenValueOf(v)
-}
-func (ms frozenMap) Range(f func(pref.MapKey, pref.Value) bool) {
-	ms.Map.Range(func(k pref.MapKey, v pref.Value) bool {
-		return f(k, frozenValueOf(v))
-	})
-}
-func (frozenMap) Set(k pref.MapKey, v pref.Value) { panic("invalid n read-only Map") }
-func (frozenMap) Clear(k pref.MapKey)             { panic("invalid on read-only Map") }

@@ -38,6 +38,10 @@ func (c *listConverter) New() pref.Value {
 	return c.PBValueOf(reflect.New(c.goType.Elem()))
 }
 
+func (c *listConverter) Zero() pref.Value {
+	return c.PBValueOf(reflect.Zero(c.goType))
+}
+
 type listReflect struct {
 	v    reflect.Value // *[]T
 	conv Converter

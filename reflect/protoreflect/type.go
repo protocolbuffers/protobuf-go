@@ -234,6 +234,9 @@ type MessageType interface {
 	// New returns a newly allocated empty message.
 	New() Message
 
+	// Zero returns an immutable empty message.
+	Zero() Message
+
 	// GoType returns the Go type of the allocated message.
 	//
 	// Invariant: t.GoType() == reflect.TypeOf(t.New().Interface())
@@ -438,6 +441,11 @@ type ExtensionType interface {
 	// New returns a new value for the field.
 	// For scalars, this returns the default value in native Go form.
 	New() Value
+
+	// Zero returns a new value for the field.
+	// For scalars, this returns the default value in native Go form.
+	// For composite types, this returns an empty, immutable message, list, or map.
+	Zero() Value
 
 	// GoType returns the Go type of the field value.
 	//

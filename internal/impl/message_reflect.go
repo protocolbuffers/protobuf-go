@@ -142,10 +142,7 @@ func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
 			return xt.ValueOf(x.GetValue())
 		}
 	}
-	if !isComposite(xt) {
-		return defaultValueOf(xt)
-	}
-	return frozenValueOf(xt.New())
+	return xt.Zero()
 }
 func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
 	if *m == nil {

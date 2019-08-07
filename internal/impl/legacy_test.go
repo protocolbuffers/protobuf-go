@@ -491,8 +491,8 @@ func TestExtensionConvert(t *testing.T) {
 							switch name {
 							case "ParentFile", "Parent":
 							// Ignore parents to avoid recursive cycle.
-							case "New":
-								// Ignore New since it a constructor.
+							case "New", "Zero":
+								// Ignore constructors.
 							case "Options":
 								// Ignore descriptor options since protos are not cmperable.
 							case "ContainingOneof", "ContainingMessage", "Enum", "Message":

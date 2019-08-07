@@ -346,7 +346,8 @@ type Extension struct {
 	conv   pimpl.Converter
 }
 
-func (t *Extension) New() pref.Value { return t.lazyInit().New() }
+func (t *Extension) New() pref.Value  { return t.lazyInit().New() }
+func (t *Extension) Zero() pref.Value { return t.lazyInit().Zero() }
 func (t *Extension) ValueOf(v interface{}) pref.Value {
 	return t.lazyInit().PBValueOf(reflect.ValueOf(v))
 }
