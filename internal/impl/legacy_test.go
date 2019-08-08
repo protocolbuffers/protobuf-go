@@ -59,7 +59,9 @@ func init() {
 func mustMakeExtensionType(fileDesc, extDesc string, t reflect.Type, r pdesc.Resolver) pref.ExtensionType {
 	s := fmt.Sprintf(`name:"test.proto" syntax:"proto2" %s extension:[{%s}]`, fileDesc, extDesc)
 	xd := mustMakeFileDesc(s, r).Extensions().Get(0)
-	return pimpl.LegacyExtensionTypeOf(xd, t)
+	xi := &pimpl.ExtensionInfo{}
+	pimpl.InitExtensionInfo(xi, xd, t)
+	return xi
 }
 
 func mustMakeFileDesc(s string, r pdesc.Resolver) pref.FileDescriptor {
@@ -141,56 +143,56 @@ var (
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_bool" number:10010 label:LABEL_REPEATED type:TYPE_BOOL extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[]bool)(nil)), depReg,
+			reflect.TypeOf(false), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_int32" number:10011 label:LABEL_REPEATED type:TYPE_INT32 extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[]int32)(nil)), depReg,
+			reflect.TypeOf(int32(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_uint32" number:10012 label:LABEL_REPEATED type:TYPE_UINT32 extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[]uint32)(nil)), depReg,
+			reflect.TypeOf(uint32(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_float" number:10013 label:LABEL_REPEATED type:TYPE_FLOAT extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[]float32)(nil)), depReg,
+			reflect.TypeOf(float32(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_string" number:10014 label:LABEL_REPEATED type:TYPE_STRING extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[]string)(nil)), depReg,
+			reflect.TypeOf(""), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_bytes" number:10015 label:LABEL_REPEATED type:TYPE_BYTES extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[][]byte)(nil)), depReg,
+			reflect.TypeOf(([]byte)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
 			`name:"repeated_enum_v1" number:10016 label:LABEL_REPEATED type:TYPE_ENUM type_name:".google.golang.org.proto2_20180125.Message.ChildEnum" extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[]proto2_20180125.Message_ChildEnum)(nil)), depReg,
+			reflect.TypeOf(proto2_20180125.Message_ChildEnum(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
 			`name:"repeated_message_v1" number:10017 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.proto2_20180125.Message.ChildMessage" extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[]*proto2_20180125.Message_ChildMessage)(nil)), depReg,
+			reflect.TypeOf((*proto2_20180125.Message_ChildMessage)(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "enum2.proto"]`,
 			`name:"repeated_enum_v2" number:10018 label:LABEL_REPEATED type:TYPE_ENUM type_name:".EnumProto2" extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[]EnumProto2)(nil)), depReg,
+			reflect.TypeOf(EnumProto2(0)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "enum-messages.proto"]`,
 			`name:"repeated_message_v2" number:10019 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".EnumMessages" extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*[](*EnumMessages))(nil)), depReg,
+			reflect.TypeOf((*EnumMessages)(nil)), depReg,
 		),
 	}
 
-	extensionDescs = []*piface.ExtensionDescV1{{
+	extensionDescs = []*pimpl.ExtensionInfo{{
 		ExtendedType:  (*LegacyTestMessage)(nil),
 		ExtensionType: (*bool)(nil),
 		Field:         10000,
@@ -463,7 +465,7 @@ func TestExtensionConvert(t *testing.T) {
 
 			wantType := extensionTypes[i]
 			wantDesc := extensionDescs[i]
-			gotType := pimpl.Export{}.ExtensionTypeFromDesc(wantDesc)
+			gotType := (pref.ExtensionType)(wantDesc)
 			gotDesc := pimpl.Export{}.ExtensionDescFromType(wantType)
 
 			// TODO: We need a test package to compare descriptors.
@@ -528,7 +530,8 @@ func TestExtensionConvert(t *testing.T) {
 			}
 
 			opts = cmp.Options{
-				cmpopts.IgnoreFields(piface.ExtensionDescV1{}, "Type"),
+				cmpopts.IgnoreFields(pimpl.ExtensionInfo{}, "ExtensionType"),
+				cmpopts.IgnoreUnexported(pimpl.ExtensionInfo{}),
 			}
 			if diff := cmp.Diff(wantDesc, gotDesc, opts); diff != "" {
 				t.Errorf("ExtensionDesc mismatch (-want, +got):\n%v", diff)

@@ -9,13 +9,12 @@ package test
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 )
 
-var file_test_ext_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_test_ext_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*TestAllExtensions)(nil),
 		ExtensionType: (*int32)(nil),
@@ -29,7 +28,7 @@ var file_test_ext_proto_extDescs = []protoiface.ExtensionDescV1{
 // Extension fields to TestAllExtensions.
 var (
 	// optional int32 foreign_int32_extension = 2000;
-	E_ForeignInt32Extension = &file_test_ext_proto_extDescs[0]
+	E_ForeignInt32Extension = &file_test_ext_proto_extTypes[0]
 )
 
 var File_test_ext_proto protoreflect.FileDescriptor
@@ -92,7 +91,7 @@ func file_test_ext_proto_init() {
 		},
 		GoTypes:           file_test_ext_proto_goTypes,
 		DependencyIndexes: file_test_ext_proto_depIdxs,
-		LegacyExtensions:  file_test_ext_proto_extDescs,
+		ExtensionInfos:    file_test_ext_proto_extTypes,
 	}.Build()
 	File_test_ext_proto = out.File
 	file_test_ext_proto_rawDesc = nil

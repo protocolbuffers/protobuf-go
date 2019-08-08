@@ -219,7 +219,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 		g.P("MessageInfos: ", messageTypesVarName(f), ",")
 	}
 	if len(f.allExtensions) > 0 {
-		g.P("LegacyExtensions: ", extDescsVarName(f), ",")
+		g.P("ExtensionInfos: ", extensionTypesVarName(f), ",")
 	}
 	g.P("}.Build()")
 	g.P(f.GoDescriptorIdent, " = out.File")
@@ -344,8 +344,8 @@ func enumTypesVarName(f *fileInfo) string {
 func messageTypesVarName(f *fileInfo) string {
 	return fileVarName(f.File, "msgTypes")
 }
-func extDescsVarName(f *fileInfo) string {
-	return fileVarName(f.File, "extDescs")
+func extensionTypesVarName(f *fileInfo) string {
+	return fileVarName(f.File, "extTypes")
 }
 func initFuncName(f *protogen.File) string {
 	return fileVarName(f, "init")

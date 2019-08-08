@@ -4,12 +4,6 @@
 
 package protoiface
 
-import (
-	"reflect"
-
-	"google.golang.org/protobuf/reflect/protoreflect"
-)
-
 type MessageV1 interface {
 	Reset()
 	String() string
@@ -18,79 +12,4 @@ type MessageV1 interface {
 
 type ExtensionRangeV1 struct {
 	Start, End int32 // both inclusive
-}
-
-type ExtensionDescV1 struct {
-	// Type is the descriptor type for the extension field using the v2 API.
-	// If populated, the information in this field takes precedence over
-	// all other fields in ExtensionDescV1.
-	Type protoreflect.ExtensionType
-
-	// ExtendedType is a typed nil-pointer to the parent message type that
-	// is being extended. It is possible for this to be unpopulated in v2
-	// since the message may no longer implement the MessageV1 interface.
-	//
-	// Deprecated: Use Type.ExtendedType instead.
-	ExtendedType MessageV1
-
-	// ExtensionType is zero value of the extension type.
-	//
-	// For historical reasons, reflect.TypeOf(ExtensionType) and Type.GoType
-	// may not be identical:
-	//	* for scalars (except []byte), where ExtensionType uses *T,
-	//	while Type.GoType uses T.
-	//	* for repeated fields, where ExtensionType uses []T,
-	//	while Type.GoType uses *[]T.
-	//
-	// Deprecated: Use Type.GoType instead.
-	ExtensionType interface{}
-
-	// Field is the field number of the extension.
-	//
-	// Deprecated: Use Type.Number instead.
-	Field int32
-
-	// Name is the fully qualified name of extension.
-	//
-	// Deprecated: Use Type.FullName instead.
-	Name string
-
-	// Tag is the protobuf struct tag used in the v1 API.
-	//
-	// Deprecated: Do not use.
-	Tag string
-
-	// Filename is the proto filename in which the extension is defined.
-	//
-	// Deprecated: Use Type.Parent to ascend to the top-most parent and use
-	// protoreflect.FileDescriptor.Path.
-	Filename string
-}
-
-func (e ExtensionDescV1) getType() protoreflect.ExtensionType {
-	if e.Type != nil {
-		return e.Type
-	}
-	// All ExtensionDescV1 instances in generated code should have
-	// an Type field initialized at init time, so this case only
-	// occurs for non-standard generated code and hand-written
-	// ExtensionDescs.
-	panic(`proto: ExtensionDesc.Type is not set.
-
-This error probably indicates that you are trying to use a non-standard
-"github.com/golang/protobuf/proto".ExtensionDesc with the
-"google.golang.org/golang/protobuf" API. Use a protoreflect.ExtensionType
-instead.
-`)
-}
-
-func (e ExtensionDescV1) New() protoreflect.Value  { return e.getType().New() }
-func (e ExtensionDescV1) Zero() protoreflect.Value { return e.getType().Zero() }
-func (e ExtensionDescV1) GoType() reflect.Type     { return e.getType().GoType() }
-func (e ExtensionDescV1) Descriptor() protoreflect.ExtensionTypeDescriptor {
-	return e.getType().Descriptor()
-}
-func (e ExtensionDescV1) ValueOf(x interface{}) protoreflect.Value { return e.getType().ValueOf(x) }
-func (e ExtensionDescV1) InterfaceOf(x protoreflect.Value) interface{} {
-	return e.getType().InterfaceOf(x)
 }

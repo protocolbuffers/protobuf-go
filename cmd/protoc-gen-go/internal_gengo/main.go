@@ -831,7 +831,7 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 		return
 	}
 
-	g.P("var ", extDescsVarName(f), " = []", protoifacePackage.Ident("ExtensionDescV1"), "{")
+	g.P("var ", extensionTypesVarName(f), " = []", protoimplPackage.Ident("ExtensionInfo"), "{")
 	for _, extension := range f.allExtensions {
 		g.P("{")
 		g.P("ExtendedType: (*", extension.Extendee.GoIdent, ")(nil),")
@@ -884,7 +884,7 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 			leadingComments = appendDeprecationSuffix(leadingComments,
 				extension.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
 			g.P(leadingComments,
-				extensionVar(f.File, extension), " = &", extDescsVarName(f), "[", allExtensionsByPtr[extension], "]",
+				extensionVar(f.File, extension), " = &", extensionTypesVarName(f), "[", allExtensionsByPtr[extension], "]",
 				trailingComment(extension.Comments.Trailing))
 		}
 		g.P(")")

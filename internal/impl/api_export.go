@@ -10,7 +10,6 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
-	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 // Export is a zero-length named type that exists only to export a set of
@@ -90,12 +89,14 @@ func (Export) MessageStringOf(m pref.ProtoMessage) string {
 	return string(b)
 }
 
-// ExtensionDescFromType returns the legacy protoiface.ExtensionDescV1 for t.
-func (Export) ExtensionDescFromType(t pref.ExtensionType) *piface.ExtensionDescV1 {
+// ExtensionDescFromType returns the legacy protoV1.ExtensionDesc for t.
+func (Export) ExtensionDescFromType(t pref.ExtensionType) *ExtensionInfo {
 	return legacyExtensionDescFromType(t)
 }
 
 // ExtensionTypeFromDesc returns the v2 protoreflect.ExtensionType for d.
-func (Export) ExtensionTypeFromDesc(d *piface.ExtensionDescV1) pref.ExtensionType {
-	return legacyExtensionTypeFromDesc(d)
+//
+// TODO: Remove after updating v1 to no longer call this.
+func (Export) ExtensionTypeFromDesc(d *ExtensionInfo) pref.ExtensionType {
+	return d
 }

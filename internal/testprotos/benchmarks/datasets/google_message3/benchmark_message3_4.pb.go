@@ -4430,7 +4430,7 @@ func (*Message16816_Message16818) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_4_proto_rawDescGZIP(), []int{20, 1}
 }
 
-var file_datasets_google_message3_benchmark_message3_4_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_datasets_google_message3_benchmark_message3_4_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*Message0)(nil),
 		ExtensionType: (*Message33958)(nil),
@@ -4460,19 +4460,19 @@ var file_datasets_google_message3_benchmark_message3_4_proto_extDescs = []protoi
 // Extension fields to Message0.
 var (
 	// optional benchmarks.google_message3.Message33958 field33981 = 10747482;
-	E_Message33958_Field33981 = &file_datasets_google_message3_benchmark_message3_4_proto_extDescs[0]
+	E_Message33958_Field33981 = &file_datasets_google_message3_benchmark_message3_4_proto_extTypes[0]
 )
 
 // Extension fields to Message8301.
 var (
 	// optional benchmarks.google_message3.Message8454 field8469 = 66;
-	E_Message8454_Field8469 = &file_datasets_google_message3_benchmark_message3_4_proto_extDescs[1]
+	E_Message8454_Field8469 = &file_datasets_google_message3_benchmark_message3_4_proto_extTypes[1]
 )
 
 // Extension fields to Message8302.
 var (
 	// optional benchmarks.google_message3.Message8455 field8474 = 66;
-	E_Message8455_Field8474 = &file_datasets_google_message3_benchmark_message3_4_proto_extDescs[2]
+	E_Message8455_Field8474 = &file_datasets_google_message3_benchmark_message3_4_proto_extTypes[2]
 )
 
 var File_datasets_google_message3_benchmark_message3_4_proto protoreflect.FileDescriptor
@@ -6410,7 +6410,7 @@ func file_datasets_google_message3_benchmark_message3_4_proto_init() {
 		GoTypes:           file_datasets_google_message3_benchmark_message3_4_proto_goTypes,
 		DependencyIndexes: file_datasets_google_message3_benchmark_message3_4_proto_depIdxs,
 		MessageInfos:      file_datasets_google_message3_benchmark_message3_4_proto_msgTypes,
-		LegacyExtensions:  file_datasets_google_message3_benchmark_message3_4_proto_extDescs,
+		ExtensionInfos:    file_datasets_google_message3_benchmark_message3_4_proto_extTypes,
 	}.Build()
 	File_datasets_google_message3_benchmark_message3_4_proto = out.File
 	file_datasets_google_message3_benchmark_message3_4_proto_rawDesc = nil

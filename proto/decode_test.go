@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/runtime/protoiface"
 	"google.golang.org/protobuf/runtime/protoimpl"
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
@@ -1679,7 +1678,7 @@ func unknown(raw protoreflect.RawFields) buildOpt {
 	}
 }
 
-func extend(desc *protoiface.ExtensionDescV1, value interface{}) buildOpt {
+func extend(desc protoreflect.ExtensionType, value interface{}) buildOpt {
 	// TODO: Should ExtensionType.ValueOf accept []T instead of *[]T?
 	t := reflect.TypeOf(value)
 	if t.Kind() == reflect.Slice && t.Elem().Kind() != reflect.Uint8 {

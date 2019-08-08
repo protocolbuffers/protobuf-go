@@ -8,14 +8,12 @@ package filetype
 
 import (
 	"reflect"
-	"sync"
 
 	"google.golang.org/protobuf/internal/descopts"
 	fdesc "google.golang.org/protobuf/internal/filedesc"
 	pimpl "google.golang.org/protobuf/internal/impl"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
-	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 // Builder constructs type descriptors from a raw file descriptor
@@ -101,13 +99,11 @@ type Builder struct {
 	// EnumInfos is a list of enum infos in "flattened ordering".
 	EnumInfos []EnumInfo
 
-	// LegacyExtensions is a list of legacy extensions in "flattened ordering".
-	// If provided, the pointer to the v1 ExtensionDesc will be stored into the
-	// associated v2 ExtensionType and accessible via a pseudo-internal API.
-	// Also, the v2 ExtensionType will be stored into each v1 ExtensionDesc.
+	// ExtensionInfos is a list of extension infos in "flattened ordering".
+	// Each element is initialized and registered with the protoregistry package.
 	//
 	// Requirement: len(LegacyExtensions) == len(Build.Extensions)
-	LegacyExtensions []piface.ExtensionDescV1
+	ExtensionInfos []pimpl.ExtensionInfo
 
 	// TypeRegistry is the registry to register each type descriptor.
 	// If nil, it uses protoregistry.GlobalTypes.
@@ -158,7 +154,7 @@ func (tb Builder) Build() (out struct {
 
 	// Process messages.
 	messageGoTypes := tb.GoTypes[len(fbOut.Enums):][:len(fbOut.Messages)]
-	if tb.MessageInfos != nil && len(tb.MessageInfos) != len(fbOut.Messages) {
+	if len(tb.MessageInfos) != len(fbOut.Messages) {
 		panic("mismatching message lengths")
 	}
 	if len(fbOut.Messages) > 0 {
@@ -167,10 +163,8 @@ func (tb Builder) Build() (out struct {
 				continue // skip map entry
 			}
 
-			if tb.MessageInfos != nil {
-				tb.MessageInfos[i].GoReflectType = reflect.TypeOf(messageGoTypes[i])
-				tb.MessageInfos[i].Desc = &fbOut.Messages[i]
-			}
+			tb.MessageInfos[i].GoReflectType = reflect.TypeOf(messageGoTypes[i])
+			tb.MessageInfos[i].Desc = &fbOut.Messages[i]
 
 			// Register message types.
 			if err := tb.TypeRegistry.Register(&tb.MessageInfos[i]); err != nil {
@@ -207,49 +201,33 @@ func (tb Builder) Build() (out struct {
 	}
 
 	// Process extensions.
-	if tb.LegacyExtensions != nil && len(tb.LegacyExtensions) != len(fbOut.Extensions) {
+	if len(tb.ExtensionInfos) != len(fbOut.Extensions) {
 		panic("mismatching extension lengths")
 	}
-	if len(fbOut.Extensions) > 0 {
-		var depIdx int32
-		extensions := make([]Extension, len(fbOut.Extensions))
-		for i := range fbOut.Extensions {
-			// For enum and message kinds, determine the referent Go type so
-			// that we can construct their constructors.
-			const listExtDeps = 2
-			var goType reflect.Type
-			switch fbOut.Extensions[i].L1.Kind {
-			case pref.EnumKind:
-				j := depIdxs.Get(tb.DependencyIndexes, listExtDeps, depIdx)
-				goType = reflect.TypeOf(tb.GoTypes[j])
-				depIdx++
-			case pref.MessageKind, pref.GroupKind:
-				j := depIdxs.Get(tb.DependencyIndexes, listExtDeps, depIdx)
-				goType = reflect.TypeOf(tb.GoTypes[j])
-				depIdx++
-			default:
-				goType = goTypeForPBKind[fbOut.Extensions[i].L1.Kind]
-			}
+	var depIdx int32
+	for i := range fbOut.Extensions {
+		// For enum and message kinds, determine the referent Go type so
+		// that we can construct their constructors.
+		const listExtDeps = 2
+		var goType reflect.Type
+		switch fbOut.Extensions[i].L1.Kind {
+		case pref.EnumKind:
+			j := depIdxs.Get(tb.DependencyIndexes, listExtDeps, depIdx)
+			goType = reflect.TypeOf(tb.GoTypes[j])
+			depIdx++
+		case pref.MessageKind, pref.GroupKind:
+			j := depIdxs.Get(tb.DependencyIndexes, listExtDeps, depIdx)
+			goType = reflect.TypeOf(tb.GoTypes[j])
+			depIdx++
+		default:
+			goType = goTypeForPBKind[fbOut.Extensions[i].L1.Kind]
+		}
 
-			extensions[i] = Extension{
-				desc:   &fbOut.Extensions[i],
-				goType: goType,
-			}
-			extensions[i].tdesc = extensionTypeDescriptor{
-				ExtensionDescriptor: &fbOut.Extensions[i],
-				typ:                 &extensions[i],
-			}
+		pimpl.InitExtensionInfo(&tb.ExtensionInfos[i], &fbOut.Extensions[i], goType)
 
-			// Keep v1 and v2 extensions in sync.
-			if tb.LegacyExtensions != nil {
-				extensions[i].legacyDesc = &tb.LegacyExtensions[i]
-				tb.LegacyExtensions[i].Type = &extensions[i]
-			}
-
-			// Register extension types.
-			if err := tb.TypeRegistry.Register(&extensions[i]); err != nil {
-				panic(err)
-			}
+		// Register extension types.
+		if err := tb.TypeRegistry.Register(&tb.ExtensionInfos[i]); err != nil {
+			panic(err)
 		}
 	}
 
@@ -328,54 +306,3 @@ func messageMaker(t reflect.Type) func() pref.Message {
 		return reflect.New(t.Elem()).Interface().(pref.ProtoMessage).ProtoReflect()
 	}
 }
-
-type Extension struct {
-	desc       pref.ExtensionDescriptor
-	tdesc      extensionTypeDescriptor
-	legacyDesc *piface.ExtensionDescV1
-
-	once   sync.Once
-	goType reflect.Type
-	conv   pimpl.Converter
-}
-
-func (t *Extension) New() pref.Value  { return t.lazyInit().New() }
-func (t *Extension) Zero() pref.Value { return t.lazyInit().Zero() }
-func (t *Extension) ValueOf(v interface{}) pref.Value {
-	return t.lazyInit().PBValueOf(reflect.ValueOf(v))
-}
-func (t *Extension) InterfaceOf(v pref.Value) interface{} {
-	return t.lazyInit().GoValueOf(v).Interface()
-}
-func (t *Extension) GoType() reflect.Type {
-	t.lazyInit()
-	return t.goType
-}
-func (t *Extension) Descriptor() pref.ExtensionTypeDescriptor { return &t.tdesc }
-
-// ProtoLegacyExtensionDesc is a pseudo-internal API for allowing the v1 code
-// to be able to retrieve a v1 ExtensionDesc.
-//
-// WARNING: This method is exempt from the compatibility promise and may be
-// removed in the future without warning.
-func (x *Extension) ProtoLegacyExtensionDesc() *piface.ExtensionDescV1 {
-	return x.legacyDesc
-}
-
-func (t *Extension) lazyInit() pimpl.Converter {
-	t.once.Do(func() {
-		if t.desc.Cardinality() == pref.Repeated {
-			t.goType = reflect.PtrTo(reflect.SliceOf(t.goType))
-		}
-		t.conv = pimpl.NewConverter(t.goType, t.desc)
-	})
-	return t.conv
-}
-
-type extensionTypeDescriptor struct {
-	pref.ExtensionDescriptor
-	typ pref.ExtensionType
-}
-
-func (t *extensionTypeDescriptor) Type() pref.ExtensionType             { return t.typ }
-func (t *extensionTypeDescriptor) Descriptor() pref.ExtensionDescriptor { return t.ExtensionDescriptor }

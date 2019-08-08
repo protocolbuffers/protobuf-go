@@ -323,8 +323,8 @@ func TestFiles(t *testing.T) {
 func TestTypes(t *testing.T) {
 	mt1 := pimpl.Export{}.MessageTypeOf(&testpb.Message1{})
 	et1 := pimpl.Export{}.EnumTypeOf(testpb.Enum1_ONE)
-	xt1 := testpb.E_StringField.Type
-	xt2 := testpb.E_Message4_MessageField.Type
+	xt1 := testpb.E_StringField
+	xt2 := testpb.E_Message4_MessageField
 	registry := new(preg.Types)
 	if err := registry.Register(mt1, et1, xt1, xt2); err != nil {
 		t.Fatalf("registry.Register() returns unexpected error: %v", err)

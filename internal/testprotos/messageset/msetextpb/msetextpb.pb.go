@@ -10,7 +10,6 @@ package msetextpb
 import (
 	messagesetpb "google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -108,7 +107,7 @@ func (x *Ext2) GetExt2Field1() int32 {
 	return 0
 }
 
-var file_messageset_msetextpb_msetextpb_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_messageset_msetextpb_msetextpb_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*messagesetpb.MessageSet)(nil),
 		ExtensionType: (*Ext1)(nil),
@@ -130,9 +129,9 @@ var file_messageset_msetextpb_msetextpb_proto_extDescs = []protoiface.ExtensionD
 // Extension fields to messagesetpb.MessageSet.
 var (
 	// optional goproto.proto.messageset.Ext1 message_set_extension = 1000;
-	E_Ext1_MessageSetExtension = &file_messageset_msetextpb_msetextpb_proto_extDescs[0]
+	E_Ext1_MessageSetExtension = &file_messageset_msetextpb_msetextpb_proto_extTypes[0]
 	// optional goproto.proto.messageset.Ext2 message_set_extension = 1001;
-	E_Ext2_MessageSetExtension = &file_messageset_msetextpb_msetextpb_proto_extDescs[1]
+	E_Ext2_MessageSetExtension = &file_messageset_msetextpb_msetextpb_proto_extTypes[1]
 )
 
 var File_messageset_msetextpb_msetextpb_proto protoreflect.FileDescriptor
@@ -248,7 +247,7 @@ func file_messageset_msetextpb_msetextpb_proto_init() {
 		GoTypes:           file_messageset_msetextpb_msetextpb_proto_goTypes,
 		DependencyIndexes: file_messageset_msetextpb_msetextpb_proto_depIdxs,
 		MessageInfos:      file_messageset_msetextpb_msetextpb_proto_msgTypes,
-		LegacyExtensions:  file_messageset_msetextpb_msetextpb_proto_extDescs,
+		ExtensionInfos:    file_messageset_msetextpb_msetextpb_proto_extTypes,
 	}.Build()
 	File_messageset_msetextpb_msetextpb_proto = out.File
 	file_messageset_msetextpb_msetextpb_proto_rawDesc = nil

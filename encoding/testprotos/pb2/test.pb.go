@@ -1442,7 +1442,7 @@ func (x *Nests_OptGroup_OptNestedGroup) GetOptFixed32() uint32 {
 	return 0
 }
 
-var file_pb2_test_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_pb2_test_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*Extensions)(nil),
 		ExtensionType: (*bool)(nil),
@@ -1616,55 +1616,55 @@ var file_pb2_test_proto_extDescs = []protoiface.ExtensionDescV1{
 // Extension fields to Extensions.
 var (
 	// optional bool opt_ext_bool = 21;
-	E_OptExtBool = &file_pb2_test_proto_extDescs[0]
+	E_OptExtBool = &file_pb2_test_proto_extTypes[0]
 	// optional string opt_ext_string = 22;
-	E_OptExtString = &file_pb2_test_proto_extDescs[1]
+	E_OptExtString = &file_pb2_test_proto_extTypes[1]
 	// optional pb2.Enum opt_ext_enum = 23;
-	E_OptExtEnum = &file_pb2_test_proto_extDescs[2]
+	E_OptExtEnum = &file_pb2_test_proto_extTypes[2]
 	// optional pb2.Nested opt_ext_nested = 24;
-	E_OptExtNested = &file_pb2_test_proto_extDescs[3]
+	E_OptExtNested = &file_pb2_test_proto_extTypes[3]
 	// optional pb2.PartialRequired opt_ext_partial = 25;
-	E_OptExtPartial = &file_pb2_test_proto_extDescs[4]
+	E_OptExtPartial = &file_pb2_test_proto_extTypes[4]
 	// repeated fixed32 rpt_ext_fixed32 = 31;
-	E_RptExtFixed32 = &file_pb2_test_proto_extDescs[5]
+	E_RptExtFixed32 = &file_pb2_test_proto_extTypes[5]
 	// repeated pb2.Enum rpt_ext_enum = 32;
-	E_RptExtEnum = &file_pb2_test_proto_extDescs[6]
+	E_RptExtEnum = &file_pb2_test_proto_extTypes[6]
 	// repeated pb2.Nested rpt_ext_nested = 33;
-	E_RptExtNested = &file_pb2_test_proto_extDescs[7]
+	E_RptExtNested = &file_pb2_test_proto_extTypes[7]
 	// optional bool opt_ext_bool = 51;
-	E_ExtensionsContainer_OptExtBool = &file_pb2_test_proto_extDescs[9]
+	E_ExtensionsContainer_OptExtBool = &file_pb2_test_proto_extTypes[9]
 	// optional string opt_ext_string = 52;
-	E_ExtensionsContainer_OptExtString = &file_pb2_test_proto_extDescs[10]
+	E_ExtensionsContainer_OptExtString = &file_pb2_test_proto_extTypes[10]
 	// optional pb2.Enum opt_ext_enum = 53;
-	E_ExtensionsContainer_OptExtEnum = &file_pb2_test_proto_extDescs[11]
+	E_ExtensionsContainer_OptExtEnum = &file_pb2_test_proto_extTypes[11]
 	// optional pb2.Nested opt_ext_nested = 54;
-	E_ExtensionsContainer_OptExtNested = &file_pb2_test_proto_extDescs[12]
+	E_ExtensionsContainer_OptExtNested = &file_pb2_test_proto_extTypes[12]
 	// optional pb2.PartialRequired opt_ext_partial = 55;
-	E_ExtensionsContainer_OptExtPartial = &file_pb2_test_proto_extDescs[13]
+	E_ExtensionsContainer_OptExtPartial = &file_pb2_test_proto_extTypes[13]
 	// repeated string rpt_ext_string = 61;
-	E_ExtensionsContainer_RptExtString = &file_pb2_test_proto_extDescs[14]
+	E_ExtensionsContainer_RptExtString = &file_pb2_test_proto_extTypes[14]
 	// repeated pb2.Enum rpt_ext_enum = 62;
-	E_ExtensionsContainer_RptExtEnum = &file_pb2_test_proto_extDescs[15]
+	E_ExtensionsContainer_RptExtEnum = &file_pb2_test_proto_extTypes[15]
 	// repeated pb2.Nested rpt_ext_nested = 63;
-	E_ExtensionsContainer_RptExtNested = &file_pb2_test_proto_extDescs[16]
+	E_ExtensionsContainer_RptExtNested = &file_pb2_test_proto_extTypes[16]
 )
 
 // Extension fields to MessageSet.
 var (
 	// optional pb2.FakeMessageSetExtension message_set_extension = 50;
-	E_MessageSetExtension = &file_pb2_test_proto_extDescs[8]
+	E_MessageSetExtension = &file_pb2_test_proto_extTypes[8]
 	// optional pb2.MessageSetExtension message_set_extension = 10;
-	E_MessageSetExtension_MessageSetExtension = &file_pb2_test_proto_extDescs[17]
+	E_MessageSetExtension_MessageSetExtension = &file_pb2_test_proto_extTypes[17]
 	// optional pb2.MessageSetExtension not_message_set_extension = 20;
-	E_MessageSetExtension_NotMessageSetExtension = &file_pb2_test_proto_extDescs[18]
+	E_MessageSetExtension_NotMessageSetExtension = &file_pb2_test_proto_extTypes[18]
 	// optional pb2.Nested ext_nested = 30;
-	E_MessageSetExtension_ExtNested = &file_pb2_test_proto_extDescs[19]
+	E_MessageSetExtension_ExtNested = &file_pb2_test_proto_extTypes[19]
 )
 
 // Extension fields to FakeMessageSet.
 var (
 	// optional pb2.FakeMessageSetExtension message_set_extension = 10;
-	E_FakeMessageSetExtension_MessageSetExtension = &file_pb2_test_proto_extDescs[20]
+	E_FakeMessageSetExtension_MessageSetExtension = &file_pb2_test_proto_extTypes[20]
 )
 
 var File_pb2_test_proto protoreflect.FileDescriptor
@@ -2406,7 +2406,7 @@ func file_pb2_test_proto_init() {
 		DependencyIndexes: file_pb2_test_proto_depIdxs,
 		EnumInfos:         file_pb2_test_proto_enumTypes,
 		MessageInfos:      file_pb2_test_proto_msgTypes,
-		LegacyExtensions:  file_pb2_test_proto_extDescs,
+		ExtensionInfos:    file_pb2_test_proto_extTypes,
 	}.Build()
 	File_pb2_test_proto = out.File
 	file_pb2_test_proto_rawDesc = nil

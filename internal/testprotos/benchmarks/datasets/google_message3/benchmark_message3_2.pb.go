@@ -4317,7 +4317,7 @@ func (x *Message36858_Message36859) GetField36969() float32 {
 	return 0
 }
 
-var file_datasets_google_message3_benchmark_message3_2_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_datasets_google_message3_benchmark_message3_2_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*Message0)(nil),
 		ExtensionType: (*Message34621)(nil),
@@ -4331,7 +4331,7 @@ var file_datasets_google_message3_benchmark_message3_2_proto_extDescs = []protoi
 // Extension fields to Message0.
 var (
 	// optional benchmarks.google_message3.Message34621 field34669 = 17562023;
-	E_Message34621_Field34669 = &file_datasets_google_message3_benchmark_message3_2_proto_extDescs[0]
+	E_Message34621_Field34669 = &file_datasets_google_message3_benchmark_message3_2_proto_extTypes[0]
 )
 
 var File_datasets_google_message3_benchmark_message3_2_proto protoreflect.FileDescriptor
@@ -6148,7 +6148,7 @@ func file_datasets_google_message3_benchmark_message3_2_proto_init() {
 		GoTypes:           file_datasets_google_message3_benchmark_message3_2_proto_goTypes,
 		DependencyIndexes: file_datasets_google_message3_benchmark_message3_2_proto_depIdxs,
 		MessageInfos:      file_datasets_google_message3_benchmark_message3_2_proto_msgTypes,
-		LegacyExtensions:  file_datasets_google_message3_benchmark_message3_2_proto_extDescs,
+		ExtensionInfos:    file_datasets_google_message3_benchmark_message3_2_proto_extTypes,
 	}.Build()
 	File_datasets_google_message3_benchmark_message3_2_proto = out.File
 	file_datasets_google_message3_benchmark_message3_2_proto_rawDesc = nil

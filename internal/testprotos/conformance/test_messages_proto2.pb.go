@@ -1407,7 +1407,7 @@ func (x *UnknownToTestAllTypes_OptionalGroup) GetA() int32 {
 	return 0
 }
 
-var file_google_protobuf_test_messages_proto2_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_google_protobuf_test_messages_proto2_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*TestAllTypesProto2)(nil),
 		ExtensionType: (*int32)(nil),
@@ -1437,15 +1437,15 @@ var file_google_protobuf_test_messages_proto2_proto_extDescs = []protoiface.Exte
 // Extension fields to TestAllTypesProto2.
 var (
 	// optional int32 extension_int32 = 120;
-	E_ExtensionInt32 = &file_google_protobuf_test_messages_proto2_proto_extDescs[0]
+	E_ExtensionInt32 = &file_google_protobuf_test_messages_proto2_proto_extTypes[0]
 )
 
 // Extension fields to TestAllTypesProto2_MessageSetCorrect.
 var (
 	// optional protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1 message_set_extension = 1547769;
-	E_TestAllTypesProto2_MessageSetCorrectExtension1_MessageSetExtension = &file_google_protobuf_test_messages_proto2_proto_extDescs[1]
+	E_TestAllTypesProto2_MessageSetCorrectExtension1_MessageSetExtension = &file_google_protobuf_test_messages_proto2_proto_extTypes[1]
 	// optional protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2 message_set_extension = 4135312;
-	E_TestAllTypesProto2_MessageSetCorrectExtension2_MessageSetExtension = &file_google_protobuf_test_messages_proto2_proto_extDescs[2]
+	E_TestAllTypesProto2_MessageSetCorrectExtension2_MessageSetExtension = &file_google_protobuf_test_messages_proto2_proto_extTypes[2]
 )
 
 var File_google_protobuf_test_messages_proto2_proto protoreflect.FileDescriptor
@@ -2262,7 +2262,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		DependencyIndexes: file_google_protobuf_test_messages_proto2_proto_depIdxs,
 		EnumInfos:         file_google_protobuf_test_messages_proto2_proto_enumTypes,
 		MessageInfos:      file_google_protobuf_test_messages_proto2_proto_msgTypes,
-		LegacyExtensions:  file_google_protobuf_test_messages_proto2_proto_extDescs,
+		ExtensionInfos:    file_google_protobuf_test_messages_proto2_proto_extTypes,
 	}.Build()
 	File_google_protobuf_test_messages_proto2_proto = out.File
 	file_google_protobuf_test_messages_proto2_proto_rawDesc = nil

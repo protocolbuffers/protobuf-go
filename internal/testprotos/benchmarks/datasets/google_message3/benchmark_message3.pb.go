@@ -3479,7 +3479,7 @@ func (x *Message24404_Message24405) GetField24716() int64 {
 	return 0
 }
 
-var file_datasets_google_message3_benchmark_message3_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_datasets_google_message3_benchmark_message3_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*Message16945)(nil),
 		ExtensionType: (*string)(nil),
@@ -4101,171 +4101,171 @@ var file_datasets_google_message3_benchmark_message3_proto_extDescs = []protoifa
 // Extension fields to Message16945.
 var (
 	// optional string field17026 = 472;
-	E_Field17026 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[0]
+	E_Field17026 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[0]
 	// repeated string field17027 = 818;
-	E_Field17027 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[1]
+	E_Field17027 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[1]
 	// optional benchmarks.google_message3.Message0 field17031 = 215;
-	E_Field17031 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[2]
+	E_Field17031 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[2]
 	// repeated benchmarks.google_message3.Message0 field17032 = 292;
-	E_Field17032 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[3]
+	E_Field17032 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[3]
 	// repeated benchmarks.google_message3.Message0 field17038 = 234;
-	E_Field17038 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[4]
+	E_Field17038 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[4]
 	// repeated benchmarks.google_message3.Message0 field17039 = 235;
-	E_Field17039 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[5]
+	E_Field17039 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[5]
 	// optional benchmarks.google_message3.Message0 field17042 = 246;
-	E_Field17042 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[6]
+	E_Field17042 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[6]
 	// optional string field17043 = 224;
-	E_Field17043 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[7]
+	E_Field17043 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[7]
 	// optional string field17044 = 225;
-	E_Field17044 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[8]
+	E_Field17044 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[8]
 	// repeated string field17048 = 63;
-	E_Field17048 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[9]
+	E_Field17048 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[9]
 	// repeated string field17049 = 64;
-	E_Field17049 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[10]
+	E_Field17049 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[10]
 	// repeated benchmarks.google_message3.Message0 field17052 = 233;
-	E_Field17052 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[11]
+	E_Field17052 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[11]
 	// repeated benchmarks.google_message3.Message0 field17053 = 66;
-	E_Field17053 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[12]
+	E_Field17053 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[12]
 	// repeated string field17056 = 275;
-	E_Field17056 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[13]
+	E_Field17056 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[13]
 	// optional string field17057 = 226;
-	E_Field17057 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[14]
+	E_Field17057 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[14]
 	// repeated benchmarks.google_message3.Message0 field17060 = 27;
-	E_Field17060 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[15]
+	E_Field17060 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[15]
 	// repeated string field17073 = 75;
-	E_Field17073 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[16]
+	E_Field17073 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[16]
 	// repeated benchmarks.google_message3.Message0 field17076 = 77;
-	E_Field17076 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[17]
+	E_Field17076 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[17]
 	// repeated string field17078 = 296;
-	E_Field17078 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[18]
+	E_Field17078 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[18]
 	// repeated benchmarks.google_message3.Message0 field17082 = 160;
-	E_Field17082 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[19]
+	E_Field17082 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[19]
 	// repeated benchmarks.google_message3.Message0 field17091 = 585;
-	E_Field17091 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[20]
+	E_Field17091 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[20]
 	// repeated benchmarks.google_message3.Message0 field17098 = 987;
-	E_Field17098 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[21]
+	E_Field17098 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[21]
 	// repeated benchmarks.google_message3.Message0 field17101 = 157;
-	E_Field17101 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[22]
+	E_Field17101 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[22]
 	// repeated string field17102 = 158;
-	E_Field17102 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[23]
+	E_Field17102 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[23]
 	// repeated string field17107 = 166;
-	E_Field17107 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[24]
+	E_Field17107 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[24]
 	// repeated string field17133 = 567;
-	E_Field17133 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[25]
+	E_Field17133 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[25]
 	// repeated string field17134 = 572;
-	E_Field17134 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[26]
+	E_Field17134 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[26]
 	// repeated string field17160 = 49;
-	E_Field17160 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[27]
+	E_Field17160 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[27]
 	// repeated string field17168 = 32;
-	E_Field17168 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[28]
+	E_Field17168 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[28]
 	// repeated string field17170 = 34;
-	E_Field17170 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[29]
+	E_Field17170 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[29]
 	// repeated benchmarks.google_message3.Message0 field17172 = 509;
-	E_Field17172 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[30]
+	E_Field17172 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[30]
 	// repeated string field17174 = 39;
-	E_Field17174 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[31]
+	E_Field17174 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[31]
 	// repeated benchmarks.google_message3.Message0 field17175 = 40;
-	E_Field17175 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[32]
+	E_Field17175 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[32]
 	// repeated benchmarks.google_message3.Message0 field17178 = 511;
-	E_Field17178 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[33]
+	E_Field17178 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[33]
 	// repeated benchmarks.google_message3.Message0 field17185 = 50;
-	E_Field17185 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[34]
+	E_Field17185 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[34]
 	// repeated int32 field17207 = 1081;
-	E_Field17207 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[35]
+	E_Field17207 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[35]
 	// repeated benchmarks.google_message3.Message0 field17238 = 184;
-	E_Field17238 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[36]
+	E_Field17238 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[36]
 	// repeated benchmarks.google_message3.Message0 field17289 = 177;
-	E_Field17289 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[37]
+	E_Field17289 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[37]
 	// repeated benchmarks.google_message3.Message0 field17290 = 178;
-	E_Field17290 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[38]
+	E_Field17290 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[38]
 	// repeated benchmarks.google_message3.Message0 field17296 = 474;
-	E_Field17296 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[39]
+	E_Field17296 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[39]
 	// repeated string field17298 = 44;
-	E_Field17298 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[40]
+	E_Field17298 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[40]
 	// repeated benchmarks.google_message3.Message0 field17301 = 47;
-	E_Field17301 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[41]
+	E_Field17301 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[41]
 	// optional benchmarks.google_message3.Message0 field17412 = 21;
-	E_Field17412 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[42]
+	E_Field17412 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[42]
 	// repeated benchmarks.google_message3.Message0 field17438 = 132;
-	E_Field17438 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[43]
+	E_Field17438 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[43]
 	// repeated benchmarks.google_message3.Message0 field17458 = 512;
-	E_Field17458 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[44]
+	E_Field17458 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[44]
 	// repeated string field17460 = 560;
-	E_Field17460 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[45]
+	E_Field17460 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[45]
 	// repeated string field17466 = 552;
-	E_Field17466 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[46]
+	E_Field17466 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[46]
 	// repeated benchmarks.google_message3.Message0 field17617 = 1080;
-	E_Field17617 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[47]
+	E_Field17617 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[47]
 	// repeated int32 field17618 = 1084;
-	E_Field17618 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[48]
+	E_Field17618 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[48]
 )
 
 // Extension fields to Message0.
 var (
 	// optional benchmarks.google_message3.Message1327 field1373 = 23104162;
-	E_Message1327_Field1373 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[49]
+	E_Message1327_Field1373 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[49]
 	// optional benchmarks.google_message3.Message3672 field3737 = 3144435;
-	E_Message3672_Field3737 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[50]
+	E_Message3672_Field3737 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[50]
 	// optional benchmarks.google_message3.Message3804 field3825 = 59241828;
-	E_Message3804_Field3825 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[51]
+	E_Message3804_Field3825 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[51]
 	// optional benchmarks.google_message3.Message6849 field6911 = 107558455;
-	E_Message6849_Field6911 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[52]
+	E_Message6849_Field6911 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[52]
 	// optional benchmarks.google_message3.Message6866 field6974 = 22259060;
-	E_Message6866_Field6974 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[53]
+	E_Message6866_Field6974 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[53]
 	// optional benchmarks.google_message3.Message6870 field6992 = 90034652;
-	E_Message6870_Field6992 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[54]
+	E_Message6870_Field6992 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[54]
 	// optional benchmarks.google_message3.Message7651 field7730 = 55876009;
-	E_Message7651_Field7730 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[55]
+	E_Message7651_Field7730 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[55]
 	// optional benchmarks.google_message3.Message7864 field7872 = 44542730;
-	E_Message7864_Field7872 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[56]
+	E_Message7864_Field7872 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[56]
 	// optional benchmarks.google_message3.Message7929 field7962 = 53392238;
-	E_Message7929_Field7962 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[57]
+	E_Message7929_Field7962 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[57]
 	// optional benchmarks.google_message3.Message8508 field8534 = 3811804;
-	E_Message8508_Field8534 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[58]
+	E_Message8508_Field8534 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[58]
 	// optional benchmarks.google_message3.Message9122 field9134 = 120398939;
-	E_Message9122_Field9134 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[59]
+	E_Message9122_Field9134 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[59]
 	// optional benchmarks.google_message3.Message10177 field10271 = 26801105;
-	E_Message10177_Field10271 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[60]
+	E_Message10177_Field10271 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[60]
 	// optional benchmarks.google_message3.Message11990 field12031 = 21265426;
-	E_Message11990_Field12031 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[64]
+	E_Message11990_Field12031 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[64]
 	// optional benchmarks.google_message3.Message12691 field12716 = 28426536;
-	E_Message12691_Field12716 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[65]
+	E_Message12691_Field12716 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[65]
 	// optional benchmarks.google_message3.Message12870 field12899 = 5447656;
-	E_Message12870_Field12899 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[66]
+	E_Message12870_Field12899 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[66]
 	// optional benchmarks.google_message3.Message16507 field16542 = 5569941;
-	E_Message16507_Field16542 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[68]
+	E_Message16507_Field16542 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[68]
 	// optional benchmarks.google_message3.Message16564 field16569 = 25830030;
-	E_Message16564_Field16569 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[69]
+	E_Message16564_Field16569 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[69]
 	// optional benchmarks.google_message3.Message16661 field16673 = 31274398;
-	E_Message16661_Field16673 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[70]
+	E_Message16661_Field16673 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[70]
 	// optional benchmarks.google_message3.Message16746 field16810 = 28406765;
-	E_Message16746_Field16810 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[71]
+	E_Message16746_Field16810 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[71]
 	// optional benchmarks.google_message3.Message17786 field18176 = 11823055;
-	E_Message17786_Field18176 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[72]
+	E_Message17786_Field18176 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[72]
 	// optional benchmarks.google_message3.Message24404 field24685 = 9129287;
-	E_Message24404_Field24685 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[74]
+	E_Message24404_Field24685 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[74]
 	// optional benchmarks.google_message3.Message27300 field27304 = 24956467;
-	E_Message27300_Field27304 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[75]
+	E_Message27300_Field27304 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[75]
 	// optional benchmarks.google_message3.Message27453 field27482 = 8086204;
-	E_Message27453_Field27482 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[76]
+	E_Message27453_Field27482 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[76]
 )
 
 // Extension fields to Message10155.
 var (
 	// optional benchmarks.google_message3.Message10278 field10289 = 29374161;
-	E_Message10278_Field10289 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[61]
+	E_Message10278_Field10289 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[61]
 	// optional benchmarks.google_message3.Message10323 field10361 = 27922524;
-	E_Message10323_Field10361 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[62]
+	E_Message10323_Field10361 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[62]
 	// optional benchmarks.google_message3.Message10324 field10364 = 27832297;
-	E_Message10324_Field10364 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[63]
+	E_Message10324_Field10364 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[63]
 	// optional benchmarks.google_message3.Message22857 field22875 = 67799715;
-	E_Message22857_Field22875 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[73]
+	E_Message22857_Field22875 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[73]
 )
 
 // Extension fields to Message13145.
 var (
 	// optional benchmarks.google_message3.Message13154 field13166 = 47301086;
-	E_Message13154_Field13166 = &file_datasets_google_message3_benchmark_message3_proto_extDescs[67]
+	E_Message13154_Field13166 = &file_datasets_google_message3_benchmark_message3_proto_extTypes[67]
 )
 
 var File_datasets_google_message3_benchmark_message3_proto protoreflect.FileDescriptor
@@ -6548,7 +6548,7 @@ func file_datasets_google_message3_benchmark_message3_proto_init() {
 		GoTypes:           file_datasets_google_message3_benchmark_message3_proto_goTypes,
 		DependencyIndexes: file_datasets_google_message3_benchmark_message3_proto_depIdxs,
 		MessageInfos:      file_datasets_google_message3_benchmark_message3_proto_msgTypes,
-		LegacyExtensions:  file_datasets_google_message3_benchmark_message3_proto_extDescs,
+		ExtensionInfos:    file_datasets_google_message3_benchmark_message3_proto_extTypes,
 	}.Build()
 	File_datasets_google_message3_benchmark_message3_proto = out.File
 	file_datasets_google_message3_benchmark_message3_proto_rawDesc = nil

@@ -274,33 +274,33 @@ func TestMerge(t *testing.T) {
 		desc: "merge extension fields",
 		dst: func() proto.Message {
 			m := new(testpb.TestAllExtensions)
-			proto.SetExtension(m, testpb.E_OptionalInt32Extension.Type, int32(32))
-			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension.Type,
+			proto.SetExtension(m, testpb.E_OptionalInt32Extension, int32(32))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
 				&testpb.TestAllTypes_NestedMessage{
 					A: proto.Int32(50),
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension.Type, &[]uint32{1, 2, 3})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, &[]uint32{1, 2, 3})
 			return m
 		}(),
 		src: func() proto.Message {
 			m := new(testpb.TestAllExtensions)
-			proto.SetExtension(m, testpb.E_OptionalInt64Extension.Type, int64(64))
-			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension.Type,
+			proto.SetExtension(m, testpb.E_OptionalInt64Extension, int64(64))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
 				&testpb.TestAllTypes_NestedMessage{
 					Corecursive: &testpb.TestAllTypes{
 						OptionalInt64: proto.Int64(1000),
 					},
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension.Type, &[]uint32{4, 5, 6})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, &[]uint32{4, 5, 6})
 			return m
 		}(),
 		want: func() proto.Message {
 			m := new(testpb.TestAllExtensions)
-			proto.SetExtension(m, testpb.E_OptionalInt32Extension.Type, int32(32))
-			proto.SetExtension(m, testpb.E_OptionalInt64Extension.Type, int64(64))
-			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension.Type,
+			proto.SetExtension(m, testpb.E_OptionalInt32Extension, int32(32))
+			proto.SetExtension(m, testpb.E_OptionalInt64Extension, int64(64))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
 				&testpb.TestAllTypes_NestedMessage{
 					A: proto.Int32(50),
 					Corecursive: &testpb.TestAllTypes{
@@ -308,7 +308,7 @@ func TestMerge(t *testing.T) {
 					},
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension.Type, &[]uint32{1, 2, 3, 4, 5, 6})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, &[]uint32{1, 2, 3, 4, 5, 6})
 			return m
 		}(),
 	}, {

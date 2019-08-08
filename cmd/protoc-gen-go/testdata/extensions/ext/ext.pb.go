@@ -374,7 +374,7 @@ func (*ExtendingMessage_ExtendingMessageSubmessage) Descriptor() ([]byte, []int)
 	return file_extensions_ext_ext_proto_rawDescGZIP(), []int{2, 0}
 }
 
-var file_extensions_ext_ext_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_extensions_ext_ext_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*base.BaseMessage)(nil),
 		ExtensionType: (*bool)(nil),
@@ -732,101 +732,101 @@ var file_extensions_ext_ext_proto_extDescs = []protoiface.ExtensionDescV1{
 // Extension fields to base.BaseMessage.
 var (
 	// optional bool extension_bool = 101;
-	E_ExtensionBool = &file_extensions_ext_ext_proto_extDescs[0]
+	E_ExtensionBool = &file_extensions_ext_ext_proto_extTypes[0]
 	// optional goproto.protoc.extension.ext.Enum extension_enum = 102;
-	E_ExtensionEnum = &file_extensions_ext_ext_proto_extDescs[1]
+	E_ExtensionEnum = &file_extensions_ext_ext_proto_extTypes[1]
 	// optional int32 extension_int32 = 103;
-	E_ExtensionInt32 = &file_extensions_ext_ext_proto_extDescs[2]
+	E_ExtensionInt32 = &file_extensions_ext_ext_proto_extTypes[2]
 	// optional sint32 extension_sint32 = 104;
-	E_ExtensionSint32 = &file_extensions_ext_ext_proto_extDescs[3]
+	E_ExtensionSint32 = &file_extensions_ext_ext_proto_extTypes[3]
 	// optional uint32 extension_uint32 = 105;
-	E_ExtensionUint32 = &file_extensions_ext_ext_proto_extDescs[4]
+	E_ExtensionUint32 = &file_extensions_ext_ext_proto_extTypes[4]
 	// optional int64 extension_int64 = 106;
-	E_ExtensionInt64 = &file_extensions_ext_ext_proto_extDescs[5]
+	E_ExtensionInt64 = &file_extensions_ext_ext_proto_extTypes[5]
 	// optional sint64 extension_sint64 = 107;
-	E_ExtensionSint64 = &file_extensions_ext_ext_proto_extDescs[6]
+	E_ExtensionSint64 = &file_extensions_ext_ext_proto_extTypes[6]
 	// optional uint64 extension_uint64 = 108;
-	E_ExtensionUint64 = &file_extensions_ext_ext_proto_extDescs[7]
+	E_ExtensionUint64 = &file_extensions_ext_ext_proto_extTypes[7]
 	// optional sfixed32 extension_sfixed32 = 109;
-	E_ExtensionSfixed32 = &file_extensions_ext_ext_proto_extDescs[8]
+	E_ExtensionSfixed32 = &file_extensions_ext_ext_proto_extTypes[8]
 	// optional fixed32 extension_fixed32 = 110;
-	E_ExtensionFixed32 = &file_extensions_ext_ext_proto_extDescs[9]
+	E_ExtensionFixed32 = &file_extensions_ext_ext_proto_extTypes[9]
 	// optional float extension_float = 111;
-	E_ExtensionFloat = &file_extensions_ext_ext_proto_extDescs[10]
+	E_ExtensionFloat = &file_extensions_ext_ext_proto_extTypes[10]
 	// optional sfixed64 extension_sfixed64 = 112;
-	E_ExtensionSfixed64 = &file_extensions_ext_ext_proto_extDescs[11]
+	E_ExtensionSfixed64 = &file_extensions_ext_ext_proto_extTypes[11]
 	// optional fixed64 extension_fixed64 = 113;
-	E_ExtensionFixed64 = &file_extensions_ext_ext_proto_extDescs[12]
+	E_ExtensionFixed64 = &file_extensions_ext_ext_proto_extTypes[12]
 	// optional double extension_double = 114;
-	E_ExtensionDouble = &file_extensions_ext_ext_proto_extDescs[13]
+	E_ExtensionDouble = &file_extensions_ext_ext_proto_extTypes[13]
 	// optional string extension_string = 115;
-	E_ExtensionString = &file_extensions_ext_ext_proto_extDescs[14]
+	E_ExtensionString = &file_extensions_ext_ext_proto_extTypes[14]
 	// optional bytes extension_bytes = 116;
-	E_ExtensionBytes = &file_extensions_ext_ext_proto_extDescs[15]
+	E_ExtensionBytes = &file_extensions_ext_ext_proto_extTypes[15]
 	// optional goproto.protoc.extension.ext.Message extension_Message = 117;
-	E_Extension_Message = &file_extensions_ext_ext_proto_extDescs[16]
+	E_Extension_Message = &file_extensions_ext_ext_proto_extTypes[16]
 	// optional goproto.protoc.extension.ext.Message.M extension_MessageM = 118;
-	E_Extension_MessageM = &file_extensions_ext_ext_proto_extDescs[17]
+	E_Extension_MessageM = &file_extensions_ext_ext_proto_extTypes[17]
 	// optional goproto.protoc.extension.ext.ExtensionGroup extensiongroup = 119;
-	E_Extensiongroup = &file_extensions_ext_ext_proto_extDescs[18]
+	E_Extensiongroup = &file_extensions_ext_ext_proto_extTypes[18]
 	// optional goproto.protoc.extension.extra.ExtraMessage extra_message = 9;
-	E_ExtraMessage = &file_extensions_ext_ext_proto_extDescs[19]
+	E_ExtraMessage = &file_extensions_ext_ext_proto_extTypes[19]
 	// repeated bool repeated_x_bool = 301;
-	E_RepeatedXBool = &file_extensions_ext_ext_proto_extDescs[20]
+	E_RepeatedXBool = &file_extensions_ext_ext_proto_extTypes[20]
 	// repeated goproto.protoc.extension.ext.Enum repeated_x_enum = 302;
-	E_RepeatedXEnum = &file_extensions_ext_ext_proto_extDescs[21]
+	E_RepeatedXEnum = &file_extensions_ext_ext_proto_extTypes[21]
 	// repeated int32 repeated_x_int32 = 303;
-	E_RepeatedXInt32 = &file_extensions_ext_ext_proto_extDescs[22]
+	E_RepeatedXInt32 = &file_extensions_ext_ext_proto_extTypes[22]
 	// repeated sint32 repeated_x_sint32 = 304;
-	E_RepeatedXSint32 = &file_extensions_ext_ext_proto_extDescs[23]
+	E_RepeatedXSint32 = &file_extensions_ext_ext_proto_extTypes[23]
 	// repeated uint32 repeated_x_uint32 = 305;
-	E_RepeatedXUint32 = &file_extensions_ext_ext_proto_extDescs[24]
+	E_RepeatedXUint32 = &file_extensions_ext_ext_proto_extTypes[24]
 	// repeated int64 repeated_x_int64 = 306;
-	E_RepeatedXInt64 = &file_extensions_ext_ext_proto_extDescs[25]
+	E_RepeatedXInt64 = &file_extensions_ext_ext_proto_extTypes[25]
 	// repeated sint64 repeated_x_sint64 = 307;
-	E_RepeatedXSint64 = &file_extensions_ext_ext_proto_extDescs[26]
+	E_RepeatedXSint64 = &file_extensions_ext_ext_proto_extTypes[26]
 	// repeated uint64 repeated_x_uint64 = 308;
-	E_RepeatedXUint64 = &file_extensions_ext_ext_proto_extDescs[27]
+	E_RepeatedXUint64 = &file_extensions_ext_ext_proto_extTypes[27]
 	// repeated sfixed32 repeated_x_sfixed32 = 309;
-	E_RepeatedXSfixed32 = &file_extensions_ext_ext_proto_extDescs[28]
+	E_RepeatedXSfixed32 = &file_extensions_ext_ext_proto_extTypes[28]
 	// repeated fixed32 repeated_x_fixed32 = 310;
-	E_RepeatedXFixed32 = &file_extensions_ext_ext_proto_extDescs[29]
+	E_RepeatedXFixed32 = &file_extensions_ext_ext_proto_extTypes[29]
 	// repeated float repeated_x_float = 311;
-	E_RepeatedXFloat = &file_extensions_ext_ext_proto_extDescs[30]
+	E_RepeatedXFloat = &file_extensions_ext_ext_proto_extTypes[30]
 	// repeated sfixed64 repeated_x_sfixed64 = 312;
-	E_RepeatedXSfixed64 = &file_extensions_ext_ext_proto_extDescs[31]
+	E_RepeatedXSfixed64 = &file_extensions_ext_ext_proto_extTypes[31]
 	// repeated fixed64 repeated_x_fixed64 = 313;
-	E_RepeatedXFixed64 = &file_extensions_ext_ext_proto_extDescs[32]
+	E_RepeatedXFixed64 = &file_extensions_ext_ext_proto_extTypes[32]
 	// repeated double repeated_x_double = 314;
-	E_RepeatedXDouble = &file_extensions_ext_ext_proto_extDescs[33]
+	E_RepeatedXDouble = &file_extensions_ext_ext_proto_extTypes[33]
 	// repeated string repeated_x_string = 315;
-	E_RepeatedXString = &file_extensions_ext_ext_proto_extDescs[34]
+	E_RepeatedXString = &file_extensions_ext_ext_proto_extTypes[34]
 	// repeated bytes repeated_x_bytes = 316;
-	E_RepeatedXBytes = &file_extensions_ext_ext_proto_extDescs[35]
+	E_RepeatedXBytes = &file_extensions_ext_ext_proto_extTypes[35]
 	// repeated goproto.protoc.extension.ext.Message repeated_x_Message = 317;
-	E_RepeatedX_Message = &file_extensions_ext_ext_proto_extDescs[36]
+	E_RepeatedX_Message = &file_extensions_ext_ext_proto_extTypes[36]
 	// repeated goproto.protoc.extension.ext.RepeatedGroup repeatedgroup = 318;
-	E_Repeatedgroup = &file_extensions_ext_ext_proto_extDescs[37]
+	E_Repeatedgroup = &file_extensions_ext_ext_proto_extTypes[37]
 	// optional goproto.protoc.extension.ext.Extendable extendable_field = 400;
-	E_ExtendableField = &file_extensions_ext_ext_proto_extDescs[38]
+	E_ExtendableField = &file_extensions_ext_ext_proto_extTypes[38]
 	// optional string extending_message_string = 200;
-	E_ExtendingMessage_ExtendingMessageString = &file_extensions_ext_ext_proto_extDescs[41]
+	E_ExtendingMessage_ExtendingMessageString = &file_extensions_ext_ext_proto_extTypes[41]
 	// optional goproto.protoc.extension.ext.ExtendingMessage.ExtendingMessageSubmessage extending_message_submessage = 201;
-	E_ExtendingMessage_ExtendingMessageSubmessage = &file_extensions_ext_ext_proto_extDescs[42]
+	E_ExtendingMessage_ExtendingMessageSubmessage = &file_extensions_ext_ext_proto_extTypes[42]
 )
 
 // Extension fields to Extendable.
 var (
 	// optional string extendable_string_field = 1;
-	E_ExtendableStringField = &file_extensions_ext_ext_proto_extDescs[39]
+	E_ExtendableStringField = &file_extensions_ext_ext_proto_extTypes[39]
 )
 
 // Extension fields to base.MessageSetWireFormatMessage.
 var (
 	// optional goproto.protoc.extension.ext.MessageSetWireFormatExtension message_set_extension = 101;
-	E_MessageSetExtension = &file_extensions_ext_ext_proto_extDescs[40]
+	E_MessageSetExtension = &file_extensions_ext_ext_proto_extTypes[40]
 	// optional goproto.protoc.extension.ext.MessageSetWireFormatExtension message_set_extension = 100;
-	E_MessageSetWireFormatExtension_MessageSetExtension = &file_extensions_ext_ext_proto_extDescs[43]
+	E_MessageSetWireFormatExtension_MessageSetExtension = &file_extensions_ext_ext_proto_extTypes[43]
 )
 
 var File_extensions_ext_ext_proto protoreflect.FileDescriptor
@@ -1358,7 +1358,7 @@ func file_extensions_ext_ext_proto_init() {
 		DependencyIndexes: file_extensions_ext_ext_proto_depIdxs,
 		EnumInfos:         file_extensions_ext_ext_proto_enumTypes,
 		MessageInfos:      file_extensions_ext_ext_proto_msgTypes,
-		LegacyExtensions:  file_extensions_ext_ext_proto_extDescs,
+		ExtensionInfos:    file_extensions_ext_ext_proto_extTypes,
 	}.Build()
 	File_extensions_ext_ext_proto = out.File
 	file_extensions_ext_ext_proto_rawDesc = nil

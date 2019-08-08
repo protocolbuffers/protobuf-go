@@ -6023,7 +6023,7 @@ func (x *Message17783_Message17785) GetField18173() []string {
 	return nil
 }
 
-var file_datasets_google_message3_benchmark_message3_1_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_datasets_google_message3_benchmark_message3_1_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*Message0)(nil),
 		ExtensionType: (*Message34390)(nil),
@@ -6077,17 +6077,17 @@ var file_datasets_google_message3_benchmark_message3_1_proto_extDescs = []protoi
 // Extension fields to Message0.
 var (
 	// optional benchmarks.google_message3.Message34390 field34453 = 92144610;
-	E_Message34390_Field34453 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[0]
+	E_Message34390_Field34453 = &file_datasets_google_message3_benchmark_message3_1_proto_extTypes[0]
 	// optional benchmarks.google_message3.Message34624 field34685 = 18178548;
-	E_Message34624_Field34685 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[1]
+	E_Message34624_Field34685 = &file_datasets_google_message3_benchmark_message3_1_proto_extTypes[1]
 	// optional benchmarks.google_message3.Message34791 field34807 = 6330340;
-	E_Message34791_Field34807 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[2]
+	E_Message34791_Field34807 = &file_datasets_google_message3_benchmark_message3_1_proto_extTypes[2]
 	// optional benchmarks.google_message3.Message35483 field35505 = 7913554;
-	E_Message35483_Field35505 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[3]
+	E_Message35483_Field35505 = &file_datasets_google_message3_benchmark_message3_1_proto_extTypes[3]
 	// optional benchmarks.google_message3.Message35807 field35818 = 3803299;
-	E_Message35807_Field35818 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[4]
+	E_Message35807_Field35818 = &file_datasets_google_message3_benchmark_message3_1_proto_extTypes[4]
 	// optional benchmarks.google_message3.Message16945 field17025 = 22068132;
-	E_Message16945_Field17025 = &file_datasets_google_message3_benchmark_message3_1_proto_extDescs[5]
+	E_Message16945_Field17025 = &file_datasets_google_message3_benchmark_message3_1_proto_extTypes[5]
 )
 
 var File_datasets_google_message3_benchmark_message3_1_proto protoreflect.FileDescriptor
@@ -8872,7 +8872,7 @@ func file_datasets_google_message3_benchmark_message3_1_proto_init() {
 		GoTypes:           file_datasets_google_message3_benchmark_message3_1_proto_goTypes,
 		DependencyIndexes: file_datasets_google_message3_benchmark_message3_1_proto_depIdxs,
 		MessageInfos:      file_datasets_google_message3_benchmark_message3_1_proto_msgTypes,
-		LegacyExtensions:  file_datasets_google_message3_benchmark_message3_1_proto_extDescs,
+		ExtensionInfos:    file_datasets_google_message3_benchmark_message3_1_proto_extTypes,
 	}.Build()
 	File_datasets_google_message3_benchmark_message3_1_proto = out.File
 	file_datasets_google_message3_benchmark_message3_1_proto_rawDesc = nil

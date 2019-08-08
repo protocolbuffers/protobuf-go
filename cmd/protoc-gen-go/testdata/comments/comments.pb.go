@@ -330,7 +330,7 @@ func (*Message2_Message2B) Descriptor() ([]byte, []int) {
 	return file_comments_comments_proto_rawDescGZIP(), []int{1, 1}
 }
 
-var file_comments_comments_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_comments_comments_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*Message1)(nil),
 		ExtensionType: (*Message1)(nil),
@@ -346,7 +346,7 @@ var (
 	// COMMENT: Extension.Leading
 	//
 	// optional goproto.protoc.comments.Message1 extension = 100;
-	E_Extension = &file_comments_comments_proto_extDescs[0] // COMMENT: Extension.Trailing
+	E_Extension = &file_comments_comments_proto_extTypes[0] // COMMENT: Extension.Trailing
 )
 
 var File_comments_comments_proto protoreflect.FileDescriptor
@@ -511,7 +511,7 @@ func file_comments_comments_proto_init() {
 		DependencyIndexes: file_comments_comments_proto_depIdxs,
 		EnumInfos:         file_comments_comments_proto_enumTypes,
 		MessageInfos:      file_comments_comments_proto_msgTypes,
-		LegacyExtensions:  file_comments_comments_proto_extDescs,
+		ExtensionInfos:    file_comments_comments_proto_extTypes,
 	}.Build()
 	File_comments_comments_proto = out.File
 	file_comments_comments_proto_rawDesc = nil

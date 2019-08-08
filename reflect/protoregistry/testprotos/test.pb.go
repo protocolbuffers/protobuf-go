@@ -327,7 +327,7 @@ func (x *Message4) GetBoolField() bool {
 	return false
 }
 
-var file_test_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_test_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*Message1)(nil),
 		ExtensionType: (*string)(nil),
@@ -381,17 +381,17 @@ var file_test_proto_extDescs = []protoiface.ExtensionDescV1{
 // Extension fields to Message1.
 var (
 	// optional string string_field = 11;
-	E_StringField = &file_test_proto_extDescs[0]
+	E_StringField = &file_test_proto_extTypes[0]
 	// optional testprotos.Enum1 enum_field = 12;
-	E_EnumField = &file_test_proto_extDescs[1]
+	E_EnumField = &file_test_proto_extTypes[1]
 	// optional testprotos.Message2 message_field = 13;
-	E_MessageField = &file_test_proto_extDescs[2]
+	E_MessageField = &file_test_proto_extTypes[2]
 	// optional testprotos.Message2 message_field = 21;
-	E_Message4_MessageField = &file_test_proto_extDescs[3]
+	E_Message4_MessageField = &file_test_proto_extTypes[3]
 	// optional testprotos.Enum1 enum_field = 22;
-	E_Message4_EnumField = &file_test_proto_extDescs[4]
+	E_Message4_EnumField = &file_test_proto_extTypes[4]
 	// optional string string_field = 23;
-	E_Message4_StringField = &file_test_proto_extDescs[5]
+	E_Message4_StringField = &file_test_proto_extTypes[5]
 )
 
 var File_test_proto protoreflect.FileDescriptor
@@ -552,7 +552,7 @@ func file_test_proto_init() {
 		DependencyIndexes: file_test_proto_depIdxs,
 		EnumInfos:         file_test_proto_enumTypes,
 		MessageInfos:      file_test_proto_msgTypes,
-		LegacyExtensions:  file_test_proto_extDescs,
+		ExtensionInfos:    file_test_proto_extTypes,
 	}.Build()
 	File_test_proto = out.File
 	file_test_proto_rawDesc = nil

@@ -384,7 +384,7 @@ func (*M_Submessage_SubmessageOneofInt32) isM_Submessage_SubmessageOneofField() 
 
 func (*M_Submessage_SubmessageOneofInt64) isM_Submessage_SubmessageOneofField() {}
 
-var file_import_public_sub_a_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_import_public_sub_a_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*M)(nil),
 		ExtensionType: (*string)(nil),
@@ -398,7 +398,7 @@ var file_import_public_sub_a_proto_extDescs = []protoiface.ExtensionDescV1{
 // Extension fields to M.
 var (
 	// optional string extension_field = 100;
-	E_ExtensionField = &file_import_public_sub_a_proto_extDescs[0]
+	E_ExtensionField = &file_import_public_sub_a_proto_extTypes[0]
 )
 
 var File_import_public_sub_a_proto protoreflect.FileDescriptor
@@ -540,7 +540,7 @@ func file_import_public_sub_a_proto_init() {
 		DependencyIndexes: file_import_public_sub_a_proto_depIdxs,
 		EnumInfos:         file_import_public_sub_a_proto_enumTypes,
 		MessageInfos:      file_import_public_sub_a_proto_msgTypes,
-		LegacyExtensions:  file_import_public_sub_a_proto_extDescs,
+		ExtensionInfos:    file_import_public_sub_a_proto_extTypes,
 	}.Build()
 	File_import_public_sub_a_proto = out.File
 	file_import_public_sub_a_proto_rawDesc = nil

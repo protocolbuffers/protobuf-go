@@ -2383,7 +2383,7 @@ func (x *TestRequiredGroupFields_RepeatedGroup) GetA() int32 {
 	return 0
 }
 
-var file_test_test_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_test_test_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*TestAllExtensions)(nil),
 		ExtensionType: (*int32)(nil),
@@ -3045,177 +3045,177 @@ var file_test_test_proto_extDescs = []protoiface.ExtensionDescV1{
 // Extension fields to TestAllExtensions.
 var (
 	// optional int32 optional_int32_extension = 1;
-	E_OptionalInt32Extension = &file_test_test_proto_extDescs[0]
+	E_OptionalInt32Extension = &file_test_test_proto_extTypes[0]
 	// optional int64 optional_int64_extension = 2;
-	E_OptionalInt64Extension = &file_test_test_proto_extDescs[1]
+	E_OptionalInt64Extension = &file_test_test_proto_extTypes[1]
 	// optional uint32 optional_uint32_extension = 3;
-	E_OptionalUint32Extension = &file_test_test_proto_extDescs[2]
+	E_OptionalUint32Extension = &file_test_test_proto_extTypes[2]
 	// optional uint64 optional_uint64_extension = 4;
-	E_OptionalUint64Extension = &file_test_test_proto_extDescs[3]
+	E_OptionalUint64Extension = &file_test_test_proto_extTypes[3]
 	// optional sint32 optional_sint32_extension = 5;
-	E_OptionalSint32Extension = &file_test_test_proto_extDescs[4]
+	E_OptionalSint32Extension = &file_test_test_proto_extTypes[4]
 	// optional sint64 optional_sint64_extension = 6;
-	E_OptionalSint64Extension = &file_test_test_proto_extDescs[5]
+	E_OptionalSint64Extension = &file_test_test_proto_extTypes[5]
 	// optional fixed32 optional_fixed32_extension = 7;
-	E_OptionalFixed32Extension = &file_test_test_proto_extDescs[6]
+	E_OptionalFixed32Extension = &file_test_test_proto_extTypes[6]
 	// optional fixed64 optional_fixed64_extension = 8;
-	E_OptionalFixed64Extension = &file_test_test_proto_extDescs[7]
+	E_OptionalFixed64Extension = &file_test_test_proto_extTypes[7]
 	// optional sfixed32 optional_sfixed32_extension = 9;
-	E_OptionalSfixed32Extension = &file_test_test_proto_extDescs[8]
+	E_OptionalSfixed32Extension = &file_test_test_proto_extTypes[8]
 	// optional sfixed64 optional_sfixed64_extension = 10;
-	E_OptionalSfixed64Extension = &file_test_test_proto_extDescs[9]
+	E_OptionalSfixed64Extension = &file_test_test_proto_extTypes[9]
 	// optional float optional_float_extension = 11;
-	E_OptionalFloatExtension = &file_test_test_proto_extDescs[10]
+	E_OptionalFloatExtension = &file_test_test_proto_extTypes[10]
 	// optional double optional_double_extension = 12;
-	E_OptionalDoubleExtension = &file_test_test_proto_extDescs[11]
+	E_OptionalDoubleExtension = &file_test_test_proto_extTypes[11]
 	// optional bool optional_bool_extension = 13;
-	E_OptionalBoolExtension = &file_test_test_proto_extDescs[12]
+	E_OptionalBoolExtension = &file_test_test_proto_extTypes[12]
 	// optional string optional_string_extension = 14;
-	E_OptionalStringExtension = &file_test_test_proto_extDescs[13]
+	E_OptionalStringExtension = &file_test_test_proto_extTypes[13]
 	// optional bytes optional_bytes_extension = 15;
-	E_OptionalBytesExtension = &file_test_test_proto_extDescs[14]
+	E_OptionalBytesExtension = &file_test_test_proto_extTypes[14]
 	// optional goproto.proto.test.OptionalGroup_extension optionalgroup_extension = 16;
-	E_OptionalgroupExtension = &file_test_test_proto_extDescs[15]
+	E_OptionalgroupExtension = &file_test_test_proto_extTypes[15]
 	// optional goproto.proto.test.TestAllTypes.NestedMessage optional_nested_message_extension = 18;
-	E_OptionalNestedMessageExtension = &file_test_test_proto_extDescs[16]
+	E_OptionalNestedMessageExtension = &file_test_test_proto_extTypes[16]
 	// optional goproto.proto.test.TestAllTypes.NestedEnum optional_nested_enum_extension = 21;
-	E_OptionalNestedEnumExtension = &file_test_test_proto_extDescs[17]
+	E_OptionalNestedEnumExtension = &file_test_test_proto_extTypes[17]
 	// repeated int32 repeated_int32_extension = 31;
-	E_RepeatedInt32Extension = &file_test_test_proto_extDescs[18]
+	E_RepeatedInt32Extension = &file_test_test_proto_extTypes[18]
 	// repeated int64 repeated_int64_extension = 32;
-	E_RepeatedInt64Extension = &file_test_test_proto_extDescs[19]
+	E_RepeatedInt64Extension = &file_test_test_proto_extTypes[19]
 	// repeated uint32 repeated_uint32_extension = 33;
-	E_RepeatedUint32Extension = &file_test_test_proto_extDescs[20]
+	E_RepeatedUint32Extension = &file_test_test_proto_extTypes[20]
 	// repeated uint64 repeated_uint64_extension = 34;
-	E_RepeatedUint64Extension = &file_test_test_proto_extDescs[21]
+	E_RepeatedUint64Extension = &file_test_test_proto_extTypes[21]
 	// repeated sint32 repeated_sint32_extension = 35;
-	E_RepeatedSint32Extension = &file_test_test_proto_extDescs[22]
+	E_RepeatedSint32Extension = &file_test_test_proto_extTypes[22]
 	// repeated sint64 repeated_sint64_extension = 36;
-	E_RepeatedSint64Extension = &file_test_test_proto_extDescs[23]
+	E_RepeatedSint64Extension = &file_test_test_proto_extTypes[23]
 	// repeated fixed32 repeated_fixed32_extension = 37;
-	E_RepeatedFixed32Extension = &file_test_test_proto_extDescs[24]
+	E_RepeatedFixed32Extension = &file_test_test_proto_extTypes[24]
 	// repeated fixed64 repeated_fixed64_extension = 38;
-	E_RepeatedFixed64Extension = &file_test_test_proto_extDescs[25]
+	E_RepeatedFixed64Extension = &file_test_test_proto_extTypes[25]
 	// repeated sfixed32 repeated_sfixed32_extension = 39;
-	E_RepeatedSfixed32Extension = &file_test_test_proto_extDescs[26]
+	E_RepeatedSfixed32Extension = &file_test_test_proto_extTypes[26]
 	// repeated sfixed64 repeated_sfixed64_extension = 40;
-	E_RepeatedSfixed64Extension = &file_test_test_proto_extDescs[27]
+	E_RepeatedSfixed64Extension = &file_test_test_proto_extTypes[27]
 	// repeated float repeated_float_extension = 41;
-	E_RepeatedFloatExtension = &file_test_test_proto_extDescs[28]
+	E_RepeatedFloatExtension = &file_test_test_proto_extTypes[28]
 	// repeated double repeated_double_extension = 42;
-	E_RepeatedDoubleExtension = &file_test_test_proto_extDescs[29]
+	E_RepeatedDoubleExtension = &file_test_test_proto_extTypes[29]
 	// repeated bool repeated_bool_extension = 43;
-	E_RepeatedBoolExtension = &file_test_test_proto_extDescs[30]
+	E_RepeatedBoolExtension = &file_test_test_proto_extTypes[30]
 	// repeated string repeated_string_extension = 44;
-	E_RepeatedStringExtension = &file_test_test_proto_extDescs[31]
+	E_RepeatedStringExtension = &file_test_test_proto_extTypes[31]
 	// repeated bytes repeated_bytes_extension = 45;
-	E_RepeatedBytesExtension = &file_test_test_proto_extDescs[32]
+	E_RepeatedBytesExtension = &file_test_test_proto_extTypes[32]
 	// repeated goproto.proto.test.RepeatedGroup_extension repeatedgroup_extension = 46;
-	E_RepeatedgroupExtension = &file_test_test_proto_extDescs[33]
+	E_RepeatedgroupExtension = &file_test_test_proto_extTypes[33]
 	// repeated goproto.proto.test.TestAllTypes.NestedMessage repeated_nested_message_extension = 48;
-	E_RepeatedNestedMessageExtension = &file_test_test_proto_extDescs[34]
+	E_RepeatedNestedMessageExtension = &file_test_test_proto_extTypes[34]
 	// repeated goproto.proto.test.TestAllTypes.NestedEnum repeated_nested_enum_extension = 51;
-	E_RepeatedNestedEnumExtension = &file_test_test_proto_extDescs[35]
+	E_RepeatedNestedEnumExtension = &file_test_test_proto_extTypes[35]
 	// optional int32 default_int32_extension = 81;
-	E_DefaultInt32Extension = &file_test_test_proto_extDescs[36]
+	E_DefaultInt32Extension = &file_test_test_proto_extTypes[36]
 	// optional int64 default_int64_extension = 82;
-	E_DefaultInt64Extension = &file_test_test_proto_extDescs[37]
+	E_DefaultInt64Extension = &file_test_test_proto_extTypes[37]
 	// optional uint32 default_uint32_extension = 83;
-	E_DefaultUint32Extension = &file_test_test_proto_extDescs[38]
+	E_DefaultUint32Extension = &file_test_test_proto_extTypes[38]
 	// optional uint64 default_uint64_extension = 84;
-	E_DefaultUint64Extension = &file_test_test_proto_extDescs[39]
+	E_DefaultUint64Extension = &file_test_test_proto_extTypes[39]
 	// optional sint32 default_sint32_extension = 85;
-	E_DefaultSint32Extension = &file_test_test_proto_extDescs[40]
+	E_DefaultSint32Extension = &file_test_test_proto_extTypes[40]
 	// optional sint64 default_sint64_extension = 86;
-	E_DefaultSint64Extension = &file_test_test_proto_extDescs[41]
+	E_DefaultSint64Extension = &file_test_test_proto_extTypes[41]
 	// optional fixed32 default_fixed32_extension = 87;
-	E_DefaultFixed32Extension = &file_test_test_proto_extDescs[42]
+	E_DefaultFixed32Extension = &file_test_test_proto_extTypes[42]
 	// optional fixed64 default_fixed64_extension = 88;
-	E_DefaultFixed64Extension = &file_test_test_proto_extDescs[43]
+	E_DefaultFixed64Extension = &file_test_test_proto_extTypes[43]
 	// optional sfixed32 default_sfixed32_extension = 89;
-	E_DefaultSfixed32Extension = &file_test_test_proto_extDescs[44]
+	E_DefaultSfixed32Extension = &file_test_test_proto_extTypes[44]
 	// optional sfixed64 default_sfixed64_extension = 80;
-	E_DefaultSfixed64Extension = &file_test_test_proto_extDescs[45]
+	E_DefaultSfixed64Extension = &file_test_test_proto_extTypes[45]
 	// optional float default_float_extension = 91;
-	E_DefaultFloatExtension = &file_test_test_proto_extDescs[46]
+	E_DefaultFloatExtension = &file_test_test_proto_extTypes[46]
 	// optional double default_double_extension = 92;
-	E_DefaultDoubleExtension = &file_test_test_proto_extDescs[47]
+	E_DefaultDoubleExtension = &file_test_test_proto_extTypes[47]
 	// optional bool default_bool_extension = 93;
-	E_DefaultBoolExtension = &file_test_test_proto_extDescs[48]
+	E_DefaultBoolExtension = &file_test_test_proto_extTypes[48]
 	// optional string default_string_extension = 94;
-	E_DefaultStringExtension = &file_test_test_proto_extDescs[49]
+	E_DefaultStringExtension = &file_test_test_proto_extTypes[49]
 	// optional bytes default_bytes_extension = 95;
-	E_DefaultBytesExtension = &file_test_test_proto_extDescs[50]
+	E_DefaultBytesExtension = &file_test_test_proto_extTypes[50]
 	// optional string nested_string_extension = 1003;
-	E_TestNestedExtension_NestedStringExtension = &file_test_test_proto_extDescs[79]
+	E_TestNestedExtension_NestedStringExtension = &file_test_test_proto_extTypes[79]
 	// optional goproto.proto.test.TestRequired single = 1000;
-	E_TestRequired_Single = &file_test_test_proto_extDescs[80]
+	E_TestRequired_Single = &file_test_test_proto_extTypes[80]
 	// repeated goproto.proto.test.TestRequired multi = 1001;
-	E_TestRequired_Multi = &file_test_test_proto_extDescs[81]
+	E_TestRequired_Multi = &file_test_test_proto_extTypes[81]
 )
 
 // Extension fields to TestPackedExtensions.
 var (
 	// repeated int32 packed_int32_extension = 90;
-	E_PackedInt32Extension = &file_test_test_proto_extDescs[51]
+	E_PackedInt32Extension = &file_test_test_proto_extTypes[51]
 	// repeated int64 packed_int64_extension = 91;
-	E_PackedInt64Extension = &file_test_test_proto_extDescs[52]
+	E_PackedInt64Extension = &file_test_test_proto_extTypes[52]
 	// repeated uint32 packed_uint32_extension = 92;
-	E_PackedUint32Extension = &file_test_test_proto_extDescs[53]
+	E_PackedUint32Extension = &file_test_test_proto_extTypes[53]
 	// repeated uint64 packed_uint64_extension = 93;
-	E_PackedUint64Extension = &file_test_test_proto_extDescs[54]
+	E_PackedUint64Extension = &file_test_test_proto_extTypes[54]
 	// repeated sint32 packed_sint32_extension = 94;
-	E_PackedSint32Extension = &file_test_test_proto_extDescs[55]
+	E_PackedSint32Extension = &file_test_test_proto_extTypes[55]
 	// repeated sint64 packed_sint64_extension = 95;
-	E_PackedSint64Extension = &file_test_test_proto_extDescs[56]
+	E_PackedSint64Extension = &file_test_test_proto_extTypes[56]
 	// repeated fixed32 packed_fixed32_extension = 96;
-	E_PackedFixed32Extension = &file_test_test_proto_extDescs[57]
+	E_PackedFixed32Extension = &file_test_test_proto_extTypes[57]
 	// repeated fixed64 packed_fixed64_extension = 97;
-	E_PackedFixed64Extension = &file_test_test_proto_extDescs[58]
+	E_PackedFixed64Extension = &file_test_test_proto_extTypes[58]
 	// repeated sfixed32 packed_sfixed32_extension = 98;
-	E_PackedSfixed32Extension = &file_test_test_proto_extDescs[59]
+	E_PackedSfixed32Extension = &file_test_test_proto_extTypes[59]
 	// repeated sfixed64 packed_sfixed64_extension = 99;
-	E_PackedSfixed64Extension = &file_test_test_proto_extDescs[60]
+	E_PackedSfixed64Extension = &file_test_test_proto_extTypes[60]
 	// repeated float packed_float_extension = 100;
-	E_PackedFloatExtension = &file_test_test_proto_extDescs[61]
+	E_PackedFloatExtension = &file_test_test_proto_extTypes[61]
 	// repeated double packed_double_extension = 101;
-	E_PackedDoubleExtension = &file_test_test_proto_extDescs[62]
+	E_PackedDoubleExtension = &file_test_test_proto_extTypes[62]
 	// repeated bool packed_bool_extension = 102;
-	E_PackedBoolExtension = &file_test_test_proto_extDescs[63]
+	E_PackedBoolExtension = &file_test_test_proto_extTypes[63]
 	// repeated goproto.proto.test.ForeignEnum packed_enum_extension = 103;
-	E_PackedEnumExtension = &file_test_test_proto_extDescs[64]
+	E_PackedEnumExtension = &file_test_test_proto_extTypes[64]
 )
 
 // Extension fields to TestUnpackedExtensions.
 var (
 	// repeated int32 unpacked_int32_extension = 90;
-	E_UnpackedInt32Extension = &file_test_test_proto_extDescs[65]
+	E_UnpackedInt32Extension = &file_test_test_proto_extTypes[65]
 	// repeated int64 unpacked_int64_extension = 91;
-	E_UnpackedInt64Extension = &file_test_test_proto_extDescs[66]
+	E_UnpackedInt64Extension = &file_test_test_proto_extTypes[66]
 	// repeated uint32 unpacked_uint32_extension = 92;
-	E_UnpackedUint32Extension = &file_test_test_proto_extDescs[67]
+	E_UnpackedUint32Extension = &file_test_test_proto_extTypes[67]
 	// repeated uint64 unpacked_uint64_extension = 93;
-	E_UnpackedUint64Extension = &file_test_test_proto_extDescs[68]
+	E_UnpackedUint64Extension = &file_test_test_proto_extTypes[68]
 	// repeated sint32 unpacked_sint32_extension = 94;
-	E_UnpackedSint32Extension = &file_test_test_proto_extDescs[69]
+	E_UnpackedSint32Extension = &file_test_test_proto_extTypes[69]
 	// repeated sint64 unpacked_sint64_extension = 95;
-	E_UnpackedSint64Extension = &file_test_test_proto_extDescs[70]
+	E_UnpackedSint64Extension = &file_test_test_proto_extTypes[70]
 	// repeated fixed32 unpacked_fixed32_extension = 96;
-	E_UnpackedFixed32Extension = &file_test_test_proto_extDescs[71]
+	E_UnpackedFixed32Extension = &file_test_test_proto_extTypes[71]
 	// repeated fixed64 unpacked_fixed64_extension = 97;
-	E_UnpackedFixed64Extension = &file_test_test_proto_extDescs[72]
+	E_UnpackedFixed64Extension = &file_test_test_proto_extTypes[72]
 	// repeated sfixed32 unpacked_sfixed32_extension = 98;
-	E_UnpackedSfixed32Extension = &file_test_test_proto_extDescs[73]
+	E_UnpackedSfixed32Extension = &file_test_test_proto_extTypes[73]
 	// repeated sfixed64 unpacked_sfixed64_extension = 99;
-	E_UnpackedSfixed64Extension = &file_test_test_proto_extDescs[74]
+	E_UnpackedSfixed64Extension = &file_test_test_proto_extTypes[74]
 	// repeated float unpacked_float_extension = 100;
-	E_UnpackedFloatExtension = &file_test_test_proto_extDescs[75]
+	E_UnpackedFloatExtension = &file_test_test_proto_extTypes[75]
 	// repeated double unpacked_double_extension = 101;
-	E_UnpackedDoubleExtension = &file_test_test_proto_extDescs[76]
+	E_UnpackedDoubleExtension = &file_test_test_proto_extTypes[76]
 	// repeated bool unpacked_bool_extension = 102;
-	E_UnpackedBoolExtension = &file_test_test_proto_extDescs[77]
+	E_UnpackedBoolExtension = &file_test_test_proto_extTypes[77]
 	// repeated goproto.proto.test.ForeignEnum unpacked_enum_extension = 103;
-	E_UnpackedEnumExtension = &file_test_test_proto_extDescs[78]
+	E_UnpackedEnumExtension = &file_test_test_proto_extTypes[78]
 )
 
 var File_test_test_proto protoreflect.FileDescriptor
@@ -4986,7 +4986,7 @@ func file_test_test_proto_init() {
 		DependencyIndexes: file_test_test_proto_depIdxs,
 		EnumInfos:         file_test_test_proto_enumTypes,
 		MessageInfos:      file_test_test_proto_msgTypes,
-		LegacyExtensions:  file_test_test_proto_extDescs,
+		ExtensionInfos:    file_test_test_proto_extTypes,
 	}.Build()
 	File_test_test_proto = out.File
 	file_test_test_proto_rawDesc = nil

@@ -9,7 +9,6 @@ package proto3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
 	reflect "reflect"
@@ -92,7 +91,7 @@ func (*Message) Descriptor() ([]byte, []int) {
 	return file_extensions_proto3_ext3_proto_rawDescGZIP(), []int{0}
 }
 
-var file_extensions_proto3_ext3_proto_extDescs = []protoiface.ExtensionDescV1{
+var file_extensions_proto3_ext3_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
 		ExtensionType: (*bool)(nil),
@@ -370,73 +369,73 @@ var file_extensions_proto3_ext3_proto_extDescs = []protoiface.ExtensionDescV1{
 // Extension fields to descriptorpb.MessageOptions.
 var (
 	// optional bool extension_bool = 1001;
-	E_ExtensionBool = &file_extensions_proto3_ext3_proto_extDescs[0]
+	E_ExtensionBool = &file_extensions_proto3_ext3_proto_extTypes[0]
 	// optional goproto.protoc.extension.proto3.Enum extension_enum = 1002;
-	E_ExtensionEnum = &file_extensions_proto3_ext3_proto_extDescs[1]
+	E_ExtensionEnum = &file_extensions_proto3_ext3_proto_extTypes[1]
 	// optional int32 extension_int32 = 1003;
-	E_ExtensionInt32 = &file_extensions_proto3_ext3_proto_extDescs[2]
+	E_ExtensionInt32 = &file_extensions_proto3_ext3_proto_extTypes[2]
 	// optional sint32 extension_sint32 = 1004;
-	E_ExtensionSint32 = &file_extensions_proto3_ext3_proto_extDescs[3]
+	E_ExtensionSint32 = &file_extensions_proto3_ext3_proto_extTypes[3]
 	// optional uint32 extension_uint32 = 1005;
-	E_ExtensionUint32 = &file_extensions_proto3_ext3_proto_extDescs[4]
+	E_ExtensionUint32 = &file_extensions_proto3_ext3_proto_extTypes[4]
 	// optional int64 extension_int64 = 1006;
-	E_ExtensionInt64 = &file_extensions_proto3_ext3_proto_extDescs[5]
+	E_ExtensionInt64 = &file_extensions_proto3_ext3_proto_extTypes[5]
 	// optional sint64 extension_sint64 = 1007;
-	E_ExtensionSint64 = &file_extensions_proto3_ext3_proto_extDescs[6]
+	E_ExtensionSint64 = &file_extensions_proto3_ext3_proto_extTypes[6]
 	// optional uint64 extension_uint64 = 1008;
-	E_ExtensionUint64 = &file_extensions_proto3_ext3_proto_extDescs[7]
+	E_ExtensionUint64 = &file_extensions_proto3_ext3_proto_extTypes[7]
 	// optional sfixed32 extension_sfixed32 = 1009;
-	E_ExtensionSfixed32 = &file_extensions_proto3_ext3_proto_extDescs[8]
+	E_ExtensionSfixed32 = &file_extensions_proto3_ext3_proto_extTypes[8]
 	// optional fixed32 extension_fixed32 = 1010;
-	E_ExtensionFixed32 = &file_extensions_proto3_ext3_proto_extDescs[9]
+	E_ExtensionFixed32 = &file_extensions_proto3_ext3_proto_extTypes[9]
 	// optional float extension_float = 1011;
-	E_ExtensionFloat = &file_extensions_proto3_ext3_proto_extDescs[10]
+	E_ExtensionFloat = &file_extensions_proto3_ext3_proto_extTypes[10]
 	// optional sfixed64 extension_sfixed64 = 1012;
-	E_ExtensionSfixed64 = &file_extensions_proto3_ext3_proto_extDescs[11]
+	E_ExtensionSfixed64 = &file_extensions_proto3_ext3_proto_extTypes[11]
 	// optional fixed64 extension_fixed64 = 1013;
-	E_ExtensionFixed64 = &file_extensions_proto3_ext3_proto_extDescs[12]
+	E_ExtensionFixed64 = &file_extensions_proto3_ext3_proto_extTypes[12]
 	// optional double extension_double = 1014;
-	E_ExtensionDouble = &file_extensions_proto3_ext3_proto_extDescs[13]
+	E_ExtensionDouble = &file_extensions_proto3_ext3_proto_extTypes[13]
 	// optional string extension_string = 1015;
-	E_ExtensionString = &file_extensions_proto3_ext3_proto_extDescs[14]
+	E_ExtensionString = &file_extensions_proto3_ext3_proto_extTypes[14]
 	// optional bytes extension_bytes = 1016;
-	E_ExtensionBytes = &file_extensions_proto3_ext3_proto_extDescs[15]
+	E_ExtensionBytes = &file_extensions_proto3_ext3_proto_extTypes[15]
 	// optional goproto.protoc.extension.proto3.Message extension_Message = 1017;
-	E_Extension_Message = &file_extensions_proto3_ext3_proto_extDescs[16]
+	E_Extension_Message = &file_extensions_proto3_ext3_proto_extTypes[16]
 	// repeated bool repeated_extension_bool = 2001;
-	E_RepeatedExtensionBool = &file_extensions_proto3_ext3_proto_extDescs[17]
+	E_RepeatedExtensionBool = &file_extensions_proto3_ext3_proto_extTypes[17]
 	// repeated goproto.protoc.extension.proto3.Enum repeated_extension_enum = 2002;
-	E_RepeatedExtensionEnum = &file_extensions_proto3_ext3_proto_extDescs[18]
+	E_RepeatedExtensionEnum = &file_extensions_proto3_ext3_proto_extTypes[18]
 	// repeated int32 repeated_extension_int32 = 2003;
-	E_RepeatedExtensionInt32 = &file_extensions_proto3_ext3_proto_extDescs[19]
+	E_RepeatedExtensionInt32 = &file_extensions_proto3_ext3_proto_extTypes[19]
 	// repeated sint32 repeated_extension_sint32 = 2004;
-	E_RepeatedExtensionSint32 = &file_extensions_proto3_ext3_proto_extDescs[20]
+	E_RepeatedExtensionSint32 = &file_extensions_proto3_ext3_proto_extTypes[20]
 	// repeated uint32 repeated_extension_uint32 = 2005;
-	E_RepeatedExtensionUint32 = &file_extensions_proto3_ext3_proto_extDescs[21]
+	E_RepeatedExtensionUint32 = &file_extensions_proto3_ext3_proto_extTypes[21]
 	// repeated int64 repeated_extension_int64 = 2006;
-	E_RepeatedExtensionInt64 = &file_extensions_proto3_ext3_proto_extDescs[22]
+	E_RepeatedExtensionInt64 = &file_extensions_proto3_ext3_proto_extTypes[22]
 	// repeated sint64 repeated_extension_sint64 = 2007;
-	E_RepeatedExtensionSint64 = &file_extensions_proto3_ext3_proto_extDescs[23]
+	E_RepeatedExtensionSint64 = &file_extensions_proto3_ext3_proto_extTypes[23]
 	// repeated uint64 repeated_extension_uint64 = 2008;
-	E_RepeatedExtensionUint64 = &file_extensions_proto3_ext3_proto_extDescs[24]
+	E_RepeatedExtensionUint64 = &file_extensions_proto3_ext3_proto_extTypes[24]
 	// repeated sfixed32 repeated_extension_sfixed32 = 2009;
-	E_RepeatedExtensionSfixed32 = &file_extensions_proto3_ext3_proto_extDescs[25]
+	E_RepeatedExtensionSfixed32 = &file_extensions_proto3_ext3_proto_extTypes[25]
 	// repeated fixed32 repeated_extension_fixed32 = 2010;
-	E_RepeatedExtensionFixed32 = &file_extensions_proto3_ext3_proto_extDescs[26]
+	E_RepeatedExtensionFixed32 = &file_extensions_proto3_ext3_proto_extTypes[26]
 	// repeated float repeated_extension_float = 2011;
-	E_RepeatedExtensionFloat = &file_extensions_proto3_ext3_proto_extDescs[27]
+	E_RepeatedExtensionFloat = &file_extensions_proto3_ext3_proto_extTypes[27]
 	// repeated sfixed64 repeated_extension_sfixed64 = 2012;
-	E_RepeatedExtensionSfixed64 = &file_extensions_proto3_ext3_proto_extDescs[28]
+	E_RepeatedExtensionSfixed64 = &file_extensions_proto3_ext3_proto_extTypes[28]
 	// repeated fixed64 repeated_extension_fixed64 = 2013;
-	E_RepeatedExtensionFixed64 = &file_extensions_proto3_ext3_proto_extDescs[29]
+	E_RepeatedExtensionFixed64 = &file_extensions_proto3_ext3_proto_extTypes[29]
 	// repeated double repeated_extension_double = 2014;
-	E_RepeatedExtensionDouble = &file_extensions_proto3_ext3_proto_extDescs[30]
+	E_RepeatedExtensionDouble = &file_extensions_proto3_ext3_proto_extTypes[30]
 	// repeated string repeated_extension_string = 2015;
-	E_RepeatedExtensionString = &file_extensions_proto3_ext3_proto_extDescs[31]
+	E_RepeatedExtensionString = &file_extensions_proto3_ext3_proto_extTypes[31]
 	// repeated bytes repeated_extension_bytes = 2016;
-	E_RepeatedExtensionBytes = &file_extensions_proto3_ext3_proto_extDescs[32]
+	E_RepeatedExtensionBytes = &file_extensions_proto3_ext3_proto_extTypes[32]
 	// repeated goproto.protoc.extension.proto3.Message repeated_extension_Message = 2017;
-	E_RepeatedExtension_Message = &file_extensions_proto3_ext3_proto_extDescs[33]
+	E_RepeatedExtension_Message = &file_extensions_proto3_ext3_proto_extTypes[33]
 )
 
 var File_extensions_proto3_ext3_proto protoreflect.FileDescriptor
@@ -747,7 +746,7 @@ func file_extensions_proto3_ext3_proto_init() {
 		DependencyIndexes: file_extensions_proto3_ext3_proto_depIdxs,
 		EnumInfos:         file_extensions_proto3_ext3_proto_enumTypes,
 		MessageInfos:      file_extensions_proto3_ext3_proto_msgTypes,
-		LegacyExtensions:  file_extensions_proto3_ext3_proto_extDescs,
+		ExtensionInfos:    file_extensions_proto3_ext3_proto_extTypes,
 	}.Build()
 	File_extensions_proto3_ext3_proto = out.File
 	file_extensions_proto3_ext3_proto_rawDesc = nil
