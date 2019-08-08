@@ -1,10 +1,11 @@
-.cache
-.gocache
-vendor
-cmd/protoc-gen-go/protoc-gen-go
-cmd/protoc-gen-go/testdata/go.sum
-cmd/protoc-gen-go-grpc/protoc-gen-go-grpc
-cmd/protoc-gen-go-grpc/testdata/go.sum
+/.cache
+/.gocache
+/bin
+/cmd/protoc-gen-go/protoc-gen-go
+/cmd/protoc-gen-go/testdata/go.sum
+/cmd/protoc-gen-go-grpc/protoc-gen-go-grpc
+/cmd/protoc-gen-go-grpc/testdata/go.sum
+/vendor
 
 # This file includes artifacts of the system test that should not be checked in.
 # For files created by specific development environment (e.g. editor),

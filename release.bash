@@ -74,8 +74,8 @@ if ! [[ -z $MIN_VERSION ]]; then
 fi
 git commit -a -m "all: release $(version_string)"
 
-# TODO: Build release binaries.
-# go test -mod=vendor -timeout=60m -count=1 integration_test.go "$@" -buildRelease
+# Build release binaries.
+go test -mod=vendor -timeout=60m -count=1 integration_test.go "$@" -buildRelease
 
 # Create commit to start development after release.
 VERSION_PRERELEASE="${VERSION_PRERELEASE}.devel" # append ".devel"

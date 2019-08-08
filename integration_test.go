@@ -25,10 +25,13 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
 var (
-	regenerate = flag.Bool("regenerate", false, "regenerate files")
+	regenerate   = flag.Bool("regenerate", false, "regenerate files")
+	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
 	protobufVersion = "3.9.1"
 	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.9"}
@@ -45,16 +48,7 @@ var (
 
 func Test(t *testing.T) {
 	mustInitDeps(t)
-
-	if *regenerate {
-		t.Run("Generate", func(t *testing.T) {
-			fmt.Print(mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-types", "-execute"))
-			fmt.Print(mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-protos", "-execute"))
-			files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go")), "\n")
-			mustRunCommand(t, append([]string{"gofmt", "-w"}, files...)...)
-		})
-		t.SkipNow()
-	}
+	mustHandleFlags(t)
 
 	var wg sync.WaitGroup
 	sema := make(chan bool, (runtime.NumCPU()+1)/2)
@@ -379,6 +373,55 @@ func patchProtos(check func(error), repoRoot string) {
 		fmt.Println("patch " + pbpath)
 		b = []byte(strings.Join(ss, "\n"))
 		check(ioutil.WriteFile(filepath.Join(repoRoot, pbpath), b, 0664))
+	}
+}
+
+func mustHandleFlags(t *testing.T) {
+	if *regenerate {
+		t.Run("Generate", func(t *testing.T) {
+			fmt.Print(mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-types", "-execute"))
+			fmt.Print(mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-protos", "-execute"))
+			files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go")), "\n")
+			mustRunCommand(t, append([]string{"gofmt", "-w"}, files...)...)
+		})
+	}
+	if *buildRelease {
+		t.Run("BuildRelease", func(t *testing.T) {
+			v := protoimpl.VersionString()
+			for _, goos := range []string{"linux", "darwin", "windows"} {
+				for _, goarch := range []string{"386", "amd64"} {
+					binPath := filepath.Join("bin", fmt.Sprintf("protoc-gen-go.%v.%v.%v", v, goos, goarch))
+
+					// Build the binary.
+					cmd := command{Env: append(os.Environ(), "GOOS="+goos, "GOARCH="+goarch)}
+					cmd.mustRun(t, "go", "build", "-trimpath", "-ldflags", "-s -w", "-o", binPath, "./cmd/protoc-gen-go")
+
+					// Archive and compress the binary.
+					in, err := ioutil.ReadFile(binPath)
+					if err != nil {
+						t.Fatal(err)
+					}
+					out := new(bytes.Buffer)
+					gz, _ := gzip.NewWriterLevel(out, gzip.BestCompression)
+					gz.Comment = fmt.Sprintf("protoc-gen-go VERSION=%v GOOS=%v GOARCH=%v", v, goos, goarch)
+					tw := tar.NewWriter(gz)
+					tw.WriteHeader(&tar.Header{
+						Name: "protoc-gen-go",
+						Mode: int64(0775),
+						Size: int64(len(in)),
+					})
+					tw.Write(in)
+					tw.Close()
+					gz.Close()
+					if err := ioutil.WriteFile(binPath+".tar.gz", out.Bytes(), 0664); err != nil {
+						t.Fatal(err)
+					}
+				}
+			}
+		})
+	}
+	if *regenerate || *buildRelease {
+		t.SkipNow()
 	}
 }
 
