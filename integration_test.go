@@ -48,10 +48,10 @@ func Test(t *testing.T) {
 
 	if *regenerate {
 		t.Run("Generate", func(t *testing.T) {
-			fmt.Print(mustRunCommand(t, ".", "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-types", "-execute"))
-			fmt.Print(mustRunCommand(t, ".", "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-protos", "-execute"))
-			files := strings.Split(strings.TrimSpace(mustRunCommand(t, ".", "git", "ls-files", "*.go")), "\n")
-			mustRunCommand(t, ".", append([]string{"gofmt", "-w"}, files...)...)
+			fmt.Print(mustRunCommand(t, "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-types", "-execute"))
+			fmt.Print(mustRunCommand(t, "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-protos", "-execute"))
+			files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go")), "\n")
+			mustRunCommand(t, append([]string{"gofmt", "-w"}, files...)...)
 		})
 		t.SkipNow()
 	}
@@ -69,7 +69,7 @@ func Test(t *testing.T) {
 				defer func() { <-sema }()
 				t.Run(goLabel+"/"+label, func(t *testing.T) {
 					args[0] += goVersion
-					mustRunCommand(t, workDir, args...)
+					command{Dir: workDir}.mustRun(t, args...)
 				})
 			}()
 		}
@@ -91,33 +91,33 @@ func Test(t *testing.T) {
 		driver := filepath.Join(driverPath, "conformance.sh")
 		failureList := filepath.Join(driverPath, "failure_list_go.txt")
 		runner := filepath.Join(protobufPath, "conformance", "conformance-test-runner")
-		mustRunCommand(t, ".", runner, "--failure_list", failureList, "--enforce_recommended", driver)
+		mustRunCommand(t, runner, "--failure_list", failureList, "--enforce_recommended", driver)
 	})
 	t.Run("GeneratedGoFiles", func(t *testing.T) {
-		diff := mustRunCommand(t, ".", "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-types")
+		diff := mustRunCommand(t, "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-types")
 		if strings.TrimSpace(diff) != "" {
 			t.Fatalf("stale generated files:\n%v", diff)
 		}
-		diff = mustRunCommand(t, ".", "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-protos")
+		diff = mustRunCommand(t, "go", "run", "-tags", "proto1_legacy", "./internal/cmd/generate-protos")
 		if strings.TrimSpace(diff) != "" {
 			t.Fatalf("stale generated files:\n%v", diff)
 		}
 	})
 	t.Run("FormattedGoFiles", func(t *testing.T) {
-		files := strings.Split(strings.TrimSpace(mustRunCommand(t, ".", "git", "ls-files", "*.go")), "\n")
-		diff := mustRunCommand(t, ".", append([]string{"gofmt", "-d"}, files...)...)
+		files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go")), "\n")
+		diff := mustRunCommand(t, append([]string{"gofmt", "-d"}, files...)...)
 		if strings.TrimSpace(diff) != "" {
 			t.Fatalf("unformatted source files:\n%v", diff)
 		}
 	})
 	t.Run("CommittedGitChanges", func(t *testing.T) {
-		diff := mustRunCommand(t, ".", "git", "diff", "--no-prefix", "HEAD")
+		diff := mustRunCommand(t, "git", "diff", "--no-prefix", "HEAD")
 		if strings.TrimSpace(diff) != "" {
 			t.Fatalf("uncommitted changes:\n%v", diff)
 		}
 	})
 	t.Run("TrackedGitFiles", func(t *testing.T) {
-		diff := mustRunCommand(t, ".", "git", "ls-files", "--others", "--exclude-standard")
+		diff := mustRunCommand(t, "git", "ls-files", "--others", "--exclude-standard")
 		if strings.TrimSpace(diff) != "" {
 			t.Fatalf("untracked files:\n%v", diff)
 		}
@@ -210,10 +210,10 @@ func mustInitDeps(t *testing.T) {
 		downloadArchive(check, protobufPath, url, "protobuf-"+protobufVersion)
 
 		fmt.Printf("build %v\n", filepath.Base(protobufPath))
-		mustRunCommand(t, protobufPath, "./autogen.sh")
-		mustRunCommand(t, protobufPath, "./configure")
-		mustRunCommand(t, protobufPath, "make")
-		mustRunCommand(t, filepath.Join(protobufPath, "conformance"), "make")
+		command{Dir: protobufPath}.mustRun(t, "./autogen.sh")
+		command{Dir: protobufPath}.mustRun(t, "./configure")
+		command{Dir: protobufPath}.mustRun(t, "make")
+		command{Dir: filepath.Join(protobufPath, "conformance")}.mustRun(t, "make")
 	}
 	// The benchmark directory isn't present in the release download,
 	// so fetch needed files directly.
@@ -265,12 +265,12 @@ func mustInitDeps(t *testing.T) {
 
 	// Setup GOPATH for pre-module support (i.e., go1.10 and earlier).
 	goPath = filepath.Join(testDir, "gopath")
-	modulePath = strings.TrimSpace(mustRunCommand(t, testDir, "go", "list", "-m", "-f", "{{.Path}}"))
+	modulePath = strings.TrimSpace(command{Dir: testDir}.mustRun(t, "go", "list", "-m", "-f", "{{.Path}}"))
 	check(os.RemoveAll(filepath.Join(goPath, "src")))
 	check(os.MkdirAll(filepath.Join(goPath, "src", filepath.Dir(modulePath)), 0775))
 	check(os.Symlink(repoRoot, filepath.Join(goPath, "src", modulePath)))
-	mustRunCommand(t, repoRoot, "go", "mod", "tidy")
-	mustRunCommand(t, repoRoot, "go", "mod", "vendor")
+	command{Dir: repoRoot}.mustRun(t, "go", "mod", "tidy")
+	command{Dir: repoRoot}.mustRun(t, "go", "mod", "vendor")
 	check(os.Setenv("GOPATH", goPath))
 }
 
@@ -388,19 +388,36 @@ func patchProtos(check func(error), repoRoot string) {
 	}
 }
 
-func mustRunCommand(t *testing.T, dir string, args ...string) string {
+type command struct {
+	Dir string
+	Env []string
+}
+
+func (c command) mustRun(t *testing.T, args ...string) string {
 	t.Helper()
 	stdout := new(bytes.Buffer)
 	stderr := new(bytes.Buffer)
 	cmd := exec.Command(args[0], args[1:]...)
-	cmd.Dir = dir
-	cmd.Env = append(os.Environ(), "PWD="+dir)
+	cmd.Dir = "."
+	if c.Dir != "" {
+		cmd.Dir = c.Dir
+	}
+	cmd.Env = os.Environ()
+	if c.Env != nil {
+		cmd.Env = c.Env
+	}
+	cmd.Env = append(cmd.Env, "PWD="+cmd.Dir)
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
 	if err := cmd.Run(); err != nil {
 		t.Fatalf("executing (%v): %v\n%s%s", strings.Join(args, " "), err, stdout.String(), stderr.String())
 	}
 	return stdout.String()
+}
+
+func mustRunCommand(t *testing.T, args ...string) string {
+	t.Helper()
+	return command{}.mustRun(t, args...)
 }
 
 var benchmarkProtos = []string{
