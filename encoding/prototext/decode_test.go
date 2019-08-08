@@ -1310,7 +1310,7 @@ opt_int32: 42
 			})
 			return m
 		}(),
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc:         "not real MessageSet 1",
 		inputMessage: &pb2.FakeMessageSet{},
@@ -1326,7 +1326,7 @@ opt_int32: 42
 			})
 			return m
 		}(),
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc:         "not real MessageSet 2",
 		inputMessage: &pb2.FakeMessageSet{},
@@ -1336,7 +1336,7 @@ opt_int32: 42
 }
 `,
 		wantErr: true,
-		skip:    !flags.Proto1Legacy,
+		skip:    !flags.ProtoLegacy,
 	}, {
 		desc:         "not real MessageSet 3",
 		inputMessage: &pb2.MessageSet{},
@@ -1351,7 +1351,7 @@ opt_int32: 42
 			})
 			return m
 		}(),
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc:         "Any not expanded",
 		inputMessage: &anypb.Any{},
@@ -1501,13 +1501,13 @@ type_url: "pb2.Nested"
 			m.SetWeakMessage1(&weakpb.WeakImportMessage1{A: proto.Int32(1)})
 			return m
 		}(),
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc:         "weak fields; unknown field",
 		inputMessage: &testpb.TestWeak{},
 		inputText:    `weak_message1:{a:1} weak_message2:{a:1}`,
 		wantErr:      true, // weak_message2 is unknown since the package containing it is not imported
-		skip:         !flags.Proto1Legacy,
+		skip:         !flags.ProtoLegacy,
 	}}
 
 	for _, tt := range tests {

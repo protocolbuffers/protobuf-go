@@ -139,7 +139,7 @@ func (o UnmarshalOptions) unmarshalMessage(m pref.Message, skipTypeURL bool) err
 // unmarshalFields unmarshals the fields into the given protoreflect.Message.
 func (o UnmarshalOptions) unmarshalFields(m pref.Message, skipTypeURL bool) error {
 	messageDesc := m.Descriptor()
-	if !flags.Proto1Legacy && messageset.IsMessageSet(messageDesc) {
+	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
 		return errors.New("no support for proto1 MessageSets")
 	}
 

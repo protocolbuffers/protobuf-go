@@ -25,7 +25,7 @@ func sizeMessageSet(m protoreflect.Message) (size int) {
 }
 
 func marshalMessageSet(b []byte, m protoreflect.Message, o MarshalOptions) ([]byte, error) {
-	if !flags.Proto1Legacy {
+	if !flags.ProtoLegacy {
 		return b, errors.New("no support for message_set_wire_format")
 	}
 	var err error
@@ -53,7 +53,7 @@ func marshalMessageSetField(b []byte, fd protoreflect.FieldDescriptor, value pro
 }
 
 func unmarshalMessageSet(b []byte, m protoreflect.Message, o UnmarshalOptions) error {
-	if !flags.Proto1Legacy {
+	if !flags.ProtoLegacy {
 		return errors.New("no support for message_set_wire_format")
 	}
 	md := m.Descriptor()

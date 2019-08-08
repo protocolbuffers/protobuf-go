@@ -1034,7 +1034,7 @@ func TestMarshal(t *testing.T) {
     "optString": "not a messageset extension"
   }
 }`,
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc: "not real MessageSet 1",
 		input: func() proto.Message {
@@ -1049,7 +1049,7 @@ func TestMarshal(t *testing.T) {
     "optString": "not a messageset extension"
   }
 }`,
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc: "not real MessageSet 2",
 		input: func() proto.Message {
@@ -1064,7 +1064,7 @@ func TestMarshal(t *testing.T) {
     "optString": "another not a messageset extension"
   }
 }`,
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc:  "BoolValue empty",
 		input: &wrapperspb.BoolValue{},

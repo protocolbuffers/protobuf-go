@@ -15,7 +15,7 @@ import (
 
 // EnforceUTF8 reports whether to enforce strict UTF-8 validation.
 func EnforceUTF8(fd protoreflect.FieldDescriptor) bool {
-	if flags.Proto1Legacy {
+	if flags.ProtoLegacy {
 		if fd, ok := fd.(interface{ EnforceUTF8() bool }); ok {
 			return fd.EnforceUTF8()
 		}

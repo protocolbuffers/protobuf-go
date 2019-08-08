@@ -615,7 +615,7 @@ func Test(t *testing.T) {
 	}, {
 		in: `nums: [0xbeefbeef,0xbeefbeefbeefbeef]`,
 		wantVal: V(Msg{{ID("nums"), func() Value {
-			if flags.Proto1Legacy {
+			if flags.ProtoLegacy {
 				return V(Lst{V(int32(-1091584273)), V(int64(-4688318750159552785))})
 			} else {
 				return V(Lst{V(uint32(0xbeefbeef)), V(uint64(0xbeefbeefbeefbeef))})

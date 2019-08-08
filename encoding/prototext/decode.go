@@ -76,7 +76,7 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {
 // unmarshalMessage unmarshals a [][2]text.Value message into the given protoreflect.Message.
 func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message) error {
 	messageDesc := m.Descriptor()
-	if !flags.Proto1Legacy && messageset.IsMessageSet(messageDesc) {
+	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
 		return errors.New("no support for proto1 MessageSets")
 	}
 

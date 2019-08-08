@@ -769,7 +769,7 @@ func TestNewFile(t *testing.T) {
 			}]}]
 		`),
 		wantErr: func() string {
-			if flags.Proto1Legacy {
+			if flags.ProtoLegacy {
 				return `message "M.M" is an invalid proto1 MessageSet`
 			} else {
 				return `message "M.M" is a MessageSet, which is a legacy proto1 feature that is no longer supported`
@@ -787,7 +787,7 @@ func TestNewFile(t *testing.T) {
 			}]}]
 		`),
 		wantErr: func() string {
-			if flags.Proto1Legacy {
+			if flags.ProtoLegacy {
 				return ""
 			} else {
 				return `message "M.M" is a MessageSet, which is a legacy proto1 feature that is no longer supported`

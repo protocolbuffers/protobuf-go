@@ -75,7 +75,7 @@ func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
 // marshalMessage converts a protoreflect.Message to a text.Value.
 func (o MarshalOptions) marshalMessage(m pref.Message) (text.Value, error) {
 	messageDesc := m.Descriptor()
-	if !flags.Proto1Legacy && messageset.IsMessageSet(messageDesc) {
+	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
 		return text.Value{}, errors.New("no support for proto1 MessageSets")
 	}
 

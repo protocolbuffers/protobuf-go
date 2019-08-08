@@ -192,7 +192,7 @@ func (v Value) Int(b64 bool) (x int64, ok bool) {
 		}
 		// C++ accepts large positive hex numbers as negative values.
 		// This feature is here for proto1 backwards compatibility purposes.
-		if flags.Proto1Legacy && len(v.raw) > 1 && v.raw[0] == '0' && v.raw[1] == 'x' {
+		if flags.ProtoLegacy && len(v.raw) > 1 && v.raw[0] == '0' && v.raw[1] == 'x' {
 			if !b64 {
 				return int64(int32(n)), n <= math.MaxUint32
 			}

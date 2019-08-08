@@ -104,9 +104,9 @@ func TestEncodeNoEnforceUTF8(t *testing.T) {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
 				_, err := proto.Marshal(want)
 				switch {
-				case flags.Proto1Legacy && err != nil:
+				case flags.ProtoLegacy && err != nil:
 					t.Errorf("Marshal returned unexpected error: %v\nMessage:\n%v", err, marshalText(want))
-				case !flags.Proto1Legacy && err == nil:
+				case !flags.ProtoLegacy && err == nil:
 					t.Errorf("Marshal did not return expected error for invalid UTF8: %v\nMessage:\n%v", err, marshalText(want))
 				}
 			})

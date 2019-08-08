@@ -98,9 +98,9 @@ func TestDecodeNoEnforceUTF8(t *testing.T) {
 				got := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
 				err := proto.Unmarshal(test.wire, got)
 				switch {
-				case flags.Proto1Legacy && err != nil:
+				case flags.ProtoLegacy && err != nil:
 					t.Errorf("Unmarshal returned unexpected error: %v\nMessage:\n%v", err, marshalText(want))
-				case !flags.Proto1Legacy && err == nil:
+				case !flags.ProtoLegacy && err == nil:
 					t.Errorf("Unmarshal did not return expected error for invalid UTF8: %v\nMessage:\n%v", err, marshalText(want))
 				}
 			})

@@ -494,7 +494,7 @@ func SizeGroup(num Number, n int) int {
 // Other than overflow, this does not check for field number validity.
 func DecodeTag(x uint64) (Number, Type) {
 	// NOTE: MessageSet allows for larger field numbers than normal.
-	if flags.Proto1Legacy {
+	if flags.ProtoLegacy {
 		if x>>3 > uint64(math.MaxInt32) {
 			return -1, 0
 		}

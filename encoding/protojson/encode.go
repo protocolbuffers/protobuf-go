@@ -88,7 +88,7 @@ func (o MarshalOptions) marshalMessage(m pref.Message) error {
 // marshalFields marshals the fields in the given protoreflect.Message.
 func (o MarshalOptions) marshalFields(m pref.Message) error {
 	messageDesc := m.Descriptor()
-	if !flags.Proto1Legacy && messageset.IsMessageSet(messageDesc) {
+	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
 		return errors.New("no support for proto1 MessageSets")
 	}
 

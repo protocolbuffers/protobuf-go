@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	if flags.Proto1Legacy {
+	if flags.ProtoLegacy {
 		testProtos = append(testProtos, messageSetTestProtos...)
 	}
 }

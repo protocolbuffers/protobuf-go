@@ -1078,7 +1078,7 @@ opt_int32: 42
   opt_string: "not a messageset extension"
 }
 `,
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc: "not real MessageSet 1",
 		input: func() proto.Message {
@@ -1092,7 +1092,7 @@ opt_int32: 42
   opt_string: "not a messageset extension"
 }
 `,
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc: "not real MessageSet 2",
 		input: func() proto.Message {
@@ -1106,7 +1106,7 @@ opt_int32: 42
   opt_string: "another not a messageset extension"
 }
 `,
-		skip: !flags.Proto1Legacy,
+		skip: !flags.ProtoLegacy,
 	}, {
 		desc: "Any not expanded",
 		mo: prototext.MarshalOptions{

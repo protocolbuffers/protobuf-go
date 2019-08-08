@@ -45,7 +45,7 @@ func sizeMessageSet(mi *MessageInfo, p pointer, tagsize int, opts marshalOptions
 }
 
 func marshalMessageSet(mi *MessageInfo, b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	if !flags.Proto1Legacy {
+	if !flags.ProtoLegacy {
 		return b, errors.New("no support for message_set_wire_format")
 	}
 	ext := *p.Extensions()
@@ -97,7 +97,7 @@ func marshalMessageSetField(mi *MessageInfo, b []byte, x ExtensionField, opts ma
 }
 
 func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
-	if !flags.Proto1Legacy {
+	if !flags.ProtoLegacy {
 		return 0, errors.New("no support for message_set_wire_format")
 	}
 	if wtyp != wire.StartGroupType {
