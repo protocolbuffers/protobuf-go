@@ -13,6 +13,7 @@ import (
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 )
 
@@ -130,7 +131,7 @@ func TestEncodeRequiredFieldChecks(t *testing.T) {
 	}
 }
 
-func TestMarshalAppend(t *testing.T) {
+func TestEncodeAppend(t *testing.T) {
 	want := []byte("prefix")
 	got := append([]byte(nil), want...)
 	got, err := proto.MarshalOptions{}.MarshalAppend(got, &test3pb.TestAllTypes{
@@ -141,5 +142,16 @@ func TestMarshalAppend(t *testing.T) {
 	}
 	if !bytes.HasPrefix(got, want) {
 		t.Fatalf("MarshalAppend modified prefix: got %v, want prefix %v", got, want)
+	}
+}
+
+func TestEncodeOneofNilWrapper(t *testing.T) {
+	m := &testpb.TestAllTypes{OneofField: (*testpb.TestAllTypes_OneofUint32)(nil)}
+	b, err := proto.Marshal(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(b) > 0 {
+		t.Errorf("Marshal return non-empty, want empty")
 	}
 }

@@ -21,6 +21,7 @@ func TestReset(t *testing.T) {
 		MapStringString:        map[string]string{},
 		OptionalForeignMessage: &testpb.ForeignMessage{},
 		OneofField:             (*testpb.TestAllTypes_OneofUint32)(nil),
+		OneofOptional:          (*testpb.TestAllTypes_OneofOptionalUint32)(nil),
 	}
 	m.ProtoReflect().SetUnknown([]byte{})
 
@@ -46,6 +47,9 @@ func TestReset(t *testing.T) {
 	}
 	if m.OneofField != nil {
 		t.Errorf("m.OneofField = %p, want nil", m.OneofField)
+	}
+	if m.OneofOptional != nil {
+		t.Errorf("m.OneofOptional = %p, want nil", m.OneofOptional)
 	}
 
 	if got := m.ProtoReflect().GetUnknown(); got != nil {

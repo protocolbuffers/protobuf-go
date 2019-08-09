@@ -122,6 +122,19 @@ func TestDecodeZeroLengthBytes(t *testing.T) {
 	}
 }
 
+func TestDecodeOneofNilWrapper(t *testing.T) {
+	wire := pack.Message{
+		pack.Tag{111, pack.VarintType}, pack.Varint(1111),
+	}.Marshal()
+	m := &testpb.TestAllTypes{OneofField: (*testpb.TestAllTypes_OneofUint32)(nil)}
+	if err := proto.Unmarshal(wire, m); err != nil {
+		t.Fatal(err)
+	}
+	if got := m.GetOneofUint32(); got != 1111 {
+		t.Errorf("GetOneofUint32() = %v, want %v", got, 1111)
+	}
+}
+
 var testProtos = []testProto{
 	{
 		desc: "basic scalar types",

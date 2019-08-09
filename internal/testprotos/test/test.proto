@@ -124,6 +124,11 @@ message TestAllTypes {
     double        oneof_double         = 118;
     NestedEnum    oneof_enum           = 119;
   }
+
+  // A oneof with exactly one field.
+  oneof oneof_optional {
+    uint32 oneof_optional_uint32 = 120;
+  }
 }
 
 message TestDeprecatedMessage {

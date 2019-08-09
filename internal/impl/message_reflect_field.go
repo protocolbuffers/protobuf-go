@@ -56,7 +56,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 				return false
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			if rv.IsNil() || rv.Elem().Type().Elem() != ot {
+			if rv.IsNil() || rv.Elem().Type().Elem() != ot || rv.Elem().IsNil() {
 				return false
 			}
 			return true
@@ -64,6 +64,8 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 		clear: func(p pointer) {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
 			if rv.IsNil() || rv.Elem().Type().Elem() != ot {
+				// NOTE: We intentionally don't check for rv.Elem().IsNil()
+				// so that (*OneofWrapperType)(nil) gets cleared to nil.
 				return
 			}
 			rv.Set(reflect.Zero(rv.Type()))
@@ -73,7 +75,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 				return conv.Zero()
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			if rv.IsNil() || rv.Elem().Type().Elem() != ot {
+			if rv.IsNil() || rv.Elem().Type().Elem() != ot || rv.Elem().IsNil() {
 				return conv.Zero()
 			}
 			rv = rv.Elem().Elem().Field(0)
@@ -81,7 +83,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 		},
 		set: func(p pointer, v pref.Value) {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			if rv.IsNil() || rv.Elem().Type().Elem() != ot {
+			if rv.IsNil() || rv.Elem().Type().Elem() != ot || rv.Elem().IsNil() {
 				rv.Set(reflect.New(ot))
 			}
 			rv = rv.Elem().Elem().Field(0)
@@ -92,7 +94,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 				panic("invalid Mutable on field with non-composite type")
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			if rv.IsNil() || rv.Elem().Type().Elem() != ot {
+			if rv.IsNil() || rv.Elem().Type().Elem() != ot || rv.Elem().IsNil() {
 				rv.Set(reflect.New(ot))
 			}
 			rv = rv.Elem().Elem().Field(0)

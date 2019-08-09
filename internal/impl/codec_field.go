@@ -30,7 +30,7 @@ func makeOneofFieldCoder(si structInfo, fd pref.FieldDescriptor) pointerCoderFun
 			return pointer{}, false
 		}
 		v = v.Elem() // interface -> *struct
-		if v.Elem().Type() != ot {
+		if v.IsNil() || v.Elem().Type() != ot {
 			return pointer{}, false
 		}
 		return pointerOfValue(v).Apply(zeroOffset), true
