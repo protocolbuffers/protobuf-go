@@ -43,9 +43,6 @@ type ExtensionInfo struct {
 	goType reflect.Type
 	conv   Converter
 
-	// TODO: Remove after updating v2 to not set this.
-	Type interface{}
-
 	// ExtendedType is a typed nil-pointer to the parent message type that
 	// is being extended. It is possible for this to be unpopulated in v2
 	// since the message may no longer implement the MessageV1 interface.

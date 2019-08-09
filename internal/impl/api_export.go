@@ -93,10 +93,3 @@ func (Export) MessageStringOf(m pref.ProtoMessage) string {
 func (Export) ExtensionDescFromType(t pref.ExtensionType) *ExtensionInfo {
 	return legacyExtensionDescFromType(t)
 }
-
-// ExtensionTypeFromDesc returns the v2 protoreflect.ExtensionType for d.
-//
-// TODO: Remove after updating v1 to no longer call this.
-func (Export) ExtensionTypeFromDesc(d *ExtensionInfo) pref.ExtensionType {
-	return d
-}
