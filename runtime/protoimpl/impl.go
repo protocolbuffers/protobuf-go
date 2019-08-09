@@ -15,23 +15,31 @@ import (
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/filetype"
 	"google.golang.org/protobuf/internal/impl"
+	"google.golang.org/protobuf/runtime/protoiface"
 )
 
 // UnsafeEnabled specifies whether package unsafe can be used.
 const UnsafeEnabled = impl.UnsafeEnabled
 
 type (
-	DescBuilder      = filedesc.Builder
-	TypeBuilder      = filetype.Builder
-	EnumInfo         = filetype.EnumInfo
-	Pointer          = impl.Pointer
-	MessageInfo      = impl.MessageInfo
+	// Types used by generated code in init functions.
+	DescBuilder = filedesc.Builder
+	TypeBuilder = filetype.Builder
+
+	// Types used by generated code to implement EnumType, MessageType, and ExtensionType.
+	EnumInfo      = filetype.EnumInfo
+	MessageInfo   = impl.MessageInfo
+	ExtensionInfo = protoiface.ExtensionDescV1
+
+	// Types embedded in generated messages.
 	MessageState     = impl.MessageState
 	SizeCache        = impl.SizeCache
 	WeakFields       = impl.WeakFields
 	UnknownFields    = impl.UnknownFields
 	ExtensionFields  = impl.ExtensionFields
 	ExtensionFieldV1 = impl.ExtensionField
+
+	Pointer = impl.Pointer
 )
 
 var X impl.Export
