@@ -302,12 +302,12 @@ func genEnumReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 	g.P()
 }
 
-func genMessageReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
-	idx := f.allMessagesByPtr[message]
+func genMessageReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+	idx := f.allMessagesByPtr[m.Message]
 	typesVar := messageTypesVarName(f)
 
 	// ProtoReflect method.
-	g.P("func (x *", message.GoIdent, ") ProtoReflect() ", protoreflectPackage.Ident("Message"), " {")
+	g.P("func (x *", m.GoIdent, ") ProtoReflect() ", protoreflectPackage.Ident("Message"), " {")
 	g.P("mi := &", typesVar, "[", idx, "]")
 	if generateMessageStateFields {
 		g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " && x != nil {")
