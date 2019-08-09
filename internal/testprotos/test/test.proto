@@ -357,3 +357,7 @@ service TestDeprecatedService {
     option deprecated = true;
   }
 }
+
+message WeirdDefault {
+  optional bytes weird_default = 1 [default = "hello, \"world!\"\ndead\xde\xad\xbe\xefbeef`"];
+}

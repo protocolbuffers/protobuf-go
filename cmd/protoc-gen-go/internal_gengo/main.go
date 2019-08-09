@@ -448,18 +448,18 @@ func genMessageInternalFields(g *protogen.GeneratedFile, message *protogen.Messa
 		sf.append("state")
 	}
 	if generateExportedSizeCacheFields {
-		g.P("XXX_sizecache", " ", protoimplPackage.Ident("SizeCache"), " `json:\"-\"`")
+		g.P("XXX_sizecache", " ", protoimplPackage.Ident("SizeCache"), jsonIgnoreTags)
 		sf.append("XXX_sizecache")
 	} else {
 		g.P("sizeCache", " ", protoimplPackage.Ident("SizeCache"))
 		sf.append("sizeCache")
 	}
 	if loadMessageAPIFlags(message).WeakMapField {
-		g.P("XXX_weak", " ", protoimplPackage.Ident("WeakFields"), " `json:\"-\"`")
+		g.P("XXX_weak", " ", protoimplPackage.Ident("WeakFields"), jsonIgnoreTags)
 		sf.append("XXX_weak")
 	}
 	if generateExportedUnknownFields {
-		g.P("XXX_unrecognized", " ", protoimplPackage.Ident("UnknownFields"), " `json:\"-\"`")
+		g.P("XXX_unrecognized", " ", protoimplPackage.Ident("UnknownFields"), jsonIgnoreTags)
 		sf.append("XXX_unrecognized")
 	} else {
 		g.P("unknownFields", " ", protoimplPackage.Ident("UnknownFields"))
@@ -467,7 +467,7 @@ func genMessageInternalFields(g *protogen.GeneratedFile, message *protogen.Messa
 	}
 	if message.Desc.ExtensionRanges().Len() > 0 {
 		if generateExportedExtensionFields {
-			g.P("XXX_InternalExtensions", " ", protoimplPackage.Ident("ExtensionFields"), " `json:\"-\"`")
+			g.P("XXX_InternalExtensions", " ", protoimplPackage.Ident("ExtensionFields"), jsonIgnoreTags)
 			sf.append("XXX_InternalExtensions")
 		} else {
 			g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"))
@@ -489,6 +489,10 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 			return // only generate for first appearance
 		}
 
+		tags := structTags{
+			{"protobuf_oneof", string(oneof.Desc.Name())},
+		}
+
 		g.Annotate(message.GoIdent.GoName+"."+oneof.GoName, oneof.Location)
 		leadingComments := oneof.Comments.Leading
 		if leadingComments != "" {
@@ -500,7 +504,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 		}
 		leadingComments += protogen.Comments(strings.Join(ss, ""))
 		g.P(leadingComments,
-			oneof.GoName, " ", oneofInterfaceName(oneof), " `protobuf_oneof:\"", oneof.Desc.Name(), "\"`")
+			oneof.GoName, " ", oneofInterfaceName(oneof), tags)
 		sf.append(oneof.GoName)
 		return
 	}
@@ -508,17 +512,17 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 	if pointer {
 		goType = "*" + goType
 	}
-	tags := []string{
-		fmt.Sprintf("protobuf:%q", fieldProtobufTag(field)),
-		fmt.Sprintf("json:%q", fieldJSONTag(field)),
+	tags := structTags{
+		{"protobuf", fieldProtobufTagValue(field)},
+		{"json", fieldJSONTagValue(field)},
 	}
 	if field.Desc.IsMap() {
 		key := field.Message.Fields[0]
 		val := field.Message.Fields[1]
-		tags = append(tags,
-			fmt.Sprintf("protobuf_key:%q", fieldProtobufTag(key)),
-			fmt.Sprintf("protobuf_val:%q", fieldProtobufTag(val)),
-		)
+		tags = append(tags, structTags{
+			{"protobuf_key", fieldProtobufTagValue(key)},
+			{"protobuf_val", fieldProtobufTagValue(val)},
+		}...)
 	}
 
 	name := field.GoName
@@ -529,7 +533,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 	leadingComments := appendDeprecationSuffix(field.Comments.Leading,
 		field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
 	g.P(leadingComments,
-		name, " ", goType, " `", strings.Join(tags, " "), "`",
+		name, " ", goType, tags,
 		trailingComment(field.Comments.Trailing))
 	sf.append(field.GoName)
 }
@@ -785,7 +789,7 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 	return goType, pointer
 }
 
-func fieldProtobufTag(field *protogen.Field) string {
+func fieldProtobufTagValue(field *protogen.Field) string {
 	var enumName string
 	if field.Desc.Kind() == protoreflect.EnumKind {
 		enumName = enumLegacyName(field.Enum)
@@ -818,7 +822,7 @@ func fieldDefaultValue(g *protogen.GeneratedFile, message *protogen.Message, fie
 	}
 }
 
-func fieldJSONTag(field *protogen.Field) string {
+func fieldJSONTagValue(field *protogen.Field) string {
 	return string(field.Desc.Name()) + ",omitempty"
 }
 
@@ -838,7 +842,7 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 		g.P("ExtensionType: (", goType, ")(nil),")
 		g.P("Field: ", extension.Desc.Number(), ",")
 		g.P("Name: ", strconv.Quote(string(extension.Desc.FullName())), ",")
-		g.P("Tag: ", strconv.Quote(fieldProtobufTag(extension)), ",")
+		g.P("Tag: ", strconv.Quote(fieldProtobufTagValue(extension)), ",")
 		g.P("Filename: ", strconv.Quote(f.Desc.Path()), ",")
 		g.P("},")
 	}
@@ -913,13 +917,13 @@ func genOneofWrapperTypes(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fi
 			g.Annotate(name.GoName+"."+field.GoName, field.Location)
 			g.P("type ", name, " struct {")
 			goType, _ := fieldGoType(g, f, field)
-			tags := []string{
-				fmt.Sprintf("protobuf:%q", fieldProtobufTag(field)),
+			tags := structTags{
+				{"protobuf", fieldProtobufTagValue(field)},
 			}
 			leadingComments := appendDeprecationSuffix(field.Comments.Leading,
 				field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
 			g.P(leadingComments,
-				field.GoName, " ", goType, " `", strings.Join(tags, " "), "`",
+				field.GoName, " ", goType, tags,
 				trailingComment(field.Comments.Trailing))
 			g.P("}")
 			g.P()
@@ -967,6 +971,29 @@ Loop:
 		}
 		return ident
 	}
+}
+
+var jsonIgnoreTags = structTags{{"json", "-"}}
+
+// structTags is a data structure for build idiomatic Go struct tags.
+// Each [2]string is a key-value pair, where value is the unescaped string.
+//
+// Example: structTags{{"key", "value"}} -> `key:"value"`
+type structTags [][2]string
+
+func (tags structTags) String() string {
+	if len(tags) == 0 {
+		return ""
+	}
+	var ss []string
+	for _, tag := range tags {
+		// NOTE: When quoting the value, we need to make sure the backtick
+		// character does not appear. Convert all cases to the escaped hex form.
+		key := tag[0]
+		val := strings.Replace(strconv.Quote(tag[1]), "`", `\x60`, -1)
+		ss = append(ss, fmt.Sprintf("%s:%s", key, val))
+	}
+	return "`" + strings.Join(ss, " ") + "`"
 }
 
 // appendDeprecationSuffix optionally appends a deprecation notice as a suffix.
