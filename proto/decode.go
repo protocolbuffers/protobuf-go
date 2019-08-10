@@ -8,6 +8,7 @@ import (
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -88,7 +89,7 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 			return wire.ParseError(tagLen)
 		}
 
-		// Parse the field value.
+		// Find the field descriptor for this field number.
 		fd := fields.ByNumber(num)
 		if fd == nil && md.ExtensionRanges().Has(num) {
 			extType, err := o.Resolver.FindExtensionByNumber(md.FullName(), num)
@@ -100,10 +101,18 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 			}
 		}
 		var err error
+		if fd == nil {
+			err = errUnknown
+		} else if flags.ProtoLegacy {
+			if fd.IsWeak() && fd.Message().IsPlaceholder() {
+				err = errUnknown // weak referent is not linked in
+			}
+		}
+
+		// Parse the field value.
 		var valLen int
 		switch {
-		case fd == nil:
-			err = errUnknown
+		case err != nil:
 		case fd.IsList():
 			valLen, err = o.unmarshalList(b[tagLen:], wtyp, m.Mutable(fd).List(), fd)
 		case fd.IsMap():
@@ -111,14 +120,15 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 		default:
 			valLen, err = o.unmarshalSingular(b[tagLen:], wtyp, m, fd)
 		}
-		if err == errUnknown {
+		if err != nil {
+			if err != errUnknown {
+				return err
+			}
 			valLen = wire.ConsumeFieldValue(num, wtyp, b[tagLen:])
 			if valLen < 0 {
 				return wire.ParseError(valLen)
 			}
 			m.SetUnknown(append(m.GetUnknown(), b[:tagLen+valLen]...))
-		} else if err != nil {
-			return err
 		}
 		b = b[tagLen+valLen:]
 	}

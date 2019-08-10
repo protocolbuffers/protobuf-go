@@ -9,51 +9,80 @@ import (
 	"strings"
 	"testing"
 
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
 )
 
 func TestIsInitializedErrors(t *testing.T) {
-	for _, test := range []struct {
+	type test struct {
 		m    proto.Message
 		want string
-	}{
-		{
-			&testpb.TestRequired{},
-			`goproto.proto.test.TestRequired.required_field`,
+		skip bool
+	}
+	tests := []test{{
+		m:    &testpb.TestRequired{},
+		want: `goproto.proto.test.TestRequired.required_field`,
+	}, {
+		m: &testpb.TestRequiredForeign{
+			OptionalMessage: &testpb.TestRequired{},
 		},
-		{
-			&testpb.TestRequiredForeign{
-				OptionalMessage: &testpb.TestRequired{},
+		want: `goproto.proto.test.TestRequired.required_field`,
+	}, {
+		m: &testpb.TestRequiredForeign{
+			RepeatedMessage: []*testpb.TestRequired{
+				{RequiredField: proto.Int32(1)},
+				{},
 			},
-			`goproto.proto.test.TestRequired.required_field`,
 		},
-		{
-			&testpb.TestRequiredForeign{
-				RepeatedMessage: []*testpb.TestRequired{
-					{RequiredField: proto.Int32(1)},
-					{},
-				},
+		want: `goproto.proto.test.TestRequired.required_field`,
+	}, {
+		m: &testpb.TestRequiredForeign{
+			MapMessage: map[int32]*testpb.TestRequired{
+				1: {},
 			},
-			`goproto.proto.test.TestRequired.required_field`,
 		},
-		{
-			&testpb.TestRequiredForeign{
-				MapMessage: map[int32]*testpb.TestRequired{
-					1: {},
-				},
-			},
-			`goproto.proto.test.TestRequired.required_field`,
-		},
-	} {
-		err := proto.IsInitialized(test.m)
-		got := "<nil>"
-		if err != nil {
-			got = fmt.Sprintf("%q", err)
-		}
-		if !strings.Contains(got, test.want) {
-			t.Errorf("IsInitialized(m):\n got: %v\nwant contains: %v\nMessage:\n%v", got, test.want, marshalText(test.m))
-		}
+		want: `goproto.proto.test.TestRequired.required_field`,
+	}, {
+		m:    &testpb.TestWeak{},
+		want: `<nil>`,
+		skip: !flags.ProtoLegacy,
+	}, {
+		m: func() proto.Message {
+			m := &testpb.TestWeak{}
+			m.SetWeakMessage1(&weakpb.WeakImportMessage1{})
+			return m
+		}(),
+		want: `goproto.proto.test.weak.WeakImportMessage1.a`,
+		skip: !flags.ProtoLegacy,
+	}, {
+		m: func() proto.Message {
+			m := &testpb.TestWeak{}
+			m.SetWeakMessage1(&weakpb.WeakImportMessage1{
+				A: proto.Int32(1),
+			})
+			return m
+		}(),
+		want: `<nil>`,
+		skip: !flags.ProtoLegacy,
+	}}
+
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			if tt.skip {
+				t.SkipNow()
+			}
+
+			err := proto.IsInitialized(tt.m)
+			got := "<nil>"
+			if err != nil {
+				got = fmt.Sprintf("%q", err)
+			}
+			if !strings.Contains(got, tt.want) {
+				t.Errorf("IsInitialized(m):\n got: %v\nwant contains: %v\nMessage:\n%v", got, tt.want, marshalText(tt.m))
+			}
+		})
 	}
 }

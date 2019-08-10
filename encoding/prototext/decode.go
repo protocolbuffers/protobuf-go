@@ -138,8 +138,10 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 		} else if xtErr != nil && xtErr != protoregistry.NotFound {
 			return errors.New("unable to resolve: %v", xtErr)
 		}
-		if fd != nil && fd.IsWeak() && fd.Message().IsPlaceholder() {
-			fd = nil // reset since the weak reference is not linked in
+		if flags.ProtoLegacy {
+			if fd != nil && fd.IsWeak() && fd.Message().IsPlaceholder() {
+				fd = nil // reset since the weak reference is not linked in
+			}
 		}
 
 		// Handle unknown fields.

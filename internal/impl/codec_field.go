@@ -6,10 +6,13 @@ package impl
 
 import (
 	"reflect"
+	"sync"
 
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	preg "google.golang.org/protobuf/reflect/protoregistry"
+	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 type errInvalidUTF8 struct{}
@@ -17,7 +20,7 @@ type errInvalidUTF8 struct{}
 func (errInvalidUTF8) Error() string     { return "string field contains invalid UTF-8" }
 func (errInvalidUTF8) InvalidUTF8() bool { return true }
 
-func makeOneofFieldCoder(si structInfo, fd pref.FieldDescriptor) pointerCoderFuncs {
+func makeOneofFieldCoder(fd pref.FieldDescriptor, si structInfo) pointerCoderFuncs {
 	ot := si.oneofWrappersByNumber[fd.Number()]
 	funcs := fieldCoder(fd, ot.Field(0).Type)
 	fs := si.oneofsByName[fd.ContainingOneof().Name()]
@@ -76,6 +79,61 @@ func makeOneofFieldCoder(si structInfo, fd pref.FieldDescriptor) pointerCoderFun
 		}
 	}
 	return pcf
+}
+
+func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
+	var once sync.Once
+	var messageType pref.MessageType
+	lazyInit := func() {
+		once.Do(func() {
+			messageName := fd.Message().FullName()
+			messageType, _ = preg.GlobalTypes.FindMessageByName(messageName)
+		})
+	}
+
+	num := int32(fd.Number())
+	return pointerCoderFuncs{
+		size: func(p pointer, tagsize int, opts marshalOptions) int {
+			fs := p.WeakFields()
+			m, ok := (*fs)[num]
+			if !ok {
+				return 0
+			}
+			return sizeMessage(m.(proto.Message), tagsize, opts)
+		},
+		marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
+			fs := p.WeakFields()
+			m, ok := (*fs)[num]
+			if !ok {
+				return b, nil
+			}
+			return appendMessage(b, m.(proto.Message), wiretag, opts)
+		},
+		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
+			fs := p.WeakFields()
+			m, ok := (*fs)[num]
+			if !ok {
+				lazyInit()
+				if messageType == nil {
+					return 0, errUnknown
+				}
+				m = messageType.New().Interface().(piface.MessageV1)
+				if *fs == nil {
+					*fs = make(WeakFields)
+				}
+				(*fs)[num] = m
+			}
+			return consumeMessage(b, m.(proto.Message), wtyp, opts)
+		},
+		isInit: func(p pointer) error {
+			fs := p.WeakFields()
+			m, ok := (*fs)[num]
+			if !ok {
+				return nil
+			}
+			return proto.IsInitialized(m.(proto.Message))
+		},
+	}
 }
 
 func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {

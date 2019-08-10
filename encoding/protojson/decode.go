@@ -201,6 +201,8 @@ func (o UnmarshalOptions) unmarshalFields(m pref.Message, skipTypeURL bool) erro
 					fd = nil // reset since field name is actually the message name
 				}
 			}
+		}
+		if flags.ProtoLegacy {
 			if fd != nil && fd.IsWeak() && fd.Message().IsPlaceholder() {
 				fd = nil // reset since the weak reference is not linked in
 			}

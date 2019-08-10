@@ -21,6 +21,7 @@ import (
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2.v0.0.0-20160225-2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -1724,6 +1725,46 @@ var invalidFieldNumberTestProtos = []struct {
 		}.Marshal(),
 		allowed: flags.ProtoLegacy,
 	},
+}
+
+func TestWeak(t *testing.T) {
+	if !flags.ProtoLegacy {
+		t.SkipNow()
+	}
+
+	m := new(testpb.TestWeak)
+	b := pack.Message{
+		pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+			pack.Tag{1, pack.VarintType}, pack.Varint(1000),
+		}),
+		pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
+			pack.Tag{1, pack.VarintType}, pack.Varint(2000),
+		}),
+	}.Marshal()
+	if err := proto.Unmarshal(b, m); err != nil {
+		t.Errorf("Unmarshal error: %v", err)
+	}
+
+	mw := m.GetWeakMessage1().(*weakpb.WeakImportMessage1)
+	if mw.GetA() != 1000 {
+		t.Errorf("m.WeakMessage1.a = %d, want %d", mw.GetA(), 1000)
+	}
+
+	if len(m.ProtoReflect().GetUnknown()) == 0 {
+		t.Errorf("m has no unknown fields, expected at least something")
+	}
+
+	if n := proto.Size(m); n != len(b) {
+		t.Errorf("Size() = %d, want %d", n, len(b))
+	}
+
+	b2, err := proto.Marshal(m)
+	if err != nil {
+		t.Errorf("Marshal error: %v", err)
+	}
+	if len(b2) != len(b) {
+		t.Errorf("len(Marshal) = %d, want %d", len(b2), len(b))
+	}
 }
 
 func build(m proto.Message, opts ...buildOpt) proto.Message {

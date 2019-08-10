@@ -65,15 +65,22 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		} else {
 			wiretag = wire.EncodeTag(fd.Number(), wire.BytesType)
 		}
+		var fieldOffset offset
 		var funcs pointerCoderFuncs
-		if fd.ContainingOneof() != nil {
-			funcs = makeOneofFieldCoder(si, fd)
-		} else {
+		switch {
+		case fd.ContainingOneof() != nil:
+			fieldOffset = offsetOf(fs, mi.Exporter)
+			funcs = makeOneofFieldCoder(fd, si)
+		case fd.IsWeak():
+			fieldOffset = si.weakOffset
+			funcs = makeWeakMessageFieldCoder(fd)
+		default:
+			fieldOffset = offsetOf(fs, mi.Exporter)
 			funcs = fieldCoder(fd, ft)
 		}
 		cf := &coderFieldInfo{
 			num:     fd.Number(),
-			offset:  offsetOf(fs, mi.Exporter),
+			offset:  fieldOffset,
 			wiretag: wiretag,
 			tagsize: wire.SizeVarint(wiretag),
 			funcs:   funcs,
