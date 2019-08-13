@@ -12,6 +12,159 @@ import (
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+type reflectMessageInfo struct {
+	fields map[pref.FieldNumber]*fieldInfo
+	oneofs map[pref.Name]*oneofInfo
+
+	getUnknown   func(pointer) pref.RawFields
+	setUnknown   func(pointer, pref.RawFields)
+	extensionMap func(pointer) *extensionMap
+
+	nilMessage atomicNilMessage
+}
+
+// makeReflectFuncs generates the set of functions to support reflection.
+func (mi *MessageInfo) makeReflectFuncs(t reflect.Type, si structInfo) {
+	mi.makeKnownFieldsFunc(si)
+	mi.makeUnknownFieldsFunc(t, si)
+	mi.makeExtensionFieldsFunc(t, si)
+}
+
+// makeKnownFieldsFunc generates functions for operations that can be performed
+// on each protobuf message field. It takes in a reflect.Type representing the
+// Go struct and matches message fields with struct fields.
+//
+// This code assumes that the struct is well-formed and panics if there are
+// any discrepancies.
+func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
+	mi.fields = map[pref.FieldNumber]*fieldInfo{}
+	md := mi.Desc
+	for i := 0; i < md.Fields().Len(); i++ {
+		fd := md.Fields().Get(i)
+		fs := si.fieldsByNumber[fd.Number()]
+		var fi fieldInfo
+		switch {
+		case fd.ContainingOneof() != nil:
+			fi = fieldInfoForOneof(fd, si.oneofsByName[fd.ContainingOneof().Name()], mi.Exporter, si.oneofWrappersByNumber[fd.Number()])
+		case fd.IsMap():
+			fi = fieldInfoForMap(fd, fs, mi.Exporter)
+		case fd.IsList():
+			fi = fieldInfoForList(fd, fs, mi.Exporter)
+		case fd.IsWeak():
+			fi = fieldInfoForWeakMessage(fd, si.weakOffset)
+		case fd.Kind() == pref.MessageKind || fd.Kind() == pref.GroupKind:
+			fi = fieldInfoForMessage(fd, fs, mi.Exporter)
+		default:
+			fi = fieldInfoForScalar(fd, fs, mi.Exporter)
+		}
+		mi.fields[fd.Number()] = &fi
+	}
+
+	mi.oneofs = map[pref.Name]*oneofInfo{}
+	for i := 0; i < md.Oneofs().Len(); i++ {
+		od := md.Oneofs().Get(i)
+		mi.oneofs[od.Name()] = makeOneofInfo(od, si.oneofsByName[od.Name()], mi.Exporter, si.oneofWrappersByType)
+	}
+}
+
+func (mi *MessageInfo) makeUnknownFieldsFunc(t reflect.Type, si structInfo) {
+	mi.getUnknown = func(pointer) pref.RawFields { return nil }
+	mi.setUnknown = func(pointer, pref.RawFields) { return }
+	if si.unknownOffset.IsValid() {
+		mi.getUnknown = func(p pointer) pref.RawFields {
+			if p.IsNil() {
+				return nil
+			}
+			rv := p.Apply(si.unknownOffset).AsValueOf(unknownFieldsType)
+			return pref.RawFields(*rv.Interface().(*[]byte))
+		}
+		mi.setUnknown = func(p pointer, b pref.RawFields) {
+			if p.IsNil() {
+				panic("invalid SetUnknown on nil Message")
+			}
+			rv := p.Apply(si.unknownOffset).AsValueOf(unknownFieldsType)
+			*rv.Interface().(*[]byte) = []byte(b)
+		}
+	} else {
+		mi.getUnknown = func(pointer) pref.RawFields {
+			return nil
+		}
+		mi.setUnknown = func(p pointer, _ pref.RawFields) {
+			if p.IsNil() {
+				panic("invalid SetUnknown on nil Message")
+			}
+		}
+	}
+}
+
+func (mi *MessageInfo) makeExtensionFieldsFunc(t reflect.Type, si structInfo) {
+	if si.extensionOffset.IsValid() {
+		mi.extensionMap = func(p pointer) *extensionMap {
+			if p.IsNil() {
+				return (*extensionMap)(nil)
+			}
+			v := p.Apply(si.extensionOffset).AsValueOf(extensionFieldsType)
+			return (*extensionMap)(v.Interface().(*map[int32]ExtensionField))
+		}
+	} else {
+		mi.extensionMap = func(pointer) *extensionMap {
+			return (*extensionMap)(nil)
+		}
+	}
+}
+
+type extensionMap map[int32]ExtensionField
+
+func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
+	if m != nil {
+		for _, x := range *m {
+			xt := x.GetType()
+			if !f(xt.Descriptor(), xt.ValueOf(x.GetValue())) {
+				return
+			}
+		}
+	}
+}
+func (m *extensionMap) Has(xt pref.ExtensionType) (ok bool) {
+	if m != nil {
+		_, ok = (*m)[int32(xt.Descriptor().Number())]
+	}
+	return ok
+}
+func (m *extensionMap) Clear(xt pref.ExtensionType) {
+	delete(*m, int32(xt.Descriptor().Number()))
+}
+func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
+	xd := xt.Descriptor()
+	if m != nil {
+		if x, ok := (*m)[int32(xd.Number())]; ok {
+			return xt.ValueOf(x.GetValue())
+		}
+	}
+	return xt.Zero()
+}
+func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
+	if *m == nil {
+		*m = make(map[int32]ExtensionField)
+	}
+	var x ExtensionField
+	x.SetType(xt)
+	x.SetEagerValue(xt.InterfaceOf(v))
+	(*m)[int32(xt.Descriptor().Number())] = x
+}
+func (m *extensionMap) Mutable(xt pref.ExtensionType) pref.Value {
+	xd := xt.Descriptor()
+	if xd.Kind() != pref.MessageKind && xd.Kind() != pref.GroupKind && !xd.IsList() && !xd.IsMap() {
+		panic("invalid Mutable on field with non-composite type")
+	}
+	if x, ok := (*m)[int32(xd.Number())]; ok {
+		return xt.ValueOf(x.GetValue())
+	}
+	v := xt.New()
+	m.Set(xt, v)
+	return v
+}
+
 // MessageState is a data structure that is nested as the first field in a
 // concrete message. It provides a way to implement the ProtoReflect method
 // in an allocation-free way without needing to have a shadow Go type generated
@@ -113,62 +266,6 @@ func (m *messageIfaceWrapper) ProtoReflect() pref.Message {
 }
 func (m *messageIfaceWrapper) ProtoUnwrap() interface{} {
 	return m.p.AsIfaceOf(m.mi.GoReflectType.Elem())
-}
-
-type extensionMap map[int32]ExtensionField
-
-func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
-	if m != nil {
-		for _, x := range *m {
-			xt := x.GetType()
-			if !f(xt.Descriptor(), xt.ValueOf(x.GetValue())) {
-				return
-			}
-		}
-	}
-}
-func (m *extensionMap) Has(xt pref.ExtensionType) (ok bool) {
-	if m != nil {
-		_, ok = (*m)[int32(xt.Descriptor().Number())]
-	}
-	return ok
-}
-func (m *extensionMap) Clear(xt pref.ExtensionType) {
-	delete(*m, int32(xt.Descriptor().Number()))
-}
-func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
-	xd := xt.Descriptor()
-	if m != nil {
-		if x, ok := (*m)[int32(xd.Number())]; ok {
-			return xt.ValueOf(x.GetValue())
-		}
-	}
-	return xt.Zero()
-}
-func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
-	if *m == nil {
-		*m = make(map[int32]ExtensionField)
-	}
-	var x ExtensionField
-	x.SetType(xt)
-	x.SetEagerValue(xt.InterfaceOf(v))
-	(*m)[int32(xt.Descriptor().Number())] = x
-}
-func (m *extensionMap) Mutable(xt pref.ExtensionType) pref.Value {
-	xd := xt.Descriptor()
-	if !isComposite(xd) {
-		panic("invalid Mutable on field with non-composite type")
-	}
-	if x, ok := (*m)[int32(xd.Number())]; ok {
-		return xt.ValueOf(x.GetValue())
-	}
-	v := xt.New()
-	m.Set(xt, v)
-	return v
-}
-
-func isComposite(fd pref.FieldDescriptor) bool {
-	return fd.Kind() == pref.MessageKind || fd.Kind() == pref.GroupKind || fd.IsList() || fd.IsMap()
 }
 
 // checkField verifies that the provided field descriptor is valid.

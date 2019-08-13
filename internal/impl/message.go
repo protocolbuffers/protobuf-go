@@ -20,13 +20,14 @@ import (
 // MessageInfo provides protobuf related functionality for a given Go type
 // that represents a message. A given instance of MessageInfo is tied to
 // exactly one Go type, which must be a pointer to a struct type.
+//
+// The exported fields must be populated before any methods are called
+// and cannot be mutated after set.
 type MessageInfo struct {
 	// GoReflectType is the underlying message Go type and must be populated.
-	// Once set, this field must never be mutated.
 	GoReflectType reflect.Type // pointer to struct
 
 	// Desc is the underlying message descriptor type and must be populated.
-	// Once set, this field must never be mutated.
 	Desc pref.MessageDescriptor
 
 	// Exporter must be provided in a purego environment in order to provide
@@ -39,25 +40,8 @@ type MessageInfo struct {
 	initMu   sync.Mutex // protects all unexported fields
 	initDone uint32
 
-	reflectMessageInfo
-
-	// Information used by the fast-path methods.
-	methods piface.Methods
-	coderMessageInfo
-
-	extensionFieldInfosMu sync.RWMutex
-	extensionFieldInfos   map[pref.ExtensionType]*extensionFieldInfo
-}
-
-type reflectMessageInfo struct {
-	fields map[pref.FieldNumber]*fieldInfo
-	oneofs map[pref.Name]*oneofInfo
-
-	getUnknown   func(pointer) pref.RawFields
-	setUnknown   func(pointer, pref.RawFields)
-	extensionMap func(pointer) *extensionMap
-
-	nilMessage atomicNilMessage
+	reflectMessageInfo // for reflection implementation
+	coderMessageInfo   // for fast-path method implementations
 }
 
 // exporter is a function that returns a reference to the ith field of v,
@@ -81,8 +65,8 @@ func getMessageInfo(mt reflect.Type) *MessageInfo {
 }
 
 func (mi *MessageInfo) init() {
-	// This function is called in the hot path. Inline the sync.Once
-	// logic, since allocating a closure for Once.Do is expensive.
+	// This function is called in the hot path. Inline the sync.Once logic,
+	// since allocating a closure for Once.Do is expensive.
 	// Keep init small to ensure that it can be inlined.
 	if atomic.LoadUint32(&mi.initDone) == 0 {
 		mi.initOnce()
@@ -100,12 +84,11 @@ func (mi *MessageInfo) initOnce() {
 	if t.Kind() != reflect.Ptr && t.Elem().Kind() != reflect.Struct {
 		panic(fmt.Sprintf("got %v, want *struct kind", t))
 	}
+	t = t.Elem()
 
-	si := mi.makeStructInfo(t.Elem())
-	mi.makeKnownFieldsFunc(si)
-	mi.makeUnknownFieldsFunc(t.Elem(), si)
-	mi.makeExtensionFieldsFunc(t.Elem(), si)
-	mi.makeMethods(t.Elem(), si)
+	si := mi.makeStructInfo(t)
+	mi.makeReflectFuncs(t, si)
+	mi.makeCoderMethods(t, si)
 
 	atomic.StoreUint32(&mi.initDone, 1)
 }
@@ -213,89 +196,6 @@ fieldLoop:
 	}
 
 	return si
-}
-
-// makeKnownFieldsFunc generates functions for operations that can be performed
-// on each protobuf message field. It takes in a reflect.Type representing the
-// Go struct and matches message fields with struct fields.
-//
-// This code assumes that the struct is well-formed and panics if there are
-// any discrepancies.
-func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
-	mi.fields = map[pref.FieldNumber]*fieldInfo{}
-	md := mi.Desc
-	for i := 0; i < md.Fields().Len(); i++ {
-		fd := md.Fields().Get(i)
-		fs := si.fieldsByNumber[fd.Number()]
-		var fi fieldInfo
-		switch {
-		case fd.ContainingOneof() != nil:
-			fi = fieldInfoForOneof(fd, si.oneofsByName[fd.ContainingOneof().Name()], mi.Exporter, si.oneofWrappersByNumber[fd.Number()])
-		case fd.IsMap():
-			fi = fieldInfoForMap(fd, fs, mi.Exporter)
-		case fd.IsList():
-			fi = fieldInfoForList(fd, fs, mi.Exporter)
-		case fd.IsWeak():
-			fi = fieldInfoForWeakMessage(fd, si.weakOffset)
-		case fd.Kind() == pref.MessageKind || fd.Kind() == pref.GroupKind:
-			fi = fieldInfoForMessage(fd, fs, mi.Exporter)
-		default:
-			fi = fieldInfoForScalar(fd, fs, mi.Exporter)
-		}
-		mi.fields[fd.Number()] = &fi
-	}
-
-	mi.oneofs = map[pref.Name]*oneofInfo{}
-	for i := 0; i < md.Oneofs().Len(); i++ {
-		od := md.Oneofs().Get(i)
-		mi.oneofs[od.Name()] = makeOneofInfo(od, si.oneofsByName[od.Name()], mi.Exporter, si.oneofWrappersByType)
-	}
-}
-
-func (mi *MessageInfo) makeUnknownFieldsFunc(t reflect.Type, si structInfo) {
-	mi.getUnknown = func(pointer) pref.RawFields { return nil }
-	mi.setUnknown = func(pointer, pref.RawFields) { return }
-	if si.unknownOffset.IsValid() {
-		mi.getUnknown = func(p pointer) pref.RawFields {
-			if p.IsNil() {
-				return nil
-			}
-			rv := p.Apply(si.unknownOffset).AsValueOf(unknownFieldsType)
-			return pref.RawFields(*rv.Interface().(*[]byte))
-		}
-		mi.setUnknown = func(p pointer, b pref.RawFields) {
-			if p.IsNil() {
-				panic("invalid SetUnknown on nil Message")
-			}
-			rv := p.Apply(si.unknownOffset).AsValueOf(unknownFieldsType)
-			*rv.Interface().(*[]byte) = []byte(b)
-		}
-	} else {
-		mi.getUnknown = func(pointer) pref.RawFields {
-			return nil
-		}
-		mi.setUnknown = func(p pointer, _ pref.RawFields) {
-			if p.IsNil() {
-				panic("invalid SetUnknown on nil Message")
-			}
-		}
-	}
-}
-
-func (mi *MessageInfo) makeExtensionFieldsFunc(t reflect.Type, si structInfo) {
-	if si.extensionOffset.IsValid() {
-		mi.extensionMap = func(p pointer) *extensionMap {
-			if p.IsNil() {
-				return (*extensionMap)(nil)
-			}
-			v := p.Apply(si.extensionOffset).AsValueOf(extensionFieldsType)
-			return (*extensionMap)(v.Interface().(*map[int32]ExtensionField))
-		}
-	} else {
-		mi.extensionMap = func(pointer) *extensionMap {
-			return (*extensionMap)(nil)
-		}
-	}
 }
 
 func (mi *MessageInfo) GoType() reflect.Type {

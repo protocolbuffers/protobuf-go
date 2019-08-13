@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"reflect"
 	"sort"
+	"sync"
 
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
@@ -19,6 +20,8 @@ import (
 // This is a different type from MessageInfo to keep MessageInfo as general-purpose as
 // possible.
 type coderMessageInfo struct {
+	methods piface.Methods
+
 	orderedCoderFields []*coderFieldInfo
 	denseCoderFields   []*coderFieldInfo
 	coderFields        map[wire.Number]*coderFieldInfo
@@ -26,6 +29,9 @@ type coderMessageInfo struct {
 	unknownOffset      offset
 	extensionOffset    offset
 	needsInitCheck     bool
+
+	extensionFieldInfosMu sync.RWMutex
+	extensionFieldInfos   map[pref.ExtensionType]*extensionFieldInfo
 }
 
 type coderFieldInfo struct {
@@ -38,7 +44,7 @@ type coderFieldInfo struct {
 	isRequired bool              // true if field is required
 }
 
-func (mi *MessageInfo) makeMethods(t reflect.Type, si structInfo) {
+func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 	mi.sizecacheOffset = si.sizecacheOffset
 	mi.unknownOffset = si.unknownOffset
 	mi.extensionOffset = si.extensionOffset
