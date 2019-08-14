@@ -1176,67 +1176,67 @@ var file_extensions_ext_ext_proto_goTypes = []interface{}{
 	(*extra.ExtraMessage)(nil),                          // 11: goproto.protoc.extension.extra.ExtraMessage
 }
 var file_extensions_ext_ext_proto_depIdxs = []int32{
-	9,  // goproto.protoc.extension.ext.extension_bool:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_enum:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_int32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_sint32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_uint32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_int64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_sint64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_uint64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_sfixed32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_fixed32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_float:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_sfixed64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_fixed64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_double:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_string:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_bytes:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_Message:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extension_MessageM:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extensiongroup:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extra_message:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_bool:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_enum:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_int32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_sint32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_uint32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_int64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_sint64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_uint64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_sfixed32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_fixed32:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_float:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_sfixed64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_fixed64:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_double:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_string:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_bytes:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeated_x_Message:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.repeatedgroup:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.extendable_field:extendee -> goproto.protoc.extension.base.BaseMessage
-	5,  // goproto.protoc.extension.ext.extendable_string_field:extendee -> goproto.protoc.extension.ext.Extendable
-	10, // goproto.protoc.extension.ext.message_set_extension:extendee -> goproto.protoc.extension.base.MessageSetWireFormatMessage
-	9,  // goproto.protoc.extension.ext.ExtendingMessage.extending_message_string:extendee -> goproto.protoc.extension.base.BaseMessage
-	9,  // goproto.protoc.extension.ext.ExtendingMessage.extending_message_submessage:extendee -> goproto.protoc.extension.base.BaseMessage
-	10, // goproto.protoc.extension.ext.MessageSetWireFormatExtension.message_set_extension:extendee -> goproto.protoc.extension.base.MessageSetWireFormatMessage
-	0,  // goproto.protoc.extension.ext.extension_enum:type_name -> goproto.protoc.extension.ext.Enum
-	1,  // goproto.protoc.extension.ext.extension_Message:type_name -> goproto.protoc.extension.ext.Message
-	7,  // goproto.protoc.extension.ext.extension_MessageM:type_name -> goproto.protoc.extension.ext.Message.M
-	2,  // goproto.protoc.extension.ext.extensiongroup:type_name -> goproto.protoc.extension.ext.ExtensionGroup
-	11, // goproto.protoc.extension.ext.extra_message:type_name -> goproto.protoc.extension.extra.ExtraMessage
-	0,  // goproto.protoc.extension.ext.repeated_x_enum:type_name -> goproto.protoc.extension.ext.Enum
-	1,  // goproto.protoc.extension.ext.repeated_x_Message:type_name -> goproto.protoc.extension.ext.Message
-	4,  // goproto.protoc.extension.ext.repeatedgroup:type_name -> goproto.protoc.extension.ext.RepeatedGroup
-	5,  // goproto.protoc.extension.ext.extendable_field:type_name -> goproto.protoc.extension.ext.Extendable
-	6,  // goproto.protoc.extension.ext.message_set_extension:type_name -> goproto.protoc.extension.ext.MessageSetWireFormatExtension
-	8,  // goproto.protoc.extension.ext.ExtendingMessage.extending_message_submessage:type_name -> goproto.protoc.extension.ext.ExtendingMessage.ExtendingMessageSubmessage
-	6,  // goproto.protoc.extension.ext.MessageSetWireFormatExtension.message_set_extension:type_name -> goproto.protoc.extension.ext.MessageSetWireFormatExtension
-	56, // starting offset of method output_type sub-list
-	56, // starting offset of method input_type sub-list
-	44, // starting offset of extension type_name sub-list
-	0,  // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	9,  // 0: goproto.protoc.extension.ext.extension_bool:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 1: goproto.protoc.extension.ext.extension_enum:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 2: goproto.protoc.extension.ext.extension_int32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 3: goproto.protoc.extension.ext.extension_sint32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 4: goproto.protoc.extension.ext.extension_uint32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 5: goproto.protoc.extension.ext.extension_int64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 6: goproto.protoc.extension.ext.extension_sint64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 7: goproto.protoc.extension.ext.extension_uint64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 8: goproto.protoc.extension.ext.extension_sfixed32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 9: goproto.protoc.extension.ext.extension_fixed32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 10: goproto.protoc.extension.ext.extension_float:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 11: goproto.protoc.extension.ext.extension_sfixed64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 12: goproto.protoc.extension.ext.extension_fixed64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 13: goproto.protoc.extension.ext.extension_double:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 14: goproto.protoc.extension.ext.extension_string:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 15: goproto.protoc.extension.ext.extension_bytes:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 16: goproto.protoc.extension.ext.extension_Message:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 17: goproto.protoc.extension.ext.extension_MessageM:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 18: goproto.protoc.extension.ext.extensiongroup:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 19: goproto.protoc.extension.ext.extra_message:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 20: goproto.protoc.extension.ext.repeated_x_bool:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 21: goproto.protoc.extension.ext.repeated_x_enum:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 22: goproto.protoc.extension.ext.repeated_x_int32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 23: goproto.protoc.extension.ext.repeated_x_sint32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 24: goproto.protoc.extension.ext.repeated_x_uint32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 25: goproto.protoc.extension.ext.repeated_x_int64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 26: goproto.protoc.extension.ext.repeated_x_sint64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 27: goproto.protoc.extension.ext.repeated_x_uint64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 28: goproto.protoc.extension.ext.repeated_x_sfixed32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 29: goproto.protoc.extension.ext.repeated_x_fixed32:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 30: goproto.protoc.extension.ext.repeated_x_float:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 31: goproto.protoc.extension.ext.repeated_x_sfixed64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 32: goproto.protoc.extension.ext.repeated_x_fixed64:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 33: goproto.protoc.extension.ext.repeated_x_double:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 34: goproto.protoc.extension.ext.repeated_x_string:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 35: goproto.protoc.extension.ext.repeated_x_bytes:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 36: goproto.protoc.extension.ext.repeated_x_Message:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 37: goproto.protoc.extension.ext.repeatedgroup:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 38: goproto.protoc.extension.ext.extendable_field:extendee -> goproto.protoc.extension.base.BaseMessage
+	5,  // 39: goproto.protoc.extension.ext.extendable_string_field:extendee -> goproto.protoc.extension.ext.Extendable
+	10, // 40: goproto.protoc.extension.ext.message_set_extension:extendee -> goproto.protoc.extension.base.MessageSetWireFormatMessage
+	9,  // 41: goproto.protoc.extension.ext.ExtendingMessage.extending_message_string:extendee -> goproto.protoc.extension.base.BaseMessage
+	9,  // 42: goproto.protoc.extension.ext.ExtendingMessage.extending_message_submessage:extendee -> goproto.protoc.extension.base.BaseMessage
+	10, // 43: goproto.protoc.extension.ext.MessageSetWireFormatExtension.message_set_extension:extendee -> goproto.protoc.extension.base.MessageSetWireFormatMessage
+	0,  // 44: goproto.protoc.extension.ext.extension_enum:type_name -> goproto.protoc.extension.ext.Enum
+	1,  // 45: goproto.protoc.extension.ext.extension_Message:type_name -> goproto.protoc.extension.ext.Message
+	7,  // 46: goproto.protoc.extension.ext.extension_MessageM:type_name -> goproto.protoc.extension.ext.Message.M
+	2,  // 47: goproto.protoc.extension.ext.extensiongroup:type_name -> goproto.protoc.extension.ext.ExtensionGroup
+	11, // 48: goproto.protoc.extension.ext.extra_message:type_name -> goproto.protoc.extension.extra.ExtraMessage
+	0,  // 49: goproto.protoc.extension.ext.repeated_x_enum:type_name -> goproto.protoc.extension.ext.Enum
+	1,  // 50: goproto.protoc.extension.ext.repeated_x_Message:type_name -> goproto.protoc.extension.ext.Message
+	4,  // 51: goproto.protoc.extension.ext.repeatedgroup:type_name -> goproto.protoc.extension.ext.RepeatedGroup
+	5,  // 52: goproto.protoc.extension.ext.extendable_field:type_name -> goproto.protoc.extension.ext.Extendable
+	6,  // 53: goproto.protoc.extension.ext.message_set_extension:type_name -> goproto.protoc.extension.ext.MessageSetWireFormatExtension
+	8,  // 54: goproto.protoc.extension.ext.ExtendingMessage.extending_message_submessage:type_name -> goproto.protoc.extension.ext.ExtendingMessage.ExtendingMessageSubmessage
+	6,  // 55: goproto.protoc.extension.ext.MessageSetWireFormatExtension.message_set_extension:type_name -> goproto.protoc.extension.ext.MessageSetWireFormatExtension
+	56, // [56:56] is the sub-list for method output_type
+	56, // [56:56] is the sub-list for method input_type
+	44, // [44:56] is the sub-list for extension type_name
+	0,  // [0:44] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_extensions_ext_ext_proto_init() }

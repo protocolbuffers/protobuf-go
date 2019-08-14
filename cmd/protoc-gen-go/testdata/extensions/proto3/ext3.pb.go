@@ -669,49 +669,49 @@ var file_extensions_proto3_ext3_proto_goTypes = []interface{}{
 	(*descriptorpb.MessageOptions)(nil), // 2: google.protobuf.MessageOptions
 }
 var file_extensions_proto3_ext3_proto_depIdxs = []int32{
-	2,  // goproto.protoc.extension.proto3.extension_bool:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_enum:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_int32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_sint32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_uint32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_int64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_sint64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_uint64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_sfixed32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_fixed32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_float:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_sfixed64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_fixed64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_double:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_string:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_bytes:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.extension_Message:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_bool:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_enum:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_int32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_sint32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_uint32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_int64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_sint64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_uint64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_sfixed32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_fixed32:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_float:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_sfixed64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_fixed64:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_double:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_string:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_bytes:extendee -> google.protobuf.MessageOptions
-	2,  // goproto.protoc.extension.proto3.repeated_extension_Message:extendee -> google.protobuf.MessageOptions
-	0,  // goproto.protoc.extension.proto3.extension_enum:type_name -> goproto.protoc.extension.proto3.Enum
-	1,  // goproto.protoc.extension.proto3.extension_Message:type_name -> goproto.protoc.extension.proto3.Message
-	0,  // goproto.protoc.extension.proto3.repeated_extension_enum:type_name -> goproto.protoc.extension.proto3.Enum
-	1,  // goproto.protoc.extension.proto3.repeated_extension_Message:type_name -> goproto.protoc.extension.proto3.Message
-	38, // starting offset of method output_type sub-list
-	38, // starting offset of method input_type sub-list
-	34, // starting offset of extension type_name sub-list
-	0,  // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	2,  // 0: goproto.protoc.extension.proto3.extension_bool:extendee -> google.protobuf.MessageOptions
+	2,  // 1: goproto.protoc.extension.proto3.extension_enum:extendee -> google.protobuf.MessageOptions
+	2,  // 2: goproto.protoc.extension.proto3.extension_int32:extendee -> google.protobuf.MessageOptions
+	2,  // 3: goproto.protoc.extension.proto3.extension_sint32:extendee -> google.protobuf.MessageOptions
+	2,  // 4: goproto.protoc.extension.proto3.extension_uint32:extendee -> google.protobuf.MessageOptions
+	2,  // 5: goproto.protoc.extension.proto3.extension_int64:extendee -> google.protobuf.MessageOptions
+	2,  // 6: goproto.protoc.extension.proto3.extension_sint64:extendee -> google.protobuf.MessageOptions
+	2,  // 7: goproto.protoc.extension.proto3.extension_uint64:extendee -> google.protobuf.MessageOptions
+	2,  // 8: goproto.protoc.extension.proto3.extension_sfixed32:extendee -> google.protobuf.MessageOptions
+	2,  // 9: goproto.protoc.extension.proto3.extension_fixed32:extendee -> google.protobuf.MessageOptions
+	2,  // 10: goproto.protoc.extension.proto3.extension_float:extendee -> google.protobuf.MessageOptions
+	2,  // 11: goproto.protoc.extension.proto3.extension_sfixed64:extendee -> google.protobuf.MessageOptions
+	2,  // 12: goproto.protoc.extension.proto3.extension_fixed64:extendee -> google.protobuf.MessageOptions
+	2,  // 13: goproto.protoc.extension.proto3.extension_double:extendee -> google.protobuf.MessageOptions
+	2,  // 14: goproto.protoc.extension.proto3.extension_string:extendee -> google.protobuf.MessageOptions
+	2,  // 15: goproto.protoc.extension.proto3.extension_bytes:extendee -> google.protobuf.MessageOptions
+	2,  // 16: goproto.protoc.extension.proto3.extension_Message:extendee -> google.protobuf.MessageOptions
+	2,  // 17: goproto.protoc.extension.proto3.repeated_extension_bool:extendee -> google.protobuf.MessageOptions
+	2,  // 18: goproto.protoc.extension.proto3.repeated_extension_enum:extendee -> google.protobuf.MessageOptions
+	2,  // 19: goproto.protoc.extension.proto3.repeated_extension_int32:extendee -> google.protobuf.MessageOptions
+	2,  // 20: goproto.protoc.extension.proto3.repeated_extension_sint32:extendee -> google.protobuf.MessageOptions
+	2,  // 21: goproto.protoc.extension.proto3.repeated_extension_uint32:extendee -> google.protobuf.MessageOptions
+	2,  // 22: goproto.protoc.extension.proto3.repeated_extension_int64:extendee -> google.protobuf.MessageOptions
+	2,  // 23: goproto.protoc.extension.proto3.repeated_extension_sint64:extendee -> google.protobuf.MessageOptions
+	2,  // 24: goproto.protoc.extension.proto3.repeated_extension_uint64:extendee -> google.protobuf.MessageOptions
+	2,  // 25: goproto.protoc.extension.proto3.repeated_extension_sfixed32:extendee -> google.protobuf.MessageOptions
+	2,  // 26: goproto.protoc.extension.proto3.repeated_extension_fixed32:extendee -> google.protobuf.MessageOptions
+	2,  // 27: goproto.protoc.extension.proto3.repeated_extension_float:extendee -> google.protobuf.MessageOptions
+	2,  // 28: goproto.protoc.extension.proto3.repeated_extension_sfixed64:extendee -> google.protobuf.MessageOptions
+	2,  // 29: goproto.protoc.extension.proto3.repeated_extension_fixed64:extendee -> google.protobuf.MessageOptions
+	2,  // 30: goproto.protoc.extension.proto3.repeated_extension_double:extendee -> google.protobuf.MessageOptions
+	2,  // 31: goproto.protoc.extension.proto3.repeated_extension_string:extendee -> google.protobuf.MessageOptions
+	2,  // 32: goproto.protoc.extension.proto3.repeated_extension_bytes:extendee -> google.protobuf.MessageOptions
+	2,  // 33: goproto.protoc.extension.proto3.repeated_extension_Message:extendee -> google.protobuf.MessageOptions
+	0,  // 34: goproto.protoc.extension.proto3.extension_enum:type_name -> goproto.protoc.extension.proto3.Enum
+	1,  // 35: goproto.protoc.extension.proto3.extension_Message:type_name -> goproto.protoc.extension.proto3.Message
+	0,  // 36: goproto.protoc.extension.proto3.repeated_extension_enum:type_name -> goproto.protoc.extension.proto3.Enum
+	1,  // 37: goproto.protoc.extension.proto3.repeated_extension_Message:type_name -> goproto.protoc.extension.proto3.Message
+	38, // [38:38] is the sub-list for method output_type
+	38, // [38:38] is the sub-list for method input_type
+	34, // [34:38] is the sub-list for extension type_name
+	0,  // [0:34] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_extensions_proto3_ext3_proto_init() }

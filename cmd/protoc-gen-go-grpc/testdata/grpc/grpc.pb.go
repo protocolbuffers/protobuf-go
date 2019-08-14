@@ -132,19 +132,19 @@ var file_grpc_grpc_proto_goTypes = []interface{}{
 	(*Response)(nil), // 1: goproto.protoc.grpc.Response
 }
 var file_grpc_grpc_proto_depIdxs = []int32{
-	0, // goproto.protoc.grpc.test_service.unary_call:input_type -> goproto.protoc.grpc.Request
-	0, // goproto.protoc.grpc.test_service.downstream_call:input_type -> goproto.protoc.grpc.Request
-	0, // goproto.protoc.grpc.test_service.upstream_call:input_type -> goproto.protoc.grpc.Request
-	0, // goproto.protoc.grpc.test_service.bidi_call:input_type -> goproto.protoc.grpc.Request
-	1, // goproto.protoc.grpc.test_service.unary_call:output_type -> goproto.protoc.grpc.Response
-	1, // goproto.protoc.grpc.test_service.downstream_call:output_type -> goproto.protoc.grpc.Response
-	1, // goproto.protoc.grpc.test_service.upstream_call:output_type -> goproto.protoc.grpc.Response
-	1, // goproto.protoc.grpc.test_service.bidi_call:output_type -> goproto.protoc.grpc.Response
-	4, // starting offset of method output_type sub-list
-	0, // starting offset of method input_type sub-list
-	0, // starting offset of extension type_name sub-list
-	0, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	0, // 0: goproto.protoc.grpc.test_service.unary_call:input_type -> goproto.protoc.grpc.Request
+	0, // 1: goproto.protoc.grpc.test_service.downstream_call:input_type -> goproto.protoc.grpc.Request
+	0, // 2: goproto.protoc.grpc.test_service.upstream_call:input_type -> goproto.protoc.grpc.Request
+	0, // 3: goproto.protoc.grpc.test_service.bidi_call:input_type -> goproto.protoc.grpc.Request
+	1, // 4: goproto.protoc.grpc.test_service.unary_call:output_type -> goproto.protoc.grpc.Response
+	1, // 5: goproto.protoc.grpc.test_service.downstream_call:output_type -> goproto.protoc.grpc.Response
+	1, // 6: goproto.protoc.grpc.test_service.upstream_call:output_type -> goproto.protoc.grpc.Response
+	1, // 7: goproto.protoc.grpc.test_service.bidi_call:output_type -> goproto.protoc.grpc.Response
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_grpc_grpc_proto_init() }

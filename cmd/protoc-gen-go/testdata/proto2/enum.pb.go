@@ -503,13 +503,13 @@ var file_proto2_enum_proto_goTypes = []interface{}{
 	(*EnumContainerMessage1_EnumContainerMessage2)(nil),               // 7: goproto.protoc.proto2.EnumContainerMessage1.EnumContainerMessage2
 }
 var file_proto2_enum_proto_depIdxs = []int32{
-	1, // goproto.protoc.proto2.EnumContainerMessage1.default_duplicate1:type_name -> goproto.protoc.proto2.EnumType2
-	1, // goproto.protoc.proto2.EnumContainerMessage1.default_duplicate2:type_name -> goproto.protoc.proto2.EnumType2
-	2, // starting offset of method output_type sub-list
-	2, // starting offset of method input_type sub-list
-	2, // starting offset of extension type_name sub-list
-	2, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	1, // 0: goproto.protoc.proto2.EnumContainerMessage1.default_duplicate1:type_name -> goproto.protoc.proto2.EnumType2
+	1, // 1: goproto.protoc.proto2.EnumContainerMessage1.default_duplicate2:type_name -> goproto.protoc.proto2.EnumType2
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto2_enum_proto_init() }

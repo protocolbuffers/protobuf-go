@@ -1708,29 +1708,29 @@ var file_proto2_fields_proto_goTypes = []interface{}{
 	(*FieldTestMessage_Message)(nil),       // 9: goproto.protoc.proto2.FieldTestMessage.Message
 }
 var file_proto2_fields_proto_depIdxs = []int32{
-	0,  // goproto.protoc.proto2.FieldTestMessage.optional_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
-	9,  // goproto.protoc.proto2.FieldTestMessage.optional_Message:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
-	2,  // goproto.protoc.proto2.FieldTestMessage.optionalgroup:type_name -> goproto.protoc.proto2.FieldTestMessage.OptionalGroup
-	0,  // goproto.protoc.proto2.FieldTestMessage.required_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
-	9,  // goproto.protoc.proto2.FieldTestMessage.required_Message:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
-	3,  // goproto.protoc.proto2.FieldTestMessage.requiredgroup:type_name -> goproto.protoc.proto2.FieldTestMessage.RequiredGroup
-	0,  // goproto.protoc.proto2.FieldTestMessage.repeated_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
-	9,  // goproto.protoc.proto2.FieldTestMessage.repeated_Message:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
-	4,  // goproto.protoc.proto2.FieldTestMessage.repeatedgroup:type_name -> goproto.protoc.proto2.FieldTestMessage.RepeatedGroup
-	0,  // goproto.protoc.proto2.FieldTestMessage.default_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
-	5,  // goproto.protoc.proto2.FieldTestMessage.map_int32_int64:type_name -> goproto.protoc.proto2.FieldTestMessage.MapInt32Int64Entry
-	6,  // goproto.protoc.proto2.FieldTestMessage.map_string_message:type_name -> goproto.protoc.proto2.FieldTestMessage.MapStringMessageEntry
-	7,  // goproto.protoc.proto2.FieldTestMessage.map_fixed64_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.MapFixed64EnumEntry
-	0,  // goproto.protoc.proto2.FieldTestMessage.oneof_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
-	9,  // goproto.protoc.proto2.FieldTestMessage.oneof_Message:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
-	8,  // goproto.protoc.proto2.FieldTestMessage.oneofgroup:type_name -> goproto.protoc.proto2.FieldTestMessage.OneofGroup
-	9,  // goproto.protoc.proto2.FieldTestMessage.MapStringMessageEntry.value:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
-	0,  // goproto.protoc.proto2.FieldTestMessage.MapFixed64EnumEntry.value:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
-	18, // starting offset of method output_type sub-list
-	18, // starting offset of method input_type sub-list
-	18, // starting offset of extension type_name sub-list
-	18, // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	0,  // 0: goproto.protoc.proto2.FieldTestMessage.optional_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
+	9,  // 1: goproto.protoc.proto2.FieldTestMessage.optional_Message:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
+	2,  // 2: goproto.protoc.proto2.FieldTestMessage.optionalgroup:type_name -> goproto.protoc.proto2.FieldTestMessage.OptionalGroup
+	0,  // 3: goproto.protoc.proto2.FieldTestMessage.required_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
+	9,  // 4: goproto.protoc.proto2.FieldTestMessage.required_Message:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
+	3,  // 5: goproto.protoc.proto2.FieldTestMessage.requiredgroup:type_name -> goproto.protoc.proto2.FieldTestMessage.RequiredGroup
+	0,  // 6: goproto.protoc.proto2.FieldTestMessage.repeated_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
+	9,  // 7: goproto.protoc.proto2.FieldTestMessage.repeated_Message:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
+	4,  // 8: goproto.protoc.proto2.FieldTestMessage.repeatedgroup:type_name -> goproto.protoc.proto2.FieldTestMessage.RepeatedGroup
+	0,  // 9: goproto.protoc.proto2.FieldTestMessage.default_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
+	5,  // 10: goproto.protoc.proto2.FieldTestMessage.map_int32_int64:type_name -> goproto.protoc.proto2.FieldTestMessage.MapInt32Int64Entry
+	6,  // 11: goproto.protoc.proto2.FieldTestMessage.map_string_message:type_name -> goproto.protoc.proto2.FieldTestMessage.MapStringMessageEntry
+	7,  // 12: goproto.protoc.proto2.FieldTestMessage.map_fixed64_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.MapFixed64EnumEntry
+	0,  // 13: goproto.protoc.proto2.FieldTestMessage.oneof_enum:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
+	9,  // 14: goproto.protoc.proto2.FieldTestMessage.oneof_Message:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
+	8,  // 15: goproto.protoc.proto2.FieldTestMessage.oneofgroup:type_name -> goproto.protoc.proto2.FieldTestMessage.OneofGroup
+	9,  // 16: goproto.protoc.proto2.FieldTestMessage.MapStringMessageEntry.value:type_name -> goproto.protoc.proto2.FieldTestMessage.Message
+	0,  // 17: goproto.protoc.proto2.FieldTestMessage.MapFixed64EnumEntry.value:type_name -> goproto.protoc.proto2.FieldTestMessage.Enum
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_proto2_fields_proto_init() }

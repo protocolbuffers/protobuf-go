@@ -698,14 +698,14 @@ var file_conformance_conformance_proto_goTypes = []interface{}{
 	(*JspbEncodingConfig)(nil),  // 5: conformance.JspbEncodingConfig
 }
 var file_conformance_conformance_proto_depIdxs = []int32{
-	0, // conformance.ConformanceRequest.requested_output_format:type_name -> conformance.WireFormat
-	1, // conformance.ConformanceRequest.test_category:type_name -> conformance.TestCategory
-	5, // conformance.ConformanceRequest.jspb_encoding_options:type_name -> conformance.JspbEncodingConfig
-	3, // starting offset of method output_type sub-list
-	3, // starting offset of method input_type sub-list
-	3, // starting offset of extension type_name sub-list
-	3, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	0, // 0: conformance.ConformanceRequest.requested_output_format:type_name -> conformance.WireFormat
+	1, // 1: conformance.ConformanceRequest.test_category:type_name -> conformance.TestCategory
+	5, // 2: conformance.ConformanceRequest.jspb_encoding_options:type_name -> conformance.JspbEncodingConfig
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_conformance_conformance_proto_init() }

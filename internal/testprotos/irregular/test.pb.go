@@ -178,17 +178,17 @@ var file_irregular_test_proto_goTypes = []interface{}{
 	(*IrregularMessage)(nil), // 2: goproto.proto.irregular.IrregularMessage
 }
 var file_irregular_test_proto_depIdxs = []int32{
-	2, // goproto.proto.irregular.Message.optional_message:type_name -> goproto.proto.irregular.IrregularMessage
-	2, // goproto.proto.irregular.Message.repeated_message:type_name -> goproto.proto.irregular.IrregularMessage
-	2, // goproto.proto.irregular.Message.required_message:type_name -> goproto.proto.irregular.IrregularMessage
-	1, // goproto.proto.irregular.Message.map_message:type_name -> goproto.proto.irregular.Message.MapMessageEntry
-	2, // goproto.proto.irregular.Message.oneof_message:type_name -> goproto.proto.irregular.IrregularMessage
-	2, // goproto.proto.irregular.Message.MapMessageEntry.value:type_name -> goproto.proto.irregular.IrregularMessage
-	6, // starting offset of method output_type sub-list
-	6, // starting offset of method input_type sub-list
-	6, // starting offset of extension type_name sub-list
-	6, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	2, // 0: goproto.proto.irregular.Message.optional_message:type_name -> goproto.proto.irregular.IrregularMessage
+	2, // 1: goproto.proto.irregular.Message.repeated_message:type_name -> goproto.proto.irregular.IrregularMessage
+	2, // 2: goproto.proto.irregular.Message.required_message:type_name -> goproto.proto.irregular.IrregularMessage
+	1, // 3: goproto.proto.irregular.Message.map_message:type_name -> goproto.proto.irregular.Message.MapMessageEntry
+	2, // 4: goproto.proto.irregular.Message.oneof_message:type_name -> goproto.proto.irregular.IrregularMessage
+	2, // 5: goproto.proto.irregular.Message.MapMessageEntry.value:type_name -> goproto.proto.irregular.IrregularMessage
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_irregular_test_proto_init() }

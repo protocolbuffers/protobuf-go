@@ -746,13 +746,13 @@ var file_datasets_google_message2_benchmark_message2_proto_goTypes = []interface
 	(*GoogleMessage2_Group1)(nil),        // 2: benchmarks.proto2.GoogleMessage2.Group1
 }
 var file_datasets_google_message2_benchmark_message2_proto_depIdxs = []int32{
-	2, // benchmarks.proto2.GoogleMessage2.group1:type_name -> benchmarks.proto2.GoogleMessage2.Group1
-	1, // benchmarks.proto2.GoogleMessage2.Group1.field31:type_name -> benchmarks.proto2.GoogleMessage2GroupedMessage
-	2, // starting offset of method output_type sub-list
-	2, // starting offset of method input_type sub-list
-	2, // starting offset of extension type_name sub-list
-	2, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	2, // 0: benchmarks.proto2.GoogleMessage2.group1:type_name -> benchmarks.proto2.GoogleMessage2.Group1
+	1, // 1: benchmarks.proto2.GoogleMessage2.Group1.field31:type_name -> benchmarks.proto2.GoogleMessage2GroupedMessage
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_datasets_google_message2_benchmark_message2_proto_init() }

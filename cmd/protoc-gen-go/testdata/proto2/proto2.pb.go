@@ -98,12 +98,12 @@ var file_proto2_proto2_proto_goTypes = []interface{}{
 	(*Message)(nil), // 0: goproto.protoc.proto2.Message
 }
 var file_proto2_proto2_proto_depIdxs = []int32{
-	0, // goproto.protoc.proto2.Message.m:type_name -> goproto.protoc.proto2.Message
-	1, // starting offset of method output_type sub-list
-	1, // starting offset of method input_type sub-list
-	1, // starting offset of extension type_name sub-list
-	1, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	0, // 0: goproto.protoc.proto2.Message.m:type_name -> goproto.protoc.proto2.Message
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_proto2_proto2_proto_init() }

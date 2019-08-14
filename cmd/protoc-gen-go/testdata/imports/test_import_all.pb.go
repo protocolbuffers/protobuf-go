@@ -148,16 +148,16 @@ var file_imports_test_import_all_proto_goTypes = []interface{}{
 	(*fmt.M)(nil),       // 5: fmt.M
 }
 var file_imports_test_import_all_proto_depIdxs = []int32{
-	1, // test.All.am1:type_name -> test.a.M1
-	2, // test.All.am2:type_name -> test.a.M2
-	3, // test.All.bm1:type_name -> test.b.part1.M1
-	4, // test.All.bm2:type_name -> test.b.part2.M2
-	5, // test.All.fmt:type_name -> fmt.M
-	5, // starting offset of method output_type sub-list
-	5, // starting offset of method input_type sub-list
-	5, // starting offset of extension type_name sub-list
-	5, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	1, // 0: test.All.am1:type_name -> test.a.M1
+	2, // 1: test.All.am2:type_name -> test.a.M2
+	3, // 2: test.All.bm1:type_name -> test.b.part1.M1
+	4, // 3: test.All.bm2:type_name -> test.b.part2.M2
+	5, // 4: test.All.fmt:type_name -> fmt.M
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_imports_test_import_all_proto_init() }

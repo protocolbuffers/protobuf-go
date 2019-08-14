@@ -36,7 +36,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	seen := map[protoreflect.FullName]int{}
 	genDep := func(name protoreflect.FullName, depSource string) {
 		if depSource != "" {
-			line := fmt.Sprintf("%d, // %s -> %s", seen[name], depSource, name)
+			line := fmt.Sprintf("%d, // %d: %s -> %s", seen[name], len(depIdxs), depSource, name)
 			depIdxs = append(depIdxs, line)
 		}
 	}
@@ -73,14 +73,18 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 
 	// This ordering is significant.
 	// See filetype.TypeBuilder.DependencyIndexes.
-	var depOffsets []string
+	type offsetEntry struct {
+		start int
+		name  string
+	}
+	var depOffsets []offsetEntry
 	for _, enum := range f.allEnums {
 		genEnum(enum, "")
 	}
 	for _, message := range f.allMessages {
 		genMessage(message, "")
 	}
-	depOffsets = append(depOffsets, fmt.Sprintf("%d, // starting offset of field type_name sub-list", len(depIdxs)))
+	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "field type_name"})
 	for _, message := range f.allMessages {
 		for _, field := range message.Fields {
 			if field.Desc.IsWeak() {
@@ -91,33 +95,36 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 			genMessage(field.Message, source+":type_name")
 		}
 	}
-	depOffsets = append(depOffsets, fmt.Sprintf("%d, // starting offset of extension extendee sub-list", len(depIdxs)))
+	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "extension extendee"})
 	for _, extension := range f.allExtensions {
 		source := string(extension.Desc.FullName())
 		genMessage(extension.Extendee, source+":extendee")
 	}
-	depOffsets = append(depOffsets, fmt.Sprintf("%d, // starting offset of extension type_name sub-list", len(depIdxs)))
+	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "extension type_name"})
 	for _, extension := range f.allExtensions {
 		source := string(extension.Desc.FullName())
 		genEnum(extension.Enum, source+":type_name")
 		genMessage(extension.Message, source+":type_name")
 	}
-	depOffsets = append(depOffsets, fmt.Sprintf("%d, // starting offset of method input_type sub-list", len(depIdxs)))
+	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "method input_type"})
 	for _, service := range f.Services {
 		for _, method := range service.Methods {
 			source := string(method.Desc.FullName())
 			genMessage(method.Input, source+":input_type")
 		}
 	}
-	depOffsets = append(depOffsets, fmt.Sprintf("%d, // starting offset of method output_type sub-list", len(depIdxs)))
+	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "method output_type"})
 	for _, service := range f.Services {
 		for _, method := range service.Methods {
 			source := string(method.Desc.FullName())
 			genMessage(method.Output, source+":output_type")
 		}
 	}
-	for i := len(depOffsets) - 1; i >= 0; i-- {
-		depIdxs = append(depIdxs, depOffsets[i])
+	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), ""})
+	for i := len(depOffsets) - 2; i >= 0; i-- {
+		curr, next := depOffsets[i], depOffsets[i+1]
+		depIdxs = append(depIdxs, fmt.Sprintf("%d, // [%d:%d] is the sub-list for %s",
+			curr.start, curr.start, next.start, curr.name))
 	}
 	if len(depIdxs) > math.MaxInt32 {
 		panic("too many dependencies") // sanity check

@@ -2069,83 +2069,83 @@ var file_pb2_test_proto_goTypes = []interface{}{
 	(*fieldmaskpb.FieldMask)(nil),         // 39: google.protobuf.FieldMask
 }
 var file_pb2_test_proto_depIdxs = []int32{
-	0,  // pb2.Enums.opt_enum:type_name -> pb2.Enum
-	0,  // pb2.Enums.rpt_enum:type_name -> pb2.Enum
-	1,  // pb2.Enums.opt_nested_enum:type_name -> pb2.Enums.NestedEnum
-	1,  // pb2.Enums.rpt_nested_enum:type_name -> pb2.Enums.NestedEnum
-	5,  // pb2.Nested.opt_nested:type_name -> pb2.Nested
-	5,  // pb2.Nests.opt_nested:type_name -> pb2.Nested
-	18, // pb2.Nests.optgroup:type_name -> pb2.Nests.OptGroup
-	5,  // pb2.Nests.rpt_nested:type_name -> pb2.Nested
-	19, // pb2.Nests.rptgroup:type_name -> pb2.Nests.RptGroup
-	0,  // pb2.Requireds.req_enum:type_name -> pb2.Enum
-	5,  // pb2.Requireds.req_nested:type_name -> pb2.Nested
-	9,  // pb2.IndirectRequired.opt_nested:type_name -> pb2.NestedWithRequired
-	9,  // pb2.IndirectRequired.rpt_nested:type_name -> pb2.NestedWithRequired
-	21, // pb2.IndirectRequired.str_to_nested:type_name -> pb2.IndirectRequired.StrToNestedEntry
-	9,  // pb2.IndirectRequired.oneof_nested:type_name -> pb2.NestedWithRequired
-	22, // pb2.KnownTypes.opt_bool:type_name -> google.protobuf.BoolValue
-	23, // pb2.KnownTypes.opt_int32:type_name -> google.protobuf.Int32Value
-	24, // pb2.KnownTypes.opt_int64:type_name -> google.protobuf.Int64Value
-	25, // pb2.KnownTypes.opt_uint32:type_name -> google.protobuf.UInt32Value
-	26, // pb2.KnownTypes.opt_uint64:type_name -> google.protobuf.UInt64Value
-	27, // pb2.KnownTypes.opt_float:type_name -> google.protobuf.FloatValue
-	28, // pb2.KnownTypes.opt_double:type_name -> google.protobuf.DoubleValue
-	29, // pb2.KnownTypes.opt_string:type_name -> google.protobuf.StringValue
-	30, // pb2.KnownTypes.opt_bytes:type_name -> google.protobuf.BytesValue
-	31, // pb2.KnownTypes.opt_duration:type_name -> google.protobuf.Duration
-	32, // pb2.KnownTypes.opt_timestamp:type_name -> google.protobuf.Timestamp
-	33, // pb2.KnownTypes.opt_struct:type_name -> google.protobuf.Struct
-	34, // pb2.KnownTypes.opt_list:type_name -> google.protobuf.ListValue
-	35, // pb2.KnownTypes.opt_value:type_name -> google.protobuf.Value
-	36, // pb2.KnownTypes.opt_null:type_name -> google.protobuf.NullValue
-	37, // pb2.KnownTypes.opt_empty:type_name -> google.protobuf.Empty
-	38, // pb2.KnownTypes.opt_any:type_name -> google.protobuf.Any
-	39, // pb2.KnownTypes.opt_fieldmask:type_name -> google.protobuf.FieldMask
-	5,  // pb2.Nests.OptGroup.opt_nested:type_name -> pb2.Nested
-	20, // pb2.Nests.OptGroup.optnestedgroup:type_name -> pb2.Nests.OptGroup.OptNestedGroup
-	9,  // pb2.IndirectRequired.StrToNestedEntry.value:type_name -> pb2.NestedWithRequired
-	11, // pb2.opt_ext_bool:extendee -> pb2.Extensions
-	11, // pb2.opt_ext_string:extendee -> pb2.Extensions
-	11, // pb2.opt_ext_enum:extendee -> pb2.Extensions
-	11, // pb2.opt_ext_nested:extendee -> pb2.Extensions
-	11, // pb2.opt_ext_partial:extendee -> pb2.Extensions
-	11, // pb2.rpt_ext_fixed32:extendee -> pb2.Extensions
-	11, // pb2.rpt_ext_enum:extendee -> pb2.Extensions
-	11, // pb2.rpt_ext_nested:extendee -> pb2.Extensions
-	13, // pb2.message_set_extension:extendee -> pb2.MessageSet
-	11, // pb2.ExtensionsContainer.opt_ext_bool:extendee -> pb2.Extensions
-	11, // pb2.ExtensionsContainer.opt_ext_string:extendee -> pb2.Extensions
-	11, // pb2.ExtensionsContainer.opt_ext_enum:extendee -> pb2.Extensions
-	11, // pb2.ExtensionsContainer.opt_ext_nested:extendee -> pb2.Extensions
-	11, // pb2.ExtensionsContainer.opt_ext_partial:extendee -> pb2.Extensions
-	11, // pb2.ExtensionsContainer.rpt_ext_string:extendee -> pb2.Extensions
-	11, // pb2.ExtensionsContainer.rpt_ext_enum:extendee -> pb2.Extensions
-	11, // pb2.ExtensionsContainer.rpt_ext_nested:extendee -> pb2.Extensions
-	13, // pb2.MessageSetExtension.message_set_extension:extendee -> pb2.MessageSet
-	13, // pb2.MessageSetExtension.not_message_set_extension:extendee -> pb2.MessageSet
-	13, // pb2.MessageSetExtension.ext_nested:extendee -> pb2.MessageSet
-	15, // pb2.FakeMessageSetExtension.message_set_extension:extendee -> pb2.FakeMessageSet
-	0,  // pb2.opt_ext_enum:type_name -> pb2.Enum
-	5,  // pb2.opt_ext_nested:type_name -> pb2.Nested
-	8,  // pb2.opt_ext_partial:type_name -> pb2.PartialRequired
-	0,  // pb2.rpt_ext_enum:type_name -> pb2.Enum
-	5,  // pb2.rpt_ext_nested:type_name -> pb2.Nested
-	16, // pb2.message_set_extension:type_name -> pb2.FakeMessageSetExtension
-	0,  // pb2.ExtensionsContainer.opt_ext_enum:type_name -> pb2.Enum
-	5,  // pb2.ExtensionsContainer.opt_ext_nested:type_name -> pb2.Nested
-	8,  // pb2.ExtensionsContainer.opt_ext_partial:type_name -> pb2.PartialRequired
-	0,  // pb2.ExtensionsContainer.rpt_ext_enum:type_name -> pb2.Enum
-	5,  // pb2.ExtensionsContainer.rpt_ext_nested:type_name -> pb2.Nested
-	14, // pb2.MessageSetExtension.message_set_extension:type_name -> pb2.MessageSetExtension
-	14, // pb2.MessageSetExtension.not_message_set_extension:type_name -> pb2.MessageSetExtension
-	5,  // pb2.MessageSetExtension.ext_nested:type_name -> pb2.Nested
-	16, // pb2.FakeMessageSetExtension.message_set_extension:type_name -> pb2.FakeMessageSetExtension
-	72, // starting offset of method output_type sub-list
-	72, // starting offset of method input_type sub-list
-	57, // starting offset of extension type_name sub-list
-	36, // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	0,  // 0: pb2.Enums.opt_enum:type_name -> pb2.Enum
+	0,  // 1: pb2.Enums.rpt_enum:type_name -> pb2.Enum
+	1,  // 2: pb2.Enums.opt_nested_enum:type_name -> pb2.Enums.NestedEnum
+	1,  // 3: pb2.Enums.rpt_nested_enum:type_name -> pb2.Enums.NestedEnum
+	5,  // 4: pb2.Nested.opt_nested:type_name -> pb2.Nested
+	5,  // 5: pb2.Nests.opt_nested:type_name -> pb2.Nested
+	18, // 6: pb2.Nests.optgroup:type_name -> pb2.Nests.OptGroup
+	5,  // 7: pb2.Nests.rpt_nested:type_name -> pb2.Nested
+	19, // 8: pb2.Nests.rptgroup:type_name -> pb2.Nests.RptGroup
+	0,  // 9: pb2.Requireds.req_enum:type_name -> pb2.Enum
+	5,  // 10: pb2.Requireds.req_nested:type_name -> pb2.Nested
+	9,  // 11: pb2.IndirectRequired.opt_nested:type_name -> pb2.NestedWithRequired
+	9,  // 12: pb2.IndirectRequired.rpt_nested:type_name -> pb2.NestedWithRequired
+	21, // 13: pb2.IndirectRequired.str_to_nested:type_name -> pb2.IndirectRequired.StrToNestedEntry
+	9,  // 14: pb2.IndirectRequired.oneof_nested:type_name -> pb2.NestedWithRequired
+	22, // 15: pb2.KnownTypes.opt_bool:type_name -> google.protobuf.BoolValue
+	23, // 16: pb2.KnownTypes.opt_int32:type_name -> google.protobuf.Int32Value
+	24, // 17: pb2.KnownTypes.opt_int64:type_name -> google.protobuf.Int64Value
+	25, // 18: pb2.KnownTypes.opt_uint32:type_name -> google.protobuf.UInt32Value
+	26, // 19: pb2.KnownTypes.opt_uint64:type_name -> google.protobuf.UInt64Value
+	27, // 20: pb2.KnownTypes.opt_float:type_name -> google.protobuf.FloatValue
+	28, // 21: pb2.KnownTypes.opt_double:type_name -> google.protobuf.DoubleValue
+	29, // 22: pb2.KnownTypes.opt_string:type_name -> google.protobuf.StringValue
+	30, // 23: pb2.KnownTypes.opt_bytes:type_name -> google.protobuf.BytesValue
+	31, // 24: pb2.KnownTypes.opt_duration:type_name -> google.protobuf.Duration
+	32, // 25: pb2.KnownTypes.opt_timestamp:type_name -> google.protobuf.Timestamp
+	33, // 26: pb2.KnownTypes.opt_struct:type_name -> google.protobuf.Struct
+	34, // 27: pb2.KnownTypes.opt_list:type_name -> google.protobuf.ListValue
+	35, // 28: pb2.KnownTypes.opt_value:type_name -> google.protobuf.Value
+	36, // 29: pb2.KnownTypes.opt_null:type_name -> google.protobuf.NullValue
+	37, // 30: pb2.KnownTypes.opt_empty:type_name -> google.protobuf.Empty
+	38, // 31: pb2.KnownTypes.opt_any:type_name -> google.protobuf.Any
+	39, // 32: pb2.KnownTypes.opt_fieldmask:type_name -> google.protobuf.FieldMask
+	5,  // 33: pb2.Nests.OptGroup.opt_nested:type_name -> pb2.Nested
+	20, // 34: pb2.Nests.OptGroup.optnestedgroup:type_name -> pb2.Nests.OptGroup.OptNestedGroup
+	9,  // 35: pb2.IndirectRequired.StrToNestedEntry.value:type_name -> pb2.NestedWithRequired
+	11, // 36: pb2.opt_ext_bool:extendee -> pb2.Extensions
+	11, // 37: pb2.opt_ext_string:extendee -> pb2.Extensions
+	11, // 38: pb2.opt_ext_enum:extendee -> pb2.Extensions
+	11, // 39: pb2.opt_ext_nested:extendee -> pb2.Extensions
+	11, // 40: pb2.opt_ext_partial:extendee -> pb2.Extensions
+	11, // 41: pb2.rpt_ext_fixed32:extendee -> pb2.Extensions
+	11, // 42: pb2.rpt_ext_enum:extendee -> pb2.Extensions
+	11, // 43: pb2.rpt_ext_nested:extendee -> pb2.Extensions
+	13, // 44: pb2.message_set_extension:extendee -> pb2.MessageSet
+	11, // 45: pb2.ExtensionsContainer.opt_ext_bool:extendee -> pb2.Extensions
+	11, // 46: pb2.ExtensionsContainer.opt_ext_string:extendee -> pb2.Extensions
+	11, // 47: pb2.ExtensionsContainer.opt_ext_enum:extendee -> pb2.Extensions
+	11, // 48: pb2.ExtensionsContainer.opt_ext_nested:extendee -> pb2.Extensions
+	11, // 49: pb2.ExtensionsContainer.opt_ext_partial:extendee -> pb2.Extensions
+	11, // 50: pb2.ExtensionsContainer.rpt_ext_string:extendee -> pb2.Extensions
+	11, // 51: pb2.ExtensionsContainer.rpt_ext_enum:extendee -> pb2.Extensions
+	11, // 52: pb2.ExtensionsContainer.rpt_ext_nested:extendee -> pb2.Extensions
+	13, // 53: pb2.MessageSetExtension.message_set_extension:extendee -> pb2.MessageSet
+	13, // 54: pb2.MessageSetExtension.not_message_set_extension:extendee -> pb2.MessageSet
+	13, // 55: pb2.MessageSetExtension.ext_nested:extendee -> pb2.MessageSet
+	15, // 56: pb2.FakeMessageSetExtension.message_set_extension:extendee -> pb2.FakeMessageSet
+	0,  // 57: pb2.opt_ext_enum:type_name -> pb2.Enum
+	5,  // 58: pb2.opt_ext_nested:type_name -> pb2.Nested
+	8,  // 59: pb2.opt_ext_partial:type_name -> pb2.PartialRequired
+	0,  // 60: pb2.rpt_ext_enum:type_name -> pb2.Enum
+	5,  // 61: pb2.rpt_ext_nested:type_name -> pb2.Nested
+	16, // 62: pb2.message_set_extension:type_name -> pb2.FakeMessageSetExtension
+	0,  // 63: pb2.ExtensionsContainer.opt_ext_enum:type_name -> pb2.Enum
+	5,  // 64: pb2.ExtensionsContainer.opt_ext_nested:type_name -> pb2.Nested
+	8,  // 65: pb2.ExtensionsContainer.opt_ext_partial:type_name -> pb2.PartialRequired
+	0,  // 66: pb2.ExtensionsContainer.rpt_ext_enum:type_name -> pb2.Enum
+	5,  // 67: pb2.ExtensionsContainer.rpt_ext_nested:type_name -> pb2.Nested
+	14, // 68: pb2.MessageSetExtension.message_set_extension:type_name -> pb2.MessageSetExtension
+	14, // 69: pb2.MessageSetExtension.not_message_set_extension:type_name -> pb2.MessageSetExtension
+	5,  // 70: pb2.MessageSetExtension.ext_nested:type_name -> pb2.Nested
+	16, // 71: pb2.FakeMessageSetExtension.message_set_extension:type_name -> pb2.FakeMessageSetExtension
+	72, // [72:72] is the sub-list for method output_type
+	72, // [72:72] is the sub-list for method input_type
+	57, // [57:72] is the sub-list for extension type_name
+	36, // [36:57] is the sub-list for extension extendee
+	0,  // [0:36] is the sub-list for field type_name
 }
 
 func init() { file_pb2_test_proto_init() }

@@ -830,24 +830,24 @@ var file_google_protobuf_type_proto_goTypes = []interface{}{
 	(*anypb.Any)(nil),                     // 9: google.protobuf.Any
 }
 var file_google_protobuf_type_proto_depIdxs = []int32{
-	4,  // google.protobuf.Type.fields:type_name -> google.protobuf.Field
-	7,  // google.protobuf.Type.options:type_name -> google.protobuf.Option
-	8,  // google.protobuf.Type.source_context:type_name -> google.protobuf.SourceContext
-	0,  // google.protobuf.Type.syntax:type_name -> google.protobuf.Syntax
-	1,  // google.protobuf.Field.kind:type_name -> google.protobuf.Field.Kind
-	2,  // google.protobuf.Field.cardinality:type_name -> google.protobuf.Field.Cardinality
-	7,  // google.protobuf.Field.options:type_name -> google.protobuf.Option
-	6,  // google.protobuf.Enum.enumvalue:type_name -> google.protobuf.EnumValue
-	7,  // google.protobuf.Enum.options:type_name -> google.protobuf.Option
-	8,  // google.protobuf.Enum.source_context:type_name -> google.protobuf.SourceContext
-	0,  // google.protobuf.Enum.syntax:type_name -> google.protobuf.Syntax
-	7,  // google.protobuf.EnumValue.options:type_name -> google.protobuf.Option
-	9,  // google.protobuf.Option.value:type_name -> google.protobuf.Any
-	13, // starting offset of method output_type sub-list
-	13, // starting offset of method input_type sub-list
-	13, // starting offset of extension type_name sub-list
-	13, // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	4,  // 0: google.protobuf.Type.fields:type_name -> google.protobuf.Field
+	7,  // 1: google.protobuf.Type.options:type_name -> google.protobuf.Option
+	8,  // 2: google.protobuf.Type.source_context:type_name -> google.protobuf.SourceContext
+	0,  // 3: google.protobuf.Type.syntax:type_name -> google.protobuf.Syntax
+	1,  // 4: google.protobuf.Field.kind:type_name -> google.protobuf.Field.Kind
+	2,  // 5: google.protobuf.Field.cardinality:type_name -> google.protobuf.Field.Cardinality
+	7,  // 6: google.protobuf.Field.options:type_name -> google.protobuf.Option
+	6,  // 7: google.protobuf.Enum.enumvalue:type_name -> google.protobuf.EnumValue
+	7,  // 8: google.protobuf.Enum.options:type_name -> google.protobuf.Option
+	8,  // 9: google.protobuf.Enum.source_context:type_name -> google.protobuf.SourceContext
+	0,  // 10: google.protobuf.Enum.syntax:type_name -> google.protobuf.Syntax
+	7,  // 11: google.protobuf.EnumValue.options:type_name -> google.protobuf.Option
+	9,  // 12: google.protobuf.Option.value:type_name -> google.protobuf.Any
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_google_protobuf_type_proto_init() }

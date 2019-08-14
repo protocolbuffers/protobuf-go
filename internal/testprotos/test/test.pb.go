@@ -4465,156 +4465,156 @@ var file_test_test_proto_goTypes = []interface{}{
 	(ImportEnum)(0),                               // 47: goproto.proto.test.ImportEnum
 }
 var file_test_test_proto_depIdxs = []int32{
-	24,  // goproto.proto.test.TestAllTypes.optionalgroup:type_name -> goproto.proto.test.TestAllTypes.OptionalGroup
-	23,  // goproto.proto.test.TestAllTypes.optional_nested_message:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
-	6,   // goproto.proto.test.TestAllTypes.optional_foreign_message:type_name -> goproto.proto.test.ForeignMessage
-	46,  // goproto.proto.test.TestAllTypes.optional_import_message:type_name -> goproto.proto.test.ImportMessage
-	2,   // goproto.proto.test.TestAllTypes.optional_nested_enum:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
-	0,   // goproto.proto.test.TestAllTypes.optional_foreign_enum:type_name -> goproto.proto.test.ForeignEnum
-	47,  // goproto.proto.test.TestAllTypes.optional_import_enum:type_name -> goproto.proto.test.ImportEnum
-	25,  // goproto.proto.test.TestAllTypes.repeatedgroup:type_name -> goproto.proto.test.TestAllTypes.RepeatedGroup
-	23,  // goproto.proto.test.TestAllTypes.repeated_nested_message:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
-	6,   // goproto.proto.test.TestAllTypes.repeated_foreign_message:type_name -> goproto.proto.test.ForeignMessage
-	46,  // goproto.proto.test.TestAllTypes.repeated_importmessage:type_name -> goproto.proto.test.ImportMessage
-	2,   // goproto.proto.test.TestAllTypes.repeated_nested_enum:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
-	0,   // goproto.proto.test.TestAllTypes.repeated_foreign_enum:type_name -> goproto.proto.test.ForeignEnum
-	47,  // goproto.proto.test.TestAllTypes.repeated_importenum:type_name -> goproto.proto.test.ImportEnum
-	26,  // goproto.proto.test.TestAllTypes.map_int32_int32:type_name -> goproto.proto.test.TestAllTypes.MapInt32Int32Entry
-	27,  // goproto.proto.test.TestAllTypes.map_int64_int64:type_name -> goproto.proto.test.TestAllTypes.MapInt64Int64Entry
-	28,  // goproto.proto.test.TestAllTypes.map_uint32_uint32:type_name -> goproto.proto.test.TestAllTypes.MapUint32Uint32Entry
-	29,  // goproto.proto.test.TestAllTypes.map_uint64_uint64:type_name -> goproto.proto.test.TestAllTypes.MapUint64Uint64Entry
-	30,  // goproto.proto.test.TestAllTypes.map_sint32_sint32:type_name -> goproto.proto.test.TestAllTypes.MapSint32Sint32Entry
-	31,  // goproto.proto.test.TestAllTypes.map_sint64_sint64:type_name -> goproto.proto.test.TestAllTypes.MapSint64Sint64Entry
-	32,  // goproto.proto.test.TestAllTypes.map_fixed32_fixed32:type_name -> goproto.proto.test.TestAllTypes.MapFixed32Fixed32Entry
-	33,  // goproto.proto.test.TestAllTypes.map_fixed64_fixed64:type_name -> goproto.proto.test.TestAllTypes.MapFixed64Fixed64Entry
-	34,  // goproto.proto.test.TestAllTypes.map_sfixed32_sfixed32:type_name -> goproto.proto.test.TestAllTypes.MapSfixed32Sfixed32Entry
-	35,  // goproto.proto.test.TestAllTypes.map_sfixed64_sfixed64:type_name -> goproto.proto.test.TestAllTypes.MapSfixed64Sfixed64Entry
-	36,  // goproto.proto.test.TestAllTypes.map_int32_float:type_name -> goproto.proto.test.TestAllTypes.MapInt32FloatEntry
-	37,  // goproto.proto.test.TestAllTypes.map_int32_double:type_name -> goproto.proto.test.TestAllTypes.MapInt32DoubleEntry
-	38,  // goproto.proto.test.TestAllTypes.map_bool_bool:type_name -> goproto.proto.test.TestAllTypes.MapBoolBoolEntry
-	39,  // goproto.proto.test.TestAllTypes.map_string_string:type_name -> goproto.proto.test.TestAllTypes.MapStringStringEntry
-	40,  // goproto.proto.test.TestAllTypes.map_string_bytes:type_name -> goproto.proto.test.TestAllTypes.MapStringBytesEntry
-	41,  // goproto.proto.test.TestAllTypes.map_string_nested_message:type_name -> goproto.proto.test.TestAllTypes.MapStringNestedMessageEntry
-	42,  // goproto.proto.test.TestAllTypes.map_string_nested_enum:type_name -> goproto.proto.test.TestAllTypes.MapStringNestedEnumEntry
-	2,   // goproto.proto.test.TestAllTypes.default_nested_enum:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
-	0,   // goproto.proto.test.TestAllTypes.default_foreign_enum:type_name -> goproto.proto.test.ForeignEnum
-	23,  // goproto.proto.test.TestAllTypes.oneof_nested_message:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
-	2,   // goproto.proto.test.TestAllTypes.oneof_enum:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
-	12,  // goproto.proto.test.TestRequiredForeign.optional_message:type_name -> goproto.proto.test.TestRequired
-	12,  // goproto.proto.test.TestRequiredForeign.repeated_message:type_name -> goproto.proto.test.TestRequired
-	43,  // goproto.proto.test.TestRequiredForeign.map_message:type_name -> goproto.proto.test.TestRequiredForeign.MapMessageEntry
-	12,  // goproto.proto.test.TestRequiredForeign.oneof_message:type_name -> goproto.proto.test.TestRequired
-	44,  // goproto.proto.test.TestRequiredGroupFields.optionalgroup:type_name -> goproto.proto.test.TestRequiredGroupFields.OptionalGroup
-	45,  // goproto.proto.test.TestRequiredGroupFields.repeatedgroup:type_name -> goproto.proto.test.TestRequiredGroupFields.RepeatedGroup
-	0,   // goproto.proto.test.TestPackedTypes.packed_enum:type_name -> goproto.proto.test.ForeignEnum
-	0,   // goproto.proto.test.TestUnpackedTypes.unpacked_enum:type_name -> goproto.proto.test.ForeignEnum
-	4,   // goproto.proto.test.TestAllTypes.NestedMessage.corecursive:type_name -> goproto.proto.test.TestAllTypes
-	23,  // goproto.proto.test.TestAllTypes.MapStringNestedMessageEntry.value:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
-	2,   // goproto.proto.test.TestAllTypes.MapStringNestedEnumEntry.value:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
-	12,  // goproto.proto.test.TestRequiredForeign.MapMessageEntry.value:type_name -> goproto.proto.test.TestRequired
-	8,   // goproto.proto.test.optional_int32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_int64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_uint32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_uint64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_sint32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_sint64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_fixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_fixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_sfixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_sfixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_float_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_double_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_bool_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_string_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_bytes_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optionalgroup_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_nested_message_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.optional_nested_enum_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_int32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_int64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_uint32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_uint64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_sint32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_sint64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_fixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_fixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_sfixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_sfixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_float_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_double_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_bool_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_string_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_bytes_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeatedgroup_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_nested_message_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.repeated_nested_enum_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_int32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_int64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_uint32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_uint64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_sint32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_sint64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_fixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_fixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_sfixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_sfixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_float_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_double_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_bool_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_string_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.default_bytes_extension:extendee -> goproto.proto.test.TestAllExtensions
-	18,  // goproto.proto.test.packed_int32_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_int64_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_uint32_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_uint64_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_sint32_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_sint64_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_fixed32_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_fixed64_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_sfixed32_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_sfixed64_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_float_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_double_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_bool_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	18,  // goproto.proto.test.packed_enum_extension:extendee -> goproto.proto.test.TestPackedExtensions
-	19,  // goproto.proto.test.unpacked_int32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_int64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_uint32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_uint64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_sint32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_sint64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_fixed32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_fixed64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_sfixed32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_sfixed64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_float_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_double_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_bool_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	19,  // goproto.proto.test.unpacked_enum_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
-	8,   // goproto.proto.test.TestNestedExtension.nested_string_extension:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.TestRequired.single:extendee -> goproto.proto.test.TestAllExtensions
-	8,   // goproto.proto.test.TestRequired.multi:extendee -> goproto.proto.test.TestAllExtensions
-	9,   // goproto.proto.test.optionalgroup_extension:type_name -> goproto.proto.test.OptionalGroup_extension
-	23,  // goproto.proto.test.optional_nested_message_extension:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
-	2,   // goproto.proto.test.optional_nested_enum_extension:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
-	10,  // goproto.proto.test.repeatedgroup_extension:type_name -> goproto.proto.test.RepeatedGroup_extension
-	23,  // goproto.proto.test.repeated_nested_message_extension:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
-	2,   // goproto.proto.test.repeated_nested_enum_extension:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
-	0,   // goproto.proto.test.packed_enum_extension:type_name -> goproto.proto.test.ForeignEnum
-	0,   // goproto.proto.test.unpacked_enum_extension:type_name -> goproto.proto.test.ForeignEnum
-	12,  // goproto.proto.test.TestRequired.single:type_name -> goproto.proto.test.TestRequired
-	12,  // goproto.proto.test.TestRequired.multi:type_name -> goproto.proto.test.TestRequired
-	20,  // goproto.proto.test.TestService.Foo:input_type -> goproto.proto.test.FooRequest
-	20,  // goproto.proto.test.TestService.TestStream:input_type -> goproto.proto.test.FooRequest
-	5,   // goproto.proto.test.TestDeprecatedService.Deprecated:input_type -> goproto.proto.test.TestDeprecatedMessage
-	21,  // goproto.proto.test.TestService.Foo:output_type -> goproto.proto.test.FooResponse
-	21,  // goproto.proto.test.TestService.TestStream:output_type -> goproto.proto.test.FooResponse
-	5,   // goproto.proto.test.TestDeprecatedService.Deprecated:output_type -> goproto.proto.test.TestDeprecatedMessage
-	142, // starting offset of method output_type sub-list
-	139, // starting offset of method input_type sub-list
-	129, // starting offset of extension type_name sub-list
-	47,  // starting offset of extension extendee sub-list
-	0,   // starting offset of field type_name sub-list
+	24,  // 0: goproto.proto.test.TestAllTypes.optionalgroup:type_name -> goproto.proto.test.TestAllTypes.OptionalGroup
+	23,  // 1: goproto.proto.test.TestAllTypes.optional_nested_message:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
+	6,   // 2: goproto.proto.test.TestAllTypes.optional_foreign_message:type_name -> goproto.proto.test.ForeignMessage
+	46,  // 3: goproto.proto.test.TestAllTypes.optional_import_message:type_name -> goproto.proto.test.ImportMessage
+	2,   // 4: goproto.proto.test.TestAllTypes.optional_nested_enum:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
+	0,   // 5: goproto.proto.test.TestAllTypes.optional_foreign_enum:type_name -> goproto.proto.test.ForeignEnum
+	47,  // 6: goproto.proto.test.TestAllTypes.optional_import_enum:type_name -> goproto.proto.test.ImportEnum
+	25,  // 7: goproto.proto.test.TestAllTypes.repeatedgroup:type_name -> goproto.proto.test.TestAllTypes.RepeatedGroup
+	23,  // 8: goproto.proto.test.TestAllTypes.repeated_nested_message:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
+	6,   // 9: goproto.proto.test.TestAllTypes.repeated_foreign_message:type_name -> goproto.proto.test.ForeignMessage
+	46,  // 10: goproto.proto.test.TestAllTypes.repeated_importmessage:type_name -> goproto.proto.test.ImportMessage
+	2,   // 11: goproto.proto.test.TestAllTypes.repeated_nested_enum:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
+	0,   // 12: goproto.proto.test.TestAllTypes.repeated_foreign_enum:type_name -> goproto.proto.test.ForeignEnum
+	47,  // 13: goproto.proto.test.TestAllTypes.repeated_importenum:type_name -> goproto.proto.test.ImportEnum
+	26,  // 14: goproto.proto.test.TestAllTypes.map_int32_int32:type_name -> goproto.proto.test.TestAllTypes.MapInt32Int32Entry
+	27,  // 15: goproto.proto.test.TestAllTypes.map_int64_int64:type_name -> goproto.proto.test.TestAllTypes.MapInt64Int64Entry
+	28,  // 16: goproto.proto.test.TestAllTypes.map_uint32_uint32:type_name -> goproto.proto.test.TestAllTypes.MapUint32Uint32Entry
+	29,  // 17: goproto.proto.test.TestAllTypes.map_uint64_uint64:type_name -> goproto.proto.test.TestAllTypes.MapUint64Uint64Entry
+	30,  // 18: goproto.proto.test.TestAllTypes.map_sint32_sint32:type_name -> goproto.proto.test.TestAllTypes.MapSint32Sint32Entry
+	31,  // 19: goproto.proto.test.TestAllTypes.map_sint64_sint64:type_name -> goproto.proto.test.TestAllTypes.MapSint64Sint64Entry
+	32,  // 20: goproto.proto.test.TestAllTypes.map_fixed32_fixed32:type_name -> goproto.proto.test.TestAllTypes.MapFixed32Fixed32Entry
+	33,  // 21: goproto.proto.test.TestAllTypes.map_fixed64_fixed64:type_name -> goproto.proto.test.TestAllTypes.MapFixed64Fixed64Entry
+	34,  // 22: goproto.proto.test.TestAllTypes.map_sfixed32_sfixed32:type_name -> goproto.proto.test.TestAllTypes.MapSfixed32Sfixed32Entry
+	35,  // 23: goproto.proto.test.TestAllTypes.map_sfixed64_sfixed64:type_name -> goproto.proto.test.TestAllTypes.MapSfixed64Sfixed64Entry
+	36,  // 24: goproto.proto.test.TestAllTypes.map_int32_float:type_name -> goproto.proto.test.TestAllTypes.MapInt32FloatEntry
+	37,  // 25: goproto.proto.test.TestAllTypes.map_int32_double:type_name -> goproto.proto.test.TestAllTypes.MapInt32DoubleEntry
+	38,  // 26: goproto.proto.test.TestAllTypes.map_bool_bool:type_name -> goproto.proto.test.TestAllTypes.MapBoolBoolEntry
+	39,  // 27: goproto.proto.test.TestAllTypes.map_string_string:type_name -> goproto.proto.test.TestAllTypes.MapStringStringEntry
+	40,  // 28: goproto.proto.test.TestAllTypes.map_string_bytes:type_name -> goproto.proto.test.TestAllTypes.MapStringBytesEntry
+	41,  // 29: goproto.proto.test.TestAllTypes.map_string_nested_message:type_name -> goproto.proto.test.TestAllTypes.MapStringNestedMessageEntry
+	42,  // 30: goproto.proto.test.TestAllTypes.map_string_nested_enum:type_name -> goproto.proto.test.TestAllTypes.MapStringNestedEnumEntry
+	2,   // 31: goproto.proto.test.TestAllTypes.default_nested_enum:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
+	0,   // 32: goproto.proto.test.TestAllTypes.default_foreign_enum:type_name -> goproto.proto.test.ForeignEnum
+	23,  // 33: goproto.proto.test.TestAllTypes.oneof_nested_message:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
+	2,   // 34: goproto.proto.test.TestAllTypes.oneof_enum:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
+	12,  // 35: goproto.proto.test.TestRequiredForeign.optional_message:type_name -> goproto.proto.test.TestRequired
+	12,  // 36: goproto.proto.test.TestRequiredForeign.repeated_message:type_name -> goproto.proto.test.TestRequired
+	43,  // 37: goproto.proto.test.TestRequiredForeign.map_message:type_name -> goproto.proto.test.TestRequiredForeign.MapMessageEntry
+	12,  // 38: goproto.proto.test.TestRequiredForeign.oneof_message:type_name -> goproto.proto.test.TestRequired
+	44,  // 39: goproto.proto.test.TestRequiredGroupFields.optionalgroup:type_name -> goproto.proto.test.TestRequiredGroupFields.OptionalGroup
+	45,  // 40: goproto.proto.test.TestRequiredGroupFields.repeatedgroup:type_name -> goproto.proto.test.TestRequiredGroupFields.RepeatedGroup
+	0,   // 41: goproto.proto.test.TestPackedTypes.packed_enum:type_name -> goproto.proto.test.ForeignEnum
+	0,   // 42: goproto.proto.test.TestUnpackedTypes.unpacked_enum:type_name -> goproto.proto.test.ForeignEnum
+	4,   // 43: goproto.proto.test.TestAllTypes.NestedMessage.corecursive:type_name -> goproto.proto.test.TestAllTypes
+	23,  // 44: goproto.proto.test.TestAllTypes.MapStringNestedMessageEntry.value:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
+	2,   // 45: goproto.proto.test.TestAllTypes.MapStringNestedEnumEntry.value:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
+	12,  // 46: goproto.proto.test.TestRequiredForeign.MapMessageEntry.value:type_name -> goproto.proto.test.TestRequired
+	8,   // 47: goproto.proto.test.optional_int32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 48: goproto.proto.test.optional_int64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 49: goproto.proto.test.optional_uint32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 50: goproto.proto.test.optional_uint64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 51: goproto.proto.test.optional_sint32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 52: goproto.proto.test.optional_sint64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 53: goproto.proto.test.optional_fixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 54: goproto.proto.test.optional_fixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 55: goproto.proto.test.optional_sfixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 56: goproto.proto.test.optional_sfixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 57: goproto.proto.test.optional_float_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 58: goproto.proto.test.optional_double_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 59: goproto.proto.test.optional_bool_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 60: goproto.proto.test.optional_string_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 61: goproto.proto.test.optional_bytes_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 62: goproto.proto.test.optionalgroup_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 63: goproto.proto.test.optional_nested_message_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 64: goproto.proto.test.optional_nested_enum_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 65: goproto.proto.test.repeated_int32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 66: goproto.proto.test.repeated_int64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 67: goproto.proto.test.repeated_uint32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 68: goproto.proto.test.repeated_uint64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 69: goproto.proto.test.repeated_sint32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 70: goproto.proto.test.repeated_sint64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 71: goproto.proto.test.repeated_fixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 72: goproto.proto.test.repeated_fixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 73: goproto.proto.test.repeated_sfixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 74: goproto.proto.test.repeated_sfixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 75: goproto.proto.test.repeated_float_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 76: goproto.proto.test.repeated_double_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 77: goproto.proto.test.repeated_bool_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 78: goproto.proto.test.repeated_string_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 79: goproto.proto.test.repeated_bytes_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 80: goproto.proto.test.repeatedgroup_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 81: goproto.proto.test.repeated_nested_message_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 82: goproto.proto.test.repeated_nested_enum_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 83: goproto.proto.test.default_int32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 84: goproto.proto.test.default_int64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 85: goproto.proto.test.default_uint32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 86: goproto.proto.test.default_uint64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 87: goproto.proto.test.default_sint32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 88: goproto.proto.test.default_sint64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 89: goproto.proto.test.default_fixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 90: goproto.proto.test.default_fixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 91: goproto.proto.test.default_sfixed32_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 92: goproto.proto.test.default_sfixed64_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 93: goproto.proto.test.default_float_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 94: goproto.proto.test.default_double_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 95: goproto.proto.test.default_bool_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 96: goproto.proto.test.default_string_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 97: goproto.proto.test.default_bytes_extension:extendee -> goproto.proto.test.TestAllExtensions
+	18,  // 98: goproto.proto.test.packed_int32_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 99: goproto.proto.test.packed_int64_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 100: goproto.proto.test.packed_uint32_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 101: goproto.proto.test.packed_uint64_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 102: goproto.proto.test.packed_sint32_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 103: goproto.proto.test.packed_sint64_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 104: goproto.proto.test.packed_fixed32_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 105: goproto.proto.test.packed_fixed64_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 106: goproto.proto.test.packed_sfixed32_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 107: goproto.proto.test.packed_sfixed64_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 108: goproto.proto.test.packed_float_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 109: goproto.proto.test.packed_double_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 110: goproto.proto.test.packed_bool_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	18,  // 111: goproto.proto.test.packed_enum_extension:extendee -> goproto.proto.test.TestPackedExtensions
+	19,  // 112: goproto.proto.test.unpacked_int32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 113: goproto.proto.test.unpacked_int64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 114: goproto.proto.test.unpacked_uint32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 115: goproto.proto.test.unpacked_uint64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 116: goproto.proto.test.unpacked_sint32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 117: goproto.proto.test.unpacked_sint64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 118: goproto.proto.test.unpacked_fixed32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 119: goproto.proto.test.unpacked_fixed64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 120: goproto.proto.test.unpacked_sfixed32_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 121: goproto.proto.test.unpacked_sfixed64_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 122: goproto.proto.test.unpacked_float_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 123: goproto.proto.test.unpacked_double_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 124: goproto.proto.test.unpacked_bool_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	19,  // 125: goproto.proto.test.unpacked_enum_extension:extendee -> goproto.proto.test.TestUnpackedExtensions
+	8,   // 126: goproto.proto.test.TestNestedExtension.nested_string_extension:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 127: goproto.proto.test.TestRequired.single:extendee -> goproto.proto.test.TestAllExtensions
+	8,   // 128: goproto.proto.test.TestRequired.multi:extendee -> goproto.proto.test.TestAllExtensions
+	9,   // 129: goproto.proto.test.optionalgroup_extension:type_name -> goproto.proto.test.OptionalGroup_extension
+	23,  // 130: goproto.proto.test.optional_nested_message_extension:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
+	2,   // 131: goproto.proto.test.optional_nested_enum_extension:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
+	10,  // 132: goproto.proto.test.repeatedgroup_extension:type_name -> goproto.proto.test.RepeatedGroup_extension
+	23,  // 133: goproto.proto.test.repeated_nested_message_extension:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
+	2,   // 134: goproto.proto.test.repeated_nested_enum_extension:type_name -> goproto.proto.test.TestAllTypes.NestedEnum
+	0,   // 135: goproto.proto.test.packed_enum_extension:type_name -> goproto.proto.test.ForeignEnum
+	0,   // 136: goproto.proto.test.unpacked_enum_extension:type_name -> goproto.proto.test.ForeignEnum
+	12,  // 137: goproto.proto.test.TestRequired.single:type_name -> goproto.proto.test.TestRequired
+	12,  // 138: goproto.proto.test.TestRequired.multi:type_name -> goproto.proto.test.TestRequired
+	20,  // 139: goproto.proto.test.TestService.Foo:input_type -> goproto.proto.test.FooRequest
+	20,  // 140: goproto.proto.test.TestService.TestStream:input_type -> goproto.proto.test.FooRequest
+	5,   // 141: goproto.proto.test.TestDeprecatedService.Deprecated:input_type -> goproto.proto.test.TestDeprecatedMessage
+	21,  // 142: goproto.proto.test.TestService.Foo:output_type -> goproto.proto.test.FooResponse
+	21,  // 143: goproto.proto.test.TestService.TestStream:output_type -> goproto.proto.test.FooResponse
+	5,   // 144: goproto.proto.test.TestDeprecatedService.Deprecated:output_type -> goproto.proto.test.TestDeprecatedMessage
+	142, // [142:145] is the sub-list for method output_type
+	139, // [139:142] is the sub-list for method input_type
+	129, // [129:139] is the sub-list for extension type_name
+	47,  // [47:129] is the sub-list for extension extendee
+	0,   // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_test_test_proto_init() }

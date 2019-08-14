@@ -464,21 +464,21 @@ var file_test_proto_goTypes = []interface{}{
 	(*Message4)(nil), // 6: testprotos.Message4
 }
 var file_test_proto_depIdxs = []int32{
-	3,  // testprotos.string_field:extendee -> testprotos.Message1
-	3,  // testprotos.enum_field:extendee -> testprotos.Message1
-	3,  // testprotos.message_field:extendee -> testprotos.Message1
-	3,  // testprotos.Message4.message_field:extendee -> testprotos.Message1
-	3,  // testprotos.Message4.enum_field:extendee -> testprotos.Message1
-	3,  // testprotos.Message4.string_field:extendee -> testprotos.Message1
-	0,  // testprotos.enum_field:type_name -> testprotos.Enum1
-	4,  // testprotos.message_field:type_name -> testprotos.Message2
-	4,  // testprotos.Message4.message_field:type_name -> testprotos.Message2
-	0,  // testprotos.Message4.enum_field:type_name -> testprotos.Enum1
-	10, // starting offset of method output_type sub-list
-	10, // starting offset of method input_type sub-list
-	6,  // starting offset of extension type_name sub-list
-	0,  // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	3,  // 0: testprotos.string_field:extendee -> testprotos.Message1
+	3,  // 1: testprotos.enum_field:extendee -> testprotos.Message1
+	3,  // 2: testprotos.message_field:extendee -> testprotos.Message1
+	3,  // 3: testprotos.Message4.message_field:extendee -> testprotos.Message1
+	3,  // 4: testprotos.Message4.enum_field:extendee -> testprotos.Message1
+	3,  // 5: testprotos.Message4.string_field:extendee -> testprotos.Message1
+	0,  // 6: testprotos.enum_field:type_name -> testprotos.Enum1
+	4,  // 7: testprotos.message_field:type_name -> testprotos.Message2
+	4,  // 8: testprotos.Message4.message_field:type_name -> testprotos.Message2
+	0,  // 9: testprotos.Message4.enum_field:type_name -> testprotos.Enum1
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	6,  // [6:10] is the sub-list for extension type_name
+	0,  // [0:6] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_test_proto_init() }

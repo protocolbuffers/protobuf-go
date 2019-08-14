@@ -281,23 +281,23 @@ var file_legacy_legacy_proto_goTypes = []interface{}{
 	(*proto3_v1_21.Message)(nil), // 12: google.golang.org.proto3_20181126.Message
 }
 var file_legacy_legacy_proto_depIdxs = []int32{
-	1,  // google.golang.org.Legacy.f1:type_name -> google.golang.org.proto2_20160225.Message
-	2,  // google.golang.org.Legacy.f2:type_name -> google.golang.org.proto3_20160225.Message
-	3,  // google.golang.org.Legacy.f3:type_name -> google.golang.org.proto2_20160519.Message
-	4,  // google.golang.org.Legacy.f4:type_name -> google.golang.org.proto3_20160519.Message
-	5,  // google.golang.org.Legacy.f5:type_name -> google.golang.org.proto2_20180125.Message
-	6,  // google.golang.org.Legacy.f6:type_name -> google.golang.org.proto3_20180125.Message
-	7,  // google.golang.org.Legacy.f7:type_name -> google.golang.org.proto2_20180430.Message
-	8,  // google.golang.org.Legacy.f8:type_name -> google.golang.org.proto3_20180430.Message
-	9,  // google.golang.org.Legacy.f9:type_name -> google.golang.org.proto2_20180814.Message
-	10, // google.golang.org.Legacy.f10:type_name -> google.golang.org.proto3_20180814.Message
-	11, // google.golang.org.Legacy.f11:type_name -> google.golang.org.proto2_20181126.Message
-	12, // google.golang.org.Legacy.f12:type_name -> google.golang.org.proto3_20181126.Message
-	12, // starting offset of method output_type sub-list
-	12, // starting offset of method input_type sub-list
-	12, // starting offset of extension type_name sub-list
-	12, // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	1,  // 0: google.golang.org.Legacy.f1:type_name -> google.golang.org.proto2_20160225.Message
+	2,  // 1: google.golang.org.Legacy.f2:type_name -> google.golang.org.proto3_20160225.Message
+	3,  // 2: google.golang.org.Legacy.f3:type_name -> google.golang.org.proto2_20160519.Message
+	4,  // 3: google.golang.org.Legacy.f4:type_name -> google.golang.org.proto3_20160519.Message
+	5,  // 4: google.golang.org.Legacy.f5:type_name -> google.golang.org.proto2_20180125.Message
+	6,  // 5: google.golang.org.Legacy.f6:type_name -> google.golang.org.proto3_20180125.Message
+	7,  // 6: google.golang.org.Legacy.f7:type_name -> google.golang.org.proto2_20180430.Message
+	8,  // 7: google.golang.org.Legacy.f8:type_name -> google.golang.org.proto3_20180430.Message
+	9,  // 8: google.golang.org.Legacy.f9:type_name -> google.golang.org.proto2_20180814.Message
+	10, // 9: google.golang.org.Legacy.f10:type_name -> google.golang.org.proto3_20180814.Message
+	11, // 10: google.golang.org.Legacy.f11:type_name -> google.golang.org.proto2_20181126.Message
+	12, // 11: google.golang.org.Legacy.f12:type_name -> google.golang.org.proto3_20181126.Message
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_legacy_legacy_proto_init() }

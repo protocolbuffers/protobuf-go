@@ -193,15 +193,15 @@ var file_messageset_msetextpb_msetextpb_proto_goTypes = []interface{}{
 	(*messagesetpb.MessageSet)(nil), // 2: goproto.proto.messageset.MessageSet
 }
 var file_messageset_msetextpb_msetextpb_proto_depIdxs = []int32{
-	2, // goproto.proto.messageset.Ext1.message_set_extension:extendee -> goproto.proto.messageset.MessageSet
-	2, // goproto.proto.messageset.Ext2.message_set_extension:extendee -> goproto.proto.messageset.MessageSet
-	0, // goproto.proto.messageset.Ext1.message_set_extension:type_name -> goproto.proto.messageset.Ext1
-	1, // goproto.proto.messageset.Ext2.message_set_extension:type_name -> goproto.proto.messageset.Ext2
-	4, // starting offset of method output_type sub-list
-	4, // starting offset of method input_type sub-list
-	2, // starting offset of extension type_name sub-list
-	0, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	2, // 0: goproto.proto.messageset.Ext1.message_set_extension:extendee -> goproto.proto.messageset.MessageSet
+	2, // 1: goproto.proto.messageset.Ext2.message_set_extension:extendee -> goproto.proto.messageset.MessageSet
+	0, // 2: goproto.proto.messageset.Ext1.message_set_extension:type_name -> goproto.proto.messageset.Ext1
+	1, // 3: goproto.proto.messageset.Ext2.message_set_extension:type_name -> goproto.proto.messageset.Ext2
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	2, // [2:4] is the sub-list for extension type_name
+	0, // [0:2] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_messageset_msetextpb_msetextpb_proto_init() }

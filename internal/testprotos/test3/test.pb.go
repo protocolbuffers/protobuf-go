@@ -1298,45 +1298,45 @@ var file_test3_test_proto_goTypes = []interface{}{
 	(ImportEnum)(0),                    // 23: goproto.proto.test3.ImportEnum
 }
 var file_test3_test_proto_depIdxs = []int32{
-	4,  // goproto.proto.test3.TestAllTypes.optional_nested_message:type_name -> goproto.proto.test3.TestAllTypes.NestedMessage
-	3,  // goproto.proto.test3.TestAllTypes.optional_foreign_message:type_name -> goproto.proto.test3.ForeignMessage
-	22, // goproto.proto.test3.TestAllTypes.optional_import_message:type_name -> goproto.proto.test3.ImportMessage
-	1,  // goproto.proto.test3.TestAllTypes.optional_nested_enum:type_name -> goproto.proto.test3.TestAllTypes.NestedEnum
-	0,  // goproto.proto.test3.TestAllTypes.optional_foreign_enum:type_name -> goproto.proto.test3.ForeignEnum
-	23, // goproto.proto.test3.TestAllTypes.optional_import_enum:type_name -> goproto.proto.test3.ImportEnum
-	4,  // goproto.proto.test3.TestAllTypes.repeated_nested_message:type_name -> goproto.proto.test3.TestAllTypes.NestedMessage
-	3,  // goproto.proto.test3.TestAllTypes.repeated_foreign_message:type_name -> goproto.proto.test3.ForeignMessage
-	22, // goproto.proto.test3.TestAllTypes.repeated_importmessage:type_name -> goproto.proto.test3.ImportMessage
-	1,  // goproto.proto.test3.TestAllTypes.repeated_nested_enum:type_name -> goproto.proto.test3.TestAllTypes.NestedEnum
-	0,  // goproto.proto.test3.TestAllTypes.repeated_foreign_enum:type_name -> goproto.proto.test3.ForeignEnum
-	23, // goproto.proto.test3.TestAllTypes.repeated_importenum:type_name -> goproto.proto.test3.ImportEnum
-	5,  // goproto.proto.test3.TestAllTypes.map_int32_int32:type_name -> goproto.proto.test3.TestAllTypes.MapInt32Int32Entry
-	6,  // goproto.proto.test3.TestAllTypes.map_int64_int64:type_name -> goproto.proto.test3.TestAllTypes.MapInt64Int64Entry
-	7,  // goproto.proto.test3.TestAllTypes.map_uint32_uint32:type_name -> goproto.proto.test3.TestAllTypes.MapUint32Uint32Entry
-	8,  // goproto.proto.test3.TestAllTypes.map_uint64_uint64:type_name -> goproto.proto.test3.TestAllTypes.MapUint64Uint64Entry
-	9,  // goproto.proto.test3.TestAllTypes.map_sint32_sint32:type_name -> goproto.proto.test3.TestAllTypes.MapSint32Sint32Entry
-	10, // goproto.proto.test3.TestAllTypes.map_sint64_sint64:type_name -> goproto.proto.test3.TestAllTypes.MapSint64Sint64Entry
-	11, // goproto.proto.test3.TestAllTypes.map_fixed32_fixed32:type_name -> goproto.proto.test3.TestAllTypes.MapFixed32Fixed32Entry
-	12, // goproto.proto.test3.TestAllTypes.map_fixed64_fixed64:type_name -> goproto.proto.test3.TestAllTypes.MapFixed64Fixed64Entry
-	13, // goproto.proto.test3.TestAllTypes.map_sfixed32_sfixed32:type_name -> goproto.proto.test3.TestAllTypes.MapSfixed32Sfixed32Entry
-	14, // goproto.proto.test3.TestAllTypes.map_sfixed64_sfixed64:type_name -> goproto.proto.test3.TestAllTypes.MapSfixed64Sfixed64Entry
-	15, // goproto.proto.test3.TestAllTypes.map_int32_float:type_name -> goproto.proto.test3.TestAllTypes.MapInt32FloatEntry
-	16, // goproto.proto.test3.TestAllTypes.map_int32_double:type_name -> goproto.proto.test3.TestAllTypes.MapInt32DoubleEntry
-	17, // goproto.proto.test3.TestAllTypes.map_bool_bool:type_name -> goproto.proto.test3.TestAllTypes.MapBoolBoolEntry
-	18, // goproto.proto.test3.TestAllTypes.map_string_string:type_name -> goproto.proto.test3.TestAllTypes.MapStringStringEntry
-	19, // goproto.proto.test3.TestAllTypes.map_string_bytes:type_name -> goproto.proto.test3.TestAllTypes.MapStringBytesEntry
-	20, // goproto.proto.test3.TestAllTypes.map_string_nested_message:type_name -> goproto.proto.test3.TestAllTypes.MapStringNestedMessageEntry
-	21, // goproto.proto.test3.TestAllTypes.map_string_nested_enum:type_name -> goproto.proto.test3.TestAllTypes.MapStringNestedEnumEntry
-	4,  // goproto.proto.test3.TestAllTypes.oneof_nested_message:type_name -> goproto.proto.test3.TestAllTypes.NestedMessage
-	1,  // goproto.proto.test3.TestAllTypes.oneof_enum:type_name -> goproto.proto.test3.TestAllTypes.NestedEnum
-	2,  // goproto.proto.test3.TestAllTypes.NestedMessage.corecursive:type_name -> goproto.proto.test3.TestAllTypes
-	4,  // goproto.proto.test3.TestAllTypes.MapStringNestedMessageEntry.value:type_name -> goproto.proto.test3.TestAllTypes.NestedMessage
-	1,  // goproto.proto.test3.TestAllTypes.MapStringNestedEnumEntry.value:type_name -> goproto.proto.test3.TestAllTypes.NestedEnum
-	34, // starting offset of method output_type sub-list
-	34, // starting offset of method input_type sub-list
-	34, // starting offset of extension type_name sub-list
-	34, // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	4,  // 0: goproto.proto.test3.TestAllTypes.optional_nested_message:type_name -> goproto.proto.test3.TestAllTypes.NestedMessage
+	3,  // 1: goproto.proto.test3.TestAllTypes.optional_foreign_message:type_name -> goproto.proto.test3.ForeignMessage
+	22, // 2: goproto.proto.test3.TestAllTypes.optional_import_message:type_name -> goproto.proto.test3.ImportMessage
+	1,  // 3: goproto.proto.test3.TestAllTypes.optional_nested_enum:type_name -> goproto.proto.test3.TestAllTypes.NestedEnum
+	0,  // 4: goproto.proto.test3.TestAllTypes.optional_foreign_enum:type_name -> goproto.proto.test3.ForeignEnum
+	23, // 5: goproto.proto.test3.TestAllTypes.optional_import_enum:type_name -> goproto.proto.test3.ImportEnum
+	4,  // 6: goproto.proto.test3.TestAllTypes.repeated_nested_message:type_name -> goproto.proto.test3.TestAllTypes.NestedMessage
+	3,  // 7: goproto.proto.test3.TestAllTypes.repeated_foreign_message:type_name -> goproto.proto.test3.ForeignMessage
+	22, // 8: goproto.proto.test3.TestAllTypes.repeated_importmessage:type_name -> goproto.proto.test3.ImportMessage
+	1,  // 9: goproto.proto.test3.TestAllTypes.repeated_nested_enum:type_name -> goproto.proto.test3.TestAllTypes.NestedEnum
+	0,  // 10: goproto.proto.test3.TestAllTypes.repeated_foreign_enum:type_name -> goproto.proto.test3.ForeignEnum
+	23, // 11: goproto.proto.test3.TestAllTypes.repeated_importenum:type_name -> goproto.proto.test3.ImportEnum
+	5,  // 12: goproto.proto.test3.TestAllTypes.map_int32_int32:type_name -> goproto.proto.test3.TestAllTypes.MapInt32Int32Entry
+	6,  // 13: goproto.proto.test3.TestAllTypes.map_int64_int64:type_name -> goproto.proto.test3.TestAllTypes.MapInt64Int64Entry
+	7,  // 14: goproto.proto.test3.TestAllTypes.map_uint32_uint32:type_name -> goproto.proto.test3.TestAllTypes.MapUint32Uint32Entry
+	8,  // 15: goproto.proto.test3.TestAllTypes.map_uint64_uint64:type_name -> goproto.proto.test3.TestAllTypes.MapUint64Uint64Entry
+	9,  // 16: goproto.proto.test3.TestAllTypes.map_sint32_sint32:type_name -> goproto.proto.test3.TestAllTypes.MapSint32Sint32Entry
+	10, // 17: goproto.proto.test3.TestAllTypes.map_sint64_sint64:type_name -> goproto.proto.test3.TestAllTypes.MapSint64Sint64Entry
+	11, // 18: goproto.proto.test3.TestAllTypes.map_fixed32_fixed32:type_name -> goproto.proto.test3.TestAllTypes.MapFixed32Fixed32Entry
+	12, // 19: goproto.proto.test3.TestAllTypes.map_fixed64_fixed64:type_name -> goproto.proto.test3.TestAllTypes.MapFixed64Fixed64Entry
+	13, // 20: goproto.proto.test3.TestAllTypes.map_sfixed32_sfixed32:type_name -> goproto.proto.test3.TestAllTypes.MapSfixed32Sfixed32Entry
+	14, // 21: goproto.proto.test3.TestAllTypes.map_sfixed64_sfixed64:type_name -> goproto.proto.test3.TestAllTypes.MapSfixed64Sfixed64Entry
+	15, // 22: goproto.proto.test3.TestAllTypes.map_int32_float:type_name -> goproto.proto.test3.TestAllTypes.MapInt32FloatEntry
+	16, // 23: goproto.proto.test3.TestAllTypes.map_int32_double:type_name -> goproto.proto.test3.TestAllTypes.MapInt32DoubleEntry
+	17, // 24: goproto.proto.test3.TestAllTypes.map_bool_bool:type_name -> goproto.proto.test3.TestAllTypes.MapBoolBoolEntry
+	18, // 25: goproto.proto.test3.TestAllTypes.map_string_string:type_name -> goproto.proto.test3.TestAllTypes.MapStringStringEntry
+	19, // 26: goproto.proto.test3.TestAllTypes.map_string_bytes:type_name -> goproto.proto.test3.TestAllTypes.MapStringBytesEntry
+	20, // 27: goproto.proto.test3.TestAllTypes.map_string_nested_message:type_name -> goproto.proto.test3.TestAllTypes.MapStringNestedMessageEntry
+	21, // 28: goproto.proto.test3.TestAllTypes.map_string_nested_enum:type_name -> goproto.proto.test3.TestAllTypes.MapStringNestedEnumEntry
+	4,  // 29: goproto.proto.test3.TestAllTypes.oneof_nested_message:type_name -> goproto.proto.test3.TestAllTypes.NestedMessage
+	1,  // 30: goproto.proto.test3.TestAllTypes.oneof_enum:type_name -> goproto.proto.test3.TestAllTypes.NestedEnum
+	2,  // 31: goproto.proto.test3.TestAllTypes.NestedMessage.corecursive:type_name -> goproto.proto.test3.TestAllTypes
+	4,  // 32: goproto.proto.test3.TestAllTypes.MapStringNestedMessageEntry.value:type_name -> goproto.proto.test3.TestAllTypes.NestedMessage
+	1,  // 33: goproto.proto.test3.TestAllTypes.MapStringNestedEnumEntry.value:type_name -> goproto.proto.test3.TestAllTypes.NestedEnum
+	34, // [34:34] is the sub-list for method output_type
+	34, // [34:34] is the sub-list for method input_type
+	34, // [34:34] is the sub-list for extension type_name
+	34, // [34:34] is the sub-list for extension extendee
+	0,  // [0:34] is the sub-list for field type_name
 }
 
 func init() { file_test3_test_proto_init() }

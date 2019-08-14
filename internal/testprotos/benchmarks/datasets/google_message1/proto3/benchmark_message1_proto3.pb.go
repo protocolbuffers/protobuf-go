@@ -712,12 +712,12 @@ var file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_goTypes
 	(*GoogleMessage1SubMessage)(nil), // 1: benchmarks.proto3.GoogleMessage1SubMessage
 }
 var file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_depIdxs = []int32{
-	1, // benchmarks.proto3.GoogleMessage1.field15:type_name -> benchmarks.proto3.GoogleMessage1SubMessage
-	1, // starting offset of method output_type sub-list
-	1, // starting offset of method input_type sub-list
-	1, // starting offset of extension type_name sub-list
-	1, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	1, // 0: benchmarks.proto3.GoogleMessage1.field15:type_name -> benchmarks.proto3.GoogleMessage1SubMessage
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_init() }

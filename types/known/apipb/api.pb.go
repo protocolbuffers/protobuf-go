@@ -484,18 +484,18 @@ var file_google_protobuf_api_proto_goTypes = []interface{}{
 	(typepb.Syntax)(0),                    // 5: google.protobuf.Syntax
 }
 var file_google_protobuf_api_proto_depIdxs = []int32{
-	1, // google.protobuf.Api.methods:type_name -> google.protobuf.Method
-	3, // google.protobuf.Api.options:type_name -> google.protobuf.Option
-	4, // google.protobuf.Api.source_context:type_name -> google.protobuf.SourceContext
-	2, // google.protobuf.Api.mixins:type_name -> google.protobuf.Mixin
-	5, // google.protobuf.Api.syntax:type_name -> google.protobuf.Syntax
-	3, // google.protobuf.Method.options:type_name -> google.protobuf.Option
-	5, // google.protobuf.Method.syntax:type_name -> google.protobuf.Syntax
-	7, // starting offset of method output_type sub-list
-	7, // starting offset of method input_type sub-list
-	7, // starting offset of extension type_name sub-list
-	7, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	1, // 0: google.protobuf.Api.methods:type_name -> google.protobuf.Method
+	3, // 1: google.protobuf.Api.options:type_name -> google.protobuf.Option
+	4, // 2: google.protobuf.Api.source_context:type_name -> google.protobuf.SourceContext
+	2, // 3: google.protobuf.Api.mixins:type_name -> google.protobuf.Mixin
+	5, // 4: google.protobuf.Api.syntax:type_name -> google.protobuf.Syntax
+	3, // 5: google.protobuf.Method.options:type_name -> google.protobuf.Option
+	5, // 6: google.protobuf.Method.syntax:type_name -> google.protobuf.Syntax
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_google_protobuf_api_proto_init() }

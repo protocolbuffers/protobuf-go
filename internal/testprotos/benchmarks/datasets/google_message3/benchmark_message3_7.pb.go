@@ -591,12 +591,12 @@ var file_datasets_google_message3_benchmark_message3_7_proto_goTypes = []interfa
 	(*Message741)(nil),         // 9: benchmarks.google_message3.Message741
 }
 var file_datasets_google_message3_benchmark_message3_7_proto_depIdxs = []int32{
-	9, // benchmarks.google_message3.Message708.field823:type_name -> benchmarks.google_message3.Message741
-	1, // starting offset of method output_type sub-list
-	1, // starting offset of method input_type sub-list
-	1, // starting offset of extension type_name sub-list
-	1, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	9, // 0: benchmarks.google_message3.Message708.field823:type_name -> benchmarks.google_message3.Message741
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_datasets_google_message3_benchmark_message3_7_proto_init() }

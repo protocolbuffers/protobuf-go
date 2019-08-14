@@ -158,14 +158,14 @@ var file_import_public_a_proto_goTypes = []interface{}{
 	(*Local)(nil),  // 3: goproto.protoc.import_public.Local
 }
 var file_import_public_a_proto_depIdxs = []int32{
-	1, // goproto.protoc.import_public.Public.m:type_name -> goproto.protoc.import_public.sub.M
-	2, // goproto.protoc.import_public.Public.e:type_name -> goproto.protoc.import_public.sub.E
-	3, // goproto.protoc.import_public.Public.local:type_name -> goproto.protoc.import_public.Local
-	3, // starting offset of method output_type sub-list
-	3, // starting offset of method input_type sub-list
-	3, // starting offset of extension type_name sub-list
-	3, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	1, // 0: goproto.protoc.import_public.Public.m:type_name -> goproto.protoc.import_public.sub.M
+	2, // 1: goproto.protoc.import_public.Public.e:type_name -> goproto.protoc.import_public.sub.E
+	3, // 2: goproto.protoc.import_public.Public.local:type_name -> goproto.protoc.import_public.Local
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_import_public_a_proto_init() }

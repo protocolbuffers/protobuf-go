@@ -404,17 +404,17 @@ var file_google_protobuf_struct_proto_goTypes = []interface{}{
 	nil,               // 4: google.protobuf.Struct.FieldsEntry
 }
 var file_google_protobuf_struct_proto_depIdxs = []int32{
-	4, // google.protobuf.Struct.fields:type_name -> google.protobuf.Struct.FieldsEntry
-	0, // google.protobuf.Value.null_value:type_name -> google.protobuf.NullValue
-	1, // google.protobuf.Value.struct_value:type_name -> google.protobuf.Struct
-	3, // google.protobuf.Value.list_value:type_name -> google.protobuf.ListValue
-	2, // google.protobuf.ListValue.values:type_name -> google.protobuf.Value
-	2, // google.protobuf.Struct.FieldsEntry.value:type_name -> google.protobuf.Value
-	6, // starting offset of method output_type sub-list
-	6, // starting offset of method input_type sub-list
-	6, // starting offset of extension type_name sub-list
-	6, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	4, // 0: google.protobuf.Struct.fields:type_name -> google.protobuf.Struct.FieldsEntry
+	0, // 1: google.protobuf.Value.null_value:type_name -> google.protobuf.NullValue
+	1, // 2: google.protobuf.Value.struct_value:type_name -> google.protobuf.Struct
+	3, // 3: google.protobuf.Value.list_value:type_name -> google.protobuf.ListValue
+	2, // 4: google.protobuf.ListValue.values:type_name -> google.protobuf.Value
+	2, // 5: google.protobuf.Struct.FieldsEntry.value:type_name -> google.protobuf.Value
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_google_protobuf_struct_proto_init() }

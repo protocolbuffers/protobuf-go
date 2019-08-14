@@ -771,25 +771,25 @@ var file_pb3_test_proto_goTypes = []interface{}{
 	nil,                   // 13: pb3.Maps.StrToOneofsEntry
 }
 var file_pb3_test_proto_depIdxs = []int32{
-	0,  // pb3.Enums.s_enum:type_name -> pb3.Enum
-	1,  // pb3.Enums.s_nested_enum:type_name -> pb3.Enums.NestedEnum
-	5,  // pb3.Nests.s_nested:type_name -> pb3.Nested
-	5,  // pb3.Nested.s_nested:type_name -> pb3.Nested
-	0,  // pb3.Oneofs.oneof_enum:type_name -> pb3.Enum
-	5,  // pb3.Oneofs.oneof_nested:type_name -> pb3.Nested
-	9,  // pb3.Maps.int32_to_str:type_name -> pb3.Maps.Int32ToStrEntry
-	10, // pb3.Maps.bool_to_uint32:type_name -> pb3.Maps.BoolToUint32Entry
-	11, // pb3.Maps.uint64_to_enum:type_name -> pb3.Maps.Uint64ToEnumEntry
-	12, // pb3.Maps.str_to_nested:type_name -> pb3.Maps.StrToNestedEntry
-	13, // pb3.Maps.str_to_oneofs:type_name -> pb3.Maps.StrToOneofsEntry
-	0,  // pb3.Maps.Uint64ToEnumEntry.value:type_name -> pb3.Enum
-	5,  // pb3.Maps.StrToNestedEntry.value:type_name -> pb3.Nested
-	6,  // pb3.Maps.StrToOneofsEntry.value:type_name -> pb3.Oneofs
-	14, // starting offset of method output_type sub-list
-	14, // starting offset of method input_type sub-list
-	14, // starting offset of extension type_name sub-list
-	14, // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	0,  // 0: pb3.Enums.s_enum:type_name -> pb3.Enum
+	1,  // 1: pb3.Enums.s_nested_enum:type_name -> pb3.Enums.NestedEnum
+	5,  // 2: pb3.Nests.s_nested:type_name -> pb3.Nested
+	5,  // 3: pb3.Nested.s_nested:type_name -> pb3.Nested
+	0,  // 4: pb3.Oneofs.oneof_enum:type_name -> pb3.Enum
+	5,  // 5: pb3.Oneofs.oneof_nested:type_name -> pb3.Nested
+	9,  // 6: pb3.Maps.int32_to_str:type_name -> pb3.Maps.Int32ToStrEntry
+	10, // 7: pb3.Maps.bool_to_uint32:type_name -> pb3.Maps.BoolToUint32Entry
+	11, // 8: pb3.Maps.uint64_to_enum:type_name -> pb3.Maps.Uint64ToEnumEntry
+	12, // 9: pb3.Maps.str_to_nested:type_name -> pb3.Maps.StrToNestedEntry
+	13, // 10: pb3.Maps.str_to_oneofs:type_name -> pb3.Maps.StrToOneofsEntry
+	0,  // 11: pb3.Maps.Uint64ToEnumEntry.value:type_name -> pb3.Enum
+	5,  // 12: pb3.Maps.StrToNestedEntry.value:type_name -> pb3.Nested
+	6,  // 13: pb3.Maps.StrToOneofsEntry.value:type_name -> pb3.Oneofs
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_pb3_test_proto_init() }

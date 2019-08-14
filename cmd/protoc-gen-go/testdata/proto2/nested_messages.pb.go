@@ -184,14 +184,14 @@ var file_proto2_nested_messages_proto_goTypes = []interface{}{
 	(*Layer1_Layer2_Layer3)(nil), // 2: goproto.protoc.proto2.Layer1.Layer2.Layer3
 }
 var file_proto2_nested_messages_proto_depIdxs = []int32{
-	1, // goproto.protoc.proto2.Layer1.l2:type_name -> goproto.protoc.proto2.Layer1.Layer2
-	2, // goproto.protoc.proto2.Layer1.l3:type_name -> goproto.protoc.proto2.Layer1.Layer2.Layer3
-	2, // goproto.protoc.proto2.Layer1.Layer2.l3:type_name -> goproto.protoc.proto2.Layer1.Layer2.Layer3
-	3, // starting offset of method output_type sub-list
-	3, // starting offset of method input_type sub-list
-	3, // starting offset of extension type_name sub-list
-	3, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	1, // 0: goproto.protoc.proto2.Layer1.l2:type_name -> goproto.protoc.proto2.Layer1.Layer2
+	2, // 1: goproto.protoc.proto2.Layer1.l3:type_name -> goproto.protoc.proto2.Layer1.Layer2.Layer3
+	2, // 2: goproto.protoc.proto2.Layer1.Layer2.l3:type_name -> goproto.protoc.proto2.Layer1.Layer2.Layer3
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_proto2_nested_messages_proto_init() }

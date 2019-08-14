@@ -452,14 +452,14 @@ var file_google_protobuf_compiler_plugin_proto_goTypes = []interface{}{
 	(*descriptorpb.FileDescriptorProto)(nil), // 4: google.protobuf.FileDescriptorProto
 }
 var file_google_protobuf_compiler_plugin_proto_depIdxs = []int32{
-	4, // google.protobuf.compiler.CodeGeneratorRequest.proto_file:type_name -> google.protobuf.FileDescriptorProto
-	0, // google.protobuf.compiler.CodeGeneratorRequest.compiler_version:type_name -> google.protobuf.compiler.Version
-	3, // google.protobuf.compiler.CodeGeneratorResponse.file:type_name -> google.protobuf.compiler.CodeGeneratorResponse.File
-	3, // starting offset of method output_type sub-list
-	3, // starting offset of method input_type sub-list
-	3, // starting offset of extension type_name sub-list
-	3, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	4, // 0: google.protobuf.compiler.CodeGeneratorRequest.proto_file:type_name -> google.protobuf.FileDescriptorProto
+	0, // 1: google.protobuf.compiler.CodeGeneratorRequest.compiler_version:type_name -> google.protobuf.compiler.Version
+	3, // 2: google.protobuf.compiler.CodeGeneratorResponse.file:type_name -> google.protobuf.compiler.CodeGeneratorResponse.File
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_google_protobuf_compiler_plugin_proto_init() }

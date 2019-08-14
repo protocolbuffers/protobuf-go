@@ -1913,52 +1913,52 @@ var file_google_protobuf_test_messages_proto2_proto_goTypes = []interface{}{
 	(*TestAllTypesProto2_MessageSetCorrectExtension2)(nil), // 27: protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2
 }
 var file_google_protobuf_test_messages_proto2_proto_depIdxs = []int32{
-	4,  // protobuf_test_messages.proto2.TestAllTypesProto2.optional_nested_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage
-	3,  // protobuf_test_messages.proto2.TestAllTypesProto2.optional_foreign_message:type_name -> protobuf_test_messages.proto2.ForeignMessageProto2
-	1,  // protobuf_test_messages.proto2.TestAllTypesProto2.optional_nested_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
-	0,  // protobuf_test_messages.proto2.TestAllTypesProto2.optional_foreign_enum:type_name -> protobuf_test_messages.proto2.ForeignEnumProto2
-	2,  // protobuf_test_messages.proto2.TestAllTypesProto2.recursive_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2
-	4,  // protobuf_test_messages.proto2.TestAllTypesProto2.repeated_nested_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage
-	3,  // protobuf_test_messages.proto2.TestAllTypesProto2.repeated_foreign_message:type_name -> protobuf_test_messages.proto2.ForeignMessageProto2
-	1,  // protobuf_test_messages.proto2.TestAllTypesProto2.repeated_nested_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
-	0,  // protobuf_test_messages.proto2.TestAllTypesProto2.repeated_foreign_enum:type_name -> protobuf_test_messages.proto2.ForeignEnumProto2
-	5,  // protobuf_test_messages.proto2.TestAllTypesProto2.map_int32_int32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapInt32Int32Entry
-	6,  // protobuf_test_messages.proto2.TestAllTypesProto2.map_int64_int64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapInt64Int64Entry
-	7,  // protobuf_test_messages.proto2.TestAllTypesProto2.map_uint32_uint32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapUint32Uint32Entry
-	8,  // protobuf_test_messages.proto2.TestAllTypesProto2.map_uint64_uint64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapUint64Uint64Entry
-	9,  // protobuf_test_messages.proto2.TestAllTypesProto2.map_sint32_sint32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapSint32Sint32Entry
-	10, // protobuf_test_messages.proto2.TestAllTypesProto2.map_sint64_sint64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapSint64Sint64Entry
-	11, // protobuf_test_messages.proto2.TestAllTypesProto2.map_fixed32_fixed32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapFixed32Fixed32Entry
-	12, // protobuf_test_messages.proto2.TestAllTypesProto2.map_fixed64_fixed64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapFixed64Fixed64Entry
-	13, // protobuf_test_messages.proto2.TestAllTypesProto2.map_sfixed32_sfixed32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapSfixed32Sfixed32Entry
-	14, // protobuf_test_messages.proto2.TestAllTypesProto2.map_sfixed64_sfixed64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapSfixed64Sfixed64Entry
-	15, // protobuf_test_messages.proto2.TestAllTypesProto2.map_int32_float:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapInt32FloatEntry
-	16, // protobuf_test_messages.proto2.TestAllTypesProto2.map_int32_double:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapInt32DoubleEntry
-	17, // protobuf_test_messages.proto2.TestAllTypesProto2.map_bool_bool:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapBoolBoolEntry
-	18, // protobuf_test_messages.proto2.TestAllTypesProto2.map_string_string:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringStringEntry
-	19, // protobuf_test_messages.proto2.TestAllTypesProto2.map_string_bytes:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringBytesEntry
-	20, // protobuf_test_messages.proto2.TestAllTypesProto2.map_string_nested_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringNestedMessageEntry
-	21, // protobuf_test_messages.proto2.TestAllTypesProto2.map_string_foreign_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringForeignMessageEntry
-	22, // protobuf_test_messages.proto2.TestAllTypesProto2.map_string_nested_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringNestedEnumEntry
-	23, // protobuf_test_messages.proto2.TestAllTypesProto2.map_string_foreign_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringForeignEnumEntry
-	4,  // protobuf_test_messages.proto2.TestAllTypesProto2.oneof_nested_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage
-	1,  // protobuf_test_messages.proto2.TestAllTypesProto2.oneof_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
-	24, // protobuf_test_messages.proto2.TestAllTypesProto2.data:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.Data
-	2,  // protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage.corecursive:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2
-	4,  // protobuf_test_messages.proto2.TestAllTypesProto2.MapStringNestedMessageEntry.value:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage
-	3,  // protobuf_test_messages.proto2.TestAllTypesProto2.MapStringForeignMessageEntry.value:type_name -> protobuf_test_messages.proto2.ForeignMessageProto2
-	1,  // protobuf_test_messages.proto2.TestAllTypesProto2.MapStringNestedEnumEntry.value:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
-	0,  // protobuf_test_messages.proto2.TestAllTypesProto2.MapStringForeignEnumEntry.value:type_name -> protobuf_test_messages.proto2.ForeignEnumProto2
-	2,  // protobuf_test_messages.proto2.extension_int32:extendee -> protobuf_test_messages.proto2.TestAllTypesProto2
-	25, // protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1.message_set_extension:extendee -> protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrect
-	25, // protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2.message_set_extension:extendee -> protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrect
-	26, // protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1.message_set_extension:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1
-	27, // protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2.message_set_extension:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2
-	41, // starting offset of method output_type sub-list
-	41, // starting offset of method input_type sub-list
-	39, // starting offset of extension type_name sub-list
-	36, // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	4,  // 0: protobuf_test_messages.proto2.TestAllTypesProto2.optional_nested_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage
+	3,  // 1: protobuf_test_messages.proto2.TestAllTypesProto2.optional_foreign_message:type_name -> protobuf_test_messages.proto2.ForeignMessageProto2
+	1,  // 2: protobuf_test_messages.proto2.TestAllTypesProto2.optional_nested_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
+	0,  // 3: protobuf_test_messages.proto2.TestAllTypesProto2.optional_foreign_enum:type_name -> protobuf_test_messages.proto2.ForeignEnumProto2
+	2,  // 4: protobuf_test_messages.proto2.TestAllTypesProto2.recursive_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2
+	4,  // 5: protobuf_test_messages.proto2.TestAllTypesProto2.repeated_nested_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage
+	3,  // 6: protobuf_test_messages.proto2.TestAllTypesProto2.repeated_foreign_message:type_name -> protobuf_test_messages.proto2.ForeignMessageProto2
+	1,  // 7: protobuf_test_messages.proto2.TestAllTypesProto2.repeated_nested_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
+	0,  // 8: protobuf_test_messages.proto2.TestAllTypesProto2.repeated_foreign_enum:type_name -> protobuf_test_messages.proto2.ForeignEnumProto2
+	5,  // 9: protobuf_test_messages.proto2.TestAllTypesProto2.map_int32_int32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapInt32Int32Entry
+	6,  // 10: protobuf_test_messages.proto2.TestAllTypesProto2.map_int64_int64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapInt64Int64Entry
+	7,  // 11: protobuf_test_messages.proto2.TestAllTypesProto2.map_uint32_uint32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapUint32Uint32Entry
+	8,  // 12: protobuf_test_messages.proto2.TestAllTypesProto2.map_uint64_uint64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapUint64Uint64Entry
+	9,  // 13: protobuf_test_messages.proto2.TestAllTypesProto2.map_sint32_sint32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapSint32Sint32Entry
+	10, // 14: protobuf_test_messages.proto2.TestAllTypesProto2.map_sint64_sint64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapSint64Sint64Entry
+	11, // 15: protobuf_test_messages.proto2.TestAllTypesProto2.map_fixed32_fixed32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapFixed32Fixed32Entry
+	12, // 16: protobuf_test_messages.proto2.TestAllTypesProto2.map_fixed64_fixed64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapFixed64Fixed64Entry
+	13, // 17: protobuf_test_messages.proto2.TestAllTypesProto2.map_sfixed32_sfixed32:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapSfixed32Sfixed32Entry
+	14, // 18: protobuf_test_messages.proto2.TestAllTypesProto2.map_sfixed64_sfixed64:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapSfixed64Sfixed64Entry
+	15, // 19: protobuf_test_messages.proto2.TestAllTypesProto2.map_int32_float:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapInt32FloatEntry
+	16, // 20: protobuf_test_messages.proto2.TestAllTypesProto2.map_int32_double:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapInt32DoubleEntry
+	17, // 21: protobuf_test_messages.proto2.TestAllTypesProto2.map_bool_bool:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapBoolBoolEntry
+	18, // 22: protobuf_test_messages.proto2.TestAllTypesProto2.map_string_string:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringStringEntry
+	19, // 23: protobuf_test_messages.proto2.TestAllTypesProto2.map_string_bytes:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringBytesEntry
+	20, // 24: protobuf_test_messages.proto2.TestAllTypesProto2.map_string_nested_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringNestedMessageEntry
+	21, // 25: protobuf_test_messages.proto2.TestAllTypesProto2.map_string_foreign_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringForeignMessageEntry
+	22, // 26: protobuf_test_messages.proto2.TestAllTypesProto2.map_string_nested_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringNestedEnumEntry
+	23, // 27: protobuf_test_messages.proto2.TestAllTypesProto2.map_string_foreign_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MapStringForeignEnumEntry
+	4,  // 28: protobuf_test_messages.proto2.TestAllTypesProto2.oneof_nested_message:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage
+	1,  // 29: protobuf_test_messages.proto2.TestAllTypesProto2.oneof_enum:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
+	24, // 30: protobuf_test_messages.proto2.TestAllTypesProto2.data:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.Data
+	2,  // 31: protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage.corecursive:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2
+	4,  // 32: protobuf_test_messages.proto2.TestAllTypesProto2.MapStringNestedMessageEntry.value:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedMessage
+	3,  // 33: protobuf_test_messages.proto2.TestAllTypesProto2.MapStringForeignMessageEntry.value:type_name -> protobuf_test_messages.proto2.ForeignMessageProto2
+	1,  // 34: protobuf_test_messages.proto2.TestAllTypesProto2.MapStringNestedEnumEntry.value:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
+	0,  // 35: protobuf_test_messages.proto2.TestAllTypesProto2.MapStringForeignEnumEntry.value:type_name -> protobuf_test_messages.proto2.ForeignEnumProto2
+	2,  // 36: protobuf_test_messages.proto2.extension_int32:extendee -> protobuf_test_messages.proto2.TestAllTypesProto2
+	25, // 37: protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1.message_set_extension:extendee -> protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrect
+	25, // 38: protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2.message_set_extension:extendee -> protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrect
+	26, // 39: protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1.message_set_extension:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension1
+	27, // 40: protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2.message_set_extension:type_name -> protobuf_test_messages.proto2.TestAllTypesProto2.MessageSetCorrectExtension2
+	41, // [41:41] is the sub-list for method output_type
+	41, // [41:41] is the sub-list for method input_type
+	39, // [39:41] is the sub-list for extension type_name
+	36, // [36:39] is the sub-list for extension extendee
+	0,  // [0:36] is the sub-list for field type_name
 }
 
 func init() { file_google_protobuf_test_messages_proto2_proto_init() }

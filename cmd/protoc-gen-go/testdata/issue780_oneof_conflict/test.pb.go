@@ -99,11 +99,11 @@ var file_issue780_oneof_conflict_test_proto_goTypes = []interface{}{
 	(*Foo)(nil), // 0: oneoftest.Foo
 }
 var file_issue780_oneof_conflict_test_proto_depIdxs = []int32{
-	0, // starting offset of method output_type sub-list
-	0, // starting offset of method input_type sub-list
-	0, // starting offset of extension type_name sub-list
-	0, // starting offset of extension extendee sub-list
-	0, // starting offset of field type_name sub-list
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_issue780_oneof_conflict_test_proto_init() }

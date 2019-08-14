@@ -5267,100 +5267,100 @@ var file_datasets_google_message3_benchmark_message3_3_proto_goTypes = []interfa
 	(*Message3850)(nil),               // 70: benchmarks.google_message3.Message3850
 }
 var file_datasets_google_message3_benchmark_message3_3_proto_depIdxs = []int32{
-	28, // benchmarks.google_message3.Message35546.message35547:type_name -> benchmarks.google_message3.Message35546.Message35547
-	29, // benchmarks.google_message3.Message35546.message35548:type_name -> benchmarks.google_message3.Message35546.Message35548
-	37, // benchmarks.google_message3.Message2356.field2368:type_name -> benchmarks.google_message3.Message1374
-	30, // benchmarks.google_message3.Message2356.message2357:type_name -> benchmarks.google_message3.Message2356.Message2357
-	31, // benchmarks.google_message3.Message2356.message2358:type_name -> benchmarks.google_message3.Message2356.Message2358
-	32, // benchmarks.google_message3.Message2356.message2359:type_name -> benchmarks.google_message3.Message2356.Message2359
-	38, // benchmarks.google_message3.Message2356.field2393:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message2356.field2394:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message2356.field2395:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message2356.field2396:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	33, // benchmarks.google_message3.Message7029.message7030:type_name -> benchmarks.google_message3.Message7029.Message7030
-	34, // benchmarks.google_message3.Message7029.message7031:type_name -> benchmarks.google_message3.Message7029.Message7031
-	38, // benchmarks.google_message3.Message7029.field7219:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message7029.field7223:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message18921.field18952:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	35, // benchmarks.google_message3.Message18921.message18922:type_name -> benchmarks.google_message3.Message18921.Message18922
-	38, // benchmarks.google_message3.Message18921.field18954:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	39, // benchmarks.google_message3.Message18921.field18955:type_name -> benchmarks.google_message3.Message18943
-	40, // benchmarks.google_message3.Message18921.field18956:type_name -> benchmarks.google_message3.Message18944
-	38, // benchmarks.google_message3.Message18921.field18957:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	36, // benchmarks.google_message3.Message3886.message3887:type_name -> benchmarks.google_message3.Message3886.Message3887
-	41, // benchmarks.google_message3.Message6743.field6759:type_name -> benchmarks.google_message3.Message6721
-	42, // benchmarks.google_message3.Message6743.field6760:type_name -> benchmarks.google_message3.Message6723
-	42, // benchmarks.google_message3.Message6743.field6761:type_name -> benchmarks.google_message3.Message6723
-	43, // benchmarks.google_message3.Message6743.field6762:type_name -> benchmarks.google_message3.Message6725
-	44, // benchmarks.google_message3.Message6743.field6763:type_name -> benchmarks.google_message3.Message6726
-	45, // benchmarks.google_message3.Message6743.field6764:type_name -> benchmarks.google_message3.Message6733
-	46, // benchmarks.google_message3.Message6743.field6765:type_name -> benchmarks.google_message3.Message6734
-	47, // benchmarks.google_message3.Message6743.field6766:type_name -> benchmarks.google_message3.Message6742
-	48, // benchmarks.google_message3.Message6773.field6794:type_name -> benchmarks.google_message3.Enum6769
-	49, // benchmarks.google_message3.Message6773.field6796:type_name -> benchmarks.google_message3.UnusedEnum
-	50, // benchmarks.google_message3.Message6773.field6799:type_name -> benchmarks.google_message3.Enum6774
-	51, // benchmarks.google_message3.Message6773.field6803:type_name -> benchmarks.google_message3.Enum6782
-	38, // benchmarks.google_message3.Message8224.field8255:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	52, // benchmarks.google_message3.Message8224.field8256:type_name -> benchmarks.google_message3.Message8184
-	53, // benchmarks.google_message3.Message8224.field8257:type_name -> benchmarks.google_message3.Message7966
-	38, // benchmarks.google_message3.Message8224.field8272:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8224.field8273:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8224.field8274:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8224.field8276:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8224.field8277:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8224.field8278:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8224.field8279:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8224.field8281:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	53, // benchmarks.google_message3.Message8392.field8397:type_name -> benchmarks.google_message3.Message7966
-	38, // benchmarks.google_message3.Message8130.field8159:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8130.field8162:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8130.field8167:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8130.field8168:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	49, // benchmarks.google_message3.Message8130.field8170:type_name -> benchmarks.google_message3.UnusedEnum
-	49, // benchmarks.google_message3.Message8130.field8171:type_name -> benchmarks.google_message3.UnusedEnum
-	38, // benchmarks.google_message3.Message8130.field8177:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8130.field8178:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message8130.field8179:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	53, // benchmarks.google_message3.Message8478.field8490:type_name -> benchmarks.google_message3.Message7966
-	54, // benchmarks.google_message3.Message8478.field8491:type_name -> benchmarks.google_message3.Message8476
-	54, // benchmarks.google_message3.Message8478.field8493:type_name -> benchmarks.google_message3.Message8476
-	55, // benchmarks.google_message3.Message8478.field8494:type_name -> benchmarks.google_message3.Message8477
-	56, // benchmarks.google_message3.Message8478.field8495:type_name -> benchmarks.google_message3.Message8454
-	38, // benchmarks.google_message3.Message8478.field8496:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	57, // benchmarks.google_message3.Message8479.field8497:type_name -> benchmarks.google_message3.Message8475
-	53, // benchmarks.google_message3.Message8479.field8498:type_name -> benchmarks.google_message3.Message7966
-	54, // benchmarks.google_message3.Message8479.field8499:type_name -> benchmarks.google_message3.Message8476
-	54, // benchmarks.google_message3.Message8479.field8500:type_name -> benchmarks.google_message3.Message8476
-	53, // benchmarks.google_message3.Message8479.field8503:type_name -> benchmarks.google_message3.Message7966
-	58, // benchmarks.google_message3.Message8479.field8504:type_name -> benchmarks.google_message3.Message8455
-	38, // benchmarks.google_message3.Message8479.field8505:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	59, // benchmarks.google_message3.Message10319.field10340:type_name -> benchmarks.google_message3.Enum10325
-	60, // benchmarks.google_message3.Message12669.field12681:type_name -> benchmarks.google_message3.Message12559
-	61, // benchmarks.google_message3.Message12669.field12684:type_name -> benchmarks.google_message3.Enum12670
-	62, // benchmarks.google_message3.Message12818.field12833:type_name -> benchmarks.google_message3.Message12817
-	63, // benchmarks.google_message3.Message16479.field16484:type_name -> benchmarks.google_message3.Message16480
-	38, // benchmarks.google_message3.Message16724.field16768:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	64, // benchmarks.google_message3.Message16724.field16771:type_name -> benchmarks.google_message3.Enum16728
-	49, // benchmarks.google_message3.Message24356.field24565:type_name -> benchmarks.google_message3.UnusedEnum
-	65, // benchmarks.google_message3.Message24356.field24567:type_name -> benchmarks.google_message3.Enum24361
-	38, // benchmarks.google_message3.Message24356.field24571:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	66, // benchmarks.google_message3.Message24376.field24592:type_name -> benchmarks.google_message3.Message24377
-	67, // benchmarks.google_message3.Message24376.field24593:type_name -> benchmarks.google_message3.Message24317
-	68, // benchmarks.google_message3.Message24376.field24595:type_name -> benchmarks.google_message3.Message24378
-	38, // benchmarks.google_message3.Message24376.field24597:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	49, // benchmarks.google_message3.Message24366.field24581:type_name -> benchmarks.google_message3.UnusedEnum
-	49, // benchmarks.google_message3.Message24366.field24583:type_name -> benchmarks.google_message3.UnusedEnum
-	38, // benchmarks.google_message3.Message24366.field24586:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	69, // benchmarks.google_message3.Message18921.Message18922.field18966:type_name -> benchmarks.google_message3.Message18856
-	38, // benchmarks.google_message3.Message18921.Message18922.field18968:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	38, // benchmarks.google_message3.Message18921.Message18922.field18978:type_name -> benchmarks.google_message3.UnusedEmptyMessage
-	49, // benchmarks.google_message3.Message18921.Message18922.field18979:type_name -> benchmarks.google_message3.UnusedEnum
-	70, // benchmarks.google_message3.Message3886.Message3887.field3934:type_name -> benchmarks.google_message3.Message3850
-	89, // starting offset of method output_type sub-list
-	89, // starting offset of method input_type sub-list
-	89, // starting offset of extension type_name sub-list
-	89, // starting offset of extension extendee sub-list
-	0,  // starting offset of field type_name sub-list
+	28, // 0: benchmarks.google_message3.Message35546.message35547:type_name -> benchmarks.google_message3.Message35546.Message35547
+	29, // 1: benchmarks.google_message3.Message35546.message35548:type_name -> benchmarks.google_message3.Message35546.Message35548
+	37, // 2: benchmarks.google_message3.Message2356.field2368:type_name -> benchmarks.google_message3.Message1374
+	30, // 3: benchmarks.google_message3.Message2356.message2357:type_name -> benchmarks.google_message3.Message2356.Message2357
+	31, // 4: benchmarks.google_message3.Message2356.message2358:type_name -> benchmarks.google_message3.Message2356.Message2358
+	32, // 5: benchmarks.google_message3.Message2356.message2359:type_name -> benchmarks.google_message3.Message2356.Message2359
+	38, // 6: benchmarks.google_message3.Message2356.field2393:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 7: benchmarks.google_message3.Message2356.field2394:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 8: benchmarks.google_message3.Message2356.field2395:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 9: benchmarks.google_message3.Message2356.field2396:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	33, // 10: benchmarks.google_message3.Message7029.message7030:type_name -> benchmarks.google_message3.Message7029.Message7030
+	34, // 11: benchmarks.google_message3.Message7029.message7031:type_name -> benchmarks.google_message3.Message7029.Message7031
+	38, // 12: benchmarks.google_message3.Message7029.field7219:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 13: benchmarks.google_message3.Message7029.field7223:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 14: benchmarks.google_message3.Message18921.field18952:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	35, // 15: benchmarks.google_message3.Message18921.message18922:type_name -> benchmarks.google_message3.Message18921.Message18922
+	38, // 16: benchmarks.google_message3.Message18921.field18954:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	39, // 17: benchmarks.google_message3.Message18921.field18955:type_name -> benchmarks.google_message3.Message18943
+	40, // 18: benchmarks.google_message3.Message18921.field18956:type_name -> benchmarks.google_message3.Message18944
+	38, // 19: benchmarks.google_message3.Message18921.field18957:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	36, // 20: benchmarks.google_message3.Message3886.message3887:type_name -> benchmarks.google_message3.Message3886.Message3887
+	41, // 21: benchmarks.google_message3.Message6743.field6759:type_name -> benchmarks.google_message3.Message6721
+	42, // 22: benchmarks.google_message3.Message6743.field6760:type_name -> benchmarks.google_message3.Message6723
+	42, // 23: benchmarks.google_message3.Message6743.field6761:type_name -> benchmarks.google_message3.Message6723
+	43, // 24: benchmarks.google_message3.Message6743.field6762:type_name -> benchmarks.google_message3.Message6725
+	44, // 25: benchmarks.google_message3.Message6743.field6763:type_name -> benchmarks.google_message3.Message6726
+	45, // 26: benchmarks.google_message3.Message6743.field6764:type_name -> benchmarks.google_message3.Message6733
+	46, // 27: benchmarks.google_message3.Message6743.field6765:type_name -> benchmarks.google_message3.Message6734
+	47, // 28: benchmarks.google_message3.Message6743.field6766:type_name -> benchmarks.google_message3.Message6742
+	48, // 29: benchmarks.google_message3.Message6773.field6794:type_name -> benchmarks.google_message3.Enum6769
+	49, // 30: benchmarks.google_message3.Message6773.field6796:type_name -> benchmarks.google_message3.UnusedEnum
+	50, // 31: benchmarks.google_message3.Message6773.field6799:type_name -> benchmarks.google_message3.Enum6774
+	51, // 32: benchmarks.google_message3.Message6773.field6803:type_name -> benchmarks.google_message3.Enum6782
+	38, // 33: benchmarks.google_message3.Message8224.field8255:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	52, // 34: benchmarks.google_message3.Message8224.field8256:type_name -> benchmarks.google_message3.Message8184
+	53, // 35: benchmarks.google_message3.Message8224.field8257:type_name -> benchmarks.google_message3.Message7966
+	38, // 36: benchmarks.google_message3.Message8224.field8272:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 37: benchmarks.google_message3.Message8224.field8273:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 38: benchmarks.google_message3.Message8224.field8274:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 39: benchmarks.google_message3.Message8224.field8276:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 40: benchmarks.google_message3.Message8224.field8277:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 41: benchmarks.google_message3.Message8224.field8278:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 42: benchmarks.google_message3.Message8224.field8279:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 43: benchmarks.google_message3.Message8224.field8281:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	53, // 44: benchmarks.google_message3.Message8392.field8397:type_name -> benchmarks.google_message3.Message7966
+	38, // 45: benchmarks.google_message3.Message8130.field8159:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 46: benchmarks.google_message3.Message8130.field8162:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 47: benchmarks.google_message3.Message8130.field8167:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 48: benchmarks.google_message3.Message8130.field8168:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	49, // 49: benchmarks.google_message3.Message8130.field8170:type_name -> benchmarks.google_message3.UnusedEnum
+	49, // 50: benchmarks.google_message3.Message8130.field8171:type_name -> benchmarks.google_message3.UnusedEnum
+	38, // 51: benchmarks.google_message3.Message8130.field8177:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 52: benchmarks.google_message3.Message8130.field8178:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 53: benchmarks.google_message3.Message8130.field8179:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	53, // 54: benchmarks.google_message3.Message8478.field8490:type_name -> benchmarks.google_message3.Message7966
+	54, // 55: benchmarks.google_message3.Message8478.field8491:type_name -> benchmarks.google_message3.Message8476
+	54, // 56: benchmarks.google_message3.Message8478.field8493:type_name -> benchmarks.google_message3.Message8476
+	55, // 57: benchmarks.google_message3.Message8478.field8494:type_name -> benchmarks.google_message3.Message8477
+	56, // 58: benchmarks.google_message3.Message8478.field8495:type_name -> benchmarks.google_message3.Message8454
+	38, // 59: benchmarks.google_message3.Message8478.field8496:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	57, // 60: benchmarks.google_message3.Message8479.field8497:type_name -> benchmarks.google_message3.Message8475
+	53, // 61: benchmarks.google_message3.Message8479.field8498:type_name -> benchmarks.google_message3.Message7966
+	54, // 62: benchmarks.google_message3.Message8479.field8499:type_name -> benchmarks.google_message3.Message8476
+	54, // 63: benchmarks.google_message3.Message8479.field8500:type_name -> benchmarks.google_message3.Message8476
+	53, // 64: benchmarks.google_message3.Message8479.field8503:type_name -> benchmarks.google_message3.Message7966
+	58, // 65: benchmarks.google_message3.Message8479.field8504:type_name -> benchmarks.google_message3.Message8455
+	38, // 66: benchmarks.google_message3.Message8479.field8505:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	59, // 67: benchmarks.google_message3.Message10319.field10340:type_name -> benchmarks.google_message3.Enum10325
+	60, // 68: benchmarks.google_message3.Message12669.field12681:type_name -> benchmarks.google_message3.Message12559
+	61, // 69: benchmarks.google_message3.Message12669.field12684:type_name -> benchmarks.google_message3.Enum12670
+	62, // 70: benchmarks.google_message3.Message12818.field12833:type_name -> benchmarks.google_message3.Message12817
+	63, // 71: benchmarks.google_message3.Message16479.field16484:type_name -> benchmarks.google_message3.Message16480
+	38, // 72: benchmarks.google_message3.Message16724.field16768:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	64, // 73: benchmarks.google_message3.Message16724.field16771:type_name -> benchmarks.google_message3.Enum16728
+	49, // 74: benchmarks.google_message3.Message24356.field24565:type_name -> benchmarks.google_message3.UnusedEnum
+	65, // 75: benchmarks.google_message3.Message24356.field24567:type_name -> benchmarks.google_message3.Enum24361
+	38, // 76: benchmarks.google_message3.Message24356.field24571:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	66, // 77: benchmarks.google_message3.Message24376.field24592:type_name -> benchmarks.google_message3.Message24377
+	67, // 78: benchmarks.google_message3.Message24376.field24593:type_name -> benchmarks.google_message3.Message24317
+	68, // 79: benchmarks.google_message3.Message24376.field24595:type_name -> benchmarks.google_message3.Message24378
+	38, // 80: benchmarks.google_message3.Message24376.field24597:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	49, // 81: benchmarks.google_message3.Message24366.field24581:type_name -> benchmarks.google_message3.UnusedEnum
+	49, // 82: benchmarks.google_message3.Message24366.field24583:type_name -> benchmarks.google_message3.UnusedEnum
+	38, // 83: benchmarks.google_message3.Message24366.field24586:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	69, // 84: benchmarks.google_message3.Message18921.Message18922.field18966:type_name -> benchmarks.google_message3.Message18856
+	38, // 85: benchmarks.google_message3.Message18921.Message18922.field18968:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	38, // 86: benchmarks.google_message3.Message18921.Message18922.field18978:type_name -> benchmarks.google_message3.UnusedEmptyMessage
+	49, // 87: benchmarks.google_message3.Message18921.Message18922.field18979:type_name -> benchmarks.google_message3.UnusedEnum
+	70, // 88: benchmarks.google_message3.Message3886.Message3887.field3934:type_name -> benchmarks.google_message3.Message3850
+	89, // [89:89] is the sub-list for method output_type
+	89, // [89:89] is the sub-list for method input_type
+	89, // [89:89] is the sub-list for extension type_name
+	89, // [89:89] is the sub-list for extension extendee
+	0,  // [0:89] is the sub-list for field type_name
 }
 
 func init() { file_datasets_google_message3_benchmark_message3_3_proto_init() }
