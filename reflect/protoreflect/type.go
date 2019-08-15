@@ -30,18 +30,18 @@ type Descriptor interface {
 	// Parent returns the parent containing this descriptor declaration.
 	// The following shows the mapping from child type to possible parent types:
 	//
-	//	+---------------------+-----------------------------------+
-	//	| Child type          | Possible parent types             |
-	//	+---------------------+-----------------------------------+
-	//	| FileDescriptor      | nil                               |
-	//	| MessageDescriptor   | FileDescriptor, MessageDescriptor |
-	//	| FieldDescriptor     | FileDescriptor, MessageDescriptor |
-	//	| OneofDescriptor     | MessageDescriptor                 |
-	//	| EnumDescriptor      | FileDescriptor, MessageDescriptor |
-	//	| EnumValueDescriptor | EnumDescriptor                    |
-	//	| ServiceDescriptor   | FileDescriptor                    |
-	//	| MethodDescriptor    | ServiceDescriptor                 |
-	//	+---------------------+-----------------------------------+
+	//	╔═════════════════════╤═══════════════════════════════════╗
+	//	║ Child type          │ Possible parent types             ║
+	//	╠═════════════════════╪═══════════════════════════════════╣
+	//	║ FileDescriptor      │ nil                               ║
+	//	║ MessageDescriptor   │ FileDescriptor, MessageDescriptor ║
+	//	║ FieldDescriptor     │ FileDescriptor, MessageDescriptor ║
+	//	║ OneofDescriptor     │ MessageDescriptor                 ║
+	//	║ EnumDescriptor      │ FileDescriptor, MessageDescriptor ║
+	//	║ EnumValueDescriptor │ EnumDescriptor                    ║
+	//	║ ServiceDescriptor   │ FileDescriptor                    ║
+	//	║ MethodDescriptor    │ ServiceDescriptor                 ║
+	//	╚═════════════════════╧═══════════════════════════════════╝
 	//
 	// Support for this functionality is optional and may return nil.
 	Parent() Descriptor
@@ -72,12 +72,12 @@ type Descriptor interface {
 	// Placeholder types may only be returned by the following accessors
 	// as a result of weak imports:
 	//
-	//	+-----------------------------------+-------------------+
-	//	| Accessor                          | Descriptor        |
-	//	+-----------------------------------+-------------------+
-	//	| FileImports.FileDescriptor        | FileDescriptor    |
-	//	| FieldDescriptor.MessageDescriptor | MessageDescriptor |
-	//	+-----------------------------------+-------------------+
+	//	╔═══════════════════════════════════╤═══════════════════╗
+	//	║ Accessor                          │ Descriptor        ║
+	//	╠═══════════════════════════════════╪═══════════════════╣
+	//	║ FileImports.FileDescriptor        │ FileDescriptor    ║
+	//	║ FieldDescriptor.MessageDescriptor │ MessageDescriptor ║
+	//	╚═══════════════════════════════════╧═══════════════════╝
 	//
 	// If true, only Name and FullName are valid.
 	// For FileDescriptor, the Path and Package are also valid.
@@ -88,18 +88,18 @@ type Descriptor interface {
 	//
 	// To avoid a dependency cycle, this function returns an interface value.
 	// The proto message type returned for each descriptor type is as follows:
-	//	+---------------------+------------------------------------------+
-	//	| Go type             | Proto message type                       |
-	//	+---------------------+------------------------------------------+
-	//	| FileDescriptor      | google.protobuf.FileOptions              |
-	//	| MessageDescriptor   | google.protobuf.MessageOptions           |
-	//	| FieldDescriptor     | google.protobuf.FieldOptions             |
-	//	| OneofDescriptor     | google.protobuf.OneofOptions             |
-	//	| EnumDescriptor      | google.protobuf.EnumOptions              |
-	//	| EnumValueDescriptor | google.protobuf.EnumValueOptions         |
-	//	| ServiceDescriptor   | google.protobuf.ServiceOptions           |
-	//	| MethodDescriptor    | google.protobuf.MethodOptions            |
-	//	+---------------------+------------------------------------------+
+	//	╔═════════════════════╤══════════════════════════════════════════╗
+	//	║ Go type             │ Protobuf message type                    ║
+	//	╠═════════════════════╪══════════════════════════════════════════╣
+	//	║ FileDescriptor      │ google.protobuf.FileOptions              ║
+	//	║ MessageDescriptor   │ google.protobuf.MessageOptions           ║
+	//	║ FieldDescriptor     │ google.protobuf.FieldOptions             ║
+	//	║ OneofDescriptor     │ google.protobuf.OneofOptions             ║
+	//	║ EnumDescriptor      │ google.protobuf.EnumOptions              ║
+	//	║ EnumValueDescriptor │ google.protobuf.EnumValueOptions         ║
+	//	║ ServiceDescriptor   │ google.protobuf.ServiceOptions           ║
+	//	║ MethodDescriptor    │ google.protobuf.MethodOptions            ║
+	//	╚═════════════════════╧══════════════════════════════════════════╝
 	//
 	// This method returns a typed nil-pointer if no options are present.
 	// The caller must import the descriptor package to use this.

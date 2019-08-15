@@ -4,9 +4,10 @@
 
 // Package protoreflect provides interfaces to dynamically manipulate messages.
 //
-// This package includes type descriptors which describe the structure of
-// types defined in proto source files, and value interfaces which provide the
+// This package includes type descriptors which describe the structure of types
+// defined in proto source files, and value interfaces which provide the
 // ability to examine and manipulate the contents of messages.
+//
 //
 // Type Descriptors
 //
@@ -17,6 +18,7 @@
 // The Message and Enum interfaces provide a Type method which returns the
 // appropriate descriptor type for a value.
 //
+//
 // Value Interfaces
 //
 // The protoreflect.Message type is a reflective view of a message instance.
@@ -24,6 +26,70 @@
 //
 // To convert a proto.Message to a protoreflect.Message, use the
 // former's ProtoReflect method.
+//
+//
+// Relationships
+//
+//	                       ┌───────────────────────────────────┐
+//	                       V                                   │
+//	   ┌────────────── New(n) ─────────────┐                   │
+//	   │                                   │                   │
+//	   │      ┌──── Descriptor() ──┐       │  ┌── Number() ──┐ │
+//	   │      │                    V       V  │              V │
+//	╔════════════╗  ╔════════════════╗  ╔════════╗  ╔════════════╗
+//	║  EnumType  ║  ║ EnumDescriptor ║  ║  Enum  ║  ║ EnumNumber ║
+//	╚════════════╝  ╚════════════════╝  ╚════════╝  ╚════════════╝
+//	      Λ           Λ                   │ │
+//	      │           └─── Descriptor() ──┘ │
+//	      │                                 │
+//	      └────────────────── Type() ───────┘
+//
+// • An EnumType describes a concrete Go enum type.
+// It has an EnumDescriptor and can construct an Enum instance.
+//
+// • An EnumDescriptor describes an abstract protobuf enum type.
+//
+// • An Enum is a concrete enum instance. Generated enums implement Enum.
+//
+//
+//	  ┌──────────────── New() ─────────────────┐
+//	  │                                        │
+//	  │         ┌─── Descriptor() ─────┐       │   ┌── Interface() ───┐
+//	  │         │                      V       V   │                  V
+//	╔═════════════╗  ╔═══════════════════╗  ╔═════════╗  ╔══════════════╗
+//	║ MessageType ║  ║ MessageDescriptor ║  ║ Message ║  ║ ProtoMessage ║
+//	╚═════════════╝  ╚═══════════════════╝  ╚═════════╝  ╚══════════════╝
+//	       Λ           Λ                      │ │  Λ                  │
+//	       │           └──── Descriptor() ────┘ │  └─ ProtoReflect() ─┘
+//	       │                                    │
+//	       └─────────────────── Type() ─────────┘
+//
+// • A MessageType describes a concrete Go message type.
+// It has a MessageDescriptor and can construct a Message instance.
+//
+// • A MessageDescriptor describes an abstract protobuf message type.
+//
+// • A Message is a concrete message instance. Generated messages implement
+// ProtoMessage, which can convert to/from a Message.
+//
+//
+//	        ┌── Descriptor() ──┐       ┌───── implements ─────┐
+//	        │                  V       │                      V
+//	╔═══════════════╗  ╔═════════════════════════╗  ╔═════════════════════╗
+//	║ ExtensionType ║  ║ ExtensionTypeDescriptor ║  ║ ExtensionDescriptor ║
+//	╚═══════════════╝  ╚═════════════════════════╝  ╚═════════════════════╝
+//	        Λ                  │       Λ                      │
+//	        └───── Type() ─────┘       └─── may implement ────┘
+//
+// • An ExtensionType describes a concrete Go implementation of an extension.
+// It has an ExtensionTypeDescriptor and can convert to/from
+// abstract Values and Go values.
+//
+// • An ExtensionTypeDescriptor is an ExtensionDescriptor
+// which also has an ExtensionType.
+//
+// • An ExtensionDescriptor describes an abstract protobuf extension field and
+// may not always be an ExtensionTypeDescriptor.
 package protoreflect
 
 import (
