@@ -30,8 +30,8 @@ import (
 var (
 	regenerate = flag.Bool("regenerate", false, "regenerate files")
 
-	protobufVersion = "3.7.1"
-	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.6", "1.12.1"}
+	protobufVersion = "3.9.1"
+	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.9"}
 	golangLatest    = golangVersions[len(golangVersions)-1]
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
@@ -89,9 +89,10 @@ func Test(t *testing.T) {
 	t.Run("ConformanceTests", func(t *testing.T) {
 		driverPath := filepath.Join("internal", "cmd", "conformance")
 		driver := filepath.Join(driverPath, "conformance.sh")
-		failureList := filepath.Join(driverPath, "failure_list_go.txt")
+		failureList := filepath.Join(driverPath, "failure_list.txt")
+		textFailureList := filepath.Join(driverPath, "text_failure_list.txt")
 		runner := filepath.Join(protobufPath, "conformance", "conformance-test-runner")
-		mustRunCommand(t, runner, "--failure_list", failureList, "--enforce_recommended", driver)
+		mustRunCommand(t, runner, "--failure_list", failureList, "--text_format_failure_list", textFailureList, "--enforce_recommended", driver)
 	})
 	t.Run("GeneratedGoFiles", func(t *testing.T) {
 		diff := mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-types")

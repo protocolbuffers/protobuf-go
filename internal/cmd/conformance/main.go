@@ -13,6 +13,7 @@ import (
 	"os"
 
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
 
 	pb "google.golang.org/protobuf/internal/testprotos/conformance"
@@ -58,13 +59,14 @@ func main() {
 	}
 }
 
-func handle(req *pb.ConformanceRequest) *pb.ConformanceResponse {
-	var err error
+func handle(req *pb.ConformanceRequest) (res *pb.ConformanceResponse) {
 	var msg proto.Message = &pb.TestAllTypesProto2{}
 	if req.GetMessageType() == "protobuf_test_messages.proto3.TestAllTypesProto3" {
 		msg = &pb.TestAllTypesProto3{}
 	}
 
+	// Unmarshal the test message.
+	var err error
 	switch p := req.Payload.(type) {
 	case *pb.ConformanceRequest_ProtobufPayload:
 		err = proto.Unmarshal(p.ProtobufPayload, msg)
@@ -72,6 +74,8 @@ func handle(req *pb.ConformanceRequest) *pb.ConformanceResponse {
 		err = protojson.UnmarshalOptions{
 			DiscardUnknown: req.TestCategory == pb.TestCategory_JSON_IGNORE_UNKNOWN_PARSING_TEST,
 		}.Unmarshal([]byte(p.JsonPayload), msg)
+	case *pb.ConformanceRequest_TextPayload:
+		err = prototext.Unmarshal([]byte(p.TextPayload), msg)
 	default:
 		return &pb.ConformanceResponse{
 			Result: &pb.ConformanceResponse_RuntimeError{
@@ -87,33 +91,28 @@ func handle(req *pb.ConformanceRequest) *pb.ConformanceResponse {
 		}
 	}
 
+	// Marshal the test message.
+	var b []byte
 	switch req.RequestedOutputFormat {
 	case pb.WireFormat_PROTOBUF:
-		p, err := proto.Marshal(msg)
-		if err != nil {
-			return &pb.ConformanceResponse{
-				Result: &pb.ConformanceResponse_SerializeError{
-					SerializeError: err.Error(),
-				},
-			}
-		}
-		return &pb.ConformanceResponse{
+		b, err = proto.Marshal(msg)
+		res = &pb.ConformanceResponse{
 			Result: &pb.ConformanceResponse_ProtobufPayload{
-				ProtobufPayload: p,
+				ProtobufPayload: b,
 			},
 		}
 	case pb.WireFormat_JSON:
-		p, err := protojson.Marshal(msg)
-		if err != nil {
-			return &pb.ConformanceResponse{
-				Result: &pb.ConformanceResponse_SerializeError{
-					SerializeError: err.Error(),
-				},
-			}
-		}
-		return &pb.ConformanceResponse{
+		b, err = protojson.Marshal(msg)
+		res = &pb.ConformanceResponse{
 			Result: &pb.ConformanceResponse_JsonPayload{
-				JsonPayload: string(p),
+				JsonPayload: string(b),
+			},
+		}
+	case pb.WireFormat_TEXT_FORMAT:
+		b, err = prototext.Marshal(msg)
+		res = &pb.ConformanceResponse{
+			Result: &pb.ConformanceResponse_TextPayload{
+				TextPayload: string(b),
 			},
 		}
 	default:
@@ -123,4 +122,12 @@ func handle(req *pb.ConformanceRequest) *pb.ConformanceResponse {
 			},
 		}
 	}
+	if err != nil {
+		return &pb.ConformanceResponse{
+			Result: &pb.ConformanceResponse_SerializeError{
+				SerializeError: err.Error(),
+			},
+		}
+	}
+	return res
 }
