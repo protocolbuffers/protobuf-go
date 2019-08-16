@@ -2,15 +2,17 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// This binary implements the conformance test subprocess protocol as documented
-// in conformance.proto.
-package main
+package conformance
 
 import (
 	"encoding/binary"
+	"flag"
 	"io"
 	"log"
 	"os"
+	"os/exec"
+	"path/filepath"
+	"testing"
 
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/encoding/prototext"
@@ -18,6 +20,38 @@ import (
 
 	pb "google.golang.org/protobuf/internal/testprotos/conformance"
 )
+
+func init() {
+	// When the environment variable RUN_AS_CONFORMANCE_PLUGIN is set,
+	// we skip running the tests and instead act as a conformance plugin.
+	// This allows the binary to pass itself to conformance.
+	if os.Getenv("RUN_AS_CONFORMANCE_PLUGIN") == "1" {
+		main()
+		os.Exit(0)
+	}
+}
+
+var (
+	execute   = flag.Bool("execute", false, "execute the conformance test")
+	protoRoot = flag.String("protoroot", os.Getenv("PROTOBUF_ROOT"), "The root of the protobuf source tree.")
+)
+
+func Test(t *testing.T) {
+	if !*execute {
+		t.SkipNow()
+	}
+	binPath := filepath.Join(*protoRoot, "conformance", "conformance-test-runner")
+	cmd := exec.Command(binPath,
+		"--failure_list", "failing_tests.txt",
+		"--text_format_failure_list", "failing_tests_text_format.txt",
+		"--enforce_recommended",
+		os.Args[0])
+	cmd.Env = append(os.Environ(), "RUN_AS_CONFORMANCE_PLUGIN=1")
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("execution error: %v\n\n%s", err, out)
+	}
+}
 
 func main() {
 	var sizeBuf [4]byte

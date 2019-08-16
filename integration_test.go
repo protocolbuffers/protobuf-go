@@ -82,18 +82,11 @@ func Test(t *testing.T) {
 			runGo("ProtoLegacy", workDir, "go", "test", "-race", "-tags", "protolegacy", "./...")
 			runGo("ProtocGenGo", "cmd/protoc-gen-go/testdata", "go", "test")
 			runGo("ProtocGenGoGRPC", "cmd/protoc-gen-go-grpc/testdata", "go", "test")
+			runGo("Conformance", "internal/conformance", "go", "test", "-execute")
 		}
 	}
 	wg.Wait()
 
-	t.Run("ConformanceTests", func(t *testing.T) {
-		driverPath := filepath.Join("internal", "cmd", "conformance")
-		driver := filepath.Join(driverPath, "conformance.sh")
-		failureList := filepath.Join(driverPath, "failure_list.txt")
-		textFailureList := filepath.Join(driverPath, "text_failure_list.txt")
-		runner := filepath.Join(protobufPath, "conformance", "conformance-test-runner")
-		mustRunCommand(t, runner, "--failure_list", failureList, "--text_format_failure_list", textFailureList, "--enforce_recommended", driver)
-	})
 	t.Run("GeneratedGoFiles", func(t *testing.T) {
 		diff := mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-types")
 		if strings.TrimSpace(diff) != "" {
