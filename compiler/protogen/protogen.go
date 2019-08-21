@@ -103,8 +103,8 @@ type Plugin struct {
 	filesByName map[string]*File
 
 	fileReg        *protoregistry.Files
-	messagesByName map[protoreflect.FullName]*Message
 	enumsByName    map[protoreflect.FullName]*Enum
+	messagesByName map[protoreflect.FullName]*Message
 	annotateCode   bool
 	pathType       pathType
 	genFiles       []*GeneratedFile
@@ -156,8 +156,8 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 		Request:        req,
 		filesByName:    make(map[string]*File),
 		fileReg:        protoregistry.NewFiles(),
-		messagesByName: make(map[protoreflect.FullName]*Message),
 		enumsByName:    make(map[protoreflect.FullName]*Enum),
+		messagesByName: make(map[protoreflect.FullName]*Message),
 		opts:           opts,
 	}
 
@@ -386,11 +386,13 @@ type File struct {
 	GoDescriptorIdent GoIdent       // name of Go variable for the file descriptor
 	GoPackageName     GoPackageName // name of this file's Go package
 	GoImportPath      GoImportPath  // import path of this file's Go package
-	Messages          []*Message    // top-level message declarations
-	Enums             []*Enum       // top-level enum declarations
-	Extensions        []*Extension  // top-level extension declarations
-	Services          []*Service    // top-level service declarations
-	Generate          bool          // true if we should generate code for this file
+
+	Enums      []*Enum      // top-level enum declarations
+	Messages   []*Message   // top-level message declarations
+	Extensions []*Extension // top-level extension declarations
+	Services   []*Service   // top-level service declarations
+
+	Generate bool // true if we should generate code for this file
 
 	// GeneratedFilenamePrefix is used to construct filenames for generated
 	// files associated with this source file.
@@ -453,31 +455,31 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 			Trailing:        Comments(loc.GetTrailingComments()),
 		}
 	}
-	for i, mdescs := 0, desc.Messages(); i < mdescs.Len(); i++ {
-		f.Messages = append(f.Messages, newMessage(gen, f, nil, mdescs.Get(i)))
+	for i, eds := 0, desc.Enums(); i < eds.Len(); i++ {
+		f.Enums = append(f.Enums, newEnum(gen, f, nil, eds.Get(i)))
 	}
-	for i, edescs := 0, desc.Enums(); i < edescs.Len(); i++ {
-		f.Enums = append(f.Enums, newEnum(gen, f, nil, edescs.Get(i)))
+	for i, mds := 0, desc.Messages(); i < mds.Len(); i++ {
+		f.Messages = append(f.Messages, newMessage(gen, f, nil, mds.Get(i)))
 	}
-	for i, extdescs := 0, desc.Extensions(); i < extdescs.Len(); i++ {
-		f.Extensions = append(f.Extensions, newField(gen, f, nil, extdescs.Get(i)))
+	for i, xds := 0, desc.Extensions(); i < xds.Len(); i++ {
+		f.Extensions = append(f.Extensions, newField(gen, f, nil, xds.Get(i)))
 	}
-	for i, sdescs := 0, desc.Services(); i < sdescs.Len(); i++ {
-		f.Services = append(f.Services, newService(gen, f, sdescs.Get(i)))
+	for i, sds := 0, desc.Services(); i < sds.Len(); i++ {
+		f.Services = append(f.Services, newService(gen, f, sds.Get(i)))
 	}
 	for _, message := range f.Messages {
-		if err := message.init(gen); err != nil {
+		if err := message.resolveDependencies(gen); err != nil {
 			return nil, err
 		}
 	}
 	for _, extension := range f.Extensions {
-		if err := extension.init(gen); err != nil {
+		if err := extension.resolveDependencies(gen); err != nil {
 			return nil, err
 		}
 	}
 	for _, service := range f.Services {
 		for _, method := range service.Methods {
-			if err := method.init(gen); err != nil {
+			if err := method.resolveDependencies(gen); err != nil {
 				return nil, err
 			}
 		}
@@ -512,18 +514,82 @@ func goPackageOption(d *descriptorpb.FileDescriptorProto) (pkg GoPackageName, im
 	return cleanPackageName(opt), ""
 }
 
+// An Enum describes an enum.
+type Enum struct {
+	Desc protoreflect.EnumDescriptor
+
+	GoIdent GoIdent // name of the generated Go type
+
+	Values []*EnumValue // enum value declarations
+
+	Location Location   // location of this enum
+	Comments CommentSet // comments associated with this enum
+}
+
+func newEnum(gen *Plugin, f *File, parent *Message, desc protoreflect.EnumDescriptor) *Enum {
+	var loc Location
+	if parent != nil {
+		loc = parent.Location.appendPath(fieldnum.DescriptorProto_EnumType, int32(desc.Index()))
+	} else {
+		loc = f.location(fieldnum.FileDescriptorProto_EnumType, int32(desc.Index()))
+	}
+	enum := &Enum{
+		Desc:     desc,
+		GoIdent:  newGoIdent(f, desc),
+		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
+	}
+	gen.enumsByName[desc.FullName()] = enum
+	for i, vds := 0, enum.Desc.Values(); i < vds.Len(); i++ {
+		enum.Values = append(enum.Values, newEnumValue(gen, f, parent, enum, vds.Get(i)))
+	}
+	return enum
+}
+
+// An EnumValue describes an enum value.
+type EnumValue struct {
+	Desc protoreflect.EnumValueDescriptor
+
+	GoIdent GoIdent // name of the generated Go declaration
+
+	Location Location   // location of this enum value
+	Comments CommentSet // comments associated with this enum value
+}
+
+func newEnumValue(gen *Plugin, f *File, message *Message, enum *Enum, desc protoreflect.EnumValueDescriptor) *EnumValue {
+	// A top-level enum value's name is: EnumName_ValueName
+	// An enum value contained in a message is: MessageName_ValueName
+	//
+	// Enum value names are not camelcased.
+	parentIdent := enum.GoIdent
+	if message != nil {
+		parentIdent = message.GoIdent
+	}
+	name := parentIdent.GoName + "_" + string(desc.Name())
+	loc := enum.Location.appendPath(fieldnum.EnumDescriptorProto_Value, int32(desc.Index()))
+	return &EnumValue{
+		Desc:     desc,
+		GoIdent:  f.GoImportPath.Ident(name),
+		Location: loc,
+		Comments: f.comments[newPathKey(loc.Path)],
+	}
+}
+
 // A Message describes a message.
 type Message struct {
 	Desc protoreflect.MessageDescriptor
 
-	GoIdent    GoIdent      // name of the generated Go type
-	Fields     []*Field     // message field declarations
-	Oneofs     []*Oneof     // oneof declarations
-	Messages   []*Message   // nested message declarations
+	GoIdent GoIdent // name of the generated Go type
+
+	Fields []*Field // message field declarations
+	Oneofs []*Oneof // message oneof declarations
+
 	Enums      []*Enum      // nested enum declarations
+	Messages   []*Message   // nested message declarations
 	Extensions []*Extension // nested extension declarations
-	Location   Location     // location of this message
-	Comments   CommentSet   // comments associated with this message
+
+	Location Location   // location of this message
+	Comments CommentSet // comments associated with this message
 }
 
 func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.MessageDescriptor) *Message {
@@ -540,20 +606,29 @@ func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.Message
 		Comments: f.comments[newPathKey(loc.Path)],
 	}
 	gen.messagesByName[desc.FullName()] = message
-	for i, mdescs := 0, desc.Messages(); i < mdescs.Len(); i++ {
-		message.Messages = append(message.Messages, newMessage(gen, f, message, mdescs.Get(i)))
+	for i, eds := 0, desc.Enums(); i < eds.Len(); i++ {
+		message.Enums = append(message.Enums, newEnum(gen, f, message, eds.Get(i)))
 	}
-	for i, edescs := 0, desc.Enums(); i < edescs.Len(); i++ {
-		message.Enums = append(message.Enums, newEnum(gen, f, message, edescs.Get(i)))
+	for i, mds := 0, desc.Messages(); i < mds.Len(); i++ {
+		message.Messages = append(message.Messages, newMessage(gen, f, message, mds.Get(i)))
 	}
-	for i, odescs := 0, desc.Oneofs(); i < odescs.Len(); i++ {
-		message.Oneofs = append(message.Oneofs, newOneof(gen, f, message, odescs.Get(i)))
+	for i, fds := 0, desc.Fields(); i < fds.Len(); i++ {
+		message.Fields = append(message.Fields, newField(gen, f, message, fds.Get(i)))
 	}
-	for i, fdescs := 0, desc.Fields(); i < fdescs.Len(); i++ {
-		message.Fields = append(message.Fields, newField(gen, f, message, fdescs.Get(i)))
+	for i, ods := 0, desc.Oneofs(); i < ods.Len(); i++ {
+		message.Oneofs = append(message.Oneofs, newOneof(gen, f, message, ods.Get(i)))
 	}
-	for i, extdescs := 0, desc.Extensions(); i < extdescs.Len(); i++ {
-		message.Extensions = append(message.Extensions, newField(gen, f, message, extdescs.Get(i)))
+	for i, xds := 0, desc.Extensions(); i < xds.Len(); i++ {
+		message.Extensions = append(message.Extensions, newField(gen, f, message, xds.Get(i)))
+	}
+
+	// Resolve local references between fields and oneofs.
+	for _, field := range message.Fields {
+		if od := field.Desc.ContainingOneof(); od != nil {
+			oneof := message.Oneofs[od.Index()]
+			field.Oneof = oneof
+			oneof.Fields = append(oneof.Fields, field)
+		}
 	}
 
 	// Field name conflict resolution.
@@ -605,22 +680,19 @@ func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.Message
 	return message
 }
 
-func (message *Message) init(gen *Plugin) error {
-	for _, child := range message.Messages {
-		if err := child.init(gen); err != nil {
-			return err
-		}
-	}
+func (message *Message) resolveDependencies(gen *Plugin) error {
 	for _, field := range message.Fields {
-		if err := field.init(gen); err != nil {
+		if err := field.resolveDependencies(gen); err != nil {
 			return err
 		}
 	}
-	for _, oneof := range message.Oneofs {
-		oneof.init(gen, message)
+	for _, message := range message.Messages {
+		if err := message.resolveDependencies(gen); err != nil {
+			return err
+		}
 	}
 	for _, extension := range message.Extensions {
-		if err := extension.init(gen); err != nil {
+		if err := extension.resolveDependencies(gen); err != nil {
 			return err
 		}
 	}
@@ -636,11 +708,13 @@ type Field struct {
 	// '{{GoName}}' and a getter method named 'Get{{GoName}}'.
 	GoName string
 
-	Parent   *Message   // message in which this field is defined; nil if top-level extension
-	Oneof    *Oneof     // containing oneof; nil if not part of a oneof
-	Extendee *Message   // extended message for extension fields; nil otherwise
-	Enum     *Enum      // type for enum fields; nil otherwise
-	Message  *Message   // type for message or group fields; nil otherwise
+	Parent   *Message // message in which this field is declared; nil if top-level extension
+	Oneof    *Oneof   // containing oneof; nil if not part of a oneof
+	Extendee *Message // extended message for extension fields; nil otherwise
+
+	Enum    *Enum    // type for enum fields; nil otherwise
+	Message *Message // type for message or group fields; nil otherwise
+
 	Location Location   // location of this field
 	Comments CommentSet // comments associated with this field
 }
@@ -662,50 +736,46 @@ func newField(gen *Plugin, f *File, message *Message, desc protoreflect.FieldDes
 		Location: loc,
 		Comments: f.comments[newPathKey(loc.Path)],
 	}
-	if desc.ContainingOneof() != nil {
-		field.Oneof = message.Oneofs[desc.ContainingOneof().Index()]
-	}
 	return field
 }
 
-// Extension is an alias of Field for documentation.
-type Extension = Field
-
-func (field *Field) init(gen *Plugin) error {
+func (field *Field) resolveDependencies(gen *Plugin) error {
 	desc := field.Desc
 	switch desc.Kind() {
-	case protoreflect.MessageKind, protoreflect.GroupKind:
-		mname := desc.Message().FullName()
-		message, ok := gen.messagesByName[mname]
-		if !ok {
-			return fmt.Errorf("field %v: no descriptor for type %v", desc.FullName(), mname)
-		}
-		field.Message = message
 	case protoreflect.EnumKind:
-		ename := field.Desc.Enum().FullName()
-		enum, ok := gen.enumsByName[ename]
+		name := field.Desc.Enum().FullName()
+		enum, ok := gen.enumsByName[name]
 		if !ok {
-			return fmt.Errorf("field %v: no descriptor for enum %v", desc.FullName(), ename)
+			return fmt.Errorf("field %v: no descriptor for enum %v", desc.FullName(), name)
 		}
 		field.Enum = enum
+	case protoreflect.MessageKind, protoreflect.GroupKind:
+		name := desc.Message().FullName()
+		message, ok := gen.messagesByName[name]
+		if !ok {
+			return fmt.Errorf("field %v: no descriptor for type %v", desc.FullName(), name)
+		}
+		field.Message = message
 	}
 	if desc.IsExtension() {
-		mname := desc.ContainingMessage().FullName()
-		message, ok := gen.messagesByName[mname]
+		name := desc.ContainingMessage().FullName()
+		message, ok := gen.messagesByName[name]
 		if !ok {
-			return fmt.Errorf("field %v: no descriptor for type %v", desc.FullName(), mname)
+			return fmt.Errorf("field %v: no descriptor for type %v", desc.FullName(), name)
 		}
 		field.Extendee = message
 	}
 	return nil
 }
 
-// A Oneof describes a oneof field.
+// A Oneof describes a message oneof.
 type Oneof struct {
 	Desc protoreflect.OneofDescriptor
 
-	GoName string   // Go field name of this oneof
-	Parent *Message // message in which this oneof occurs
+	GoName string // Go field name of this oneof
+
+	Parent *Message // message in which this oneof is declared
+
 	Fields []*Field // fields that are part of this oneof
 
 	Location Location   // location of this oneof
@@ -723,78 +793,16 @@ func newOneof(gen *Plugin, f *File, message *Message, desc protoreflect.OneofDes
 	}
 }
 
-func (oneof *Oneof) init(gen *Plugin, parent *Message) {
-	for i, fdescs := 0, oneof.Desc.Fields(); i < fdescs.Len(); i++ {
-		oneof.Fields = append(oneof.Fields, parent.Fields[fdescs.Get(i).Index()])
-	}
-}
-
-// An Enum describes an enum.
-type Enum struct {
-	Desc protoreflect.EnumDescriptor
-
-	GoIdent GoIdent      // name of the generated Go type
-	Values  []*EnumValue // enum values
-
-	Location Location   // location of this enum
-	Comments CommentSet // comments associated with this enum
-}
-
-func newEnum(gen *Plugin, f *File, parent *Message, desc protoreflect.EnumDescriptor) *Enum {
-	var loc Location
-	if parent != nil {
-		loc = parent.Location.appendPath(fieldnum.DescriptorProto_EnumType, int32(desc.Index()))
-	} else {
-		loc = f.location(fieldnum.FileDescriptorProto_EnumType, int32(desc.Index()))
-	}
-	enum := &Enum{
-		Desc:     desc,
-		GoIdent:  newGoIdent(f, desc),
-		Location: loc,
-		Comments: f.comments[newPathKey(loc.Path)],
-	}
-	gen.enumsByName[desc.FullName()] = enum
-	for i, evdescs := 0, enum.Desc.Values(); i < evdescs.Len(); i++ {
-		enum.Values = append(enum.Values, newEnumValue(gen, f, parent, enum, evdescs.Get(i)))
-	}
-	return enum
-}
-
-// An EnumValue describes an enum value.
-type EnumValue struct {
-	Desc protoreflect.EnumValueDescriptor
-
-	GoIdent GoIdent // name of the generated Go type
-
-	Location Location   // location of this enum value
-	Comments CommentSet // comments associated with this enum value
-}
-
-func newEnumValue(gen *Plugin, f *File, message *Message, enum *Enum, desc protoreflect.EnumValueDescriptor) *EnumValue {
-	// A top-level enum value's name is: EnumName_ValueName
-	// An enum value contained in a message is: MessageName_ValueName
-	//
-	// Enum value names are not camelcased.
-	parentIdent := enum.GoIdent
-	if message != nil {
-		parentIdent = message.GoIdent
-	}
-	name := parentIdent.GoName + "_" + string(desc.Name())
-	loc := enum.Location.appendPath(fieldnum.EnumDescriptorProto_Value, int32(desc.Index()))
-	return &EnumValue{
-		Desc:     desc,
-		GoIdent:  f.GoImportPath.Ident(name),
-		Location: loc,
-		Comments: f.comments[newPathKey(loc.Path)],
-	}
-}
+// Extension is an alias of Field for documentation.
+type Extension = Field
 
 // A Service describes a service.
 type Service struct {
 	Desc protoreflect.ServiceDescriptor
 
-	GoName  string
-	Methods []*Method // service method definitions
+	GoName string
+
+	Methods []*Method // service method declarations
 
 	Location Location   // location of this service
 	Comments CommentSet // comments associated with this service
@@ -808,8 +816,8 @@ func newService(gen *Plugin, f *File, desc protoreflect.ServiceDescriptor) *Serv
 		Location: loc,
 		Comments: f.comments[newPathKey(loc.Path)],
 	}
-	for i, mdescs := 0, desc.Methods(); i < mdescs.Len(); i++ {
-		service.Methods = append(service.Methods, newMethod(gen, f, service, mdescs.Get(i)))
+	for i, mds := 0, desc.Methods(); i < mds.Len(); i++ {
+		service.Methods = append(service.Methods, newMethod(gen, f, service, mds.Get(i)))
 	}
 	return service
 }
@@ -819,7 +827,9 @@ type Method struct {
 	Desc protoreflect.MethodDescriptor
 
 	GoName string
-	Parent *Service
+
+	Parent *Service // service in which this method is declared
+
 	Input  *Message
 	Output *Message
 
@@ -839,7 +849,7 @@ func newMethod(gen *Plugin, f *File, service *Service, desc protoreflect.MethodD
 	return method
 }
 
-func (method *Method) init(gen *Plugin) error {
+func (method *Method) resolveDependencies(gen *Plugin) error {
 	desc := method.Desc
 
 	inName := desc.Input().FullName()
