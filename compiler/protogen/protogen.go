@@ -546,6 +546,8 @@ type EnumValue struct {
 
 	GoIdent GoIdent // name of the generated Go declaration
 
+	Parent *Enum // enum in which this value is declared
+
 	Location Location   // location of this enum value
 	Comments CommentSet // comments associated with this enum value
 }
@@ -564,6 +566,7 @@ func newEnumValue(gen *Plugin, f *File, message *Message, enum *Enum, desc proto
 	return &EnumValue{
 		Desc:     desc,
 		GoIdent:  f.GoImportPath.Ident(name),
+		Parent:   enum,
 		Location: loc,
 		Comments: f.comments[newPathKey(loc.Path)],
 	}
