@@ -153,7 +153,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	// package run in the correct order: Call the init funcs for every .proto file
 	// imported by this one that is in the same Go package.
 	for i, imps := 0, f.Desc.Imports(); i < imps.Len(); i++ {
-		impFile, _ := gen.FileByName(imps.Get(i).Path())
+		impFile := gen.FilesByPath[imps.Get(i).Path()]
 		if impFile.GoImportPath != f.GoImportPath {
 			continue
 		}

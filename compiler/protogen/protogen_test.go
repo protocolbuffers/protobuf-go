@@ -186,7 +186,7 @@ TEST: %v
 			t.Errorf("%vNew(req) = %v", context, err)
 			continue
 		}
-		gotFile, ok := gen.FileByName(filename)
+		gotFile, ok := gen.FilesByPath[filename]
 		if !ok {
 			t.Errorf("%v%v: missing file info", context, filename)
 			continue
@@ -223,7 +223,7 @@ func TestPackageNameInference(t *testing.T) {
 	if err != nil {
 		t.Fatalf("New(req) = %v", err)
 	}
-	if f1, ok := gen.FileByName("dir/file1.proto"); !ok {
+	if f1, ok := gen.FilesByPath["dir/file1.proto"]; !ok {
 		t.Errorf("missing file info for dir/file1.proto")
 	} else if f1.GoPackageName != "foo" {
 		t.Errorf("dir/file1.proto: GoPackageName=%v, want foo; package name should be derived from dir/file2.proto", f1.GoPackageName)

@@ -100,7 +100,7 @@ type Plugin struct {
 	// Files appear in topological order, so each file appears before any
 	// file that imports it.
 	Files       []*File
-	filesByName map[string]*File
+	FilesByPath map[string]*File
 
 	fileReg        *protoregistry.Files
 	enumsByName    map[protoreflect.FullName]*Enum
@@ -154,7 +154,7 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 	}
 	gen := &Plugin{
 		Request:        req,
-		filesByName:    make(map[string]*File),
+		FilesByPath:    make(map[string]*File),
 		fileReg:        protoregistry.NewFiles(),
 		enumsByName:    make(map[protoreflect.FullName]*Enum),
 		messagesByName: make(map[protoreflect.FullName]*Message),
@@ -307,7 +307,7 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 
 	for _, fdesc := range gen.Request.ProtoFile {
 		filename := fdesc.GetName()
-		if gen.filesByName[filename] != nil {
+		if gen.FilesByPath[filename] != nil {
 			return nil, fmt.Errorf("duplicate file name: %q", filename)
 		}
 		f, err := newFile(gen, fdesc, packageNames[filename], importPaths[filename])
@@ -315,10 +315,10 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 			return nil, err
 		}
 		gen.Files = append(gen.Files, f)
-		gen.filesByName[filename] = f
+		gen.FilesByPath[filename] = f
 	}
 	for _, filename := range gen.Request.FileToGenerate {
-		f, ok := gen.FileByName(filename)
+		f, ok := gen.FilesByPath[filename]
 		if !ok {
 			return nil, fmt.Errorf("no descriptor for generated file: %v", filename)
 		}
@@ -370,12 +370,6 @@ func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 		}
 	}
 	return resp
-}
-
-// FileByName returns the file with the given name.
-func (gen *Plugin) FileByName(name string) (f *File, ok bool) {
-	f, ok = gen.filesByName[name]
-	return f, ok
 }
 
 // A File describes a .proto source file.

@@ -234,7 +234,7 @@ func genGeneratedHeader(gen *protogen.Plugin, g *protogen.GeneratedFile, f *file
 }
 
 func genImport(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, imp protoreflect.FileImport) {
-	impFile, ok := gen.FileByName(imp.Path())
+	impFile, ok := gen.FilesByPath[imp.Path()]
 	if !ok {
 		return
 	}
