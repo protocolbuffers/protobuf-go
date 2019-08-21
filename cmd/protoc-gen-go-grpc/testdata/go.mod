@@ -1,5 +1,7 @@
 module google.golang.org/protobuf/cmd/protoc-gen-go-grpc/testdata
 
+go 1.9
+
 require (
 	github.com/golang/protobuf v1.2.1-0.20190820213554-ae1d65bc5435
 	google.golang.org/grpc v1.19.0

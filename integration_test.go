@@ -34,7 +34,7 @@ var (
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
 	protobufVersion = "3.9.1"
-	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.9"}
+	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.9", "1.13rc1"}
 	golangLatest    = golangVersions[len(golangVersions)-1]
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
