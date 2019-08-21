@@ -192,7 +192,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 				g.P(typesVar, "[", idx, "].OneofWrappers = []interface{} {")
 				for _, oneof := range message.Oneofs {
 					for _, field := range oneof.Fields {
-						g.P("(*", fieldOneofType(field), ")(nil),")
+						g.P("(*", field.GoIdent, ")(nil),")
 					}
 				}
 				g.P("}")

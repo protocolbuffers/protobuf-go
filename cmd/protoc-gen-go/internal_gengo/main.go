@@ -402,19 +402,6 @@ func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum 
 	}
 }
 
-// enumLegacyName returns the name used by the v1 proto package.
-//
-// Confusingly, this is <proto_package>.<go_ident>. This probably should have
-// been the full name of the proto enum type instead, but changing it at this
-// point would require thought.
-func enumLegacyName(enum *protogen.Enum) string {
-	fdesc := enum.Desc.ParentFile()
-	if fdesc.Package() == "" {
-		return enum.GoIdent.GoName
-	}
-	return string(fdesc.Package()) + "." + enum.GoIdent.GoName
-}
-
 func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
 	if message.Desc.IsMapEntry() {
 		return
@@ -501,7 +488,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, message *protogen.M
 		}
 		ss := []string{fmt.Sprintf(" Types that are assignable to %s:\n", oneof.GoName)}
 		for _, field := range oneof.Fields {
-			ss = append(ss, "\t*"+fieldOneofType(field).GoName+"\n")
+			ss = append(ss, "\t*"+field.GoIdent.GoName+"\n")
 		}
 		leadingComments += protogen.Comments(strings.Join(ss, ""))
 		g.P(leadingComments,
@@ -691,7 +678,7 @@ func genMessageGetterMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f 
 			g.P("}")
 		case field.Oneof != nil:
 			g.P(leadingComments, "func (x *", message.GoIdent, ") Get", field.GoName, "() ", goType, " {")
-			g.P("if x, ok := x.Get", field.Oneof.GoName, "().(*", fieldOneofType(field), "); ok {")
+			g.P("if x, ok := x.Get", field.Oneof.GoName, "().(*", field.GoIdent, "); ok {")
 			g.P("return x.", field.GoName)
 			g.P("}")
 			g.P("return ", defaultValue)
@@ -793,7 +780,14 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 func fieldProtobufTagValue(field *protogen.Field) string {
 	var enumName string
 	if field.Desc.Kind() == protoreflect.EnumKind {
-		enumName = enumLegacyName(field.Enum)
+		// For historical reasons, the name used in the tag is neither
+		// the protobuf full name nor the fully qualified Go identifier,
+		// but an odd mix of both.
+		enumName = field.Enum.GoIdent.GoName
+		protoPkg := string(field.Enum.Desc.ParentFile().Package())
+		if protoPkg != "" {
+			enumName = protoPkg + "." + enumName
+		}
 	}
 	return tag.Marshal(field.Desc, enumName)
 }
@@ -891,22 +885,12 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 			leadingComments = appendDeprecationSuffix(leadingComments,
 				extension.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
 			g.P(leadingComments,
-				extensionVar(f.File, extension), " = &", extensionTypesVarName(f), "[", allExtensionsByPtr[extension], "]",
+				"E_", extension.GoIdent, " = &", extensionTypesVarName(f), "[", allExtensionsByPtr[extension], "]",
 				trailingComment(extension.Comments.Trailing))
 		}
 		g.P(")")
 		g.P()
 	}
-}
-
-// extensionVar returns the var holding the ExtensionDesc for an extension.
-func extensionVar(f *protogen.File, extension *protogen.Extension) protogen.GoIdent {
-	name := "E_"
-	if extension.Parent != nil {
-		name += extension.Parent.GoIdent.GoName + "_"
-	}
-	name += extension.GoName
-	return f.GoImportPath.Ident(name)
 }
 
 // genOneofWrapperTypes generates the oneof wrapper types and
@@ -919,10 +903,9 @@ func genOneofWrapperTypes(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fi
 		g.P("}")
 		g.P()
 		for _, field := range oneof.Fields {
-			name := fieldOneofType(field)
-			g.Annotate(name.GoName, field.Location)
-			g.Annotate(name.GoName+"."+field.GoName, field.Location)
-			g.P("type ", name, " struct {")
+			g.Annotate(field.GoIdent.GoName, field.Location)
+			g.Annotate(field.GoIdent.GoName+"."+field.GoName, field.Location)
+			g.P("type ", field.GoIdent, " struct {")
 			goType, _ := fieldGoType(g, f, field)
 			tags := structTags{
 				{"protobuf", fieldProtobufTagValue(field)},
@@ -936,7 +919,7 @@ func genOneofWrapperTypes(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fi
 			g.P()
 		}
 		for _, field := range oneof.Fields {
-			g.P("func (*", fieldOneofType(field), ") ", ifName, "() {}")
+			g.P("func (*", field.GoIdent, ") ", ifName, "() {}")
 			g.P()
 		}
 	}
@@ -945,39 +928,7 @@ func genOneofWrapperTypes(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fi
 // oneofInterfaceName returns the name of the interface type implemented by
 // the oneof field value types.
 func oneofInterfaceName(oneof *protogen.Oneof) string {
-	return fmt.Sprintf("is%s_%s", oneof.Parent.GoIdent.GoName, oneof.GoName)
-}
-
-// fieldOneofType returns the wrapper type used to represent a field in a oneof.
-func fieldOneofType(field *protogen.Field) protogen.GoIdent {
-	ident := protogen.GoIdent{
-		GoImportPath: field.Parent.GoIdent.GoImportPath,
-		GoName:       field.Parent.GoIdent.GoName + "_" + field.GoName,
-	}
-	// Check for collisions with nested messages or enums.
-	//
-	// This conflict resolution is incomplete: Among other things, it
-	// does not consider collisions with other oneof field types.
-	//
-	// TODO: Consider dropping this entirely. Detecting conflicts and
-	// producing an error is almost certainly better than permuting
-	// field and type names in mostly unpredictable ways.
-Loop:
-	for {
-		for _, message := range field.Parent.Messages {
-			if message.GoIdent == ident {
-				ident.GoName += "_"
-				continue Loop
-			}
-		}
-		for _, enum := range field.Parent.Enums {
-			if enum.GoIdent == ident {
-				ident.GoName += "_"
-				continue Loop
-			}
-		}
-		return ident
-	}
+	return "is" + oneof.GoIdent.GoName
 }
 
 var jsonIgnoreTags = structTags{{"json", "-"}}
