@@ -90,13 +90,12 @@ func (ms *mapReflect) Clear(k pref.MapKey) {
 	ms.v.SetMapIndex(rk, reflect.Value{})
 }
 func (ms *mapReflect) Range(f func(pref.MapKey, pref.Value) bool) {
-	for _, k := range ms.v.MapKeys() {
-		if v := ms.v.MapIndex(k); v.IsValid() {
-			pk := ms.keyConv.PBValueOf(k).MapKey()
-			pv := ms.valConv.PBValueOf(v)
-			if !f(pk, pv) {
-				return
-			}
+	iter := mapRange(ms.v)
+	for iter.Next() {
+		k := ms.keyConv.PBValueOf(iter.Key()).MapKey()
+		v := ms.valConv.PBValueOf(iter.Value())
+		if !f(k, v) {
+			return
 		}
 	}
 }

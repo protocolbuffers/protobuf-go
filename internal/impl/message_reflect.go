@@ -119,7 +119,7 @@ func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 	if m != nil {
 		for _, x := range *m {
 			xt := x.GetType()
-			if !f(xt.TypeDescriptor(), xt.ValueOf(x.GetValue())) {
+			if !f(xt.TypeDescriptor(), x.Value()) {
 				return
 			}
 		}
@@ -138,18 +138,20 @@ func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
 	xd := xt.TypeDescriptor()
 	if m != nil {
 		if x, ok := (*m)[int32(xd.Number())]; ok {
-			return xt.ValueOf(x.GetValue())
+			return x.Value()
 		}
 	}
 	return xt.Zero()
 }
 func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
+	if !xt.IsValidValue(v) {
+		panic(fmt.Errorf("%v: assigning invalid value", xt.TypeDescriptor().FullName()))
+	}
 	if *m == nil {
 		*m = make(map[int32]ExtensionField)
 	}
 	var x ExtensionField
-	x.SetType(xt)
-	x.SetEagerValue(xt.InterfaceOf(v))
+	x.Set(xt, v)
 	(*m)[int32(xt.TypeDescriptor().Number())] = x
 }
 func (m *extensionMap) Mutable(xt pref.ExtensionType) pref.Value {
@@ -158,7 +160,7 @@ func (m *extensionMap) Mutable(xt pref.ExtensionType) pref.Value {
 		panic("invalid Mutable on field with non-composite type")
 	}
 	if x, ok := (*m)[int32(xd.Number())]; ok {
-		return xt.ValueOf(x.GetValue())
+		return x.Value()
 	}
 	v := xt.New()
 	m.Set(xt, v)

@@ -87,15 +87,52 @@ var coderEnumPtr = pointerCoderFuncs{
 }
 
 func sizeEnumSlice(p pointer, tagsize int, opts marshalOptions) (size int) {
-	return sizeEnumSliceReflect(p.v.Elem(), tagsize, opts)
+	s := p.v.Elem()
+	for i, llen := 0, s.Len(); i < llen; i++ {
+		size += wire.SizeVarint(uint64(s.Index(i).Int())) + tagsize
+	}
+	return size
 }
 
 func appendEnumSlice(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	return appendEnumSliceReflect(b, p.v.Elem(), wiretag, opts)
+	s := p.v.Elem()
+	for i, llen := 0, s.Len(); i < llen; i++ {
+		b = wire.AppendVarint(b, wiretag)
+		b = wire.AppendVarint(b, uint64(s.Index(i).Int()))
+	}
+	return b, nil
 }
 
 func consumeEnumSlice(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (n int, err error) {
-	return consumeEnumSliceReflect(b, p.v, wtyp, opts)
+	s := p.v.Elem()
+	if wtyp == wire.BytesType {
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return 0, wire.ParseError(n)
+			}
+			rv := reflect.New(s.Type().Elem()).Elem()
+			rv.SetInt(int64(v))
+			s.Set(reflect.Append(s, rv))
+			b = b[n:]
+		}
+		return n, nil
+	}
+	if wtyp != wire.VarintType {
+		return 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return 0, wire.ParseError(n)
+	}
+	rv := reflect.New(s.Type().Elem()).Elem()
+	rv.SetInt(int64(v))
+	s.Set(reflect.Append(s, rv))
+	return n, nil
 }
 
 var coderEnumSlice = pointerCoderFuncs{
@@ -105,11 +142,34 @@ var coderEnumSlice = pointerCoderFuncs{
 }
 
 func sizeEnumPackedSlice(p pointer, tagsize int, opts marshalOptions) (size int) {
-	return sizeEnumPackedSliceReflect(p.v.Elem(), tagsize, opts)
+	s := p.v.Elem()
+	llen := s.Len()
+	if llen == 0 {
+		return 0
+	}
+	n := 0
+	for i := 0; i < llen; i++ {
+		n += wire.SizeVarint(uint64(s.Index(i).Int()))
+	}
+	return tagsize + wire.SizeBytes(n)
 }
 
 func appendEnumPackedSlice(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	return appendEnumPackedSliceReflect(b, p.v.Elem(), wiretag, opts)
+	s := p.v.Elem()
+	llen := s.Len()
+	if llen == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for i := 0; i < llen; i++ {
+		n += wire.SizeVarint(uint64(s.Index(i).Int()))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for i := 0; i < llen; i++ {
+		b = wire.AppendVarint(b, uint64(s.Index(i).Int()))
+	}
+	return b, nil
 }
 
 var coderEnumPackedSlice = pointerCoderFuncs{

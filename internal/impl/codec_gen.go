@@ -207,129 +207,252 @@ var coderBoolPackedSlice = pointerCoderFuncs{
 	unmarshal: consumeBoolSlice,
 }
 
-// sizeBoolIface returns the size of wire encoding a bool value as a Bool.
-func sizeBoolIface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.(bool)
-	return tagsize + wire.SizeVarint(wire.EncodeBool(v))
+// sizeBoolValue returns the size of wire encoding a bool value as a Bool.
+func sizeBoolValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeVarint(wire.EncodeBool(v.Bool()))
 }
 
-// appendBoolIface encodes a bool value as a Bool.
-func appendBoolIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(bool)
+// appendBoolValue encodes a bool value as a Bool.
+func appendBoolValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, wire.EncodeBool(v))
+	b = wire.AppendVarint(b, wire.EncodeBool(v.Bool()))
 	return b, nil
 }
 
-// consumeBoolIface decodes a bool value as a Bool.
-func consumeBoolIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeBoolValue decodes a bool value as a Bool.
+func consumeBoolValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return wire.DecodeBool(v), n, nil
+	return protoreflect.ValueOfBool(wire.DecodeBool(v)), n, nil
 }
 
-var coderBoolIface = ifaceCoderFuncs{
-	size:      sizeBoolIface,
-	marshal:   appendBoolIface,
-	unmarshal: consumeBoolIface,
+var coderBoolValue = valueCoderFuncs{
+	size:      sizeBoolValue,
+	marshal:   appendBoolValue,
+	unmarshal: consumeBoolValue,
 }
 
-// sizeBoolSliceIface returns the size of wire encoding a []bool value as a repeated Bool.
-func sizeBoolSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]bool)
-	for _, v := range s {
-		size += tagsize + wire.SizeVarint(wire.EncodeBool(v))
+// sizeBoolSliceValue returns the size of wire encoding a []bool value as a repeated Bool.
+func sizeBoolSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeVarint(wire.EncodeBool(v.Bool()))
 	}
 	return size
 }
 
-// appendBoolSliceIface encodes a []bool value as a repeated Bool.
-func appendBoolSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]bool)
-	for _, v := range s {
+// appendBoolSliceValue encodes a []bool value as a repeated Bool.
+func appendBoolSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, wire.EncodeBool(v))
+		b = wire.AppendVarint(b, wire.EncodeBool(v.Bool()))
 	}
 	return b, nil
 }
 
-// consumeBoolSliceIface wire decodes a []bool value as a repeated Bool.
-func consumeBoolSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]bool)
+// consumeBoolSliceValue wire decodes a []bool value as a repeated Bool.
+func consumeBoolSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeVarint(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, wire.DecodeBool(v))
+			list.Append(protoreflect.ValueOfBool(wire.DecodeBool(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, wire.DecodeBool(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfBool(wire.DecodeBool(v)))
+	return listv, n, nil
 }
 
-var coderBoolSliceIface = ifaceCoderFuncs{
-	size:      sizeBoolSliceIface,
-	marshal:   appendBoolSliceIface,
-	unmarshal: consumeBoolSliceIface,
+var coderBoolSliceValue = valueCoderFuncs{
+	size:      sizeBoolSliceValue,
+	marshal:   appendBoolSliceValue,
+	unmarshal: consumeBoolSliceValue,
 }
 
-// sizeBoolPackedSliceIface returns the size of wire encoding a []bool value as a packed repeated Bool.
-func sizeBoolPackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]bool)
-	if len(s) == 0 {
-		return 0
-	}
+// sizeBoolPackedSliceValue returns the size of wire encoding a []bool value as a packed repeated Bool.
+func sizeBoolPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeBool(v))
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(wire.EncodeBool(v.Bool()))
 	}
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendBoolPackedSliceIface encodes a []bool value as a packed repeated Bool.
-func appendBoolPackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]bool)
-	if len(s) == 0 {
+// appendBoolPackedSliceValue encodes a []bool value as a packed repeated Bool.
+func appendBoolPackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeBool(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(wire.EncodeBool(v.Bool()))
 	}
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendVarint(b, wire.EncodeBool(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, wire.EncodeBool(v.Bool()))
 	}
 	return b, nil
 }
 
-var coderBoolPackedSliceIface = ifaceCoderFuncs{
-	size:      sizeBoolPackedSliceIface,
-	marshal:   appendBoolPackedSliceIface,
-	unmarshal: consumeBoolSliceIface,
+var coderBoolPackedSliceValue = valueCoderFuncs{
+	size:      sizeBoolPackedSliceValue,
+	marshal:   appendBoolPackedSliceValue,
+	unmarshal: consumeBoolSliceValue,
+}
+
+// sizeEnumValue returns the size of wire encoding a  value as a Enum.
+func sizeEnumValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeVarint(uint64(v.Enum()))
+}
+
+// appendEnumValue encodes a  value as a Enum.
+func appendEnumValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	b = wire.AppendVarint(b, wiretag)
+	b = wire.AppendVarint(b, uint64(v.Enum()))
+	return b, nil
+}
+
+// consumeEnumValue decodes a  value as a Enum.
+func consumeEnumValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
+	if wtyp != wire.VarintType {
+		return protoreflect.Value{}, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return protoreflect.Value{}, 0, wire.ParseError(n)
+	}
+	return protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)), n, nil
+}
+
+var coderEnumValue = valueCoderFuncs{
+	size:      sizeEnumValue,
+	marshal:   appendEnumValue,
+	unmarshal: consumeEnumValue,
+}
+
+// sizeEnumSliceValue returns the size of wire encoding a [] value as a repeated Enum.
+func sizeEnumSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeVarint(uint64(v.Enum()))
+	}
+	return size
+}
+
+// appendEnumSliceValue encodes a [] value as a repeated Enum.
+func appendEnumSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, wiretag)
+		b = wire.AppendVarint(b, uint64(v.Enum()))
+	}
+	return b, nil
+}
+
+// consumeEnumSliceValue wire decodes a [] value as a repeated Enum.
+func consumeEnumSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
+	if wtyp == wire.BytesType {
+		b, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return protoreflect.Value{}, 0, wire.ParseError(n)
+		}
+		for len(b) > 0 {
+			v, n := wire.ConsumeVarint(b)
+			if n < 0 {
+				return protoreflect.Value{}, 0, wire.ParseError(n)
+			}
+			list.Append(protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)))
+			b = b[n:]
+		}
+		return listv, n, nil
+	}
+	if wtyp != wire.VarintType {
+		return protoreflect.Value{}, 0, errUnknown
+	}
+	v, n := wire.ConsumeVarint(b)
+	if n < 0 {
+		return protoreflect.Value{}, 0, wire.ParseError(n)
+	}
+	list.Append(protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)))
+	return listv, n, nil
+}
+
+var coderEnumSliceValue = valueCoderFuncs{
+	size:      sizeEnumSliceValue,
+	marshal:   appendEnumSliceValue,
+	unmarshal: consumeEnumSliceValue,
+}
+
+// sizeEnumPackedSliceValue returns the size of wire encoding a [] value as a packed repeated Enum.
+func sizeEnumPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	n := 0
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(uint64(v.Enum()))
+	}
+	return tagsize + wire.SizeBytes(n)
+}
+
+// appendEnumPackedSliceValue encodes a [] value as a packed repeated Enum.
+func appendEnumPackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return b, nil
+	}
+	b = wire.AppendVarint(b, wiretag)
+	n := 0
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(uint64(v.Enum()))
+	}
+	b = wire.AppendVarint(b, uint64(n))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, uint64(v.Enum()))
+	}
+	return b, nil
+}
+
+var coderEnumPackedSliceValue = valueCoderFuncs{
+	size:      sizeEnumPackedSliceValue,
+	marshal:   appendEnumPackedSliceValue,
+	unmarshal: consumeEnumSliceValue,
 }
 
 // sizeInt32 returns the size of wire encoding a int32 pointer as a Int32.
@@ -525,129 +648,128 @@ var coderInt32PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeInt32Slice,
 }
 
-// sizeInt32Iface returns the size of wire encoding a int32 value as a Int32.
-func sizeInt32Iface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.(int32)
-	return tagsize + wire.SizeVarint(uint64(v))
+// sizeInt32Value returns the size of wire encoding a int32 value as a Int32.
+func sizeInt32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeVarint(uint64(int32(v.Int())))
 }
 
-// appendInt32Iface encodes a int32 value as a Int32.
-func appendInt32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(int32)
+// appendInt32Value encodes a int32 value as a Int32.
+func appendInt32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = wire.AppendVarint(b, uint64(int32(v.Int())))
 	return b, nil
 }
 
-// consumeInt32Iface decodes a int32 value as a Int32.
-func consumeInt32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeInt32Value decodes a int32 value as a Int32.
+func consumeInt32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return int32(v), n, nil
+	return protoreflect.ValueOfInt32(int32(v)), n, nil
 }
 
-var coderInt32Iface = ifaceCoderFuncs{
-	size:      sizeInt32Iface,
-	marshal:   appendInt32Iface,
-	unmarshal: consumeInt32Iface,
+var coderInt32Value = valueCoderFuncs{
+	size:      sizeInt32Value,
+	marshal:   appendInt32Value,
+	unmarshal: consumeInt32Value,
 }
 
-// sizeInt32SliceIface returns the size of wire encoding a []int32 value as a repeated Int32.
-func sizeInt32SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int32)
-	for _, v := range s {
-		size += tagsize + wire.SizeVarint(uint64(v))
+// sizeInt32SliceValue returns the size of wire encoding a []int32 value as a repeated Int32.
+func sizeInt32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeVarint(uint64(int32(v.Int())))
 	}
 	return size
 }
 
-// appendInt32SliceIface encodes a []int32 value as a repeated Int32.
-func appendInt32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int32)
-	for _, v := range s {
+// appendInt32SliceValue encodes a []int32 value as a repeated Int32.
+func appendInt32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, uint64(v))
+		b = wire.AppendVarint(b, uint64(int32(v.Int())))
 	}
 	return b, nil
 }
 
-// consumeInt32SliceIface wire decodes a []int32 value as a repeated Int32.
-func consumeInt32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]int32)
+// consumeInt32SliceValue wire decodes a []int32 value as a repeated Int32.
+func consumeInt32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeVarint(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, int32(v))
+			list.Append(protoreflect.ValueOfInt32(int32(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, int32(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfInt32(int32(v)))
+	return listv, n, nil
 }
 
-var coderInt32SliceIface = ifaceCoderFuncs{
-	size:      sizeInt32SliceIface,
-	marshal:   appendInt32SliceIface,
-	unmarshal: consumeInt32SliceIface,
+var coderInt32SliceValue = valueCoderFuncs{
+	size:      sizeInt32SliceValue,
+	marshal:   appendInt32SliceValue,
+	unmarshal: consumeInt32SliceValue,
 }
 
-// sizeInt32PackedSliceIface returns the size of wire encoding a []int32 value as a packed repeated Int32.
-func sizeInt32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int32)
-	if len(s) == 0 {
-		return 0
-	}
+// sizeInt32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Int32.
+func sizeInt32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(uint64(int32(v.Int())))
 	}
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendInt32PackedSliceIface encodes a []int32 value as a packed repeated Int32.
-func appendInt32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int32)
-	if len(s) == 0 {
+// appendInt32PackedSliceValue encodes a []int32 value as a packed repeated Int32.
+func appendInt32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(uint64(int32(v.Int())))
 	}
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendVarint(b, uint64(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, uint64(int32(v.Int())))
 	}
 	return b, nil
 }
 
-var coderInt32PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeInt32PackedSliceIface,
-	marshal:   appendInt32PackedSliceIface,
-	unmarshal: consumeInt32SliceIface,
+var coderInt32PackedSliceValue = valueCoderFuncs{
+	size:      sizeInt32PackedSliceValue,
+	marshal:   appendInt32PackedSliceValue,
+	unmarshal: consumeInt32SliceValue,
 }
 
 // sizeSint32 returns the size of wire encoding a int32 pointer as a Sint32.
@@ -843,129 +965,128 @@ var coderSint32PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeSint32Slice,
 }
 
-// sizeSint32Iface returns the size of wire encoding a int32 value as a Sint32.
-func sizeSint32Iface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.(int32)
-	return tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+// sizeSint32Value returns the size of wire encoding a int32 value as a Sint32.
+func sizeSint32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
 }
 
-// appendSint32Iface encodes a int32 value as a Sint32.
-func appendSint32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(int32)
+// appendSint32Value encodes a int32 value as a Sint32.
+func appendSint32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+	b = wire.AppendVarint(b, wire.EncodeZigZag(int64(int32(v.Int()))))
 	return b, nil
 }
 
-// consumeSint32Iface decodes a int32 value as a Sint32.
-func consumeSint32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeSint32Value decodes a int32 value as a Sint32.
+func consumeSint32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return int32(wire.DecodeZigZag(v & math.MaxUint32)), n, nil
+	return protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))), n, nil
 }
 
-var coderSint32Iface = ifaceCoderFuncs{
-	size:      sizeSint32Iface,
-	marshal:   appendSint32Iface,
-	unmarshal: consumeSint32Iface,
+var coderSint32Value = valueCoderFuncs{
+	size:      sizeSint32Value,
+	marshal:   appendSint32Value,
+	unmarshal: consumeSint32Value,
 }
 
-// sizeSint32SliceIface returns the size of wire encoding a []int32 value as a repeated Sint32.
-func sizeSint32SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int32)
-	for _, v := range s {
-		size += tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+// sizeSint32SliceValue returns the size of wire encoding a []int32 value as a repeated Sint32.
+func sizeSint32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
 	}
 	return size
 }
 
-// appendSint32SliceIface encodes a []int32 value as a repeated Sint32.
-func appendSint32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int32)
-	for _, v := range s {
+// appendSint32SliceValue encodes a []int32 value as a repeated Sint32.
+func appendSint32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(int32(v.Int()))))
 	}
 	return b, nil
 }
 
-// consumeSint32SliceIface wire decodes a []int32 value as a repeated Sint32.
-func consumeSint32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]int32)
+// consumeSint32SliceValue wire decodes a []int32 value as a repeated Sint32.
+func consumeSint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeVarint(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, int32(wire.DecodeZigZag(v&math.MaxUint32)))
+			list.Append(protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, int32(wire.DecodeZigZag(v&math.MaxUint32)))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))))
+	return listv, n, nil
 }
 
-var coderSint32SliceIface = ifaceCoderFuncs{
-	size:      sizeSint32SliceIface,
-	marshal:   appendSint32SliceIface,
-	unmarshal: consumeSint32SliceIface,
+var coderSint32SliceValue = valueCoderFuncs{
+	size:      sizeSint32SliceValue,
+	marshal:   appendSint32SliceValue,
+	unmarshal: consumeSint32SliceValue,
 }
 
-// sizeSint32PackedSliceIface returns the size of wire encoding a []int32 value as a packed repeated Sint32.
-func sizeSint32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int32)
-	if len(s) == 0 {
-		return 0
-	}
+// sizeSint32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Sint32.
+func sizeSint32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
 	}
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendSint32PackedSliceIface encodes a []int32 value as a packed repeated Sint32.
-func appendSint32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int32)
-	if len(s) == 0 {
+// appendSint32PackedSliceValue encodes a []int32 value as a packed repeated Sint32.
+func appendSint32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
 	}
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(int32(v.Int()))))
 	}
 	return b, nil
 }
 
-var coderSint32PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeSint32PackedSliceIface,
-	marshal:   appendSint32PackedSliceIface,
-	unmarshal: consumeSint32SliceIface,
+var coderSint32PackedSliceValue = valueCoderFuncs{
+	size:      sizeSint32PackedSliceValue,
+	marshal:   appendSint32PackedSliceValue,
+	unmarshal: consumeSint32SliceValue,
 }
 
 // sizeUint32 returns the size of wire encoding a uint32 pointer as a Uint32.
@@ -1161,129 +1282,128 @@ var coderUint32PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeUint32Slice,
 }
 
-// sizeUint32Iface returns the size of wire encoding a uint32 value as a Uint32.
-func sizeUint32Iface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.(uint32)
-	return tagsize + wire.SizeVarint(uint64(v))
+// sizeUint32Value returns the size of wire encoding a uint32 value as a Uint32.
+func sizeUint32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeVarint(uint64(uint32(v.Uint())))
 }
 
-// appendUint32Iface encodes a uint32 value as a Uint32.
-func appendUint32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(uint32)
+// appendUint32Value encodes a uint32 value as a Uint32.
+func appendUint32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = wire.AppendVarint(b, uint64(uint32(v.Uint())))
 	return b, nil
 }
 
-// consumeUint32Iface decodes a uint32 value as a Uint32.
-func consumeUint32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeUint32Value decodes a uint32 value as a Uint32.
+func consumeUint32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return uint32(v), n, nil
+	return protoreflect.ValueOfUint32(uint32(v)), n, nil
 }
 
-var coderUint32Iface = ifaceCoderFuncs{
-	size:      sizeUint32Iface,
-	marshal:   appendUint32Iface,
-	unmarshal: consumeUint32Iface,
+var coderUint32Value = valueCoderFuncs{
+	size:      sizeUint32Value,
+	marshal:   appendUint32Value,
+	unmarshal: consumeUint32Value,
 }
 
-// sizeUint32SliceIface returns the size of wire encoding a []uint32 value as a repeated Uint32.
-func sizeUint32SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]uint32)
-	for _, v := range s {
-		size += tagsize + wire.SizeVarint(uint64(v))
+// sizeUint32SliceValue returns the size of wire encoding a []uint32 value as a repeated Uint32.
+func sizeUint32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeVarint(uint64(uint32(v.Uint())))
 	}
 	return size
 }
 
-// appendUint32SliceIface encodes a []uint32 value as a repeated Uint32.
-func appendUint32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]uint32)
-	for _, v := range s {
+// appendUint32SliceValue encodes a []uint32 value as a repeated Uint32.
+func appendUint32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, uint64(v))
+		b = wire.AppendVarint(b, uint64(uint32(v.Uint())))
 	}
 	return b, nil
 }
 
-// consumeUint32SliceIface wire decodes a []uint32 value as a repeated Uint32.
-func consumeUint32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]uint32)
+// consumeUint32SliceValue wire decodes a []uint32 value as a repeated Uint32.
+func consumeUint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeVarint(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, uint32(v))
+			list.Append(protoreflect.ValueOfUint32(uint32(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, uint32(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfUint32(uint32(v)))
+	return listv, n, nil
 }
 
-var coderUint32SliceIface = ifaceCoderFuncs{
-	size:      sizeUint32SliceIface,
-	marshal:   appendUint32SliceIface,
-	unmarshal: consumeUint32SliceIface,
+var coderUint32SliceValue = valueCoderFuncs{
+	size:      sizeUint32SliceValue,
+	marshal:   appendUint32SliceValue,
+	unmarshal: consumeUint32SliceValue,
 }
 
-// sizeUint32PackedSliceIface returns the size of wire encoding a []uint32 value as a packed repeated Uint32.
-func sizeUint32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]uint32)
-	if len(s) == 0 {
-		return 0
-	}
+// sizeUint32PackedSliceValue returns the size of wire encoding a []uint32 value as a packed repeated Uint32.
+func sizeUint32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(uint64(uint32(v.Uint())))
 	}
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendUint32PackedSliceIface encodes a []uint32 value as a packed repeated Uint32.
-func appendUint32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]uint32)
-	if len(s) == 0 {
+// appendUint32PackedSliceValue encodes a []uint32 value as a packed repeated Uint32.
+func appendUint32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(uint64(uint32(v.Uint())))
 	}
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendVarint(b, uint64(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, uint64(uint32(v.Uint())))
 	}
 	return b, nil
 }
 
-var coderUint32PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeUint32PackedSliceIface,
-	marshal:   appendUint32PackedSliceIface,
-	unmarshal: consumeUint32SliceIface,
+var coderUint32PackedSliceValue = valueCoderFuncs{
+	size:      sizeUint32PackedSliceValue,
+	marshal:   appendUint32PackedSliceValue,
+	unmarshal: consumeUint32SliceValue,
 }
 
 // sizeInt64 returns the size of wire encoding a int64 pointer as a Int64.
@@ -1479,129 +1599,128 @@ var coderInt64PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeInt64Slice,
 }
 
-// sizeInt64Iface returns the size of wire encoding a int64 value as a Int64.
-func sizeInt64Iface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.(int64)
-	return tagsize + wire.SizeVarint(uint64(v))
+// sizeInt64Value returns the size of wire encoding a int64 value as a Int64.
+func sizeInt64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeVarint(uint64(v.Int()))
 }
 
-// appendInt64Iface encodes a int64 value as a Int64.
-func appendInt64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(int64)
+// appendInt64Value encodes a int64 value as a Int64.
+func appendInt64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = wire.AppendVarint(b, uint64(v.Int()))
 	return b, nil
 }
 
-// consumeInt64Iface decodes a int64 value as a Int64.
-func consumeInt64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeInt64Value decodes a int64 value as a Int64.
+func consumeInt64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return int64(v), n, nil
+	return protoreflect.ValueOfInt64(int64(v)), n, nil
 }
 
-var coderInt64Iface = ifaceCoderFuncs{
-	size:      sizeInt64Iface,
-	marshal:   appendInt64Iface,
-	unmarshal: consumeInt64Iface,
+var coderInt64Value = valueCoderFuncs{
+	size:      sizeInt64Value,
+	marshal:   appendInt64Value,
+	unmarshal: consumeInt64Value,
 }
 
-// sizeInt64SliceIface returns the size of wire encoding a []int64 value as a repeated Int64.
-func sizeInt64SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int64)
-	for _, v := range s {
-		size += tagsize + wire.SizeVarint(uint64(v))
+// sizeInt64SliceValue returns the size of wire encoding a []int64 value as a repeated Int64.
+func sizeInt64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeVarint(uint64(v.Int()))
 	}
 	return size
 }
 
-// appendInt64SliceIface encodes a []int64 value as a repeated Int64.
-func appendInt64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int64)
-	for _, v := range s {
+// appendInt64SliceValue encodes a []int64 value as a repeated Int64.
+func appendInt64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, uint64(v))
+		b = wire.AppendVarint(b, uint64(v.Int()))
 	}
 	return b, nil
 }
 
-// consumeInt64SliceIface wire decodes a []int64 value as a repeated Int64.
-func consumeInt64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]int64)
+// consumeInt64SliceValue wire decodes a []int64 value as a repeated Int64.
+func consumeInt64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeVarint(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, int64(v))
+			list.Append(protoreflect.ValueOfInt64(int64(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, int64(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfInt64(int64(v)))
+	return listv, n, nil
 }
 
-var coderInt64SliceIface = ifaceCoderFuncs{
-	size:      sizeInt64SliceIface,
-	marshal:   appendInt64SliceIface,
-	unmarshal: consumeInt64SliceIface,
+var coderInt64SliceValue = valueCoderFuncs{
+	size:      sizeInt64SliceValue,
+	marshal:   appendInt64SliceValue,
+	unmarshal: consumeInt64SliceValue,
 }
 
-// sizeInt64PackedSliceIface returns the size of wire encoding a []int64 value as a packed repeated Int64.
-func sizeInt64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int64)
-	if len(s) == 0 {
-		return 0
-	}
+// sizeInt64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Int64.
+func sizeInt64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(uint64(v.Int()))
 	}
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendInt64PackedSliceIface encodes a []int64 value as a packed repeated Int64.
-func appendInt64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int64)
-	if len(s) == 0 {
+// appendInt64PackedSliceValue encodes a []int64 value as a packed repeated Int64.
+func appendInt64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(uint64(v.Int()))
 	}
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendVarint(b, uint64(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, uint64(v.Int()))
 	}
 	return b, nil
 }
 
-var coderInt64PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeInt64PackedSliceIface,
-	marshal:   appendInt64PackedSliceIface,
-	unmarshal: consumeInt64SliceIface,
+var coderInt64PackedSliceValue = valueCoderFuncs{
+	size:      sizeInt64PackedSliceValue,
+	marshal:   appendInt64PackedSliceValue,
+	unmarshal: consumeInt64SliceValue,
 }
 
 // sizeSint64 returns the size of wire encoding a int64 pointer as a Sint64.
@@ -1797,129 +1916,128 @@ var coderSint64PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeSint64Slice,
 }
 
-// sizeSint64Iface returns the size of wire encoding a int64 value as a Sint64.
-func sizeSint64Iface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.(int64)
-	return tagsize + wire.SizeVarint(wire.EncodeZigZag(v))
+// sizeSint64Value returns the size of wire encoding a int64 value as a Sint64.
+func sizeSint64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeVarint(wire.EncodeZigZag(v.Int()))
 }
 
-// appendSint64Iface encodes a int64 value as a Sint64.
-func appendSint64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(int64)
+// appendSint64Value encodes a int64 value as a Sint64.
+func appendSint64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+	b = wire.AppendVarint(b, wire.EncodeZigZag(v.Int()))
 	return b, nil
 }
 
-// consumeSint64Iface decodes a int64 value as a Sint64.
-func consumeSint64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeSint64Value decodes a int64 value as a Sint64.
+func consumeSint64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return wire.DecodeZigZag(v), n, nil
+	return protoreflect.ValueOfInt64(wire.DecodeZigZag(v)), n, nil
 }
 
-var coderSint64Iface = ifaceCoderFuncs{
-	size:      sizeSint64Iface,
-	marshal:   appendSint64Iface,
-	unmarshal: consumeSint64Iface,
+var coderSint64Value = valueCoderFuncs{
+	size:      sizeSint64Value,
+	marshal:   appendSint64Value,
+	unmarshal: consumeSint64Value,
 }
 
-// sizeSint64SliceIface returns the size of wire encoding a []int64 value as a repeated Sint64.
-func sizeSint64SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int64)
-	for _, v := range s {
-		size += tagsize + wire.SizeVarint(wire.EncodeZigZag(v))
+// sizeSint64SliceValue returns the size of wire encoding a []int64 value as a repeated Sint64.
+func sizeSint64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeVarint(wire.EncodeZigZag(v.Int()))
 	}
 	return size
 }
 
-// appendSint64SliceIface encodes a []int64 value as a repeated Sint64.
-func appendSint64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int64)
-	for _, v := range s {
+// appendSint64SliceValue encodes a []int64 value as a repeated Sint64.
+func appendSint64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+		b = wire.AppendVarint(b, wire.EncodeZigZag(v.Int()))
 	}
 	return b, nil
 }
 
-// consumeSint64SliceIface wire decodes a []int64 value as a repeated Sint64.
-func consumeSint64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]int64)
+// consumeSint64SliceValue wire decodes a []int64 value as a repeated Sint64.
+func consumeSint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeVarint(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, wire.DecodeZigZag(v))
+			list.Append(protoreflect.ValueOfInt64(wire.DecodeZigZag(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, wire.DecodeZigZag(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfInt64(wire.DecodeZigZag(v)))
+	return listv, n, nil
 }
 
-var coderSint64SliceIface = ifaceCoderFuncs{
-	size:      sizeSint64SliceIface,
-	marshal:   appendSint64SliceIface,
-	unmarshal: consumeSint64SliceIface,
+var coderSint64SliceValue = valueCoderFuncs{
+	size:      sizeSint64SliceValue,
+	marshal:   appendSint64SliceValue,
+	unmarshal: consumeSint64SliceValue,
 }
 
-// sizeSint64PackedSliceIface returns the size of wire encoding a []int64 value as a packed repeated Sint64.
-func sizeSint64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int64)
-	if len(s) == 0 {
-		return 0
-	}
+// sizeSint64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Sint64.
+func sizeSint64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeZigZag(v))
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(wire.EncodeZigZag(v.Int()))
 	}
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendSint64PackedSliceIface encodes a []int64 value as a packed repeated Sint64.
-func appendSint64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int64)
-	if len(s) == 0 {
+// appendSint64PackedSliceValue encodes a []int64 value as a packed repeated Sint64.
+func appendSint64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeZigZag(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(wire.EncodeZigZag(v.Int()))
 	}
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, wire.EncodeZigZag(v.Int()))
 	}
 	return b, nil
 }
 
-var coderSint64PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeSint64PackedSliceIface,
-	marshal:   appendSint64PackedSliceIface,
-	unmarshal: consumeSint64SliceIface,
+var coderSint64PackedSliceValue = valueCoderFuncs{
+	size:      sizeSint64PackedSliceValue,
+	marshal:   appendSint64PackedSliceValue,
+	unmarshal: consumeSint64SliceValue,
 }
 
 // sizeUint64 returns the size of wire encoding a uint64 pointer as a Uint64.
@@ -2115,129 +2233,128 @@ var coderUint64PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeUint64Slice,
 }
 
-// sizeUint64Iface returns the size of wire encoding a uint64 value as a Uint64.
-func sizeUint64Iface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.(uint64)
-	return tagsize + wire.SizeVarint(v)
+// sizeUint64Value returns the size of wire encoding a uint64 value as a Uint64.
+func sizeUint64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeVarint(v.Uint())
 }
 
-// appendUint64Iface encodes a uint64 value as a Uint64.
-func appendUint64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(uint64)
+// appendUint64Value encodes a uint64 value as a Uint64.
+func appendUint64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, v)
+	b = wire.AppendVarint(b, v.Uint())
 	return b, nil
 }
 
-// consumeUint64Iface decodes a uint64 value as a Uint64.
-func consumeUint64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeUint64Value decodes a uint64 value as a Uint64.
+func consumeUint64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return v, n, nil
+	return protoreflect.ValueOfUint64(v), n, nil
 }
 
-var coderUint64Iface = ifaceCoderFuncs{
-	size:      sizeUint64Iface,
-	marshal:   appendUint64Iface,
-	unmarshal: consumeUint64Iface,
+var coderUint64Value = valueCoderFuncs{
+	size:      sizeUint64Value,
+	marshal:   appendUint64Value,
+	unmarshal: consumeUint64Value,
 }
 
-// sizeUint64SliceIface returns the size of wire encoding a []uint64 value as a repeated Uint64.
-func sizeUint64SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]uint64)
-	for _, v := range s {
-		size += tagsize + wire.SizeVarint(v)
+// sizeUint64SliceValue returns the size of wire encoding a []uint64 value as a repeated Uint64.
+func sizeUint64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeVarint(v.Uint())
 	}
 	return size
 }
 
-// appendUint64SliceIface encodes a []uint64 value as a repeated Uint64.
-func appendUint64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]uint64)
-	for _, v := range s {
+// appendUint64SliceValue encodes a []uint64 value as a repeated Uint64.
+func appendUint64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, v)
+		b = wire.AppendVarint(b, v.Uint())
 	}
 	return b, nil
 }
 
-// consumeUint64SliceIface wire decodes a []uint64 value as a repeated Uint64.
-func consumeUint64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]uint64)
+// consumeUint64SliceValue wire decodes a []uint64 value as a repeated Uint64.
+func consumeUint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeVarint(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, v)
+			list.Append(protoreflect.ValueOfUint64(v))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, v)
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfUint64(v))
+	return listv, n, nil
 }
 
-var coderUint64SliceIface = ifaceCoderFuncs{
-	size:      sizeUint64SliceIface,
-	marshal:   appendUint64SliceIface,
-	unmarshal: consumeUint64SliceIface,
+var coderUint64SliceValue = valueCoderFuncs{
+	size:      sizeUint64SliceValue,
+	marshal:   appendUint64SliceValue,
+	unmarshal: consumeUint64SliceValue,
 }
 
-// sizeUint64PackedSliceIface returns the size of wire encoding a []uint64 value as a packed repeated Uint64.
-func sizeUint64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]uint64)
-	if len(s) == 0 {
-		return 0
-	}
+// sizeUint64PackedSliceValue returns the size of wire encoding a []uint64 value as a packed repeated Uint64.
+func sizeUint64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(v)
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(v.Uint())
 	}
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendUint64PackedSliceIface encodes a []uint64 value as a packed repeated Uint64.
-func appendUint64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]uint64)
-	if len(s) == 0 {
+// appendUint64PackedSliceValue encodes a []uint64 value as a packed repeated Uint64.
+func appendUint64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
 	n := 0
-	for _, v := range s {
-		n += wire.SizeVarint(v)
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += wire.SizeVarint(v.Uint())
 	}
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendVarint(b, v)
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendVarint(b, v.Uint())
 	}
 	return b, nil
 }
 
-var coderUint64PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeUint64PackedSliceIface,
-	marshal:   appendUint64PackedSliceIface,
-	unmarshal: consumeUint64SliceIface,
+var coderUint64PackedSliceValue = valueCoderFuncs{
+	size:      sizeUint64PackedSliceValue,
+	marshal:   appendUint64PackedSliceValue,
+	unmarshal: consumeUint64SliceValue,
 }
 
 // sizeSfixed32 returns the size of wire encoding a int32 pointer as a Sfixed32.
@@ -2424,120 +2541,117 @@ var coderSfixed32PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeSfixed32Slice,
 }
 
-// sizeSfixed32Iface returns the size of wire encoding a int32 value as a Sfixed32.
-func sizeSfixed32Iface(ival interface{}, tagsize int, _ marshalOptions) int {
+// sizeSfixed32Value returns the size of wire encoding a int32 value as a Sfixed32.
+func sizeSfixed32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendSfixed32Iface encodes a int32 value as a Sfixed32.
-func appendSfixed32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(int32)
+// appendSfixed32Value encodes a int32 value as a Sfixed32.
+func appendSfixed32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed32(b, uint32(v))
+	b = wire.AppendFixed32(b, uint32(v.Int()))
 	return b, nil
 }
 
-// consumeSfixed32Iface decodes a int32 value as a Sfixed32.
-func consumeSfixed32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeSfixed32Value decodes a int32 value as a Sfixed32.
+func consumeSfixed32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.Fixed32Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed32(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return int32(v), n, nil
+	return protoreflect.ValueOfInt32(int32(v)), n, nil
 }
 
-var coderSfixed32Iface = ifaceCoderFuncs{
-	size:      sizeSfixed32Iface,
-	marshal:   appendSfixed32Iface,
-	unmarshal: consumeSfixed32Iface,
+var coderSfixed32Value = valueCoderFuncs{
+	size:      sizeSfixed32Value,
+	marshal:   appendSfixed32Value,
+	unmarshal: consumeSfixed32Value,
 }
 
-// sizeSfixed32SliceIface returns the size of wire encoding a []int32 value as a repeated Sfixed32.
-func sizeSfixed32SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int32)
-	size = len(s) * (tagsize + wire.SizeFixed32())
+// sizeSfixed32SliceValue returns the size of wire encoding a []int32 value as a repeated Sfixed32.
+func sizeSfixed32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	size = list.Len() * (tagsize + wire.SizeFixed32())
 	return size
 }
 
-// appendSfixed32SliceIface encodes a []int32 value as a repeated Sfixed32.
-func appendSfixed32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int32)
-	for _, v := range s {
+// appendSfixed32SliceValue encodes a []int32 value as a repeated Sfixed32.
+func appendSfixed32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed32(b, uint32(v))
+		b = wire.AppendFixed32(b, uint32(v.Int()))
 	}
 	return b, nil
 }
 
-// consumeSfixed32SliceIface wire decodes a []int32 value as a repeated Sfixed32.
-func consumeSfixed32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]int32)
+// consumeSfixed32SliceValue wire decodes a []int32 value as a repeated Sfixed32.
+func consumeSfixed32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeFixed32(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, int32(v))
+			list.Append(protoreflect.ValueOfInt32(int32(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.Fixed32Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed32(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, int32(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfInt32(int32(v)))
+	return listv, n, nil
 }
 
-var coderSfixed32SliceIface = ifaceCoderFuncs{
-	size:      sizeSfixed32SliceIface,
-	marshal:   appendSfixed32SliceIface,
-	unmarshal: consumeSfixed32SliceIface,
+var coderSfixed32SliceValue = valueCoderFuncs{
+	size:      sizeSfixed32SliceValue,
+	marshal:   appendSfixed32SliceValue,
+	unmarshal: consumeSfixed32SliceValue,
 }
 
-// sizeSfixed32PackedSliceIface returns the size of wire encoding a []int32 value as a packed repeated Sfixed32.
-func sizeSfixed32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int32)
-	if len(s) == 0 {
-		return 0
-	}
-	n := len(s) * wire.SizeFixed32()
+// sizeSfixed32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Sfixed32.
+func sizeSfixed32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	n := list.Len() * wire.SizeFixed32()
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendSfixed32PackedSliceIface encodes a []int32 value as a packed repeated Sfixed32.
-func appendSfixed32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int32)
-	if len(s) == 0 {
+// appendSfixed32PackedSliceValue encodes a []int32 value as a packed repeated Sfixed32.
+func appendSfixed32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
-	n := len(s) * wire.SizeFixed32()
+	n := llen * wire.SizeFixed32()
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendFixed32(b, uint32(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendFixed32(b, uint32(v.Int()))
 	}
 	return b, nil
 }
 
-var coderSfixed32PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeSfixed32PackedSliceIface,
-	marshal:   appendSfixed32PackedSliceIface,
-	unmarshal: consumeSfixed32SliceIface,
+var coderSfixed32PackedSliceValue = valueCoderFuncs{
+	size:      sizeSfixed32PackedSliceValue,
+	marshal:   appendSfixed32PackedSliceValue,
+	unmarshal: consumeSfixed32SliceValue,
 }
 
 // sizeFixed32 returns the size of wire encoding a uint32 pointer as a Fixed32.
@@ -2724,120 +2838,117 @@ var coderFixed32PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeFixed32Slice,
 }
 
-// sizeFixed32Iface returns the size of wire encoding a uint32 value as a Fixed32.
-func sizeFixed32Iface(ival interface{}, tagsize int, _ marshalOptions) int {
+// sizeFixed32Value returns the size of wire encoding a uint32 value as a Fixed32.
+func sizeFixed32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendFixed32Iface encodes a uint32 value as a Fixed32.
-func appendFixed32Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(uint32)
+// appendFixed32Value encodes a uint32 value as a Fixed32.
+func appendFixed32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed32(b, v)
+	b = wire.AppendFixed32(b, uint32(v.Uint()))
 	return b, nil
 }
 
-// consumeFixed32Iface decodes a uint32 value as a Fixed32.
-func consumeFixed32Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeFixed32Value decodes a uint32 value as a Fixed32.
+func consumeFixed32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.Fixed32Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed32(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return v, n, nil
+	return protoreflect.ValueOfUint32(uint32(v)), n, nil
 }
 
-var coderFixed32Iface = ifaceCoderFuncs{
-	size:      sizeFixed32Iface,
-	marshal:   appendFixed32Iface,
-	unmarshal: consumeFixed32Iface,
+var coderFixed32Value = valueCoderFuncs{
+	size:      sizeFixed32Value,
+	marshal:   appendFixed32Value,
+	unmarshal: consumeFixed32Value,
 }
 
-// sizeFixed32SliceIface returns the size of wire encoding a []uint32 value as a repeated Fixed32.
-func sizeFixed32SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]uint32)
-	size = len(s) * (tagsize + wire.SizeFixed32())
+// sizeFixed32SliceValue returns the size of wire encoding a []uint32 value as a repeated Fixed32.
+func sizeFixed32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	size = list.Len() * (tagsize + wire.SizeFixed32())
 	return size
 }
 
-// appendFixed32SliceIface encodes a []uint32 value as a repeated Fixed32.
-func appendFixed32SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]uint32)
-	for _, v := range s {
+// appendFixed32SliceValue encodes a []uint32 value as a repeated Fixed32.
+func appendFixed32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed32(b, v)
+		b = wire.AppendFixed32(b, uint32(v.Uint()))
 	}
 	return b, nil
 }
 
-// consumeFixed32SliceIface wire decodes a []uint32 value as a repeated Fixed32.
-func consumeFixed32SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]uint32)
+// consumeFixed32SliceValue wire decodes a []uint32 value as a repeated Fixed32.
+func consumeFixed32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeFixed32(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, v)
+			list.Append(protoreflect.ValueOfUint32(uint32(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.Fixed32Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed32(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, v)
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfUint32(uint32(v)))
+	return listv, n, nil
 }
 
-var coderFixed32SliceIface = ifaceCoderFuncs{
-	size:      sizeFixed32SliceIface,
-	marshal:   appendFixed32SliceIface,
-	unmarshal: consumeFixed32SliceIface,
+var coderFixed32SliceValue = valueCoderFuncs{
+	size:      sizeFixed32SliceValue,
+	marshal:   appendFixed32SliceValue,
+	unmarshal: consumeFixed32SliceValue,
 }
 
-// sizeFixed32PackedSliceIface returns the size of wire encoding a []uint32 value as a packed repeated Fixed32.
-func sizeFixed32PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]uint32)
-	if len(s) == 0 {
-		return 0
-	}
-	n := len(s) * wire.SizeFixed32()
+// sizeFixed32PackedSliceValue returns the size of wire encoding a []uint32 value as a packed repeated Fixed32.
+func sizeFixed32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	n := list.Len() * wire.SizeFixed32()
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendFixed32PackedSliceIface encodes a []uint32 value as a packed repeated Fixed32.
-func appendFixed32PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]uint32)
-	if len(s) == 0 {
+// appendFixed32PackedSliceValue encodes a []uint32 value as a packed repeated Fixed32.
+func appendFixed32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
-	n := len(s) * wire.SizeFixed32()
+	n := llen * wire.SizeFixed32()
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendFixed32(b, v)
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendFixed32(b, uint32(v.Uint()))
 	}
 	return b, nil
 }
 
-var coderFixed32PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeFixed32PackedSliceIface,
-	marshal:   appendFixed32PackedSliceIface,
-	unmarshal: consumeFixed32SliceIface,
+var coderFixed32PackedSliceValue = valueCoderFuncs{
+	size:      sizeFixed32PackedSliceValue,
+	marshal:   appendFixed32PackedSliceValue,
+	unmarshal: consumeFixed32SliceValue,
 }
 
 // sizeFloat returns the size of wire encoding a float32 pointer as a Float.
@@ -3024,120 +3135,117 @@ var coderFloatPackedSlice = pointerCoderFuncs{
 	unmarshal: consumeFloatSlice,
 }
 
-// sizeFloatIface returns the size of wire encoding a float32 value as a Float.
-func sizeFloatIface(ival interface{}, tagsize int, _ marshalOptions) int {
+// sizeFloatValue returns the size of wire encoding a float32 value as a Float.
+func sizeFloatValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
 	return tagsize + wire.SizeFixed32()
 }
 
-// appendFloatIface encodes a float32 value as a Float.
-func appendFloatIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(float32)
+// appendFloatValue encodes a float32 value as a Float.
+func appendFloatValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed32(b, math.Float32bits(v))
+	b = wire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
 	return b, nil
 }
 
-// consumeFloatIface decodes a float32 value as a Float.
-func consumeFloatIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeFloatValue decodes a float32 value as a Float.
+func consumeFloatValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.Fixed32Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed32(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return math.Float32frombits(v), n, nil
+	return protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))), n, nil
 }
 
-var coderFloatIface = ifaceCoderFuncs{
-	size:      sizeFloatIface,
-	marshal:   appendFloatIface,
-	unmarshal: consumeFloatIface,
+var coderFloatValue = valueCoderFuncs{
+	size:      sizeFloatValue,
+	marshal:   appendFloatValue,
+	unmarshal: consumeFloatValue,
 }
 
-// sizeFloatSliceIface returns the size of wire encoding a []float32 value as a repeated Float.
-func sizeFloatSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]float32)
-	size = len(s) * (tagsize + wire.SizeFixed32())
+// sizeFloatSliceValue returns the size of wire encoding a []float32 value as a repeated Float.
+func sizeFloatSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	size = list.Len() * (tagsize + wire.SizeFixed32())
 	return size
 }
 
-// appendFloatSliceIface encodes a []float32 value as a repeated Float.
-func appendFloatSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]float32)
-	for _, v := range s {
+// appendFloatSliceValue encodes a []float32 value as a repeated Float.
+func appendFloatSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed32(b, math.Float32bits(v))
+		b = wire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
 	}
 	return b, nil
 }
 
-// consumeFloatSliceIface wire decodes a []float32 value as a repeated Float.
-func consumeFloatSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]float32)
+// consumeFloatSliceValue wire decodes a []float32 value as a repeated Float.
+func consumeFloatSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeFixed32(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, math.Float32frombits(v))
+			list.Append(protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.Fixed32Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed32(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, math.Float32frombits(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))))
+	return listv, n, nil
 }
 
-var coderFloatSliceIface = ifaceCoderFuncs{
-	size:      sizeFloatSliceIface,
-	marshal:   appendFloatSliceIface,
-	unmarshal: consumeFloatSliceIface,
+var coderFloatSliceValue = valueCoderFuncs{
+	size:      sizeFloatSliceValue,
+	marshal:   appendFloatSliceValue,
+	unmarshal: consumeFloatSliceValue,
 }
 
-// sizeFloatPackedSliceIface returns the size of wire encoding a []float32 value as a packed repeated Float.
-func sizeFloatPackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]float32)
-	if len(s) == 0 {
-		return 0
-	}
-	n := len(s) * wire.SizeFixed32()
+// sizeFloatPackedSliceValue returns the size of wire encoding a []float32 value as a packed repeated Float.
+func sizeFloatPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	n := list.Len() * wire.SizeFixed32()
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendFloatPackedSliceIface encodes a []float32 value as a packed repeated Float.
-func appendFloatPackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]float32)
-	if len(s) == 0 {
+// appendFloatPackedSliceValue encodes a []float32 value as a packed repeated Float.
+func appendFloatPackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
-	n := len(s) * wire.SizeFixed32()
+	n := llen * wire.SizeFixed32()
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendFixed32(b, math.Float32bits(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
 	}
 	return b, nil
 }
 
-var coderFloatPackedSliceIface = ifaceCoderFuncs{
-	size:      sizeFloatPackedSliceIface,
-	marshal:   appendFloatPackedSliceIface,
-	unmarshal: consumeFloatSliceIface,
+var coderFloatPackedSliceValue = valueCoderFuncs{
+	size:      sizeFloatPackedSliceValue,
+	marshal:   appendFloatPackedSliceValue,
+	unmarshal: consumeFloatSliceValue,
 }
 
 // sizeSfixed64 returns the size of wire encoding a int64 pointer as a Sfixed64.
@@ -3324,120 +3432,117 @@ var coderSfixed64PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeSfixed64Slice,
 }
 
-// sizeSfixed64Iface returns the size of wire encoding a int64 value as a Sfixed64.
-func sizeSfixed64Iface(ival interface{}, tagsize int, _ marshalOptions) int {
+// sizeSfixed64Value returns the size of wire encoding a int64 value as a Sfixed64.
+func sizeSfixed64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendSfixed64Iface encodes a int64 value as a Sfixed64.
-func appendSfixed64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(int64)
+// appendSfixed64Value encodes a int64 value as a Sfixed64.
+func appendSfixed64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed64(b, uint64(v))
+	b = wire.AppendFixed64(b, uint64(v.Int()))
 	return b, nil
 }
 
-// consumeSfixed64Iface decodes a int64 value as a Sfixed64.
-func consumeSfixed64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeSfixed64Value decodes a int64 value as a Sfixed64.
+func consumeSfixed64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.Fixed64Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed64(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return int64(v), n, nil
+	return protoreflect.ValueOfInt64(int64(v)), n, nil
 }
 
-var coderSfixed64Iface = ifaceCoderFuncs{
-	size:      sizeSfixed64Iface,
-	marshal:   appendSfixed64Iface,
-	unmarshal: consumeSfixed64Iface,
+var coderSfixed64Value = valueCoderFuncs{
+	size:      sizeSfixed64Value,
+	marshal:   appendSfixed64Value,
+	unmarshal: consumeSfixed64Value,
 }
 
-// sizeSfixed64SliceIface returns the size of wire encoding a []int64 value as a repeated Sfixed64.
-func sizeSfixed64SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int64)
-	size = len(s) * (tagsize + wire.SizeFixed64())
+// sizeSfixed64SliceValue returns the size of wire encoding a []int64 value as a repeated Sfixed64.
+func sizeSfixed64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	size = list.Len() * (tagsize + wire.SizeFixed64())
 	return size
 }
 
-// appendSfixed64SliceIface encodes a []int64 value as a repeated Sfixed64.
-func appendSfixed64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int64)
-	for _, v := range s {
+// appendSfixed64SliceValue encodes a []int64 value as a repeated Sfixed64.
+func appendSfixed64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed64(b, uint64(v))
+		b = wire.AppendFixed64(b, uint64(v.Int()))
 	}
 	return b, nil
 }
 
-// consumeSfixed64SliceIface wire decodes a []int64 value as a repeated Sfixed64.
-func consumeSfixed64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]int64)
+// consumeSfixed64SliceValue wire decodes a []int64 value as a repeated Sfixed64.
+func consumeSfixed64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeFixed64(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, int64(v))
+			list.Append(protoreflect.ValueOfInt64(int64(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.Fixed64Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed64(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, int64(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfInt64(int64(v)))
+	return listv, n, nil
 }
 
-var coderSfixed64SliceIface = ifaceCoderFuncs{
-	size:      sizeSfixed64SliceIface,
-	marshal:   appendSfixed64SliceIface,
-	unmarshal: consumeSfixed64SliceIface,
+var coderSfixed64SliceValue = valueCoderFuncs{
+	size:      sizeSfixed64SliceValue,
+	marshal:   appendSfixed64SliceValue,
+	unmarshal: consumeSfixed64SliceValue,
 }
 
-// sizeSfixed64PackedSliceIface returns the size of wire encoding a []int64 value as a packed repeated Sfixed64.
-func sizeSfixed64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]int64)
-	if len(s) == 0 {
-		return 0
-	}
-	n := len(s) * wire.SizeFixed64()
+// sizeSfixed64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Sfixed64.
+func sizeSfixed64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	n := list.Len() * wire.SizeFixed64()
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendSfixed64PackedSliceIface encodes a []int64 value as a packed repeated Sfixed64.
-func appendSfixed64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]int64)
-	if len(s) == 0 {
+// appendSfixed64PackedSliceValue encodes a []int64 value as a packed repeated Sfixed64.
+func appendSfixed64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
-	n := len(s) * wire.SizeFixed64()
+	n := llen * wire.SizeFixed64()
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendFixed64(b, uint64(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendFixed64(b, uint64(v.Int()))
 	}
 	return b, nil
 }
 
-var coderSfixed64PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeSfixed64PackedSliceIface,
-	marshal:   appendSfixed64PackedSliceIface,
-	unmarshal: consumeSfixed64SliceIface,
+var coderSfixed64PackedSliceValue = valueCoderFuncs{
+	size:      sizeSfixed64PackedSliceValue,
+	marshal:   appendSfixed64PackedSliceValue,
+	unmarshal: consumeSfixed64SliceValue,
 }
 
 // sizeFixed64 returns the size of wire encoding a uint64 pointer as a Fixed64.
@@ -3624,120 +3729,117 @@ var coderFixed64PackedSlice = pointerCoderFuncs{
 	unmarshal: consumeFixed64Slice,
 }
 
-// sizeFixed64Iface returns the size of wire encoding a uint64 value as a Fixed64.
-func sizeFixed64Iface(ival interface{}, tagsize int, _ marshalOptions) int {
+// sizeFixed64Value returns the size of wire encoding a uint64 value as a Fixed64.
+func sizeFixed64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendFixed64Iface encodes a uint64 value as a Fixed64.
-func appendFixed64Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(uint64)
+// appendFixed64Value encodes a uint64 value as a Fixed64.
+func appendFixed64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed64(b, v)
+	b = wire.AppendFixed64(b, v.Uint())
 	return b, nil
 }
 
-// consumeFixed64Iface decodes a uint64 value as a Fixed64.
-func consumeFixed64Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeFixed64Value decodes a uint64 value as a Fixed64.
+func consumeFixed64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.Fixed64Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed64(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return v, n, nil
+	return protoreflect.ValueOfUint64(v), n, nil
 }
 
-var coderFixed64Iface = ifaceCoderFuncs{
-	size:      sizeFixed64Iface,
-	marshal:   appendFixed64Iface,
-	unmarshal: consumeFixed64Iface,
+var coderFixed64Value = valueCoderFuncs{
+	size:      sizeFixed64Value,
+	marshal:   appendFixed64Value,
+	unmarshal: consumeFixed64Value,
 }
 
-// sizeFixed64SliceIface returns the size of wire encoding a []uint64 value as a repeated Fixed64.
-func sizeFixed64SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]uint64)
-	size = len(s) * (tagsize + wire.SizeFixed64())
+// sizeFixed64SliceValue returns the size of wire encoding a []uint64 value as a repeated Fixed64.
+func sizeFixed64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	size = list.Len() * (tagsize + wire.SizeFixed64())
 	return size
 }
 
-// appendFixed64SliceIface encodes a []uint64 value as a repeated Fixed64.
-func appendFixed64SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]uint64)
-	for _, v := range s {
+// appendFixed64SliceValue encodes a []uint64 value as a repeated Fixed64.
+func appendFixed64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed64(b, v)
+		b = wire.AppendFixed64(b, v.Uint())
 	}
 	return b, nil
 }
 
-// consumeFixed64SliceIface wire decodes a []uint64 value as a repeated Fixed64.
-func consumeFixed64SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]uint64)
+// consumeFixed64SliceValue wire decodes a []uint64 value as a repeated Fixed64.
+func consumeFixed64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeFixed64(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, v)
+			list.Append(protoreflect.ValueOfUint64(v))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.Fixed64Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed64(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, v)
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfUint64(v))
+	return listv, n, nil
 }
 
-var coderFixed64SliceIface = ifaceCoderFuncs{
-	size:      sizeFixed64SliceIface,
-	marshal:   appendFixed64SliceIface,
-	unmarshal: consumeFixed64SliceIface,
+var coderFixed64SliceValue = valueCoderFuncs{
+	size:      sizeFixed64SliceValue,
+	marshal:   appendFixed64SliceValue,
+	unmarshal: consumeFixed64SliceValue,
 }
 
-// sizeFixed64PackedSliceIface returns the size of wire encoding a []uint64 value as a packed repeated Fixed64.
-func sizeFixed64PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]uint64)
-	if len(s) == 0 {
-		return 0
-	}
-	n := len(s) * wire.SizeFixed64()
+// sizeFixed64PackedSliceValue returns the size of wire encoding a []uint64 value as a packed repeated Fixed64.
+func sizeFixed64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	n := list.Len() * wire.SizeFixed64()
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendFixed64PackedSliceIface encodes a []uint64 value as a packed repeated Fixed64.
-func appendFixed64PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]uint64)
-	if len(s) == 0 {
+// appendFixed64PackedSliceValue encodes a []uint64 value as a packed repeated Fixed64.
+func appendFixed64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
-	n := len(s) * wire.SizeFixed64()
+	n := llen * wire.SizeFixed64()
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendFixed64(b, v)
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendFixed64(b, v.Uint())
 	}
 	return b, nil
 }
 
-var coderFixed64PackedSliceIface = ifaceCoderFuncs{
-	size:      sizeFixed64PackedSliceIface,
-	marshal:   appendFixed64PackedSliceIface,
-	unmarshal: consumeFixed64SliceIface,
+var coderFixed64PackedSliceValue = valueCoderFuncs{
+	size:      sizeFixed64PackedSliceValue,
+	marshal:   appendFixed64PackedSliceValue,
+	unmarshal: consumeFixed64SliceValue,
 }
 
 // sizeDouble returns the size of wire encoding a float64 pointer as a Double.
@@ -3924,120 +4026,117 @@ var coderDoublePackedSlice = pointerCoderFuncs{
 	unmarshal: consumeDoubleSlice,
 }
 
-// sizeDoubleIface returns the size of wire encoding a float64 value as a Double.
-func sizeDoubleIface(ival interface{}, tagsize int, _ marshalOptions) int {
+// sizeDoubleValue returns the size of wire encoding a float64 value as a Double.
+func sizeDoubleValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
 	return tagsize + wire.SizeFixed64()
 }
 
-// appendDoubleIface encodes a float64 value as a Double.
-func appendDoubleIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(float64)
+// appendDoubleValue encodes a float64 value as a Double.
+func appendDoubleValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed64(b, math.Float64bits(v))
+	b = wire.AppendFixed64(b, math.Float64bits(v.Float()))
 	return b, nil
 }
 
-// consumeDoubleIface decodes a float64 value as a Double.
-func consumeDoubleIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeDoubleValue decodes a float64 value as a Double.
+func consumeDoubleValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.Fixed64Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed64(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return math.Float64frombits(v), n, nil
+	return protoreflect.ValueOfFloat64(math.Float64frombits(v)), n, nil
 }
 
-var coderDoubleIface = ifaceCoderFuncs{
-	size:      sizeDoubleIface,
-	marshal:   appendDoubleIface,
-	unmarshal: consumeDoubleIface,
+var coderDoubleValue = valueCoderFuncs{
+	size:      sizeDoubleValue,
+	marshal:   appendDoubleValue,
+	unmarshal: consumeDoubleValue,
 }
 
-// sizeDoubleSliceIface returns the size of wire encoding a []float64 value as a repeated Double.
-func sizeDoubleSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]float64)
-	size = len(s) * (tagsize + wire.SizeFixed64())
+// sizeDoubleSliceValue returns the size of wire encoding a []float64 value as a repeated Double.
+func sizeDoubleSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	size = list.Len() * (tagsize + wire.SizeFixed64())
 	return size
 }
 
-// appendDoubleSliceIface encodes a []float64 value as a repeated Double.
-func appendDoubleSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]float64)
-	for _, v := range s {
+// appendDoubleSliceValue encodes a []float64 value as a repeated Double.
+func appendDoubleSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed64(b, math.Float64bits(v))
+		b = wire.AppendFixed64(b, math.Float64bits(v.Float()))
 	}
 	return b, nil
 }
 
-// consumeDoubleSliceIface wire decodes a []float64 value as a repeated Double.
-func consumeDoubleSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]float64)
+// consumeDoubleSliceValue wire decodes a []float64 value as a repeated Double.
+func consumeDoubleSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeFixed64(b)
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, math.Float64frombits(v))
+			list.Append(protoreflect.ValueOfFloat64(math.Float64frombits(v)))
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	if wtyp != wire.Fixed64Type {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeFixed64(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, math.Float64frombits(v))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfFloat64(math.Float64frombits(v)))
+	return listv, n, nil
 }
 
-var coderDoubleSliceIface = ifaceCoderFuncs{
-	size:      sizeDoubleSliceIface,
-	marshal:   appendDoubleSliceIface,
-	unmarshal: consumeDoubleSliceIface,
+var coderDoubleSliceValue = valueCoderFuncs{
+	size:      sizeDoubleSliceValue,
+	marshal:   appendDoubleSliceValue,
+	unmarshal: consumeDoubleSliceValue,
 }
 
-// sizeDoublePackedSliceIface returns the size of wire encoding a []float64 value as a packed repeated Double.
-func sizeDoublePackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]float64)
-	if len(s) == 0 {
-		return 0
-	}
-	n := len(s) * wire.SizeFixed64()
+// sizeDoublePackedSliceValue returns the size of wire encoding a []float64 value as a packed repeated Double.
+func sizeDoublePackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	n := list.Len() * wire.SizeFixed64()
 	return tagsize + wire.SizeBytes(n)
 }
 
-// appendDoublePackedSliceIface encodes a []float64 value as a packed repeated Double.
-func appendDoublePackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]float64)
-	if len(s) == 0 {
+// appendDoublePackedSliceValue encodes a []float64 value as a packed repeated Double.
+func appendDoublePackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
-	n := len(s) * wire.SizeFixed64()
+	n := llen * wire.SizeFixed64()
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		b = wire.AppendFixed64(b, math.Float64bits(v))
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		b = wire.AppendFixed64(b, math.Float64bits(v.Float()))
 	}
 	return b, nil
 }
 
-var coderDoublePackedSliceIface = ifaceCoderFuncs{
-	size:      sizeDoublePackedSliceIface,
-	marshal:   appendDoublePackedSliceIface,
-	unmarshal: consumeDoubleSliceIface,
+var coderDoublePackedSliceValue = valueCoderFuncs{
+	size:      sizeDoublePackedSliceValue,
+	marshal:   appendDoublePackedSliceValue,
+	unmarshal: consumeDoubleSliceValue,
 }
 
 // sizeString returns the size of wire encoding a string pointer as a String.
@@ -4269,107 +4368,106 @@ var coderStringSliceValidateUTF8 = pointerCoderFuncs{
 	unmarshal: consumeStringSliceValidateUTF8,
 }
 
-// sizeStringIface returns the size of wire encoding a string value as a String.
-func sizeStringIface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.(string)
-	return tagsize + wire.SizeBytes(len(v))
+// sizeStringValue returns the size of wire encoding a string value as a String.
+func sizeStringValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeBytes(len(v.String()))
 }
 
-// appendStringIface encodes a string value as a String.
-func appendStringIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(string)
+// appendStringValue encodes a string value as a String.
+func appendStringValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendString(b, v)
+	b = wire.AppendString(b, v.String())
 	return b, nil
 }
 
-// consumeStringIface decodes a string value as a String.
-func consumeStringIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeStringValue decodes a string value as a String.
+func consumeStringValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.BytesType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeString(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return v, n, nil
+	return protoreflect.ValueOfString(string(v)), n, nil
 }
 
-var coderStringIface = ifaceCoderFuncs{
-	size:      sizeStringIface,
-	marshal:   appendStringIface,
-	unmarshal: consumeStringIface,
+var coderStringValue = valueCoderFuncs{
+	size:      sizeStringValue,
+	marshal:   appendStringValue,
+	unmarshal: consumeStringValue,
 }
 
-// appendStringIfaceValidateUTF8 encodes a string value as a String.
-func appendStringIfaceValidateUTF8(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.(string)
+// appendStringValueValidateUTF8 encodes a string value as a String.
+func appendStringValueValidateUTF8(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendString(b, v)
-	if !utf8.ValidString(v) {
+	b = wire.AppendString(b, v.String())
+	if !utf8.ValidString(v.String()) {
 		return b, errInvalidUTF8{}
 	}
 	return b, nil
 }
 
-// consumeStringIfaceValidateUTF8 decodes a string value as a String.
-func consumeStringIfaceValidateUTF8(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeStringValueValidateUTF8 decodes a string value as a String.
+func consumeStringValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.BytesType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeString(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
 	if !utf8.ValidString(v) {
-		return nil, 0, errInvalidUTF8{}
+		return protoreflect.Value{}, 0, errInvalidUTF8{}
 	}
-	return v, n, nil
+	return protoreflect.ValueOfString(string(v)), n, nil
 }
 
-var coderStringIfaceValidateUTF8 = ifaceCoderFuncs{
-	size:      sizeStringIface,
-	marshal:   appendStringIfaceValidateUTF8,
-	unmarshal: consumeStringIfaceValidateUTF8,
+var coderStringValueValidateUTF8 = valueCoderFuncs{
+	size:      sizeStringValue,
+	marshal:   appendStringValueValidateUTF8,
+	unmarshal: consumeStringValueValidateUTF8,
 }
 
-// sizeStringSliceIface returns the size of wire encoding a []string value as a repeated String.
-func sizeStringSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]string)
-	for _, v := range s {
-		size += tagsize + wire.SizeBytes(len(v))
+// sizeStringSliceValue returns the size of wire encoding a []string value as a repeated String.
+func sizeStringSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeBytes(len(v.String()))
 	}
 	return size
 }
 
-// appendStringSliceIface encodes a []string value as a repeated String.
-func appendStringSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]string)
-	for _, v := range s {
+// appendStringSliceValue encodes a []string value as a repeated String.
+func appendStringSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendString(b, v)
+		b = wire.AppendString(b, v.String())
 	}
 	return b, nil
 }
 
-// consumeStringSliceIface wire decodes a []string value as a repeated String.
-func consumeStringSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]string)
+// consumeStringSliceValue wire decodes a []string value as a repeated String.
+func consumeStringSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp != wire.BytesType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeString(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, v)
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfString(string(v)))
+	return listv, n, nil
 }
 
-var coderStringSliceIface = ifaceCoderFuncs{
-	size:      sizeStringSliceIface,
-	marshal:   appendStringSliceIface,
-	unmarshal: consumeStringSliceIface,
+var coderStringSliceValue = valueCoderFuncs{
+	size:      sizeStringSliceValue,
+	marshal:   appendStringSliceValue,
+	unmarshal: consumeStringSliceValue,
 }
 
 // sizeBytes returns the size of wire encoding a []byte pointer as a Bytes.
@@ -4592,107 +4690,106 @@ var coderBytesSliceValidateUTF8 = pointerCoderFuncs{
 	unmarshal: consumeBytesSliceValidateUTF8,
 }
 
-// sizeBytesIface returns the size of wire encoding a []byte value as a Bytes.
-func sizeBytesIface(ival interface{}, tagsize int, _ marshalOptions) int {
-	v := ival.([]byte)
-	return tagsize + wire.SizeBytes(len(v))
+// sizeBytesValue returns the size of wire encoding a []byte value as a Bytes.
+func sizeBytesValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + wire.SizeBytes(len(v.Bytes()))
 }
 
-// appendBytesIface encodes a []byte value as a Bytes.
-func appendBytesIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.([]byte)
+// appendBytesValue encodes a []byte value as a Bytes.
+func appendBytesValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendBytes(b, v)
+	b = wire.AppendBytes(b, v.Bytes())
 	return b, nil
 }
 
-// consumeBytesIface decodes a []byte value as a Bytes.
-func consumeBytesIface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeBytesValue decodes a []byte value as a Bytes.
+func consumeBytesValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.BytesType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeBytes(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return append(emptyBuf[:], v...), n, nil
+	return protoreflect.ValueOfBytes(append(([]byte)(nil), v...)), n, nil
 }
 
-var coderBytesIface = ifaceCoderFuncs{
-	size:      sizeBytesIface,
-	marshal:   appendBytesIface,
-	unmarshal: consumeBytesIface,
+var coderBytesValue = valueCoderFuncs{
+	size:      sizeBytesValue,
+	marshal:   appendBytesValue,
+	unmarshal: consumeBytesValue,
 }
 
-// appendBytesIfaceValidateUTF8 encodes a []byte value as a Bytes.
-func appendBytesIfaceValidateUTF8(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.([]byte)
+// appendBytesValueValidateUTF8 encodes a []byte value as a Bytes.
+func appendBytesValueValidateUTF8(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendBytes(b, v)
-	if !utf8.Valid(v) {
+	b = wire.AppendBytes(b, v.Bytes())
+	if !utf8.Valid(v.Bytes()) {
 		return b, errInvalidUTF8{}
 	}
 	return b, nil
 }
 
-// consumeBytesIfaceValidateUTF8 decodes a []byte value as a Bytes.
-func consumeBytesIfaceValidateUTF8(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consumeBytesValueValidateUTF8 decodes a []byte value as a Bytes.
+func consumeBytesValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != wire.BytesType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeBytes(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
 	if !utf8.Valid(v) {
-		return nil, 0, errInvalidUTF8{}
+		return protoreflect.Value{}, 0, errInvalidUTF8{}
 	}
-	return append(emptyBuf[:], v...), n, nil
+	return protoreflect.ValueOfBytes(append(([]byte)(nil), v...)), n, nil
 }
 
-var coderBytesIfaceValidateUTF8 = ifaceCoderFuncs{
-	size:      sizeBytesIface,
-	marshal:   appendBytesIfaceValidateUTF8,
-	unmarshal: consumeBytesIfaceValidateUTF8,
+var coderBytesValueValidateUTF8 = valueCoderFuncs{
+	size:      sizeBytesValue,
+	marshal:   appendBytesValueValidateUTF8,
+	unmarshal: consumeBytesValueValidateUTF8,
 }
 
-// sizeBytesSliceIface returns the size of wire encoding a [][]byte value as a repeated Bytes.
-func sizeBytesSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[][]byte)
-	for _, v := range s {
-		size += tagsize + wire.SizeBytes(len(v))
+// sizeBytesSliceValue returns the size of wire encoding a [][]byte value as a repeated Bytes.
+func sizeBytesSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + wire.SizeBytes(len(v.Bytes()))
 	}
 	return size
 }
 
-// appendBytesSliceIface encodes a [][]byte value as a repeated Bytes.
-func appendBytesSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[][]byte)
-	for _, v := range s {
+// appendBytesSliceValue encodes a [][]byte value as a repeated Bytes.
+func appendBytesSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendBytes(b, v)
+		b = wire.AppendBytes(b, v.Bytes())
 	}
 	return b, nil
 }
 
-// consumeBytesSliceIface wire decodes a [][]byte value as a repeated Bytes.
-func consumeBytesSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[][]byte)
+// consumeBytesSliceValue wire decodes a [][]byte value as a repeated Bytes.
+func consumeBytesSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	if wtyp != wire.BytesType {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := wire.ConsumeBytes(b)
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, append(emptyBuf[:], v...))
-	return ival, n, nil
+	list.Append(protoreflect.ValueOfBytes(append(([]byte)(nil), v...)))
+	return listv, n, nil
 }
 
-var coderBytesSliceIface = ifaceCoderFuncs{
-	size:      sizeBytesSliceIface,
-	marshal:   appendBytesSliceIface,
-	unmarshal: consumeBytesSliceIface,
+var coderBytesSliceValue = valueCoderFuncs{
+	size:      sizeBytesSliceValue,
+	marshal:   appendBytesSliceValue,
+	unmarshal: consumeBytesSliceValue,
 }
 
 // We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.

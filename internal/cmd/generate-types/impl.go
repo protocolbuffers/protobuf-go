@@ -39,6 +39,16 @@ wire.Size{{.WireType}}({{.FromGoType}})
 {{- end -}}
 {{- end -}}
 
+{{- define "SizeValue" -}}
+{{- if .WireType.ConstSize -}}
+wire.Size{{.WireType}}()
+{{- else if eq .WireType "Bytes" -}}
+wire.SizeBytes(len({{.FromValue}}))
+{{- else -}}
+wire.Size{{.WireType}}({{.FromValue}})
+{{- end -}}
+{{- end -}}
+
 {{- /*
   Append is a set of statements appending 'v' to 'b'.
 */ -}}
@@ -47,6 +57,14 @@ wire.Size{{.WireType}}({{.FromGoType}})
 b = wire.AppendString(b, {{.FromGoType}})
 {{- else -}}
 b = wire.Append{{.WireType}}(b, {{.FromGoType}})
+{{- end -}}
+{{- end -}}
+
+{{- define "AppendValue" -}}
+{{- if eq .Name "String" -}}
+b = wire.AppendString(b, {{.FromValue}})
+{{- else -}}
+b = wire.Append{{.WireType}}(b, {{.FromValue}})
 {{- end -}}
 {{- end -}}
 
@@ -59,6 +77,7 @@ wire.Consume{{.WireType}}(b)
 {{- end -}}
 
 {{- range .}}
+
 {{- if .FromGoType }}
 // size{{.Name}} returns the size of wire encoding a {{.GoType}} pointer as a {{.Name}}.
 func size{{.Name}}(p pointer, tagsize int, _ marshalOptions) (size int) {
@@ -405,184 +424,184 @@ var coder{{.Name}}PackedSlice = pointerCoderFuncs{
 }
 {{end}}
 
-// size{{.Name}}Iface returns the size of wire encoding a {{.GoType}} value as a {{.Name}}.
-func size{{.Name}}Iface(ival interface{}, tagsize int, _ marshalOptions) int {
-	{{- if not .WireType.ConstSize}}
-	v := ival.({{.GoType}})
-	{{end -}}
-	return tagsize + {{template "Size" .}}
+{{end -}}
+
+{{- if not .NoValueCodec}}
+// size{{.Name}}Value returns the size of wire encoding a {{.GoType}} value as a {{.Name}}.
+func size{{.Name}}Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
+	return tagsize + {{template "SizeValue" .}}
 }
 
-// append{{.Name}}Iface encodes a {{.GoType}} value as a {{.Name}}.
-func append{{.Name}}Iface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.({{.GoType}})
+// append{{.Name}}Value encodes a {{.GoType}} value as a {{.Name}}.
+func append{{.Name}}Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	{{template "Append" .}}
+	{{template "AppendValue" .}}
 	return b, nil
 }
 
-// consume{{.Name}}Iface decodes a {{.GoType}} value as a {{.Name}}.
-func consume{{.Name}}Iface(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consume{{.Name}}Value decodes a {{.GoType}} value as a {{.Name}}.
+func consume{{.Name}}Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != {{.WireType.Expr}} {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return {{.ToGoType}}, n, nil
+	return {{.ToValue}}, n, nil
 }
 
-var coder{{.Name}}Iface = ifaceCoderFuncs{
-	size:    size{{.Name}}Iface,
-	marshal: append{{.Name}}Iface,
-	unmarshal: consume{{.Name}}Iface,
+var coder{{.Name}}Value = valueCoderFuncs{
+	size:    size{{.Name}}Value,
+	marshal: append{{.Name}}Value,
+	unmarshal: consume{{.Name}}Value,
 }
 
 {{if or (eq .Name "Bytes") (eq .Name "String")}}
-// append{{.Name}}IfaceValidateUTF8 encodes a {{.GoType}} value as a {{.Name}}.
-func append{{.Name}}IfaceValidateUTF8(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := ival.({{.GoType}})
+// append{{.Name}}ValueValidateUTF8 encodes a {{.GoType}} value as a {{.Name}}.
+func append{{.Name}}ValueValidateUTF8(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
-	{{template "Append" .}}
-	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+	{{template "AppendValue" .}}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}({{.FromValue}}) {
 		return b, errInvalidUTF8{}
 	}
 	return b, nil
 }
 
-// consume{{.Name}}IfaceValidateUTF8 decodes a {{.GoType}} value as a {{.Name}}.
-func consume{{.Name}}IfaceValidateUTF8(b []byte, _ interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
+// consume{{.Name}}ValueValidateUTF8 decodes a {{.GoType}} value as a {{.Name}}.
+func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
 	if wtyp != {{.WireType.Expr}} {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
-		return nil, 0, errInvalidUTF8{}
+		return protoreflect.Value{}, 0, errInvalidUTF8{}
 	}
-	return {{.ToGoType}}, n, nil
+	return {{.ToValue}}, n, nil
 }
 
-var coder{{.Name}}IfaceValidateUTF8 = ifaceCoderFuncs{
-	size:    size{{.Name}}Iface,
-	marshal: append{{.Name}}IfaceValidateUTF8,
-	unmarshal: consume{{.Name}}IfaceValidateUTF8,
+var coder{{.Name}}ValueValidateUTF8 = valueCoderFuncs{
+	size:      size{{.Name}}Value,
+	marshal:   append{{.Name}}ValueValidateUTF8,
+	unmarshal: consume{{.Name}}ValueValidateUTF8,
 }
 {{end}}
 
-// size{{.Name}}SliceIface returns the size of wire encoding a []{{.GoType}} value as a repeated {{.Name}}.
-func size{{.Name}}SliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]{{.GoType}})
+// size{{.Name}}SliceValue returns the size of wire encoding a []{{.GoType}} value as a repeated {{.Name}}.
+func size{{.Name}}SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	{{if .WireType.ConstSize -}}
-	size = len(s) * (tagsize + {{template "Size" .}})
+	size = list.Len() * (tagsize + {{template "SizeValue" .}})
 	{{- else -}}
-	for _, v := range s {
-		size += tagsize + {{template "Size" .}}
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		size += tagsize + {{template "SizeValue" .}}
 	}
 	{{- end}}
 	return size
 }
 
-// append{{.Name}}SliceIface encodes a []{{.GoType}} value as a repeated {{.Name}}.
-func append{{.Name}}SliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]{{.GoType}})
-	for _, v := range s {
+// append{{.Name}}SliceValue encodes a []{{.GoType}} value as a repeated {{.Name}}.
+func append{{.Name}}SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
 		b = wire.AppendVarint(b, wiretag)
-		{{template "Append" .}}
+		{{template "AppendValue" .}}
 	}
 	return b, nil
 }
 
-// consume{{.Name}}SliceIface wire decodes a []{{.GoType}} value as a repeated {{.Name}}.
-func consume{{.Name}}SliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ interface{}, n int, err error) {
-	sp := ival.(*[]{{.GoType}})
+// consume{{.Name}}SliceValue wire decodes a []{{.GoType}} value as a repeated {{.Name}}.
+func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+	list := listv.List()
 	{{- if .WireType.Packable}}
 	if wtyp == wire.BytesType {
-		s := *sp
 		b, n = wire.ConsumeBytes(b)
 		if n < 0 {
-			return nil, 0, wire.ParseError(n)
+			return protoreflect.Value{}, 0, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := {{template "Consume" .}}
 			if n < 0 {
-				return nil, 0, wire.ParseError(n)
+				return protoreflect.Value{}, 0, wire.ParseError(n)
 			}
-			s = append(s, {{.ToGoType}})
+			list.Append({{.ToValue}})
 			b = b[n:]
 		}
-		*sp = s
-		return ival, n, nil
+		return listv, n, nil
 	}
 	{{- end}}
 	if wtyp != {{.WireType.Expr}} {
-		return nil, 0, errUnknown
+		return protoreflect.Value{}, 0, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return nil, 0, wire.ParseError(n)
+		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	*sp = append(*sp, {{.ToGoType}})
-	return ival, n, nil
+	list.Append({{.ToValue}})
+	return listv, n, nil
 }
 
-var coder{{.Name}}SliceIface = ifaceCoderFuncs{
-	size:      size{{.Name}}SliceIface,
-	marshal:   append{{.Name}}SliceIface,
-	unmarshal: consume{{.Name}}SliceIface,
+var coder{{.Name}}SliceValue = valueCoderFuncs{
+	size:      size{{.Name}}SliceValue,
+	marshal:   append{{.Name}}SliceValue,
+	unmarshal: consume{{.Name}}SliceValue,
 }
 
 {{if or (eq .WireType "Varint") (eq .WireType "Fixed32") (eq .WireType "Fixed64")}}
-// size{{.Name}}PackedSliceIface returns the size of wire encoding a []{{.GoType}} value as a packed repeated {{.Name}}.
-func size{{.Name}}PackedSliceIface(ival interface{}, tagsize int, _ marshalOptions) (size int) {
-	s := *ival.(*[]{{.GoType}})
-	if len(s) == 0 {
-		return 0
-	}
+// size{{.Name}}PackedSliceValue returns the size of wire encoding a []{{.GoType}} value as a packed repeated {{.Name}}.
+func size{{.Name}}PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
+	list := listv.List()
 	{{if .WireType.ConstSize -}}
-	n := len(s) * {{template "Size" .}}
+	n := list.Len() * {{template "SizeValue" .}}
 	{{- else -}}
 	n := 0
-	for _, v := range s {
-		n += {{template "Size" .}}
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		v := list.Get(i)
+		n += {{template "SizeValue" .}}
 	}
 	{{- end}}
 	return tagsize + wire.SizeBytes(n)
 }
 
-// append{{.Name}}PackedSliceIface encodes a []{{.GoType}} value as a packed repeated {{.Name}}.
-func append{{.Name}}PackedSliceIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	s := *ival.(*[]{{.GoType}})
-	if len(s) == 0 {
+// append{{.Name}}PackedSliceValue encodes a []{{.GoType}} value as a packed repeated {{.Name}}.
+func append{{.Name}}PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
+	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
 		return b, nil
 	}
 	b = wire.AppendVarint(b, wiretag)
 	{{if .WireType.ConstSize -}}
-	n := len(s) * {{template "Size" .}}
+	n := llen * {{template "SizeValue" .}}
 	{{- else -}}
 	n := 0
-	for _, v := range s {
-		n += {{template "Size" .}}
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		n += {{template "SizeValue" .}}
 	}
 	{{- end}}
 	b = wire.AppendVarint(b, uint64(n))
-	for _, v := range s {
-		{{template "Append" .}}
+	for i := 0; i < llen; i++ {
+		v := list.Get(i)
+		{{template "AppendValue" .}}
 	}
 	return b, nil
 }
 
-var coder{{.Name}}PackedSliceIface = ifaceCoderFuncs{
-	size:      size{{.Name}}PackedSliceIface,
-	marshal:   append{{.Name}}PackedSliceIface,
-	unmarshal: consume{{.Name}}SliceIface,
+var coder{{.Name}}PackedSliceValue = valueCoderFuncs{
+	size:      size{{.Name}}PackedSliceValue,
+	marshal:   append{{.Name}}PackedSliceValue,
+	unmarshal: consume{{.Name}}SliceValue,
 }
 {{end}}
 
-{{end -}}
+{{- end}}{{/* if not .NoValueCodec */}}
+
 {{end -}}
 
 // We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.

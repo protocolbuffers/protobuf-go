@@ -145,24 +145,23 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 			}
 			return 0, err
 		}
-		x.SetType(xt)
 	}
 	xi := mi.extensionFieldInfo(xt)
 	if xi.funcs.unmarshal == nil {
 		return 0, errUnknown
 	}
-	ival := x.GetValue()
-	if ival == nil && xi.unmarshalNeedsValue {
+	ival := x.Value()
+	if !ival.IsValid() && xi.unmarshalNeedsValue {
 		// Create a new message, list, or map value to fill in.
 		// For enums, create a prototype value to let the unmarshal func know the
 		// concrete type.
-		ival = xt.InterfaceOf(xt.New())
+		ival = xt.New()
 	}
 	v, n, err := xi.funcs.unmarshal(b, ival, num, wtyp, opts)
 	if err != nil {
 		return 0, err
 	}
-	x.SetEagerValue(v)
+	x.Set(xt, v)
 	exts[int32(num)] = x
 	return n, nil
 }

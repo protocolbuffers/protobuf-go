@@ -66,12 +66,12 @@ func (mi *MessageInfo) isInitExtensions(ext *map[int32]ExtensionField) error {
 		return nil
 	}
 	for _, x := range *ext {
-		ei := mi.extensionFieldInfo(x.GetType())
+		ei := mi.extensionFieldInfo(x.Type())
 		if ei.funcs.isInit == nil {
 			continue
 		}
-		v := x.GetValue()
-		if v == nil {
+		v := x.Value()
+		if !v.IsValid() {
 			continue
 		}
 		if err := ei.funcs.isInit(v); err != nil {

@@ -39,7 +39,7 @@ func sizeMessageSet(mi *MessageInfo, p pointer, tagsize int, opts marshalOptions
 		}
 		num, _ := wire.DecodeTag(xi.wiretag)
 		n += messageset.SizeField(num)
-		n += xi.funcs.size(x.GetValue(), wire.SizeTag(messageset.FieldMessage), opts)
+		n += xi.funcs.size(x.Value(), wire.SizeTag(messageset.FieldMessage), opts)
 	}
 	return n
 }
@@ -88,7 +88,7 @@ func marshalMessageSetField(mi *MessageInfo, b []byte, x ExtensionField, opts ma
 	xi := mi.extensionFieldInfo(x.GetType())
 	num, _ := wire.DecodeTag(xi.wiretag)
 	b = messageset.AppendFieldStart(b, num)
-	b, err := xi.funcs.marshal(b, x.GetValue(), wire.EncodeTag(messageset.FieldMessage, wire.BytesType), opts)
+	b, err := xi.funcs.marshal(b, x.Value(), wire.EncodeTag(messageset.FieldMessage, wire.BytesType), opts)
 	if err != nil {
 		return b, err
 	}

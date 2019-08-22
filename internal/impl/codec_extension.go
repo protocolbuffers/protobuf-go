@@ -16,7 +16,7 @@ type extensionFieldInfo struct {
 	wiretag             uint64
 	tagsize             int
 	unmarshalNeedsValue bool
-	funcs               ifaceCoderFuncs
+	funcs               valueCoderFuncs
 }
 
 func (mi *MessageInfo) extensionFieldInfo(xt pref.ExtensionType) *extensionFieldInfo {
@@ -66,60 +66,80 @@ type ExtensionField struct {
 
 	// value is either the value of GetValue,
 	// or a *lazyExtensionValue that then returns the value of GetValue.
-	value interface{} // TODO: switch to protoreflect.Value
+	value pref.Value
+	lazy  *lazyExtensionValue
 }
 
-func (f ExtensionField) HasType() bool {
-	return f.typ != nil
-}
-func (f ExtensionField) GetType() pref.ExtensionType {
-	return f.typ
-}
-func (f *ExtensionField) SetType(t pref.ExtensionType) {
+// Set sets the type and value of the extension field.
+// This must not be called concurrently.
+func (f *ExtensionField) Set(t pref.ExtensionType, v pref.Value) {
 	f.typ = t
+	f.value = v
 }
 
-// HasValue reports whether a value is set for the extension field.
-// This may be called concurrently.
-func (f ExtensionField) HasValue() bool {
-	return f.value != nil
+// SetLazy sets the type and a value that is to be lazily evaluated upon first use.
+// This must not be called concurrently.
+func (f *ExtensionField) SetLazy(t pref.ExtensionType, fn func() pref.Value) {
+	f.typ = t
+	f.lazy = &lazyExtensionValue{value: fn}
 }
 
-// GetValue returns the concrete value for the extension field.
-// Let the type of Desc.ExtensionType be the "API type" and
-// the type of GetValue be the "storage type".
-// The API type and storage type are the same except:
-//	* for scalars (except []byte), where the API type uses *T,
-//	while the storage type uses T.
-//	* for repeated fields, where the API type uses []T,
-//	while the storage type uses *[]T.
-//
-// The reason for the divergence is so that the storage type more naturally
-// matches what is expected of when retrieving the values through the
-// protobuf reflection APIs.
-//
-// GetValue is only populated if Desc is also populated.
+// Value returns the value of the extension field.
 // This may be called concurrently.
-//
-// TODO: switch interface{} to protoreflect.Value
-func (f ExtensionField) GetValue() interface{} {
-	if f, ok := f.value.(*lazyExtensionValue); ok {
-		return f.GetValue()
+func (f *ExtensionField) Value() pref.Value {
+	if f.lazy != nil {
+		return f.lazy.GetValue()
 	}
 	return f.value
 }
 
-// SetEagerValue sets the current value of the extension.
-// This must not be called concurrently.
-func (f *ExtensionField) SetEagerValue(v interface{}) {
-	f.value = v
+// Type returns the type of the extension field.
+// This may be called concurrently.
+func (f ExtensionField) Type() pref.ExtensionType {
+	return f.typ
 }
 
-// SetLazyValue sets a value that is to be lazily evaluated upon first use.
-// The returned value must not be nil.
-// This must not be called concurrently.
-func (f *ExtensionField) SetLazyValue(v func() interface{}) {
-	f.value = &lazyExtensionValue{value: v}
+// IsSet returns whether the extension field is set.
+// This may be called concurrently.
+func (f ExtensionField) IsSet() bool {
+	return f.typ != nil
+}
+
+// Deprecated: Do not use.
+func (f ExtensionField) HasType() bool {
+	return f.typ != nil
+}
+
+// Deprecated: Do not use.
+func (f ExtensionField) GetType() pref.ExtensionType {
+	return f.typ
+}
+
+// Deprecated: Do not use.
+func (f *ExtensionField) SetType(t pref.ExtensionType) {
+	f.typ = t
+}
+
+// Deprecated: Do not use.
+func (f ExtensionField) HasValue() bool {
+	return f.value.IsValid() || f.lazy != nil
+}
+
+// Deprecated: Do not use.
+func (f ExtensionField) GetValue() interface{} {
+	return f.typ.InterfaceOf(f.Value())
+}
+
+// Deprecated: Do not use.
+func (f *ExtensionField) SetEagerValue(ival interface{}) {
+	f.value = f.typ.ValueOf(ival)
+}
+
+// Deprecated: Do not use.
+func (f *ExtensionField) SetLazyValue(fn func() interface{}) {
+	f.lazy = &lazyExtensionValue{value: func() interface{} {
+		return f.typ.ValueOf(fn())
+	}}
 }
 
 type lazyExtensionValue struct {
@@ -128,14 +148,14 @@ type lazyExtensionValue struct {
 	value interface{} // either the value itself or a func() interface{}
 }
 
-func (v *lazyExtensionValue) GetValue() interface{} {
+func (v *lazyExtensionValue) GetValue() pref.Value {
 	if atomic.LoadUint32(&v.once) == 0 {
 		v.mu.Lock()
-		if f, ok := v.value.(func() interface{}); ok {
+		if f, ok := v.value.(func() pref.Value); ok {
 			v.value = f()
 		}
 		atomic.StoreUint32(&v.once, 1)
 		v.mu.Unlock()
 	}
-	return v.value
+	return v.value.(pref.Value)
 }

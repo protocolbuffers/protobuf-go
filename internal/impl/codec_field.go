@@ -170,32 +170,55 @@ func consumeMessage(b []byte, m proto.Message, wtyp wire.Type, opts unmarshalOpt
 	return n, nil
 }
 
-func sizeMessageIface(ival interface{}, tagsize int, opts marshalOptions) int {
-	m := Export{}.MessageOf(ival).Interface()
+func sizeMessageValue(v pref.Value, tagsize int, opts marshalOptions) int {
+	m := v.Message().Interface()
 	return sizeMessage(m, tagsize, opts)
 }
 
-func appendMessageIface(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	m := Export{}.MessageOf(ival).Interface()
+func appendMessageValue(b []byte, v pref.Value, wiretag uint64, opts marshalOptions) ([]byte, error) {
+	m := v.Message().Interface()
 	return appendMessage(b, m, wiretag, opts)
 }
 
-func consumeMessageIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, opts unmarshalOptions) (interface{}, int, error) {
-	m := Export{}.MessageOf(ival).Interface()
+func consumeMessageValue(b []byte, v pref.Value, _ wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, int, error) {
+	m := v.Message().Interface()
 	n, err := consumeMessage(b, m, wtyp, opts)
-	return ival, n, err
+	return v, n, err
 }
 
-func isInitMessageIface(ival interface{}) error {
-	m := Export{}.MessageOf(ival).Interface()
+func isInitMessageValue(v pref.Value) error {
+	m := v.Message().Interface()
 	return proto.IsInitialized(m)
 }
 
-var coderMessageIface = ifaceCoderFuncs{
-	size:      sizeMessageIface,
-	marshal:   appendMessageIface,
-	unmarshal: consumeMessageIface,
-	isInit:    isInitMessageIface,
+var coderMessageValue = valueCoderFuncs{
+	size:      sizeMessageValue,
+	marshal:   appendMessageValue,
+	unmarshal: consumeMessageValue,
+	isInit:    isInitMessageValue,
+}
+
+func sizeGroupValue(v pref.Value, tagsize int, opts marshalOptions) int {
+	m := v.Message().Interface()
+	return sizeGroup(m, tagsize, opts)
+}
+
+func appendGroupValue(b []byte, v pref.Value, wiretag uint64, opts marshalOptions) ([]byte, error) {
+	m := v.Message().Interface()
+	return appendGroup(b, m, wiretag, opts)
+}
+
+func consumeGroupValue(b []byte, v pref.Value, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, int, error) {
+	m := v.Message().Interface()
+	n, err := consumeGroup(b, m, num, wtyp, opts)
+	return v, n, err
+}
+
+var coderGroupValue = valueCoderFuncs{
+	size:      sizeGroupValue,
+	marshal:   appendGroupValue,
+	unmarshal: consumeGroupValue,
+	isInit:    isInitMessageValue,
 }
 
 func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
@@ -281,25 +304,6 @@ func consumeGroup(b []byte, m proto.Message, num wire.Number, wtyp wire.Type, op
 		return 0, wire.ParseError(n)
 	}
 	return n, opts.Options().Unmarshal(b, m)
-}
-
-func makeGroupValueCoder(fd pref.FieldDescriptor, ft reflect.Type) ifaceCoderFuncs {
-	return ifaceCoderFuncs{
-		size: func(ival interface{}, tagsize int, opts marshalOptions) int {
-			m := Export{}.MessageOf(ival).Interface()
-			return sizeGroup(m, tagsize, opts)
-		},
-		marshal: func(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error) {
-			m := Export{}.MessageOf(ival).Interface()
-			return appendGroup(b, m, wiretag, opts)
-		},
-		unmarshal: func(b []byte, ival interface{}, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (interface{}, int, error) {
-			m := Export{}.MessageOf(ival).Interface()
-			n, err := consumeGroup(b, m, num, wtyp, opts)
-			return ival, n, err
-		},
-		isInit: isInitMessageIface,
-	}
 }
 
 func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
@@ -441,32 +445,116 @@ func isInitMessageSlice(p pointer, goType reflect.Type) error {
 
 // Slices of messages
 
-func sizeMessageSliceIface(ival interface{}, tagsize int, opts marshalOptions) int {
-	p := pointerOfIface(ival)
-	return sizeMessageSlice(p, reflect.TypeOf(ival).Elem().Elem(), tagsize, opts)
+func sizeMessageSliceValue(listv pref.Value, tagsize int, opts marshalOptions) int {
+	list := listv.List()
+	n := 0
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		m := list.Get(i).Message().Interface()
+		n += wire.SizeBytes(proto.Size(m)) + tagsize
+	}
+	return n
 }
 
-func appendMessageSliceIface(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	p := pointerOfIface(ival)
-	return appendMessageSlice(b, p, wiretag, reflect.TypeOf(ival).Elem().Elem(), opts)
+func appendMessageSliceValue(b []byte, listv pref.Value, wiretag uint64, opts marshalOptions) ([]byte, error) {
+	list := listv.List()
+	mopts := opts.Options()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		m := list.Get(i).Message().Interface()
+		b = wire.AppendVarint(b, wiretag)
+		siz := proto.Size(m)
+		b = wire.AppendVarint(b, uint64(siz))
+		var err error
+		b, err = mopts.MarshalAppend(b, m)
+		if err != nil {
+			return b, err
+		}
+	}
+	return b, nil
 }
 
-func consumeMessageSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, opts unmarshalOptions) (interface{}, int, error) {
-	p := pointerOfIface(ival)
-	n, err := consumeMessageSlice(b, p, reflect.TypeOf(ival).Elem().Elem(), wtyp, opts)
-	return ival, n, err
+func consumeMessageSliceValue(b []byte, listv pref.Value, _ wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, int, error) {
+	list := listv.List()
+	if wtyp != wire.BytesType {
+		return pref.Value{}, 0, errUnknown
+	}
+	v, n := wire.ConsumeBytes(b)
+	if n < 0 {
+		return pref.Value{}, 0, wire.ParseError(n)
+	}
+	m := list.NewElement()
+	if err := opts.Options().Unmarshal(v, m.Message().Interface()); err != nil {
+		return pref.Value{}, 0, err
+	}
+	list.Append(m)
+	return listv, n, nil
 }
 
-func isInitMessageSliceIface(ival interface{}) error {
-	p := pointerOfIface(ival)
-	return isInitMessageSlice(p, reflect.TypeOf(ival).Elem().Elem())
+func isInitMessageSliceValue(listv pref.Value) error {
+	list := listv.List()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		m := list.Get(i).Message().Interface()
+		if err := proto.IsInitialized(m); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-var coderMessageSliceIface = ifaceCoderFuncs{
-	size:      sizeMessageSliceIface,
-	marshal:   appendMessageSliceIface,
-	unmarshal: consumeMessageSliceIface,
-	isInit:    isInitMessageSliceIface,
+var coderMessageSliceValue = valueCoderFuncs{
+	size:      sizeMessageSliceValue,
+	marshal:   appendMessageSliceValue,
+	unmarshal: consumeMessageSliceValue,
+	isInit:    isInitMessageSliceValue,
+}
+
+func sizeGroupSliceValue(listv pref.Value, tagsize int, opts marshalOptions) int {
+	list := listv.List()
+	n := 0
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		m := list.Get(i).Message().Interface()
+		n += 2*tagsize + proto.Size(m)
+	}
+	return n
+}
+
+func appendGroupSliceValue(b []byte, listv pref.Value, wiretag uint64, opts marshalOptions) ([]byte, error) {
+	list := listv.List()
+	mopts := opts.Options()
+	for i, llen := 0, list.Len(); i < llen; i++ {
+		m := list.Get(i).Message().Interface()
+		b = wire.AppendVarint(b, wiretag) // start group
+		var err error
+		b, err = mopts.MarshalAppend(b, m)
+		if err != nil {
+			return b, err
+		}
+		b = wire.AppendVarint(b, wiretag+1) // end group
+	}
+	return b, nil
+}
+
+func consumeGroupSliceValue(b []byte, listv pref.Value, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, int, error) {
+	list := listv.List()
+	if wtyp != wire.StartGroupType {
+		return pref.Value{}, 0, errUnknown
+	}
+	b, n := wire.ConsumeGroup(num, b)
+	if n < 0 {
+		return pref.Value{}, 0, wire.ParseError(n)
+	}
+	m := list.NewElement()
+	if err := opts.Options().Unmarshal(b, m.Message().Interface()); err != nil {
+		return pref.Value{}, 0, err
+	}
+	list.Append(m)
+	return listv, n, nil
+}
+
+var coderGroupSliceValue = valueCoderFuncs{
+	size:      sizeGroupSliceValue,
+	marshal:   appendGroupSliceValue,
+	unmarshal: consumeGroupSliceValue,
+	isInit:    isInitMessageSliceValue,
 }
 
 func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
@@ -579,171 +667,6 @@ func consumeGroupSliceInfo(b []byte, p pointer, num wire.Number, wtyp wire.Type,
 	}
 	p.AppendPointerSlice(mp)
 	return n, nil
-}
-
-func sizeGroupSliceIface(ival interface{}, tagsize int, opts marshalOptions) int {
-	p := pointerOfIface(ival)
-	return sizeGroupSlice(p, reflect.TypeOf(ival).Elem().Elem(), tagsize, opts)
-}
-
-func appendGroupSliceIface(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	p := pointerOfIface(ival)
-	return appendGroupSlice(b, p, wiretag, reflect.TypeOf(ival).Elem().Elem(), opts)
-}
-
-func consumeGroupSliceIface(b []byte, ival interface{}, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (interface{}, int, error) {
-	p := pointerOfIface(ival)
-	n, err := consumeGroupSlice(b, p, num, wtyp, reflect.TypeOf(ival).Elem().Elem(), opts)
-	return ival, n, err
-}
-
-var coderGroupSliceIface = ifaceCoderFuncs{
-	size:      sizeGroupSliceIface,
-	marshal:   appendGroupSliceIface,
-	unmarshal: consumeGroupSliceIface,
-	isInit:    isInitMessageSliceIface,
-}
-
-// Enums
-
-func sizeEnumIface(ival interface{}, tagsize int, _ marshalOptions) (n int) {
-	v := reflect.ValueOf(ival).Int()
-	return wire.SizeVarint(uint64(v)) + tagsize
-}
-
-func appendEnumIface(b []byte, ival interface{}, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	v := reflect.ValueOf(ival).Int()
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(v))
-	return b, nil
-}
-
-func consumeEnumIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (interface{}, int, error) {
-	if wtyp != wire.VarintType {
-		return nil, 0, errUnknown
-	}
-	v, n := wire.ConsumeVarint(b)
-	if n < 0 {
-		return nil, 0, wire.ParseError(n)
-	}
-	rv := reflect.New(reflect.TypeOf(ival)).Elem()
-	rv.SetInt(int64(v))
-	return rv.Interface(), n, nil
-}
-
-var coderEnumIface = ifaceCoderFuncs{
-	size:      sizeEnumIface,
-	marshal:   appendEnumIface,
-	unmarshal: consumeEnumIface,
-}
-
-func sizeEnumSliceIface(ival interface{}, tagsize int, opts marshalOptions) (size int) {
-	return sizeEnumSliceReflect(reflect.ValueOf(ival).Elem(), tagsize, opts)
-}
-
-func sizeEnumSliceReflect(s reflect.Value, tagsize int, _ marshalOptions) (size int) {
-	for i, llen := 0, s.Len(); i < llen; i++ {
-		size += wire.SizeVarint(uint64(s.Index(i).Int())) + tagsize
-	}
-	return size
-}
-
-func appendEnumSliceIface(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	return appendEnumSliceReflect(b, reflect.ValueOf(ival).Elem(), wiretag, opts)
-}
-
-func appendEnumSliceReflect(b []byte, s reflect.Value, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	for i, llen := 0, s.Len(); i < llen; i++ {
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, uint64(s.Index(i).Int()))
-	}
-	return b, nil
-}
-
-func consumeEnumSliceIface(b []byte, ival interface{}, _ wire.Number, wtyp wire.Type, opts unmarshalOptions) (interface{}, int, error) {
-	n, err := consumeEnumSliceReflect(b, reflect.ValueOf(ival), wtyp, opts)
-	return ival, n, err
-}
-
-func consumeEnumSliceReflect(b []byte, s reflect.Value, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
-	s = s.Elem() // *[]E -> []E
-	if wtyp == wire.BytesType {
-		b, n = wire.ConsumeBytes(b)
-		if n < 0 {
-			return 0, wire.ParseError(n)
-		}
-		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
-			if n < 0 {
-				return 0, wire.ParseError(n)
-			}
-			rv := reflect.New(s.Type().Elem()).Elem()
-			rv.SetInt(int64(v))
-			s.Set(reflect.Append(s, rv))
-			b = b[n:]
-		}
-		return n, nil
-	}
-	if wtyp != wire.VarintType {
-		return 0, errUnknown
-	}
-	v, n := wire.ConsumeVarint(b)
-	if n < 0 {
-		return 0, wire.ParseError(n)
-	}
-	rv := reflect.New(s.Type().Elem()).Elem()
-	rv.SetInt(int64(v))
-	s.Set(reflect.Append(s, rv))
-	return n, nil
-}
-
-var coderEnumSliceIface = ifaceCoderFuncs{
-	size:      sizeEnumSliceIface,
-	marshal:   appendEnumSliceIface,
-	unmarshal: consumeEnumSliceIface,
-}
-
-func sizeEnumPackedSliceIface(ival interface{}, tagsize int, opts marshalOptions) (size int) {
-	return sizeEnumPackedSliceReflect(reflect.ValueOf(ival).Elem(), tagsize, opts)
-}
-
-func sizeEnumPackedSliceReflect(s reflect.Value, tagsize int, _ marshalOptions) (size int) {
-	llen := s.Len()
-	if llen == 0 {
-		return 0
-	}
-	n := 0
-	for i := 0; i < llen; i++ {
-		n += wire.SizeVarint(uint64(s.Index(i).Int()))
-	}
-	return tagsize + wire.SizeBytes(n)
-}
-
-func appendEnumPackedSliceIface(b []byte, ival interface{}, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	return appendEnumPackedSliceReflect(b, reflect.ValueOf(ival).Elem(), wiretag, opts)
-}
-
-func appendEnumPackedSliceReflect(b []byte, s reflect.Value, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	llen := s.Len()
-	if llen == 0 {
-		return b, nil
-	}
-	b = wire.AppendVarint(b, wiretag)
-	n := 0
-	for i := 0; i < llen; i++ {
-		n += wire.SizeVarint(uint64(s.Index(i).Int()))
-	}
-	b = wire.AppendVarint(b, uint64(n))
-	for i := 0; i < llen; i++ {
-		b = wire.AppendVarint(b, uint64(s.Index(i).Int()))
-	}
-	return b, nil
-}
-
-var coderEnumPackedSliceIface = ifaceCoderFuncs{
-	size:      sizeEnumPackedSliceIface,
-	marshal:   appendEnumPackedSliceIface,
-	unmarshal: consumeEnumSliceIface,
 }
 
 func asMessage(v reflect.Value) pref.ProtoMessage {
