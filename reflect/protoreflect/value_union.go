@@ -65,36 +65,99 @@ func ValueOf(v interface{}) Value {
 	case nil:
 		return Value{}
 	case bool:
-		if v {
-			return Value{typ: boolType, num: 1}
-		} else {
-			return Value{typ: boolType, num: 0}
-		}
+		return ValueOfBool(v)
 	case int32:
-		return Value{typ: int32Type, num: uint64(v)}
+		return ValueOfInt32(v)
 	case int64:
-		return Value{typ: int64Type, num: uint64(v)}
+		return ValueOfInt64(v)
 	case uint32:
-		return Value{typ: uint32Type, num: uint64(v)}
+		return ValueOfUint32(v)
 	case uint64:
-		return Value{typ: uint64Type, num: uint64(v)}
+		return ValueOfUint64(v)
 	case float32:
-		return Value{typ: float32Type, num: uint64(math.Float64bits(float64(v)))}
+		return ValueOfFloat32(v)
 	case float64:
-		return Value{typ: float64Type, num: uint64(math.Float64bits(float64(v)))}
+		return ValueOfFloat64(v)
 	case string:
-		return valueOfString(v)
+		return ValueOfString(v)
 	case []byte:
-		return valueOfBytes(v[:len(v):len(v)])
+		return ValueOfBytes(v)
 	case EnumNumber:
-		return Value{typ: enumType, num: uint64(v)}
+		return ValueOfEnum(v)
 	case Message, List, Map:
 		return valueOfIface(v)
 	default:
-		// TODO: Special case Enum, ProtoMessage, *[]T, and *map[K]V?
-		// Note: this would violate the documented invariant in Interface.
 		panic(fmt.Sprintf("invalid type: %v", reflect.TypeOf(v)))
 	}
+}
+
+// ValueOfBool returns a new boolean value.
+func ValueOfBool(v bool) Value {
+	if v {
+		return Value{typ: boolType, num: 1}
+	} else {
+		return Value{typ: boolType, num: 0}
+	}
+}
+
+// ValueOfInt32 returns a new int32 value.
+func ValueOfInt32(v int32) Value {
+	return Value{typ: int32Type, num: uint64(v)}
+}
+
+// ValueOfInt64 returns a new int64 value.
+func ValueOfInt64(v int64) Value {
+	return Value{typ: int64Type, num: uint64(v)}
+}
+
+// ValueOfUint32 returns a new uint32 value.
+func ValueOfUint32(v uint32) Value {
+	return Value{typ: uint32Type, num: uint64(v)}
+}
+
+// ValueOfUint64 returns a new uint64 value.
+func ValueOfUint64(v uint64) Value {
+	return Value{typ: uint64Type, num: v}
+}
+
+// ValueOfFloat32 returns a new float32 value.
+func ValueOfFloat32(v float32) Value {
+	return Value{typ: float32Type, num: uint64(math.Float64bits(float64(v)))}
+}
+
+// ValueOfFloat64 returns a new float64 value.
+func ValueOfFloat64(v float64) Value {
+	return Value{typ: float64Type, num: uint64(math.Float64bits(float64(v)))}
+}
+
+// ValueOfString returns a new string value.
+func ValueOfString(v string) Value {
+	return valueOfString(v)
+}
+
+// ValueOfBytes returns a new bytes value.
+func ValueOfBytes(v []byte) Value {
+	return valueOfBytes(v[:len(v):len(v)])
+}
+
+// ValueOfEnum returns a new enum value.
+func ValueOfEnum(v EnumNumber) Value {
+	return Value{typ: enumType, num: uint64(v)}
+}
+
+// ValueOfMessage returns a new Message value.
+func ValueOfMessage(v Message) Value {
+	return valueOfIface(v)
+}
+
+// ValueOfList returns a new List value.
+func ValueOfList(v List) Value {
+	return valueOfIface(v)
+}
+
+// ValueOfMap returns a new Map value.
+func ValueOfMap(v Map) Value {
+	return valueOfIface(v)
 }
 
 // IsValid reports whether v is populated with a value.

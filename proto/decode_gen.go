@@ -29,7 +29,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(wire.DecodeBool(v)), n, nil
+		return protoreflect.ValueOfBool(wire.DecodeBool(v)), n, nil
 	case protoreflect.EnumKind:
 		if wtyp != wire.VarintType {
 			return val, 0, errUnknown
@@ -38,7 +38,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(protoreflect.EnumNumber(v)), n, nil
+		return protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)), n, nil
 	case protoreflect.Int32Kind:
 		if wtyp != wire.VarintType {
 			return val, 0, errUnknown
@@ -47,7 +47,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(int32(v)), n, nil
+		return protoreflect.ValueOfInt32(int32(v)), n, nil
 	case protoreflect.Sint32Kind:
 		if wtyp != wire.VarintType {
 			return val, 0, errUnknown
@@ -56,7 +56,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(int32(wire.DecodeZigZag(v & math.MaxUint32))), n, nil
+		return protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))), n, nil
 	case protoreflect.Uint32Kind:
 		if wtyp != wire.VarintType {
 			return val, 0, errUnknown
@@ -65,7 +65,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(uint32(v)), n, nil
+		return protoreflect.ValueOfUint32(uint32(v)), n, nil
 	case protoreflect.Int64Kind:
 		if wtyp != wire.VarintType {
 			return val, 0, errUnknown
@@ -74,7 +74,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(int64(v)), n, nil
+		return protoreflect.ValueOfInt64(int64(v)), n, nil
 	case protoreflect.Sint64Kind:
 		if wtyp != wire.VarintType {
 			return val, 0, errUnknown
@@ -83,7 +83,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(wire.DecodeZigZag(v)), n, nil
+		return protoreflect.ValueOfInt64(wire.DecodeZigZag(v)), n, nil
 	case protoreflect.Uint64Kind:
 		if wtyp != wire.VarintType {
 			return val, 0, errUnknown
@@ -92,7 +92,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(v), n, nil
+		return protoreflect.ValueOfUint64(v), n, nil
 	case protoreflect.Sfixed32Kind:
 		if wtyp != wire.Fixed32Type {
 			return val, 0, errUnknown
@@ -101,7 +101,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(int32(v)), n, nil
+		return protoreflect.ValueOfInt32(int32(v)), n, nil
 	case protoreflect.Fixed32Kind:
 		if wtyp != wire.Fixed32Type {
 			return val, 0, errUnknown
@@ -110,7 +110,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(uint32(v)), n, nil
+		return protoreflect.ValueOfUint32(uint32(v)), n, nil
 	case protoreflect.FloatKind:
 		if wtyp != wire.Fixed32Type {
 			return val, 0, errUnknown
@@ -119,7 +119,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(math.Float32frombits(uint32(v))), n, nil
+		return protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))), n, nil
 	case protoreflect.Sfixed64Kind:
 		if wtyp != wire.Fixed64Type {
 			return val, 0, errUnknown
@@ -128,7 +128,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(int64(v)), n, nil
+		return protoreflect.ValueOfInt64(int64(v)), n, nil
 	case protoreflect.Fixed64Kind:
 		if wtyp != wire.Fixed64Type {
 			return val, 0, errUnknown
@@ -137,7 +137,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(v), n, nil
+		return protoreflect.ValueOfUint64(v), n, nil
 	case protoreflect.DoubleKind:
 		if wtyp != wire.Fixed64Type {
 			return val, 0, errUnknown
@@ -146,7 +146,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(math.Float64frombits(v)), n, nil
+		return protoreflect.ValueOfFloat64(math.Float64frombits(v)), n, nil
 	case protoreflect.StringKind:
 		if wtyp != wire.BytesType {
 			return val, 0, errUnknown
@@ -158,7 +158,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
 			return protoreflect.Value{}, 0, errors.InvalidUTF8(string(fd.FullName()))
 		}
-		return protoreflect.ValueOf(string(v)), n, nil
+		return protoreflect.ValueOfString(string(v)), n, nil
 	case protoreflect.BytesKind:
 		if wtyp != wire.BytesType {
 			return val, 0, errUnknown
@@ -167,7 +167,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(append(([]byte)(nil), v...)), n, nil
+		return protoreflect.ValueOfBytes(append(([]byte)(nil), v...)), n, nil
 	case protoreflect.MessageKind:
 		if wtyp != wire.BytesType {
 			return val, 0, errUnknown
@@ -176,7 +176,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(v), n, nil
+		return protoreflect.ValueOfBytes(v), n, nil
 	case protoreflect.GroupKind:
 		if wtyp != wire.StartGroupType {
 			return val, 0, errUnknown
@@ -185,7 +185,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOf(v), n, nil
+		return protoreflect.ValueOfBytes(v), n, nil
 	default:
 		return val, 0, errUnknown
 	}
@@ -205,7 +205,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(wire.DecodeBool(v)))
+				list.Append(protoreflect.ValueOfBool(wire.DecodeBool(v)))
 			}
 			return n, nil
 		}
@@ -216,7 +216,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(wire.DecodeBool(v)))
+		list.Append(protoreflect.ValueOfBool(wire.DecodeBool(v)))
 		return n, nil
 	case protoreflect.EnumKind:
 		if wtyp == wire.BytesType {
@@ -230,7 +230,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(protoreflect.EnumNumber(v)))
+				list.Append(protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)))
 			}
 			return n, nil
 		}
@@ -241,7 +241,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(protoreflect.EnumNumber(v)))
+		list.Append(protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)))
 		return n, nil
 	case protoreflect.Int32Kind:
 		if wtyp == wire.BytesType {
@@ -255,7 +255,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(int32(v)))
+				list.Append(protoreflect.ValueOfInt32(int32(v)))
 			}
 			return n, nil
 		}
@@ -266,7 +266,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(int32(v)))
+		list.Append(protoreflect.ValueOfInt32(int32(v)))
 		return n, nil
 	case protoreflect.Sint32Kind:
 		if wtyp == wire.BytesType {
@@ -280,7 +280,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(int32(wire.DecodeZigZag(v & math.MaxUint32))))
+				list.Append(protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))))
 			}
 			return n, nil
 		}
@@ -291,7 +291,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(int32(wire.DecodeZigZag(v & math.MaxUint32))))
+		list.Append(protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))))
 		return n, nil
 	case protoreflect.Uint32Kind:
 		if wtyp == wire.BytesType {
@@ -305,7 +305,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(uint32(v)))
+				list.Append(protoreflect.ValueOfUint32(uint32(v)))
 			}
 			return n, nil
 		}
@@ -316,7 +316,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(uint32(v)))
+		list.Append(protoreflect.ValueOfUint32(uint32(v)))
 		return n, nil
 	case protoreflect.Int64Kind:
 		if wtyp == wire.BytesType {
@@ -330,7 +330,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(int64(v)))
+				list.Append(protoreflect.ValueOfInt64(int64(v)))
 			}
 			return n, nil
 		}
@@ -341,7 +341,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(int64(v)))
+		list.Append(protoreflect.ValueOfInt64(int64(v)))
 		return n, nil
 	case protoreflect.Sint64Kind:
 		if wtyp == wire.BytesType {
@@ -355,7 +355,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(wire.DecodeZigZag(v)))
+				list.Append(protoreflect.ValueOfInt64(wire.DecodeZigZag(v)))
 			}
 			return n, nil
 		}
@@ -366,7 +366,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(wire.DecodeZigZag(v)))
+		list.Append(protoreflect.ValueOfInt64(wire.DecodeZigZag(v)))
 		return n, nil
 	case protoreflect.Uint64Kind:
 		if wtyp == wire.BytesType {
@@ -380,7 +380,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(v))
+				list.Append(protoreflect.ValueOfUint64(v))
 			}
 			return n, nil
 		}
@@ -391,7 +391,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(v))
+		list.Append(protoreflect.ValueOfUint64(v))
 		return n, nil
 	case protoreflect.Sfixed32Kind:
 		if wtyp == wire.BytesType {
@@ -405,7 +405,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(int32(v)))
+				list.Append(protoreflect.ValueOfInt32(int32(v)))
 			}
 			return n, nil
 		}
@@ -416,7 +416,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(int32(v)))
+		list.Append(protoreflect.ValueOfInt32(int32(v)))
 		return n, nil
 	case protoreflect.Fixed32Kind:
 		if wtyp == wire.BytesType {
@@ -430,7 +430,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(uint32(v)))
+				list.Append(protoreflect.ValueOfUint32(uint32(v)))
 			}
 			return n, nil
 		}
@@ -441,7 +441,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(uint32(v)))
+		list.Append(protoreflect.ValueOfUint32(uint32(v)))
 		return n, nil
 	case protoreflect.FloatKind:
 		if wtyp == wire.BytesType {
@@ -455,7 +455,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(math.Float32frombits(uint32(v))))
+				list.Append(protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))))
 			}
 			return n, nil
 		}
@@ -466,7 +466,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(math.Float32frombits(uint32(v))))
+		list.Append(protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))))
 		return n, nil
 	case protoreflect.Sfixed64Kind:
 		if wtyp == wire.BytesType {
@@ -480,7 +480,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(int64(v)))
+				list.Append(protoreflect.ValueOfInt64(int64(v)))
 			}
 			return n, nil
 		}
@@ -491,7 +491,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(int64(v)))
+		list.Append(protoreflect.ValueOfInt64(int64(v)))
 		return n, nil
 	case protoreflect.Fixed64Kind:
 		if wtyp == wire.BytesType {
@@ -505,7 +505,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(v))
+				list.Append(protoreflect.ValueOfUint64(v))
 			}
 			return n, nil
 		}
@@ -516,7 +516,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(v))
+		list.Append(protoreflect.ValueOfUint64(v))
 		return n, nil
 	case protoreflect.DoubleKind:
 		if wtyp == wire.BytesType {
@@ -530,7 +530,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf(math.Float64frombits(v)))
+				list.Append(protoreflect.ValueOfFloat64(math.Float64frombits(v)))
 			}
 			return n, nil
 		}
@@ -541,7 +541,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(math.Float64frombits(v)))
+		list.Append(protoreflect.ValueOfFloat64(math.Float64frombits(v)))
 		return n, nil
 	case protoreflect.StringKind:
 		if wtyp != wire.BytesType {
@@ -554,7 +554,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
 			return 0, errors.InvalidUTF8(string(fd.FullName()))
 		}
-		list.Append(protoreflect.ValueOf(string(v)))
+		list.Append(protoreflect.ValueOfString(string(v)))
 		return n, nil
 	case protoreflect.BytesKind:
 		if wtyp != wire.BytesType {
@@ -564,7 +564,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOf(append(([]byte)(nil), v...)))
+		list.Append(protoreflect.ValueOfBytes(append(([]byte)(nil), v...)))
 		return n, nil
 	case protoreflect.MessageKind:
 		if wtyp != wire.BytesType {

@@ -81,11 +81,6 @@ var (
 	bytesZero   = pref.ValueOf([]byte(nil))
 )
 
-type scalarConverter struct {
-	goType, pbType reflect.Type
-	def            pref.Value
-}
-
 func newSingularConverter(t reflect.Type, fd pref.FieldDescriptor) Converter {
 	defVal := func(fd pref.FieldDescriptor, zero pref.Value) pref.Value {
 		if fd.Cardinality() == pref.Repeated {
@@ -97,39 +92,39 @@ func newSingularConverter(t reflect.Type, fd pref.FieldDescriptor) Converter {
 	switch fd.Kind() {
 	case pref.BoolKind:
 		if t.Kind() == reflect.Bool {
-			return &scalarConverter{t, boolType, defVal(fd, boolZero)}
+			return &boolConverter{t, defVal(fd, boolZero)}
 		}
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
 		if t.Kind() == reflect.Int32 {
-			return &scalarConverter{t, int32Type, defVal(fd, int32Zero)}
+			return &int32Converter{t, defVal(fd, int32Zero)}
 		}
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
 		if t.Kind() == reflect.Int64 {
-			return &scalarConverter{t, int64Type, defVal(fd, int64Zero)}
+			return &int64Converter{t, defVal(fd, int64Zero)}
 		}
 	case pref.Uint32Kind, pref.Fixed32Kind:
 		if t.Kind() == reflect.Uint32 {
-			return &scalarConverter{t, uint32Type, defVal(fd, uint32Zero)}
+			return &uint32Converter{t, defVal(fd, uint32Zero)}
 		}
 	case pref.Uint64Kind, pref.Fixed64Kind:
 		if t.Kind() == reflect.Uint64 {
-			return &scalarConverter{t, uint64Type, defVal(fd, uint64Zero)}
+			return &uint64Converter{t, defVal(fd, uint64Zero)}
 		}
 	case pref.FloatKind:
 		if t.Kind() == reflect.Float32 {
-			return &scalarConverter{t, float32Type, defVal(fd, float32Zero)}
+			return &float32Converter{t, defVal(fd, float32Zero)}
 		}
 	case pref.DoubleKind:
 		if t.Kind() == reflect.Float64 {
-			return &scalarConverter{t, float64Type, defVal(fd, float64Zero)}
+			return &float64Converter{t, defVal(fd, float64Zero)}
 		}
 	case pref.StringKind:
 		if t.Kind() == reflect.String || (t.Kind() == reflect.Slice && t.Elem() == byteType) {
-			return &scalarConverter{t, stringType, defVal(fd, stringZero)}
+			return &stringConverter{t, defVal(fd, stringZero)}
 		}
 	case pref.BytesKind:
 		if t.Kind() == reflect.String || (t.Kind() == reflect.Slice && t.Elem() == byteType) {
-			return &scalarConverter{t, bytesType, defVal(fd, bytesZero)}
+			return &bytesConverter{t, defVal(fd, bytesZero)}
 		}
 	case pref.EnumKind:
 		// Handle enums, which must be a named int32 type.
@@ -142,37 +137,167 @@ func newSingularConverter(t reflect.Type, fd pref.FieldDescriptor) Converter {
 	panic(fmt.Sprintf("invalid Go type %v for field %v", t, fd.FullName()))
 }
 
-func (c *scalarConverter) PBValueOf(v reflect.Value) pref.Value {
+type boolConverter struct {
+	goType reflect.Type
+	def    pref.Value
+}
+
+func (c *boolConverter) PBValueOf(v reflect.Value) pref.Value {
 	if v.Type() != c.goType {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
-	if c.goType.Kind() == reflect.String && c.pbType.Kind() == reflect.Slice && v.Len() == 0 {
-		return pref.ValueOf([]byte(nil)) // ensure empty string is []byte(nil)
-	}
-	return pref.ValueOf(v.Convert(c.pbType).Interface())
+	return pref.ValueOfBool(v.Bool())
+}
+func (c *boolConverter) GoValueOf(v pref.Value) reflect.Value {
+	return reflect.ValueOf(v.Bool()).Convert(c.goType)
+}
+func (c *boolConverter) New() pref.Value  { return c.def }
+func (c *boolConverter) Zero() pref.Value { return c.def }
+
+type int32Converter struct {
+	goType reflect.Type
+	def    pref.Value
 }
 
-func (c *scalarConverter) GoValueOf(v pref.Value) reflect.Value {
-	rv := reflect.ValueOf(v.Interface())
-	if rv.Type() != c.pbType {
-		panic(fmt.Sprintf("invalid type: got %v, want %v", rv.Type(), c.pbType))
+func (c *int32Converter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
-	if c.pbType.Kind() == reflect.String && c.goType.Kind() == reflect.Slice && rv.Len() == 0 {
+	return pref.ValueOfInt32(int32(v.Int()))
+}
+func (c *int32Converter) GoValueOf(v pref.Value) reflect.Value {
+	return reflect.ValueOf(int32(v.Int())).Convert(c.goType)
+}
+func (c *int32Converter) New() pref.Value  { return c.def }
+func (c *int32Converter) Zero() pref.Value { return c.def }
+
+type int64Converter struct {
+	goType reflect.Type
+	def    pref.Value
+}
+
+func (c *int64Converter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
+	}
+	return pref.ValueOfInt64(int64(v.Int()))
+}
+func (c *int64Converter) GoValueOf(v pref.Value) reflect.Value {
+	return reflect.ValueOf(int64(v.Int())).Convert(c.goType)
+}
+func (c *int64Converter) New() pref.Value  { return c.def }
+func (c *int64Converter) Zero() pref.Value { return c.def }
+
+type uint32Converter struct {
+	goType reflect.Type
+	def    pref.Value
+}
+
+func (c *uint32Converter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
+	}
+	return pref.ValueOfUint32(uint32(v.Uint()))
+}
+func (c *uint32Converter) GoValueOf(v pref.Value) reflect.Value {
+	return reflect.ValueOf(uint32(v.Uint())).Convert(c.goType)
+}
+func (c *uint32Converter) New() pref.Value  { return c.def }
+func (c *uint32Converter) Zero() pref.Value { return c.def }
+
+type uint64Converter struct {
+	goType reflect.Type
+	def    pref.Value
+}
+
+func (c *uint64Converter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
+	}
+	return pref.ValueOfUint64(uint64(v.Uint()))
+}
+func (c *uint64Converter) GoValueOf(v pref.Value) reflect.Value {
+	return reflect.ValueOf(uint64(v.Uint())).Convert(c.goType)
+}
+func (c *uint64Converter) New() pref.Value  { return c.def }
+func (c *uint64Converter) Zero() pref.Value { return c.def }
+
+type float32Converter struct {
+	goType reflect.Type
+	def    pref.Value
+}
+
+func (c *float32Converter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
+	}
+	return pref.ValueOfFloat32(float32(v.Float()))
+}
+func (c *float32Converter) GoValueOf(v pref.Value) reflect.Value {
+	return reflect.ValueOf(float32(v.Float())).Convert(c.goType)
+}
+func (c *float32Converter) New() pref.Value  { return c.def }
+func (c *float32Converter) Zero() pref.Value { return c.def }
+
+type float64Converter struct {
+	goType reflect.Type
+	def    pref.Value
+}
+
+func (c *float64Converter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
+	}
+	return pref.ValueOfFloat64(float64(v.Float()))
+}
+func (c *float64Converter) GoValueOf(v pref.Value) reflect.Value {
+	return reflect.ValueOf(float64(v.Float())).Convert(c.goType)
+}
+func (c *float64Converter) New() pref.Value  { return c.def }
+func (c *float64Converter) Zero() pref.Value { return c.def }
+
+type stringConverter struct {
+	goType reflect.Type
+	def    pref.Value
+}
+
+func (c *stringConverter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
+	}
+	return pref.ValueOfString(v.Convert(stringType).String())
+}
+func (c *stringConverter) GoValueOf(v pref.Value) reflect.Value {
+	// pref.Value.String never panics, so we go through an interface
+	// conversion here to check the type.
+	s := v.Interface().(string)
+	if c.goType.Kind() == reflect.Slice && s == "" {
 		return reflect.Zero(c.goType) // ensure empty string is []byte(nil)
 	}
-	return rv.Convert(c.goType)
+	return reflect.ValueOf(s).Convert(c.goType)
+}
+func (c *stringConverter) New() pref.Value  { return c.def }
+func (c *stringConverter) Zero() pref.Value { return c.def }
+
+type bytesConverter struct {
+	goType reflect.Type
+	def    pref.Value
 }
 
-func (c *scalarConverter) New() pref.Value {
-	if c.pbType == bytesType {
-		return pref.ValueOf(append(([]byte)(nil), c.def.Bytes()...))
+func (c *bytesConverter) PBValueOf(v reflect.Value) pref.Value {
+	if v.Type() != c.goType {
+		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
-	return c.def
+	if c.goType.Kind() == reflect.String && v.Len() == 0 {
+		return pref.ValueOfBytes(nil) // ensure empty string is []byte(nil)
+	}
+	return pref.ValueOfBytes(v.Convert(bytesType).Bytes())
 }
-
-func (c *scalarConverter) Zero() pref.Value {
-	return c.New()
+func (c *bytesConverter) GoValueOf(v pref.Value) reflect.Value {
+	return reflect.ValueOf(v.Bytes()).Convert(c.goType)
 }
+func (c *bytesConverter) New() pref.Value  { return c.def }
+func (c *bytesConverter) Zero() pref.Value { return c.def }
 
 type enumConverter struct {
 	goType reflect.Type

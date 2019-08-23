@@ -90,6 +90,7 @@ type ProtoKind struct {
 	ToGoTypeNoZero Expr
 	FromGoType     Expr
 	NoPointer      bool
+	NoValueCodec   bool
 }
 
 func (k ProtoKind) Expr() Expr {
@@ -100,7 +101,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Bool",
 		WireType:   WireVarint,
-		ToValue:    "wire.DecodeBool(v)",
+		ToValue:    "protoreflect.ValueOfBool(wire.DecodeBool(v))",
 		FromValue:  "wire.EncodeBool(v.Bool())",
 		GoType:     GoBool,
 		ToGoType:   "wire.DecodeBool(v)",
@@ -109,13 +110,13 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:      "Enum",
 		WireType:  WireVarint,
-		ToValue:   "protoreflect.EnumNumber(v)",
+		ToValue:   "protoreflect.ValueOfEnum(protoreflect.EnumNumber(v))",
 		FromValue: "uint64(v.Enum())",
 	},
 	{
 		Name:       "Int32",
 		WireType:   WireVarint,
-		ToValue:    "int32(v)",
+		ToValue:    "protoreflect.ValueOfInt32(int32(v))",
 		FromValue:  "uint64(int32(v.Int()))",
 		GoType:     GoInt32,
 		ToGoType:   "int32(v)",
@@ -124,7 +125,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Sint32",
 		WireType:   WireVarint,
-		ToValue:    "int32(wire.DecodeZigZag(v & math.MaxUint32))",
+		ToValue:    "protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32)))",
 		FromValue:  "wire.EncodeZigZag(int64(int32(v.Int())))",
 		GoType:     GoInt32,
 		ToGoType:   "int32(wire.DecodeZigZag(v & math.MaxUint32))",
@@ -133,7 +134,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Uint32",
 		WireType:   WireVarint,
-		ToValue:    "uint32(v)",
+		ToValue:    "protoreflect.ValueOfUint32(uint32(v))",
 		FromValue:  "uint64(uint32(v.Uint()))",
 		GoType:     GoUint32,
 		ToGoType:   "uint32(v)",
@@ -142,7 +143,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Int64",
 		WireType:   WireVarint,
-		ToValue:    "int64(v)",
+		ToValue:    "protoreflect.ValueOfInt64(int64(v))",
 		FromValue:  "uint64(v.Int())",
 		GoType:     GoInt64,
 		ToGoType:   "int64(v)",
@@ -151,7 +152,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Sint64",
 		WireType:   WireVarint,
-		ToValue:    "wire.DecodeZigZag(v)",
+		ToValue:    "protoreflect.ValueOfInt64(wire.DecodeZigZag(v))",
 		FromValue:  "wire.EncodeZigZag(v.Int())",
 		GoType:     GoInt64,
 		ToGoType:   "wire.DecodeZigZag(v)",
@@ -160,7 +161,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Uint64",
 		WireType:   WireVarint,
-		ToValue:    "v",
+		ToValue:    "protoreflect.ValueOfUint64(v)",
 		FromValue:  "v.Uint()",
 		GoType:     GoUint64,
 		ToGoType:   "v",
@@ -169,7 +170,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Sfixed32",
 		WireType:   WireFixed32,
-		ToValue:    "int32(v)",
+		ToValue:    "protoreflect.ValueOfInt32(int32(v))",
 		FromValue:  "uint32(v.Int())",
 		GoType:     GoInt32,
 		ToGoType:   "int32(v)",
@@ -178,7 +179,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Fixed32",
 		WireType:   WireFixed32,
-		ToValue:    "uint32(v)",
+		ToValue:    "protoreflect.ValueOfUint32(uint32(v))",
 		FromValue:  "uint32(v.Uint())",
 		GoType:     GoUint32,
 		ToGoType:   "v",
@@ -187,7 +188,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Float",
 		WireType:   WireFixed32,
-		ToValue:    "math.Float32frombits(uint32(v))",
+		ToValue:    "protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v)))",
 		FromValue:  "math.Float32bits(float32(v.Float()))",
 		GoType:     GoFloat32,
 		ToGoType:   "math.Float32frombits(v)",
@@ -196,7 +197,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Sfixed64",
 		WireType:   WireFixed64,
-		ToValue:    "int64(v)",
+		ToValue:    "protoreflect.ValueOfInt64(int64(v))",
 		FromValue:  "uint64(v.Int())",
 		GoType:     GoInt64,
 		ToGoType:   "int64(v)",
@@ -205,7 +206,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Fixed64",
 		WireType:   WireFixed64,
-		ToValue:    "v",
+		ToValue:    "protoreflect.ValueOfUint64(v)",
 		FromValue:  "v.Uint()",
 		GoType:     GoUint64,
 		ToGoType:   "v",
@@ -214,7 +215,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Double",
 		WireType:   WireFixed64,
-		ToValue:    "math.Float64frombits(v)",
+		ToValue:    "protoreflect.ValueOfFloat64(math.Float64frombits(v))",
 		FromValue:  "math.Float64bits(v.Float())",
 		GoType:     GoFloat64,
 		ToGoType:   "math.Float64frombits(v)",
@@ -223,7 +224,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "String",
 		WireType:   WireBytes,
-		ToValue:    "string(v)",
+		ToValue:    "protoreflect.ValueOfString(string(v))",
 		FromValue:  "v.String()",
 		GoType:     GoString,
 		ToGoType:   "v",
@@ -232,7 +233,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:           "Bytes",
 		WireType:       WireBytes,
-		ToValue:        "append(([]byte)(nil), v...)",
+		ToValue:        "protoreflect.ValueOfBytes(append(([]byte)(nil), v...))",
 		FromValue:      "v.Bytes()",
 		GoType:         GoBytes,
 		ToGoType:       "append(emptyBuf[:], v...)",
@@ -241,16 +242,18 @@ var ProtoKinds = []ProtoKind{
 		NoPointer:      true,
 	},
 	{
-		Name:      "Message",
-		WireType:  WireBytes,
-		ToValue:   "v",
-		FromValue: "v",
+		Name:         "Message",
+		WireType:     WireBytes,
+		ToValue:      "protoreflect.ValueOfBytes(v)",
+		FromValue:    "v",
+		NoValueCodec: true,
 	},
 	{
-		Name:      "Group",
-		WireType:  WireGroup,
-		ToValue:   "v",
-		FromValue: "v",
+		Name:         "Group",
+		WireType:     WireGroup,
+		ToValue:      "protoreflect.ValueOfBytes(v)",
+		FromValue:    "v",
+		NoValueCodec: true,
 	},
 }
 
@@ -282,7 +285,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 			return protoreflect.Value{}, 0, errors.InvalidUTF8(string(fd.FullName()))
 		}
 		{{end -}}
-		return protoreflect.ValueOf({{.ToValue}}), n, nil
+		return {{.ToValue}}, n, nil
 	{{- end}}
 	default:
 		return val, 0, errUnknown
@@ -305,7 +308,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 					return 0, wire.ParseError(n)
 				}
 				buf = buf[n:]
-				list.Append(protoreflect.ValueOf({{.ToValue}}))
+				list.Append({{.ToValue}})
 			}
 			return n, nil
 		}
@@ -333,7 +336,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		}
 		list.Append(protoreflect.ValueOf(m))
 		{{- else -}}
-		list.Append(protoreflect.ValueOf({{.ToValue}}))
+		list.Append({{.ToValue}})
 		{{- end}}
 		return n, nil
 	{{- end}}
