@@ -77,31 +77,10 @@ func (xi *ExtensionInfo) initToLegacy() {
 		}
 	}
 
-	// Reconstruct the legacy enum full name, which is an odd mixture of the
-	// proto package name with the Go type name.
+	// Reconstruct the legacy enum full name.
 	var enumName string
 	if xd.Kind() == pref.EnumKind {
-		// Derive Go type name.
-		t := extType
-		if t.Kind() == reflect.Ptr || t.Kind() == reflect.Slice {
-			t = t.Elem()
-		}
-		enumName = t.Name()
-
-		// Derive the proto package name.
-		// For legacy enums, obtain the proto package from the raw descriptor.
-		var protoPkg string
-		if fd := xd.Enum().ParentFile(); fd != nil {
-			protoPkg = string(fd.Package())
-		}
-		if ed, ok := reflect.Zero(t).Interface().(enumV1); ok && protoPkg == "" {
-			b, _ := ed.EnumDescriptor()
-			protoPkg = string(legacyLoadFileDesc(b).Package())
-		}
-
-		if protoPkg != "" {
-			enumName = protoPkg + "." + enumName
-		}
+		enumName = legacyEnumName(xd.Enum())
 	}
 
 	// Derive the proto file that the extension was declared within.

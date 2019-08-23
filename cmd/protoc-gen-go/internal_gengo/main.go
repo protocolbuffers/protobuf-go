@@ -780,14 +780,7 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 func fieldProtobufTagValue(field *protogen.Field) string {
 	var enumName string
 	if field.Desc.Kind() == protoreflect.EnumKind {
-		// For historical reasons, the name used in the tag is neither
-		// the protobuf full name nor the fully qualified Go identifier,
-		// but an odd mix of both.
-		enumName = field.Enum.GoIdent.GoName
-		protoPkg := string(field.Enum.Desc.ParentFile().Package())
-		if protoPkg != "" {
-			enumName = protoPkg + "." + enumName
-		}
+		enumName = protoimpl.X.LegacyEnumName(field.Enum.Desc)
 	}
 	return tag.Marshal(field.Desc, enumName)
 }

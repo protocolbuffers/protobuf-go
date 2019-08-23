@@ -21,6 +21,11 @@ import (
 // These functions exist to support exported APIs in generated protobufs.
 // While these are deprecated, they cannot be removed for compatibility reasons.
 
+// LegacyEnumName returns the name of enums used in legacy code.
+func (Export) LegacyEnumName(ed pref.EnumDescriptor) string {
+	return legacyEnumName(ed)
+}
+
 // UnmarshalJSONEnum unmarshals an enum from a JSON-encoded input.
 // The input can either be a string representing the enum value by name,
 // or a number representing the enum number itself.

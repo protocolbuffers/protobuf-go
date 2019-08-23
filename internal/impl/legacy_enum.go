@@ -11,9 +11,26 @@ import (
 	"sync"
 
 	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
+
+// legacyEnumName returns the name of enums used in legacy code.
+// It is neither the protobuf full name nor the qualified Go name,
+// but rather an odd hybrid of both.
+func legacyEnumName(ed pref.EnumDescriptor) string {
+	var protoPkg string
+	enumName := string(ed.FullName())
+	if fd := ed.ParentFile(); fd != nil {
+		protoPkg = string(fd.Package())
+		enumName = strings.TrimPrefix(enumName, protoPkg+".")
+	}
+	if protoPkg == "" {
+		return strs.GoCamelCase(enumName)
+	}
+	return protoPkg + "." + strs.GoCamelCase(enumName)
+}
 
 // legacyWrapEnum wraps v as a protoreflect.Enum,
 // where v must be a int32 kind and not implement the v2 API already.

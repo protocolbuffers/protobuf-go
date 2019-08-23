@@ -30,6 +30,7 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/fieldnum"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -431,7 +432,7 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 		}
 	}
 	f.GoDescriptorIdent = GoIdent{
-		GoName:       "File_" + cleanGoName(p.GetName()),
+		GoName:       "File_" + strs.GoSanitized(p.GetName()),
 		GoImportPath: f.GoImportPath,
 	}
 	f.GeneratedFilenamePrefix = prefix
@@ -499,6 +500,8 @@ func goPackageOption(d *descriptorpb.FileDescriptorProto) (pkg GoPackageName, im
 	}
 	// A semicolon-delimited suffix delimits the import path and package name.
 	if i := strings.Index(opt, ";"); i >= 0 {
+		// TODO: The package name is explicitly provided by the .proto file.
+		// Rather than sanitizing it, we should pass it verbatim.
 		return cleanPackageName(opt[i+1:]), GoImportPath(opt[:i])
 	}
 	// The presence of a slash implies there's an import path.
@@ -756,7 +759,7 @@ func newField(gen *Plugin, f *File, message *Message, desc protoreflect.FieldDes
 	default:
 		loc = message.Location.appendPath(fieldnum.DescriptorProto_Field, int32(desc.Index()))
 	}
-	camelCased := camelCase(string(desc.Name()))
+	camelCased := strs.GoCamelCase(string(desc.Name()))
 	var parentPrefix string
 	if message != nil {
 		parentPrefix = message.GoIdent.GoName + "_"
@@ -826,7 +829,7 @@ type Oneof struct {
 
 func newOneof(gen *Plugin, f *File, message *Message, desc protoreflect.OneofDescriptor) *Oneof {
 	loc := message.Location.appendPath(fieldnum.DescriptorProto_OneofDecl, int32(desc.Index()))
-	camelCased := camelCase(string(desc.Name()))
+	camelCased := strs.GoCamelCase(string(desc.Name()))
 	parentPrefix := message.GoIdent.GoName + "_"
 	return &Oneof{
 		Desc:   desc,
@@ -860,7 +863,7 @@ func newService(gen *Plugin, f *File, desc protoreflect.ServiceDescriptor) *Serv
 	loc := f.location(fieldnum.FileDescriptorProto_Service, int32(desc.Index()))
 	service := &Service{
 		Desc:     desc,
-		GoName:   camelCase(string(desc.Name())),
+		GoName:   strs.GoCamelCase(string(desc.Name())),
 		Location: loc,
 		Comments: f.comments[newPathKey(loc.Path)],
 	}
@@ -889,7 +892,7 @@ func newMethod(gen *Plugin, f *File, service *Service, desc protoreflect.MethodD
 	loc := service.Location.appendPath(fieldnum.ServiceDescriptorProto_Method, int32(desc.Index()))
 	method := &Method{
 		Desc:     desc,
-		GoName:   camelCase(string(desc.Name())),
+		GoName:   strs.GoCamelCase(string(desc.Name())),
 		Parent:   service,
 		Location: loc,
 		Comments: f.comments[newPathKey(loc.Path)],
@@ -1181,6 +1184,56 @@ func (g *GeneratedFile) metaFile(content []byte) (string, error) {
 		return "", err
 	}
 	return string(b), nil
+}
+
+// A GoIdent is a Go identifier, consisting of a name and import path.
+// The name is a single identifier and may not be a dot-qualified selector.
+type GoIdent struct {
+	GoName       string
+	GoImportPath GoImportPath
+}
+
+func (id GoIdent) String() string { return fmt.Sprintf("%q.%v", id.GoImportPath, id.GoName) }
+
+// newGoIdent returns the Go identifier for a descriptor.
+func newGoIdent(f *File, d protoreflect.Descriptor) GoIdent {
+	name := strings.TrimPrefix(string(d.FullName()), string(f.Desc.Package())+".")
+	return GoIdent{
+		GoName:       strs.GoCamelCase(name),
+		GoImportPath: f.GoImportPath,
+	}
+}
+
+// A GoImportPath is the import path of a Go package.
+// For example: "google.golang.org/protobuf/compiler/protogen"
+type GoImportPath string
+
+func (p GoImportPath) String() string { return strconv.Quote(string(p)) }
+
+// Ident returns a GoIdent with s as the GoName and p as the GoImportPath.
+func (p GoImportPath) Ident(s string) GoIdent {
+	return GoIdent{GoName: s, GoImportPath: p}
+}
+
+// A GoPackageName is the name of a Go package. e.g., "protobuf".
+type GoPackageName string
+
+// cleanPackageName converts a string to a valid Go package name.
+func cleanPackageName(name string) GoPackageName {
+	return GoPackageName(strs.GoSanitized(name))
+}
+
+// baseName returns the last path element of the name, with the last dotted suffix removed.
+func baseName(name string) string {
+	// First, find the last element
+	if i := strings.LastIndex(name, "/"); i >= 0 {
+		name = name[i+1:]
+	}
+	// Now drop the suffix
+	if i := strings.LastIndex(name, "."); i >= 0 {
+		name = name[:i]
+	}
+	return name
 }
 
 type pathType int
