@@ -150,7 +150,7 @@ func (s Syntax) GoString() string {
 	case Proto3:
 		return "Proto3"
 	default:
-		return fmt.Sprintf("<unknown:%d>", s)
+		return fmt.Sprintf("Syntax(%d)", s)
 	}
 }
 
@@ -200,7 +200,7 @@ func (c Cardinality) GoString() string {
 	case Repeated:
 		return "Repeated"
 	default:
-		return fmt.Sprintf("<unknown:%d>", c)
+		return fmt.Sprintf("Cardinality(%d)", c)
 	}
 }
 
@@ -330,7 +330,7 @@ func (k Kind) GoString() string {
 	case GroupKind:
 		return "GroupKind"
 	default:
-		return fmt.Sprintf("<unknown:%d>", k)
+		return fmt.Sprintf("Kind(%d)", k)
 	}
 }
 
