@@ -23,20 +23,16 @@ func Range(mapv protoreflect.Map, keyKind protoreflect.Kind, f func(protoreflect
 		switch keyKind {
 		case protoreflect.BoolKind:
 			return !keys[i].Bool() && keys[j].Bool()
-		case protoreflect.Int32Kind,
-			protoreflect.Sint32Kind,
-			protoreflect.Sfixed32Kind,
-			protoreflect.Int64Kind,
-			protoreflect.Sint64Kind,
-			protoreflect.Sfixed64Kind:
+		case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind,
+			protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
 			return keys[i].Int() < keys[j].Int()
-		case protoreflect.Uint32Kind,
-			protoreflect.Fixed32Kind,
-			protoreflect.Uint64Kind,
-			protoreflect.Fixed64Kind:
+		case protoreflect.Uint32Kind, protoreflect.Fixed32Kind,
+			protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
 			return keys[i].Uint() < keys[j].Uint()
-		default:
+		case protoreflect.StringKind:
 			return keys[i].String() < keys[j].String()
+		default:
+			panic("invalid kind: " + keyKind.String())
 		}
 	})
 	for _, key := range keys {
