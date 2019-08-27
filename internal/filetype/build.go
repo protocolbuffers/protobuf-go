@@ -112,9 +112,12 @@ type Builder struct {
 	}
 }
 
-func (tb Builder) Build() (out struct {
+// Out is the output of the builder.
+type Out struct {
 	File pref.FileDescriptor
-}) {
+}
+
+func (tb Builder) Build() (out Out) {
 	// Replace the resolver with one that resolves dependencies by index,
 	// which is faster and more reliable than relying on the global registry.
 	if tb.File.FileRegistry == nil {

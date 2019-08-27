@@ -65,13 +65,8 @@ const (
 	listMethOutDeps
 )
 
-// Build constructs a FileDescriptor given the parameters set in Builder.
-// It assumes that the inputs are well-formed and panics if any inconsistencies
-// are encountered.
-//
-// If NumEnums+NumMessages+NumExtensions+NumServices is zero,
-// then Build automatically derives them from the raw descriptor.
-func (db Builder) Build() (out struct {
+// Out is the output of the Builder.
+type Out struct {
 	File pref.FileDescriptor
 
 	// Enums is all enum descriptors in "flattened ordering".
@@ -83,7 +78,15 @@ func (db Builder) Build() (out struct {
 	Extensions []Extension
 	// Service is all service descriptors in "flattened ordering".
 	Services []Service
-}) {
+}
+
+// Build constructs a FileDescriptor given the parameters set in Builder.
+// It assumes that the inputs are well-formed and panics if any inconsistencies
+// are encountered.
+//
+// If NumEnums+NumMessages+NumExtensions+NumServices is zero,
+// then Build automatically derives them from the raw descriptor.
+func (db Builder) Build() (out Out) {
 	// Populate the counts if uninitialized.
 	if db.NumEnums+db.NumMessages+db.NumExtensions+db.NumServices == 0 {
 		db.unmarshalCounts(db.RawDescriptor, true)
