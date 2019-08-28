@@ -461,7 +461,12 @@ type ExtensionType interface {
 	//	t.GoType() == reflect.TypeOf(t.InterfaceOf(t.New()))
 	GoType() reflect.Type
 
-	// Descriptor returns the extension descriptor.
+	// TypeDescriptor returns the extension type descriptor.
+	TypeDescriptor() ExtensionTypeDescriptor
+
+	// Descriptor is deprecated.
+	//
+	// TODO: remove.
 	Descriptor() ExtensionTypeDescriptor
 
 	// TODO: What to do with nil?

@@ -127,7 +127,7 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 				return errors.New("unable to resolve [%v]: %v", extName, err)
 			}
 			if xt != nil {
-				fd = xt.Descriptor()
+				fd = xt.TypeDescriptor()
 			}
 		}
 

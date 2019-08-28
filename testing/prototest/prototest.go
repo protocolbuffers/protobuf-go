@@ -47,7 +47,7 @@ func TestMessage(t testing.TB, m proto.Message, opts MessageOptions) {
 		})
 	}
 	for _, xt := range opts.ExtensionTypes {
-		testField(t, m1, xt.Descriptor())
+		testField(t, m1, xt.TypeDescriptor())
 	}
 	for i := 0; i < md.Oneofs().Len(); i++ {
 		testOneof(t, m1, md.Oneofs().Get(i))

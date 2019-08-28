@@ -119,7 +119,7 @@ func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 	if m != nil {
 		for _, x := range *m {
 			xt := x.GetType()
-			if !f(xt.Descriptor(), xt.ValueOf(x.GetValue())) {
+			if !f(xt.TypeDescriptor(), xt.ValueOf(x.GetValue())) {
 				return
 			}
 		}
@@ -127,15 +127,15 @@ func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 }
 func (m *extensionMap) Has(xt pref.ExtensionType) (ok bool) {
 	if m != nil {
-		_, ok = (*m)[int32(xt.Descriptor().Number())]
+		_, ok = (*m)[int32(xt.TypeDescriptor().Number())]
 	}
 	return ok
 }
 func (m *extensionMap) Clear(xt pref.ExtensionType) {
-	delete(*m, int32(xt.Descriptor().Number()))
+	delete(*m, int32(xt.TypeDescriptor().Number()))
 }
 func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
-	xd := xt.Descriptor()
+	xd := xt.TypeDescriptor()
 	if m != nil {
 		if x, ok := (*m)[int32(xd.Number())]; ok {
 			return xt.ValueOf(x.GetValue())
@@ -150,10 +150,10 @@ func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
 	var x ExtensionField
 	x.SetType(xt)
 	x.SetEagerValue(xt.InterfaceOf(v))
-	(*m)[int32(xt.Descriptor().Number())] = x
+	(*m)[int32(xt.TypeDescriptor().Number())] = x
 }
 func (m *extensionMap) Mutable(xt pref.ExtensionType) pref.Value {
-	xd := xt.Descriptor()
+	xd := xt.TypeDescriptor()
 	if xd.Kind() != pref.MessageKind && xd.Kind() != pref.GroupKind && !xd.IsList() && !xd.IsMap() {
 		panic("invalid Mutable on field with non-composite type")
 	}

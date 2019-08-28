@@ -78,7 +78,7 @@ func unmarshalMessageSet(b []byte, m protoreflect.Message, o UnmarshalOptions) e
 			if err != nil {
 				return err
 			}
-			xd := xt.Descriptor()
+			xd := xt.TypeDescriptor()
 			if err := o.unmarshalMessage(v, m.Mutable(xd).Message()); err != nil {
 				// Contents cannot be unmarshaled.
 				return err

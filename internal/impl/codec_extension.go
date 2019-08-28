@@ -29,7 +29,7 @@ func (mi *MessageInfo) extensionFieldInfo(xt pref.ExtensionType) *extensionField
 		return e
 	}
 
-	xd := xt.Descriptor()
+	xd := xt.TypeDescriptor()
 	var wiretag uint64
 	if !xd.IsPacked() {
 		wiretag = wire.EncodeTag(xd.Number(), wireTypes[xd.Kind()])

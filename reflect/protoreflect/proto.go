@@ -73,13 +73,15 @@
 // ProtoMessage, which can convert to/from a Message.
 //
 //
-//	        ┌── Descriptor() ──┐       ┌───── implements ─────┐
+//	        ┌── Descriptor() ──┐       ┌──── Descriptor() ────┐
 //	        │                  V       │                      V
 //	╔═══════════════╗  ╔═════════════════════════╗  ╔═════════════════════╗
 //	║ ExtensionType ║  ║ ExtensionTypeDescriptor ║  ║ ExtensionDescriptor ║
 //	╚═══════════════╝  ╚═════════════════════════╝  ╚═════════════════════╝
-//	        Λ                  │       Λ                      │
-//	        └───── Type() ─────┘       └─── may implement ────┘
+//	        Λ                  │     │ Λ                      │ Λ
+//	        └───── Type() ─────┘     │ └─── may implement ────┘ │
+//	                                 │                          │
+//	                                 └────── implements ────────┘
 //
 // • An ExtensionType describes a concrete Go implementation of an extension.
 // It has an ExtensionTypeDescriptor and can convert to/from

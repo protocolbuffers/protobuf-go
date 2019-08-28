@@ -119,6 +119,10 @@ func (xi *ExtensionInfo) GoType() reflect.Type {
 	return xi.goType
 }
 func (xi *ExtensionInfo) Descriptor() pref.ExtensionTypeDescriptor {
+	// TODO: Remove.
+	return xi.TypeDescriptor()
+}
+func (xi *ExtensionInfo) TypeDescriptor() pref.ExtensionTypeDescriptor {
 	if atomic.LoadUint32(&xi.init) == extensionInfoUninitialized {
 		xi.lazyInitSlow()
 	}

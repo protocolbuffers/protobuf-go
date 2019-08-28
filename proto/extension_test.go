@@ -45,7 +45,7 @@ func TestExtensionFuncs(t *testing.T) {
 			value:       true,
 		},
 	} {
-		desc := fmt.Sprintf("Extension %v, value %v", test.ext.Descriptor().FullName(), test.value)
+		desc := fmt.Sprintf("Extension %v, value %v", test.ext.TypeDescriptor().FullName(), test.value)
 		if proto.HasExtension(test.message, test.ext) {
 			t.Errorf("%v:\nbefore setting extension HasExtension(...) = true, want false", desc)
 		}

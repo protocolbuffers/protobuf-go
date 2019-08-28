@@ -183,7 +183,7 @@ func (o UnmarshalOptions) unmarshalFields(m pref.Message, skipTypeURL bool) erro
 				return errors.New("unable to resolve [%v]: %v", extName, err)
 			}
 			if extType != nil {
-				fd = extType.Descriptor()
+				fd = extType.TypeDescriptor()
 			}
 		} else {
 			// The name can either be the JSON name or the proto field name.

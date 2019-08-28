@@ -540,7 +540,7 @@ func TestTypes(t *testing.T) {
 		case pref.MessageType:
 			return t.Descriptor().FullName()
 		case pref.ExtensionType:
-			return t.Descriptor().FullName()
+			return t.TypeDescriptor().FullName()
 		default:
 			panic("invalid type")
 		}

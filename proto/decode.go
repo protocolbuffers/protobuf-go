@@ -89,7 +89,7 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 				return err
 			}
 			if extType != nil {
-				fd = extType.Descriptor()
+				fd = extType.TypeDescriptor()
 			}
 		}
 		var err error

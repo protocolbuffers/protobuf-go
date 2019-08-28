@@ -33,11 +33,11 @@ func legacyExtensionDescFromType(xt pref.ExtensionType) *ExtensionInfo {
 	}
 
 	tt := xt.GoType()
-	if xt.Descriptor().Cardinality() == pref.Repeated {
+	if xt.TypeDescriptor().Cardinality() == pref.Repeated {
 		tt = tt.Elem().Elem()
 	}
 	xi := &ExtensionInfo{}
-	InitExtensionInfo(xi, xt.Descriptor().Descriptor(), tt)
+	InitExtensionInfo(xi, xt.TypeDescriptor().Descriptor(), tt)
 	xi.lazyInit() // populate legacy fields
 
 	if xi, ok := legacyExtensionInfoCache.LoadOrStore(xt, xi); ok {

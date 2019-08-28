@@ -358,7 +358,7 @@ func TestLegacyExtensions(t *testing.T) {
 	}
 	for i, xt := range extensionTypes {
 		var got interface{}
-		xd := xt.Descriptor()
+		xd := xt.TypeDescriptor()
 		if !(xd.IsList() || xd.IsMap() || xd.Message() != nil) {
 			got = xt.InterfaceOf(m.Get(xd))
 		}
@@ -370,7 +370,7 @@ func TestLegacyExtensions(t *testing.T) {
 
 	// All fields should be unpopulated.
 	for _, xt := range extensionTypes {
-		xd := xt.Descriptor()
+		xd := xt.TypeDescriptor()
 		if m.Has(xd) {
 			t.Errorf("Message.Has(%d) = true, want false", xd.Number())
 		}
@@ -404,11 +404,11 @@ func TestLegacyExtensions(t *testing.T) {
 		19: &[]*EnumMessages{m2b},
 	}
 	for i, xt := range extensionTypes {
-		m.Set(xt.Descriptor(), xt.ValueOf(setValues[i]))
+		m.Set(xt.TypeDescriptor(), xt.ValueOf(setValues[i]))
 	}
 	for i, xt := range extensionTypes[len(extensionTypes)/2:] {
 		v := extensionTypes[i].ValueOf(setValues[i])
-		m.Get(xt.Descriptor()).List().Append(v)
+		m.Get(xt.TypeDescriptor()).List().Append(v)
 	}
 
 	// Get the values and check for equality.
@@ -435,7 +435,7 @@ func TestLegacyExtensions(t *testing.T) {
 		19: &[]*EnumMessages{m2b, m2a},
 	}
 	for i, xt := range extensionTypes {
-		xd := xt.Descriptor()
+		xd := xt.TypeDescriptor()
 		got := xt.InterfaceOf(m.Get(xd))
 		want := getValues[i]
 		if diff := cmp.Diff(want, got, opts); diff != "" {
@@ -445,15 +445,15 @@ func TestLegacyExtensions(t *testing.T) {
 
 	// Clear all singular fields and truncate all repeated fields.
 	for _, xt := range extensionTypes[:len(extensionTypes)/2] {
-		m.Clear(xt.Descriptor())
+		m.Clear(xt.TypeDescriptor())
 	}
 	for _, xt := range extensionTypes[len(extensionTypes)/2:] {
-		m.Get(xt.Descriptor()).List().Truncate(0)
+		m.Get(xt.TypeDescriptor()).List().Truncate(0)
 	}
 
 	// Clear all repeated fields.
 	for _, xt := range extensionTypes[len(extensionTypes)/2:] {
-		m.Clear(xt.Descriptor())
+		m.Clear(xt.TypeDescriptor())
 	}
 }
 
@@ -517,7 +517,7 @@ func TestExtensionConvert(t *testing.T) {
 				}),
 				cmp.Transformer("", func(xt pref.ExtensionType) map[string]interface{} {
 					return map[string]interface{}{
-						"Descriptor": xt.Descriptor(),
+						"Descriptor": xt.TypeDescriptor(),
 						"GoType":     xt.GoType(),
 					}
 				}),

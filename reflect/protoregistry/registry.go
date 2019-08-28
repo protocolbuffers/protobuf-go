@@ -434,7 +434,7 @@ typeLoop:
 			case protoreflect.MessageType:
 				desc = t.Descriptor()
 			case protoreflect.ExtensionType:
-				desc = t.Descriptor()
+				desc = t.TypeDescriptor()
 			default:
 				panic(fmt.Sprintf("invalid type: %T", t))
 			}
@@ -453,7 +453,7 @@ typeLoop:
 
 			// Check for conflicts in extensionsByMessage.
 			if xt, _ := typ.(protoreflect.ExtensionType); xt != nil {
-				xd := xt.Descriptor()
+				xd := xt.TypeDescriptor()
 				field := xd.Number()
 				message := xd.ContainingMessage().FullName()
 				if prev := r.extensionsByMessage[message][field]; prev != nil {
@@ -660,7 +660,7 @@ func goPackage(v interface{}) string {
 	case protoreflect.MessageType:
 		v = d.Descriptor()
 	case protoreflect.ExtensionType:
-		v = d.Descriptor()
+		v = d.TypeDescriptor()
 	}
 	if d, ok := v.(protoreflect.Descriptor); ok {
 		v = d.ParentFile()
