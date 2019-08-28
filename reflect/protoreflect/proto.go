@@ -73,13 +73,13 @@
 // ProtoMessage, which can convert to/from a Message.
 //
 //
-//	        ┌── Descriptor() ──┐       ┌──── Descriptor() ────┐
-//	        │                  V       │                      V
+//	      ┌── TypeDescriptor() ──┐   ┌──── Descriptor() ────┐
+//	      │                      V   │                      V
 //	╔═══════════════╗  ╔═════════════════════════╗  ╔═════════════════════╗
 //	║ ExtensionType ║  ║ ExtensionTypeDescriptor ║  ║ ExtensionDescriptor ║
 //	╚═══════════════╝  ╚═════════════════════════╝  ╚═════════════════════╝
-//	        Λ                  │     │ Λ                      │ Λ
-//	        └───── Type() ─────┘     │ └─── may implement ────┘ │
+//	      Λ                      │   │ Λ                      │ Λ
+//	      └─────── Type() ───────┘   │ └─── may implement ────┘ │
 //	                                 │                          │
 //	                                 └────── implements ────────┘
 //

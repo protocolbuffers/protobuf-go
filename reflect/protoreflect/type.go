@@ -464,11 +464,6 @@ type ExtensionType interface {
 	// TypeDescriptor returns the extension type descriptor.
 	TypeDescriptor() ExtensionTypeDescriptor
 
-	// Descriptor is deprecated.
-	//
-	// TODO: remove.
-	Descriptor() ExtensionTypeDescriptor
-
 	// TODO: What to do with nil?
 	//	Should ValueOf(nil) return Value{}?
 	//	Should InterfaceOf(Value{}) return nil?
