@@ -484,6 +484,12 @@ type ExtensionType interface {
 	// InterfaceOf is able to unwrap the Value further than Value.Interface
 	// as it has more type information available.
 	InterfaceOf(Value) interface{}
+
+	// IsValidValue returns whether the Value is valid to assign to the field.
+	IsValidValue(Value) bool
+
+	// IsValidInterface returns whether the input is valid to assign to the field.
+	IsValidInterface(interface{}) bool
 }
 
 // EnumDescriptor describes an enum and

@@ -166,8 +166,9 @@ func (m *Message) Set(fd pref.FieldDescriptor, v pref.Value) {
 	m.checkField(fd)
 	switch {
 	case fd.IsExtension():
-		// Call InterfaceOf just to let the extension typecheck the value.
-		_ = fd.(pref.ExtensionTypeDescriptor).Type().InterfaceOf(v)
+		if !fd.(pref.ExtensionTypeDescriptor).Type().IsValidValue(v) {
+			panic(errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface()))
+		}
 		m.ext[fd.Number()] = fd
 	case fd.IsMap():
 		if mapv, ok := v.Interface().(*dynamicMap); !ok || mapv.desc != fd {

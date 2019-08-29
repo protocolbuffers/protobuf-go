@@ -38,6 +38,18 @@ func (c *mapConverter) GoValueOf(v pref.Value) reflect.Value {
 	return v.Map().(*mapReflect).v
 }
 
+func (c *mapConverter) IsValidPB(v pref.Value) bool {
+	mapv, ok := v.Interface().(*mapReflect)
+	if !ok {
+		return false
+	}
+	return mapv.v.Type() == c.goType
+}
+
+func (c *mapConverter) IsValidGo(v reflect.Value) bool {
+	return v.Type() == c.goType
+}
+
 func (c *mapConverter) New() pref.Value {
 	return c.PBValueOf(reflect.MakeMap(c.goType))
 }

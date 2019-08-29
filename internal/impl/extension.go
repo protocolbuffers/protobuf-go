@@ -114,6 +114,12 @@ func (xi *ExtensionInfo) ValueOf(v interface{}) pref.Value {
 func (xi *ExtensionInfo) InterfaceOf(v pref.Value) interface{} {
 	return xi.lazyInit().GoValueOf(v).Interface()
 }
+func (xi *ExtensionInfo) IsValidValue(v pref.Value) bool {
+	return xi.lazyInit().IsValidPB(v)
+}
+func (xi *ExtensionInfo) IsValidInterface(v interface{}) bool {
+	return xi.lazyInit().IsValidGo(reflect.ValueOf(v))
+}
 func (xi *ExtensionInfo) GoType() reflect.Type {
 	xi.lazyInit()
 	return xi.goType

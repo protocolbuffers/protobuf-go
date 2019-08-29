@@ -34,6 +34,18 @@ func (c *listConverter) GoValueOf(v pref.Value) reflect.Value {
 	return v.List().(*listReflect).v
 }
 
+func (c *listConverter) IsValidPB(v pref.Value) bool {
+	list, ok := v.Interface().(*listReflect)
+	if !ok {
+		return false
+	}
+	return list.v.Type() == c.goType
+}
+
+func (c *listConverter) IsValidGo(v reflect.Value) bool {
+	return v.Type() == c.goType
+}
+
 func (c *listConverter) New() pref.Value {
 	return c.PBValueOf(reflect.New(c.goType.Elem()))
 }
