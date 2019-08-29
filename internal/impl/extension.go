@@ -151,7 +151,7 @@ func (xi *ExtensionInfo) lazyInitSlow() {
 		xi.initFromLegacy()
 	} else if xi.desc.Cardinality() == pref.Repeated {
 		// Cardinality is initialized lazily, so we defer consulting it until here.
-		xi.goType = reflect.PtrTo(reflect.SliceOf(xi.goType))
+		xi.goType = reflect.SliceOf(xi.goType)
 	}
 	xi.conv = NewConverter(xi.goType, xi.desc)
 	xi.tdesc.ExtensionDescriptor = xi.desc

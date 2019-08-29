@@ -280,7 +280,7 @@ func TestMerge(t *testing.T) {
 					A: proto.Int32(50),
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, &[]uint32{1, 2, 3})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, []uint32{1, 2, 3})
 			return m
 		}(),
 		src: func() proto.Message {
@@ -293,7 +293,7 @@ func TestMerge(t *testing.T) {
 					},
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, &[]uint32{4, 5, 6})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, []uint32{4, 5, 6})
 			return m
 		}(),
 		want: func() proto.Message {
@@ -308,7 +308,7 @@ func TestMerge(t *testing.T) {
 					},
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, &[]uint32{1, 2, 3, 4, 5, 6})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, []uint32{1, 2, 3, 4, 5, 6})
 			return m
 		}(),
 	}, {
@@ -363,7 +363,7 @@ func TestMerge(t *testing.T) {
 				tt.mutator(tt.src) // should not be observable by dst
 			}
 			if !proto.Equal(tt.dst, tt.want) {
-				t.Fatalf("Merge() mismatch: got %v, want %v", tt.dst, tt.want)
+				t.Fatalf("Merge() mismatch:\n got %v\nwant %v", tt.dst, tt.want)
 			}
 		})
 	}

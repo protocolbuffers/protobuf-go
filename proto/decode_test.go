@@ -1742,13 +1742,6 @@ func unknown(raw protoreflect.RawFields) buildOpt {
 }
 
 func extend(desc protoreflect.ExtensionType, value interface{}) buildOpt {
-	// TODO: Should ExtensionType.ValueOf accept []T instead of *[]T?
-	t := reflect.TypeOf(value)
-	if t.Kind() == reflect.Slice && t.Elem().Kind() != reflect.Uint8 {
-		v := reflect.New(t)
-		v.Elem().Set(reflect.ValueOf(value))
-		value = v.Interface()
-	}
 	return func(m proto.Message) {
 		proto.SetExtension(m, desc, value)
 	}

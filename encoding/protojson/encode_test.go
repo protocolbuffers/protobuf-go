@@ -909,9 +909,9 @@ func TestMarshal(t *testing.T) {
 		desc: "extensions of repeated fields",
 		input: func() proto.Message {
 			m := &pb2.Extensions{}
-			proto.SetExtension(m, pb2.E_RptExtEnum, &[]pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
-			proto.SetExtension(m, pb2.E_RptExtFixed32, &[]uint32{42, 47})
-			proto.SetExtension(m, pb2.E_RptExtNested, &[]*pb2.Nested{
+			proto.SetExtension(m, pb2.E_RptExtEnum, []pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
+			proto.SetExtension(m, pb2.E_RptExtFixed32, []uint32{42, 47})
+			proto.SetExtension(m, pb2.E_RptExtNested, []*pb2.Nested{
 				&pb2.Nested{OptString: proto.String("one")},
 				&pb2.Nested{OptString: proto.String("two")},
 				&pb2.Nested{OptString: proto.String("three")},
@@ -974,9 +974,9 @@ func TestMarshal(t *testing.T) {
 				OptBool:   proto.Bool(true),
 				OptInt32:  proto.Int32(42),
 			}
-			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtEnum, &[]pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
-			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtString, &[]string{"hello", "world"})
-			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtNested, &[]*pb2.Nested{
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtEnum, []pb2.Enum{pb2.Enum_TEN, 101, pb2.Enum_ONE})
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtString, []string{"hello", "world"})
+			proto.SetExtension(m, pb2.E_ExtensionsContainer_RptExtNested, []*pb2.Nested{
 				&pb2.Nested{OptString: proto.String("one")},
 				&pb2.Nested{OptString: proto.String("two")},
 				&pb2.Nested{OptString: proto.String("three")},

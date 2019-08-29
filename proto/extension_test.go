@@ -35,8 +35,8 @@ func TestExtensionFuncs(t *testing.T) {
 			ext:     testpb.E_RepeatedStringExtension,
 			// TODO: Represent repeated extension fields as []T.
 			// https://github.com/golang/protobuf/issues/901
-			wantDefault: (*[]string)(nil),
-			value:       &[]string{"a", "b", "c"},
+			wantDefault: ([]string)(nil),
+			value:       []string{"a", "b", "c"},
 		},
 		{
 			message:     protoimpl.X.MessageOf(&legacy1pb.Message{}).Interface(),

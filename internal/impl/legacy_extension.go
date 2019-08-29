@@ -71,10 +71,6 @@ func (xi *ExtensionInfo) initToLegacy() {
 	switch extType.Kind() {
 	case reflect.Bool, reflect.Int32, reflect.Int64, reflect.Uint32, reflect.Uint64, reflect.Float32, reflect.Float64, reflect.String:
 		extType = reflect.PtrTo(extType) // T -> *T for singular scalar fields
-	case reflect.Ptr:
-		if extType.Elem().Kind() == reflect.Slice {
-			extType = extType.Elem() // *[]T -> []T for repeated fields
-		}
 	}
 
 	// Reconstruct the legacy enum full name.
@@ -154,8 +150,6 @@ func (xi *ExtensionInfo) initFromLegacy() {
 	tt := reflect.TypeOf(xi.ExtensionType)
 	if isOptional {
 		tt = tt.Elem()
-	} else if isRepeated {
-		tt = reflect.PtrTo(tt)
 	}
 	xi.desc = xd
 	xi.goType = tt

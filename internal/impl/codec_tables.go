@@ -431,10 +431,13 @@ func fieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 func encoderFuncsForValue(fd pref.FieldDescriptor, ft reflect.Type) valueCoderFuncs {
 	switch {
 	case fd.Cardinality() == pref.Repeated && !fd.IsPacked():
-		if ft.Kind() != reflect.Ptr || ft.Elem().Kind() != reflect.Slice {
+		if ft.Kind() == reflect.Ptr {
+			ft = ft.Elem()
+		}
+		if ft.Kind() != reflect.Slice {
 			break
 		}
-		ft := ft.Elem().Elem()
+		ft := ft.Elem()
 		switch fd.Kind() {
 		case pref.BoolKind:
 			if ft.Kind() == reflect.Bool {
@@ -512,10 +515,13 @@ func encoderFuncsForValue(fd pref.FieldDescriptor, ft reflect.Type) valueCoderFu
 			return coderGroupSliceValue
 		}
 	case fd.Cardinality() == pref.Repeated && fd.IsPacked():
-		if ft.Kind() != reflect.Ptr || ft.Elem().Kind() != reflect.Slice {
+		if ft.Kind() == reflect.Ptr {
+			ft = ft.Elem()
+		}
+		if ft.Kind() != reflect.Slice {
 			break
 		}
-		ft := ft.Elem().Elem()
+		ft := ft.Elem()
 		switch fd.Kind() {
 		case pref.BoolKind:
 			if ft.Kind() == reflect.Bool {
