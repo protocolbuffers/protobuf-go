@@ -297,9 +297,7 @@ type EnumInfo struct {
 }
 
 func (t *EnumInfo) New(n pref.EnumNumber) pref.Enum {
-	v := reflect.New(t.goType)
-	v.SetInt(int64(n))
-	return v.Interface().(pref.Enum)
+	return reflect.ValueOf(n).Convert(t.goType).Interface().(pref.Enum)
 }
 func (t *EnumInfo) GoType() reflect.Type            { return t.goType }
 func (t *EnumInfo) Descriptor() pref.EnumDescriptor { return t.desc }
