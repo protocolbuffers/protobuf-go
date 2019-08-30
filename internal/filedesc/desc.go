@@ -524,10 +524,18 @@ func unmarshalDefault(b []byte, k pref.Kind, pf *File, ed pref.EnumDescriptor) d
 	if k == pref.EnumKind {
 		// If the enum is declared within the same file, be careful not to
 		// blindly call the Values method, lest we bind ourselves in a deadlock.
-		if ed, ok := ed.(*Enum); ok && ed.L0.ParentFile == pf {
-			evs = &ed.L2.Values
+		if e, ok := ed.(*Enum); ok && e.L0.ParentFile == pf {
+			evs = &e.L2.Values
 		} else {
 			evs = ed.Values()
+		}
+
+		// If we are unable to resolve the enum dependency, use a placeholder
+		// enum value since we will not be able to parse the default value.
+		if ed.IsPlaceholder() && pref.Name(b).IsValid() {
+			v := pref.ValueOf(pref.EnumNumber(0))
+			ev := PlaceholderEnumValue(ed.FullName().Parent().Append(pref.Name(b)))
+			return DefaultValue(v, ev)
 		}
 	}
 
