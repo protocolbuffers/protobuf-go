@@ -5,11 +5,15 @@
 package impl
 
 import (
+	"fmt"
 	"reflect"
 	"strconv"
 
 	"google.golang.org/protobuf/encoding/prototext"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 // Export is a zero-length named type that exists only to export a set of
@@ -28,20 +32,20 @@ func (Export) EnumOf(e enum) pref.Enum {
 	return legacyWrapEnum(reflect.ValueOf(e))
 }
 
-// EnumTypeOf returns the protoreflect.EnumType for e.
-func (Export) EnumTypeOf(e enum) pref.EnumType {
-	if ev, ok := e.(pref.Enum); ok {
-		return ev.Type()
-	}
-	return legacyLoadEnumType(reflect.TypeOf(e))
-}
-
 // EnumDescriptorOf returns the protoreflect.EnumDescriptor for e.
 func (Export) EnumDescriptorOf(e enum) pref.EnumDescriptor {
 	if ev, ok := e.(pref.Enum); ok {
 		return ev.Descriptor()
 	}
 	return LegacyLoadEnumDesc(reflect.TypeOf(e))
+}
+
+// EnumTypeOf returns the protoreflect.EnumType for e.
+func (Export) EnumTypeOf(e enum) pref.EnumType {
+	if ev, ok := e.(pref.Enum); ok {
+		return ev.Type()
+	}
+	return legacyLoadEnumType(reflect.TypeOf(e))
 }
 
 // EnumStringOf returns the enum value as a string, either as the name if
@@ -58,28 +62,81 @@ func (Export) EnumStringOf(ed pref.EnumDescriptor, n pref.EnumNumber) string {
 // and must be a pointer to a named struct type.
 type message = interface{}
 
-// MessageOf returns the protoreflect.Message interface over m.
-func (Export) MessageOf(m message) pref.Message {
-	if mv, ok := m.(pref.ProtoMessage); ok {
-		return mv.ProtoReflect()
+// legacyMessageWrapper wraps a v2 message as a v1 message.
+type legacyMessageWrapper struct{ m protoreflect.ProtoMessage }
+
+func (m legacyMessageWrapper) Reset()         { proto.Reset(m.m) }
+func (m legacyMessageWrapper) String() string { return Export{}.MessageStringOf(m.m) }
+func (m legacyMessageWrapper) ProtoMessage()  {}
+
+// ProtoMessageV1Of converts either a v1 or v2 message to a v1 message.
+func (Export) ProtoMessageV1Of(m message) piface.MessageV1 {
+	switch mv := m.(type) {
+	case piface.MessageV1:
+		return mv
+	case Unwrapper:
+		return Export{}.ProtoMessageV1Of(mv.ProtoUnwrap())
+	case protoreflect.ProtoMessage:
+		return legacyMessageWrapper{mv}
+	default:
+		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
 	}
-	return legacyWrapMessage(reflect.ValueOf(m)).ProtoReflect()
 }
 
-// MessageTypeOf returns the protoreflect.MessageType for m.
-func (Export) MessageTypeOf(m message) pref.MessageType {
-	if mv, ok := m.(pref.ProtoMessage); ok {
-		return mv.ProtoReflect().Type()
+// ProtoMessageV2Of converts either a v1 or v2 message to a v2 message.
+func (Export) ProtoMessageV2Of(m message) pref.ProtoMessage {
+	switch mv := m.(type) {
+	case protoreflect.ProtoMessage:
+		return mv
+	case legacyMessageWrapper:
+		return mv.m
+	case piface.MessageV1:
+		return legacyWrapMessage(reflect.ValueOf(mv))
+	default:
+		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
 	}
-	return legacyLoadMessageInfo(reflect.TypeOf(m))
+}
+
+// MessageOf returns the protoreflect.Message interface over m.
+func (Export) MessageOf(m message) pref.Message {
+	switch mv := m.(type) {
+	case pref.ProtoMessage:
+		return mv.ProtoReflect()
+	case legacyMessageWrapper:
+		return mv.m.ProtoReflect()
+	case piface.MessageV1:
+		return legacyWrapMessage(reflect.ValueOf(mv)).ProtoReflect()
+	default:
+		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
+	}
 }
 
 // MessageDescriptorOf returns the protoreflect.MessageDescriptor for m.
 func (Export) MessageDescriptorOf(m message) pref.MessageDescriptor {
-	if mv, ok := m.(pref.ProtoMessage); ok {
+	switch mv := m.(type) {
+	case pref.ProtoMessage:
 		return mv.ProtoReflect().Descriptor()
+	case legacyMessageWrapper:
+		return mv.m.ProtoReflect().Descriptor()
+	case piface.MessageV1:
+		return LegacyLoadMessageDesc(reflect.TypeOf(mv))
+	default:
+		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
 	}
-	return LegacyLoadMessageDesc(reflect.TypeOf(m))
+}
+
+// MessageTypeOf returns the protoreflect.MessageType for m.
+func (Export) MessageTypeOf(m message) pref.MessageType {
+	switch mv := m.(type) {
+	case pref.ProtoMessage:
+		return mv.ProtoReflect().Type()
+	case legacyMessageWrapper:
+		return mv.m.ProtoReflect().Type()
+	case piface.MessageV1:
+		return legacyLoadMessageInfo(reflect.TypeOf(mv))
+	default:
+		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
+	}
 }
 
 // MessageStringOf returns the message value as a string,

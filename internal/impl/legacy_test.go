@@ -554,9 +554,17 @@ type (
 	Enum int32
 )
 
+func (*MessageA) Reset()                      { panic("not implemented") }
+func (*MessageA) String() string              { panic("not implemented") }
+func (*MessageA) ProtoMessage()               { panic("not implemented") }
 func (*MessageA) Descriptor() ([]byte, []int) { return concurrentFD, []int{0} }
+
+func (*MessageB) Reset()                      { panic("not implemented") }
+func (*MessageB) String() string              { panic("not implemented") }
+func (*MessageB) ProtoMessage()               { panic("not implemented") }
 func (*MessageB) Descriptor() ([]byte, []int) { return concurrentFD, []int{1} }
-func (Enum) EnumDescriptor() ([]byte, []int)  { return concurrentFD, []int{0} }
+
+func (Enum) EnumDescriptor() ([]byte, []int) { return concurrentFD, []int{0} }
 
 var concurrentFD = func() []byte {
 	b, _ := proto.Marshal(pdesc.ToFileDescriptorProto(mustMakeFileDesc(`
