@@ -11,7 +11,6 @@ import (
 	"go/parser"
 	"go/token"
 	"math"
-	"runtime"
 	"strconv"
 	"strings"
 	"unicode"
@@ -216,13 +215,8 @@ func genGeneratedHeader(gen *protogen.Plugin, g *protogen.GeneratedFile, f *file
 		if v := gen.Request.GetCompilerVersion(); v != nil {
 			protocVersion = fmt.Sprintf("v%v.%v.%v", v.GetMajor(), v.GetMinor(), v.GetPatch())
 		}
-		goVersion := runtime.Version()
-		if strings.HasPrefix(goVersion, "go") {
-			goVersion = "v" + goVersion[len("go"):]
-		}
 		g.P("// \tprotoc-gen-go ", protocGenGoVersion)
 		g.P("// \tprotoc        ", protocVersion)
-		g.P("// \tgo            ", goVersion)
 	}
 
 	if f.Proto.GetOptions().GetDeprecated() {
