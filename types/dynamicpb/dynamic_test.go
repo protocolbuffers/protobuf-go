@@ -23,7 +23,7 @@ func TestConformance(t *testing.T) {
 		(*test3pb.TestAllTypes)(nil),
 		(*testpb.TestAllExtensions)(nil),
 	} {
-		prototest.TestMessage(t, dynamicpb.New(message.ProtoReflect().Descriptor()), prototest.MessageOptions{})
+		prototest.TestMessage(t, dynamicpb.NewMessage(message.ProtoReflect().Descriptor()), prototest.MessageOptions{})
 	}
 }
 
@@ -40,7 +40,7 @@ func TestDynamicExtensions(t *testing.T) {
 	for i := 0; i < file.Extensions().Len(); i++ {
 		opts.ExtensionTypes = append(opts.ExtensionTypes, dynamicpb.NewExtensionType(file.Extensions().Get(i)))
 	}
-	prototest.TestMessage(t, dynamicpb.New(md), opts)
+	prototest.TestMessage(t, dynamicpb.NewMessage(md), opts)
 }
 
 type extResolver struct{}

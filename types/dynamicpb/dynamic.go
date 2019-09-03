@@ -30,16 +30,16 @@ import (
 //
 // Operations which modify a Message are not safe for concurrent use.
 type Message struct {
-	desc    pref.MessageDescriptor
+	typ     messageType
 	known   map[pref.FieldNumber]pref.Value
 	ext     map[pref.FieldNumber]pref.FieldDescriptor
 	unknown pref.RawFields
 }
 
-// New creates a new message with the provided descriptor.
-func New(desc pref.MessageDescriptor) *Message {
+// NewMessage creates a new message with the provided descriptor.
+func NewMessage(desc pref.MessageDescriptor) *Message {
 	return &Message{
-		desc:  desc,
+		typ:   messageType{desc},
 		known: make(map[pref.FieldNumber]pref.Value),
 		ext:   make(map[pref.FieldNumber]pref.FieldDescriptor),
 	}
@@ -57,12 +57,12 @@ func (m *Message) String() string {
 
 // Descriptor returns the message descriptor.
 func (m *Message) Descriptor() pref.MessageDescriptor {
-	return m.desc
+	return m.typ.desc
 }
 
 // Type returns the message type.
 func (m *Message) Type() pref.MessageType {
-	return (*messageType)(m)
+	return m.typ
 }
 
 // New returns a newly allocated empty message with the same descriptor.
@@ -137,7 +137,7 @@ func (m *Message) Get(fd pref.FieldDescriptor) pref.Value {
 	case fd.IsList():
 		return pref.ValueOf(emptyList{desc: fd})
 	case fd.Message() != nil:
-		return pref.ValueOf(&Message{desc: fd.Message()})
+		return pref.ValueOf(&Message{typ: messageType{fd.Message()}})
 	case fd.Kind() == pref.BytesKind:
 		return pref.ValueOf(append([]byte(nil), fd.Default().Bytes()...))
 	default:
@@ -214,7 +214,7 @@ func (m *Message) NewMessage(fd pref.FieldDescriptor) pref.Message {
 	if fd.Cardinality() == pref.Repeated || md == nil {
 		panic(errors.New("%v: field is not of non-repeated message type", fd.FullName()))
 	}
-	return New(md).ProtoReflect()
+	return NewMessage(md).ProtoReflect()
 }
 
 // NewField returns a new value for assignable to the field of a given descriptor.
@@ -232,7 +232,7 @@ func (m *Message) NewField(fd pref.FieldDescriptor) pref.Value {
 	case fd.IsList():
 		return pref.ValueOf(&dynamicList{desc: fd})
 	case fd.Message() != nil:
-		return pref.ValueOf(New(fd.Message()).ProtoReflect())
+		return pref.ValueOf(NewMessage(fd.Message()).ProtoReflect())
 	default:
 		return fd.Default()
 	}
@@ -260,7 +260,7 @@ func (m *Message) GetUnknown() pref.RawFields {
 // See protoreflect.Message for details.
 func (m *Message) SetUnknown(r pref.RawFields) {
 	if m.known == nil {
-		panic(errors.New("%v: modification of read-only message", m.desc.FullName()))
+		panic(errors.New("%v: modification of read-only message", m.typ.desc.FullName()))
 	}
 	m.unknown = r
 }
@@ -282,12 +282,22 @@ func (m *Message) checkField(fd pref.FieldDescriptor) {
 	}
 }
 
-type messageType Message
+type messageType struct {
+	desc pref.MessageDescriptor
+}
 
-func (mt *messageType) New() pref.Message                  { return New(mt.desc) }
-func (mt *messageType) Zero() pref.Message                 { return New(mt.desc) }
-func (mt *messageType) GoType() reflect.Type               { return reflect.TypeOf((*Message)(nil)) }
-func (mt *messageType) Descriptor() pref.MessageDescriptor { return mt.desc }
+// NewMessageType creates a new MessageType with the provided descriptor.
+//
+// MessageTypes created by this package are equal if their descriptors are equal.
+// That is, if md1 == md2, then NewMessageType(md1) == NewMessageType(md2).
+func NewMessageType(desc pref.MessageDescriptor) pref.MessageType {
+	return messageType{desc}
+}
+
+func (mt messageType) New() pref.Message                  { return NewMessage(mt.desc) }
+func (mt messageType) Zero() pref.Message                 { return NewMessage(mt.desc) }
+func (mt messageType) GoType() reflect.Type               { return reflect.TypeOf((*Message)(nil)) }
+func (mt messageType) Descriptor() pref.MessageDescriptor { return mt.desc }
 
 type emptyList struct {
 	desc pref.FieldDescriptor
@@ -303,7 +313,7 @@ func (x emptyList) NewMessage() pref.Message {
 	if md == nil {
 		panic(errors.New("list is not of message type"))
 	}
-	return New(md).ProtoReflect()
+	return NewMessage(md).ProtoReflect()
 }
 func (x emptyList) NewElement() pref.Value {
 	return newListEntry(x.desc)
@@ -345,7 +355,7 @@ func (x *dynamicList) NewMessage() pref.Message {
 	if md == nil {
 		panic(errors.New("list is not of message type"))
 	}
-	return New(md).ProtoReflect()
+	return NewMessage(md).ProtoReflect()
 }
 
 func (x *dynamicList) NewElement() pref.Value {
@@ -371,11 +381,11 @@ func (x *dynamicMap) NewMessage() pref.Message {
 	if md == nil {
 		panic(errors.New("map value is not of message type"))
 	}
-	return New(md).ProtoReflect()
+	return NewMessage(md).ProtoReflect()
 }
 func (x *dynamicMap) NewValue() pref.Value {
 	if md := x.desc.MapValue().Message(); md != nil {
-		return pref.ValueOf(New(md).ProtoReflect())
+		return pref.ValueOf(NewMessage(md).ProtoReflect())
 	}
 	return x.desc.MapValue().Default()
 }
@@ -517,7 +527,7 @@ func newListEntry(fd pref.FieldDescriptor) pref.Value {
 	case pref.BytesKind:
 		return pref.ValueOf(([]byte)(nil))
 	case pref.MessageKind, pref.GroupKind:
-		return pref.ValueOf(New(fd.Message()).ProtoReflect())
+		return pref.ValueOf(NewMessage(fd.Message()).ProtoReflect())
 	}
 	panic(errors.New("%v: unknown kind %v", fd.FullName(), fd.Kind()))
 }
@@ -563,7 +573,7 @@ func (xt extensionType) New() pref.Value {
 	case xt.desc.IsList():
 		return pref.ValueOf(&dynamicList{desc: xt.desc})
 	case xt.desc.Message() != nil:
-		return pref.ValueOf(New(xt.desc.Message()))
+		return pref.ValueOf(NewMessage(xt.desc.Message()))
 	default:
 		return xt.desc.Default()
 	}
@@ -576,7 +586,7 @@ func (xt extensionType) Zero() pref.Value {
 	case xt.desc.Cardinality() == pref.Repeated:
 		return pref.ValueOf(emptyList{desc: xt.desc})
 	case xt.desc.Message() != nil:
-		return pref.ValueOf(&Message{desc: xt.desc.Message()})
+		return pref.ValueOf(&Message{typ: messageType{xt.desc.Message()}})
 	default:
 		return xt.desc.Default()
 	}
