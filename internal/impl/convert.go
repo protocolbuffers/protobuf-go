@@ -11,10 +11,10 @@ import (
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// Unwrapper unwraps the value to the underlying value.
+// unwrapper unwraps the value to the underlying value.
 // This is implemented by List and Map.
-type Unwrapper interface {
-	ProtoUnwrap() interface{}
+type unwrapper interface {
+	protoUnwrap() interface{}
 }
 
 // A Converter coverts to/from Go reflect.Value types and protobuf protoreflect.Value types.
@@ -432,8 +432,8 @@ func (c *messageConverter) PBValueOf(v reflect.Value) pref.Value {
 func (c *messageConverter) GoValueOf(v pref.Value) reflect.Value {
 	m := v.Message()
 	var rv reflect.Value
-	if u, ok := m.(Unwrapper); ok {
-		rv = reflect.ValueOf(u.ProtoUnwrap())
+	if u, ok := m.(unwrapper); ok {
+		rv = reflect.ValueOf(u.protoUnwrap())
 	} else {
 		rv = reflect.ValueOf(m.Interface())
 	}
@@ -446,8 +446,8 @@ func (c *messageConverter) GoValueOf(v pref.Value) reflect.Value {
 func (c *messageConverter) IsValidPB(v pref.Value) bool {
 	m := v.Message()
 	var rv reflect.Value
-	if u, ok := m.(Unwrapper); ok {
-		rv = reflect.ValueOf(u.ProtoUnwrap())
+	if u, ok := m.(unwrapper); ok {
+		rv = reflect.ValueOf(u.protoUnwrap())
 	} else {
 		rv = reflect.ValueOf(m.Interface())
 	}

@@ -54,8 +54,8 @@ func (xi *ExtensionInfo) initToLegacy() {
 		// Create a new parent message and unwrap it if possible.
 		mv := mt.New().Interface()
 		t := reflect.TypeOf(mv)
-		if mv, ok := mv.(Unwrapper); ok {
-			t = reflect.TypeOf(mv.ProtoUnwrap())
+		if mv, ok := mv.(unwrapper); ok {
+			t = reflect.TypeOf(mv.protoUnwrap())
 		}
 
 		// Check whether the message implements the legacy v1 Message interface.

@@ -101,7 +101,7 @@ func (e *legacyEnumWrapper) Number() pref.EnumNumber {
 func (e *legacyEnumWrapper) ProtoReflect() pref.Enum {
 	return e
 }
-func (e *legacyEnumWrapper) ProtoUnwrap() interface{} {
+func (e *legacyEnumWrapper) protoUnwrap() interface{} {
 	v := reflect.New(e.goTyp).Elem()
 	v.SetInt(int64(e.num))
 	return v.Interface()
@@ -109,7 +109,7 @@ func (e *legacyEnumWrapper) ProtoUnwrap() interface{} {
 
 var (
 	_ pref.Enum = (*legacyEnumWrapper)(nil)
-	_ Unwrapper = (*legacyEnumWrapper)(nil)
+	_ unwrapper = (*legacyEnumWrapper)(nil)
 )
 
 var legacyEnumDescCache sync.Map // map[reflect.Type]protoreflect.EnumDescriptor

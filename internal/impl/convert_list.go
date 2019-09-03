@@ -128,6 +128,6 @@ func (ls *listReflect) NewMessage() pref.Message {
 func (ls *listReflect) NewElement() pref.Value {
 	return ls.conv.New()
 }
-func (ls *listReflect) ProtoUnwrap() interface{} {
+func (ls *listReflect) protoUnwrap() interface{} {
 	return ls.v.Interface()
 }

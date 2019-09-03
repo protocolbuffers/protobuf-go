@@ -221,7 +221,7 @@ type messageState MessageState
 
 var (
 	_ pref.Message = (*messageState)(nil)
-	_ Unwrapper    = (*messageState)(nil)
+	_ unwrapper    = (*messageState)(nil)
 )
 
 // messageDataType is a tuple of a pointer to the message data and
@@ -240,9 +240,9 @@ type (
 
 var (
 	_ pref.Message      = (*messageReflectWrapper)(nil)
-	_ Unwrapper         = (*messageReflectWrapper)(nil)
+	_ unwrapper         = (*messageReflectWrapper)(nil)
 	_ pref.ProtoMessage = (*messageIfaceWrapper)(nil)
-	_ Unwrapper         = (*messageIfaceWrapper)(nil)
+	_ unwrapper         = (*messageIfaceWrapper)(nil)
 )
 
 // MessageOf returns a reflective view over a message. The input must be a
@@ -266,7 +266,7 @@ func (m *messageReflectWrapper) messageInfo() *MessageInfo { return m.mi }
 func (m *messageIfaceWrapper) ProtoReflect() pref.Message {
 	return (*messageReflectWrapper)(m)
 }
-func (m *messageIfaceWrapper) ProtoUnwrap() interface{} {
+func (m *messageIfaceWrapper) protoUnwrap() interface{} {
 	return m.p.AsIfaceOf(m.mi.GoReflectType.Elem())
 }
 

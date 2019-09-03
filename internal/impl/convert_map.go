@@ -105,6 +105,6 @@ func (ms *mapReflect) NewMessage() pref.Message {
 func (ms *mapReflect) NewValue() pref.Value {
 	return ms.valConv.New()
 }
-func (ms *mapReflect) ProtoUnwrap() interface{} {
+func (ms *mapReflect) protoUnwrap() interface{} {
 	return ms.v.Interface()
 }

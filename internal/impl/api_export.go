@@ -74,8 +74,8 @@ func (Export) ProtoMessageV1Of(m message) piface.MessageV1 {
 	switch mv := m.(type) {
 	case piface.MessageV1:
 		return mv
-	case Unwrapper:
-		return Export{}.ProtoMessageV1Of(mv.ProtoUnwrap())
+	case unwrapper:
+		return Export{}.ProtoMessageV1Of(mv.protoUnwrap())
 	case protoreflect.ProtoMessage:
 		return legacyMessageWrapper{mv}
 	default:

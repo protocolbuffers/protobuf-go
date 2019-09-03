@@ -189,7 +189,7 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporte
 		},
 		set: func(p pointer, v pref.Value) {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			rv.Set(reflect.ValueOf(v.List().(Unwrapper).ProtoUnwrap()).Elem())
+			rv.Set(reflect.ValueOf(v.List().(unwrapper).protoUnwrap()).Elem())
 		},
 		mutable: func(p pointer) pref.Value {
 			v := p.Apply(fieldOffset).AsValueOf(fs.Type)

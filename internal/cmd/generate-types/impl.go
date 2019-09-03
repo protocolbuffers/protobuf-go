@@ -631,15 +631,15 @@ func (m *{{.}}) New() protoreflect.Message {
 }
 func (m *{{.}}) Interface() protoreflect.ProtoMessage {
 	{{if eq . "messageState" -}}
-	return m.ProtoUnwrap().(protoreflect.ProtoMessage)
+	return m.protoUnwrap().(protoreflect.ProtoMessage)
 	{{- else -}}
-	if m, ok := m.ProtoUnwrap().(protoreflect.ProtoMessage); ok {
+	if m, ok := m.protoUnwrap().(protoreflect.ProtoMessage); ok {
 		return m
 	}
 	return (*messageIfaceWrapper)(m)
 	{{- end -}}
 }
-func (m *{{.}}) ProtoUnwrap() interface{} {
+func (m *{{.}}) protoUnwrap() interface{} {
 	return m.pointer().AsIfaceOf(m.messageInfo().GoReflectType.Elem())
 }
 func (m *{{.}}) ProtoMethods() *protoiface.Methods {
