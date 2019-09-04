@@ -209,11 +209,10 @@ func (o UnmarshalOptions) unmarshalSingular(input text.Value, fd pref.FieldDescr
 		if input.Type() != text.Message {
 			return errors.New("%v contains invalid message/group value: %v", fd.FullName(), input)
 		}
-		m2 := m.NewMessage(fd)
-		if err := o.unmarshalMessage(input.Message(), m2); err != nil {
+		val = m.NewField(fd)
+		if err := o.unmarshalMessage(input.Message(), val.Message()); err != nil {
 			return err
 		}
-		val = pref.ValueOf(m2)
 	default:
 		var err error
 		val, err = unmarshalScalar(input, fd)
@@ -299,11 +298,11 @@ func (o UnmarshalOptions) unmarshalList(inputList []text.Value, fd pref.FieldDes
 			if input.Type() != text.Message {
 				return errors.New("%v contains invalid message/group value: %v", fd.FullName(), input)
 			}
-			m := list.NewMessage()
-			if err := o.unmarshalMessage(input.Message(), m); err != nil {
+			val := list.NewElement()
+			if err := o.unmarshalMessage(input.Message(), val.Message()); err != nil {
 				return err
 			}
-			list.Append(pref.ValueOf(m))
+			list.Append(val)
 		}
 	default:
 		for _, input := range inputList {
@@ -402,11 +401,11 @@ func (o UnmarshalOptions) unmarshalMapMessageValue(input text.Value, pkey pref.M
 	if input.Type() != 0 {
 		value = input.Message()
 	}
-	m := mmap.NewMessage()
-	if err := o.unmarshalMessage(value, m); err != nil {
+	val := mmap.NewValue()
+	if err := o.unmarshalMessage(value, val.Message()); err != nil {
 		return err
 	}
-	mmap.Set(pkey, pref.ValueOf(m))
+	mmap.Set(pkey, val)
 	return nil
 }
 

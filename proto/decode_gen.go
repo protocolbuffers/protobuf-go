@@ -574,11 +574,11 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		m := list.NewMessage()
-		if err := o.unmarshalMessage(v, m); err != nil {
+		m := list.NewElement()
+		if err := o.unmarshalMessage(v, m.Message()); err != nil {
 			return 0, err
 		}
-		list.Append(protoreflect.ValueOf(m))
+		list.Append(m)
 		return n, nil
 	case protoreflect.GroupKind:
 		if wtyp != wire.StartGroupType {
@@ -588,11 +588,11 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		m := list.NewMessage()
-		if err := o.unmarshalMessage(v, m); err != nil {
+		m := list.NewElement()
+		if err := o.unmarshalMessage(v, m.Message()); err != nil {
 			return 0, err
 		}
-		list.Append(protoreflect.ValueOf(m))
+		list.Append(m)
 		return n, nil
 	default:
 		return 0, errUnknown

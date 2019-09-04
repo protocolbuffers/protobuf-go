@@ -587,19 +587,19 @@ func (o UnmarshalOptions) unmarshalKnownValue(m pref.Message) error {
 
 	case json.StartObject:
 		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_StructValue)
-		m2 := m.NewMessage(fd)
-		if err := o.unmarshalStruct(m2); err != nil {
+		val := m.NewField(fd)
+		if err := o.unmarshalStruct(val.Message()); err != nil {
 			return err
 		}
-		m.Set(fd, pref.ValueOf(m2))
+		m.Set(fd, val)
 
 	case json.StartArray:
 		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_ListValue)
-		m2 := m.NewMessage(fd)
-		if err := o.unmarshalListValue(m2); err != nil {
+		val := m.NewField(fd)
+		if err := o.unmarshalListValue(val.Message()); err != nil {
 			return err
 		}
-		m.Set(fd, pref.ValueOf(m2))
+		m.Set(fd, val)
 
 	default:
 		jval, err := o.decoder.Read()

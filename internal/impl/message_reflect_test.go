@@ -1326,9 +1326,9 @@ func testLists(t *testing.T, p path, v pref.List, tt listOps) {
 				v.Append(e)
 			}
 		case appendMessageList:
-			m := v.NewMessage()
-			v.Append(V(m))
-			testMessage(t, p, m, messageOps(op))
+			e := v.NewElement()
+			v.Append(e)
+			testMessage(t, p, e.Message(), messageOps(op))
 		case truncList:
 			v.Truncate(int(op))
 		default:
@@ -1380,7 +1380,7 @@ func testMaps(t *testing.T, p path, m pref.Map, tt mapOps) {
 			for k, tt := range op {
 				mk := V(k).MapKey()
 				if !m.Has(mk) {
-					m.Set(mk, V(m.NewMessage()))
+					m.Set(mk, m.NewValue())
 				}
 				testMessage(t, p, m.Get(mk).Message(), tt)
 			}

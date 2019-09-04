@@ -276,9 +276,8 @@ func (o UnmarshalOptions) unmarshalSingular(m pref.Message, fd pref.FieldDescrip
 	var err error
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
-		m2 := m.NewMessage(fd)
-		err = o.unmarshalMessage(m2, false)
-		val = pref.ValueOf(m2)
+		val = m.NewField(fd)
+		err = o.unmarshalMessage(val.Message(), false)
 	default:
 		val, err = o.unmarshalScalar(fd)
 	}
@@ -528,8 +527,8 @@ func (o UnmarshalOptions) unmarshalList(list pref.List, fd pref.FieldDescriptor)
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
 		for {
-			m := list.NewMessage()
-			err := o.unmarshalMessage(m, false)
+			val := list.NewElement()
+			err := o.unmarshalMessage(val.Message(), false)
 			if err != nil {
 				if e, ok := err.(unexpectedJSONError); ok {
 					if e.value.Type() == json.EndArray {
@@ -539,7 +538,7 @@ func (o UnmarshalOptions) unmarshalList(list pref.List, fd pref.FieldDescriptor)
 				}
 				return err
 			}
-			list.Append(pref.ValueOf(m))
+			list.Append(val)
 		}
 	default:
 		for {
@@ -575,11 +574,11 @@ func (o UnmarshalOptions) unmarshalMap(mmap pref.Map, fd pref.FieldDescriptor) e
 	switch fd.MapValue().Kind() {
 	case pref.MessageKind, pref.GroupKind:
 		unmarshalMapValue = func() (pref.Value, error) {
-			m := mmap.NewMessage()
-			if err := o.unmarshalMessage(m, false); err != nil {
+			val := mmap.NewValue()
+			if err := o.unmarshalMessage(val.Message(), false); err != nil {
 				return pref.Value{}, err
 			}
-			return pref.ValueOf(m), nil
+			return val, nil
 		}
 	default:
 		unmarshalMapValue = func() (pref.Value, error) {

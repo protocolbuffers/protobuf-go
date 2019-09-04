@@ -61,9 +61,9 @@ func fillMessage(m pref.Message, level int) {
 func setScalarField(m pref.Message, fd pref.FieldDescriptor, level int) {
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
-		m2 := m.NewMessage(fd)
-		fillMessage(m2, level+1)
-		m.Set(fd, pref.ValueOf(m2))
+		val := m.NewField(fd)
+		fillMessage(val.Message(), level+1)
+		m.Set(fd, val)
 	default:
 		m.Set(fd, scalarField(fd.Kind()))
 	}
@@ -109,9 +109,9 @@ func setList(list pref.List, fd pref.FieldDescriptor, level int) {
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
 		for i := 0; i < 10; i++ {
-			m := list.NewMessage()
-			fillMessage(m, level+1)
-			list.Append(pref.ValueOf(m))
+			val := list.NewElement()
+			fillMessage(val.Message(), level+1)
+			list.Append(val)
 		}
 	default:
 		for i := 0; i < 100; i++ {
@@ -128,9 +128,9 @@ func setMap(mmap pref.Map, fd pref.FieldDescriptor, level int) {
 	pkey := scalarField(keyDesc.Kind())
 	switch kind := valDesc.Kind(); kind {
 	case pref.MessageKind, pref.GroupKind:
-		m := mmap.NewMessage()
-		fillMessage(m, level+1)
-		mmap.Set(pkey.MapKey(), pref.ValueOf(m))
+		val := mmap.NewValue()
+		fillMessage(val.Message(), level+1)
+		mmap.Set(pkey.MapKey(), val)
 	default:
 		mmap.Set(pkey.MapKey(), scalarField(kind))
 	}

@@ -330,11 +330,11 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		}
 		{{end -}}
 		{{if or (eq .Name "Message") (eq .Name "Group") -}}
-		m := list.NewMessage()
-		if err := o.unmarshalMessage(v, m); err != nil {
+		m := list.NewElement()
+		if err := o.unmarshalMessage(v, m.Message()); err != nil {
 			return 0, err
 		}
-		list.Append(protoreflect.ValueOf(m))
+		list.Append(m)
 		{{- else -}}
 		list.Append({{.ToValue}})
 		{{- end}}

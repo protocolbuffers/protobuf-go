@@ -46,9 +46,9 @@ func mergeList(dst, src protoreflect.List, fd protoreflect.FieldDescriptor) {
 	for i := 0; i < src.Len(); i++ {
 		switch v := src.Get(i); {
 		case fd.Message() != nil:
-			m := dst.NewMessage()
-			mergeMessage(m, v.Message())
-			dst.Append(protoreflect.ValueOf(m))
+			dstv := dst.NewElement()
+			mergeMessage(dstv.Message(), v.Message())
+			dst.Append(dstv)
 		case fd.Kind() == protoreflect.BytesKind:
 			dst.Append(cloneBytes(v))
 		default:
@@ -61,9 +61,9 @@ func mergeMap(dst, src protoreflect.Map, fd protoreflect.FieldDescriptor) {
 	src.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 		switch {
 		case fd.Message() != nil:
-			m := dst.NewMessage()
-			mergeMessage(m, v.Message())
-			dst.Set(k, protoreflect.ValueOf(m)) // may replace existing entry
+			dstv := dst.NewValue()
+			mergeMessage(dstv.Message(), v.Message())
+			dst.Set(k, dstv) // may replace existing entry
 		case fd.Kind() == protoreflect.BytesKind:
 			dst.Set(k, cloneBytes(v))
 		default:

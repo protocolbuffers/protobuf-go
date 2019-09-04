@@ -154,7 +154,7 @@ func (o UnmarshalOptions) unmarshalMap(b []byte, wtyp wire.Type, mapv protorefle
 	)
 	switch valField.Kind() {
 	case protoreflect.GroupKind, protoreflect.MessageKind:
-		val = protoreflect.ValueOf(mapv.NewMessage())
+		val = mapv.NewValue()
 	}
 	// Map entries are represented as a two-element message with fields
 	// containing the key and value.
