@@ -457,12 +457,12 @@ var coder{{.Name}}Value = valueCoderFuncs{
 	unmarshal: consume{{.Name}}Value,
 }
 
-{{if or (eq .Name "Bytes") (eq .Name "String")}}
+{{if (eq .Name "String")}}
 // append{{.Name}}ValueValidateUTF8 encodes a {{.GoType}} value as a {{.Name}}.
 func append{{.Name}}ValueValidateUTF8(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
 	b = wire.AppendVarint(b, wiretag)
 	{{template "AppendValue" .}}
-	if !utf8.Valid{{if eq .Name "String"}}String{{end}}({{.FromValue}}) {
+	if !utf8.ValidString({{.FromValue}}) {
 		return b, errInvalidUTF8{}
 	}
 	return b, nil
@@ -477,7 +477,7 @@ func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Nu
 	if n < 0 {
 		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+	if !utf8.ValidString(v) {
 		return protoreflect.Value{}, 0, errInvalidUTF8{}
 	}
 	return {{.ToValue}}, n, nil

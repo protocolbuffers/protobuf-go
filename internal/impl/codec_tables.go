@@ -426,244 +426,126 @@ func fieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	panic(fmt.Errorf("invalid type: no encoder for %v %v %v/%v", fd.FullName(), fd.Cardinality(), fd.Kind(), ft))
 }
 
-// encoderFuncsForValue returns interface{} value functions for a field, used for
+// encoderFuncsForValue returns value functions for a field, used for
 // extension values and map encoding.
-func encoderFuncsForValue(fd pref.FieldDescriptor, ft reflect.Type) valueCoderFuncs {
+func encoderFuncsForValue(fd pref.FieldDescriptor) valueCoderFuncs {
 	switch {
 	case fd.Cardinality() == pref.Repeated && !fd.IsPacked():
-		if ft.Kind() == reflect.Ptr {
-			ft = ft.Elem()
-		}
-		if ft.Kind() != reflect.Slice {
-			break
-		}
-		ft := ft.Elem()
 		switch fd.Kind() {
 		case pref.BoolKind:
-			if ft.Kind() == reflect.Bool {
-				return coderBoolSliceValue
-			}
+			return coderBoolSliceValue
 		case pref.EnumKind:
-			if ft.Kind() == reflect.Int32 {
-				return coderEnumSliceValue
-			}
+			return coderEnumSliceValue
 		case pref.Int32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderInt32SliceValue
-			}
+			return coderInt32SliceValue
 		case pref.Sint32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderSint32SliceValue
-			}
+			return coderSint32SliceValue
 		case pref.Uint32Kind:
-			if ft.Kind() == reflect.Uint32 {
-				return coderUint32SliceValue
-			}
+			return coderUint32SliceValue
 		case pref.Int64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderInt64SliceValue
-			}
+			return coderInt64SliceValue
 		case pref.Sint64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderSint64SliceValue
-			}
+			return coderSint64SliceValue
 		case pref.Uint64Kind:
-			if ft.Kind() == reflect.Uint64 {
-				return coderUint64SliceValue
-			}
+			return coderUint64SliceValue
 		case pref.Sfixed32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderSfixed32SliceValue
-			}
+			return coderSfixed32SliceValue
 		case pref.Fixed32Kind:
-			if ft.Kind() == reflect.Uint32 {
-				return coderFixed32SliceValue
-			}
+			return coderFixed32SliceValue
 		case pref.FloatKind:
-			if ft.Kind() == reflect.Float32 {
-				return coderFloatSliceValue
-			}
+			return coderFloatSliceValue
 		case pref.Sfixed64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderSfixed64SliceValue
-			}
+			return coderSfixed64SliceValue
 		case pref.Fixed64Kind:
-			if ft.Kind() == reflect.Uint64 {
-				return coderFixed64SliceValue
-			}
+			return coderFixed64SliceValue
 		case pref.DoubleKind:
-			if ft.Kind() == reflect.Float64 {
-				return coderDoubleSliceValue
-			}
+			return coderDoubleSliceValue
 		case pref.StringKind:
-			if ft.Kind() == reflect.String {
-				return coderStringSliceValue
-			}
-			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
-				return coderBytesSliceValue
-			}
+			// We don't have a UTF-8 validating coder for repeated string fields.
+			// Value coders are used for extensions and maps.
+			// Extensions are never proto3, and maps never contain lists.
+			return coderStringSliceValue
 		case pref.BytesKind:
-			if ft.Kind() == reflect.String {
-				return coderStringSliceValue
-			}
-			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
-				return coderBytesSliceValue
-			}
+			return coderBytesSliceValue
 		case pref.MessageKind:
 			return coderMessageSliceValue
 		case pref.GroupKind:
 			return coderGroupSliceValue
 		}
 	case fd.Cardinality() == pref.Repeated && fd.IsPacked():
-		if ft.Kind() == reflect.Ptr {
-			ft = ft.Elem()
-		}
-		if ft.Kind() != reflect.Slice {
-			break
-		}
-		ft := ft.Elem()
 		switch fd.Kind() {
 		case pref.BoolKind:
-			if ft.Kind() == reflect.Bool {
-				return coderBoolPackedSliceValue
-			}
+			return coderBoolPackedSliceValue
 		case pref.EnumKind:
-			if ft.Kind() == reflect.Int32 {
-				return coderEnumPackedSliceValue
-			}
+			return coderEnumPackedSliceValue
 		case pref.Int32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderInt32PackedSliceValue
-			}
+			return coderInt32PackedSliceValue
 		case pref.Sint32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderSint32PackedSliceValue
-			}
+			return coderSint32PackedSliceValue
 		case pref.Uint32Kind:
-			if ft.Kind() == reflect.Uint32 {
-				return coderUint32PackedSliceValue
-			}
+			return coderUint32PackedSliceValue
 		case pref.Int64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderInt64PackedSliceValue
-			}
+			return coderInt64PackedSliceValue
 		case pref.Sint64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderSint64PackedSliceValue
-			}
+			return coderSint64PackedSliceValue
 		case pref.Uint64Kind:
-			if ft.Kind() == reflect.Uint64 {
-				return coderUint64PackedSliceValue
-			}
+			return coderUint64PackedSliceValue
 		case pref.Sfixed32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderSfixed32PackedSliceValue
-			}
+			return coderSfixed32PackedSliceValue
 		case pref.Fixed32Kind:
-			if ft.Kind() == reflect.Uint32 {
-				return coderFixed32PackedSliceValue
-			}
+			return coderFixed32PackedSliceValue
 		case pref.FloatKind:
-			if ft.Kind() == reflect.Float32 {
-				return coderFloatPackedSliceValue
-			}
+			return coderFloatPackedSliceValue
 		case pref.Sfixed64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderSfixed64PackedSliceValue
-			}
+			return coderSfixed64PackedSliceValue
 		case pref.Fixed64Kind:
-			if ft.Kind() == reflect.Uint64 {
-				return coderFixed64PackedSliceValue
-			}
+			return coderFixed64PackedSliceValue
 		case pref.DoubleKind:
-			if ft.Kind() == reflect.Float64 {
-				return coderDoublePackedSliceValue
-			}
+			return coderDoublePackedSliceValue
 		}
 	default:
 		switch fd.Kind() {
 		default:
 		case pref.BoolKind:
-			if ft.Kind() == reflect.Bool {
-				return coderBoolValue
-			}
+			return coderBoolValue
 		case pref.EnumKind:
-			if ft.Kind() == reflect.Int32 {
-				return coderEnumValue
-			}
+			return coderEnumValue
 		case pref.Int32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderInt32Value
-			}
+			return coderInt32Value
 		case pref.Sint32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderSint32Value
-			}
+			return coderSint32Value
 		case pref.Uint32Kind:
-			if ft.Kind() == reflect.Uint32 {
-				return coderUint32Value
-			}
+			return coderUint32Value
 		case pref.Int64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderInt64Value
-			}
+			return coderInt64Value
 		case pref.Sint64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderSint64Value
-			}
+			return coderSint64Value
 		case pref.Uint64Kind:
-			if ft.Kind() == reflect.Uint64 {
-				return coderUint64Value
-			}
+			return coderUint64Value
 		case pref.Sfixed32Kind:
-			if ft.Kind() == reflect.Int32 {
-				return coderSfixed32Value
-			}
+			return coderSfixed32Value
 		case pref.Fixed32Kind:
-			if ft.Kind() == reflect.Uint32 {
-				return coderFixed32Value
-			}
+			return coderFixed32Value
 		case pref.FloatKind:
-			if ft.Kind() == reflect.Float32 {
-				return coderFloatValue
-			}
+			return coderFloatValue
 		case pref.Sfixed64Kind:
-			if ft.Kind() == reflect.Int64 {
-				return coderSfixed64Value
-			}
+			return coderSfixed64Value
 		case pref.Fixed64Kind:
-			if ft.Kind() == reflect.Uint64 {
-				return coderFixed64Value
-			}
+			return coderFixed64Value
 		case pref.DoubleKind:
-			if ft.Kind() == reflect.Float64 {
-				return coderDoubleValue
-			}
+			return coderDoubleValue
 		case pref.StringKind:
-			if ft.Kind() == reflect.String && strs.EnforceUTF8(fd) {
+			if strs.EnforceUTF8(fd) {
 				return coderStringValueValidateUTF8
 			}
-			if ft.Kind() == reflect.String {
-				return coderStringValue
-			}
-			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 && strs.EnforceUTF8(fd) {
-				return coderBytesValueValidateUTF8
-			}
-			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
-				return coderBytesValue
-			}
+			return coderStringValue
 		case pref.BytesKind:
-			if ft.Kind() == reflect.String {
-				return coderStringValue
-			}
-			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
-				return coderBytesValue
-			}
+			return coderBytesValue
 		case pref.MessageKind:
 			return coderMessageValue
 		case pref.GroupKind:
 			return coderGroupValue
 		}
 	}
-	panic(fmt.Errorf("invalid type: no encoder for %v %v %v/%v", fd.FullName(), fd.Cardinality(), fd.Kind(), ft))
+	panic(fmt.Errorf("invalid field: no encoder for %v %v %v", fd.FullName(), fd.Cardinality(), fd.Kind()))
 }

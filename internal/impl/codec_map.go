@@ -28,8 +28,8 @@ func encoderFuncsForMap(fd pref.FieldDescriptor, ft reflect.Type) (funcs pointer
 	valField := fd.MapValue()
 	keyWiretag := wire.EncodeTag(1, wireTypes[keyField.Kind()])
 	valWiretag := wire.EncodeTag(2, wireTypes[valField.Kind()])
-	keyFuncs := encoderFuncsForValue(keyField, ft.Key())
-	valFuncs := encoderFuncsForValue(valField, ft.Elem())
+	keyFuncs := encoderFuncsForValue(keyField)
+	valFuncs := encoderFuncsForValue(valField)
 	conv := NewConverter(ft, fd)
 
 	mapi := &mapInfo{

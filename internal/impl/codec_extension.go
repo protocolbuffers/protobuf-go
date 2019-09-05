@@ -39,7 +39,7 @@ func (mi *MessageInfo) extensionFieldInfo(xt pref.ExtensionType) *extensionField
 	e = &extensionFieldInfo{
 		wiretag: wiretag,
 		tagsize: wire.SizeVarint(wiretag),
-		funcs:   encoderFuncsForValue(xd, xt.GoType()),
+		funcs:   encoderFuncsForValue(xd),
 	}
 	// Does the unmarshal function need a value passed to it?
 	// This is true for composite types, where we pass in a message, list, or map to fill in,

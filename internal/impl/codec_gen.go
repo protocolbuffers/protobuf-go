@@ -4720,37 +4720,6 @@ var coderBytesValue = valueCoderFuncs{
 	unmarshal: consumeBytesValue,
 }
 
-// appendBytesValueValidateUTF8 encodes a []byte value as a Bytes.
-func appendBytesValueValidateUTF8(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendBytes(b, v.Bytes())
-	if !utf8.Valid(v.Bytes()) {
-		return b, errInvalidUTF8{}
-	}
-	return b, nil
-}
-
-// consumeBytesValueValidateUTF8 decodes a []byte value as a Bytes.
-func consumeBytesValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
-	if wtyp != wire.BytesType {
-		return protoreflect.Value{}, 0, errUnknown
-	}
-	v, n := wire.ConsumeBytes(b)
-	if n < 0 {
-		return protoreflect.Value{}, 0, wire.ParseError(n)
-	}
-	if !utf8.Valid(v) {
-		return protoreflect.Value{}, 0, errInvalidUTF8{}
-	}
-	return protoreflect.ValueOfBytes(append(([]byte)(nil), v...)), n, nil
-}
-
-var coderBytesValueValidateUTF8 = valueCoderFuncs{
-	size:      sizeBytesValue,
-	marshal:   appendBytesValueValidateUTF8,
-	unmarshal: consumeBytesValueValidateUTF8,
-}
-
 // sizeBytesSliceValue returns the size of wire encoding a [][]byte value as a repeated Bytes.
 func sizeBytesSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
