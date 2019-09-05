@@ -394,7 +394,7 @@ func mustHandleFlags(t *testing.T) {
 
 					// Build the binary.
 					cmd := command{Env: append(os.Environ(), "GOOS="+goos, "GOARCH="+goarch)}
-					cmd.mustRun(t, "go", "build", "-trimpath", "-ldflags", "-s -w", "-o", binPath, "./cmd/protoc-gen-go")
+					cmd.mustRun(t, "go", "build", "-trimpath", "-ldflags", "-s -w -buildid=", "-o", binPath, "./cmd/protoc-gen-go")
 
 					// Archive and compress the binary.
 					in, err := ioutil.ReadFile(binPath)
