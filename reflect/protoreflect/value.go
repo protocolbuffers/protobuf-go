@@ -116,13 +116,6 @@ type Message interface {
 	// Mutable is a mutating operation and unsafe for concurrent use.
 	Mutable(FieldDescriptor) Value
 
-	// NewMessage returns a newly allocated empty message assignable to
-	// the field of the given descriptor.
-	// It panics if the field is not a singular message.
-	//
-	// Deprecated: Use NewField instead.
-	NewMessage(FieldDescriptor) Message
-
 	// NewField returns a new value for assignable to the field of a given descriptor.
 	// For scalars, this returns the default value.
 	// For lists, maps, and messages, this returns a new, empty, mutable value.
@@ -202,12 +195,6 @@ type List interface {
 	// Truncate is a mutating operation and unsafe for concurrent use.
 	Truncate(int)
 
-	// NewMessage returns a newly allocated empty message assignable as a list entry.
-	// It panics if the list entry type is not a message.
-	//
-	// Deprecated: Use NewElement instead.
-	NewMessage() Message
-
 	// NewElement returns a new value for a list element.
 	// For enums, this returns the first enum value.
 	// For other scalars, this returns the zero value.
@@ -252,12 +239,6 @@ type Map interface {
 	Set(MapKey, Value)
 
 	// TODO: Should there be a Mutable method?
-
-	// NewMessage returns a newly allocated empty message assignable as a map value.
-	// It panics if the map value type is not a message.
-	//
-	// Deprecated: Use NewValue instead.
-	NewMessage() Message
 
 	// NewValue returns a new value assignable as a map value.
 	// For enums, this returns the first enum value.

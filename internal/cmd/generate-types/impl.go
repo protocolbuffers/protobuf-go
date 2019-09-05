@@ -707,9 +707,6 @@ func (m *{{.}}) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 		return m.messageInfo().extensionMap(m.pointer()).Mutable(xt)
 	}
 }
-func (m *{{.}}) NewMessage(fd protoreflect.FieldDescriptor) protoreflect.Message {
-	return m.NewField(fd).Message()
-}
 func (m *{{.}}) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {

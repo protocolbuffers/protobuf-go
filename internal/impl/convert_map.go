@@ -99,9 +99,6 @@ func (ms *mapReflect) Range(f func(pref.MapKey, pref.Value) bool) {
 		}
 	}
 }
-func (ms *mapReflect) NewMessage() pref.Message {
-	return ms.NewValue().Message()
-}
 func (ms *mapReflect) NewValue() pref.Value {
 	return ms.valConv.New()
 }

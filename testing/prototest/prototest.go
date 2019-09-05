@@ -273,7 +273,6 @@ func (m testMap) Set(k pref.MapKey, v pref.Value) { m[k.Interface()] = v }
 func (m testMap) Has(k pref.MapKey) bool          { return m.Get(k).IsValid() }
 func (m testMap) Clear(k pref.MapKey)             { delete(m, k.Interface()) }
 func (m testMap) Len() int                        { return len(m) }
-func (m testMap) NewMessage() pref.Message        { panic("unimplemented") }
 func (m testMap) NewValue() pref.Value            { panic("unimplemented") }
 func (m testMap) Range(f func(pref.MapKey, pref.Value) bool) {
 	for k, v := range m {
@@ -341,13 +340,12 @@ type testList struct {
 	a []pref.Value
 }
 
-func (l *testList) Append(v pref.Value)      { l.a = append(l.a, v) }
-func (l *testList) Get(n int) pref.Value     { return l.a[n] }
-func (l *testList) Len() int                 { return len(l.a) }
-func (l *testList) Set(n int, v pref.Value)  { l.a[n] = v }
-func (l *testList) Truncate(n int)           { l.a = l.a[:n] }
-func (l *testList) NewMessage() pref.Message { panic("unimplemented") }
-func (l *testList) NewElement() pref.Value   { panic("unimplemented") }
+func (l *testList) Append(v pref.Value)     { l.a = append(l.a, v) }
+func (l *testList) Get(n int) pref.Value    { return l.a[n] }
+func (l *testList) Len() int                { return len(l.a) }
+func (l *testList) Set(n int, v pref.Value) { l.a[n] = v }
+func (l *testList) Truncate(n int)          { l.a = l.a[:n] }
+func (l *testList) NewElement() pref.Value  { panic("unimplemented") }
 
 // testFieldFloat exercises some interesting floating-point scalar field values.
 func testFieldFloat(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {

@@ -206,17 +206,6 @@ func (m *Message) clearOtherOneofFields(fd pref.FieldDescriptor) {
 	}
 }
 
-// NewMessage returns a newly-allocated message assignable to a field.
-// See protoreflect.Message for details.
-func (m *Message) NewMessage(fd pref.FieldDescriptor) pref.Message {
-	m.checkField(fd)
-	md := fd.Message()
-	if fd.Cardinality() == pref.Repeated || md == nil {
-		panic(errors.New("%v: field is not of non-repeated message type", fd.FullName()))
-	}
-	return NewMessage(md).ProtoReflect()
-}
-
 // NewField returns a new value for assignable to the field of a given descriptor.
 // See protoreflect.Message for details.
 func (m *Message) NewField(fd pref.FieldDescriptor) pref.Value {
@@ -308,13 +297,6 @@ func (x emptyList) Get(n int) pref.Value    { panic(errors.New("out of range")) 
 func (x emptyList) Set(n int, v pref.Value) { panic(errors.New("modification of immutable list")) }
 func (x emptyList) Append(v pref.Value)     { panic(errors.New("modification of immutable list")) }
 func (x emptyList) Truncate(n int)          { panic(errors.New("modification of immutable list")) }
-func (x emptyList) NewMessage() pref.Message {
-	md := x.desc.Message()
-	if md == nil {
-		panic(errors.New("list is not of message type"))
-	}
-	return NewMessage(md).ProtoReflect()
-}
 func (x emptyList) NewElement() pref.Value {
 	return newListEntry(x.desc)
 }
@@ -350,14 +332,6 @@ func (x *dynamicList) Truncate(n int) {
 	x.list = x.list[:n]
 }
 
-func (x *dynamicList) NewMessage() pref.Message {
-	md := x.desc.Message()
-	if md == nil {
-		panic(errors.New("list is not of message type"))
-	}
-	return NewMessage(md).ProtoReflect()
-}
-
 func (x *dynamicList) NewElement() pref.Value {
 	return newListEntry(x.desc)
 }
@@ -376,13 +350,6 @@ func (x *dynamicMap) Set(k pref.MapKey, v pref.Value) {
 func (x *dynamicMap) Has(k pref.MapKey) bool { return x.Get(k).IsValid() }
 func (x *dynamicMap) Clear(k pref.MapKey)    { delete(x.mapv, k.Interface()) }
 func (x *dynamicMap) Len() int               { return len(x.mapv) }
-func (x *dynamicMap) NewMessage() pref.Message {
-	md := x.desc.MapValue().Message()
-	if md == nil {
-		panic(errors.New("map value is not of message type"))
-	}
-	return NewMessage(md).ProtoReflect()
-}
 func (x *dynamicMap) NewValue() pref.Value {
 	if md := x.desc.MapValue().Message(); md != nil {
 		return pref.ValueOf(NewMessage(md).ProtoReflect())

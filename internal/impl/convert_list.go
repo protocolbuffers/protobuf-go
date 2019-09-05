@@ -122,9 +122,6 @@ func (ls *listReflect) Append(v pref.Value) {
 func (ls *listReflect) Truncate(i int) {
 	ls.v.Elem().Set(ls.v.Elem().Slice(0, i))
 }
-func (ls *listReflect) NewMessage() pref.Message {
-	return ls.NewElement().Message()
-}
 func (ls *listReflect) NewElement() pref.Value {
 	return ls.conv.New()
 }

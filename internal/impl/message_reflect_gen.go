@@ -91,9 +91,6 @@ func (m *messageState) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Val
 		return m.messageInfo().extensionMap(m.pointer()).Mutable(xt)
 	}
 }
-func (m *messageState) NewMessage(fd protoreflect.FieldDescriptor) protoreflect.Message {
-	return m.NewField(fd).Message()
-}
 func (m *messageState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -200,9 +197,6 @@ func (m *messageReflectWrapper) Mutable(fd protoreflect.FieldDescriptor) protore
 	} else {
 		return m.messageInfo().extensionMap(m.pointer()).Mutable(xt)
 	}
-}
-func (m *messageReflectWrapper) NewMessage(fd protoreflect.FieldDescriptor) protoreflect.Message {
-	return m.NewField(fd).Message()
 }
 func (m *messageReflectWrapper) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
