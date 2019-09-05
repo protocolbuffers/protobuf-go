@@ -21,7 +21,7 @@ import (
 // legacyWrapMessage wraps v as a protoreflect.ProtoMessage,
 // where v must be a *struct kind and not implement the v2 API already.
 func legacyWrapMessage(v reflect.Value) pref.ProtoMessage {
-	mt := legacyLoadMessageInfo(v.Type())
+	mt := legacyLoadMessageInfo(v.Type(), "")
 	return mt.MessageOf(v.Interface()).Interface()
 }
 
@@ -29,7 +29,8 @@ var legacyMessageTypeCache sync.Map // map[reflect.Type]*MessageInfo
 
 // legacyLoadMessageInfo dynamically loads a *MessageInfo for t,
 // where t must be a *struct kind and not implement the v2 API already.
-func legacyLoadMessageInfo(t reflect.Type) *MessageInfo {
+// The provided name is used if it cannot be determined from the message.
+func legacyLoadMessageInfo(t reflect.Type, name pref.FullName) *MessageInfo {
 	// Fast-path: check if a MessageInfo is cached for this concrete type.
 	if mt, ok := legacyMessageTypeCache.Load(t); ok {
 		return mt.(*MessageInfo)
@@ -37,7 +38,7 @@ func legacyLoadMessageInfo(t reflect.Type) *MessageInfo {
 
 	// Slow-path: derive message descriptor and initialize MessageInfo.
 	mi := &MessageInfo{
-		Desc:          LegacyLoadMessageDesc(t),
+		Desc:          legacyLoadMessageDesc(t, name),
 		GoReflectType: t,
 	}
 	if mi, ok := legacyMessageTypeCache.LoadOrStore(t, mi); ok {
@@ -53,6 +54,9 @@ var legacyMessageDescCache sync.Map // map[reflect.Type]protoreflect.MessageDesc
 //
 // This is exported for testing purposes.
 func LegacyLoadMessageDesc(t reflect.Type) pref.MessageDescriptor {
+	return legacyLoadMessageDesc(t, "")
+}
+func legacyLoadMessageDesc(t reflect.Type, name pref.FullName) pref.MessageDescriptor {
 	// Fast-path: check if a MessageDescriptor is cached for this concrete type.
 	if mi, ok := legacyMessageDescCache.Load(t); ok {
 		return mi.(pref.MessageDescriptor)
@@ -65,13 +69,16 @@ func LegacyLoadMessageDesc(t reflect.Type) pref.MessageDescriptor {
 	}
 	mdV1, ok := mv.(messageV1)
 	if !ok {
-		return aberrantLoadMessageDesc(t)
+		return aberrantLoadMessageDesc(t, name)
 	}
 	b, idxs := mdV1.Descriptor()
 
 	md := legacyLoadFileDesc(b).Messages().Get(idxs[0])
 	for _, i := range idxs[1:] {
 		md = md.Messages().Get(i)
+	}
+	if name != "" && md.FullName() != name {
+		panic(fmt.Sprintf("mismatching message name: got %v, want %v", md.FullName(), name))
 	}
 	if md, ok := legacyMessageDescCache.LoadOrStore(t, md); ok {
 		return md.(protoreflect.MessageDescriptor)
@@ -89,15 +96,15 @@ var (
 //
 // This is a best-effort derivation of the message descriptor using the protobuf
 // tags on the struct fields.
-func aberrantLoadMessageDesc(t reflect.Type) pref.MessageDescriptor {
+func aberrantLoadMessageDesc(t reflect.Type, name pref.FullName) pref.MessageDescriptor {
 	aberrantMessageDescLock.Lock()
 	defer aberrantMessageDescLock.Unlock()
 	if aberrantMessageDescCache == nil {
 		aberrantMessageDescCache = make(map[reflect.Type]protoreflect.MessageDescriptor)
 	}
-	return aberrantLoadMessageDescReentrant(t)
+	return aberrantLoadMessageDescReentrant(t, name)
 }
-func aberrantLoadMessageDescReentrant(t reflect.Type) pref.MessageDescriptor {
+func aberrantLoadMessageDescReentrant(t reflect.Type, name pref.FullName) pref.MessageDescriptor {
 	// Fast-path: check if an MessageDescriptor is cached for this concrete type.
 	if md, ok := aberrantMessageDescCache[t]; ok {
 		return md
@@ -107,7 +114,7 @@ func aberrantLoadMessageDescReentrant(t reflect.Type) pref.MessageDescriptor {
 	// Cache the MessageDescriptor early on so that we can resolve internal
 	// cyclic references.
 	md := &filedesc.Message{L2: new(filedesc.MessageL2)}
-	md.L0.FullName = aberrantDeriveFullName(t.Elem())
+	md.L0.FullName = aberrantDeriveMessageName(t.Elem(), name)
 	md.L0.ParentFile = filedesc.SurrogateProto2
 	aberrantMessageDescCache[t] = md
 
@@ -191,6 +198,18 @@ func aberrantLoadMessageDescReentrant(t reflect.Type) pref.MessageDescriptor {
 	return md
 }
 
+func aberrantDeriveMessageName(t reflect.Type, name pref.FullName) pref.FullName {
+	if name.IsValid() {
+		return name
+	}
+	if m, ok := reflect.New(t).Interface().(interface{ XXX_MessageName() string }); ok {
+		if name := pref.FullName(m.XXX_MessageName()); name.IsValid() {
+			return name
+		}
+	}
+	return aberrantDeriveFullName(t)
+}
+
 func aberrantAppendField(md *filedesc.Message, goType reflect.Type, tag, tagKey, tagVal string) {
 	t := goType
 	isOptional := t.Kind() == reflect.Ptr && t.Elem().Kind() != reflect.Struct
@@ -260,7 +279,7 @@ func aberrantAppendField(md *filedesc.Message, goType reflect.Type, tag, tagKey,
 				fd.L1.Message = md2
 				break
 			}
-			fd.L1.Message = aberrantLoadMessageDescReentrant(t)
+			fd.L1.Message = aberrantLoadMessageDescReentrant(t, "")
 		}
 	}
 }

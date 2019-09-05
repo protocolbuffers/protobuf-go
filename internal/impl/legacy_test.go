@@ -664,3 +664,36 @@ func TestConcurrentInit(t *testing.T) {
 		}
 	}
 }
+
+type LegacyTestMessageName1 struct{}
+
+func (*LegacyTestMessageName1) Reset()         { panic("not implemented") }
+func (*LegacyTestMessageName1) String() string { panic("not implemented") }
+func (*LegacyTestMessageName1) ProtoMessage()  { panic("not implemented") }
+
+type LegacyTestMessageName2 struct{}
+
+func (*LegacyTestMessageName2) Reset()         { panic("not implemented") }
+func (*LegacyTestMessageName2) String() string { panic("not implemented") }
+func (*LegacyTestMessageName2) ProtoMessage()  { panic("not implemented") }
+func (*LegacyTestMessageName2) XXX_MessageName() string {
+	return "google.golang.org.LegacyTestMessageName2"
+}
+
+func TestLegacyMessageName(t *testing.T) {
+	tests := []struct {
+		in          piface.MessageV1
+		suggestName pref.FullName
+		wantName    pref.FullName
+	}{
+		{new(LegacyTestMessageName1), "google.golang.org.LegacyTestMessageName1", "google.golang.org.LegacyTestMessageName1"},
+		{new(LegacyTestMessageName2), "", "google.golang.org.LegacyTestMessageName2"},
+	}
+
+	for _, tt := range tests {
+		mt := pimpl.Export{}.LegacyMessageTypeOf(tt.in, tt.suggestName)
+		if got := mt.Descriptor().FullName(); got != tt.wantName {
+			t.Errorf("type: %T, name mismatch: got %v, want %v", tt.in, got, tt.wantName)
+		}
+	}
+}

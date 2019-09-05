@@ -26,6 +26,15 @@ func (Export) LegacyEnumName(ed pref.EnumDescriptor) string {
 	return legacyEnumName(ed)
 }
 
+// LegacyMessageTypeOf returns the protoreflect.MessageType for m,
+// with name used as the message name if necessary.
+func (Export) LegacyMessageTypeOf(m piface.MessageV1, name pref.FullName) pref.MessageType {
+	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
+		return mv.ProtoReflect().Type()
+	}
+	return legacyLoadMessageInfo(reflect.TypeOf(m), name)
+}
+
 // UnmarshalJSONEnum unmarshals an enum from a JSON-encoded input.
 // The input can either be a string representing the enum value by name,
 // or a number representing the enum number itself.

@@ -11,7 +11,6 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
@@ -63,7 +62,7 @@ func (Export) EnumStringOf(ed pref.EnumDescriptor, n pref.EnumNumber) string {
 type message = interface{}
 
 // legacyMessageWrapper wraps a v2 message as a v1 message.
-type legacyMessageWrapper struct{ m protoreflect.ProtoMessage }
+type legacyMessageWrapper struct{ m pref.ProtoMessage }
 
 func (m legacyMessageWrapper) Reset()         { proto.Reset(m.m) }
 func (m legacyMessageWrapper) String() string { return Export{}.MessageStringOf(m.m) }
@@ -76,8 +75,21 @@ func (Export) ProtoMessageV1Of(m message) piface.MessageV1 {
 		return mv
 	case unwrapper:
 		return Export{}.ProtoMessageV1Of(mv.protoUnwrap())
-	case protoreflect.ProtoMessage:
+	case pref.ProtoMessage:
 		return legacyMessageWrapper{mv}
+	default:
+		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
+	}
+}
+
+func (Export) protoMessageV2Of(m message) pref.ProtoMessage {
+	switch mv := m.(type) {
+	case pref.ProtoMessage:
+		return mv
+	case legacyMessageWrapper:
+		return mv.m
+	case piface.MessageV1:
+		return nil
 	default:
 		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
 	}
@@ -85,58 +97,34 @@ func (Export) ProtoMessageV1Of(m message) piface.MessageV1 {
 
 // ProtoMessageV2Of converts either a v1 or v2 message to a v2 message.
 func (Export) ProtoMessageV2Of(m message) pref.ProtoMessage {
-	switch mv := m.(type) {
-	case protoreflect.ProtoMessage:
+	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv
-	case legacyMessageWrapper:
-		return mv.m
-	case piface.MessageV1:
-		return legacyWrapMessage(reflect.ValueOf(mv))
-	default:
-		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
 	}
+	return legacyWrapMessage(reflect.ValueOf(m))
 }
 
 // MessageOf returns the protoreflect.Message interface over m.
 func (Export) MessageOf(m message) pref.Message {
-	switch mv := m.(type) {
-	case pref.ProtoMessage:
+	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv.ProtoReflect()
-	case legacyMessageWrapper:
-		return mv.m.ProtoReflect()
-	case piface.MessageV1:
-		return legacyWrapMessage(reflect.ValueOf(mv)).ProtoReflect()
-	default:
-		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
 	}
+	return legacyWrapMessage(reflect.ValueOf(m)).ProtoReflect()
 }
 
 // MessageDescriptorOf returns the protoreflect.MessageDescriptor for m.
 func (Export) MessageDescriptorOf(m message) pref.MessageDescriptor {
-	switch mv := m.(type) {
-	case pref.ProtoMessage:
+	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv.ProtoReflect().Descriptor()
-	case legacyMessageWrapper:
-		return mv.m.ProtoReflect().Descriptor()
-	case piface.MessageV1:
-		return LegacyLoadMessageDesc(reflect.TypeOf(mv))
-	default:
-		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
 	}
+	return LegacyLoadMessageDesc(reflect.TypeOf(m))
 }
 
 // MessageTypeOf returns the protoreflect.MessageType for m.
 func (Export) MessageTypeOf(m message) pref.MessageType {
-	switch mv := m.(type) {
-	case pref.ProtoMessage:
+	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv.ProtoReflect().Type()
-	case legacyMessageWrapper:
-		return mv.m.ProtoReflect().Type()
-	case piface.MessageV1:
-		return legacyLoadMessageInfo(reflect.TypeOf(mv))
-	default:
-		panic(fmt.Sprintf("message %T is neither a v1 or v2 Message", m))
 	}
+	return legacyLoadMessageInfo(reflect.TypeOf(m), "")
 }
 
 // MessageStringOf returns the message value as a string,
