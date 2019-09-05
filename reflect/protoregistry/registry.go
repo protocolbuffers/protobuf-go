@@ -255,21 +255,37 @@ func (r *Files) FindFileByPath(path string) (protoreflect.FileDescriptor, error)
 	return nil, NotFound
 }
 
+// NumFiles reports the number of registered files.
+func (r *Files) NumFiles() int {
+	if r == nil {
+		return 0
+	}
+	return len(r.filesByPath)
+}
+
 // RangeFiles iterates over all registered files.
 // The iteration order is undefined.
 func (r *Files) RangeFiles(f func(protoreflect.FileDescriptor) bool) {
 	if r == nil {
 		return
 	}
-	for _, d := range r.descsByName {
-		if p, ok := d.(*packageDescriptor); ok {
-			for _, file := range p.files {
-				if !f(file) {
-					return
-				}
-			}
+	for _, file := range r.filesByPath {
+		if !f(file) {
+			return
 		}
 	}
+}
+
+// NumFilesByPackage reports the number of registered files in a proto package.
+func (r *Files) NumFilesByPackage(name protoreflect.FullName) int {
+	if r == nil {
+		return 0
+	}
+	p, ok := r.descsByName[name].(*packageDescriptor)
+	if !ok {
+		return 0
+	}
+	return len(p.files)
 }
 
 // RangeFilesByPackage iterates over all registered files in a give proto package.
@@ -399,6 +415,10 @@ type Types struct {
 
 	typesByName         typesByName
 	extensionsByMessage extensionsByMessage
+
+	numEnums      int
+	numMessages   int
+	numExtensions int
 }
 
 type (
@@ -428,13 +448,17 @@ typeLoop:
 		case protoreflect.EnumType, protoreflect.MessageType, protoreflect.ExtensionType:
 			// Check for conflicts in typesByName.
 			var desc protoreflect.Descriptor
+			var pcnt *int
 			switch t := typ.(type) {
 			case protoreflect.EnumType:
 				desc = t.Descriptor()
+				pcnt = &r.numEnums
 			case protoreflect.MessageType:
 				desc = t.Descriptor()
+				pcnt = &r.numMessages
 			case protoreflect.ExtensionType:
 				desc = t.TypeDescriptor()
+				pcnt = &r.numExtensions
 			default:
 				panic(fmt.Sprintf("invalid type: %T", t))
 			}
@@ -478,11 +502,12 @@ typeLoop:
 				r.extensionsByMessage[message][field] = xt
 			}
 
-			// Update typesByName.
+			// Update typesByName and the count.
 			if r.typesByName == nil {
 				r.typesByName = make(typesByName)
 			}
 			r.typesByName[name] = typ
+			(*pcnt)++
 		default:
 			if firstErr == nil {
 				firstErr = errors.New("invalid type: %v", typeName(typ))
@@ -573,6 +598,14 @@ func (r *Types) FindExtensionByNumber(message protoreflect.FullName, field proto
 	return nil, NotFound
 }
 
+// NumEnums reports the number of registered enums.
+func (r *Types) NumEnums() int {
+	if r == nil {
+		return 0
+	}
+	return r.numEnums
+}
+
 // RangeEnums iterates over all registered enums.
 // Iteration order is undefined.
 func (r *Types) RangeEnums(f func(protoreflect.EnumType) bool) {
@@ -586,6 +619,14 @@ func (r *Types) RangeEnums(f func(protoreflect.EnumType) bool) {
 			}
 		}
 	}
+}
+
+// NumMessages reports the number of registered messages.
+func (r *Types) NumMessages() int {
+	if r == nil {
+		return 0
+	}
+	return r.numMessages
 }
 
 // RangeMessages iterates over all registered messages.
@@ -603,6 +644,14 @@ func (r *Types) RangeMessages(f func(protoreflect.MessageType) bool) {
 	}
 }
 
+// NumExtensions reports the number of registered extensions.
+func (r *Types) NumExtensions() int {
+	if r == nil {
+		return 0
+	}
+	return r.numExtensions
+}
+
 // RangeExtensions iterates over all registered extensions.
 // Iteration order is undefined.
 func (r *Types) RangeExtensions(f func(protoreflect.ExtensionType) bool) {
@@ -616,6 +665,15 @@ func (r *Types) RangeExtensions(f func(protoreflect.ExtensionType) bool) {
 			}
 		}
 	}
+}
+
+// NumExtensionsByMessage reports the number of registered extensions for
+// a given message type.
+func (r *Types) NumExtensionsByMessage(message protoreflect.FullName) int {
+	if r == nil {
+		return 0
+	}
+	return len(r.extensionsByMessage[message])
 }
 
 // RangeExtensionsByMessage iterates over all registered extensions filtered

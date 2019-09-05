@@ -298,10 +298,16 @@ func TestFiles(t *testing.T) {
 
 			for _, tc := range tt.rangePkgs {
 				var gotFiles []file
+				var gotCnt int
+				wantCnt := files.NumFilesByPackage(tc.inPkg)
 				files.RangeFilesByPackage(tc.inPkg, func(fd pref.FileDescriptor) bool {
 					gotFiles = append(gotFiles, file{fd.Path(), fd.Package()})
+					gotCnt++
 					return true
 				})
+				if gotCnt != wantCnt {
+					t.Errorf("NumFilesByPackage(%v) = %v, want %v", tc.inPkg, gotCnt, wantCnt)
+				}
 				if diff := cmp.Diff(tc.wantFiles, gotFiles, sortFiles); diff != "" {
 					t.Errorf("RangeFilesByPackage(%v) mismatch (-want +got):\n%v", tc.inPkg, diff)
 				}
@@ -552,44 +558,59 @@ func TestTypes(t *testing.T) {
 		return x == y
 	})
 
-	t.Run("RangeMessages", func(t *testing.T) {
-		want := []preg.Type{mt1}
-		var got []preg.Type
-		registry.RangeMessages(func(mt pref.MessageType) bool {
-			got = append(got, mt)
-			return true
-		})
-
-		diff := cmp.Diff(want, got, sortTypes, compare)
-		if diff != "" {
-			t.Errorf("RangeMessages() mismatch (-want +got):\n%v", diff)
-		}
-	})
-
 	t.Run("RangeEnums", func(t *testing.T) {
 		want := []preg.Type{et1}
 		var got []preg.Type
+		var gotCnt int
+		wantCnt := registry.NumEnums()
 		registry.RangeEnums(func(et pref.EnumType) bool {
 			got = append(got, et)
+			gotCnt++
 			return true
 		})
 
-		diff := cmp.Diff(want, got, sortTypes, compare)
-		if diff != "" {
+		if gotCnt != wantCnt {
+			t.Errorf("NumEnums() = %v, want %v", gotCnt, wantCnt)
+		}
+		if diff := cmp.Diff(want, got, sortTypes, compare); diff != "" {
 			t.Errorf("RangeEnums() mismatch (-want +got):\n%v", diff)
+		}
+	})
+
+	t.Run("RangeMessages", func(t *testing.T) {
+		want := []preg.Type{mt1}
+		var got []preg.Type
+		var gotCnt int
+		wantCnt := registry.NumMessages()
+		registry.RangeMessages(func(mt pref.MessageType) bool {
+			got = append(got, mt)
+			gotCnt++
+			return true
+		})
+
+		if gotCnt != wantCnt {
+			t.Errorf("NumMessages() = %v, want %v", gotCnt, wantCnt)
+		}
+		if diff := cmp.Diff(want, got, sortTypes, compare); diff != "" {
+			t.Errorf("RangeMessages() mismatch (-want +got):\n%v", diff)
 		}
 	})
 
 	t.Run("RangeExtensions", func(t *testing.T) {
 		want := []preg.Type{xt1, xt2}
 		var got []preg.Type
+		var gotCnt int
+		wantCnt := registry.NumExtensions()
 		registry.RangeExtensions(func(xt pref.ExtensionType) bool {
 			got = append(got, xt)
+			gotCnt++
 			return true
 		})
 
-		diff := cmp.Diff(want, got, sortTypes, compare)
-		if diff != "" {
+		if gotCnt != wantCnt {
+			t.Errorf("NumExtensions() = %v, want %v", gotCnt, wantCnt)
+		}
+		if diff := cmp.Diff(want, got, sortTypes, compare); diff != "" {
 			t.Errorf("RangeExtensions() mismatch (-want +got):\n%v", diff)
 		}
 	})
@@ -597,13 +618,18 @@ func TestTypes(t *testing.T) {
 	t.Run("RangeExtensionsByMessage", func(t *testing.T) {
 		want := []preg.Type{xt1, xt2}
 		var got []preg.Type
-		registry.RangeExtensionsByMessage(pref.FullName("testprotos.Message1"), func(xt pref.ExtensionType) bool {
+		var gotCnt int
+		wantCnt := registry.NumExtensionsByMessage("testprotos.Message1")
+		registry.RangeExtensionsByMessage("testprotos.Message1", func(xt pref.ExtensionType) bool {
 			got = append(got, xt)
+			gotCnt++
 			return true
 		})
 
-		diff := cmp.Diff(want, got, sortTypes, compare)
-		if diff != "" {
+		if gotCnt != wantCnt {
+			t.Errorf("NumExtensionsByMessage() = %v, want %v", gotCnt, wantCnt)
+		}
+		if diff := cmp.Diff(want, got, sortTypes, compare); diff != "" {
 			t.Errorf("RangeExtensionsByMessage() mismatch (-want +got):\n%v", diff)
 		}
 	})
