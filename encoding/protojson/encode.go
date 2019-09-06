@@ -27,11 +27,28 @@ func Marshal(m proto.Message) ([]byte, error) {
 // MarshalOptions is a configurable JSON format marshaler.
 type MarshalOptions struct {
 	pragma.NoUnkeyedLiterals
+	encoder *json.Encoder
 
 	// AllowPartial allows messages that have missing required fields to marshal
 	// without returning an error. If AllowPartial is false (the default),
 	// Marshal will return error if there are any missing required fields.
 	AllowPartial bool
+
+	// EmitUnpopulated specifies whether to emit unpopulated fields. It does not
+	// emit unpopulated oneof fields or unpopulated extension fields.
+	// The JSON value emitted for unpopulated fields are as follows:
+	// ╔═══════╤════════════════════════════╗
+	// ║ JSON  │ Protobuf field             ║
+	// ╠═══════╪════════════════════════════╣
+	// ║ false │ proto3 boolean fields      ║
+	// ║ 0     │ proto3 numeric fields      ║
+	// ║ ""    │ proto3 string/bytes fields ║
+	// ║ null  │ proto2 scalar fields       ║
+	// ║ null  │ message fields             ║
+	// ║ []    │ list fields                ║
+	// ║ {}    │ map fields                 ║
+	// ╚═══════╧════════════════════════════╝
+	EmitUnpopulated bool
 
 	// If Indent is a non-empty string, it causes entries for an Array or Object
 	// to be preceded by the indent and trailed by a newline. Indent can only be
@@ -44,8 +61,6 @@ type MarshalOptions struct {
 		protoregistry.ExtensionTypeResolver
 		protoregistry.MessageTypeResolver
 	}
-
-	encoder *json.Encoder
 }
 
 // Marshal marshals the given proto.Message in the JSON format using options in
@@ -96,12 +111,20 @@ func (o MarshalOptions) marshalFields(m pref.Message) error {
 	fieldDescs := messageDesc.Fields()
 	for i := 0; i < fieldDescs.Len(); i++ {
 		fd := fieldDescs.Get(i)
+		val := m.Get(fd)
 		if !m.Has(fd) {
-			continue
+			if !o.EmitUnpopulated || fd.ContainingOneof() != nil {
+				continue
+			}
+			isProto2Scalar := fd.Syntax() == pref.Proto2 && fd.Default().IsValid()
+			isSingularMessage := fd.Cardinality() != pref.Repeated && fd.Message() != nil
+			if isProto2Scalar || isSingularMessage {
+				// Use invalid value to emit null.
+				val = pref.Value{}
+			}
 		}
 
 		name := fd.JSONName()
-		val := m.Get(fd)
 		if err := o.encoder.WriteName(name); err != nil {
 			return err
 		}
@@ -132,6 +155,11 @@ func (o MarshalOptions) marshalValue(val pref.Value, fd pref.FieldDescriptor) er
 // marshalSingular marshals the given non-repeated field value. This includes
 // all scalar types, enums, messages, and groups.
 func (o MarshalOptions) marshalSingular(val pref.Value, fd pref.FieldDescriptor) error {
+	if !val.IsValid() {
+		o.encoder.WriteNull()
+		return nil
+	}
+
 	switch kind := fd.Kind(); kind {
 	case pref.BoolKind:
 		o.encoder.WriteBool(val.Bool())
