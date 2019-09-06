@@ -145,7 +145,7 @@ func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
 }
 func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
 	if !xt.IsValidValue(v) {
-		panic(fmt.Errorf("%v: assigning invalid value", xt.TypeDescriptor().FullName()))
+		panic(fmt.Sprintf("%v: assigning invalid value", xt.TypeDescriptor().FullName()))
 	}
 	if *m == nil {
 		*m = make(map[int32]ExtensionField)

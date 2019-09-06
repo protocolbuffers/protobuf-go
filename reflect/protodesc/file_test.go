@@ -819,7 +819,7 @@ func TestNewFile(t *testing.T) {
 				]
 			}]}]
 		`),
-		wantErr: `proto: message "M.M" using proto3 semantics has conflict: "baz" with "_b_a_z_"`,
+		wantErr: `message "M.M" using proto3 semantics has conflict: "baz" with "_b_a_z_"`,
 	}, {
 		label: "proto3 message fields",
 		inDesc: mustParseFile(`

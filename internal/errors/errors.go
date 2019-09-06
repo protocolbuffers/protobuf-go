@@ -7,6 +7,8 @@ package errors
 
 import (
 	"fmt"
+
+	"google.golang.org/protobuf/internal/detrand"
 )
 
 // New formats a string according to the format specifier and arguments and
@@ -22,7 +24,16 @@ func New(f string, x ...interface{}) error {
 
 type prefixError struct{ s string }
 
-func (e *prefixError) Error() string { return "proto: " + e.s }
+var prefix = func() string {
+	if detrand.Bool() {
+		return "proto:  "
+	}
+	return "proto: "
+}()
+
+func (e *prefixError) Error() string {
+	return prefix + e.s
+}
 
 func InvalidUTF8(name string) error {
 	return New("field %v contains invalid UTF-8", name)

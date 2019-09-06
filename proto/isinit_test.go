@@ -6,6 +6,7 @@ package proto_test
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"google.golang.org/protobuf/proto"
@@ -20,13 +21,13 @@ func TestIsInitializedErrors(t *testing.T) {
 	}{
 		{
 			&testpb.TestRequired{},
-			`proto: required field goproto.proto.test.TestRequired.required_field not set`,
+			`goproto.proto.test.TestRequired.required_field`,
 		},
 		{
 			&testpb.TestRequiredForeign{
 				OptionalMessage: &testpb.TestRequired{},
 			},
-			`proto: required field goproto.proto.test.TestRequired.required_field not set`,
+			`goproto.proto.test.TestRequired.required_field`,
 		},
 		{
 			&testpb.TestRequiredForeign{
@@ -35,7 +36,7 @@ func TestIsInitializedErrors(t *testing.T) {
 					{},
 				},
 			},
-			`proto: required field goproto.proto.test.TestRequired.required_field not set`,
+			`goproto.proto.test.TestRequired.required_field`,
 		},
 		{
 			&testpb.TestRequiredForeign{
@@ -43,7 +44,7 @@ func TestIsInitializedErrors(t *testing.T) {
 					1: {},
 				},
 			},
-			`proto: required field goproto.proto.test.TestRequired.required_field not set`,
+			`goproto.proto.test.TestRequired.required_field`,
 		},
 	} {
 		err := proto.IsInitialized(test.m)
@@ -51,9 +52,8 @@ func TestIsInitializedErrors(t *testing.T) {
 		if err != nil {
 			got = fmt.Sprintf("%q", err)
 		}
-		want := fmt.Sprintf("%q", test.want)
-		if got != want {
-			t.Errorf("IsInitialized(m):\n got: %v\nwant: %v\nMessage:\n%v", got, want, marshalText(test.m))
+		if !strings.Contains(got, test.want) {
+			t.Errorf("IsInitialized(m):\n got: %v\nwant contains: %v\nMessage:\n%v", got, test.want, marshalText(test.m))
 		}
 	}
 }

@@ -19,6 +19,7 @@ import (
 
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -174,7 +175,7 @@ func (fs fields) set(prefix, s string, k protoreflect.Kind) error {
 	n, _ := strconv.ParseInt(s[:i], 10, 32)
 	num := wire.Number(n)
 	if num < wire.MinValidNumber || wire.MaxValidNumber < num {
-		return fmt.Errorf("invalid field: %v", prefix)
+		return errors.New("invalid field: %v", prefix)
 	}
 	s = strings.TrimPrefix(s[i:], ".")
 
@@ -184,7 +185,7 @@ func (fs fields) set(prefix, s string, k protoreflect.Kind) error {
 	}
 	if len(s) == 0 {
 		if fs[num].kind.IsValid() {
-			return fmt.Errorf("field %v already set as %v type", prefix, fs[num].kind)
+			return errors.New("field %v already set as %v type", prefix, fs[num].kind)
 		}
 		fs[num].kind = k
 	}
@@ -195,7 +196,7 @@ func (fs fields) set(prefix, s string, k protoreflect.Kind) error {
 	// Verify that only messages or groups can have sub-fields.
 	k2 := fs[num].kind
 	if k2 > 0 && k2 != protoreflect.MessageKind && k2 != protoreflect.GroupKind && len(fs[num].sub) > 0 {
-		return fmt.Errorf("field %v of %v type cannot have sub-fields", prefix, k2)
+		return errors.New("field %v of %v type cannot have sub-fields", prefix, k2)
 	}
 	return nil
 }

@@ -423,7 +423,7 @@ func fieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 			}
 		}
 	}
-	panic(fmt.Errorf("invalid type: no encoder for %v %v %v/%v", fd.FullName(), fd.Cardinality(), fd.Kind(), ft))
+	panic(fmt.Sprintf("invalid type: no encoder for %v %v %v/%v", fd.FullName(), fd.Cardinality(), fd.Kind(), ft))
 }
 
 // encoderFuncsForValue returns value functions for a field, used for
@@ -547,5 +547,5 @@ func encoderFuncsForValue(fd pref.FieldDescriptor) valueCoderFuncs {
 			return coderGroupValue
 		}
 	}
-	panic(fmt.Errorf("invalid field: no encoder for %v %v %v", fd.FullName(), fd.Cardinality(), fd.Kind()))
+	panic(fmt.Sprintf("invalid field: no encoder for %v %v %v", fd.FullName(), fd.Cardinality(), fd.Kind()))
 }
