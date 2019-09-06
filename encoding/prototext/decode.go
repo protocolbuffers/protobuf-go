@@ -128,6 +128,9 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 			}
 			if xt != nil {
 				fd = xt.TypeDescriptor()
+				if !messageDesc.ExtensionRanges().Has(fd.Number()) || fd.ContainingMessage().FullName() != messageDesc.FullName() {
+					return errors.New("message %v cannot be extended by %v", messageDesc.FullName(), fd.FullName())
+				}
 			}
 		}
 

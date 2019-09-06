@@ -184,6 +184,9 @@ func (o UnmarshalOptions) unmarshalFields(m pref.Message, skipTypeURL bool) erro
 			}
 			if extType != nil {
 				fd = extType.TypeDescriptor()
+				if !messageDesc.ExtensionRanges().Has(fd.Number()) || fd.ContainingMessage().FullName() != messageDesc.FullName() {
+					return errors.New("message %v cannot be extended by %v", messageDesc.FullName(), fd.FullName())
+				}
 			}
 		} else {
 			// The name can either be the JSON name or the proto field name.
