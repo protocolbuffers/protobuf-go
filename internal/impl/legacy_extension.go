@@ -7,9 +7,11 @@ package impl
 import (
 	"reflect"
 
+	"google.golang.org/protobuf/internal/descopts"
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	ptag "google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/pragma"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 	piface "google.golang.org/protobuf/runtime/protoiface"
@@ -71,6 +73,17 @@ func (xi *ExtensionInfo) initToLegacy() {
 // initFromLegacy initializes an ExtensionInfo from
 // the contents of the deprecated exported fields of the type.
 func (xi *ExtensionInfo) initFromLegacy() {
+	// The v1 API returns "type incomplete" descriptors where only the
+	// field number is specified. In such a case, use a placeholder.
+	if xi.ExtendedType == nil || xi.ExtensionType == nil {
+		xd := placeholderExtension{
+			name:   pref.FullName(xi.Name),
+			number: pref.FieldNumber(xi.Field),
+		}
+		xi.desc = extensionTypeDescriptor{xd, xi}
+		return
+	}
+
 	// Resolve enum or message dependencies.
 	var ed pref.EnumDescriptor
 	var md pref.MessageDescriptor
@@ -123,3 +136,38 @@ func (xi *ExtensionInfo) initFromLegacy() {
 	xi.goType = tt
 	xi.desc = extensionTypeDescriptor{xd, xi}
 }
+
+type placeholderExtension struct {
+	name   pref.FullName
+	number pref.FieldNumber
+}
+
+func (x placeholderExtension) ParentFile() pref.FileDescriptor            { return nil }
+func (x placeholderExtension) Parent() pref.Descriptor                    { return nil }
+func (x placeholderExtension) Index() int                                 { return 0 }
+func (x placeholderExtension) Syntax() pref.Syntax                        { return 0 }
+func (x placeholderExtension) Name() pref.Name                            { return x.name.Name() }
+func (x placeholderExtension) FullName() pref.FullName                    { return x.name }
+func (x placeholderExtension) IsPlaceholder() bool                        { return true }
+func (x placeholderExtension) Options() pref.ProtoMessage                 { return descopts.Field }
+func (x placeholderExtension) Number() pref.FieldNumber                   { return x.number }
+func (x placeholderExtension) Cardinality() pref.Cardinality              { return 0 }
+func (x placeholderExtension) Kind() pref.Kind                            { return 0 }
+func (x placeholderExtension) HasJSONName() bool                          { return false }
+func (x placeholderExtension) JSONName() string                           { return "" }
+func (x placeholderExtension) IsExtension() bool                          { return true }
+func (x placeholderExtension) IsWeak() bool                               { return false }
+func (x placeholderExtension) IsPacked() bool                             { return false }
+func (x placeholderExtension) IsList() bool                               { return false }
+func (x placeholderExtension) IsMap() bool                                { return false }
+func (x placeholderExtension) MapKey() pref.FieldDescriptor               { return nil }
+func (x placeholderExtension) MapValue() pref.FieldDescriptor             { return nil }
+func (x placeholderExtension) HasDefault() bool                           { return false }
+func (x placeholderExtension) Default() pref.Value                        { return pref.Value{} }
+func (x placeholderExtension) DefaultEnumValue() pref.EnumValueDescriptor { return nil }
+func (x placeholderExtension) ContainingOneof() pref.OneofDescriptor      { return nil }
+func (x placeholderExtension) ContainingMessage() pref.MessageDescriptor  { return nil }
+func (x placeholderExtension) Enum() pref.EnumDescriptor                  { return nil }
+func (x placeholderExtension) Message() pref.MessageDescriptor            { return nil }
+func (x placeholderExtension) ProtoType(pref.FieldDescriptor)             { return }
+func (x placeholderExtension) ProtoInternal(pragma.DoNotImplement)        { return }

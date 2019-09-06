@@ -140,10 +140,12 @@ func (xi *ExtensionInfo) lazyInitSlow() {
 	if xi.desc.ExtensionDescriptor == nil {
 		xi.initFromLegacy()
 	}
-	if xi.ExtensionType == nil {
-		xi.initToLegacy()
+	if !xi.desc.ExtensionDescriptor.IsPlaceholder() {
+		if xi.ExtensionType == nil {
+			xi.initToLegacy()
+		}
+		xi.conv = NewConverter(xi.goType, xi.desc)
 	}
-	xi.conv = NewConverter(xi.goType, xi.desc)
 }
 
 type extensionTypeDescriptor struct {

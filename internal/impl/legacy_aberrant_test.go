@@ -180,7 +180,7 @@ func (OneofMessage) isOneofUnion()  {}
 
 type AberrantEnum int32
 
-func TestAberrant(t *testing.T) {
+func TestAberrantMessages(t *testing.T) {
 	want := new(descriptorpb.DescriptorProto)
 	if err := prototext.Unmarshal([]byte(`
 		name: "AberrantMessage"
@@ -318,5 +318,36 @@ func TestAberrantRace(t *testing.T) {
 
 	if gotMD1 != wantMD1 || gotMD2 != wantMD2 {
 		t.Errorf("mismatching exact message descriptors")
+	}
+}
+
+func TestAberrantExtensions(t *testing.T) {
+	tests := []struct {
+		in              *impl.ExtensionInfo
+		wantName        protoreflect.FullName
+		wantNumber      protoreflect.FieldNumber
+		wantPlaceholder bool
+	}{{
+		in:              &impl.ExtensionInfo{Field: 500},
+		wantNumber:      500,
+		wantPlaceholder: true,
+	}, {
+		in:              &impl.ExtensionInfo{Name: "foo.bar.baz"},
+		wantName:        "foo.bar.baz",
+		wantPlaceholder: true,
+	}}
+
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			xtd := tt.in.TypeDescriptor()
+			switch {
+			case xtd.FullName() != tt.wantName:
+				t.Errorf("FullName() = %v, want %v", xtd.FullName(), tt.wantName)
+			case xtd.Number() != tt.wantNumber:
+				t.Errorf("Number() = %v, want %v", xtd.Number(), tt.wantNumber)
+			case xtd.IsPlaceholder() != tt.wantPlaceholder:
+				t.Errorf("IsPlaceholder() = %v, want %v", xtd.IsPlaceholder(), tt.wantPlaceholder)
+			}
+		})
 	}
 }
