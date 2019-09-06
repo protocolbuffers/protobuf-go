@@ -11,6 +11,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/flags"
 	pimpl "google.golang.org/protobuf/internal/impl"
@@ -27,6 +28,9 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
+
+// Disable detrand to enable direct comparisons on outputs.
+func init() { detrand.Disable() }
 
 func TestMarshal(t *testing.T) {
 	tests := []struct {

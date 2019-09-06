@@ -20,6 +20,8 @@ import (
 )
 
 // Marshal writes the given proto.Message in JSON format using default options.
+// Do not depend on the output of being stable. It may change over time across
+// different versions of the program.
 func Marshal(m proto.Message) ([]byte, error) {
 	return MarshalOptions{}.Marshal(m)
 }
@@ -71,7 +73,8 @@ type MarshalOptions struct {
 }
 
 // Marshal marshals the given proto.Message in the JSON format using options in
-// MarshalOptions.
+// MarshalOptions. Do not depend on the output being stable. It may change over
+// time across different versions of the program.
 func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
 	var err error
 	o.encoder, err = json.NewEncoder(o.Indent)

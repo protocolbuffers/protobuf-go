@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/errors"
 )
 
@@ -132,6 +133,11 @@ func (e *Encoder) prepareNext(next Type) {
 		if e.lastType&(Null|Bool|Number|String|EndObject|EndArray) != 0 &&
 			next&(Name|Null|Bool|Number|String|StartObject|StartArray) != 0 {
 			e.out = append(e.out, ',')
+			// For single-line output, add a random extra space after each
+			// comma to make output unstable.
+			if detrand.Bool() {
+				e.out = append(e.out, ' ')
+			}
 		}
 		return
 	}
@@ -160,5 +166,10 @@ func (e *Encoder) prepareNext(next Type) {
 
 	case e.lastType&Name != 0:
 		e.out = append(e.out, ' ')
+		// For multi-line output, add a random extra space after key: to make
+		// output unstable.
+		if detrand.Bool() {
+			e.out = append(e.out, ' ')
+		}
 	}
 }

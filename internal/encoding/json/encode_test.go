@@ -11,8 +11,12 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/encoding/json"
 )
+
+// Disable detrand to enable direct comparisons on outputs.
+func init() { detrand.Disable() }
 
 // splitLines is a cmpopts.Option for comparing strings with line breaks.
 var splitLines = cmpopts.AcyclicTransformer("SplitLines", func(s string) []string {
