@@ -2175,6 +2175,46 @@ func TestMarshal(t *testing.T) {
     "47": 47
   }
 }`,
+	}, {
+		desc: "UseProtoNames",
+		mo:   protojson.MarshalOptions{UseProtoNames: true},
+		input: &pb2.Nests{
+			OptNested: &pb2.Nested{},
+			Optgroup: &pb2.Nests_OptGroup{
+				OptString: proto.String("inside a group"),
+				OptNested: &pb2.Nested{
+					OptString: proto.String("nested message inside a group"),
+				},
+				Optnestedgroup: &pb2.Nests_OptGroup_OptNestedGroup{
+					OptFixed32: proto.Uint32(47),
+				},
+			},
+			Rptgroup: []*pb2.Nests_RptGroup{
+				{
+					RptString: []string{"hello", "world"},
+				},
+			},
+		},
+		want: `{
+  "opt_nested": {},
+  "OptGroup": {
+    "opt_string": "inside a group",
+    "opt_nested": {
+      "opt_string": "nested message inside a group"
+    },
+    "OptNestedGroup": {
+      "opt_fixed32": 47
+    }
+  },
+  "RptGroup": [
+    {
+      "rpt_string": [
+        "hello",
+        "world"
+      ]
+    }
+  ]
+}`,
 	}}
 
 	for _, tt := range tests {

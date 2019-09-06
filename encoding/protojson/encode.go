@@ -34,23 +34,27 @@ type MarshalOptions struct {
 	// Marshal will return error if there are any missing required fields.
 	AllowPartial bool
 
+	// UseProtoNames uses proto field name instead of lowerCamelCase name in JSON
+	// field names.
+	UseProtoNames bool
+
 	// UseEnumNumbers emits enum values as numbers.
 	UseEnumNumbers bool
 
 	// EmitUnpopulated specifies whether to emit unpopulated fields. It does not
 	// emit unpopulated oneof fields or unpopulated extension fields.
 	// The JSON value emitted for unpopulated fields are as follows:
-	// ╔═══════╤════════════════════════════╗
-	// ║ JSON  │ Protobuf field             ║
-	// ╠═══════╪════════════════════════════╣
-	// ║ false │ proto3 boolean fields      ║
-	// ║ 0     │ proto3 numeric fields      ║
-	// ║ ""    │ proto3 string/bytes fields ║
-	// ║ null  │ proto2 scalar fields       ║
-	// ║ null  │ message fields             ║
-	// ║ []    │ list fields                ║
-	// ║ {}    │ map fields                 ║
-	// ╚═══════╧════════════════════════════╝
+	//  ╔═══════╤════════════════════════════╗
+	//  ║ JSON  │ Protobuf field             ║
+	//  ╠═══════╪════════════════════════════╣
+	//  ║ false │ proto3 boolean fields      ║
+	//  ║ 0     │ proto3 numeric fields      ║
+	//  ║ ""    │ proto3 string/bytes fields ║
+	//  ║ null  │ proto2 scalar fields       ║
+	//  ║ null  │ message fields             ║
+	//  ║ []    │ list fields                ║
+	//  ║ {}    │ map fields                 ║
+	//  ╚═══════╧════════════════════════════╝
 	EmitUnpopulated bool
 
 	// If Indent is a non-empty string, it causes entries for an Array or Object
@@ -128,6 +132,13 @@ func (o MarshalOptions) marshalFields(m pref.Message) error {
 		}
 
 		name := fd.JSONName()
+		if o.UseProtoNames {
+			name = string(fd.Name())
+			// Use type name for group field name.
+			if fd.Kind() == pref.GroupKind {
+				name = string(fd.Message().Name())
+			}
+		}
 		if err := o.encoder.WriteName(name); err != nil {
 			return err
 		}
