@@ -137,7 +137,7 @@ func (f *ExtensionField) SetEagerValue(ival interface{}) {
 
 // Deprecated: Do not use.
 func (f *ExtensionField) SetLazyValue(fn func() interface{}) {
-	f.lazy = &lazyExtensionValue{value: func() interface{} {
+	f.lazy = &lazyExtensionValue{value: func() pref.Value {
 		return f.typ.ValueOf(fn())
 	}}
 }
@@ -145,7 +145,7 @@ func (f *ExtensionField) SetLazyValue(fn func() interface{}) {
 type lazyExtensionValue struct {
 	once  uint32      // atomically set if value is valid
 	mu    sync.Mutex  // protects value
-	value interface{} // either the value itself or a func() interface{}
+	value interface{} // either a pref.Value itself or a func() pref.ValueOf
 }
 
 func (v *lazyExtensionValue) GetValue() pref.Value {
