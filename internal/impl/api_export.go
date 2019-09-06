@@ -71,6 +71,8 @@ func (m legacyMessageWrapper) ProtoMessage()  {}
 // ProtoMessageV1Of converts either a v1 or v2 message to a v1 message.
 func (Export) ProtoMessageV1Of(m message) piface.MessageV1 {
 	switch mv := m.(type) {
+	case nil:
+		return nil
 	case piface.MessageV1:
 		return mv
 	case unwrapper:
@@ -84,6 +86,8 @@ func (Export) ProtoMessageV1Of(m message) piface.MessageV1 {
 
 func (Export) protoMessageV2Of(m message) pref.ProtoMessage {
 	switch mv := m.(type) {
+	case nil:
+		return nil
 	case pref.ProtoMessage:
 		return mv
 	case legacyMessageWrapper:
@@ -97,7 +101,7 @@ func (Export) protoMessageV2Of(m message) pref.ProtoMessage {
 
 // ProtoMessageV2Of converts either a v1 or v2 message to a v2 message.
 func (Export) ProtoMessageV2Of(m message) pref.ProtoMessage {
-	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
+	if mv := (Export{}).protoMessageV2Of(m); mv != nil || m == nil {
 		return mv
 	}
 	return legacyWrapMessage(reflect.ValueOf(m))
