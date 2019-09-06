@@ -34,6 +34,9 @@ type MarshalOptions struct {
 	// Marshal will return error if there are any missing required fields.
 	AllowPartial bool
 
+	// UseEnumNumbers emits enum values as numbers.
+	UseEnumNumbers bool
+
 	// EmitUnpopulated specifies whether to emit unpopulated fields. It does not
 	// emit unpopulated oneof fields or unpopulated extension fields.
 	// The JSON value emitted for unpopulated fields are as follows:
@@ -197,14 +200,16 @@ func (o MarshalOptions) marshalSingular(val pref.Value, fd pref.FieldDescriptor)
 	case pref.EnumKind:
 		if fd.Enum().FullName() == "google.protobuf.NullValue" {
 			o.encoder.WriteNull()
-		} else if desc := fd.Enum().Values().ByNumber(val.Enum()); desc != nil {
-			err := o.encoder.WriteString(string(desc.Name()))
-			if err != nil {
-				return err
-			}
 		} else {
-			// Use numeric value if there is no enum value descriptor.
-			o.encoder.WriteInt(int64(val.Enum()))
+			desc := fd.Enum().Values().ByNumber(val.Enum())
+			if o.UseEnumNumbers || desc == nil {
+				o.encoder.WriteInt(int64(val.Enum()))
+			} else {
+				err := o.encoder.WriteString(string(desc.Name()))
+				if err != nil {
+					return err
+				}
+			}
 		}
 
 	case pref.MessageKind, pref.GroupKind:

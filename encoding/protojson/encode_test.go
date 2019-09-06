@@ -2125,6 +2125,56 @@ func TestMarshal(t *testing.T) {
     }
   ]
 }`,
+	}, {
+		desc: "UseEnumNumbers in singular field",
+		mo:   protojson.MarshalOptions{UseEnumNumbers: true},
+		input: &pb2.Enums{
+			OptEnum:       pb2.Enum_ONE.Enum(),
+			OptNestedEnum: pb2.Enums_UNO.Enum(),
+		},
+		want: `{
+  "optEnum": 1,
+  "optNestedEnum": 1
+}`,
+	}, {
+		desc: "UseEnumNumbers in repeated field",
+		mo:   protojson.MarshalOptions{UseEnumNumbers: true},
+		input: &pb2.Enums{
+			RptEnum:       []pb2.Enum{pb2.Enum_ONE, 2, pb2.Enum_TEN, 42},
+			RptNestedEnum: []pb2.Enums_NestedEnum{pb2.Enums_UNO, pb2.Enums_DOS, 47},
+		},
+		want: `{
+  "rptEnum": [
+    1,
+    2,
+    10,
+    42
+  ],
+  "rptNestedEnum": [
+    1,
+    2,
+    47
+  ]
+}`,
+	}, {
+		desc: "UseEnumNumbers in map field",
+		mo:   protojson.MarshalOptions{UseEnumNumbers: true},
+		input: &pb3.Maps{
+			Uint64ToEnum: map[uint64]pb3.Enum{
+				1:  pb3.Enum_ONE,
+				2:  pb3.Enum_TWO,
+				10: pb3.Enum_TEN,
+				47: 47,
+			},
+		},
+		want: `{
+  "uint64ToEnum": {
+    "1": 1,
+    "2": 2,
+    "10": 10,
+    "47": 47
+  }
+}`,
 	}}
 
 	for _, tt := range tests {
