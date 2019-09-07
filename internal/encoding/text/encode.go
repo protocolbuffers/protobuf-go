@@ -113,11 +113,11 @@ func (p *encoder) marshalMessage(v Value, emitDelims bool) error {
 		p.out = append(p.out, ':')
 		if len(p.indent) > 0 {
 			p.out = append(p.out, ' ')
-		}
-		// For multi-line output, add a random extra space after key: per message to
-		// make output unstable.
-		if len(p.indent) > 0 && detrand.Bool() {
-			p.out = append(p.out, ' ')
+			// For multi-line output, add a random extra space after key:
+			// to make output unstable.
+			if detrand.Bool() {
+				p.out = append(p.out, ' ')
+			}
 		}
 
 		if err := p.marshalValue(item[1]); err != nil {
@@ -125,11 +125,11 @@ func (p *encoder) marshalMessage(v Value, emitDelims bool) error {
 		}
 		if i < len(items)-1 && len(p.indent) == 0 {
 			p.out = append(p.out, ' ')
-		}
-		// For single-line output, add a random extra space after a field per message to
-		// make output unstable.
-		if len(p.indent) == 0 && detrand.Bool() && i != len(items)-1 {
-			p.out = append(p.out, ' ')
+			// For single-line output, add a random extra space after a field
+			// to make output unstable.
+			if detrand.Bool() {
+				p.out = append(p.out, ' ')
+			}
 		}
 		p.out = append(p.out, p.newline...)
 	}
