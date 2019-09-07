@@ -43,7 +43,7 @@ func formatListOpt(vs list, isRoot, allowMulti bool) string {
 		case pref.Descriptor:
 			name = reflect.ValueOf(vs).MethodByName("Get").Type().Out(0).Name() + "s"
 		}
-		start, end = name+randomSpace()+"{", "}"
+		start, end = name+"{", "}"
 	}
 
 	var ss []string
@@ -123,7 +123,7 @@ func formatDescOpt(t pref.Descriptor, isRoot, allowMulti bool) string {
 
 	start, end := "{", "}"
 	if isRoot {
-		start = rt.Name() + randomSpace() + "{"
+		start = rt.Name() + "{"
 	}
 
 	_, isFile := t.(pref.FileDescriptor)
@@ -269,7 +269,7 @@ func (rs *records) Join() string {
 	// In single line mode, simply join all records with commas.
 	if !rs.allowMulti {
 		for _, r := range rs.recs {
-			ss = append(ss, r[0]+": "+r[1])
+			ss = append(ss, r[0]+formatColon(0)+r[1])
 		}
 		return joinStrings(ss, false)
 	}
@@ -278,21 +278,31 @@ func (rs *records) Join() string {
 	var maxLen int
 	flush := func(i int) {
 		for _, r := range rs.recs[len(ss):i] {
-			padding := strings.Repeat(" ", maxLen-len(r[0]))
-			ss = append(ss, r[0]+": "+padding+r[1])
+			ss = append(ss, r[0]+formatColon(maxLen-len(r[0]))+r[1])
 		}
 		maxLen = 0
 	}
 	for i, r := range rs.recs {
 		if isMulti := strings.Contains(r[1], "\n"); isMulti {
 			flush(i)
-			ss = append(ss, r[0]+": "+strings.Join(strings.Split(r[1], "\n"), "\n\t"))
+			ss = append(ss, r[0]+formatColon(0)+strings.Join(strings.Split(r[1], "\n"), "\n\t"))
 		} else if maxLen < len(r[0]) {
 			maxLen = len(r[0])
 		}
 	}
 	flush(len(rs.recs))
 	return joinStrings(ss, true)
+}
+
+func formatColon(padding int) string {
+	// Deliberately introduce instability into the debug output to
+	// discourage users from performing string comparisons.
+	// This provides us flexibility to change the output in the future.
+	if detrand.Bool() {
+		return ":" + strings.Repeat(" ", 1+padding) // use non-breaking spaces (U+00a0)
+	} else {
+		return ":" + strings.Repeat(" ", 1+padding) // use regular spaces (U+0020)
+	}
 }
 
 func joinStrings(ss []string, isMulti bool) string {
@@ -303,13 +313,4 @@ func joinStrings(ss []string, isMulti bool) string {
 		return "\n\t" + strings.Join(ss, "\n\t") + "\n"
 	}
 	return strings.Join(ss, ", ")
-}
-
-// randomSpace randomly returns a string that is either empty or a single space.
-// This is done deliberately to ensure that the output is slightly non-stable.
-//
-// These makes it harder for people to depend on the debug string as stable
-// and provides us the flexibility to make changes.
-func randomSpace() string {
-	return " "[:detrand.Intn(2)]
 }

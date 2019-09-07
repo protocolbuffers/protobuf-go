@@ -18,24 +18,16 @@ import (
 // Disable disables detrand such that all functions returns the zero value.
 // This function is not concurrent-safe and must be called during program init.
 func Disable() {
-	binHash = 0
+	randSeed = 0
 }
 
 // Bool returns a deterministically random boolean.
 func Bool() bool {
-	return binHash%2 == 1
+	return randSeed%2 == 1
 }
 
-// Intn returns a deterministically random integer within [0,n).
-func Intn(n int) int {
-	if n <= 0 {
-		panic("invalid argument to Intn")
-	}
-	return int(binHash % uint64(n))
-}
-
-// binHash is a best-effort at an approximate hash of the Go binary.
-var binHash = binaryHash()
+// randSeed is a best-effort at an approximate hash of the Go binary.
+var randSeed = binaryHash()
 
 func binaryHash() uint64 {
 	// Open the Go binary.
