@@ -21,6 +21,7 @@ import (
 	"go/token"
 	"go/types"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -164,6 +165,7 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 
 	packageNames := make(map[string]GoPackageName) // filename -> package name
 	importPaths := make(map[string]GoImportPath)   // filename -> import path
+	mfiles := make(map[string]bool)                // filename set
 	var packageImportPath GoImportPath
 	for _, param := range strings.Split(req.GetParameter(), ",") {
 		var value string
@@ -196,6 +198,7 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 		default:
 			if param[0] == 'M' {
 				importPaths[param[1:]] = GoImportPath(value)
+				mfiles[param[1:]] = true
 				continue
 			}
 			if opts.ParamFunc != nil {
@@ -261,10 +264,16 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 	}
 	for _, fdesc := range gen.Request.ProtoFile {
 		filename := fdesc.GetName()
-		packageName, _ := goPackageOption(fdesc)
+		packageName, importPath := goPackageOption(fdesc)
 		defaultPackageName := packageNameForImportPath[importPaths[filename]]
 		switch {
 		case packageName != "":
+			// TODO: For the "M" command-line argument, this means that the
+			// package name can be derived from the go_package option.
+			// Go package information should either consistently come from the
+			// command-line or the .proto source file, but not both.
+			// See how to make this consistent.
+
 			// Source file: option go_package = "quux/bar";
 			packageNames[filename] = packageName
 		case defaultPackageName != "":
@@ -283,6 +292,33 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 		default:
 			// Source filename.
 			packageNames[filename] = cleanPackageName(baseName(filename))
+		}
+
+		goPkgOpt := string(importPaths[filename])
+		if path.Base(string(goPkgOpt)) != string(packageNames[filename]) {
+			goPkgOpt += ";" + string(packageNames[filename])
+		}
+		switch {
+		case packageImportPath != "":
+			// Command line: import_path=quux/bar
+			log.Printf("WARNING: Deprecated use of the 'import_path' command-line argument. In %q, please specify:\n"+
+				"\toption go_package = %q;\n"+
+				"A future release of protoc-gen-go will no longer support the 'import_path' argument.\n"+
+				"\n", fdesc.GetName(), goPkgOpt)
+		case mfiles[filename]:
+			// Command line: M=foo.proto=quux/bar
+		case packageName != "" && importPath == "":
+			// Source file: option go_package = "quux";
+			log.Printf("WARNING: Deprecated use of 'go_package' option without a full import path in %q, please specify:\n"+
+				"\toption go_package = %q;\n"+
+				"A future release of protoc-gen-go will require the import path be specified.\n"+
+				"\n", fdesc.GetName(), goPkgOpt)
+		case packageName == "" && importPath == "":
+			// No Go package information provided.
+			log.Printf("WARNING: Missing 'go_package' option in %q, please specify:\n"+
+				"\toption go_package = %q;\n"+
+				"A future release of protoc-gen-go will require this be specified.\n"+
+				"\n", fdesc.GetName(), goPkgOpt)
 		}
 	}
 
@@ -498,17 +534,26 @@ func goPackageOption(d *descriptorpb.FileDescriptorProto) (pkg GoPackageName, im
 	if opt == "" {
 		return "", ""
 	}
+	rawPkg, impPath := goPackageOptionRaw(opt)
+	pkg = cleanPackageName(rawPkg)
+	if string(pkg) != rawPkg && impPath != "" {
+		log.Printf("WARNING: Malformed 'go_package' option in %q, please specify:\n"+
+			"\toption go_package = %q;\n"+
+			"A future release of protoc-gen-go will reject this.\n"+
+			"\n", d.GetName(), string(impPath)+";"+string(pkg))
+	}
+	return pkg, impPath
+}
+func goPackageOptionRaw(opt string) (rawPkg string, impPath GoImportPath) {
 	// A semicolon-delimited suffix delimits the import path and package name.
 	if i := strings.Index(opt, ";"); i >= 0 {
-		// TODO: The package name is explicitly provided by the .proto file.
-		// Rather than sanitizing it, we should pass it verbatim.
-		return cleanPackageName(opt[i+1:]), GoImportPath(opt[:i])
+		return opt[i+1:], GoImportPath(opt[:i])
 	}
 	// The presence of a slash implies there's an import path.
 	if i := strings.LastIndex(opt, "/"); i >= 0 {
-		return cleanPackageName(opt[i+1:]), GoImportPath(opt)
+		return opt[i+1:], GoImportPath(opt)
 	}
-	return cleanPackageName(opt), ""
+	return opt, ""
 }
 
 // An Enum describes an enum.
