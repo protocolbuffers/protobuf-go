@@ -145,7 +145,7 @@ func (xi *ExtensionInfo) lazyInitSlow() {
 	if xi.init == extensionInfoFullInit {
 		return
 	}
-	atomic.StoreUint32(&xi.init, extensionInfoFullInit)
+	defer atomic.StoreUint32(&xi.init, extensionInfoFullInit)
 
 	if xi.desc == nil {
 		xi.initFromLegacy()
