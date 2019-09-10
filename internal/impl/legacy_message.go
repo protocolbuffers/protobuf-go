@@ -202,10 +202,14 @@ func aberrantDeriveMessageName(t reflect.Type, name pref.FullName) pref.FullName
 	if name.IsValid() {
 		return name
 	}
-	if m, ok := reflect.New(t).Interface().(interface{ XXX_MessageName() string }); ok {
-		if name := pref.FullName(m.XXX_MessageName()); name.IsValid() {
-			return name
+	func() {
+		defer func() { recover() }() // swallow possible nil panics
+		if m, ok := reflect.New(t).Interface().(interface{ XXX_MessageName() string }); ok {
+			name = pref.FullName(m.XXX_MessageName())
 		}
+	}()
+	if name.IsValid() {
+		return name
 	}
 	return aberrantDeriveFullName(t)
 }
