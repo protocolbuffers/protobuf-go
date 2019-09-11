@@ -42,7 +42,7 @@ func Test(t *testing.T) {
 	}{{
 		in:            "",
 		wantVal:       V(Msg{}),
-		wantOutIndent: "\n",
+		wantOutIndent: "",
 	}, {
 		in:      S("%s# hello%s", space, space),
 		wantVal: V(Msg{}),

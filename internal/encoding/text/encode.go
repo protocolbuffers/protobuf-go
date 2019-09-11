@@ -5,7 +5,6 @@
 package text
 
 import (
-	"bytes"
 	"regexp"
 	"strings"
 
@@ -48,9 +47,6 @@ func Marshal(v Value, indent string, delims [2]byte, outputASCII bool) ([]byte, 
 	err := p.marshalMessage(v, false)
 	if err != nil {
 		return nil, err
-	}
-	if len(indent) > 0 {
-		return append(bytes.TrimRight(p.out, "\n"), '\n'), nil
 	}
 	return p.out, nil
 }

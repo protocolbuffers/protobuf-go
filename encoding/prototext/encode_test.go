@@ -38,11 +38,11 @@ func TestMarshal(t *testing.T) {
 	}{{
 		desc:  "proto2 optional scalars not set",
 		input: &pb2.Scalars{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc:  "proto3 scalars not set",
 		input: &pb3.Scalars{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc: "proto2 optional scalars set to zero values",
 		input: &pb2.Scalars{
@@ -97,7 +97,7 @@ opt_string: ""
 			SBytes:    []byte{},
 			SString:   "",
 		},
-		want: "\n",
+		want: "",
 	}, {
 		desc: "proto2 optional scalars set to some values",
 		input: &pb2.Scalars{
@@ -174,7 +174,7 @@ opt_string: "谷歌"
 	}, {
 		desc:  "proto2 enum not set",
 		input: &pb2.Enums{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc: "proto2 enum set to zero value",
 		input: &pb2.Enums{
@@ -214,14 +214,14 @@ opt_nested_enum: -101
 	}, {
 		desc:  "proto3 enum not set",
 		input: &pb3.Enums{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc: "proto3 enum set to zero value",
 		input: &pb3.Enums{
 			SEnum:       pb3.Enum_ZERO,
 			SNestedEnum: pb3.Enums_CERO,
 		},
-		want: "\n",
+		want: "",
 	}, {
 		desc: "proto3 enum",
 		input: &pb3.Enums{
@@ -252,7 +252,7 @@ s_nested_enum: 47
 	}, {
 		desc:  "proto2 nested message not set",
 		input: &pb2.Nests{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc: "proto2 nested message set to empty",
 		input: &pb2.Nests{
@@ -305,7 +305,7 @@ OptGroup: {}
 	}, {
 		desc:  "proto3 nested message not set",
 		input: &pb3.Nests{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc: "proto3 nested message set to empty",
 		input: &pb3.Nests{
@@ -340,7 +340,7 @@ OptGroup: {}
 	}, {
 		desc:  "oneof not set",
 		input: &pb3.Oneofs{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc: "oneof set to empty string",
 		input: &pb3.Oneofs{
@@ -390,7 +390,7 @@ OptGroup: {}
 	}, {
 		desc:  "repeated fields not set",
 		input: &pb2.Repeats{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc: "repeated fields set to empty slices",
 		input: &pb2.Repeats{
@@ -403,7 +403,7 @@ OptGroup: {}
 			RptDouble: []float64{},
 			RptBytes:  [][]byte{},
 		},
-		want: "\n",
+		want: "",
 	}, {
 		desc: "repeated fields set to some values",
 		input: &pb2.Repeats{
@@ -472,7 +472,7 @@ rpt_nested_enum: DIEZ
 			RptNested: []*pb2.Nested{},
 			Rptgroup:  []*pb2.Nests_RptGroup{},
 		},
-		want: "\n",
+		want: "",
 	}, {
 		desc: "repeated messages",
 		input: &pb2.Nests{
@@ -529,7 +529,7 @@ RptGroup: {}
 	}, {
 		desc:  "map fields not set",
 		input: &pb3.Maps{},
-		want:  "\n",
+		want:  "",
 	}, {
 		desc: "map fields set to empty",
 		input: &pb3.Maps{
@@ -539,7 +539,7 @@ RptGroup: {}
 			StrToNested:  map[string]*pb3.Nested{},
 			StrToOneofs:  map[string]*pb3.Oneofs{},
 		},
-		want: "\n",
+		want: "",
 	}, {
 		desc: "map fields 1",
 		input: &pb3.Maps{
@@ -681,7 +681,7 @@ str_to_oneofs: {
 	}, {
 		desc:    "required fields not set",
 		input:   &pb2.Requireds{},
-		want:    "\n",
+		want:    "",
 		wantErr: true,
 	}, {
 		desc: "required fields partially set",
@@ -751,7 +751,7 @@ req_nested: {}
 		input: &pb2.IndirectRequired{
 			RptNested: []*pb2.NestedWithRequired{},
 		},
-		want: "\n",
+		want: "",
 	}, {
 		desc: "indirect required field in repeated",
 		input: &pb2.IndirectRequired{
@@ -775,7 +775,7 @@ req_nested: {}
 		input: &pb2.IndirectRequired{
 			StrToNested: map[string]*pb2.NestedWithRequired{},
 		},
-		want: "\n",
+		want: "",
 	}, {
 		desc: "indirect required field in map",
 		input: &pb2.IndirectRequired{
