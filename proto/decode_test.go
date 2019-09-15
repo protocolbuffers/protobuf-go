@@ -1748,6 +1748,10 @@ func extend(desc protoreflect.ExtensionType, value interface{}) buildOpt {
 }
 
 func marshalText(m proto.Message) string {
-	b, _ := prototext.MarshalOptions{Indent: "\t", AllowPartial: true}.Marshal(m)
+	b, _ := prototext.MarshalOptions{
+		AllowPartial: true,
+		EmitUnknown:  true,
+		Indent:       "\t",
+	}.Marshal(m)
 	return string(b)
 }

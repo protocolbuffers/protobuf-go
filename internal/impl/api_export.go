@@ -134,7 +134,10 @@ func (Export) MessageTypeOf(m message) pref.MessageType {
 // MessageStringOf returns the message value as a string,
 // which is the message serialized in the protobuf text format.
 func (Export) MessageStringOf(m pref.ProtoMessage) string {
-	b, _ := prototext.MarshalOptions{AllowPartial: true}.Marshal(m)
+	b, _ := prototext.MarshalOptions{
+		AllowPartial: true,
+		EmitUnknown:  true,
+	}.Marshal(m)
 	return string(b)
 }
 

@@ -38,6 +38,11 @@ type MarshalOptions struct {
 	// Marshal will return error if there are any missing required fields.
 	AllowPartial bool
 
+	// EmitUnknown specifies whether to emit unknown fields in the output.
+	// If specified, the unmarshaler may be unable to parse the output.
+	// The default is to exclude unknown fields.
+	EmitUnknown bool
+
 	// If Indent is a non-empty string, it causes entries for a Message to be
 	// preceded by the indent and trailed by a newline. Indent can only be
 	// composed of space or tab characters.
@@ -123,8 +128,9 @@ func (o MarshalOptions) marshalMessage(m pref.Message) (text.Value, error) {
 	}
 
 	// Handle unknown fields.
-	// TODO: Provide option to exclude or include unknown fields.
-	msgFields = appendUnknown(msgFields, m.GetUnknown())
+	if o.EmitUnknown {
+		msgFields = appendUnknown(msgFields, m.GetUnknown())
+	}
 
 	return text.ValueOf(msgFields), nil
 }

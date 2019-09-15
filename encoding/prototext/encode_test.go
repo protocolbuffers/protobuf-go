@@ -821,7 +821,24 @@ req_nested: {}
 		},
 		want: "oneof_nested: {}\n",
 	}, {
+		desc: "unknown fields not printed",
+		input: func() proto.Message {
+			m := &pb2.Scalars{
+				OptString: proto.String("this message contains unknown fields"),
+			}
+			m.ProtoReflect().SetUnknown(pack.Message{
+				pack.Tag{101, pack.VarintType}, pack.Bool(true),
+				pack.Tag{102, pack.VarintType}, pack.Varint(0xff),
+				pack.Tag{103, pack.Fixed32Type}, pack.Uint32(47),
+				pack.Tag{104, pack.Fixed64Type}, pack.Int64(0xdeadbeef),
+			}.Marshal())
+			return m
+		}(),
+		want: `opt_string: "this message contains unknown fields"
+`,
+	}, {
 		desc: "unknown varint and fixed types",
+		mo:   prototext.MarshalOptions{EmitUnknown: true},
 		input: func() proto.Message {
 			m := &pb2.Scalars{
 				OptString: proto.String("this message contains unknown fields"),
@@ -842,6 +859,7 @@ req_nested: {}
 `,
 	}, {
 		desc: "unknown length-delimited",
+		mo:   prototext.MarshalOptions{EmitUnknown: true},
 		input: func() proto.Message {
 			m := new(pb2.Scalars)
 			m.ProtoReflect().SetUnknown(pack.Message{
@@ -857,6 +875,7 @@ req_nested: {}
 `,
 	}, {
 		desc: "unknown group type",
+		mo:   prototext.MarshalOptions{EmitUnknown: true},
 		input: func() proto.Message {
 			m := new(pb2.Scalars)
 			m.ProtoReflect().SetUnknown(pack.Message{
@@ -876,6 +895,7 @@ req_nested: {}
 `,
 	}, {
 		desc: "unknown unpack repeated field",
+		mo:   prototext.MarshalOptions{EmitUnknown: true},
 		input: func() proto.Message {
 			m := new(pb2.Scalars)
 			m.ProtoReflect().SetUnknown(pack.Message{

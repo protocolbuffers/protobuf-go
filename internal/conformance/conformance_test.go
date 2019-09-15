@@ -143,7 +143,9 @@ func handle(req *pb.ConformanceRequest) (res *pb.ConformanceResponse) {
 			},
 		}
 	case pb.WireFormat_TEXT_FORMAT:
-		b, err = prototext.Marshal(msg)
+		b, err = prototext.MarshalOptions{
+			EmitUnknown: req.PrintUnknownFields,
+		}.Marshal(msg)
 		res = &pb.ConformanceResponse{
 			Result: &pb.ConformanceResponse_TextPayload{
 				TextPayload: string(b),
