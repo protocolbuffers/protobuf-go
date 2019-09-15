@@ -470,6 +470,17 @@ func TestUnmarshal(t *testing.T) {
 			SString: "proto name used",
 		},
 	}, {
+		desc:         "proto group name",
+		inputMessage: &pb2.Nests{},
+		inputText: `{
+		"OptGroup": {"optString": "hello"},
+		"RptGroup": [{"rptString": ["goodbye"]}]
+	}`,
+		wantMessage: &pb2.Nests{
+			Optgroup: &pb2.Nests_OptGroup{OptString: proto.String("hello")},
+			Rptgroup: []*pb2.Nests_RptGroup{{RptString: []string{"goodbye"}}},
+		},
+	}, {
 		desc:         "json_name",
 		inputMessage: &pb3.JSONNames{},
 		inputText: `{

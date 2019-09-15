@@ -190,6 +190,16 @@ func (o UnmarshalOptions) unmarshalFields(m pref.Message, skipTypeURL bool) erro
 			fd = fieldDescs.ByJSONName(name)
 			if fd == nil {
 				fd = fieldDescs.ByName(pref.Name(name))
+				if fd == nil {
+					// The proto name of a group field is in all lowercase,
+					// while the textual field name is the group message name.
+					gd := fieldDescs.ByName(pref.Name(strings.ToLower(name)))
+					if gd != nil && gd.Kind() == pref.GroupKind && gd.Message().Name() == pref.Name(name) {
+						fd = gd
+					}
+				} else if fd.Kind() == pref.GroupKind && fd.Message().Name() != pref.Name(name) {
+					fd = nil // reset since field name is actually the message name
+				}
 			}
 			if fd != nil && fd.IsWeak() && fd.Message().IsPlaceholder() {
 				fd = nil // reset since the weak reference is not linked in
