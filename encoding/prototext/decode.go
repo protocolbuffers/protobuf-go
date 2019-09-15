@@ -53,10 +53,6 @@ type UnmarshalOptions struct {
 // Unmarshal reads the given []byte and populates the given proto.Message using options in
 // UnmarshalOptions object.
 func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {
-	// Clear all fields before populating it.
-	// TODO: Determine if this needs to be consistent with protojson and binary unmarshal where
-	// behavior is to merge values into existing message. If decision is to not clear the fields
-	// ahead, code will need to be updated properly when merging nested messages.
 	proto.Reset(m)
 
 	// Parse into text.Value of message type.

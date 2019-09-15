@@ -73,6 +73,7 @@ type MarshalOptions struct {
 type UnmarshalOptions struct {
 	pragma.NoUnkeyedLiterals
 
+	Merge          bool // must be treated as true by method implementations
 	AllowPartial   bool // must be treated as true by method implementations
 	DiscardUnknown bool
 	Resolver       interface {

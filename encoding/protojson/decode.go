@@ -54,9 +54,6 @@ type UnmarshalOptions struct {
 // setting the fields. If it returns an error, the given message may be
 // partially set.
 func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {
-	// TODO: Determine if we would like to have an option for merging or only
-	// have merging behavior. We should at least be consistent with textproto
-	// marshaling.
 	proto.Reset(m)
 
 	if o.Resolver == nil {

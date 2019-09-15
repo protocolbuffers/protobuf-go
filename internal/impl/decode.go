@@ -40,6 +40,7 @@ func newUnmarshalOptions(opts piface.UnmarshalOptions) unmarshalOptions {
 
 func (o unmarshalOptions) Options() proto.UnmarshalOptions {
 	return proto.UnmarshalOptions{
+		Merge:          true,
 		AllowPartial:   true,
 		DiscardUnknown: o.DiscardUnknown(),
 		Resolver:       o.Resolver(),

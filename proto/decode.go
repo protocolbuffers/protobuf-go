@@ -21,6 +21,11 @@ import (
 type UnmarshalOptions struct {
 	pragma.NoUnkeyedLiterals
 
+	// Merge merges the input into the destination message.
+	// The default behavior is to always reset the message before unmarshaling,
+	// unless Merge is specified.
+	Merge bool
+
 	// AllowPartial accepts input for messages that will result in missing
 	// required fields. If AllowPartial is false (the default), Unmarshal will
 	// return an error if there are any missing required fields.
@@ -49,7 +54,9 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m Message) error {
 		o.Resolver = protoregistry.GlobalTypes
 	}
 
-	// TODO: Reset m?
+	if !o.Merge {
+		Reset(m)
+	}
 	err := o.unmarshalMessage(b, m.ProtoReflect())
 	if err != nil {
 		return err
