@@ -35,6 +35,12 @@ type UnmarshalOptions struct {
 	// return error if there are any missing required fields.
 	AllowPartial bool
 
+	// DiscardUnknown specifies whether to ignore unknown fields when parsing.
+	// An unknown field is any field whose field name or field number does not
+	// resolve to any known or extension field in the message.
+	// By default, unmarshal rejects unknown fields as an error.
+	DiscardUnknown bool
+
 	// Resolver is used for looking up types when unmarshaling
 	// google.protobuf.Any messages or extension fields.
 	// If nil, this defaults to using protoregistry.GlobalTypes.
@@ -92,55 +98,72 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 		tkey := tfield[0]
 		tval := tfield[1]
 
-		var fd pref.FieldDescriptor
+		// Resolve the field descriptor.
 		var name pref.Name
+		var fd pref.FieldDescriptor
+		var xt pref.ExtensionType
+		var xtErr error
 		switch tkey.Type() {
 		case text.Name:
 			name, _ = tkey.Name()
 			fd = fieldDescs.ByName(name)
-			switch {
-			case fd == nil:
+			if fd == nil {
 				// The proto name of a group field is in all lowercase,
 				// while the textproto field name is the group message name.
-				// Check to make sure that group name is correct.
 				gd := fieldDescs.ByName(pref.Name(strings.ToLower(string(name))))
 				if gd != nil && gd.Kind() == pref.GroupKind && gd.Message().Name() == name {
 					fd = gd
 				}
-			case fd.Kind() == pref.GroupKind && fd.Message().Name() != name:
+			} else if fd.Kind() == pref.GroupKind && fd.Message().Name() != name {
 				fd = nil // reset since field name is actually the message name
-			case fd.IsWeak() && fd.Message().IsPlaceholder():
-				fd = nil // reset since the weak reference is not linked in
 			}
 		case text.String:
 			// Handle extensions only. This code path is not for Any.
 			if messageDesc.FullName() == "google.protobuf.Any" {
 				break
 			}
-			// Extensions have to be registered first in the message's
-			// ExtensionTypes before setting a value to it.
-			extName := pref.FullName(tkey.String())
-			// Check first if it is already registered. This is the case for
-			// repeated fields.
-			xt, err := o.findExtension(extName)
-			if err != nil && err != protoregistry.NotFound {
-				return errors.New("unable to resolve [%v]: %v", extName, err)
+			xt, xtErr = o.findExtension(pref.FullName(tkey.String()))
+		case text.Uint:
+			v, _ := tkey.Uint(false)
+			num := pref.FieldNumber(v)
+			if !num.IsValid() {
+				return errors.New("invalid field number: %d", num)
 			}
-			if xt != nil {
-				fd = xt.TypeDescriptor()
-				if !messageDesc.ExtensionRanges().Has(fd.Number()) || fd.ContainingMessage().FullName() != messageDesc.FullName() {
-					return errors.New("message %v cannot be extended by %v", messageDesc.FullName(), fd.FullName())
-				}
+			fd = fieldDescs.ByNumber(num)
+			if fd == nil {
+				xt, xtErr = o.Resolver.FindExtensionByNumber(messageDesc.FullName(), num)
 			}
 		}
+		if xt != nil {
+			fd = xt.TypeDescriptor()
+			if !messageDesc.ExtensionRanges().Has(fd.Number()) || fd.ContainingMessage().FullName() != messageDesc.FullName() {
+				return errors.New("message %v cannot be extended by %v", messageDesc.FullName(), fd.FullName())
+			}
+		} else if xtErr != nil && xtErr != protoregistry.NotFound {
+			return errors.New("unable to resolve: %v", xtErr)
+		}
+		if fd != nil && fd.IsWeak() && fd.Message().IsPlaceholder() {
+			fd = nil // reset since the weak reference is not linked in
+		}
 
+		// Handle unknown fields.
 		if fd == nil {
-			// Ignore reserved names.
-			if messageDesc.ReservedNames().Has(name) {
+			if o.DiscardUnknown || messageDesc.ReservedNames().Has(name) {
 				continue
 			}
-			// TODO: Can provide option to ignore unknown message fields.
 			return errors.New("%v contains unknown field: %v", messageDesc.FullName(), tkey)
+		}
+
+		// Handle fields identified by field number.
+		if tkey.Type() == text.Uint {
+			// TODO: Add an option to permit parsing field numbers.
+			//
+			// This requires careful thought as the MarshalOptions.EmitUnknown
+			// option allows formatting unknown fields as the field number
+			// and the best-effort textual representation of the field value.
+			// In that case, it may not be possible to unmarshal the value from
+			// a parser that does have information about the unknown field.
+			return errors.New("cannot specify field by number: %v", tkey)
 		}
 
 		switch {

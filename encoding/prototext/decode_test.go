@@ -175,6 +175,28 @@ s_string: "谷歌"
 		inputText:    "unknown_field: 456",
 		wantErr:      true,
 	}, {
+		desc:         "proto2 message contains discarded unknown field",
+		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
+		inputMessage: &pb2.Scalars{},
+		inputText:    `unknown_field:123 1000:"hello"`,
+	}, {
+		desc:         "proto3 message contains discarded unknown field",
+		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
+		inputMessage: &pb3.Scalars{},
+		inputText:    `unknown_field:456 1000:"goodbye"`,
+	}, {
+		desc:         "proto2 message cannot parse field number",
+		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
+		inputMessage: &pb2.Scalars{},
+		inputText:    `13:"hello"`,
+		wantErr:      true,
+	}, {
+		desc:         "proto3 message cannot parse field number",
+		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
+		inputMessage: &pb3.Scalars{},
+		inputText:    `13:"goodbye"`,
+		wantErr:      true,
+	}, {
 		desc:         "proto2 numeric key field",
 		inputMessage: &pb2.Scalars{},
 		inputText:    "1: true",
