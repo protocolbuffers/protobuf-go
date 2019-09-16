@@ -2,14 +2,15 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package filetype_test
+package impl_test
 
 import (
 	"reflect"
 	"testing"
 
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
 )
 
 func TestEnum(t *testing.T) {

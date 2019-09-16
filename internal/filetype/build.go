@@ -90,14 +90,14 @@ type Builder struct {
 	// is appended to the end in reverse order.
 	DependencyIndexes []int32
 
+	// EnumInfos is a list of enum infos in "flattened ordering".
+	EnumInfos []pimpl.EnumInfo
+
 	// MessageInfos is a list of message infos in "flattened ordering".
 	// If provided, the GoType and PBType for each element is populated.
 	//
 	// Requirement: len(MessageInfos) == len(Build.Messages)
 	MessageInfos []pimpl.MessageInfo
-
-	// EnumInfos is a list of enum infos in "flattened ordering".
-	EnumInfos []EnumInfo
 
 	// ExtensionInfos is a list of extension infos in "flattened ordering".
 	// Each element is initialized and registered with the protoregistry package.
@@ -144,9 +144,9 @@ func (tb Builder) Build() (out Out) {
 	}
 	if len(fbOut.Enums) > 0 {
 		for i := range fbOut.Enums {
-			tb.EnumInfos[i] = EnumInfo{
-				desc:   &fbOut.Enums[i],
-				goType: reflect.TypeOf(enumGoTypes[i]),
+			tb.EnumInfos[i] = pimpl.EnumInfo{
+				GoReflectType: reflect.TypeOf(enumGoTypes[i]),
+				Desc:          &fbOut.Enums[i],
 			}
 			// Register enum types.
 			if err := tb.TypeRegistry.Register(&tb.EnumInfos[i]); err != nil {
@@ -291,22 +291,5 @@ func (r *resolverByIndex) FindMessageByIndex(i, j int32, es []fdesc.Enum, ms []f
 		return &ms[depIdx-len(es)]
 	} else {
 		return pimpl.Export{}.MessageDescriptorOf(r.goTypes[depIdx])
-	}
-}
-
-type EnumInfo struct {
-	desc   pref.EnumDescriptor
-	goType reflect.Type
-}
-
-func (t *EnumInfo) New(n pref.EnumNumber) pref.Enum {
-	return reflect.ValueOf(n).Convert(t.goType).Interface().(pref.Enum)
-}
-func (t *EnumInfo) GoType() reflect.Type            { return t.goType }
-func (t *EnumInfo) Descriptor() pref.EnumDescriptor { return t.desc }
-
-func messageMaker(t reflect.Type) func() pref.Message {
-	return func() pref.Message {
-		return reflect.New(t.Elem()).Interface().(pref.ProtoMessage).ProtoReflect()
 	}
 }

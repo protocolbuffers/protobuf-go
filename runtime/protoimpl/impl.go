@@ -26,7 +26,7 @@ type (
 	TypeBuilder = filetype.Builder
 
 	// Types used by generated code to implement EnumType, MessageType, and ExtensionType.
-	EnumInfo      = filetype.EnumInfo
+	EnumInfo      = impl.EnumInfo
 	MessageInfo   = impl.MessageInfo
 	ExtensionInfo = impl.ExtensionInfo
 
