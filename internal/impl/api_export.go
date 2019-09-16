@@ -140,5 +140,9 @@ func (Export) MessageStringOf(m pref.ProtoMessage) string {
 
 // ExtensionDescFromType returns the legacy protoV1.ExtensionDesc for t.
 func (Export) ExtensionDescFromType(t pref.ExtensionType) *ExtensionInfo {
-	return legacyExtensionDescFromType(t)
+	// TODO: Delete this function when v1 directly does this assertion.
+	if xt, ok := t.(*ExtensionInfo); ok {
+		return xt
+	}
+	return nil
 }

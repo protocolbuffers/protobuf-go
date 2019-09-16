@@ -26,21 +26,17 @@ type ExtensionInfo struct {
 	// initialized. This is the starting state for an ExtensionInfo
 	// in legacy generated code.
 	//
-	// extensionInfoDescInit: The desc and tdesc fields have been
-	// set, but the descriptor is not otherwise initialized. Legacy
-	// exported fields may or may not be set. This is the starting state
-	// for an ExtensionInfo in new generated code. Calling the Descriptor
-	// method will not trigger lazy initialization, although any other
-	// method will.
+	// extensionInfoDescInit: The desc field is set, but other unexported fields
+	// may not be initialized. Legacy exported fields may or may not be set.
+	// This is the starting state for an ExtensionInfo in newly generated code.
 	//
 	// extensionInfoFullInit: The ExtensionInfo is fully initialized.
 	// This state is only entered after lazy initialization is complete.
 	init uint32
 	mu   sync.Mutex
 
-	desc   pref.ExtensionDescriptor
-	tdesc  extensionTypeDescriptor
 	goType reflect.Type
+	desc   extensionTypeDescriptor
 	conv   Converter
 
 	// ExtendedType is a typed nil-pointer to the parent message type that
@@ -91,14 +87,8 @@ const (
 )
 
 func InitExtensionInfo(xi *ExtensionInfo, xd pref.ExtensionDescriptor, goType reflect.Type) {
-	if xi.desc != nil {
-		return
-	}
-	xi.desc = xd
 	xi.goType = goType
-
-	xi.tdesc.ExtensionDescriptor = xi.desc
-	xi.tdesc.xi = xi
+	xi.desc = extensionTypeDescriptor{xd, xi}
 	xi.init = extensionInfoDescInit
 }
 
@@ -125,14 +115,14 @@ func (xi *ExtensionInfo) GoType() reflect.Type {
 	return xi.goType
 }
 func (xi *ExtensionInfo) TypeDescriptor() pref.ExtensionTypeDescriptor {
-	if atomic.LoadUint32(&xi.init) == extensionInfoUninitialized {
+	if atomic.LoadUint32(&xi.init) < extensionInfoDescInit {
 		xi.lazyInitSlow()
 	}
-	return &xi.tdesc
+	return &xi.desc
 }
 
 func (xi *ExtensionInfo) lazyInit() Converter {
-	if atomic.LoadUint32(&xi.init) != extensionInfoFullInit {
+	if atomic.LoadUint32(&xi.init) < extensionInfoFullInit {
 		xi.lazyInitSlow()
 	}
 	return xi.conv
@@ -147,19 +137,13 @@ func (xi *ExtensionInfo) lazyInitSlow() {
 	}
 	defer atomic.StoreUint32(&xi.init, extensionInfoFullInit)
 
-	if xi.desc == nil {
+	if xi.desc.ExtensionDescriptor == nil {
 		xi.initFromLegacy()
-	} else if xi.desc.Cardinality() == pref.Repeated {
-		// Cardinality is initialized lazily, so we defer consulting it until here.
-		xi.goType = reflect.SliceOf(xi.goType)
 	}
-	xi.conv = NewConverter(xi.goType, xi.desc)
-	xi.tdesc.ExtensionDescriptor = xi.desc
-	xi.tdesc.xi = xi
-
 	if xi.ExtensionType == nil {
 		xi.initToLegacy()
 	}
+	xi.conv = NewConverter(xi.goType, xi.desc)
 }
 
 type extensionTypeDescriptor struct {

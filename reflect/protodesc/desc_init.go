@@ -168,7 +168,7 @@ func (r descsByName) initExtensionDeclarations(xds []*descriptorpb.FieldDescript
 			x.L2.IsPacked = opts.GetPacked()
 		}
 		x.L1.Number = protoreflect.FieldNumber(xd.GetNumber())
-		x.L2.Cardinality = protoreflect.Cardinality(xd.GetLabel())
+		x.L1.Cardinality = protoreflect.Cardinality(xd.GetLabel())
 		if xd.Type != nil {
 			x.L1.Kind = protoreflect.Kind(xd.GetType())
 		}

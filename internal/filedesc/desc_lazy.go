@@ -537,13 +537,6 @@ func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 		num, typ, n := wire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
-			b = b[m:]
-			switch num {
-			case fieldnum.FieldDescriptorProto_Label:
-				xd.L2.Cardinality = pref.Cardinality(v)
-			}
 		case wire.BytesType:
 			v, m := wire.ConsumeBytes(b)
 			b = b[m:]

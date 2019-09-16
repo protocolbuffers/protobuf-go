@@ -379,6 +379,8 @@ func (xd *Extension) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref
 			switch num {
 			case fieldnum.FieldDescriptorProto_Number:
 				xd.L1.Number = pref.FieldNumber(v)
+			case fieldnum.FieldDescriptorProto_Label:
+				xd.L1.Cardinality = pref.Cardinality(v)
 			case fieldnum.FieldDescriptorProto_Type:
 				xd.L1.Kind = pref.Kind(v)
 			}

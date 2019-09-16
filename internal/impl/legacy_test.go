@@ -143,52 +143,52 @@ var (
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_bool" number:10010 label:LABEL_REPEATED type:TYPE_BOOL extendee:".LegacyTestMessage"`,
-			reflect.TypeOf(false), depReg,
+			reflect.TypeOf([]bool(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_int32" number:10011 label:LABEL_REPEATED type:TYPE_INT32 extendee:".LegacyTestMessage"`,
-			reflect.TypeOf(int32(0)), depReg,
+			reflect.TypeOf([]int32(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_uint32" number:10012 label:LABEL_REPEATED type:TYPE_UINT32 extendee:".LegacyTestMessage"`,
-			reflect.TypeOf(uint32(0)), depReg,
+			reflect.TypeOf([]uint32(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_float" number:10013 label:LABEL_REPEATED type:TYPE_FLOAT extendee:".LegacyTestMessage"`,
-			reflect.TypeOf(float32(0)), depReg,
+			reflect.TypeOf([]float32(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_string" number:10014 label:LABEL_REPEATED type:TYPE_STRING extendee:".LegacyTestMessage"`,
-			reflect.TypeOf(""), depReg,
+			reflect.TypeOf([]string(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"repeated_bytes" number:10015 label:LABEL_REPEATED type:TYPE_BYTES extendee:".LegacyTestMessage"`,
-			reflect.TypeOf(([]byte)(nil)), depReg,
+			reflect.TypeOf([][]byte(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
 			`name:"repeated_enum_v1" number:10016 label:LABEL_REPEATED type:TYPE_ENUM type_name:".google.golang.org.proto2_20180125.Message.ChildEnum" extendee:".LegacyTestMessage"`,
-			reflect.TypeOf(proto2_20180125.Message_ChildEnum(0)), depReg,
+			reflect.TypeOf([]proto2_20180125.Message_ChildEnum(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
 			`name:"repeated_message_v1" number:10017 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.proto2_20180125.Message.ChildMessage" extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*proto2_20180125.Message_ChildMessage)(nil)), depReg,
+			reflect.TypeOf([]*proto2_20180125.Message_ChildMessage(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "enum2.proto"]`,
 			`name:"repeated_enum_v2" number:10018 label:LABEL_REPEATED type:TYPE_ENUM type_name:".EnumProto2" extendee:".LegacyTestMessage"`,
-			reflect.TypeOf(EnumProto2(0)), depReg,
+			reflect.TypeOf([]EnumProto2(nil)), depReg,
 		),
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:["legacy.proto", "enum-messages.proto"]`,
 			`name:"repeated_message_v2" number:10019 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".EnumMessages" extendee:".LegacyTestMessage"`,
-			reflect.TypeOf((*EnumMessages)(nil)), depReg,
+			reflect.TypeOf([]*EnumMessages(nil)), depReg,
 		),
 	}
 
@@ -457,7 +457,7 @@ func TestLegacyExtensions(t *testing.T) {
 	}
 }
 
-func TestExtensionConvert(t *testing.T) {
+func TestLegacyExtensionConvert(t *testing.T) {
 	for i := range extensionTypes {
 		i := i
 		t.Run("", func(t *testing.T) {
@@ -466,7 +466,16 @@ func TestExtensionConvert(t *testing.T) {
 			wantType := extensionTypes[i]
 			wantDesc := extensionDescs[i]
 			gotType := (pref.ExtensionType)(wantDesc)
-			gotDesc := pimpl.Export{}.ExtensionDescFromType(wantType)
+			gotDesc := wantType.(*pimpl.ExtensionInfo)
+
+			// Concurrently call accessors to trigger possible races.
+			for _, xt := range []pref.ExtensionType{wantType, wantDesc} {
+				xt := xt
+				go func() { xt.New() }()
+				go func() { xt.Zero() }()
+				go func() { xt.GoType() }()
+				go func() { xt.TypeDescriptor() }()
+			}
 
 			// TODO: We need a test package to compare descriptors.
 			type list interface {
@@ -594,9 +603,9 @@ var concurrentFD = func() []byte {
 	return pimpl.Export{}.CompressGZIP(b)
 }()
 
-// TestConcurrentInit tests that concurrent wrapping of multiple legacy types
+// TestLegacyConcurrentInit tests that concurrent wrapping of multiple legacy types
 // results in the exact same descriptor being created.
-func TestConcurrentInit(t *testing.T) {
+func TestLegacyConcurrentInit(t *testing.T) {
 	const numParallel = 5
 	var messageATypes [numParallel]pref.MessageType
 	var messageBTypes [numParallel]pref.MessageType

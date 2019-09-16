@@ -225,6 +225,9 @@ func (tb Builder) Build() (out Out) {
 		default:
 			goType = goTypeForPBKind[fbOut.Extensions[i].L1.Kind]
 		}
+		if fbOut.Extensions[i].IsList() {
+			goType = reflect.SliceOf(goType)
+		}
 
 		pimpl.InitExtensionInfo(&tb.ExtensionInfos[i], &fbOut.Extensions[i], goType)
 

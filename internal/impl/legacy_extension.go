@@ -6,7 +6,6 @@ package impl
 
 import (
 	"reflect"
-	"sync"
 
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	ptag "google.golang.org/protobuf/internal/encoding/tag"
@@ -15,36 +14,6 @@ import (
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
-
-var legacyExtensionInfoCache sync.Map // map[protoreflect.ExtensionType]*ExtensionInfo
-
-// legacyExtensionDescFromType converts a protoreflect.ExtensionType to an
-// ExtensionInfo. The returned ExtensionInfo must not be mutated.
-func legacyExtensionDescFromType(xt pref.ExtensionType) *ExtensionInfo {
-	// Fast-path: check whether this is an ExtensionInfo.
-	if xt, ok := xt.(*ExtensionInfo); ok {
-		return xt
-	}
-
-	// Fast-path: check the cache for whether this ExtensionType has already
-	// been converted to an ExtensionInfo.
-	if d, ok := legacyExtensionInfoCache.Load(xt); ok {
-		return d.(*ExtensionInfo)
-	}
-
-	tt := xt.GoType()
-	if xt.TypeDescriptor().Cardinality() == pref.Repeated {
-		tt = tt.Elem().Elem()
-	}
-	xi := &ExtensionInfo{}
-	InitExtensionInfo(xi, xt.TypeDescriptor().Descriptor(), tt)
-	xi.lazyInit() // populate legacy fields
-
-	if xi, ok := legacyExtensionInfoCache.LoadOrStore(xt, xi); ok {
-		return xi.(*ExtensionInfo)
-	}
-	return xi
-}
 
 func (xi *ExtensionInfo) initToLegacy() {
 	xd := xi.desc
@@ -134,7 +103,7 @@ func (xi *ExtensionInfo) initFromLegacy() {
 	xd.L0.ParentFile = filedesc.SurrogateProto2
 	xd.L0.FullName = pref.FullName(xi.Name)
 	xd.L1.Number = pref.FieldNumber(xi.Field)
-	xd.L2.Cardinality = fd.L1.Cardinality
+	xd.L1.Cardinality = fd.L1.Cardinality
 	xd.L1.Kind = fd.L1.Kind
 	xd.L2.IsPacked = fd.L1.IsPacked
 	xd.L2.Default = fd.L1.Default
@@ -151,6 +120,6 @@ func (xi *ExtensionInfo) initFromLegacy() {
 	if isOptional {
 		tt = tt.Elem()
 	}
-	xi.desc = xd
 	xi.goType = tt
+	xi.desc = extensionTypeDescriptor{xd, xi}
 }

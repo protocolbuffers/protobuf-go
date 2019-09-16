@@ -355,18 +355,18 @@ type (
 		L2 *ExtensionL2 // protected by fileDesc.once
 	}
 	ExtensionL1 struct {
-		Number   pref.FieldNumber
-		Extendee pref.MessageDescriptor
-		Kind     pref.Kind
+		Number      pref.FieldNumber
+		Extendee    pref.MessageDescriptor
+		Cardinality pref.Cardinality
+		Kind        pref.Kind
 	}
 	ExtensionL2 struct {
-		Options     func() pref.ProtoMessage
-		Cardinality pref.Cardinality
-		JSONName    jsonName
-		IsPacked    bool // promoted from google.protobuf.FieldOptions
-		Default     defaultValue
-		Enum        pref.EnumDescriptor
-		Message     pref.MessageDescriptor
+		Options  func() pref.ProtoMessage
+		JSONName jsonName
+		IsPacked bool // promoted from google.protobuf.FieldOptions
+		Default  defaultValue
+		Enum     pref.EnumDescriptor
+		Message  pref.MessageDescriptor
 	}
 )
 
@@ -377,7 +377,7 @@ func (xd *Extension) Options() pref.ProtoMessage {
 	return descopts.Field
 }
 func (xd *Extension) Number() pref.FieldNumber                   { return xd.L1.Number }
-func (xd *Extension) Cardinality() pref.Cardinality              { return xd.lazyInit().Cardinality }
+func (xd *Extension) Cardinality() pref.Cardinality              { return xd.L1.Cardinality }
 func (xd *Extension) Kind() pref.Kind                            { return xd.L1.Kind }
 func (xd *Extension) HasJSONName() bool                          { return xd.lazyInit().JSONName.has }
 func (xd *Extension) JSONName() string                           { return xd.lazyInit().JSONName.get(xd) }
