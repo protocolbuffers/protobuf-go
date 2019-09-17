@@ -579,7 +579,10 @@ func (dv *defaultValue) get(fd pref.FieldDescriptor) pref.Value {
 		case pref.BytesKind:
 			return pref.ValueOf([]byte(nil))
 		case pref.EnumKind:
-			return pref.ValueOf(fd.Enum().Values().Get(0).Number())
+			if evs := fd.Enum().Values(); evs.Len() > 0 {
+				return pref.ValueOf(evs.Get(0).Number())
+			}
+			return pref.ValueOf(pref.EnumNumber(0))
 		}
 	}
 
