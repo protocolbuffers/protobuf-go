@@ -256,53 +256,53 @@ func unmarshalScalar(input text.Value, fd pref.FieldDescriptor) (pref.Value, err
 	switch kind := fd.Kind(); kind {
 	case pref.BoolKind:
 		if b, ok := input.Bool(); ok {
-			return pref.ValueOf(bool(b)), nil
+			return pref.ValueOfBool(bool(b)), nil
 		}
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
 		if n, ok := input.Int(b32); ok {
-			return pref.ValueOf(int32(n)), nil
+			return pref.ValueOfInt32(int32(n)), nil
 		}
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
 		if n, ok := input.Int(b64); ok {
-			return pref.ValueOf(int64(n)), nil
+			return pref.ValueOfInt64(int64(n)), nil
 		}
 	case pref.Uint32Kind, pref.Fixed32Kind:
 		if n, ok := input.Uint(b32); ok {
-			return pref.ValueOf(uint32(n)), nil
+			return pref.ValueOfUint32(uint32(n)), nil
 		}
 	case pref.Uint64Kind, pref.Fixed64Kind:
 		if n, ok := input.Uint(b64); ok {
-			return pref.ValueOf(uint64(n)), nil
+			return pref.ValueOfUint64(uint64(n)), nil
 		}
 	case pref.FloatKind:
 		if n, ok := input.Float(b32); ok {
-			return pref.ValueOf(float32(n)), nil
+			return pref.ValueOfFloat32(float32(n)), nil
 		}
 	case pref.DoubleKind:
 		if n, ok := input.Float(b64); ok {
-			return pref.ValueOf(float64(n)), nil
+			return pref.ValueOfFloat64(float64(n)), nil
 		}
 	case pref.StringKind:
 		if input.Type() == text.String {
 			s := input.String()
 			if utf8.ValidString(s) {
-				return pref.ValueOf(s), nil
+				return pref.ValueOfString(s), nil
 			}
 			return pref.Value{}, errors.InvalidUTF8(string(fd.FullName()))
 		}
 	case pref.BytesKind:
 		if input.Type() == text.String {
-			return pref.ValueOf([]byte(input.String())), nil
+			return pref.ValueOfBytes([]byte(input.String())), nil
 		}
 	case pref.EnumKind:
 		// If input is int32, use directly.
 		if n, ok := input.Int(b32); ok {
-			return pref.ValueOf(pref.EnumNumber(n)), nil
+			return pref.ValueOfEnum(pref.EnumNumber(n)), nil
 		}
 		if name, ok := input.Name(); ok {
 			// Lookup EnumNumber based on name.
 			if enumVal := fd.Enum().Values().ByName(name); enumVal != nil {
-				return pref.ValueOf(enumVal.Number()), nil
+				return pref.ValueOfEnum(enumVal.Number()), nil
 			}
 		}
 	default:
@@ -488,8 +488,8 @@ func (o UnmarshalOptions) unmarshalAny(tfield [2]text.Value, m pref.Message) err
 	fdType := fds.ByNumber(fieldnum.Any_TypeUrl)
 	fdValue := fds.ByNumber(fieldnum.Any_Value)
 
-	m.Set(fdType, pref.ValueOf(typeURL))
-	m.Set(fdValue, pref.ValueOf(b))
+	m.Set(fdType, pref.ValueOfString(typeURL))
+	m.Set(fdValue, pref.ValueOfBytes(b))
 
 	return nil
 }

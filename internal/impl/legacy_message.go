@@ -236,10 +236,10 @@ func aberrantAppendField(md *filedesc.Message, goType reflect.Type, tag, tagKey,
 		fd.L1.Options = func() pref.ProtoMessage {
 			opts := descopts.Field.ProtoReflect().New()
 			if fd.L1.IsWeak {
-				opts.Set(opts.Descriptor().Fields().ByName("weak"), protoreflect.ValueOf(true))
+				opts.Set(opts.Descriptor().Fields().ByName("weak"), protoreflect.ValueOfBool(true))
 			}
 			if fd.L1.HasPacked {
-				opts.Set(opts.Descriptor().Fields().ByName("packed"), protoreflect.ValueOf(fd.L1.IsPacked))
+				opts.Set(opts.Descriptor().Fields().ByName("packed"), protoreflect.ValueOfBool(fd.L1.IsPacked))
 			}
 			return opts.Interface()
 		}
@@ -273,7 +273,7 @@ func aberrantAppendField(md *filedesc.Message, goType reflect.Type, tag, tagKey,
 				md2.L2.IsMapEntry = true
 				md2.L2.Options = func() pref.ProtoMessage {
 					opts := descopts.Message.ProtoReflect().New()
-					opts.Set(opts.Descriptor().Fields().ByName("map_entry"), protoreflect.ValueOf(true))
+					opts.Set(opts.Descriptor().Fields().ByName("map_entry"), protoreflect.ValueOfBool(true))
 					return opts.Interface()
 				}
 

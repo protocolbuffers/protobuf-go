@@ -31,7 +31,7 @@ func (c *mapConverter) PBValueOf(v reflect.Value) pref.Value {
 	if v.Type() != c.goType {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
-	return pref.ValueOf(&mapReflect{v, c.keyConv, c.valConv})
+	return pref.ValueOfMap(&mapReflect{v, c.keyConv, c.valConv})
 }
 
 func (c *mapConverter) GoValueOf(v pref.Value) reflect.Value {

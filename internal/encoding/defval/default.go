@@ -41,16 +41,16 @@ func Unmarshal(s string, k pref.Kind, evs pref.EnumValueDescriptors, f Format) (
 		if f == GoTag {
 			switch s {
 			case "1":
-				return pref.ValueOf(true), nil, nil
+				return pref.ValueOfBool(true), nil, nil
 			case "0":
-				return pref.ValueOf(false), nil, nil
+				return pref.ValueOfBool(false), nil, nil
 			}
 		} else {
 			switch s {
 			case "true":
-				return pref.ValueOf(true), nil, nil
+				return pref.ValueOfBool(true), nil, nil
 			case "false":
-				return pref.ValueOf(false), nil, nil
+				return pref.ValueOfBool(false), nil, nil
 			}
 		}
 	case pref.EnumKind:
@@ -58,31 +58,31 @@ func Unmarshal(s string, k pref.Kind, evs pref.EnumValueDescriptors, f Format) (
 			// Go tags use the numeric form of the enum value.
 			if n, err := strconv.ParseInt(s, 10, 32); err == nil {
 				if ev := evs.ByNumber(pref.EnumNumber(n)); ev != nil {
-					return pref.ValueOf(ev.Number()), ev, nil
+					return pref.ValueOfEnum(ev.Number()), ev, nil
 				}
 			}
 		} else {
 			// Descriptor default_value use the enum identifier.
 			ev := evs.ByName(pref.Name(s))
 			if ev != nil {
-				return pref.ValueOf(ev.Number()), ev, nil
+				return pref.ValueOfEnum(ev.Number()), ev, nil
 			}
 		}
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
 		if v, err := strconv.ParseInt(s, 10, 32); err == nil {
-			return pref.ValueOf(int32(v)), nil, nil
+			return pref.ValueOfInt32(int32(v)), nil, nil
 		}
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
 		if v, err := strconv.ParseInt(s, 10, 64); err == nil {
-			return pref.ValueOf(int64(v)), nil, nil
+			return pref.ValueOfInt64(int64(v)), nil, nil
 		}
 	case pref.Uint32Kind, pref.Fixed32Kind:
 		if v, err := strconv.ParseUint(s, 10, 32); err == nil {
-			return pref.ValueOf(uint32(v)), nil, nil
+			return pref.ValueOfUint32(uint32(v)), nil, nil
 		}
 	case pref.Uint64Kind, pref.Fixed64Kind:
 		if v, err := strconv.ParseUint(s, 10, 64); err == nil {
-			return pref.ValueOf(uint64(v)), nil, nil
+			return pref.ValueOfUint64(uint64(v)), nil, nil
 		}
 	case pref.FloatKind, pref.DoubleKind:
 		var v float64
@@ -99,17 +99,17 @@ func Unmarshal(s string, k pref.Kind, evs pref.EnumValueDescriptors, f Format) (
 		}
 		if err == nil {
 			if k == pref.FloatKind {
-				return pref.ValueOf(float32(v)), nil, nil
+				return pref.ValueOfFloat32(float32(v)), nil, nil
 			} else {
-				return pref.ValueOf(float64(v)), nil, nil
+				return pref.ValueOfFloat64(float64(v)), nil, nil
 			}
 		}
 	case pref.StringKind:
 		// String values are already unescaped and can be used as is.
-		return pref.ValueOf(s), nil, nil
+		return pref.ValueOfString(s), nil, nil
 	case pref.BytesKind:
 		if b, ok := unmarshalBytes(s); ok {
-			return pref.ValueOf(b), nil, nil
+			return pref.ValueOfBytes(b), nil, nil
 		}
 	}
 	return pref.Value{}, nil, errors.New("could not parse value for %v: %q", k, s)

@@ -345,7 +345,7 @@ func unmarshalBool(jval json.Value) (pref.Value, error) {
 		return pref.Value{}, unexpectedJSONError{jval}
 	}
 	b, err := jval.Bool()
-	return pref.ValueOf(b), err
+	return pref.ValueOfBool(b), err
 }
 
 func unmarshalInt(jval json.Value, bitSize int) (pref.Value, error) {
@@ -375,9 +375,9 @@ func getInt(jval json.Value, bitSize int) (pref.Value, error) {
 		return pref.Value{}, err
 	}
 	if bitSize == 32 {
-		return pref.ValueOf(int32(n)), nil
+		return pref.ValueOfInt32(int32(n)), nil
 	}
-	return pref.ValueOf(n), nil
+	return pref.ValueOfInt64(n), nil
 }
 
 func unmarshalUint(jval json.Value, bitSize int) (pref.Value, error) {
@@ -407,9 +407,9 @@ func getUint(jval json.Value, bitSize int) (pref.Value, error) {
 		return pref.Value{}, err
 	}
 	if bitSize == 32 {
-		return pref.ValueOf(uint32(n)), nil
+		return pref.ValueOfUint32(uint32(n)), nil
 	}
-	return pref.ValueOf(n), nil
+	return pref.ValueOfUint64(n), nil
 }
 
 func unmarshalFloat(jval json.Value, bitSize int) (pref.Value, error) {
@@ -422,19 +422,19 @@ func unmarshalFloat(jval json.Value, bitSize int) (pref.Value, error) {
 		switch s {
 		case "NaN":
 			if bitSize == 32 {
-				return pref.ValueOf(float32(math.NaN())), nil
+				return pref.ValueOfFloat32(float32(math.NaN())), nil
 			}
-			return pref.ValueOf(math.NaN()), nil
+			return pref.ValueOfFloat64(math.NaN()), nil
 		case "Infinity":
 			if bitSize == 32 {
-				return pref.ValueOf(float32(math.Inf(+1))), nil
+				return pref.ValueOfFloat32(float32(math.Inf(+1))), nil
 			}
-			return pref.ValueOf(math.Inf(+1)), nil
+			return pref.ValueOfFloat64(math.Inf(+1)), nil
 		case "-Infinity":
 			if bitSize == 32 {
-				return pref.ValueOf(float32(math.Inf(-1))), nil
+				return pref.ValueOfFloat32(float32(math.Inf(-1))), nil
 			}
-			return pref.ValueOf(math.Inf(-1)), nil
+			return pref.ValueOfFloat64(math.Inf(-1)), nil
 		}
 		// Decode number from string.
 		if len(s) != len(strings.TrimSpace(s)) {
@@ -456,16 +456,16 @@ func getFloat(jval json.Value, bitSize int) (pref.Value, error) {
 		return pref.Value{}, err
 	}
 	if bitSize == 32 {
-		return pref.ValueOf(float32(n)), nil
+		return pref.ValueOfFloat32(float32(n)), nil
 	}
-	return pref.ValueOf(n), nil
+	return pref.ValueOfFloat64(n), nil
 }
 
 func unmarshalString(jval json.Value) (pref.Value, error) {
 	if jval.Type() != json.String {
 		return pref.Value{}, unexpectedJSONError{jval}
 	}
-	return pref.ValueOf(jval.String()), nil
+	return pref.ValueOfString(jval.String()), nil
 }
 
 func unmarshalBytes(jval json.Value) (pref.Value, error) {
@@ -485,7 +485,7 @@ func unmarshalBytes(jval json.Value) (pref.Value, error) {
 	if err != nil {
 		return pref.Value{}, err
 	}
-	return pref.ValueOf(b), nil
+	return pref.ValueOfBytes(b), nil
 }
 
 func unmarshalEnum(jval json.Value, fd pref.FieldDescriptor) (pref.Value, error) {
@@ -494,7 +494,7 @@ func unmarshalEnum(jval json.Value, fd pref.FieldDescriptor) (pref.Value, error)
 		// Lookup EnumNumber based on name.
 		s := jval.String()
 		if enumVal := fd.Enum().Values().ByName(pref.Name(s)); enumVal != nil {
-			return pref.ValueOf(enumVal.Number()), nil
+			return pref.ValueOfEnum(enumVal.Number()), nil
 		}
 		return pref.Value{}, newError("invalid enum value %q", jval)
 
@@ -503,12 +503,12 @@ func unmarshalEnum(jval json.Value, fd pref.FieldDescriptor) (pref.Value, error)
 		if err != nil {
 			return pref.Value{}, err
 		}
-		return pref.ValueOf(pref.EnumNumber(n)), nil
+		return pref.ValueOfEnum(pref.EnumNumber(n)), nil
 
 	case json.Null:
 		// This is only valid for google.protobuf.NullValue.
 		if isNullValue(fd) {
-			return pref.ValueOf(pref.EnumNumber(0)), nil
+			return pref.ValueOfEnum(0), nil
 		}
 	}
 
@@ -640,14 +640,14 @@ func unmarshalMapKey(name string, fd pref.FieldDescriptor) (pref.MapKey, error) 
 	kind := fd.Kind()
 	switch kind {
 	case pref.StringKind:
-		return pref.ValueOf(name).MapKey(), nil
+		return pref.ValueOfString(name).MapKey(), nil
 
 	case pref.BoolKind:
 		switch name {
 		case "true":
-			return pref.ValueOf(true).MapKey(), nil
+			return pref.ValueOfBool(true).MapKey(), nil
 		case "false":
-			return pref.ValueOf(false).MapKey(), nil
+			return pref.ValueOfBool(false).MapKey(), nil
 		}
 		return pref.MapKey{}, errors.New("invalid value for boolean key %q", name)
 
@@ -656,28 +656,28 @@ func unmarshalMapKey(name string, fd pref.FieldDescriptor) (pref.MapKey, error) 
 		if err != nil {
 			return pref.MapKey{}, err
 		}
-		return pref.ValueOf(int32(n)).MapKey(), nil
+		return pref.ValueOfInt32(int32(n)).MapKey(), nil
 
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
 		n, err := strconv.ParseInt(name, base10, b64)
 		if err != nil {
 			return pref.MapKey{}, err
 		}
-		return pref.ValueOf(int64(n)).MapKey(), nil
+		return pref.ValueOfInt64(int64(n)).MapKey(), nil
 
 	case pref.Uint32Kind, pref.Fixed32Kind:
 		n, err := strconv.ParseUint(name, base10, b32)
 		if err != nil {
 			return pref.MapKey{}, err
 		}
-		return pref.ValueOf(uint32(n)).MapKey(), nil
+		return pref.ValueOfUint32(uint32(n)).MapKey(), nil
 
 	case pref.Uint64Kind, pref.Fixed64Kind:
 		n, err := strconv.ParseUint(name, base10, b64)
 		if err != nil {
 			return pref.MapKey{}, err
 		}
-		return pref.ValueOf(uint64(n)).MapKey(), nil
+		return pref.ValueOfUint64(uint64(n)).MapKey(), nil
 	}
 
 	panic(fmt.Sprintf("%s: invalid kind %s for map key", fd.FullName(), kind))

@@ -76,15 +76,15 @@ var (
 )
 
 var (
-	boolZero    = pref.ValueOf(bool(false))
-	int32Zero   = pref.ValueOf(int32(0))
-	int64Zero   = pref.ValueOf(int64(0))
-	uint32Zero  = pref.ValueOf(uint32(0))
-	uint64Zero  = pref.ValueOf(uint64(0))
-	float32Zero = pref.ValueOf(float32(0))
-	float64Zero = pref.ValueOf(float64(0))
-	stringZero  = pref.ValueOf(string(""))
-	bytesZero   = pref.ValueOf([]byte(nil))
+	boolZero    = pref.ValueOfBool(false)
+	int32Zero   = pref.ValueOfInt32(0)
+	int64Zero   = pref.ValueOfInt64(0)
+	uint32Zero  = pref.ValueOfUint32(0)
+	uint64Zero  = pref.ValueOfUint64(0)
+	float32Zero = pref.ValueOfFloat32(0)
+	float64Zero = pref.ValueOfFloat64(0)
+	stringZero  = pref.ValueOfString("")
+	bytesZero   = pref.ValueOfBytes(nil)
 )
 
 func newSingularConverter(t reflect.Type, fd pref.FieldDescriptor) Converter {
@@ -376,7 +376,7 @@ type enumConverter struct {
 func newEnumConverter(goType reflect.Type, fd pref.FieldDescriptor) Converter {
 	var def pref.Value
 	if fd.Cardinality() == pref.Repeated {
-		def = pref.ValueOf(fd.Enum().Values().Get(0).Number())
+		def = pref.ValueOfEnum(fd.Enum().Values().Get(0).Number())
 	} else {
 		def = fd.Default()
 	}
@@ -387,7 +387,7 @@ func (c *enumConverter) PBValueOf(v reflect.Value) pref.Value {
 	if v.Type() != c.goType {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
-	return pref.ValueOf(pref.EnumNumber(v.Int()))
+	return pref.ValueOfEnum(pref.EnumNumber(v.Int()))
 }
 
 func (c *enumConverter) GoValueOf(v pref.Value) reflect.Value {
@@ -424,9 +424,9 @@ func (c *messageConverter) PBValueOf(v reflect.Value) pref.Value {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
 	if m, ok := v.Interface().(pref.ProtoMessage); ok {
-		return pref.ValueOf(m.ProtoReflect())
+		return pref.ValueOfMessage(m.ProtoReflect())
 	}
-	return pref.ValueOf(legacyWrapMessage(v).ProtoReflect())
+	return pref.ValueOfMessage(legacyWrapMessage(v).ProtoReflect())
 }
 
 func (c *messageConverter) GoValueOf(v pref.Value) reflect.Value {

@@ -74,5 +74,5 @@ func mergeMap(dst, src protoreflect.Map, fd protoreflect.FieldDescriptor) {
 }
 
 func cloneBytes(v protoreflect.Value) protoreflect.Value {
-	return protoreflect.ValueOf(append([]byte{}, v.Bytes()...))
+	return protoreflect.ValueOfBytes(append([]byte{}, v.Bytes()...))
 }

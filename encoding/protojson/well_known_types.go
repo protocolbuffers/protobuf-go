@@ -261,8 +261,8 @@ func (o UnmarshalOptions) unmarshalAny(m pref.Message) error {
 	fdType := fds.ByNumber(fieldnum.Any_TypeUrl)
 	fdValue := fds.ByNumber(fieldnum.Any_Value)
 
-	m.Set(fdType, pref.ValueOf(typeURL))
-	m.Set(fdValue, pref.ValueOf(b))
+	m.Set(fdType, pref.ValueOfString(typeURL))
+	m.Set(fdValue, pref.ValueOfBytes(b))
 	return nil
 }
 
@@ -541,7 +541,7 @@ func (o UnmarshalOptions) unmarshalKnownValue(m pref.Message) error {
 	case json.Null:
 		o.decoder.Read()
 		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_NullValue)
-		m.Set(fd, pref.ValueOf(pref.EnumNumber(0)))
+		m.Set(fd, pref.ValueOfEnum(0))
 
 	case json.Bool:
 		jval, err := o.decoder.Read()
@@ -687,8 +687,8 @@ func (o UnmarshalOptions) unmarshalDuration(m pref.Message) error {
 	fdSeconds := fds.ByNumber(fieldnum.Duration_Seconds)
 	fdNanos := fds.ByNumber(fieldnum.Duration_Nanos)
 
-	m.Set(fdSeconds, pref.ValueOf(secs))
-	m.Set(fdNanos, pref.ValueOf(nanos))
+	m.Set(fdSeconds, pref.ValueOfInt64(secs))
+	m.Set(fdNanos, pref.ValueOfInt32(nanos))
 	return nil
 }
 
@@ -871,8 +871,8 @@ func (o UnmarshalOptions) unmarshalTimestamp(m pref.Message) error {
 	fdSeconds := fds.ByNumber(fieldnum.Timestamp_Seconds)
 	fdNanos := fds.ByNumber(fieldnum.Timestamp_Nanos)
 
-	m.Set(fdSeconds, pref.ValueOf(secs))
-	m.Set(fdNanos, pref.ValueOf(int32(t.Nanosecond())))
+	m.Set(fdSeconds, pref.ValueOfInt64(secs))
+	m.Set(fdNanos, pref.ValueOfInt32(int32(t.Nanosecond())))
 	return nil
 }
 
@@ -921,7 +921,7 @@ func (o UnmarshalOptions) unmarshalFieldMask(m pref.Message) error {
 		s = strings.TrimSpace(s)
 		// Convert to snake_case. Unlike encoding, no validation is done because
 		// it is not possible to know the original path names.
-		list.Append(pref.ValueOf(strs.JSONSnakeCase(s)))
+		list.Append(pref.ValueOfString(strs.JSONSnakeCase(s)))
 	}
 	return nil
 }

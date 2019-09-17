@@ -533,7 +533,7 @@ func unmarshalDefault(b []byte, k pref.Kind, pf *File, ed pref.EnumDescriptor) d
 		// If we are unable to resolve the enum dependency, use a placeholder
 		// enum value since we will not be able to parse the default value.
 		if ed.IsPlaceholder() && pref.Name(b).IsValid() {
-			v := pref.ValueOf(pref.EnumNumber(0))
+			v := pref.ValueOfEnum(0)
 			ev := PlaceholderEnumValue(ed.FullName().Parent().Append(pref.Name(b)))
 			return DefaultValue(v, ev)
 		}
@@ -561,28 +561,28 @@ func (dv *defaultValue) get(fd pref.FieldDescriptor) pref.Value {
 		}
 		switch fd.Kind() {
 		case pref.BoolKind:
-			return pref.ValueOf(false)
+			return pref.ValueOfBool(false)
 		case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
-			return pref.ValueOf(int32(0))
+			return pref.ValueOfInt32(0)
 		case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
-			return pref.ValueOf(int64(0))
+			return pref.ValueOfInt64(0)
 		case pref.Uint32Kind, pref.Fixed32Kind:
-			return pref.ValueOf(uint32(0))
+			return pref.ValueOfUint32(0)
 		case pref.Uint64Kind, pref.Fixed64Kind:
-			return pref.ValueOf(uint64(0))
+			return pref.ValueOfUint64(0)
 		case pref.FloatKind:
-			return pref.ValueOf(float32(0))
+			return pref.ValueOfFloat32(0)
 		case pref.DoubleKind:
-			return pref.ValueOf(float64(0))
+			return pref.ValueOfFloat64(0)
 		case pref.StringKind:
-			return pref.ValueOf(string(""))
+			return pref.ValueOfString("")
 		case pref.BytesKind:
-			return pref.ValueOf([]byte(nil))
+			return pref.ValueOfBytes(nil)
 		case pref.EnumKind:
 			if evs := fd.Enum().Values(); evs.Len() > 0 {
-				return pref.ValueOf(evs.Get(0).Number())
+				return pref.ValueOfEnum(evs.Get(0).Number())
 			}
-			return pref.ValueOf(pref.EnumNumber(0))
+			return pref.ValueOfEnum(0)
 		}
 	}
 

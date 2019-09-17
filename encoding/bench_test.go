@@ -24,14 +24,7 @@ import (
 
 var benchV1 = flag.Bool("v1", false, "benchmark the v1 implementation")
 
-const (
-	boolValue  = true
-	intValue   = 1 << 30
-	floatValue = 3.14159265
-	strValue   = "hello world"
-
-	maxRecurseLevel = 3
-)
+const maxRecurseLevel = 3
 
 func makeProto() *tpb.TestAllTypes {
 	m := &tpb.TestAllTypes{}
@@ -72,34 +65,34 @@ func setScalarField(m pref.Message, fd pref.FieldDescriptor, level int) {
 func scalarField(kind pref.Kind) pref.Value {
 	switch kind {
 	case pref.BoolKind:
-		return pref.ValueOf(boolValue)
+		return pref.ValueOfBool(true)
 
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
-		return pref.ValueOf(int32(intValue))
+		return pref.ValueOfInt32(1 << 30)
 
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
-		return pref.ValueOf(int64(intValue))
+		return pref.ValueOfInt64(1 << 30)
 
 	case pref.Uint32Kind, pref.Fixed32Kind:
-		return pref.ValueOf(uint32(intValue))
+		return pref.ValueOfUint32(1 << 30)
 
 	case pref.Uint64Kind, pref.Fixed64Kind:
-		return pref.ValueOf(uint64(intValue))
+		return pref.ValueOfUint64(1 << 30)
 
 	case pref.FloatKind:
-		return pref.ValueOf(float32(floatValue))
+		return pref.ValueOfFloat32(3.14159265)
 
 	case pref.DoubleKind:
-		return pref.ValueOf(float64(floatValue))
+		return pref.ValueOfFloat64(3.14159265)
 
 	case pref.BytesKind:
-		return pref.ValueOf([]byte(strValue))
+		return pref.ValueOfBytes([]byte("hello world"))
 
 	case pref.StringKind:
-		return pref.ValueOf(strValue)
+		return pref.ValueOfString("hello world")
 
 	case pref.EnumKind:
-		return pref.ValueOf(pref.EnumNumber(42))
+		return pref.ValueOfEnum(42)
 	}
 
 	panic(fmt.Sprintf("FieldDescriptor.Kind %v is not valid", kind))

@@ -133,13 +133,13 @@ func (m *Message) Get(fd pref.FieldDescriptor) pref.Value {
 	}
 	switch {
 	case fd.IsMap():
-		return pref.ValueOf(&dynamicMap{desc: fd})
+		return pref.ValueOfMap(&dynamicMap{desc: fd})
 	case fd.IsList():
-		return pref.ValueOf(emptyList{desc: fd})
+		return pref.ValueOfList(emptyList{desc: fd})
 	case fd.Message() != nil:
-		return pref.ValueOf(&Message{typ: messageType{fd.Message()}})
+		return pref.ValueOfMessage(&Message{typ: messageType{fd.Message()}})
 	case fd.Kind() == pref.BytesKind:
-		return pref.ValueOf(append([]byte(nil), fd.Default().Bytes()...))
+		return pref.ValueOfBytes(append([]byte(nil), fd.Default().Bytes()...))
 	default:
 		return fd.Default()
 	}
@@ -214,14 +214,14 @@ func (m *Message) NewField(fd pref.FieldDescriptor) pref.Value {
 	case fd.IsExtension():
 		return fd.(pref.ExtensionTypeDescriptor).Type().New()
 	case fd.IsMap():
-		return pref.ValueOf(&dynamicMap{
+		return pref.ValueOfMap(&dynamicMap{
 			desc: fd,
 			mapv: make(map[interface{}]pref.Value),
 		})
 	case fd.IsList():
-		return pref.ValueOf(&dynamicList{desc: fd})
+		return pref.ValueOfList(&dynamicList{desc: fd})
 	case fd.Message() != nil:
-		return pref.ValueOf(NewMessage(fd.Message()).ProtoReflect())
+		return pref.ValueOfMessage(NewMessage(fd.Message()).ProtoReflect())
 	default:
 		return fd.Default()
 	}
@@ -352,7 +352,7 @@ func (x *dynamicMap) Clear(k pref.MapKey)    { delete(x.mapv, k.Interface()) }
 func (x *dynamicMap) Len() int               { return len(x.mapv) }
 func (x *dynamicMap) NewValue() pref.Value {
 	if md := x.desc.MapValue().Message(); md != nil {
-		return pref.ValueOf(NewMessage(md).ProtoReflect())
+		return pref.ValueOfMessage(NewMessage(md).ProtoReflect())
 	}
 	return x.desc.MapValue().Default()
 }
@@ -474,27 +474,27 @@ func singularTypeIsValid(fd pref.FieldDescriptor, v pref.Value) error {
 func newListEntry(fd pref.FieldDescriptor) pref.Value {
 	switch fd.Kind() {
 	case pref.BoolKind:
-		return pref.ValueOf(false)
+		return pref.ValueOfBool(false)
 	case pref.EnumKind:
-		return pref.ValueOf(fd.Enum().Values().Get(0).Number())
+		return pref.ValueOfEnum(fd.Enum().Values().Get(0).Number())
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
-		return pref.ValueOf(int32(0))
+		return pref.ValueOfInt32(0)
 	case pref.Uint32Kind, pref.Fixed32Kind:
-		return pref.ValueOf(uint32(0))
+		return pref.ValueOfUint32(0)
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
-		return pref.ValueOf(int64(0))
+		return pref.ValueOfInt64(0)
 	case pref.Uint64Kind, pref.Fixed64Kind:
-		return pref.ValueOf(uint64(0))
+		return pref.ValueOfUint64(0)
 	case pref.FloatKind:
-		return pref.ValueOf(float32(0))
+		return pref.ValueOfFloat32(0)
 	case pref.DoubleKind:
-		return pref.ValueOf(float64(0))
+		return pref.ValueOfFloat64(0)
 	case pref.StringKind:
-		return pref.ValueOf("")
+		return pref.ValueOfString("")
 	case pref.BytesKind:
-		return pref.ValueOf(([]byte)(nil))
+		return pref.ValueOfBytes(nil)
 	case pref.MessageKind, pref.GroupKind:
-		return pref.ValueOf(NewMessage(fd.Message()).ProtoReflect())
+		return pref.ValueOfMessage(NewMessage(fd.Message()).ProtoReflect())
 	}
 	panic(errors.New("%v: unknown kind %v", fd.FullName(), fd.Kind()))
 }
@@ -533,14 +533,14 @@ func NewExtensionType(desc pref.ExtensionDescriptor) pref.ExtensionType {
 func (xt extensionType) New() pref.Value {
 	switch {
 	case xt.desc.IsMap():
-		return pref.ValueOf(&dynamicMap{
+		return pref.ValueOfMap(&dynamicMap{
 			desc: xt.desc,
 			mapv: make(map[interface{}]pref.Value),
 		})
 	case xt.desc.IsList():
-		return pref.ValueOf(&dynamicList{desc: xt.desc})
+		return pref.ValueOfList(&dynamicList{desc: xt.desc})
 	case xt.desc.Message() != nil:
-		return pref.ValueOf(NewMessage(xt.desc.Message()))
+		return pref.ValueOfMessage(NewMessage(xt.desc.Message()))
 	default:
 		return xt.desc.Default()
 	}
@@ -549,11 +549,11 @@ func (xt extensionType) New() pref.Value {
 func (xt extensionType) Zero() pref.Value {
 	switch {
 	case xt.desc.IsMap():
-		return pref.ValueOf(&dynamicMap{desc: xt.desc})
+		return pref.ValueOfMap(&dynamicMap{desc: xt.desc})
 	case xt.desc.Cardinality() == pref.Repeated:
-		return pref.ValueOf(emptyList{desc: xt.desc})
+		return pref.ValueOfList(emptyList{desc: xt.desc})
 	case xt.desc.Message() != nil:
-		return pref.ValueOf(&Message{typ: messageType{xt.desc.Message()}})
+		return pref.ValueOfMessage(&Message{typ: messageType{xt.desc.Message()}})
 	default:
 		return xt.desc.Default()
 	}

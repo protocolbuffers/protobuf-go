@@ -99,7 +99,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 			}
 			rv = rv.Elem().Elem().Field(0)
 			if rv.IsNil() {
-				rv.Set(conv.GoValueOf(pref.ValueOf(conv.New().Message())))
+				rv.Set(conv.GoValueOf(pref.ValueOfMessage(conv.New().Message())))
 			}
 			return conv.PBValueOf(rv)
 		},
@@ -324,14 +324,14 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 		get: func(p pointer) pref.Value {
 			lazyInit()
 			if p.IsNil() {
-				return pref.ValueOf(messageType.Zero())
+				return pref.ValueOfMessage(messageType.Zero())
 			}
 			fs := p.Apply(weakOffset).WeakFields()
 			m, ok := (*fs)[num]
 			if !ok {
-				return pref.ValueOf(messageType.Zero())
+				return pref.ValueOfMessage(messageType.Zero())
 			}
-			return pref.ValueOf(m.(pref.ProtoMessage).ProtoReflect())
+			return pref.ValueOfMessage(m.(pref.ProtoMessage).ProtoReflect())
 		},
 		set: func(p pointer, v pref.Value) {
 			lazyInit()
@@ -356,7 +356,7 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 				m = messageType.New().Interface().(piface.MessageV1)
 				(*fs)[num] = m
 			}
-			return pref.ValueOf(m.(pref.ProtoMessage).ProtoReflect())
+			return pref.ValueOfMessage(m.(pref.ProtoMessage).ProtoReflect())
 		},
 		newMessage: func() pref.Message {
 			lazyInit()
@@ -364,7 +364,7 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 		},
 		newField: func() pref.Value {
 			lazyInit()
-			return pref.ValueOf(messageType.New())
+			return pref.ValueOfMessage(messageType.New())
 		},
 	}
 }

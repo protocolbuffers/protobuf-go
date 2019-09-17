@@ -188,9 +188,9 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	m.Clear(fd)
 
 	// Set to the wrong type.
-	v := pref.ValueOf("")
+	v := pref.ValueOfString("")
 	if fd.Kind() == pref.StringKind {
-		v = pref.ValueOf(int32(0))
+		v = pref.ValueOfInt32(0)
 	}
 	if !panics(func() {
 		m.Set(fd, v)
@@ -226,7 +226,7 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		v := newMapValue(fd, mapv, n, nil)
 		mapv.Set(k, v)
 		want.Set(k, v)
-		if got, want := m.Get(fd), pref.ValueOf(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), pref.ValueOfMap(want); !valueEqual(got, want) {
 			t.Errorf("after inserting %d elements to %q:\nMessage.Get(%v) = %v, want %v", i, name, num, formatValue(got), formatValue(want))
 		}
 	}
@@ -236,7 +236,7 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		nv := newMapValue(fd, mapv, 10, nil)
 		mapv.Set(k, nv)
 		want.Set(k, nv)
-		if got, want := m.Get(fd), pref.ValueOf(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), pref.ValueOfMap(want); !valueEqual(got, want) {
 			t.Errorf("after setting element %v of %q:\nMessage.Get(%v) = %v, want %v", formatValue(k.Value()), name, num, formatValue(got), formatValue(want))
 		}
 		return true
@@ -249,7 +249,7 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		if got, want := m.Has(fd), want.Len() > 0; got != want {
 			t.Errorf("after clearing elements of %q:\nMessage.Has(%v) = %v, want %v", name, num, got, want)
 		}
-		if got, want := m.Get(fd), pref.ValueOf(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), pref.ValueOfMap(want); !valueEqual(got, want) {
 			t.Errorf("after clearing elements of %q:\nMessage.Get(%v) = %v, want %v", name, num, formatValue(got), formatValue(want))
 		}
 		return true
@@ -307,7 +307,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		want.Append(v)
 		list.Append(v)
 
-		if got, want := m.Get(fd), pref.ValueOf(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), pref.ValueOfList(want); !valueEqual(got, want) {
 			t.Errorf("after appending %d elements to %q:\nMessage.Get(%v) = %v, want %v", i+1, name, num, formatValue(got), formatValue(want))
 		}
 	}
@@ -317,7 +317,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		v := newListElement(fd, list, seed(i+10), nil)
 		want.Set(i, v)
 		list.Set(i, v)
-		if got, want := m.Get(fd), pref.ValueOf(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), pref.ValueOfList(want); !valueEqual(got, want) {
 			t.Errorf("after setting element %d of %q:\nMessage.Get(%v) = %v, want %v", i, name, num, formatValue(got), formatValue(want))
 		}
 	}
@@ -330,7 +330,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		if got, want := m.Has(fd), want.Len() > 0 || fd.IsExtension(); got != want {
 			t.Errorf("after truncating %q to %d:\nMessage.Has(%v) = %v, want %v", name, n, num, got, want)
 		}
-		if got, want := m.Get(fd), pref.ValueOf(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), pref.ValueOfList(want); !valueEqual(got, want) {
 			t.Errorf("after truncating %q to %d:\nMessage.Get(%v) = %v, want %v", name, n, num, formatValue(got), formatValue(want))
 		}
 	}
@@ -355,9 +355,9 @@ func testFieldFloat(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	for _, v := range []float64{math.Inf(-1), math.Inf(1), math.NaN(), math.Copysign(0, -1)} {
 		var val pref.Value
 		if fd.Kind() == pref.FloatKind {
-			val = pref.ValueOf(float32(v))
+			val = pref.ValueOfFloat32(float32(v))
 		} else {
-			val = pref.ValueOf(v)
+			val = pref.ValueOfFloat64(float64(v))
 		}
 		m.Set(fd, val)
 		// Note that Has is true for -0.
@@ -543,7 +543,7 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 		list.Append(newListElement(fd, list, minVal, stack))
 		list.Append(newListElement(fd, list, maxVal, stack))
 		list.Append(newListElement(fd, list, n, stack))
-		return pref.ValueOf(list)
+		return pref.ValueOfList(list)
 	case fd.IsMap():
 		if n == 0 {
 			return m.New().Get(fd)
@@ -553,7 +553,7 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 		mapv.Set(newMapKey(fd, minVal), newMapValue(fd, mapv, minVal, stack))
 		mapv.Set(newMapKey(fd, maxVal), newMapValue(fd, mapv, maxVal, stack))
 		mapv.Set(newMapKey(fd, n), newMapValue(fd, mapv, newSeed(n, 0), stack))
-		return pref.ValueOf(mapv)
+		return pref.ValueOfMap(mapv)
 	case fd.Message() != nil:
 		//if n == 0 {
 		//	return m.New().Get(fd)
@@ -587,7 +587,7 @@ func newMapValue(fd pref.FieldDescriptor, mapv pref.Map, n seed, stack []pref.Me
 func newScalarValue(fd pref.FieldDescriptor, n seed) pref.Value {
 	switch fd.Kind() {
 	case pref.BoolKind:
-		return pref.ValueOf(n != 0)
+		return pref.ValueOfBool(n != 0)
 	case pref.EnumKind:
 		vals := fd.Enum().Values()
 		var i int
@@ -599,85 +599,85 @@ func newScalarValue(fd pref.FieldDescriptor, n seed) pref.Value {
 		default:
 			i = int(n) % vals.Len()
 		}
-		return pref.ValueOf(vals.Get(i).Number())
+		return pref.ValueOfEnum(vals.Get(i).Number())
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
 		switch n {
 		case minVal:
-			return pref.ValueOf(int32(math.MinInt32))
+			return pref.ValueOfInt32(math.MinInt32)
 		case maxVal:
-			return pref.ValueOf(int32(math.MaxInt32))
+			return pref.ValueOfInt32(math.MaxInt32)
 		default:
-			return pref.ValueOf(int32(n))
+			return pref.ValueOfInt32(int32(n))
 		}
 	case pref.Uint32Kind, pref.Fixed32Kind:
 		switch n {
 		case minVal:
 			// Only use 0 for the zero value.
-			return pref.ValueOf(uint32(1))
+			return pref.ValueOfUint32(1)
 		case maxVal:
-			return pref.ValueOf(uint32(math.MaxInt32))
+			return pref.ValueOfUint32(math.MaxInt32)
 		default:
-			return pref.ValueOf(uint32(n))
+			return pref.ValueOfUint32(uint32(n))
 		}
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
 		switch n {
 		case minVal:
-			return pref.ValueOf(int64(math.MinInt64))
+			return pref.ValueOfInt64(math.MinInt64)
 		case maxVal:
-			return pref.ValueOf(int64(math.MaxInt64))
+			return pref.ValueOfInt64(math.MaxInt64)
 		default:
-			return pref.ValueOf(int64(n))
+			return pref.ValueOfInt64(int64(n))
 		}
 	case pref.Uint64Kind, pref.Fixed64Kind:
 		switch n {
 		case minVal:
 			// Only use 0 for the zero value.
-			return pref.ValueOf(uint64(1))
+			return pref.ValueOfUint64(1)
 		case maxVal:
-			return pref.ValueOf(uint64(math.MaxInt64))
+			return pref.ValueOfUint64(math.MaxInt64)
 		default:
-			return pref.ValueOf(uint64(n))
+			return pref.ValueOfUint64(uint64(n))
 		}
 	case pref.FloatKind:
 		switch n {
 		case minVal:
-			return pref.ValueOf(float32(math.SmallestNonzeroFloat32))
+			return pref.ValueOfFloat32(math.SmallestNonzeroFloat32)
 		case maxVal:
-			return pref.ValueOf(float32(math.MaxFloat32))
+			return pref.ValueOfFloat32(math.MaxFloat32)
 		default:
-			return pref.ValueOf(1.5 * float32(n))
+			return pref.ValueOfFloat32(1.5 * float32(n))
 		}
 	case pref.DoubleKind:
 		switch n {
 		case minVal:
-			return pref.ValueOf(float64(math.SmallestNonzeroFloat64))
+			return pref.ValueOfFloat64(math.SmallestNonzeroFloat64)
 		case maxVal:
-			return pref.ValueOf(float64(math.MaxFloat64))
+			return pref.ValueOfFloat64(math.MaxFloat64)
 		default:
-			return pref.ValueOf(1.5 * float64(n))
+			return pref.ValueOfFloat64(1.5 * float64(n))
 		}
 	case pref.StringKind:
 		if n == 0 {
-			return pref.ValueOf("")
+			return pref.ValueOfString("")
 		}
-		return pref.ValueOf(fmt.Sprintf("%d", n))
+		return pref.ValueOfString(fmt.Sprintf("%d", n))
 	case pref.BytesKind:
 		if n == 0 {
-			return pref.ValueOf([]byte(nil))
+			return pref.ValueOfBytes(nil)
 		}
-		return pref.ValueOf([]byte{byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)})
+		return pref.ValueOfBytes([]byte{byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)})
 	}
 	panic("unhandled kind")
 }
 
 func populateMessage(m pref.Message, n seed, stack []pref.MessageDescriptor) pref.Value {
 	if n == 0 {
-		return pref.ValueOf(m)
+		return pref.ValueOfMessage(m)
 	}
 	md := m.Descriptor()
 	for _, x := range stack {
 		if md == x {
-			return pref.ValueOf(m)
+			return pref.ValueOfMessage(m)
 		}
 	}
 	stack = append(stack, md)
@@ -688,7 +688,7 @@ func populateMessage(m pref.Message, n seed, stack []pref.MessageDescriptor) pre
 		}
 		m.Set(fd, newValue(m, fd, newSeed(n, i), stack))
 	}
-	return pref.ValueOf(m)
+	return pref.ValueOfMessage(m)
 }
 
 func panics(f func()) (didPanic bool) {

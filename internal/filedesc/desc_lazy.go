@@ -451,7 +451,7 @@ func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 			case fieldnum.FieldDescriptorProto_JsonName:
 				fd.L1.JSONName = JSONName(sb.MakeString(v))
 			case fieldnum.FieldDescriptorProto_DefaultValue:
-				fd.L1.Default.val = pref.ValueOf(v) // temporarily store as bytes; later resolved in resolveMessages
+				fd.L1.Default.val = pref.ValueOfBytes(v) // temporarily store as bytes; later resolved in resolveMessages
 			case fieldnum.FieldDescriptorProto_TypeName:
 				rawTypeName = v
 			case fieldnum.FieldDescriptorProto_Options:
@@ -544,7 +544,7 @@ func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 			case fieldnum.FieldDescriptorProto_JsonName:
 				xd.L2.JSONName = JSONName(sb.MakeString(v))
 			case fieldnum.FieldDescriptorProto_DefaultValue:
-				xd.L2.Default.val = pref.ValueOf(v) // temporarily store as bytes; later resolved in resolveExtensions
+				xd.L2.Default.val = pref.ValueOfBytes(v) // temporarily store as bytes; later resolved in resolveExtensions
 			case fieldnum.FieldDescriptorProto_TypeName:
 				rawTypeName = v
 			case fieldnum.FieldDescriptorProto_Options:

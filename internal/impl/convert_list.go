@@ -32,7 +32,7 @@ func (c *listConverter) PBValueOf(v reflect.Value) pref.Value {
 	}
 	pv := reflect.New(c.goType)
 	pv.Elem().Set(v)
-	return pref.ValueOf(&listReflect{pv, c.c})
+	return pref.ValueOfList(&listReflect{pv, c.c})
 }
 
 func (c *listConverter) GoValueOf(v pref.Value) reflect.Value {
@@ -56,11 +56,11 @@ func (c *listConverter) IsValidGo(v reflect.Value) bool {
 }
 
 func (c *listConverter) New() pref.Value {
-	return pref.ValueOf(&listReflect{reflect.New(c.goType), c.c})
+	return pref.ValueOfList(&listReflect{reflect.New(c.goType), c.c})
 }
 
 func (c *listConverter) Zero() pref.Value {
-	return pref.ValueOf(&listReflect{reflect.Zero(reflect.PtrTo(c.goType)), c.c})
+	return pref.ValueOfList(&listReflect{reflect.Zero(reflect.PtrTo(c.goType)), c.c})
 }
 
 type listPtrConverter struct {
@@ -72,7 +72,7 @@ func (c *listPtrConverter) PBValueOf(v reflect.Value) pref.Value {
 	if v.Type() != c.goType {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
-	return pref.ValueOf(&listReflect{v, c.c})
+	return pref.ValueOfList(&listReflect{v, c.c})
 }
 
 func (c *listPtrConverter) GoValueOf(v pref.Value) reflect.Value {

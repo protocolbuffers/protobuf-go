@@ -268,9 +268,9 @@ func unmarshalDefault(s string, fd protoreflect.FieldDescriptor, allowUnresolvab
 	}
 	v, ev, err := defval.Unmarshal(s, fd.Kind(), evs, defval.Descriptor)
 	if err != nil && allowUnresolvable && evs != nil && protoreflect.Name(s).IsValid() {
-		v = protoreflect.ValueOf(protoreflect.EnumNumber(0))
+		v = protoreflect.ValueOfEnum(0)
 		if evs.Len() > 0 {
-			v = protoreflect.ValueOf(evs.Get(0).Number())
+			v = protoreflect.ValueOfEnum(evs.Get(0).Number())
 		}
 		ev = filedesc.PlaceholderEnumValue(fd.Enum().FullName().Parent().Append(protoreflect.Name(s)))
 	} else if err != nil {
