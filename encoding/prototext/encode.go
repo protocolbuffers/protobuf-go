@@ -101,9 +101,15 @@ func (o MarshalOptions) marshalMessage(m pref.Message) (text.Value, error) {
 	var msgFields [][2]text.Value
 	fieldDescs := messageDesc.Fields()
 	size := fieldDescs.Len()
-	for i := 0; i < size; i++ {
+	for i := 0; i < size; {
 		fd := fieldDescs.Get(i)
-		if !m.Has(fd) {
+		if od := fd.ContainingOneof(); od != nil {
+			fd = m.WhichOneof(od)
+			i += od.Fields().Len()
+		} else {
+			i++
+		}
+		if fd == nil || !m.Has(fd) {
 			continue
 		}
 

@@ -119,11 +119,21 @@ func (o MarshalOptions) marshalFields(m pref.Message) error {
 
 	// Marshal out known fields.
 	fieldDescs := messageDesc.Fields()
-	for i := 0; i < fieldDescs.Len(); i++ {
+	for i := 0; i < fieldDescs.Len(); {
 		fd := fieldDescs.Get(i)
+		if od := fd.ContainingOneof(); od != nil {
+			fd = m.WhichOneof(od)
+			i += od.Fields().Len()
+			if fd == nil {
+				continue // unpopulated oneofs are not affected by EmitUnpopulated
+			}
+		} else {
+			i++
+		}
+
 		val := m.Get(fd)
 		if !m.Has(fd) {
-			if !o.EmitUnpopulated || fd.ContainingOneof() != nil {
+			if !o.EmitUnpopulated {
 				continue
 			}
 			isProto2Scalar := fd.Syntax() == pref.Proto2 && fd.Default().IsValid()
