@@ -435,7 +435,11 @@ func makeOneofInfo(od pref.OneofDescriptor, fs reflect.StructField, x exporter, 
 			if rv.IsNil() {
 				return 0
 			}
-			return wrappersByType[rv.Elem().Type().Elem()]
+			rv = rv.Elem()
+			if rv.IsNil() {
+				return 0
+			}
+			return wrappersByType[rv.Type().Elem()]
 		},
 	}
 }

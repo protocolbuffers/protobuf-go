@@ -42,10 +42,20 @@ func (m *messageState) ProtoMessageInfo() *MessageInfo {
 
 func (m *messageState) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	m.messageInfo().init()
-	for _, fi := range m.messageInfo().fields {
-		if fi.has(m.pointer()) {
-			if !f(fi.fieldDesc, fi.get(m.pointer())) {
-				return
+	for _, ri := range m.messageInfo().rangeInfos {
+		switch ri := ri.(type) {
+		case *fieldInfo:
+			if ri.has(m.pointer()) {
+				if !f(ri.fieldDesc, ri.get(m.pointer())) {
+					return
+				}
+			}
+		case *oneofInfo:
+			if n := ri.which(m.pointer()); n > 0 {
+				fi := m.messageInfo().fields[n]
+				if !f(fi.fieldDesc, fi.get(m.pointer())) {
+					return
+				}
 			}
 		}
 	}
@@ -149,10 +159,20 @@ func (m *messageReflectWrapper) ProtoMessageInfo() *MessageInfo {
 
 func (m *messageReflectWrapper) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	m.messageInfo().init()
-	for _, fi := range m.messageInfo().fields {
-		if fi.has(m.pointer()) {
-			if !f(fi.fieldDesc, fi.get(m.pointer())) {
-				return
+	for _, ri := range m.messageInfo().rangeInfos {
+		switch ri := ri.(type) {
+		case *fieldInfo:
+			if ri.has(m.pointer()) {
+				if !f(ri.fieldDesc, ri.get(m.pointer())) {
+					return
+				}
+			}
+		case *oneofInfo:
+			if n := ri.which(m.pointer()); n > 0 {
+				fi := m.messageInfo().fields[n]
+				if !f(fi.fieldDesc, fi.get(m.pointer())) {
+					return
+				}
 			}
 		}
 	}

@@ -1485,3 +1485,53 @@ func BenchmarkName(b *testing.B) {
 	})
 	runtime.KeepAlive(sink)
 }
+
+func BenchmarkReflect(b *testing.B) {
+	m := new(testpb.TestAllTypes).ProtoReflect()
+	fds := m.Descriptor().Fields()
+	vs := make([]pref.Value, fds.Len())
+	for i := range vs {
+		vs[i] = m.NewField(fds.Get(i))
+	}
+
+	b.Run("Has", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			for j := 0; j < fds.Len(); j++ {
+				m.Has(fds.Get(j))
+			}
+		}
+	})
+	b.Run("Get", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			for j := 0; j < fds.Len(); j++ {
+				m.Get(fds.Get(j))
+			}
+		}
+	})
+	b.Run("Set", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			for j := 0; j < fds.Len(); j++ {
+				m.Set(fds.Get(j), vs[j])
+			}
+		}
+	})
+	b.Run("Clear", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			for j := 0; j < fds.Len(); j++ {
+				m.Clear(fds.Get(j))
+			}
+		}
+	})
+	b.Run("Range", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			m.Range(func(pref.FieldDescriptor, pref.Value) bool {
+				return true
+			})
+		}
+	})
+}

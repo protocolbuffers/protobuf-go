@@ -16,6 +16,14 @@ type reflectMessageInfo struct {
 	fields map[pref.FieldNumber]*fieldInfo
 	oneofs map[pref.Name]*oneofInfo
 
+	// denseFields is a subset of fields where:
+	//	0 < fieldDesc.Number() < len(denseFields)
+	// It provides faster access to the fieldInfo, but may be incomplete.
+	denseFields []*fieldInfo
+
+	// rangeInfos is a list of all fields (not belonging to a oneof) and oneofs.
+	rangeInfos []interface{} // either *fieldInfo or *oneofInfo
+
 	getUnknown   func(pointer) pref.RawFields
 	setUnknown   func(pointer, pref.RawFields)
 	extensionMap func(pointer) *extensionMap
@@ -39,8 +47,9 @@ func (mi *MessageInfo) makeReflectFuncs(t reflect.Type, si structInfo) {
 func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	mi.fields = map[pref.FieldNumber]*fieldInfo{}
 	md := mi.Desc
-	for i := 0; i < md.Fields().Len(); i++ {
-		fd := md.Fields().Get(i)
+	fds := md.Fields()
+	for i := 0; i < fds.Len(); i++ {
+		fd := fds.Get(i)
 		fs := si.fieldsByNumber[fd.Number()]
 		var fi fieldInfo
 		switch {
@@ -64,6 +73,24 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	for i := 0; i < md.Oneofs().Len(); i++ {
 		od := md.Oneofs().Get(i)
 		mi.oneofs[od.Name()] = makeOneofInfo(od, si.oneofsByName[od.Name()], mi.Exporter, si.oneofWrappersByType)
+	}
+
+	mi.denseFields = make([]*fieldInfo, fds.Len()*2)
+	for i := 0; i < fds.Len(); i++ {
+		if fd := fds.Get(i); int(fd.Number()) < len(mi.denseFields) {
+			mi.denseFields[fd.Number()] = mi.fields[fd.Number()]
+		}
+	}
+
+	for i := 0; i < fds.Len(); {
+		fd := fds.Get(i)
+		if od := fd.ContainingOneof(); od != nil {
+			mi.rangeInfos = append(mi.rangeInfos, mi.oneofs[od.Name()])
+			i += od.Fields().Len()
+		} else {
+			mi.rangeInfos = append(mi.rangeInfos, mi.fields[fd.Number()])
+			i++
+		}
 	}
 }
 
@@ -273,12 +300,19 @@ func (m *messageIfaceWrapper) protoUnwrap() interface{} {
 // checkField verifies that the provided field descriptor is valid.
 // Exactly one of the returned values is populated.
 func (mi *MessageInfo) checkField(fd pref.FieldDescriptor) (*fieldInfo, pref.ExtensionType) {
-	if fi := mi.fields[fd.Number()]; fi != nil {
+	var fi *fieldInfo
+	if n := fd.Number(); 0 < n && int(n) < len(mi.denseFields) {
+		fi = mi.denseFields[n]
+	} else {
+		fi = mi.fields[n]
+	}
+	if fi != nil {
 		if fi.fieldDesc != fd {
 			panic("mismatching field descriptor")
 		}
 		return fi, nil
 	}
+
 	if fd.IsExtension() {
 		if fd.ContainingMessage().FullName() != mi.Desc.FullName() {
 			// TODO: Should this be exact containing message descriptor match?
