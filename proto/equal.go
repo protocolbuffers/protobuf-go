@@ -29,6 +29,9 @@ import (
 // Maps are equal if they have the same set of keys, where the pair of values
 // for each key is also equal.
 func Equal(x, y Message) bool {
+	if x == nil || y == nil {
+		return x == nil && y == nil
+	}
 	return equalMessage(x.ProtoReflect(), y.ProtoReflect())
 }
 

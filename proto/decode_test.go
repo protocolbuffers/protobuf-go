@@ -1789,6 +1789,9 @@ func extend(desc protoreflect.ExtensionType, value interface{}) buildOpt {
 }
 
 func marshalText(m proto.Message) string {
+	if m == nil {
+		return "<nil>\n"
+	}
 	b, _ := prototext.MarshalOptions{
 		AllowPartial: true,
 		EmitUnknown:  true,
