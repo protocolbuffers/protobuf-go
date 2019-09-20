@@ -39,7 +39,9 @@ func mergeMessage(dst, src protoreflect.Message) {
 		return true
 	})
 
-	dst.SetUnknown(append(dst.GetUnknown(), src.GetUnknown()...))
+	if len(src.GetUnknown()) > 0 {
+		dst.SetUnknown(append(dst.GetUnknown(), src.GetUnknown()...))
+	}
 }
 
 func mergeList(dst, src protoreflect.List, fd protoreflect.FieldDescriptor) {

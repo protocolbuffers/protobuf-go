@@ -5,6 +5,7 @@
 package proto_test
 
 import (
+	"sync"
 	"testing"
 
 	"google.golang.org/protobuf/internal/encoding/pack"
@@ -366,5 +367,37 @@ func TestMerge(t *testing.T) {
 				t.Fatalf("Merge() mismatch:\n got %v\nwant %v", tt.dst, tt.want)
 			}
 		})
+	}
+}
+
+func TestMergeRace(t *testing.T) {
+	dst := new(testpb.TestAllTypes)
+	srcs := []*testpb.TestAllTypes{
+		{OptionalInt32: proto.Int32(1)},
+		{OptionalString: proto.String("hello")},
+		{RepeatedInt32: []int32{2, 3, 4}},
+		{RepeatedString: []string{"goodbye"}},
+		{MapStringString: map[string]string{"key": "value"}},
+		{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
+			A: proto.Int32(5),
+		}},
+		func() *testpb.TestAllTypes {
+			m := new(testpb.TestAllTypes)
+			m.ProtoReflect().SetUnknown(pack.Message{
+				pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
+			}.Marshal())
+			return m
+		}(),
+	}
+
+	// It should be safe to concurrently merge non-overlapping fields.
+	var wg sync.WaitGroup
+	defer wg.Wait()
+	for _, src := range srcs {
+		wg.Add(1)
+		go func(src proto.Message) {
+			defer wg.Done()
+			proto.Merge(dst, src)
+		}(src)
 	}
 }
