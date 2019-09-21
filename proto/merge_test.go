@@ -5,6 +5,7 @@
 package proto_test
 
 import (
+	"reflect"
 	"sync"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 )
 
 func TestMerge(t *testing.T) {
@@ -380,6 +382,120 @@ func testMerge(t *testing.T, shallow bool) {
 				if gotObservable != wantObservable {
 					t.Fatalf("mutation observed:\n got %v\nwant %v", gotObservable, wantObservable)
 				}
+			}
+		})
+	}
+}
+
+// TestMergeAberrant tests inputs that are beyond the protobuf data model.
+// Just because there is a test for the current behavior does not mean that
+// this will behave the same way in the future.
+func TestMergeAberrant(t *testing.T) {
+	tests := []struct {
+		label string
+		dst   proto.Message
+		src   proto.Message
+		check func(proto.Message) bool
+	}{{
+		label: "Proto2EmptyBytes",
+		dst:   &testpb.TestAllTypes{OptionalBytes: nil},
+		src:   &testpb.TestAllTypes{OptionalBytes: []byte{}},
+		check: func(m proto.Message) bool {
+			return m.(*testpb.TestAllTypes).OptionalBytes != nil
+		},
+	}, {
+		label: "Proto3EmptyBytes",
+		dst:   &test3pb.TestAllTypes{OptionalBytes: nil},
+		src:   &test3pb.TestAllTypes{OptionalBytes: []byte{}},
+		check: func(m proto.Message) bool {
+			return m.(*test3pb.TestAllTypes).OptionalBytes == nil
+		},
+	}, {
+		label: "EmptyList",
+		dst:   &testpb.TestAllTypes{RepeatedInt32: nil},
+		src:   &testpb.TestAllTypes{RepeatedInt32: []int32{}},
+		check: func(m proto.Message) bool {
+			return m.(*testpb.TestAllTypes).RepeatedInt32 == nil
+		},
+	}, {
+		label: "ListWithNilBytes",
+		dst:   &testpb.TestAllTypes{RepeatedBytes: nil},
+		src:   &testpb.TestAllTypes{RepeatedBytes: [][]byte{nil}},
+		check: func(m proto.Message) bool {
+			return reflect.DeepEqual(m.(*testpb.TestAllTypes).RepeatedBytes, [][]byte{{}})
+		},
+	}, {
+		label: "ListWithEmptyBytes",
+		dst:   &testpb.TestAllTypes{RepeatedBytes: nil},
+		src:   &testpb.TestAllTypes{RepeatedBytes: [][]byte{{}}},
+		check: func(m proto.Message) bool {
+			return reflect.DeepEqual(m.(*testpb.TestAllTypes).RepeatedBytes, [][]byte{{}})
+		},
+	}, {
+		label: "ListWithNilMessage",
+		dst:   &testpb.TestAllTypes{RepeatedNestedMessage: nil},
+		src:   &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{nil}},
+		check: func(m proto.Message) bool {
+			return m.(*testpb.TestAllTypes).RepeatedNestedMessage[0] != nil
+		},
+	}, {
+		label: "EmptyMap",
+		dst:   &testpb.TestAllTypes{MapStringString: nil},
+		src:   &testpb.TestAllTypes{MapStringString: map[string]string{}},
+		check: func(m proto.Message) bool {
+			return m.(*testpb.TestAllTypes).MapStringString == nil
+		},
+	}, {
+		label: "MapWithNilBytes",
+		dst:   &testpb.TestAllTypes{MapStringBytes: nil},
+		src:   &testpb.TestAllTypes{MapStringBytes: map[string][]byte{"k": nil}},
+		check: func(m proto.Message) bool {
+			return reflect.DeepEqual(m.(*testpb.TestAllTypes).MapStringBytes, map[string][]byte{"k": {}})
+		},
+	}, {
+		label: "MapWithEmptyBytes",
+		dst:   &testpb.TestAllTypes{MapStringBytes: nil},
+		src:   &testpb.TestAllTypes{MapStringBytes: map[string][]byte{"k": {}}},
+		check: func(m proto.Message) bool {
+			return reflect.DeepEqual(m.(*testpb.TestAllTypes).MapStringBytes, map[string][]byte{"k": {}})
+		},
+	}, {
+		label: "MapWithNilMessage",
+		dst:   &testpb.TestAllTypes{MapStringNestedMessage: nil},
+		src:   &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": nil}},
+		check: func(m proto.Message) bool {
+			return m.(*testpb.TestAllTypes).MapStringNestedMessage["k"] != nil
+		},
+	}, {
+		label: "OneofWithTypedNilWrapper",
+		dst:   &testpb.TestAllTypes{OneofField: nil},
+		src:   &testpb.TestAllTypes{OneofField: (*testpb.TestAllTypes_OneofNestedMessage)(nil)},
+		check: func(m proto.Message) bool {
+			return m.(*testpb.TestAllTypes).OneofField == nil
+		},
+	}, {
+		label: "OneofWithNilMessage",
+		dst:   &testpb.TestAllTypes{OneofField: nil},
+		src:   &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofNestedMessage{OneofNestedMessage: nil}},
+		check: func(m proto.Message) bool {
+			return m.(*testpb.TestAllTypes).OneofField.(*testpb.TestAllTypes_OneofNestedMessage).OneofNestedMessage != nil
+		},
+		// TODO: extension, nil message
+		// TODO: repeated extension, nil
+		// TODO: extension bytes
+		// TODO: repeated extension, nil message
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.label, func(t *testing.T) {
+			var pass bool
+			func() {
+				defer func() { recover() }()
+				proto.Merge(tt.dst, tt.src)
+				pass = tt.check(tt.dst)
+			}()
+			if !pass {
+				t.Error("check failed")
 			}
 		})
 	}
