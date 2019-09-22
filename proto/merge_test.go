@@ -401,3 +401,41 @@ func TestMergeRace(t *testing.T) {
 		}(src)
 	}
 }
+
+func TestMergeSelf(t *testing.T) {
+	got := &testpb.TestAllTypes{
+		OptionalInt32:   proto.Int32(1),
+		OptionalString:  proto.String("hello"),
+		RepeatedInt32:   []int32{2, 3, 4},
+		RepeatedString:  []string{"goodbye"},
+		MapStringString: map[string]string{"key": "value"},
+		OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
+			A: proto.Int32(5),
+		},
+	}
+	got.ProtoReflect().SetUnknown(pack.Message{
+		pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
+	}.Marshal())
+	proto.Merge(got, got)
+
+	// The main impact of merging to self is that repeated fields and
+	// unknown fields are doubled.
+	want := &testpb.TestAllTypes{
+		OptionalInt32:   proto.Int32(1),
+		OptionalString:  proto.String("hello"),
+		RepeatedInt32:   []int32{2, 3, 4, 2, 3, 4},
+		RepeatedString:  []string{"goodbye", "goodbye"},
+		MapStringString: map[string]string{"key": "value"},
+		OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
+			A: proto.Int32(5),
+		},
+	}
+	want.ProtoReflect().SetUnknown(pack.Message{
+		pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
+		pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
+	}.Marshal())
+
+	if !proto.Equal(got, want) {
+		t.Errorf("Equal mismatch:\ngot  %v\nwant %v", got, want)
+	}
+}

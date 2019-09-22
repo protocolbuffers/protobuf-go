@@ -45,7 +45,7 @@ func mergeMessage(dst, src protoreflect.Message) {
 }
 
 func mergeList(dst, src protoreflect.List, fd protoreflect.FieldDescriptor) {
-	for i := 0; i < src.Len(); i++ {
+	for i, n := 0, src.Len(); i < n; i++ {
 		switch v := src.Get(i); {
 		case fd.Message() != nil:
 			dstv := dst.NewElement()
