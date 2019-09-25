@@ -16,6 +16,7 @@ import (
 	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 // legacyWrapMessage wraps v as a protoreflect.ProtoMessage,
@@ -41,6 +42,34 @@ func legacyLoadMessageInfo(t reflect.Type, name pref.FullName) *MessageInfo {
 		Desc:          legacyLoadMessageDesc(t, name),
 		GoReflectType: t,
 	}
+
+	v := reflect.Zero(t).Interface()
+	type marshaler interface {
+		Marshal() ([]byte, error)
+	}
+	if _, ok := v.(marshaler); ok {
+		mi.methods.MarshalAppend = func(b []byte, m pref.Message, _ piface.MarshalOptions) ([]byte, error) {
+			out, err := m.Interface().(unwrapper).protoUnwrap().(marshaler).Marshal()
+			if b != nil {
+				out = append(b, out...)
+			}
+			return out, err
+		}
+		mi.methods.Size = func(m pref.Message, _ piface.MarshalOptions) int {
+			// This is not at all efficient.
+			b, _ := m.Interface().(unwrapper).protoUnwrap().(marshaler).Marshal()
+			return len(b)
+		}
+	}
+	type unmarshaler interface {
+		Unmarshal([]byte) error
+	}
+	if _, ok := v.(unmarshaler); ok {
+		mi.methods.Unmarshal = func(b []byte, m pref.Message, _ piface.UnmarshalOptions) error {
+			return m.Interface().(unwrapper).protoUnwrap().(unmarshaler).Unmarshal(b)
+		}
+	}
+
 	if mi, ok := legacyMessageTypeCache.LoadOrStore(t, mi); ok {
 		return mi.(*MessageInfo)
 	}

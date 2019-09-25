@@ -128,11 +128,16 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 	}
 
 	mi.needsInitCheck = needsInitCheck(mi.Desc)
-	mi.methods = piface.Methods{
-		Flags:         piface.SupportMarshalDeterministic | piface.SupportUnmarshalDiscardUnknown,
-		MarshalAppend: mi.marshalAppend,
-		Unmarshal:     mi.unmarshal,
-		Size:          mi.size,
-		IsInitialized: mi.isInitialized,
+	if mi.methods.MarshalAppend == nil && mi.methods.Size == nil {
+		mi.methods.Flags |= piface.SupportMarshalDeterministic
+		mi.methods.MarshalAppend = mi.marshalAppend
+		mi.methods.Size = mi.size
+	}
+	if mi.methods.Unmarshal == nil {
+		mi.methods.Flags |= piface.SupportUnmarshalDiscardUnknown
+		mi.methods.Unmarshal = mi.unmarshal
+	}
+	if mi.methods.IsInitialized == nil {
+		mi.methods.IsInitialized = mi.isInitialized
 	}
 }

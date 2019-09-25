@@ -88,7 +88,7 @@ func (o MarshalOptions) Marshal(m Message) ([]byte, error) {
 func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
 	out, err := o.marshalMessage(b, m.ProtoReflect())
 	if err != nil {
-		return nil, err
+		return out, err
 	}
 	if o.AllowPartial {
 		return out, nil
