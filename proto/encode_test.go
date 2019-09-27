@@ -155,3 +155,30 @@ func TestEncodeOneofNilWrapper(t *testing.T) {
 		t.Errorf("Marshal return non-empty, want empty")
 	}
 }
+
+func TestMarshalAppendAllocations(t *testing.T) {
+	m := &test3pb.TestAllTypes{OptionalInt32: 1}
+	size := proto.Size(m)
+	const count = 1000
+	b := make([]byte, size)
+	// AllocsPerRun returns an integral value.
+	marshalAllocs := testing.AllocsPerRun(count, func() {
+		_, err := proto.MarshalOptions{}.MarshalAppend(b[:0], m)
+		if err != nil {
+			t.Fatal(err)
+		}
+	})
+	b = nil
+	marshalAppendAllocs := testing.AllocsPerRun(count, func() {
+		var err error
+		b, err = proto.MarshalOptions{}.MarshalAppend(b, m)
+		if err != nil {
+			t.Fatal(err)
+		}
+	})
+	if marshalAllocs != marshalAppendAllocs {
+		t.Errorf("%v allocs/op when writing to a preallocated buffer", marshalAllocs)
+		t.Errorf("%v allocs/op when repeatedly appending to a slice", marshalAppendAllocs)
+		t.Errorf("expect amortized allocs/op to be identical")
+	}
+}

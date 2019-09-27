@@ -101,7 +101,7 @@ func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte
 		!(o.Deterministic && methods.Flags&protoiface.SupportMarshalDeterministic == 0) {
 		sz := methods.Size(m, protoiface.MarshalOptions(o))
 		if cap(b) < len(b)+sz {
-			x := make([]byte, len(b), len(b)+sz)
+			x := make([]byte, len(b), growcap(cap(b), len(b)+sz))
 			copy(x, b)
 			b = x
 		}
@@ -109,6 +109,32 @@ func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte
 		return methods.MarshalAppend(b, m, protoiface.MarshalOptions(o))
 	}
 	return o.marshalMessageSlow(b, m)
+}
+
+// growcap scales up the capacity of a slice.
+//
+// Given a slice with a current capacity of oldcap and a desired
+// capacity of wantcap, growcap returns a new capacity >= wantcap.
+//
+// The algorithm is mostly identical to the one used by append as of Go 1.14.
+func growcap(oldcap, wantcap int) (newcap int) {
+	if wantcap > oldcap*2 {
+		newcap = wantcap
+	} else if oldcap < 1024 {
+		// The Go 1.14 runtime takes this case when len(s) < 1024,
+		// not when cap(s) < 1024. The difference doesn't seem
+		// significant here.
+		newcap = oldcap * 2
+	} else {
+		newcap = oldcap
+		for 0 < newcap && newcap < wantcap {
+			newcap += newcap / 4
+		}
+		if newcap <= 0 {
+			newcap = wantcap
+		}
+	}
+	return newcap
 }
 
 func (o MarshalOptions) marshalMessageSlow(b []byte, m protoreflect.Message) ([]byte, error) {
