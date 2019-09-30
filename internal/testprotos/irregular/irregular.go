@@ -116,3 +116,11 @@ const descriptorText = `
     go_package: "google.golang.org/protobuf/internal/testprotos/irregular"
   }
 `
+
+type AberrantMessage int
+
+func (m AberrantMessage) ProtoMessage()            {}
+func (m AberrantMessage) Reset()                   {}
+func (m AberrantMessage) String() string           { return "" }
+func (m AberrantMessage) Marshal() ([]byte, error) { return nil, nil }
+func (m AberrantMessage) Unmarshal([]byte) error   { return nil }

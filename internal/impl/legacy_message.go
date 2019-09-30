@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/protobuf/internal/descopts"
 	ptag "google.golang.org/protobuf/internal/encoding/tag"
+	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -22,7 +23,11 @@ import (
 // legacyWrapMessage wraps v as a protoreflect.ProtoMessage,
 // where v must be a *struct kind and not implement the v2 API already.
 func legacyWrapMessage(v reflect.Value) pref.ProtoMessage {
-	mt := legacyLoadMessageInfo(v.Type(), "")
+	typ := v.Type()
+	if typ.Kind() != reflect.Ptr || typ.Elem().Kind() != reflect.Struct {
+		return aberrantMessage{v: v}
+	}
+	mt := legacyLoadMessageInfo(typ, "")
 	return mt.MessageOf(v.Interface()).Interface()
 }
 
@@ -44,30 +49,12 @@ func legacyLoadMessageInfo(t reflect.Type, name pref.FullName) *MessageInfo {
 	}
 
 	v := reflect.Zero(t).Interface()
-	type marshaler interface {
-		Marshal() ([]byte, error)
+	if _, ok := v.(legacyMarshaler); ok {
+		mi.methods.MarshalAppend = legacyMarshalAppend
+		mi.methods.Size = legacySize
 	}
-	if _, ok := v.(marshaler); ok {
-		mi.methods.MarshalAppend = func(b []byte, m pref.Message, _ piface.MarshalOptions) ([]byte, error) {
-			out, err := m.Interface().(unwrapper).protoUnwrap().(marshaler).Marshal()
-			if b != nil {
-				out = append(b, out...)
-			}
-			return out, err
-		}
-		mi.methods.Size = func(m pref.Message, _ piface.MarshalOptions) int {
-			// This is not at all efficient.
-			b, _ := m.Interface().(unwrapper).protoUnwrap().(marshaler).Marshal()
-			return len(b)
-		}
-	}
-	type unmarshaler interface {
-		Unmarshal([]byte) error
-	}
-	if _, ok := v.(unmarshaler); ok {
-		mi.methods.Unmarshal = func(b []byte, m pref.Message, _ piface.UnmarshalOptions) error {
-			return m.Interface().(unwrapper).protoUnwrap().(unmarshaler).Unmarshal(b)
-		}
+	if _, ok := v.(legacyUnmarshaler); ok {
+		mi.methods.Unmarshal = legacyUnmarshal
 	}
 
 	if mi, ok := legacyMessageTypeCache.LoadOrStore(t, mi); ok {
@@ -92,7 +79,7 @@ func legacyLoadMessageDesc(t reflect.Type, name pref.FullName) pref.MessageDescr
 	}
 
 	// Slow-path: initialize MessageDescriptor from the raw descriptor.
-	mv := reflect.New(t.Elem()).Interface()
+	mv := reflect.Zero(t).Interface()
 	if _, ok := mv.(pref.ProtoMessage); ok {
 		panic(fmt.Sprintf("%v already implements proto.Message", t))
 	}
@@ -120,7 +107,7 @@ var (
 	aberrantMessageDescCache map[reflect.Type]protoreflect.MessageDescriptor
 )
 
-// aberrantLoadMessageDesc returns an EnumDescriptor derived from the Go type,
+// aberrantLoadMessageDesc returns an MessageDescriptor derived from the Go type,
 // which must not implement protoreflect.ProtoMessage or messageV1.
 //
 // This is a best-effort derivation of the message descriptor using the protobuf
@@ -143,9 +130,13 @@ func aberrantLoadMessageDescReentrant(t reflect.Type, name pref.FullName) pref.M
 	// Cache the MessageDescriptor early on so that we can resolve internal
 	// cyclic references.
 	md := &filedesc.Message{L2: new(filedesc.MessageL2)}
-	md.L0.FullName = aberrantDeriveMessageName(t.Elem(), name)
+	md.L0.FullName = aberrantDeriveMessageName(t, name)
 	md.L0.ParentFile = filedesc.SurrogateProto2
 	aberrantMessageDescCache[t] = md
+
+	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Struct {
+		return md
+	}
 
 	// Try to determine if the message is using proto3 by checking scalars.
 	for i := 0; i < t.Elem().NumField(); i++ {
@@ -222,8 +213,6 @@ func aberrantLoadMessageDescReentrant(t reflect.Type, name pref.FullName) pref.M
 		}
 	}
 
-	// TODO: Use custom Marshal/Unmarshal methods for the fast-path?
-
 	return md
 }
 
@@ -233,12 +222,15 @@ func aberrantDeriveMessageName(t reflect.Type, name pref.FullName) pref.FullName
 	}
 	func() {
 		defer func() { recover() }() // swallow possible nil panics
-		if m, ok := reflect.New(t).Interface().(interface{ XXX_MessageName() string }); ok {
+		if m, ok := reflect.Zero(t).Interface().(interface{ XXX_MessageName() string }); ok {
 			name = pref.FullName(m.XXX_MessageName())
 		}
 	}()
 	if name.IsValid() {
 		return name
+	}
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
 	}
 	return aberrantDeriveFullName(t)
 }
@@ -323,4 +315,126 @@ type placeholderEnumValues struct {
 
 func (placeholderEnumValues) ByNumber(n pref.EnumNumber) pref.EnumValueDescriptor {
 	return filedesc.PlaceholderEnumValue(pref.FullName(fmt.Sprintf("UNKNOWN_%d", n)))
+}
+
+// legacyMarshaler is the proto.Marshaler interface superseded by protoiface.Methoder.
+type legacyMarshaler interface {
+	Marshal() ([]byte, error)
+}
+
+// legacyUnmarshaler is the proto.Unmarshaler interface superseded by protoiface.Methoder.
+type legacyUnmarshaler interface {
+	Unmarshal([]byte) error
+}
+
+var legacyProtoMethods = &piface.Methods{
+	Size:          legacySize,
+	MarshalAppend: legacyMarshalAppend,
+	Unmarshal:     legacyUnmarshal,
+}
+
+func legacySize(m protoreflect.Message, opts piface.MarshalOptions) int {
+	b, _ := legacyMarshalAppend(nil, m, opts)
+	return len(b)
+}
+
+func legacyMarshalAppend(b []byte, m protoreflect.Message, opts piface.MarshalOptions) ([]byte, error) {
+	v := m.(unwrapper).protoUnwrap()
+	marshaler, ok := v.(legacyMarshaler)
+	if !ok {
+		return nil, errors.New("%T does not implement Marshal", v)
+	}
+	out, err := marshaler.Marshal()
+	if b != nil {
+		out = append(b, out...)
+	}
+	return out, err
+}
+
+func legacyUnmarshal(b []byte, m protoreflect.Message, opts piface.UnmarshalOptions) error {
+	v := m.(unwrapper).protoUnwrap()
+	unmarshaler, ok := v.(legacyUnmarshaler)
+	if !ok {
+		return errors.New("%T does not implement Marshal", v)
+	}
+	return unmarshaler.Unmarshal(b)
+}
+
+// aberrantMessageType implements MessageType for all types other than pointer-to-struct.
+type aberrantMessageType struct {
+	t reflect.Type
+}
+
+func (mt aberrantMessageType) New() pref.Message {
+	return aberrantMessage{reflect.Zero(mt.t)}
+}
+func (mt aberrantMessageType) Zero() pref.Message {
+	return aberrantMessage{reflect.Zero(mt.t)}
+}
+func (mt aberrantMessageType) GoType() reflect.Type {
+	return mt.t
+}
+func (mt aberrantMessageType) Descriptor() pref.MessageDescriptor {
+	return LegacyLoadMessageDesc(mt.t)
+}
+
+// aberrantMessage implements Message for all types other than pointer-to-struct.
+//
+// When the underlying type implements legacyMarshaler or legacyUnmarshaler,
+// the aberrant Message can be marshaled or unmarshaled. Otherwise, there is
+// not much that can be done with values of this type.
+type aberrantMessage struct {
+	v reflect.Value
+}
+
+func (m aberrantMessage) ProtoReflect() pref.Message {
+	return m
+}
+
+func (m aberrantMessage) Descriptor() pref.MessageDescriptor {
+	return LegacyLoadMessageDesc(m.v.Type())
+}
+func (m aberrantMessage) Type() pref.MessageType {
+	return aberrantMessageType{m.v.Type()}
+}
+func (m aberrantMessage) New() pref.Message {
+	return aberrantMessage{reflect.Zero(m.v.Type())}
+}
+func (m aberrantMessage) Interface() pref.ProtoMessage {
+	return m
+}
+func (m aberrantMessage) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
+}
+func (m aberrantMessage) Has(pref.FieldDescriptor) bool {
+	panic("invalid field descriptor")
+}
+func (m aberrantMessage) Clear(pref.FieldDescriptor) {
+	panic("invalid field descriptor")
+}
+func (m aberrantMessage) Get(pref.FieldDescriptor) pref.Value {
+	panic("invalid field descriptor")
+}
+func (m aberrantMessage) Set(pref.FieldDescriptor, pref.Value) {
+	panic("invalid field descriptor")
+}
+func (m aberrantMessage) Mutable(pref.FieldDescriptor) pref.Value {
+	panic("invalid field descriptor")
+}
+func (m aberrantMessage) NewField(pref.FieldDescriptor) pref.Value {
+	panic("invalid field descriptor")
+}
+func (m aberrantMessage) WhichOneof(pref.OneofDescriptor) pref.FieldDescriptor {
+	panic("invalid oneof descriptor")
+}
+func (m aberrantMessage) GetUnknown() pref.RawFields {
+	return nil
+}
+func (m aberrantMessage) SetUnknown(pref.RawFields) {
+	// SetUnknown discards its input on messages which don't support unknown field storage.
+}
+func (m aberrantMessage) ProtoMethods() *piface.Methods {
+	return legacyProtoMethods
+}
+func (m aberrantMessage) protoUnwrap() interface{} {
+	return m.v.Interface()
 }

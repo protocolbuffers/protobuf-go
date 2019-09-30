@@ -21,5 +21,11 @@ message Message {
   map<string,IrregularMessage> map_message = 4;
   oneof union {
     IrregularMessage oneof_message = 5;
+    AberrantMessage oneof_aberrant_message = 6;
   }
+
+  optional AberrantMessage optional_aberrant_message = 7;
+  repeated AberrantMessage repeated_aberrant_message = 8;
+  required AberrantMessage required_aberrant_message = 9;
+  map<string,AberrantMessage> map_aberrant_message = 10;
 }

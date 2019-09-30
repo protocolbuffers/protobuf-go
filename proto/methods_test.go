@@ -39,7 +39,7 @@ func (m *selfMarshaler) Unmarshal(b []byte) error {
 }
 
 func TestLegacyMarshalMethod(t *testing.T) {
-	for _, test := range []*selfMarshaler{
+	for _, test := range []selfMarshaler{
 		{bytes: []byte("marshal")},
 		{bytes: []byte("marshal"), err: errors.New("some error")},
 	} {
