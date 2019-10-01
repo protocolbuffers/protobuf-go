@@ -122,7 +122,7 @@ func (p pointer) StringPtr() **string      { return p.v.Interface().(**string) }
 func (p pointer) StringSlice() *[]string   { return p.v.Interface().(*[]string) }
 func (p pointer) Bytes() *[]byte           { return p.v.Interface().(*[]byte) }
 func (p pointer) BytesSlice() *[][]byte    { return p.v.Interface().(*[][]byte) }
-func (p pointer) WeakFields() *WeakFields  { return p.v.Interface().(*WeakFields) }
+func (p pointer) WeakFields() *weakFields  { return (*weakFields)(p.v.Interface().(*WeakFields)) }
 func (p pointer) Extensions() *map[int32]ExtensionField {
 	return p.v.Interface().(*map[int32]ExtensionField)
 }

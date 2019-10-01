@@ -5,6 +5,7 @@
 package impl
 
 import (
+	"fmt"
 	"reflect"
 	"sync"
 
@@ -12,7 +13,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
-	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 type errInvalidUTF8 struct{}
@@ -91,47 +91,49 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 		})
 	}
 
-	num := int32(fd.Number())
+	num := fd.Number()
 	return pointerCoderFuncs{
 		size: func(p pointer, tagsize int, opts marshalOptions) int {
-			fs := p.WeakFields()
-			m, ok := (*fs)[num]
+			m, ok := p.WeakFields().get(num)
 			if !ok {
 				return 0
 			}
-			return sizeMessage(m.(proto.Message), tagsize, opts)
+			lazyInit()
+			if messageType == nil {
+				panic(fmt.Sprintf("weak message %v is not linked in", fd.Message().FullName()))
+			}
+			return sizeMessage(m, tagsize, opts)
 		},
 		marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-			fs := p.WeakFields()
-			m, ok := (*fs)[num]
+			m, ok := p.WeakFields().get(num)
 			if !ok {
 				return b, nil
 			}
-			return appendMessage(b, m.(proto.Message), wiretag, opts)
+			lazyInit()
+			if messageType == nil {
+				panic(fmt.Sprintf("weak message %v is not linked in", fd.Message().FullName()))
+			}
+			return appendMessage(b, m, wiretag, opts)
 		},
 		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
 			fs := p.WeakFields()
-			m, ok := (*fs)[num]
+			m, ok := fs.get(num)
 			if !ok {
 				lazyInit()
 				if messageType == nil {
 					return 0, errUnknown
 				}
-				m = messageType.New().Interface().(piface.MessageV1)
-				if *fs == nil {
-					*fs = make(WeakFields)
-				}
-				(*fs)[num] = m
+				m = messageType.New().Interface()
+				fs.set(num, m)
 			}
-			return consumeMessage(b, m.(proto.Message), wtyp, opts)
+			return consumeMessage(b, m, wtyp, opts)
 		},
 		isInit: func(p pointer) error {
-			fs := p.WeakFields()
-			m, ok := (*fs)[num]
+			m, ok := p.WeakFields().get(num)
 			if !ok {
 				return nil
 			}
-			return proto.IsInitialized(m.(proto.Message))
+			return proto.IsInitialized(m)
 		},
 	}
 }

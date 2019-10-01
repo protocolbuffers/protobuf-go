@@ -13,7 +13,6 @@ import (
 	"google.golang.org/protobuf/internal/flags"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
-	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 type fieldInfo struct {
@@ -306,32 +305,29 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 		})
 	}
 
-	num := int32(fd.Number())
+	num := fd.Number()
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
 			if p.IsNil() {
 				return false
 			}
-			fs := p.Apply(weakOffset).WeakFields()
-			_, ok := (*fs)[num]
+			_, ok := p.Apply(weakOffset).WeakFields().get(num)
 			return ok
 		},
 		clear: func(p pointer) {
-			fs := p.Apply(weakOffset).WeakFields()
-			delete(*fs, num)
+			p.Apply(weakOffset).WeakFields().clear(num)
 		},
 		get: func(p pointer) pref.Value {
 			lazyInit()
 			if p.IsNil() {
 				return pref.ValueOfMessage(messageType.Zero())
 			}
-			fs := p.Apply(weakOffset).WeakFields()
-			m, ok := (*fs)[num]
+			m, ok := p.Apply(weakOffset).WeakFields().get(num)
 			if !ok {
 				return pref.ValueOfMessage(messageType.Zero())
 			}
-			return pref.ValueOfMessage(m.(pref.ProtoMessage).ProtoReflect())
+			return pref.ValueOfMessage(m.ProtoReflect())
 		},
 		set: func(p pointer, v pref.Value) {
 			lazyInit()
@@ -339,24 +335,17 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			if m.Descriptor() != messageType.Descriptor() {
 				panic("mismatching message descriptor")
 			}
-			fs := p.Apply(weakOffset).WeakFields()
-			if *fs == nil {
-				*fs = make(WeakFields)
-			}
-			(*fs)[num] = m.Interface().(piface.MessageV1)
+			p.Apply(weakOffset).WeakFields().set(num, m.Interface())
 		},
 		mutable: func(p pointer) pref.Value {
 			lazyInit()
 			fs := p.Apply(weakOffset).WeakFields()
-			if *fs == nil {
-				*fs = make(WeakFields)
-			}
-			m, ok := (*fs)[num]
+			m, ok := fs.get(num)
 			if !ok {
-				m = messageType.New().Interface().(piface.MessageV1)
-				(*fs)[num] = m
+				m = messageType.New().Interface()
+				fs.set(num, m)
 			}
-			return pref.ValueOfMessage(m.(pref.ProtoMessage).ProtoReflect())
+			return pref.ValueOfMessage(m.ProtoReflect())
 		},
 		newMessage: func() pref.Message {
 			lazyInit()

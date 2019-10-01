@@ -97,8 +97,8 @@ func (Export) CompressGZIP(in []byte) (out []byte) {
 // It panics if the message is not linked into the binary.
 func (Export) WeakNil(s pref.FullName) piface.MessageV1 {
 	mt, err := protoregistry.GlobalTypes.FindMessageByName(s)
-	if err == nil {
+	if err != nil {
 		panic(fmt.Sprintf("weak message %v is not linked in", s))
 	}
-	return reflect.Zero(mt.GoType()).Interface().(piface.MessageV1)
+	return mt.Zero().Interface().(piface.MessageV1)
 }
