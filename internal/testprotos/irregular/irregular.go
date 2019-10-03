@@ -5,8 +5,6 @@
 package irregular
 
 import (
-	"reflect"
-
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/reflect/protodesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -27,7 +25,6 @@ func (m *message) Descriptor() pref.MessageDescriptor { return fileDesc.Messages
 func (m *message) Type() pref.MessageType             { return m }
 func (m *message) New() pref.Message                  { return &message{} }
 func (m *message) Zero() pref.Message                 { return (*message)(nil) }
-func (m *message) GoType() reflect.Type               { return reflect.TypeOf(&message{}) }
 func (m *message) Interface() pref.ProtoMessage       { return (*IrregularMessage)(m) }
 
 var fieldDescS = fileDesc.Messages().Get(0).Fields().Get(0)

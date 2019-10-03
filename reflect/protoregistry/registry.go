@@ -18,7 +18,6 @@ package protoregistry
 import (
 	"fmt"
 	"log"
-	"reflect"
 	"strings"
 	"sync"
 
@@ -361,17 +360,8 @@ func rangeTopLevelDescriptors(fd protoreflect.FileDescriptor, f func(protoreflec
 	}
 }
 
-// Type is an interface satisfied by protoreflect.EnumType,
-// protoreflect.MessageType, or protoreflect.ExtensionType.
-type Type interface {
-	GoType() reflect.Type
-}
-
-var (
-	_ Type = protoreflect.EnumType(nil)
-	_ Type = protoreflect.MessageType(nil)
-	_ Type = protoreflect.ExtensionType(nil)
-)
+// A Type is a protoreflect.EnumType, protoreflect.MessageType, or protoreflect.ExtensionType.
+type Type interface{}
 
 // MessageTypeResolver is an interface for looking up messages.
 //

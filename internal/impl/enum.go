@@ -18,5 +18,4 @@ type EnumInfo struct {
 func (t *EnumInfo) New(n pref.EnumNumber) pref.Enum {
 	return reflect.ValueOf(n).Convert(t.GoReflectType).Interface().(pref.Enum)
 }
-func (t *EnumInfo) GoType() reflect.Type            { return t.GoReflectType }
 func (t *EnumInfo) Descriptor() pref.EnumDescriptor { return t.Desc }

@@ -46,16 +46,12 @@ type ExtensionInfo struct {
 	// Deprecated: Use the ExtendedType method instead.
 	ExtendedType piface.MessageV1
 
-	// ExtensionType is zero value of the extension type.
+	// ExtensionType is the zero value of the extension type.
 	//
-	// For historical reasons, reflect.TypeOf(ExtensionType) and Type.GoType
-	// may not be identical:
-	//	* for scalars (except []byte), where ExtensionType uses *T,
-	//	while Type.GoType uses T.
-	//	* for repeated fields, where ExtensionType uses []T,
-	//	while Type.GoType uses *[]T.
+	// For historical reasons, reflect.TypeOf(ExtensionType) and the
+	// type returned by InterfaceOf may not be identical.
 	//
-	// Deprecated: Use the GoType method instead.
+	// Deprecated: Use InterfaceOf(xt.Zero()) instead.
 	ExtensionType interface{}
 
 	// Field is the field number of the extension.
@@ -109,10 +105,6 @@ func (xi *ExtensionInfo) IsValidValue(v pref.Value) bool {
 }
 func (xi *ExtensionInfo) IsValidInterface(v interface{}) bool {
 	return xi.lazyInit().IsValidGo(reflect.ValueOf(v))
-}
-func (xi *ExtensionInfo) GoType() reflect.Type {
-	xi.lazyInit()
-	return xi.goType
 }
 func (xi *ExtensionInfo) TypeDescriptor() pref.ExtensionTypeDescriptor {
 	if atomic.LoadUint32(&xi.init) < extensionInfoDescInit {

@@ -539,28 +539,32 @@ func TestTypes(t *testing.T) {
 		}
 	})
 
-	fullName := func(t preg.Type) pref.FullName {
-		switch t := t.(type) {
-		case pref.EnumType:
-			return t.Descriptor().FullName()
-		case pref.MessageType:
-			return t.Descriptor().FullName()
-		case pref.ExtensionType:
-			return t.TypeDescriptor().FullName()
-		default:
-			panic("invalid type")
-		}
+	sortTypes := cmp.Options{
+		cmpopts.SortSlices(func(x, y pref.EnumType) bool {
+			return x.Descriptor().FullName() < y.Descriptor().FullName()
+		}),
+		cmpopts.SortSlices(func(x, y pref.MessageType) bool {
+			return x.Descriptor().FullName() < y.Descriptor().FullName()
+		}),
+		cmpopts.SortSlices(func(x, y pref.ExtensionType) bool {
+			return x.TypeDescriptor().FullName() < y.TypeDescriptor().FullName()
+		}),
 	}
-	sortTypes := cmpopts.SortSlices(func(x, y preg.Type) bool {
-		return fullName(x) < fullName(y)
-	})
-	compare := cmp.Comparer(func(x, y preg.Type) bool {
-		return x == y
-	})
+	compare := cmp.Options{
+		cmp.Comparer(func(x, y pref.EnumType) bool {
+			return x == y
+		}),
+		cmp.Comparer(func(x, y pref.ExtensionType) bool {
+			return x == y
+		}),
+		cmp.Comparer(func(x, y pref.MessageType) bool {
+			return x == y
+		}),
+	}
 
 	t.Run("RangeEnums", func(t *testing.T) {
-		want := []preg.Type{et1}
-		var got []preg.Type
+		want := []pref.EnumType{et1}
+		var got []pref.EnumType
 		var gotCnt int
 		wantCnt := registry.NumEnums()
 		registry.RangeEnums(func(et pref.EnumType) bool {
@@ -578,8 +582,8 @@ func TestTypes(t *testing.T) {
 	})
 
 	t.Run("RangeMessages", func(t *testing.T) {
-		want := []preg.Type{mt1}
-		var got []preg.Type
+		want := []pref.MessageType{mt1}
+		var got []pref.MessageType
 		var gotCnt int
 		wantCnt := registry.NumMessages()
 		registry.RangeMessages(func(mt pref.MessageType) bool {
@@ -597,8 +601,8 @@ func TestTypes(t *testing.T) {
 	})
 
 	t.Run("RangeExtensions", func(t *testing.T) {
-		want := []preg.Type{xt1, xt2}
-		var got []preg.Type
+		want := []pref.ExtensionType{xt1, xt2}
+		var got []pref.ExtensionType
 		var gotCnt int
 		wantCnt := registry.NumExtensions()
 		registry.RangeExtensions(func(xt pref.ExtensionType) bool {
@@ -616,8 +620,8 @@ func TestTypes(t *testing.T) {
 	})
 
 	t.Run("RangeExtensionsByMessage", func(t *testing.T) {
-		want := []preg.Type{xt1, xt2}
-		var got []preg.Type
+		want := []pref.ExtensionType{xt1, xt2}
+		var got []pref.ExtensionType
 		var gotCnt int
 		wantCnt := registry.NumExtensionsByMessage("testprotos.Message1")
 		registry.RangeExtensionsByMessage("testprotos.Message1", func(xt pref.ExtensionType) bool {

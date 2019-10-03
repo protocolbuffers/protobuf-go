@@ -4,8 +4,6 @@
 
 package protoreflect
 
-import "reflect"
-
 // Descriptor provides a set of accessors that are common to every descriptor.
 // Each descriptor type wraps the equivalent google.protobuf.XXXDescriptorProto,
 // but provides efficient lookup and immutability.
@@ -235,11 +233,6 @@ type MessageType interface {
 	// Zero returns an immutable empty message.
 	Zero() Message
 
-	// GoType returns the Go type of the allocated message.
-	//
-	// Invariant: t.GoType() == reflect.TypeOf(t.New().Interface())
-	GoType() reflect.Type
-
 	// Descriptor returns the message descriptor.
 	//
 	// Invariant: t.Descriptor() == t.New().Descriptor()
@@ -455,12 +448,6 @@ type ExtensionType interface {
 	// For composite types, this returns an empty, immutable message, list, or map.
 	Zero() Value
 
-	// GoType returns the Go type of the field value.
-	//
-	// Invariants:
-	//	t.GoType() == reflect.TypeOf(t.InterfaceOf(t.New()))
-	GoType() reflect.Type
-
 	// TypeDescriptor returns the extension type descriptor.
 	TypeDescriptor() ExtensionTypeDescriptor
 
@@ -516,11 +503,6 @@ type isEnumDescriptor interface{ ProtoType(EnumDescriptor) }
 type EnumType interface {
 	// New returns an instance of this enum type with its value set to n.
 	New(n EnumNumber) Enum
-
-	// GoType returns the Go type of the enum value.
-	//
-	// Invariants: t.GoType() == reflect.TypeOf(t.New(0))
-	GoType() reflect.Type
 
 	// Descriptor returns the enum descriptor.
 	//

@@ -198,9 +198,6 @@ fieldLoop:
 	return si
 }
 
-func (mi *MessageInfo) GoType() reflect.Type {
-	return mi.GoReflectType
-}
 func (mi *MessageInfo) New() protoreflect.Message {
 	return mi.MessageOf(reflect.New(mi.GoReflectType.Elem()).Interface())
 }

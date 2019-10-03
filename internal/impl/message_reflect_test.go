@@ -940,7 +940,6 @@ func (e EnumProto2) Descriptor() pref.EnumDescriptor { return enumProto2Desc }
 func (e EnumProto2) Type() pref.EnumType             { return e }
 func (e EnumProto2) Enum() *EnumProto2               { return &e }
 func (e EnumProto2) Number() pref.EnumNumber         { return pref.EnumNumber(e) }
-func (t EnumProto2) GoType() reflect.Type            { return reflect.TypeOf(t) }
 func (t EnumProto2) New(n pref.EnumNumber) pref.Enum { return EnumProto2(n) }
 
 type EnumProto3 int32
@@ -954,7 +953,6 @@ func (e EnumProto3) Descriptor() pref.EnumDescriptor { return enumProto3Desc }
 func (e EnumProto3) Type() pref.EnumType             { return e }
 func (e EnumProto3) Enum() *EnumProto3               { return &e }
 func (e EnumProto3) Number() pref.EnumNumber         { return pref.EnumNumber(e) }
-func (t EnumProto3) GoType() reflect.Type            { return reflect.TypeOf(t) }
 func (t EnumProto3) New(n pref.EnumNumber) pref.Enum { return EnumProto3(n) }
 
 type EnumMessages struct {

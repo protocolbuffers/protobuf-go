@@ -76,9 +76,6 @@ func (t *legacyEnumType) New(n pref.EnumNumber) pref.Enum {
 	t.m.Store(n, e)
 	return e
 }
-func (t *legacyEnumType) GoType() reflect.Type {
-	return t.goType
-}
 func (t *legacyEnumType) Descriptor() pref.EnumDescriptor {
 	return t.desc
 }

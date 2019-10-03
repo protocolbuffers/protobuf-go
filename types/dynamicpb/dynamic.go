@@ -7,7 +7,6 @@ package dynamicpb
 
 import (
 	"math"
-	"reflect"
 
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -285,7 +284,6 @@ func NewMessageType(desc pref.MessageDescriptor) pref.MessageType {
 
 func (mt messageType) New() pref.Message                  { return NewMessage(mt.desc) }
 func (mt messageType) Zero() pref.Message                 { return NewMessage(mt.desc) }
-func (mt messageType) GoType() reflect.Type               { return reflect.TypeOf((*Message)(nil)) }
 func (mt messageType) Descriptor() pref.MessageDescriptor { return mt.desc }
 
 type emptyList struct {
@@ -557,10 +555,6 @@ func (xt extensionType) Zero() pref.Value {
 	default:
 		return xt.desc.Default()
 	}
-}
-
-func (xt extensionType) GoType() reflect.Type {
-	return reflect.TypeOf(xt.InterfaceOf(xt.New()))
 }
 
 func (xt extensionType) TypeDescriptor() pref.ExtensionTypeDescriptor {

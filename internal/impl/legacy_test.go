@@ -473,7 +473,6 @@ func TestLegacyExtensionConvert(t *testing.T) {
 				xt := xt
 				go func() { xt.New() }()
 				go func() { xt.Zero() }()
-				go func() { xt.GoType() }()
 				go func() { xt.TypeDescriptor() }()
 			}
 
@@ -527,7 +526,6 @@ func TestLegacyExtensionConvert(t *testing.T) {
 				cmp.Transformer("", func(xt pref.ExtensionType) map[string]interface{} {
 					return map[string]interface{}{
 						"Descriptor": xt.TypeDescriptor(),
-						"GoType":     xt.GoType(),
 					}
 				}),
 				cmp.Transformer("", func(v pref.Value) interface{} {
