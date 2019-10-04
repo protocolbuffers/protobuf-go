@@ -12,8 +12,8 @@ github.com/golang/protobuf v1.2.1-0.20190820204156-2da1b93405dd h1:KtPU12Q37ryZW
 github.com/golang/protobuf v1.2.1-0.20190820204156-2da1b93405dd/go.mod h1:x87I3ou7ehf/yR6iQ88MkyDogdxXN04TELJ7HVy7V7I=
 github.com/golang/protobuf v1.2.1-0.20190820213554-ae1d65bc5435 h1:mh1ym3CXIEzWTZlfDucUHHIbroKZ8ri4E3dbxu80las=
 github.com/golang/protobuf v1.2.1-0.20190820213554-ae1d65bc5435/go.mod h1:k7dGkiTZ3rjVDhKSpGt+x1zDzAePJk4jdhoBwIkQgBo=
-github.com/golang/protobuf v1.2.1-0.20190828184314-28cdcb54310f h1:S72Y7P/ygIGdj6ZTtWtBDYKMEHudzFg0KqWXGgQ/U4I=
-github.com/golang/protobuf v1.2.1-0.20190828184314-28cdcb54310f/go.mod h1:o4el5ABfDjqFlwwvAq2OIgAPeNXQYUkhtrjNPXy6T6I=
+github.com/golang/protobuf v1.2.1-0.20191004062209-62f67f1ea9df h1:EXfvyTCV8/aeUp9mwwpgEDbIiiRci9e2PRaV0twjhBM=
+github.com/golang/protobuf v1.2.1-0.20191004062209-62f67f1ea9df/go.mod h1:o4el5ABfDjqFlwwvAq2OIgAPeNXQYUkhtrjNPXy6T6I=
 github.com/google/go-cmp v0.3.0 h1:crn/baboCvb5fXaQ0IJ1SGTsTVrWpDsCWC8EGETZijY=
 github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 google.golang.org/protobuf v0.0.0-20190514172829-e89e6244e0e8/go.mod h1:791zQGC15vDqjpmPRn1uGPu5oHy/Jzw/Q1n5JsgIIcY=
