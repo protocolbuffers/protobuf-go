@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/golang/protobuf/proto"
 	cmp "github.com/google/go-cmp/cmp"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
