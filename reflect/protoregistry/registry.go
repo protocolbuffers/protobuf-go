@@ -20,6 +20,7 @@ import (
 	"log"
 	"reflect"
 	"strings"
+	"sync"
 
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -36,6 +37,8 @@ var ignoreConflict = func(d protoreflect.Descriptor, err error) bool {
 		"\n", err)
 	return true
 }
+
+var globalMutex sync.RWMutex
 
 // GlobalFiles is a global registry of file descriptors.
 var GlobalFiles *Files = new(Files)
@@ -87,6 +90,10 @@ func NewFiles(files ...protoreflect.FileDescriptor) *Files {
 //
 // It is permitted for multiple files to have the same file path.
 func (r *Files) Register(files ...protoreflect.FileDescriptor) error {
+	if r == GlobalFiles {
+		globalMutex.Lock()
+		defer globalMutex.Unlock()
+	}
 	if r.descsByName == nil {
 		r.descsByName = map[protoreflect.FullName]interface{}{
 			"": &packageDescriptor{},
@@ -160,6 +167,10 @@ func (r *Files) registerFile(fd protoreflect.FileDescriptor) error {
 func (r *Files) FindDescriptorByName(name protoreflect.FullName) (protoreflect.Descriptor, error) {
 	if r == nil {
 		return nil, NotFound
+	}
+	if r == GlobalFiles {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
 	}
 	prefix := name
 	suffix := nameSuffix("")
@@ -249,6 +260,10 @@ func (r *Files) FindFileByPath(path string) (protoreflect.FileDescriptor, error)
 	if r == nil {
 		return nil, NotFound
 	}
+	if r == GlobalFiles {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	if fd, ok := r.filesByPath[path]; ok {
 		return fd, nil
 	}
@@ -260,6 +275,10 @@ func (r *Files) NumFiles() int {
 	if r == nil {
 		return 0
 	}
+	if r == GlobalFiles {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	return len(r.filesByPath)
 }
 
@@ -268,6 +287,10 @@ func (r *Files) NumFiles() int {
 func (r *Files) RangeFiles(f func(protoreflect.FileDescriptor) bool) {
 	if r == nil {
 		return
+	}
+	if r == GlobalFiles {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
 	}
 	for _, file := range r.filesByPath {
 		if !f(file) {
@@ -281,6 +304,10 @@ func (r *Files) NumFilesByPackage(name protoreflect.FullName) int {
 	if r == nil {
 		return 0
 	}
+	if r == GlobalFiles {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	p, ok := r.descsByName[name].(*packageDescriptor)
 	if !ok {
 		return 0
@@ -293,6 +320,10 @@ func (r *Files) NumFilesByPackage(name protoreflect.FullName) int {
 func (r *Files) RangeFilesByPackage(name protoreflect.FullName, f func(protoreflect.FileDescriptor) bool) {
 	if r == nil {
 		return
+	}
+	if r == GlobalFiles {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
 	}
 	p, ok := r.descsByName[name].(*packageDescriptor)
 	if !ok {
@@ -441,6 +472,10 @@ func NewTypes(typs ...Type) *Types {
 // (e.g., two different types have the same full name),
 // then the first type takes precedence and an error is returned.
 func (r *Types) Register(typs ...Type) error {
+	if r == GlobalTypes {
+		globalMutex.Lock()
+		defer globalMutex.Unlock()
+	}
 	var firstErr error
 typeLoop:
 	for _, typ := range typs {
@@ -525,6 +560,10 @@ func (r *Types) FindEnumByName(enum protoreflect.FullName) (protoreflect.EnumTyp
 	if r == nil {
 		return nil, NotFound
 	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	if v := r.typesByName[enum]; v != nil {
 		if et, _ := v.(protoreflect.EnumType); et != nil {
 			return et, nil
@@ -551,6 +590,10 @@ func (r *Types) FindMessageByURL(url string) (protoreflect.MessageType, error) {
 	if r == nil {
 		return nil, NotFound
 	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	message := protoreflect.FullName(url)
 	if i := strings.LastIndexByte(url, '/'); i >= 0 {
 		message = message[i+len("/"):]
@@ -575,6 +618,10 @@ func (r *Types) FindExtensionByName(field protoreflect.FullName) (protoreflect.E
 	if r == nil {
 		return nil, NotFound
 	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	if v := r.typesByName[field]; v != nil {
 		if xt, _ := v.(protoreflect.ExtensionType); xt != nil {
 			return xt, nil
@@ -592,6 +639,10 @@ func (r *Types) FindExtensionByNumber(message protoreflect.FullName, field proto
 	if r == nil {
 		return nil, NotFound
 	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	if xt, ok := r.extensionsByMessage[message][field]; ok {
 		return xt, nil
 	}
@@ -603,6 +654,10 @@ func (r *Types) NumEnums() int {
 	if r == nil {
 		return 0
 	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	return r.numEnums
 }
 
@@ -611,6 +666,10 @@ func (r *Types) NumEnums() int {
 func (r *Types) RangeEnums(f func(protoreflect.EnumType) bool) {
 	if r == nil {
 		return
+	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
 	}
 	for _, typ := range r.typesByName {
 		if et, ok := typ.(protoreflect.EnumType); ok {
@@ -626,6 +685,10 @@ func (r *Types) NumMessages() int {
 	if r == nil {
 		return 0
 	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	return r.numMessages
 }
 
@@ -634,6 +697,10 @@ func (r *Types) NumMessages() int {
 func (r *Types) RangeMessages(f func(protoreflect.MessageType) bool) {
 	if r == nil {
 		return
+	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
 	}
 	for _, typ := range r.typesByName {
 		if mt, ok := typ.(protoreflect.MessageType); ok {
@@ -649,6 +716,10 @@ func (r *Types) NumExtensions() int {
 	if r == nil {
 		return 0
 	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	return r.numExtensions
 }
 
@@ -657,6 +728,10 @@ func (r *Types) NumExtensions() int {
 func (r *Types) RangeExtensions(f func(protoreflect.ExtensionType) bool) {
 	if r == nil {
 		return
+	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
 	}
 	for _, typ := range r.typesByName {
 		if xt, ok := typ.(protoreflect.ExtensionType); ok {
@@ -673,6 +748,10 @@ func (r *Types) NumExtensionsByMessage(message protoreflect.FullName) int {
 	if r == nil {
 		return 0
 	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
 	return len(r.extensionsByMessage[message])
 }
 
@@ -681,6 +760,10 @@ func (r *Types) NumExtensionsByMessage(message protoreflect.FullName) int {
 func (r *Types) RangeExtensionsByMessage(message protoreflect.FullName, f func(protoreflect.ExtensionType) bool) {
 	if r == nil {
 		return
+	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
 	}
 	for _, xt := range r.extensionsByMessage[message] {
 		if !f(xt) {
