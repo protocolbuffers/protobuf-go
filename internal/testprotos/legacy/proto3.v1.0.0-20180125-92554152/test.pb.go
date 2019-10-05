@@ -13,7 +13,7 @@ It has these top-level messages:
 */
 package proto3_v1_0_0_20180125_92554152
 
-import proto "github.com/golang/protobuf/proto"
+import proto "google.golang.org/protobuf/internal/protolegacy"
 import fmt "fmt"
 import math "math"
 

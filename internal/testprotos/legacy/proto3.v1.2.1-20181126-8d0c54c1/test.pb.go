@@ -5,7 +5,7 @@ package proto3_v1_2_1_20181126_8d0c54c1
 
 import (
 	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
+	proto "google.golang.org/protobuf/internal/protolegacy"
 	math "math"
 )
 

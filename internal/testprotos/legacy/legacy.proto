@@ -15,6 +15,10 @@ option go_package = "google.golang.org/protobuf/internal/testprotos/legacy";
 //
 // The specific version of protoc-gen-go used is encoded in the file path:
 //	$NAME.$VERSION-$COMMIT_DATE-$COMMIT_HASH/test.proto
+//
+// To avoid a dependency on the v1 module, we perform the following
+// import path replacement to all generated .pb.go files:
+//	"github.com/golang/protobuf/proto" => "google.golang.org/protobuf/internal/protolegacy"
 
 // The oldest supported version of protoc-gen-go is 2fc053c5,
 // which finished adding descriptor methods to all protobuf types.

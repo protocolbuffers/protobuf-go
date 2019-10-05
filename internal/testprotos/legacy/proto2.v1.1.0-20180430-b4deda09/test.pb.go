@@ -3,7 +3,7 @@
 
 package proto2_v1_1_0_20180430_b4deda09 // import "google.golang.org/protobuf/internal/testprotos/legacy/proto2.v1.1.0-20180430-b4deda09"
 
-import proto "github.com/golang/protobuf/proto"
+import proto "google.golang.org/protobuf/internal/protolegacy"
 import fmt "fmt"
 import math "math"
 
