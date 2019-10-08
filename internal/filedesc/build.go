@@ -44,7 +44,7 @@ type Builder struct {
 	FileRegistry interface {
 		FindFileByPath(string) (protoreflect.FileDescriptor, error)
 		FindDescriptorByName(pref.FullName) (pref.Descriptor, error)
-		Register(...pref.FileDescriptor) error
+		RegisterFile(pref.FileDescriptor) error
 	}
 }
 
@@ -107,7 +107,7 @@ func (db Builder) Build() (out Out) {
 	out.Extensions = fd.allExtensions
 	out.Services = fd.allServices
 
-	if err := db.FileRegistry.Register(fd); err != nil {
+	if err := db.FileRegistry.RegisterFile(fd); err != nil {
 		panic(err)
 	}
 	return out

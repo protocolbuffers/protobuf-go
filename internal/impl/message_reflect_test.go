@@ -990,13 +990,21 @@ var enumMessagesType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(EnumM
 			{name:"F7Entry" field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_ENUM    type_name:".EnumProto3"}]   options:{map_entry:true}},
 			{name:"F8Entry" field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".ScalarProto3"}] options:{map_entry:true}}
 		]
-	`, protoregistry.NewFiles(
+	`, newFileRegistry(
 	EnumProto2(0).Descriptor().ParentFile(),
 	EnumProto3(0).Descriptor().ParentFile(),
 	((*ScalarProto2)(nil)).ProtoReflect().Descriptor().ParentFile(),
 	((*ScalarProto3)(nil)).ProtoReflect().Descriptor().ParentFile(),
 	pimpl.Export{}.MessageDescriptorOf((*proto2_20180125.Message)(nil)).ParentFile(),
 )),
+}
+
+func newFileRegistry(files ...pref.FileDescriptor) *protoregistry.Files {
+	r := new(protoregistry.Files)
+	for _, file := range files {
+		r.RegisterFile(file)
+	}
+	return r
 }
 
 func (m *EnumMessages) ProtoReflect() pref.Message { return enumMessagesType.MessageOf(m) }

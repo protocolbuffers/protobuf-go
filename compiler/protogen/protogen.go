@@ -157,7 +157,7 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 	gen := &Plugin{
 		Request:        req,
 		FilesByPath:    make(map[string]*File),
-		fileReg:        protoregistry.NewFiles(),
+		fileReg:        new(protoregistry.Files),
 		enumsByName:    make(map[protoreflect.FullName]*Enum),
 		messagesByName: make(map[protoreflect.FullName]*Message),
 		opts:           opts,
@@ -440,7 +440,7 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 	if err != nil {
 		return nil, fmt.Errorf("invalid FileDescriptorProto %q: %v", p.GetName(), err)
 	}
-	if err := gen.fileReg.Register(desc); err != nil {
+	if err := gen.fileReg.RegisterFile(desc); err != nil {
 		return nil, fmt.Errorf("cannot register descriptor %q: %v", p.GetName(), err)
 	}
 	f := &File{

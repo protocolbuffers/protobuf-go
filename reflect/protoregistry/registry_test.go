@@ -282,7 +282,7 @@ func TestFiles(t *testing.T) {
 		t.Run("", func(t *testing.T) {
 			var files preg.Files
 			for i, tc := range tt.files {
-				gotErr := files.Register(tc.inFile)
+				gotErr := files.RegisterFile(tc.inFile)
 				if ((gotErr == nil) != (tc.wantErr == "")) || !strings.Contains(fmt.Sprint(gotErr), tc.wantErr) {
 					t.Errorf("file %d, Register() = %v, want %v", i, gotErr, tc.wantErr)
 				}
@@ -332,8 +332,17 @@ func TestTypes(t *testing.T) {
 	xt1 := testpb.E_StringField
 	xt2 := testpb.E_Message4_MessageField
 	registry := new(preg.Types)
-	if err := registry.Register(mt1, et1, xt1, xt2); err != nil {
-		t.Fatalf("registry.Register() returns unexpected error: %v", err)
+	if err := registry.RegisterMessage(mt1); err != nil {
+		t.Fatalf("registry.RegisterMessage(%v) returns unexpected error: %v", mt1.Descriptor().FullName(), err)
+	}
+	if err := registry.RegisterEnum(et1); err != nil {
+		t.Fatalf("registry.RegisterEnum(%v) returns unexpected error: %v", et1.Descriptor().FullName(), err)
+	}
+	if err := registry.RegisterExtension(xt1); err != nil {
+		t.Fatalf("registry.RegisterExtension(%v) returns unexpected error: %v", xt1.TypeDescriptor().FullName(), err)
+	}
+	if err := registry.RegisterExtension(xt2); err != nil {
+		t.Fatalf("registry.RegisterExtension(%v) returns unexpected error: %v", xt2.TypeDescriptor().FullName(), err)
 	}
 
 	t.Run("FindMessageByName", func(t *testing.T) {

@@ -108,7 +108,9 @@ type Builder struct {
 	// TypeRegistry is the registry to register each type descriptor.
 	// If nil, it uses protoregistry.GlobalTypes.
 	TypeRegistry interface {
-		Register(...preg.Type) error
+		RegisterMessage(pref.MessageType) error
+		RegisterEnum(pref.EnumType) error
+		RegisterExtension(pref.ExtensionType) error
 	}
 }
 
@@ -149,7 +151,7 @@ func (tb Builder) Build() (out Out) {
 				Desc:          &fbOut.Enums[i],
 			}
 			// Register enum types.
-			if err := tb.TypeRegistry.Register(&tb.EnumInfos[i]); err != nil {
+			if err := tb.TypeRegistry.RegisterEnum(&tb.EnumInfos[i]); err != nil {
 				panic(err)
 			}
 		}
@@ -170,7 +172,7 @@ func (tb Builder) Build() (out Out) {
 			tb.MessageInfos[i].Desc = &fbOut.Messages[i]
 
 			// Register message types.
-			if err := tb.TypeRegistry.Register(&tb.MessageInfos[i]); err != nil {
+			if err := tb.TypeRegistry.RegisterMessage(&tb.MessageInfos[i]); err != nil {
 				panic(err)
 			}
 		}
@@ -232,7 +234,7 @@ func (tb Builder) Build() (out Out) {
 		pimpl.InitExtensionInfo(&tb.ExtensionInfos[i], &fbOut.Extensions[i], goType)
 
 		// Register extension types.
-		if err := tb.TypeRegistry.Register(&tb.ExtensionInfos[i]); err != nil {
+		if err := tb.TypeRegistry.RegisterExtension(&tb.ExtensionInfos[i]); err != nil {
 			panic(err)
 		}
 	}
@@ -274,7 +276,7 @@ type (
 	fileRegistry interface {
 		FindFileByPath(string) (pref.FileDescriptor, error)
 		FindDescriptorByName(pref.FullName) (pref.Descriptor, error)
-		Register(...pref.FileDescriptor) error
+		RegisterFile(pref.FileDescriptor) error
 	}
 )
 

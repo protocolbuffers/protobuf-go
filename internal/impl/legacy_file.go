@@ -70,4 +70,4 @@ type resolverOnly struct {
 	*protoregistry.Files
 }
 
-func (resolverOnly) Register(...protoreflect.FileDescriptor) error { return nil }
+func (resolverOnly) Register(protoreflect.FileDescriptor) error { return nil }

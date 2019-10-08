@@ -52,8 +52,8 @@ var legacyFD = func() []byte {
 
 func init() {
 	mt := pimpl.Export{}.MessageTypeOf((*LegacyTestMessage)(nil))
-	preg.GlobalFiles.Register(mt.Descriptor().ParentFile())
-	preg.GlobalTypes.Register(mt)
+	preg.GlobalFiles.RegisterFile(mt.Descriptor().ParentFile())
+	preg.GlobalTypes.RegisterMessage(mt)
 }
 
 func mustMakeExtensionType(fileDesc, extDesc string, t reflect.Type, r pdesc.Resolver) pref.ExtensionType {
@@ -82,7 +82,7 @@ var (
 	testMessageV1Desc = pimpl.Export{}.MessageDescriptorOf((*proto2_20180125.Message_ChildMessage)(nil))
 	testMessageV2Desc = enumMessagesType.Desc
 
-	depReg = preg.NewFiles(
+	depReg = newFileRegistry(
 		testParentDesc.ParentFile(),
 		testEnumV1Desc.ParentFile(),
 		testMessageV1Desc.ParentFile(),

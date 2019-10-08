@@ -916,7 +916,7 @@ func TestNewFile(t *testing.T) {
 				if err != nil {
 					t.Fatalf("dependency %d: unexpected NewFile() error: %v", i, err)
 				}
-				if err := r.Register(f); err != nil {
+				if err := r.RegisterFile(f); err != nil {
 					t.Fatalf("dependency %d: unexpected Register() error: %v", i, err)
 				}
 			}

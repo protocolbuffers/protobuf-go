@@ -61,7 +61,7 @@ func RegisterFile(s string, d []byte) {
 
 func RegisterType(m Message, s string) {
 	mt := protoimpl.X.LegacyMessageTypeOf(m, protoreflect.FullName(s))
-	if err := protoregistry.GlobalTypes.Register(mt); err != nil {
+	if err := protoregistry.GlobalTypes.RegisterMessage(mt); err != nil {
 		panic(err)
 	}
 }
@@ -75,7 +75,7 @@ func RegisterEnum(string, map[int32]string, map[string]int32) {
 }
 
 func RegisterExtension(d *ExtensionDesc) {
-	if err := protoregistry.GlobalTypes.Register(d); err != nil {
+	if err := protoregistry.GlobalTypes.RegisterExtension(d); err != nil {
 		panic(err)
 	}
 }
