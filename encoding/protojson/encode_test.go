@@ -14,7 +14,6 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/flags"
-	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
@@ -1492,9 +1491,6 @@ func TestMarshal(t *testing.T) {
 		want:  `{}`,
 	}, {
 		desc: "Any with non-custom message",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
 		input: func() proto.Message {
 			m := &pb2.Nested{
 				OptString: proto.String("embedded inside Any"),
@@ -1519,24 +1515,18 @@ func TestMarshal(t *testing.T) {
   }
 }`,
 	}, {
-		desc: "Any with empty embedded message",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:  "Any with empty embedded message",
 		input: &anypb.Any{TypeUrl: "foo/pb2.Nested"},
 		want: `{
   "@type": "foo/pb2.Nested"
 }`,
 	}, {
 		desc:    "Any without registered type",
-		mo:      protojson.MarshalOptions{Resolver: preg.NewTypes()},
+		mo:      protojson.MarshalOptions{Resolver: new(preg.Types)},
 		input:   &anypb.Any{TypeUrl: "foo/pb2.Nested"},
 		wantErr: true,
 	}, {
 		desc: "Any with missing required",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.PartialRequired{})),
-		},
 		input: func() proto.Message {
 			m := &pb2.PartialRequired{
 				OptString: proto.String("embedded inside Any"),
@@ -1561,7 +1551,6 @@ func TestMarshal(t *testing.T) {
 		desc: "Any with partial required and AllowPartial",
 		mo: protojson.MarshalOptions{
 			AllowPartial: true,
-			Resolver:     preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.PartialRequired{})),
 		},
 		input: func() proto.Message {
 			m := &pb2.PartialRequired{
@@ -1585,9 +1574,6 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc: "Any with invalid UTF8",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
 		input: func() proto.Message {
 			m := &pb2.Nested{
 				OptString: proto.String("abc\xff"),
@@ -1604,9 +1590,6 @@ func TestMarshal(t *testing.T) {
 		wantErr: true,
 	}, {
 		desc: "Any with invalid value",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
 		input: &anypb.Any{
 			TypeUrl: "foo/pb2.Nested",
 			Value:   []byte("\x80"),
@@ -1614,9 +1597,6 @@ func TestMarshal(t *testing.T) {
 		wantErr: true,
 	}, {
 		desc: "Any with BoolValue",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.BoolValue{})),
-		},
 		input: func() proto.Message {
 			m := &wrapperspb.BoolValue{Value: true}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1634,9 +1614,6 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc: "Any with Empty",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&emptypb.Empty{})),
-		},
 		input: func() proto.Message {
 			m := &emptypb.Empty{}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1654,9 +1631,6 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc: "Any with StringValue containing invalid UTF8",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.StringValue{})),
-		},
 		input: func() proto.Message {
 			m := &wrapperspb.StringValue{Value: "abcd"}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1671,9 +1645,6 @@ func TestMarshal(t *testing.T) {
 		wantErr: true,
 	}, {
 		desc: "Any with Int64Value",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.Int64Value{})),
-		},
 		input: func() proto.Message {
 			m := &wrapperspb.Int64Value{Value: 42}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1691,9 +1662,6 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc: "Any with Duration",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&durationpb.Duration{})),
-		},
 		input: func() proto.Message {
 			m := &durationpb.Duration{}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1711,9 +1679,6 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc: "Any with empty Value",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&structpb.Value{})),
-		},
 		input: func() proto.Message {
 			m := &structpb.Value{}
 			b, err := proto.Marshal(m)
@@ -1728,9 +1693,6 @@ func TestMarshal(t *testing.T) {
 		wantErr: true,
 	}, {
 		desc: "Any with Value of StringValue",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&structpb.Value{})),
-		},
 		input: func() proto.Message {
 			m := &structpb.Value{Kind: &structpb.Value_StringValue{"abcd"}}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1745,9 +1707,6 @@ func TestMarshal(t *testing.T) {
 		wantErr: true,
 	}, {
 		desc: "Any with Value of NullValue",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&structpb.Value{})),
-		},
 		input: func() proto.Message {
 			m := &structpb.Value{Kind: &structpb.Value_NullValue{}}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1765,15 +1724,6 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc: "Any with Struct",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(
-				pimpl.Export{}.MessageTypeOf(&structpb.Struct{}),
-				pimpl.Export{}.MessageTypeOf(&structpb.Value{}),
-				pimpl.Export{}.MessageTypeOf(&wrapperspb.BoolValue{}),
-				pimpl.Export{}.EnumTypeOf(structpb.NullValue_NULL_VALUE),
-				pimpl.Export{}.MessageTypeOf(&wrapperspb.StringValue{}),
-			),
-		},
 		input: func() proto.Message {
 			m := &structpb.Struct{
 				Fields: map[string]*structpb.Value{
@@ -1813,9 +1763,6 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc: "Any with missing type_url",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.BoolValue{})),
-		},
 		input: func() proto.Message {
 			m := &wrapperspb.BoolValue{Value: true}
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
@@ -1829,9 +1776,6 @@ func TestMarshal(t *testing.T) {
 		wantErr: true,
 	}, {
 		desc: "well known types as field values",
-		mo: protojson.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&emptypb.Empty{})),
-		},
 		input: &pb2.KnownTypes{
 			OptBool:      &wrapperspb.BoolValue{Value: false},
 			OptInt32:     &wrapperspb.Int32Value{Value: 42},

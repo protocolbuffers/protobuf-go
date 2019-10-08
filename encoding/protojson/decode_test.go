@@ -10,7 +10,6 @@ import (
 
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/internal/flags"
-	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
@@ -1899,10 +1898,7 @@ func TestUnmarshal(t *testing.T) {
 		inputText:    `{}`,
 		wantMessage:  &anypb.Any{},
 	}, {
-		desc: "Any with non-custom message",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any with non-custom message",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "foo/pb2.Nested",
@@ -1928,24 +1924,18 @@ func TestUnmarshal(t *testing.T) {
 			}
 		}(),
 	}, {
-		desc: "Any with empty embedded message",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any with empty embedded message",
 		inputMessage: &anypb.Any{},
 		inputText:    `{"@type": "foo/pb2.Nested"}`,
 		wantMessage:  &anypb.Any{TypeUrl: "foo/pb2.Nested"},
 	}, {
 		desc:         "Any without registered type",
-		umo:          protojson.UnmarshalOptions{Resolver: preg.NewTypes()},
+		umo:          protojson.UnmarshalOptions{Resolver: new(preg.Types)},
 		inputMessage: &anypb.Any{},
 		inputText:    `{"@type": "foo/pb2.Nested"}`,
 		wantErr:      true,
 	}, {
-		desc: "Any with missing required",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.PartialRequired{})),
-		},
+		desc:         "Any with missing required",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "pb2.PartialRequired",
@@ -1971,7 +1961,6 @@ func TestUnmarshal(t *testing.T) {
 		desc: "Any with partial required and AllowPartial",
 		umo: protojson.UnmarshalOptions{
 			AllowPartial: true,
-			Resolver:     preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.PartialRequired{})),
 		},
 		inputMessage: &anypb.Any{},
 		inputText: `{
@@ -1995,10 +1984,7 @@ func TestUnmarshal(t *testing.T) {
 			}
 		}(),
 	}, {
-		desc: "Any with invalid UTF8",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any with invalid UTF8",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "optString": "` + "abc\xff" + `",
@@ -2006,10 +1992,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with BoolValue",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.BoolValue{})),
-		},
+		desc:         "Any with BoolValue",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "type.googleapis.com/google.protobuf.BoolValue",
@@ -2027,10 +2010,7 @@ func TestUnmarshal(t *testing.T) {
 			}
 		}(),
 	}, {
-		desc: "Any with Empty",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&emptypb.Empty{})),
-		},
+		desc:         "Any with Empty",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "value": {},
@@ -2040,20 +2020,14 @@ func TestUnmarshal(t *testing.T) {
 			TypeUrl: "type.googleapis.com/google.protobuf.Empty",
 		},
 	}, {
-		desc: "Any with missing Empty",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&emptypb.Empty{})),
-		},
+		desc:         "Any with missing Empty",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "type.googleapis.com/google.protobuf.Empty"
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with StringValue containing invalid UTF8",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.StringValue{})),
-		},
+		desc:         "Any with StringValue containing invalid UTF8",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.StringValue",
@@ -2061,10 +2035,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with Int64Value",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.Int64Value{})),
-		},
+		desc:         "Any with Int64Value",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.Int64Value",
@@ -2082,10 +2053,7 @@ func TestUnmarshal(t *testing.T) {
 			}
 		}(),
 	}, {
-		desc: "Any with invalid Int64Value",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.Int64Value{})),
-		},
+		desc:         "Any with invalid Int64Value",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.Int64Value",
@@ -2093,10 +2061,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with invalid UInt64Value",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.UInt64Value{})),
-		},
+		desc:         "Any with invalid UInt64Value",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.UInt64Value",
@@ -2104,10 +2069,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with Duration",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&durationpb.Duration{})),
-		},
+		desc:         "Any with Duration",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "type.googleapis.com/google.protobuf.Duration",
@@ -2125,10 +2087,7 @@ func TestUnmarshal(t *testing.T) {
 			}
 		}(),
 	}, {
-		desc: "Any with Value of StringValue",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&structpb.Value{})),
-		},
+		desc:         "Any with Value of StringValue",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.Value",
@@ -2136,10 +2095,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with Value of NullValue",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&structpb.Value{})),
-		},
+		desc:         "Any with Value of NullValue",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.Value",
@@ -2157,16 +2113,7 @@ func TestUnmarshal(t *testing.T) {
 			}
 		}(),
 	}, {
-		desc: "Any with Struct",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(
-				pimpl.Export{}.MessageTypeOf(&structpb.Struct{}),
-				pimpl.Export{}.MessageTypeOf(&structpb.Value{}),
-				pimpl.Export{}.MessageTypeOf(&wrapperspb.BoolValue{}),
-				pimpl.Export{}.EnumTypeOf(structpb.NullValue_NULL_VALUE),
-				pimpl.Export{}.MessageTypeOf(&wrapperspb.StringValue{}),
-			),
-		},
+		desc:         "Any with Struct",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.Struct",
@@ -2221,13 +2168,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with duplicate @type",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(
-				pimpl.Export{}.MessageTypeOf(&pb2.Nested{}),
-				pimpl.Export{}.MessageTypeOf(&wrapperspb.StringValue{}),
-			),
-		},
+		desc:         "Any with duplicate @type",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.StringValue",
@@ -2236,10 +2177,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with duplicate value",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&wrapperspb.StringValue{})),
-		},
+		desc:         "Any with duplicate value",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "google.protobuf.StringValue",
@@ -2248,10 +2186,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with unknown field",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any with unknown field",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "pb2.Nested",
@@ -2260,14 +2195,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "Any with embedded type containing Any",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(
-				pimpl.Export{}.MessageTypeOf(&pb2.KnownTypes{}),
-				pimpl.Export{}.MessageTypeOf(&anypb.Any{}),
-				pimpl.Export{}.MessageTypeOf(&wrapperspb.StringValue{}),
-			),
-		},
+		desc:         "Any with embedded type containing Any",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": "pb2.KnownTypes",
@@ -2278,10 +2206,7 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantErr: true,
 	}, {
-		desc: "well known types as field values",
-		umo: protojson.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&emptypb.Empty{})),
-		},
+		desc:         "well known types as field values",
 		inputMessage: &pb2.KnownTypes{},
 		inputText: `{
   "optBool": false,
@@ -2435,7 +2360,6 @@ func TestUnmarshal(t *testing.T) {
 		desc: "DiscardUnknown: Any",
 		umo: protojson.UnmarshalOptions{
 			DiscardUnknown: true,
-			Resolver:       preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
 		},
 		inputMessage: &anypb.Any{},
 		inputText: `{
@@ -2449,7 +2373,6 @@ func TestUnmarshal(t *testing.T) {
 		desc: "DiscardUnknown: Any with Empty",
 		umo: protojson.UnmarshalOptions{
 			DiscardUnknown: true,
-			Resolver:       preg.NewTypes(pimpl.Export{}.MessageTypeOf(&emptypb.Empty{})),
 		},
 		inputMessage: &anypb.Any{},
 		inputText: `{

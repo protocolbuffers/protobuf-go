@@ -8,8 +8,6 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/impl"
-	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
@@ -151,7 +149,7 @@ func TestRoundTrip(t *testing.T) {
 		},
 	}, {
 		desc:     "Any field without registered type",
-		resolver: preg.NewTypes(),
+		resolver: new(preg.Types),
 		message: func() proto.Message {
 			m := &pb2.Nested{
 				OptString: proto.String("embedded inside Any"),
@@ -171,8 +169,7 @@ func TestRoundTrip(t *testing.T) {
 			}
 		}(),
 	}, {
-		desc:     "Any field with registered type",
-		resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
+		desc: "Any field with registered type",
 		message: func() *pb2.KnownTypes {
 			m := &pb2.Nested{
 				OptString: proto.String("embedded inside Any"),
@@ -193,11 +190,6 @@ func TestRoundTrip(t *testing.T) {
 		}(),
 	}, {
 		desc: "Any field containing Any message",
-		resolver: func() *preg.Types {
-			mt1 := impl.Export{}.MessageTypeOf(&pb2.Nested{})
-			mt2 := impl.Export{}.MessageTypeOf(&anypb.Any{})
-			return preg.NewTypes(mt1, mt2)
-		}(),
 		message: func() *pb2.KnownTypes {
 			m1 := &pb2.Nested{
 				OptString: proto.String("message inside Any of another Any field"),

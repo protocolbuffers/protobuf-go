@@ -13,7 +13,6 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/flags"
-	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
@@ -1130,7 +1129,7 @@ opt_int32: 42
 	}, {
 		desc: "Any not expanded",
 		mo: prototext.MarshalOptions{
-			Resolver: preg.NewTypes(),
+			Resolver: new(preg.Types),
 		},
 		input: func() proto.Message {
 			m := &pb2.Nested{
@@ -1153,9 +1152,6 @@ value: "\n\x13embedded inside Any\x12\x0b\n\tinception"
 `,
 	}, {
 		desc: "Any expanded",
-		mo: prototext.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
 		input: func() proto.Message {
 			m := &pb2.Nested{
 				OptString: proto.String("embedded inside Any"),
@@ -1181,9 +1177,6 @@ value: "\n\x13embedded inside Any\x12\x0b\n\tinception"
 `,
 	}, {
 		desc: "Any expanded with missing required",
-		mo: prototext.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.PartialRequired{})),
-		},
 		input: func() proto.Message {
 			m := &pb2.PartialRequired{
 				OptString: proto.String("embedded inside Any"),
@@ -1206,9 +1199,6 @@ value: "\n\x13embedded inside Any\x12\x0b\n\tinception"
 `,
 	}, {
 		desc: "Any with invalid value",
-		mo: prototext.MarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
 		input: &anypb.Any{
 			TypeUrl: "foo/pb2.Nested",
 			Value:   []byte("\x80"),

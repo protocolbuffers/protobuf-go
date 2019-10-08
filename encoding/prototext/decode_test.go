@@ -10,7 +10,6 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/flags"
-	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
@@ -1400,10 +1399,7 @@ value: "some bytes"
 			Value: []byte("some bytes"),
 		},
 	}, {
-		desc: "Any expanded",
-		umo: prototext.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any expanded",
 		inputMessage: &anypb.Any{},
 		inputText: `
 [foobar/pb2.Nested]: {
@@ -1430,20 +1426,14 @@ value: "some bytes"
 			}
 		}(),
 	}, {
-		desc: "Any expanded with empty value",
-		umo: prototext.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any expanded with empty value",
 		inputMessage: &anypb.Any{},
 		inputText:    `[foo.com/pb2.Nested]: {}`,
 		wantMessage: &anypb.Any{
 			TypeUrl: "foo.com/pb2.Nested",
 		},
 	}, {
-		desc: "Any expanded with missing required",
-		umo: prototext.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.PartialRequired{})),
-		},
+		desc:         "Any expanded with missing required",
 		inputMessage: &anypb.Any{},
 		inputText: `
 [pb2.PartialRequired]: {
@@ -1467,10 +1457,7 @@ value: "some bytes"
 			}
 		}(),
 	}, {
-		desc: "Any with invalid UTF-8",
-		umo: prototext.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb3.Nested{})),
-		},
+		desc:         "Any with invalid UTF-8",
 		inputMessage: &anypb.Any{},
 		inputText: `
 [pb3.Nested]: {
@@ -1480,23 +1467,17 @@ value: "some bytes"
 		wantErr: true,
 	}, {
 		desc:         "Any expanded with unregistered type",
-		umo:          prototext.UnmarshalOptions{Resolver: preg.NewTypes()},
+		umo:          prototext.UnmarshalOptions{Resolver: new(preg.Types)},
 		inputMessage: &anypb.Any{},
 		inputText:    `[SomeMessage]: {}`,
 		wantErr:      true,
 	}, {
-		desc: "Any expanded with invalid value",
-		umo: prototext.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any expanded with invalid value",
 		inputMessage: &anypb.Any{},
 		inputText:    `[pb2.Nested]: 123`,
 		wantErr:      true,
 	}, {
-		desc: "Any expanded with unknown fields",
-		umo: prototext.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any expanded with unknown fields",
 		inputMessage: &anypb.Any{},
 		inputText: `
 [pb2.Nested]: {}
@@ -1504,10 +1485,7 @@ unknown: ""
 `,
 		wantErr: true,
 	}, {
-		desc: "Any contains expanded and unexpanded fields",
-		umo: prototext.UnmarshalOptions{
-			Resolver: preg.NewTypes(pimpl.Export{}.MessageTypeOf(&pb2.Nested{})),
-		},
+		desc:         "Any contains expanded and unexpanded fields",
 		inputMessage: &anypb.Any{},
 		inputText: `
 [pb2.Nested]: {}
