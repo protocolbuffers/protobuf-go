@@ -74,6 +74,11 @@ type BenchmarkDataset struct {
 
 func (x *BenchmarkDataset) Reset() {
 	*x = BenchmarkDataset{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_benchmarks_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *BenchmarkDataset) String() string {

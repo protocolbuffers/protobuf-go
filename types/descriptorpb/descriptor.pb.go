@@ -481,6 +481,11 @@ type FileDescriptorSet struct {
 
 func (x *FileDescriptorSet) Reset() {
 	*x = FileDescriptorSet{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FileDescriptorSet) String() string {
@@ -546,6 +551,11 @@ type FileDescriptorProto struct {
 
 func (x *FileDescriptorProto) Reset() {
 	*x = FileDescriptorProto{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FileDescriptorProto) String() string {
@@ -677,6 +687,11 @@ type DescriptorProto struct {
 
 func (x *DescriptorProto) Reset() {
 	*x = DescriptorProto{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *DescriptorProto) String() string {
@@ -784,6 +799,11 @@ type ExtensionRangeOptions struct {
 
 func (x *ExtensionRangeOptions) Reset() {
 	*x = ExtensionRangeOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ExtensionRangeOptions) String() string {
@@ -865,6 +885,11 @@ type FieldDescriptorProto struct {
 
 func (x *FieldDescriptorProto) Reset() {
 	*x = FieldDescriptorProto{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldDescriptorProto) String() string {
@@ -972,6 +997,11 @@ type OneofDescriptorProto struct {
 
 func (x *OneofDescriptorProto) Reset() {
 	*x = OneofDescriptorProto{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *OneofDescriptorProto) String() string {
@@ -1031,6 +1061,11 @@ type EnumDescriptorProto struct {
 
 func (x *EnumDescriptorProto) Reset() {
 	*x = EnumDescriptorProto{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *EnumDescriptorProto) String() string {
@@ -1104,6 +1139,11 @@ type EnumValueDescriptorProto struct {
 
 func (x *EnumValueDescriptorProto) Reset() {
 	*x = EnumValueDescriptorProto{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *EnumValueDescriptorProto) String() string {
@@ -1163,6 +1203,11 @@ type ServiceDescriptorProto struct {
 
 func (x *ServiceDescriptorProto) Reset() {
 	*x = ServiceDescriptorProto{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ServiceDescriptorProto) String() string {
@@ -1235,6 +1280,11 @@ const (
 
 func (x *MethodDescriptorProto) Reset() {
 	*x = MethodDescriptorProto{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *MethodDescriptorProto) String() string {
@@ -1411,6 +1461,11 @@ const (
 
 func (x *FileOptions) Reset() {
 	*x = FileOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FileOptions) String() string {
@@ -1662,6 +1717,11 @@ const (
 
 func (x *MessageOptions) Reset() {
 	*x = MessageOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *MessageOptions) String() string {
@@ -1811,6 +1871,11 @@ const (
 
 func (x *FieldOptions) Reset() {
 	*x = FieldOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldOptions) String() string {
@@ -1906,6 +1971,11 @@ type OneofOptions struct {
 
 func (x *OneofOptions) Reset() {
 	*x = OneofOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *OneofOptions) String() string {
@@ -1972,6 +2042,11 @@ const (
 
 func (x *EnumOptions) Reset() {
 	*x = EnumOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *EnumOptions) String() string {
@@ -2049,6 +2124,11 @@ const (
 
 func (x *EnumValueOptions) Reset() {
 	*x = EnumValueOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *EnumValueOptions) String() string {
@@ -2119,6 +2199,11 @@ const (
 
 func (x *ServiceOptions) Reset() {
 	*x = ServiceOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ServiceOptions) String() string {
@@ -2191,6 +2276,11 @@ const (
 
 func (x *MethodOptions) Reset() {
 	*x = MethodOptions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *MethodOptions) String() string {
@@ -2270,6 +2360,11 @@ type UninterpretedOption struct {
 
 func (x *UninterpretedOption) Reset() {
 	*x = UninterpretedOption{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *UninterpretedOption) String() string {
@@ -2399,6 +2494,11 @@ type SourceCodeInfo struct {
 
 func (x *SourceCodeInfo) Reset() {
 	*x = SourceCodeInfo{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[19]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *SourceCodeInfo) String() string {
@@ -2446,6 +2546,11 @@ type GeneratedCodeInfo struct {
 
 func (x *GeneratedCodeInfo) Reset() {
 	*x = GeneratedCodeInfo{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[20]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *GeneratedCodeInfo) String() string {
@@ -2490,6 +2595,11 @@ type DescriptorProto_ExtensionRange struct {
 
 func (x *DescriptorProto_ExtensionRange) Reset() {
 	*x = DescriptorProto_ExtensionRange{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[21]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *DescriptorProto_ExtensionRange) String() string {
@@ -2550,6 +2660,11 @@ type DescriptorProto_ReservedRange struct {
 
 func (x *DescriptorProto_ReservedRange) Reset() {
 	*x = DescriptorProto_ReservedRange{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[22]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *DescriptorProto_ReservedRange) String() string {
@@ -2606,6 +2721,11 @@ type EnumDescriptorProto_EnumReservedRange struct {
 
 func (x *EnumDescriptorProto_EnumReservedRange) Reset() {
 	*x = EnumDescriptorProto_EnumReservedRange{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[23]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *EnumDescriptorProto_EnumReservedRange) String() string {
@@ -2661,6 +2781,11 @@ type UninterpretedOption_NamePart struct {
 
 func (x *UninterpretedOption_NamePart) Reset() {
 	*x = UninterpretedOption_NamePart{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[24]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *UninterpretedOption_NamePart) String() string {
@@ -2789,6 +2914,11 @@ type SourceCodeInfo_Location struct {
 
 func (x *SourceCodeInfo_Location) Reset() {
 	*x = SourceCodeInfo_Location{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[25]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *SourceCodeInfo_Location) String() string {
@@ -2870,6 +3000,11 @@ type GeneratedCodeInfo_Annotation struct {
 
 func (x *GeneratedCodeInfo_Annotation) Reset() {
 	*x = GeneratedCodeInfo_Annotation{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_descriptor_proto_msgTypes[26]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *GeneratedCodeInfo_Annotation) String() string {

@@ -120,6 +120,11 @@ type Duration struct {
 
 func (x *Duration) Reset() {
 	*x = Duration{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_duration_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Duration) String() string {

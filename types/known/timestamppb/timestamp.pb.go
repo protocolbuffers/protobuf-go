@@ -142,6 +142,11 @@ type Timestamp struct {
 
 func (x *Timestamp) Reset() {
 	*x = Timestamp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_timestamp_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Timestamp) String() string {

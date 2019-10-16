@@ -94,6 +94,11 @@ type Message1 struct {
 
 func (x *Message1) Reset() {
 	*x = Message1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_comments_comments_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message1) String() string {
@@ -169,6 +174,11 @@ type Message2 struct {
 
 func (x *Message2) Reset() {
 	*x = Message2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_comments_comments_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message2) String() string {
@@ -203,6 +213,11 @@ type Message1_Message1A struct {
 
 func (x *Message1_Message1A) Reset() {
 	*x = Message1_Message1A{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_comments_comments_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message1_Message1A) String() string {
@@ -237,6 +252,11 @@ type Message1_Message1B struct {
 
 func (x *Message1_Message1B) Reset() {
 	*x = Message1_Message1B{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_comments_comments_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message1_Message1B) String() string {
@@ -271,6 +291,11 @@ type Message2_Message2A struct {
 
 func (x *Message2_Message2A) Reset() {
 	*x = Message2_Message2A{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_comments_comments_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message2_Message2A) String() string {
@@ -305,6 +330,11 @@ type Message2_Message2B struct {
 
 func (x *Message2_Message2B) Reset() {
 	*x = Message2_Message2B{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_comments_comments_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message2_Message2B) String() string {

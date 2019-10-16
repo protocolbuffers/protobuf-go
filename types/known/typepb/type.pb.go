@@ -287,6 +287,11 @@ type Type struct {
 
 func (x *Type) Reset() {
 	*x = Type{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_type_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Type) String() string {
@@ -386,6 +391,11 @@ type Field struct {
 
 func (x *Field) Reset() {
 	*x = Field{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_type_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Field) String() string {
@@ -501,6 +511,11 @@ type Enum struct {
 
 func (x *Enum) Reset() {
 	*x = Enum{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_type_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Enum) String() string {
@@ -577,6 +592,11 @@ type EnumValue struct {
 
 func (x *EnumValue) Reset() {
 	*x = EnumValue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_type_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *EnumValue) String() string {
@@ -644,6 +664,11 @@ type Option struct {
 
 func (x *Option) Reset() {
 	*x = Option{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_type_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Option) String() string {

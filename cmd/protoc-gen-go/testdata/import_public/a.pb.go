@@ -65,6 +65,11 @@ type Public struct {
 
 func (x *Public) Reset() {
 	*x = Public{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_import_public_a_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Public) String() string {

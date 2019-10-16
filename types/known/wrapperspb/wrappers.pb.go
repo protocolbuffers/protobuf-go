@@ -64,6 +64,11 @@ type DoubleValue struct {
 
 func (x *DoubleValue) Reset() {
 	*x = DoubleValue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *DoubleValue) String() string {
@@ -110,6 +115,11 @@ type FloatValue struct {
 
 func (x *FloatValue) Reset() {
 	*x = FloatValue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FloatValue) String() string {
@@ -156,6 +166,11 @@ type Int64Value struct {
 
 func (x *Int64Value) Reset() {
 	*x = Int64Value{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Int64Value) String() string {
@@ -202,6 +217,11 @@ type UInt64Value struct {
 
 func (x *UInt64Value) Reset() {
 	*x = UInt64Value{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *UInt64Value) String() string {
@@ -248,6 +268,11 @@ type Int32Value struct {
 
 func (x *Int32Value) Reset() {
 	*x = Int32Value{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Int32Value) String() string {
@@ -294,6 +319,11 @@ type UInt32Value struct {
 
 func (x *UInt32Value) Reset() {
 	*x = UInt32Value{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *UInt32Value) String() string {
@@ -340,6 +370,11 @@ type BoolValue struct {
 
 func (x *BoolValue) Reset() {
 	*x = BoolValue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *BoolValue) String() string {
@@ -386,6 +421,11 @@ type StringValue struct {
 
 func (x *StringValue) Reset() {
 	*x = StringValue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *StringValue) String() string {
@@ -432,6 +472,11 @@ type BytesValue struct {
 
 func (x *BytesValue) Reset() {
 	*x = BytesValue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_wrappers_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *BytesValue) String() string {

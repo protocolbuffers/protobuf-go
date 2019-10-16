@@ -24,6 +24,11 @@ type ExtraMessage struct {
 
 func (x *ExtraMessage) Reset() {
 	*x = ExtraMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_extra_extra_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ExtraMessage) String() string {

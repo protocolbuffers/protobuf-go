@@ -71,6 +71,11 @@ type DeprecatedMessage struct {
 
 func (x *DeprecatedMessage) Reset() {
 	*x = DeprecatedMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_comments_deprecated_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *DeprecatedMessage) String() string {

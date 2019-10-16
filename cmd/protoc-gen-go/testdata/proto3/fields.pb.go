@@ -103,6 +103,11 @@ type FieldTestMessage struct {
 
 func (x *FieldTestMessage) Reset() {
 	*x = FieldTestMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto3_fields_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldTestMessage) String() string {
@@ -395,6 +400,11 @@ type FieldTestMessage_Message struct {
 
 func (x *FieldTestMessage_Message) Reset() {
 	*x = FieldTestMessage_Message{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto3_fields_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldTestMessage_Message) String() string {

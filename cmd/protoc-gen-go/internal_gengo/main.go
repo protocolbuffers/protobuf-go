@@ -601,6 +601,15 @@ func genMessageBaseMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 	// Reset method.
 	g.P("func (x *", m.GoIdent, ") Reset() {")
 	g.P("*x = ", m.GoIdent, "{}")
+	if generateMessageStateFields {
+		idx := f.allMessagesByPtr[m.Message]
+		typesVar := messageTypesVarName(f)
+		g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " {")
+		g.P("mi := &", typesVar, "[", idx, "]")
+		g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
+		g.P("ms.StoreMessageInfo(mi)")
+		g.P("}")
+	}
 	g.P("}")
 	g.P()
 

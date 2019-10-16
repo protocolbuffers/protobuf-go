@@ -39,6 +39,11 @@ type Message struct {
 
 func (x *Message) Reset() {
 	*x = Message{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_irregular_test_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message) String() string {

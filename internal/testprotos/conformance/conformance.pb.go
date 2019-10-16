@@ -174,6 +174,11 @@ type FailureSet struct {
 
 func (x *FailureSet) Reset() {
 	*x = FailureSet{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_conformance_conformance_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FailureSet) String() string {
@@ -249,6 +254,11 @@ type ConformanceRequest struct {
 
 func (x *ConformanceRequest) Reset() {
 	*x = ConformanceRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_conformance_conformance_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ConformanceRequest) String() string {
@@ -393,6 +403,11 @@ type ConformanceResponse struct {
 
 func (x *ConformanceResponse) Reset() {
 	*x = ConformanceResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_conformance_conformance_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ConformanceResponse) String() string {
@@ -567,6 +582,11 @@ type JspbEncodingConfig struct {
 
 func (x *JspbEncodingConfig) Reset() {
 	*x = JspbEncodingConfig{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_conformance_conformance_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *JspbEncodingConfig) String() string {

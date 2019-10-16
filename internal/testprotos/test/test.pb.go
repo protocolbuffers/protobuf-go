@@ -373,6 +373,11 @@ var (
 
 func (x *TestAllTypes) Reset() {
 	*x = TestAllTypes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypes) String() string {
@@ -1111,6 +1116,11 @@ type TestDeprecatedMessage struct {
 
 func (x *TestDeprecatedMessage) Reset() {
 	*x = TestDeprecatedMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestDeprecatedMessage) String() string {
@@ -1181,6 +1191,11 @@ type ForeignMessage struct {
 
 func (x *ForeignMessage) Reset() {
 	*x = ForeignMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ForeignMessage) String() string {
@@ -1228,6 +1243,11 @@ type TestReservedFields struct {
 
 func (x *TestReservedFields) Reset() {
 	*x = TestReservedFields{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestReservedFields) String() string {
@@ -1262,6 +1282,11 @@ type TestAllExtensions struct {
 
 func (x *TestAllExtensions) Reset() {
 	*x = TestAllExtensions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllExtensions) String() string {
@@ -1306,6 +1331,11 @@ type OptionalGroupExtension struct {
 
 func (x *OptionalGroupExtension) Reset() {
 	*x = OptionalGroupExtension{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *OptionalGroupExtension) String() string {
@@ -1348,6 +1378,11 @@ type RepeatedGroupExtension struct {
 
 func (x *RepeatedGroupExtension) Reset() {
 	*x = RepeatedGroupExtension{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *RepeatedGroupExtension) String() string {
@@ -1388,6 +1423,11 @@ type TestNestedExtension struct {
 
 func (x *TestNestedExtension) Reset() {
 	*x = TestNestedExtension{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestNestedExtension) String() string {
@@ -1423,6 +1463,11 @@ type TestRequired struct {
 
 func (x *TestRequired) Reset() {
 	*x = TestRequired{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestRequired) String() string {
@@ -1470,6 +1515,11 @@ type TestRequiredForeign struct {
 
 func (x *TestRequiredForeign) Reset() {
 	*x = TestRequiredForeign{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestRequiredForeign) String() string {
@@ -1551,6 +1601,11 @@ type TestRequiredGroupFields struct {
 
 func (x *TestRequiredGroupFields) Reset() {
 	*x = TestRequiredGroupFields{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestRequiredGroupFields) String() string {
@@ -1602,6 +1657,11 @@ type TestWeak struct {
 
 func (x *TestWeak) Reset() {
 	*x = TestWeak{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestWeak) String() string {
@@ -1696,6 +1756,11 @@ type TestPackedTypes struct {
 
 func (x *TestPackedTypes) Reset() {
 	*x = TestPackedTypes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestPackedTypes) String() string {
@@ -1842,6 +1907,11 @@ type TestUnpackedTypes struct {
 
 func (x *TestUnpackedTypes) Reset() {
 	*x = TestUnpackedTypes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestUnpackedTypes) String() string {
@@ -1974,6 +2044,11 @@ type TestPackedExtensions struct {
 
 func (x *TestPackedExtensions) Reset() {
 	*x = TestPackedExtensions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestPackedExtensions) String() string {
@@ -2017,6 +2092,11 @@ type TestUnpackedExtensions struct {
 
 func (x *TestUnpackedExtensions) Reset() {
 	*x = TestUnpackedExtensions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestUnpackedExtensions) String() string {
@@ -2060,6 +2140,11 @@ type FooRequest struct {
 
 func (x *FooRequest) Reset() {
 	*x = FooRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FooRequest) String() string {
@@ -2093,6 +2178,11 @@ type FooResponse struct {
 
 func (x *FooResponse) Reset() {
 	*x = FooResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FooResponse) String() string {
@@ -2133,6 +2223,11 @@ var (
 
 func (x *WeirdDefault) Reset() {
 	*x = WeirdDefault{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *WeirdDefault) String() string {
@@ -2176,6 +2271,11 @@ type TestAllTypes_NestedMessage struct {
 
 func (x *TestAllTypes_NestedMessage) Reset() {
 	*x = TestAllTypes_NestedMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[19]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypes_NestedMessage) String() string {
@@ -2225,6 +2325,11 @@ type TestAllTypes_OptionalGroup struct {
 
 func (x *TestAllTypes_OptionalGroup) Reset() {
 	*x = TestAllTypes_OptionalGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[20]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypes_OptionalGroup) String() string {
@@ -2267,6 +2372,11 @@ type TestAllTypes_RepeatedGroup struct {
 
 func (x *TestAllTypes_RepeatedGroup) Reset() {
 	*x = TestAllTypes_RepeatedGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[21]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypes_RepeatedGroup) String() string {
@@ -2309,6 +2419,11 @@ type TestRequiredGroupFields_OptionalGroup struct {
 
 func (x *TestRequiredGroupFields_OptionalGroup) Reset() {
 	*x = TestRequiredGroupFields_OptionalGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[40]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestRequiredGroupFields_OptionalGroup) String() string {
@@ -2351,6 +2466,11 @@ type TestRequiredGroupFields_RepeatedGroup struct {
 
 func (x *TestRequiredGroupFields_RepeatedGroup) Reset() {
 	*x = TestRequiredGroupFields_RepeatedGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_test_proto_msgTypes[41]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestRequiredGroupFields_RepeatedGroup) String() string {

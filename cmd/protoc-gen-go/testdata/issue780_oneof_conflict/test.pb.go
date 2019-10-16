@@ -22,6 +22,11 @@ type Foo struct {
 
 func (x *Foo) Reset() {
 	*x = Foo{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_issue780_oneof_conflict_test_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Foo) String() string {

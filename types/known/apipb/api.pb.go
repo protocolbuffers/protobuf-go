@@ -96,6 +96,11 @@ type Api struct {
 
 func (x *Api) Reset() {
 	*x = Api{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_api_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Api) String() string {
@@ -194,6 +199,11 @@ type Method struct {
 
 func (x *Method) Reset() {
 	*x = Method{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_api_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Method) String() string {
@@ -360,6 +370,11 @@ type Mixin struct {
 
 func (x *Mixin) Reset() {
 	*x = Mixin{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_api_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Mixin) String() string {

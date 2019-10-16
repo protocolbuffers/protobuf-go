@@ -145,6 +145,11 @@ type Scalars struct {
 
 func (x *Scalars) Reset() {
 	*x = Scalars{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb3_test_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Scalars) String() string {
@@ -287,6 +292,11 @@ type Enums struct {
 
 func (x *Enums) Reset() {
 	*x = Enums{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb3_test_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Enums) String() string {
@@ -337,6 +347,11 @@ type Nests struct {
 
 func (x *Nests) Reset() {
 	*x = Nests{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb3_test_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Nests) String() string {
@@ -381,6 +396,11 @@ type Nested struct {
 
 func (x *Nested) Reset() {
 	*x = Nested{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb3_test_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Nested) String() string {
@@ -435,6 +455,11 @@ type Oneofs struct {
 
 func (x *Oneofs) Reset() {
 	*x = Oneofs{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb3_test_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Oneofs) String() string {
@@ -525,6 +550,11 @@ type Maps struct {
 
 func (x *Maps) Reset() {
 	*x = Maps{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb3_test_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Maps) String() string {
@@ -596,6 +626,11 @@ type JSONNames struct {
 
 func (x *JSONNames) Reset() {
 	*x = JSONNames{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb3_test_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *JSONNames) String() string {

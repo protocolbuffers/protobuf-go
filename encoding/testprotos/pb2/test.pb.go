@@ -167,6 +167,11 @@ type Scalars struct {
 
 func (x *Scalars) Reset() {
 	*x = Scalars{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Scalars) String() string {
@@ -311,6 +316,11 @@ type Enums struct {
 
 func (x *Enums) Reset() {
 	*x = Enums{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Enums) String() string {
@@ -383,6 +393,11 @@ type Repeats struct {
 
 func (x *Repeats) Reset() {
 	*x = Repeats{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Repeats) String() string {
@@ -483,6 +498,11 @@ type Nested struct {
 
 func (x *Nested) Reset() {
 	*x = Nested{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Nested) String() string {
@@ -536,6 +556,11 @@ type Nests struct {
 
 func (x *Nests) Reset() {
 	*x = Nests{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Nests) String() string {
@@ -605,6 +630,11 @@ type Requireds struct {
 
 func (x *Requireds) Reset() {
 	*x = Requireds{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Requireds) String() string {
@@ -684,6 +714,11 @@ type PartialRequired struct {
 
 func (x *PartialRequired) Reset() {
 	*x = PartialRequired{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *PartialRequired) String() string {
@@ -733,6 +768,11 @@ type NestedWithRequired struct {
 
 func (x *NestedWithRequired) Reset() {
 	*x = NestedWithRequired{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *NestedWithRequired) String() string {
@@ -780,6 +820,11 @@ type IndirectRequired struct {
 
 func (x *IndirectRequired) Reset() {
 	*x = IndirectRequired{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *IndirectRequired) String() string {
@@ -863,6 +908,11 @@ type Extensions struct {
 
 func (x *Extensions) Reset() {
 	*x = Extensions{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Extensions) String() string {
@@ -926,6 +976,11 @@ type ExtensionsContainer struct {
 
 func (x *ExtensionsContainer) Reset() {
 	*x = ExtensionsContainer{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ExtensionsContainer) String() string {
@@ -960,6 +1015,11 @@ type MessageSet struct {
 
 func (x *MessageSet) Reset() {
 	*x = MessageSet{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *MessageSet) String() string {
@@ -1004,6 +1064,11 @@ type MessageSetExtension struct {
 
 func (x *MessageSetExtension) Reset() {
 	*x = MessageSetExtension{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *MessageSetExtension) String() string {
@@ -1045,6 +1110,11 @@ type FakeMessageSet struct {
 
 func (x *FakeMessageSet) Reset() {
 	*x = FakeMessageSet{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FakeMessageSet) String() string {
@@ -1089,6 +1159,11 @@ type FakeMessageSetExtension struct {
 
 func (x *FakeMessageSetExtension) Reset() {
 	*x = FakeMessageSetExtension{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FakeMessageSetExtension) String() string {
@@ -1149,6 +1224,11 @@ type KnownTypes struct {
 
 func (x *KnownTypes) Reset() {
 	*x = KnownTypes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *KnownTypes) String() string {
@@ -1312,6 +1392,11 @@ type Nests_OptGroup struct {
 
 func (x *Nests_OptGroup) Reset() {
 	*x = Nests_OptGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Nests_OptGroup) String() string {
@@ -1368,6 +1453,11 @@ type Nests_RptGroup struct {
 
 func (x *Nests_RptGroup) Reset() {
 	*x = Nests_RptGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Nests_RptGroup) String() string {
@@ -1410,6 +1500,11 @@ type Nests_OptGroup_OptNestedGroup struct {
 
 func (x *Nests_OptGroup_OptNestedGroup) Reset() {
 	*x = Nests_OptGroup_OptNestedGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb2_test_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Nests_OptGroup_OptNestedGroup) String() string {

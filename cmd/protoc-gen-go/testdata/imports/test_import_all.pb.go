@@ -32,6 +32,11 @@ type All struct {
 
 func (x *All) Reset() {
 	*x = All{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_imports_test_import_all_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *All) String() string {

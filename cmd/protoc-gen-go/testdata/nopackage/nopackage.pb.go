@@ -83,6 +83,11 @@ const (
 
 func (x *Message) Reset() {
 	*x = Message{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_nopackage_nopackage_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message) String() string {

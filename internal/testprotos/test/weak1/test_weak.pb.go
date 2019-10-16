@@ -24,6 +24,11 @@ type WeakImportMessage1 struct {
 
 func (x *WeakImportMessage1) Reset() {
 	*x = WeakImportMessage1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_weak1_test_weak_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *WeakImportMessage1) String() string {

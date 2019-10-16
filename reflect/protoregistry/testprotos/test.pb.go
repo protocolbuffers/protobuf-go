@@ -185,6 +185,11 @@ type Message1 struct {
 
 func (x *Message1) Reset() {
 	*x = Message1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message1) String() string {
@@ -227,6 +232,11 @@ type Message2 struct {
 
 func (x *Message2) Reset() {
 	*x = Message2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message2) String() string {
@@ -260,6 +270,11 @@ type Message3 struct {
 
 func (x *Message3) Reset() {
 	*x = Message3{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message3) String() string {
@@ -295,6 +310,11 @@ type Message4 struct {
 
 func (x *Message4) Reset() {
 	*x = Message4{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message4) String() string {

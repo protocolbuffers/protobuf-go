@@ -357,6 +357,11 @@ type TestAllTypesProto3 struct {
 
 func (x *TestAllTypesProto3) Reset() {
 	*x = TestAllTypesProto3{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypesProto3) String() string {
@@ -1304,6 +1309,11 @@ type ForeignMessage struct {
 
 func (x *ForeignMessage) Reset() {
 	*x = ForeignMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ForeignMessage) String() string {
@@ -1347,6 +1357,11 @@ type TestAllTypesProto3_NestedMessage struct {
 
 func (x *TestAllTypesProto3_NestedMessage) Reset() {
 	*x = TestAllTypesProto3_NestedMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypesProto3_NestedMessage) String() string {

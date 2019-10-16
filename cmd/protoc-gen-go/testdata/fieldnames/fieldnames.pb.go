@@ -62,6 +62,11 @@ type Message struct {
 
 func (x *Message) Reset() {
 	*x = Message{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_fieldnames_fieldnames_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message) String() string {
@@ -278,6 +283,11 @@ type Message_OneofMessageConflict struct {
 
 func (x *Message_OneofMessageConflict) Reset() {
 	*x = Message_OneofMessageConflict{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_fieldnames_fieldnames_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message_OneofMessageConflict) String() string {

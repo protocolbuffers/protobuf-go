@@ -22,6 +22,11 @@ type Sub2Message struct {
 
 func (x *Sub2Message) Reset() {
 	*x = Sub2Message{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_import_public_sub2_a_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Sub2Message) String() string {

@@ -218,6 +218,11 @@ var (
 
 func (x *FieldTestMessage) Reset() {
 	*x = FieldTestMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_fields_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldTestMessage) String() string {
@@ -1115,6 +1120,11 @@ type FieldTestMessage_OptionalGroup struct {
 
 func (x *FieldTestMessage_OptionalGroup) Reset() {
 	*x = FieldTestMessage_OptionalGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_fields_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldTestMessage_OptionalGroup) String() string {
@@ -1157,6 +1167,11 @@ type FieldTestMessage_RequiredGroup struct {
 
 func (x *FieldTestMessage_RequiredGroup) Reset() {
 	*x = FieldTestMessage_RequiredGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_fields_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldTestMessage_RequiredGroup) String() string {
@@ -1199,6 +1214,11 @@ type FieldTestMessage_RepeatedGroup struct {
 
 func (x *FieldTestMessage_RepeatedGroup) Reset() {
 	*x = FieldTestMessage_RepeatedGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_fields_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldTestMessage_RepeatedGroup) String() string {
@@ -1241,6 +1261,11 @@ type FieldTestMessage_OneofGroup struct {
 
 func (x *FieldTestMessage_OneofGroup) Reset() {
 	*x = FieldTestMessage_OneofGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_fields_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldTestMessage_OneofGroup) String() string {
@@ -1281,6 +1306,11 @@ type FieldTestMessage_Message struct {
 
 func (x *FieldTestMessage_Message) Reset() {
 	*x = FieldTestMessage_Message{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_fields_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldTestMessage_Message) String() string {

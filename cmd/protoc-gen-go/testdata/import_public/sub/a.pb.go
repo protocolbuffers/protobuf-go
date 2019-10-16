@@ -210,6 +210,11 @@ var (
 
 func (x *M) Reset() {
 	*x = M{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_import_public_sub_a_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *M) String() string {
@@ -322,6 +327,11 @@ type M_Submessage struct {
 
 func (x *M_Submessage) Reset() {
 	*x = M_Submessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_import_public_sub_a_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *M_Submessage) String() string {

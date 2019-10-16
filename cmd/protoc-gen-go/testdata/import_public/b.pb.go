@@ -26,6 +26,11 @@ type Local struct {
 
 func (x *Local) Reset() {
 	*x = Local{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_import_public_b_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Local) String() string {

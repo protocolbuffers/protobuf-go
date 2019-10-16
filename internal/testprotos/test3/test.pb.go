@@ -197,6 +197,11 @@ type TestAllTypes struct {
 
 func (x *TestAllTypes) Reset() {
 	*x = TestAllTypes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test3_test_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypes) String() string {
@@ -774,6 +779,11 @@ type ForeignMessage struct {
 
 func (x *ForeignMessage) Reset() {
 	*x = ForeignMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test3_test_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ForeignMessage) String() string {
@@ -824,6 +834,11 @@ type TestAllTypes_NestedMessage struct {
 
 func (x *TestAllTypes_NestedMessage) Reset() {
 	*x = TestAllTypes_NestedMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_test3_test_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypes_NestedMessage) String() string {

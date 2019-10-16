@@ -77,6 +77,11 @@ type AnnotationsTestMessage struct {
 
 func (x *AnnotationsTestMessage) Reset() {
 	*x = AnnotationsTestMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_annotations_annotations_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *AnnotationsTestMessage) String() string {

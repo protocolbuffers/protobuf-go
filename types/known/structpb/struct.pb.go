@@ -107,6 +107,11 @@ type Struct struct {
 
 func (x *Struct) Reset() {
 	*x = Struct{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_struct_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Struct) String() string {
@@ -164,6 +169,11 @@ type Value struct {
 
 func (x *Value) Reset() {
 	*x = Value{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_struct_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Value) String() string {
@@ -298,6 +308,11 @@ type ListValue struct {
 
 func (x *ListValue) Reset() {
 	*x = ListValue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_struct_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ListValue) String() string {

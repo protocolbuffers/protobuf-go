@@ -26,6 +26,11 @@ type BaseMessage struct {
 
 func (x *BaseMessage) Reset() {
 	*x = BaseMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_base_base_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *BaseMessage) String() string {
@@ -77,6 +82,11 @@ type MessageSetWireFormatMessage struct {
 
 func (x *MessageSetWireFormatMessage) Reset() {
 	*x = MessageSetWireFormatMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_base_base_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *MessageSetWireFormatMessage) String() string {

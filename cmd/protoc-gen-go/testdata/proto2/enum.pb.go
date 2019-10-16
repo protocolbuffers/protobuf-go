@@ -362,6 +362,11 @@ const (
 
 func (x *EnumContainerMessage1) Reset() {
 	*x = EnumContainerMessage1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_enum_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *EnumContainerMessage1) String() string {
@@ -409,6 +414,11 @@ type EnumContainerMessage1_EnumContainerMessage2 struct {
 
 func (x *EnumContainerMessage1_EnumContainerMessage2) Reset() {
 	*x = EnumContainerMessage1_EnumContainerMessage2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_enum_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *EnumContainerMessage1_EnumContainerMessage2) String() string {

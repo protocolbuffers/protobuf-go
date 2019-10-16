@@ -80,6 +80,11 @@ type TestFieldTrack struct {
 
 func (x *TestFieldTrack) Reset() {
 	*x = TestFieldTrack{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_fieldtrack_fieldtrack_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestFieldTrack) String() string {

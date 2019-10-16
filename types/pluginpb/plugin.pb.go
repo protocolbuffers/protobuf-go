@@ -73,6 +73,11 @@ type Version struct {
 
 func (x *Version) Reset() {
 	*x = Version{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_compiler_plugin_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Version) String() string {
@@ -159,6 +164,11 @@ type CodeGeneratorRequest struct {
 
 func (x *CodeGeneratorRequest) Reset() {
 	*x = CodeGeneratorRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_compiler_plugin_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *CodeGeneratorRequest) String() string {
@@ -232,6 +242,11 @@ type CodeGeneratorResponse struct {
 
 func (x *CodeGeneratorResponse) Reset() {
 	*x = CodeGeneratorResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_compiler_plugin_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *CodeGeneratorResponse) String() string {
@@ -333,6 +348,11 @@ type CodeGeneratorResponse_File struct {
 
 func (x *CodeGeneratorResponse_File) Reset() {
 	*x = CodeGeneratorResponse_File{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_compiler_plugin_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *CodeGeneratorResponse_File) String() string {

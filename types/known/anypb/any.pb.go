@@ -160,6 +160,11 @@ type Any struct {
 
 func (x *Any) Reset() {
 	*x = Any{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_any_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Any) String() string {

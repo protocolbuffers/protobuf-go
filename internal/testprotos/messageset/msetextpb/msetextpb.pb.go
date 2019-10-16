@@ -26,6 +26,11 @@ type Ext1 struct {
 
 func (x *Ext1) Reset() {
 	*x = Ext1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_messageset_msetextpb_msetextpb_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Ext1) String() string {
@@ -75,6 +80,11 @@ type Ext2 struct {
 
 func (x *Ext2) Reset() {
 	*x = Ext2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_messageset_msetextpb_msetextpb_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Ext2) String() string {

@@ -22,6 +22,11 @@ type M1 struct {
 
 func (x *M1) Reset() {
 	*x = M1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_imports_test_b_1_m1_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *M1) String() string {

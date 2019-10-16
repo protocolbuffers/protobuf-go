@@ -70,6 +70,11 @@ const (
 
 func (x *GoogleMessage2) Reset() {
 	*x = GoogleMessage2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message2_benchmark_message2_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *GoogleMessage2) String() string {
@@ -332,6 +337,11 @@ const (
 
 func (x *GoogleMessage2GroupedMessage) Reset() {
 	*x = GoogleMessage2GroupedMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message2_benchmark_message2_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *GoogleMessage2GroupedMessage) String() string {
@@ -464,6 +474,11 @@ const (
 
 func (x *GoogleMessage2_Group1) Reset() {
 	*x = GoogleMessage2_Group1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message2_benchmark_message2_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *GoogleMessage2_Group1) String() string {

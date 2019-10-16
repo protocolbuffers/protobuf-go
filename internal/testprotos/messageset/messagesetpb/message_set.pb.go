@@ -24,6 +24,11 @@ type MessageSet struct {
 
 func (x *MessageSet) Reset() {
 	*x = MessageSet{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_messageset_messagesetpb_message_set_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *MessageSet) String() string {

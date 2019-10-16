@@ -22,6 +22,11 @@ type Request struct {
 
 func (x *Request) Reset() {
 	*x = Request{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_grpc_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Request) String() string {
@@ -55,6 +60,11 @@ type Response struct {
 
 func (x *Response) Reset() {
 	*x = Response{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_grpc_grpc_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Response) String() string {

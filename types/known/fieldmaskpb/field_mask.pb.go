@@ -250,6 +250,11 @@ type FieldMask struct {
 
 func (x *FieldMask) Reset() {
 	*x = FieldMask{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_field_mask_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *FieldMask) String() string {

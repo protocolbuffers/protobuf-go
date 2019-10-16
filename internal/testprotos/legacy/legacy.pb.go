@@ -47,6 +47,11 @@ type Legacy struct {
 
 func (x *Legacy) Reset() {
 	*x = Legacy{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_legacy_legacy_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Legacy) String() string {

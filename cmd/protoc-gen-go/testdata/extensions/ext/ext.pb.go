@@ -80,6 +80,11 @@ type Message struct {
 
 func (x *Message) Reset() {
 	*x = Message{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_ext_ext_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message) String() string {
@@ -122,6 +127,11 @@ type ExtensionGroup struct {
 
 func (x *ExtensionGroup) Reset() {
 	*x = ExtensionGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_ext_ext_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ExtensionGroup) String() string {
@@ -163,6 +173,11 @@ type ExtendingMessage struct {
 
 func (x *ExtendingMessage) Reset() {
 	*x = ExtendingMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_ext_ext_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ExtendingMessage) String() string {
@@ -198,6 +213,11 @@ type RepeatedGroup struct {
 
 func (x *RepeatedGroup) Reset() {
 	*x = RepeatedGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_ext_ext_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *RepeatedGroup) String() string {
@@ -240,6 +260,11 @@ type Extendable struct {
 
 func (x *Extendable) Reset() {
 	*x = Extendable{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_ext_ext_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Extendable) String() string {
@@ -283,6 +308,11 @@ type MessageSetWireFormatExtension struct {
 
 func (x *MessageSetWireFormatExtension) Reset() {
 	*x = MessageSetWireFormatExtension{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_ext_ext_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *MessageSetWireFormatExtension) String() string {
@@ -316,6 +346,11 @@ type Message_M struct {
 
 func (x *Message_M) Reset() {
 	*x = Message_M{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_ext_ext_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message_M) String() string {
@@ -349,6 +384,11 @@ type ExtendingMessage_ExtendingMessageSubmessage struct {
 
 func (x *ExtendingMessage_ExtendingMessageSubmessage) Reset() {
 	*x = ExtendingMessage_ExtendingMessageSubmessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_extensions_ext_ext_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ExtendingMessage_ExtendingMessageSubmessage) String() string {

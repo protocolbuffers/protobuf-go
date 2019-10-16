@@ -62,6 +62,11 @@ type GoogleMessage1 struct {
 
 func (x *GoogleMessage1) Reset() {
 	*x = GoogleMessage1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *GoogleMessage1) String() string {
@@ -403,6 +408,11 @@ type GoogleMessage1SubMessage struct {
 
 func (x *GoogleMessage1SubMessage) Reset() {
 	*x = GoogleMessage1SubMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message1_proto3_benchmark_message1_proto3_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *GoogleMessage1SubMessage) String() string {

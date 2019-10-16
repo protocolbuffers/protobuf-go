@@ -25,6 +25,11 @@ type Layer1 struct {
 
 func (x *Layer1) Reset() {
 	*x = Layer1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_nested_messages_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Layer1) String() string {
@@ -74,6 +79,11 @@ type Layer1_Layer2 struct {
 
 func (x *Layer1_Layer2) Reset() {
 	*x = Layer1_Layer2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_nested_messages_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Layer1_Layer2) String() string {
@@ -114,6 +124,11 @@ type Layer1_Layer2_Layer3 struct {
 
 func (x *Layer1_Layer2_Layer3) Reset() {
 	*x = Layer1_Layer2_Layer3{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto2_nested_messages_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Layer1_Layer2_Layer3) String() string {

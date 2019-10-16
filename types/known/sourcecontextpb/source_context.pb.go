@@ -54,6 +54,11 @@ type SourceContext struct {
 
 func (x *SourceContext) Reset() {
 	*x = SourceContext{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_source_context_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *SourceContext) String() string {

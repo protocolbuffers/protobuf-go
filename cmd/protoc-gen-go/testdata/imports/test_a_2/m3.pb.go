@@ -22,6 +22,11 @@ type M3 struct {
 
 func (x *M3) Reset() {
 	*x = M3{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_imports_test_a_2_m3_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *M3) String() string {

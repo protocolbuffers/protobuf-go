@@ -283,6 +283,11 @@ type TestAllTypesProto2 struct {
 
 func (x *TestAllTypesProto2) Reset() {
 	*x = TestAllTypesProto2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypesProto2) String() string {
@@ -1022,6 +1027,11 @@ type ForeignMessageProto2 struct {
 
 func (x *ForeignMessageProto2) Reset() {
 	*x = ForeignMessageProto2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *ForeignMessageProto2) String() string {
@@ -1069,6 +1079,11 @@ type UnknownToTestAllTypes struct {
 
 func (x *UnknownToTestAllTypes) Reset() {
 	*x = UnknownToTestAllTypes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *UnknownToTestAllTypes) String() string {
@@ -1147,6 +1162,11 @@ type TestAllTypesProto2_NestedMessage struct {
 
 func (x *TestAllTypesProto2_NestedMessage) Reset() {
 	*x = TestAllTypesProto2_NestedMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypesProto2_NestedMessage) String() string {
@@ -1198,6 +1218,11 @@ type TestAllTypesProto2_Data struct {
 
 func (x *TestAllTypesProto2_Data) Reset() {
 	*x = TestAllTypesProto2_Data{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[23]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypesProto2_Data) String() string {
@@ -1247,6 +1272,11 @@ type TestAllTypesProto2_MessageSetCorrect struct {
 
 func (x *TestAllTypesProto2_MessageSetCorrect) Reset() {
 	*x = TestAllTypesProto2_MessageSetCorrect{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[24]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypesProto2_MessageSetCorrect) String() string {
@@ -1291,6 +1321,11 @@ type TestAllTypesProto2_MessageSetCorrectExtension1 struct {
 
 func (x *TestAllTypesProto2_MessageSetCorrectExtension1) Reset() {
 	*x = TestAllTypesProto2_MessageSetCorrectExtension1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[25]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypesProto2_MessageSetCorrectExtension1) String() string {
@@ -1333,6 +1368,11 @@ type TestAllTypesProto2_MessageSetCorrectExtension2 struct {
 
 func (x *TestAllTypesProto2_MessageSetCorrectExtension2) Reset() {
 	*x = TestAllTypesProto2_MessageSetCorrectExtension2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[26]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *TestAllTypesProto2_MessageSetCorrectExtension2) String() string {
@@ -1375,6 +1415,11 @@ type UnknownToTestAllTypes_OptionalGroup struct {
 
 func (x *UnknownToTestAllTypes_OptionalGroup) Reset() {
 	*x = UnknownToTestAllTypes_OptionalGroup{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto2_proto_msgTypes[27]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *UnknownToTestAllTypes_OptionalGroup) String() string {

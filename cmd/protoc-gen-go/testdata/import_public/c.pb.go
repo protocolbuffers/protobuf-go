@@ -29,6 +29,11 @@ type UsingPublicImport struct {
 
 func (x *UsingPublicImport) Reset() {
 	*x = UsingPublicImport{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_import_public_c_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *UsingPublicImport) String() string {

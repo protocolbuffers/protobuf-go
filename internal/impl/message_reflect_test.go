@@ -1416,6 +1416,19 @@ func (p path) String() string {
 	return strings.Join(ss, ".")
 }
 
+func TestReset(t *testing.T) {
+	mi := new(testpb.TestAllTypes)
+
+	// ProtoReflect is implemented using a messageState cache.
+	m := mi.ProtoReflect()
+
+	// Reset must not clear the messageState cache.
+	mi.Reset()
+
+	// If Reset accidentally cleared the messageState cache, this panics.
+	m.Descriptor()
+}
+
 // The MessageState implementation makes the assumption that when a
 // concrete message is unsafe casted as a *MessageState, the Go GC does
 // not reclaim the memory for the remainder of the concrete message.

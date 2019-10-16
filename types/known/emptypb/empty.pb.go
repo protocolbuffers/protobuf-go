@@ -57,6 +57,11 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_empty_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Empty) String() string {

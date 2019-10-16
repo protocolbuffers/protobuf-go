@@ -18,6 +18,11 @@ type Message11018 struct {
 
 func (x *Message11018) Reset() {
 	*x = Message11018{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message11018) String() string {
@@ -56,6 +61,11 @@ type Message10800 struct {
 
 func (x *Message10800) Reset() {
 	*x = Message10800{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message10800) String() string {
@@ -117,6 +127,11 @@ type Message10802 struct {
 
 func (x *Message10802) Reset() {
 	*x = Message10802{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message10802) String() string {
@@ -155,6 +170,11 @@ type Message10748 struct {
 
 func (x *Message10748) Reset() {
 	*x = Message10748{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message10748) String() string {
@@ -219,6 +239,11 @@ type Message7966 struct {
 
 func (x *Message7966) Reset() {
 	*x = Message7966{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message7966) String() string {
@@ -273,6 +298,11 @@ type Message708 struct {
 
 func (x *Message708) Reset() {
 	*x = Message708{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message708) String() string {
@@ -348,6 +378,11 @@ type Message8942 struct {
 
 func (x *Message8942) Reset() {
 	*x = Message8942{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message8942) String() string {
@@ -384,6 +419,11 @@ type Message11011 struct {
 
 func (x *Message11011) Reset() {
 	*x = Message11011{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message11011) String() string {
@@ -431,6 +471,11 @@ type UnusedEmptyMessage struct {
 
 func (x *UnusedEmptyMessage) Reset() {
 	*x = UnusedEmptyMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *UnusedEmptyMessage) String() string {
@@ -466,6 +511,11 @@ type Message741 struct {
 
 func (x *Message741) Reset() {
 	*x = Message741{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_datasets_google_message3_benchmark_message3_7_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
 }
 
 func (x *Message741) String() string {
