@@ -29,38 +29,6 @@ import (
 // GenerateVersionMarkers specifies whether to generate version markers.
 var GenerateVersionMarkers = true
 
-const (
-	// generateEnumJSONMethods specifies whether to generate the UnmarshalJSON
-	// method for proto2 enums.
-	generateEnumJSONMethods = true
-
-	// generateRawDescMethods specifies whether to generate EnumDescriptor and
-	// Descriptor methods for enums and messages. These methods return the
-	// GZIP'd contents of the raw file descriptor and the path from the root
-	// to the given enum or message descriptor.
-	generateRawDescMethods = true
-
-	// generateExtensionRangeMethods specifies whether to generate the
-	// ExtensionRangeArray method for messages that support extensions.
-	generateExtensionRangeMethods = true
-
-	// generateMessageStateFields specifies whether to generate an unexported
-	// protoimpl.MessageState as the first field.
-	generateMessageStateFields = true
-
-	// generateExportedSizeCacheFields specifies whether to generate an exported
-	// XXX_sizecache field instead of an unexported sizeCache field.
-	generateExportedSizeCacheFields = false
-
-	// generateExportedUnknownFields specifies whether to generate an exported
-	// XXX_unrecognized field instead of an unexported unknownFields field.
-	generateExportedUnknownFields = false
-
-	// generateExportedExtensionFields specifies whether to generate an exported
-	// XXX_InternalExtensions field instead of an unexported extensionFields field.
-	generateExportedExtensionFields = false
-)
-
 // Standard library dependencies.
 const (
 	mathPackage    = protogen.GoImportPath("math")
@@ -369,7 +337,7 @@ func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum 
 	genEnumReflectMethods(gen, g, f, enum)
 
 	// UnmarshalJSON method.
-	if generateEnumJSONMethods && enum.Desc.Syntax() == protoreflect.Proto2 {
+	if enum.Desc.Syntax() == protoreflect.Proto2 {
 		g.P("// Deprecated: Do not use.")
 		g.P("func (x *", enum.GoIdent, ") UnmarshalJSON(b []byte) error {")
 		g.P("num, err := ", protoimplPackage.Ident("X"), ".UnmarshalJSONEnum(x.Descriptor(), b)")
@@ -383,17 +351,15 @@ func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum 
 	}
 
 	// EnumDescriptor method.
-	if generateRawDescMethods {
-		var indexes []string
-		for i := 1; i < len(enum.Location.Path); i += 2 {
-			indexes = append(indexes, strconv.Itoa(int(enum.Location.Path[i])))
-		}
-		g.P("// Deprecated: Use ", enum.GoIdent, ".Descriptor instead.")
-		g.P("func (", enum.GoIdent, ") EnumDescriptor() ([]byte, []int) {")
-		g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
-		g.P("}")
-		g.P()
+	var indexes []string
+	for i := 1; i < len(enum.Location.Path); i += 2 {
+		indexes = append(indexes, strconv.Itoa(int(enum.Location.Path[i])))
 	}
+	g.P("// Deprecated: Use ", enum.GoIdent, ".Descriptor instead.")
+	g.P("func (", enum.GoIdent, ") EnumDescriptor() ([]byte, []int) {")
+	g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
+	g.P("}")
+	g.P()
 }
 
 type messageInfo struct {
@@ -432,36 +398,19 @@ func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 }
 
 func genMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, sf *structFields) {
-	if generateMessageStateFields {
-		g.P("state ", protoimplPackage.Ident("MessageState"))
-		sf.append("state")
-	}
-	if generateExportedSizeCacheFields {
-		g.P("XXX_sizecache", " ", protoimplPackage.Ident("SizeCache"), jsonIgnoreTags)
-		sf.append("XXX_sizecache")
-	} else {
-		g.P("sizeCache", " ", protoimplPackage.Ident("SizeCache"))
-		sf.append("sizeCache")
-	}
+	g.P("state ", protoimplPackage.Ident("MessageState"))
+	sf.append("state")
+	g.P("sizeCache", " ", protoimplPackage.Ident("SizeCache"))
+	sf.append("sizeCache")
 	if m.HasWeak {
 		g.P("XXX_weak", " ", protoimplPackage.Ident("WeakFields"), jsonIgnoreTags)
 		sf.append("XXX_weak")
 	}
-	if generateExportedUnknownFields {
-		g.P("XXX_unrecognized", " ", protoimplPackage.Ident("UnknownFields"), jsonIgnoreTags)
-		sf.append("XXX_unrecognized")
-	} else {
-		g.P("unknownFields", " ", protoimplPackage.Ident("UnknownFields"))
-		sf.append("unknownFields")
-	}
+	g.P("unknownFields", " ", protoimplPackage.Ident("UnknownFields"))
+	sf.append("unknownFields")
 	if m.Desc.ExtensionRanges().Len() > 0 {
-		if generateExportedExtensionFields {
-			g.P("XXX_InternalExtensions", " ", protoimplPackage.Ident("ExtensionFields"), jsonIgnoreTags)
-			sf.append("XXX_InternalExtensions")
-		} else {
-			g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"))
-			sf.append("extensionFields")
-		}
+		g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"))
+		sf.append("extensionFields")
 	}
 	if sf.count > 0 {
 		g.P()
@@ -601,15 +550,11 @@ func genMessageBaseMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 	// Reset method.
 	g.P("func (x *", m.GoIdent, ") Reset() {")
 	g.P("*x = ", m.GoIdent, "{}")
-	if generateMessageStateFields {
-		idx := f.allMessagesByPtr[m.Message]
-		typesVar := messageTypesVarName(f)
-		g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " {")
-		g.P("mi := &", typesVar, "[", idx, "]")
-		g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
-		g.P("ms.StoreMessageInfo(mi)")
-		g.P("}")
-	}
+	g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " {")
+	g.P("mi := &", messageTypesVarName(f), "[", f.allMessagesByPtr[m.Message], "]")
+	g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
+	g.P("ms.StoreMessageInfo(mi)")
+	g.P("}")
 	g.P("}")
 	g.P()
 
@@ -627,36 +572,32 @@ func genMessageBaseMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 	genMessageReflectMethods(gen, g, f, m)
 
 	// Descriptor method.
-	if generateRawDescMethods {
-		var indexes []string
-		for i := 1; i < len(m.Location.Path); i += 2 {
-			indexes = append(indexes, strconv.Itoa(int(m.Location.Path[i])))
-		}
-		g.P("// Deprecated: Use ", m.GoIdent, ".ProtoReflect.Descriptor instead.")
-		g.P("func (*", m.GoIdent, ") Descriptor() ([]byte, []int) {")
-		g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
-		g.P("}")
-		g.P()
+	var indexes []string
+	for i := 1; i < len(m.Location.Path); i += 2 {
+		indexes = append(indexes, strconv.Itoa(int(m.Location.Path[i])))
 	}
+	g.P("// Deprecated: Use ", m.GoIdent, ".ProtoReflect.Descriptor instead.")
+	g.P("func (*", m.GoIdent, ") Descriptor() ([]byte, []int) {")
+	g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
+	g.P("}")
+	g.P()
 
 	// ExtensionRangeArray method.
-	if generateExtensionRangeMethods {
-		if extranges := m.Desc.ExtensionRanges(); extranges.Len() > 0 {
-			protoExtRange := protoifacePackage.Ident("ExtensionRangeV1")
-			extRangeVar := "extRange_" + m.GoIdent.GoName
-			g.P("var ", extRangeVar, " = []", protoExtRange, " {")
-			for i := 0; i < extranges.Len(); i++ {
-				r := extranges.Get(i)
-				g.P("{Start:", r[0], ", End:", r[1]-1 /* inclusive */, "},")
-			}
-			g.P("}")
-			g.P()
-			g.P("// Deprecated: Use ", m.GoIdent, ".ProtoReflect.Descriptor.ExtensionRanges instead.")
-			g.P("func (*", m.GoIdent, ") ExtensionRangeArray() []", protoExtRange, " {")
-			g.P("return ", extRangeVar)
-			g.P("}")
-			g.P()
+	if extranges := m.Desc.ExtensionRanges(); extranges.Len() > 0 {
+		protoExtRange := protoifacePackage.Ident("ExtensionRangeV1")
+		extRangeVar := "extRange_" + m.GoIdent.GoName
+		g.P("var ", extRangeVar, " = []", protoExtRange, " {")
+		for i := 0; i < extranges.Len(); i++ {
+			r := extranges.Get(i)
+			g.P("{Start:", r[0], ", End:", r[1]-1 /* inclusive */, "},")
 		}
+		g.P("}")
+		g.P()
+		g.P("// Deprecated: Use ", m.GoIdent, ".ProtoReflect.Descriptor.ExtensionRanges instead.")
+		g.P("func (*", m.GoIdent, ") ExtensionRangeArray() []", protoExtRange, " {")
+		g.P("return ", extRangeVar)
+		g.P("}")
+		g.P()
 	}
 }
 

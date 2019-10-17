@@ -260,23 +260,21 @@ func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 	g.P("}")
 	g.P()
 
-	if generateRawDescMethods {
-		onceVar := rawDescVarName(f) + "Once"
-		dataVar := rawDescVarName(f) + "Data"
-		g.P("var (")
-		g.P(onceVar, " ", syncPackage.Ident("Once"))
-		g.P(dataVar, " = ", rawDescVarName(f))
-		g.P(")")
-		g.P()
+	onceVar := rawDescVarName(f) + "Once"
+	dataVar := rawDescVarName(f) + "Data"
+	g.P("var (")
+	g.P(onceVar, " ", syncPackage.Ident("Once"))
+	g.P(dataVar, " = ", rawDescVarName(f))
+	g.P(")")
+	g.P()
 
-		g.P("func ", rawDescVarName(f), "GZIP() []byte {")
-		g.P(onceVar, ".Do(func() {")
-		g.P(dataVar, " = ", protoimplPackage.Ident("X"), ".CompressGZIP(", dataVar, ")")
-		g.P("})")
-		g.P("return ", dataVar)
-		g.P("}")
-		g.P()
-	}
+	g.P("func ", rawDescVarName(f), "GZIP() []byte {")
+	g.P(onceVar, ".Do(func() {")
+	g.P(dataVar, " = ", protoimplPackage.Ident("X"), ".CompressGZIP(", dataVar, ")")
+	g.P("})")
+	g.P("return ", dataVar)
+	g.P("}")
+	g.P()
 }
 
 func genEnumReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum *protogen.Enum) {
@@ -309,15 +307,13 @@ func genMessageReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	// ProtoReflect method.
 	g.P("func (x *", m.GoIdent, ") ProtoReflect() ", protoreflectPackage.Ident("Message"), " {")
 	g.P("mi := &", typesVar, "[", idx, "]")
-	if generateMessageStateFields {
-		g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " && x != nil {")
-		g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
-		g.P("if ms.LoadMessageInfo() == nil {")
-		g.P("ms.StoreMessageInfo(mi)")
-		g.P("}")
-		g.P("return ms")
-		g.P("}")
-	}
+	g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " && x != nil {")
+	g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
+	g.P("if ms.LoadMessageInfo() == nil {")
+	g.P("ms.StoreMessageInfo(mi)")
+	g.P("}")
+	g.P("return ms")
+	g.P("}")
 	g.P("return mi.MessageOf(x)")
 	g.P("}")
 	g.P()
