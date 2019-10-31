@@ -3,6 +3,10 @@
 // license that can be found in the LICENSE file.
 
 // Package protocmp provides protobuf specific options for the cmp package.
+//
+// The primary feature is the Transform option, which transform proto.Message
+// types into a Message map that is suitable for cmp to introspect upon.
+// All other options in this package must be used in conjunction with Transform.
 package protocmp
 
 import (
@@ -12,9 +16,16 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/runtime/protoiface"
 	"google.golang.org/protobuf/runtime/protoimpl"
+)
+
+var (
+	messageV1Type = reflect.TypeOf((*protoiface.MessageV1)(nil)).Elem()
+	messageV2Type = reflect.TypeOf((*proto.Message)(nil)).Elem()
 )
 
 // Enum is a dynamic representation of a protocol buffer enum that is
@@ -25,6 +36,7 @@ type Enum struct {
 }
 
 // Descriptor returns the enum descriptor.
+// It returns nil for a zero Enum value.
 func (e Enum) Descriptor() protoreflect.EnumDescriptor {
 	return e.ed
 }
@@ -54,7 +66,8 @@ func (e Enum) String() string {
 const messageTypeKey = "@type"
 
 type messageType struct {
-	md protoreflect.MessageDescriptor
+	md  protoreflect.MessageDescriptor
+	xds map[protoreflect.FullName]protoreflect.ExtensionDescriptor
 }
 
 func (t messageType) String() string {
@@ -85,13 +98,20 @@ func (t1 messageType) Equal(t2 messageType) bool {
 // Every unknown field is stored in the map with the key being the field number
 // encoded as a decimal string (e.g., "132") and the value being the raw bytes
 // of the encoded field (as the protoreflect.RawFields type).
+//
+// Message values must not be created by or mutated by users.
 type Message map[string]interface{}
 
 // Descriptor return the message descriptor.
+// It returns nil for a zero Message value.
 func (m Message) Descriptor() protoreflect.MessageDescriptor {
 	mt, _ := m[messageTypeKey].(messageType)
 	return mt.md
 }
+
+// TODO: There is currently no public API for retrieving the FieldDescriptors
+// for extension fields. Rather than adding a specialized API to support that,
+// perhaps Message should just implement protoreflect.ProtoMessage instead.
 
 // String returns a formatted string for the message.
 // It is intended for human debugging and has no guarantees about its
@@ -107,15 +127,32 @@ type option struct{}
 
 // Transform returns a cmp.Option that converts each proto.Message to a Message.
 // The transformation does not mutate nor alias any converted messages.
+//
+// The google.protobuf.Any message is automatically unmarshaled such that the
+// "value" field is a Message representing the underlying message value
+// assuming it could be resolved and properly unmarshaled.
 func Transform(...option) cmp.Option {
 	// NOTE: There are currently no custom options for Transform,
 	// but the use of an unexported type keeps the future open.
-	return cmp.FilterValues(func(x, y interface{}) bool {
-		_, okX1 := x.(protoiface.MessageV1)
-		_, okX2 := x.(protoreflect.ProtoMessage)
-		_, okY1 := y.(protoiface.MessageV1)
-		_, okY2 := y.(protoreflect.ProtoMessage)
-		return (okX1 || okX2) && (okY1 || okY2)
+
+	// TODO: Should this transform protoreflect.Enum types to Enum as well?
+	return cmp.FilterPath(func(p cmp.Path) bool {
+		ps := p.Last()
+		if isMessageType(ps.Type()) {
+			return true
+		}
+
+		// Check whether the concrete values of an interface both satisfy
+		// the Message interface.
+		if ps.Type().Kind() == reflect.Interface {
+			vx, vy := ps.Values()
+			if !vx.IsValid() || vx.IsNil() || !vy.IsValid() || vy.IsNil() {
+				return false
+			}
+			return isMessageType(vx.Elem().Type()) && isMessageType(vy.Elem().Type())
+		}
+
+		return false
 	}, cmp.Transformer("protocmp.Transform", func(m interface{}) Message {
 		if m == nil {
 			return nil
@@ -131,15 +168,20 @@ func Transform(...option) cmp.Option {
 	}))
 }
 
+func isMessageType(t reflect.Type) bool {
+	return t.Implements(messageV1Type) || t.Implements(messageV2Type)
+}
+
 func transformMessage(m protoreflect.Message) Message {
-	md := m.Descriptor()
-	mx := Message{messageTypeKey: messageType{md}}
+	mx := Message{}
+	mt := messageType{md: m.Descriptor(), xds: make(map[protoreflect.FullName]protoreflect.FieldDescriptor)}
 
 	// Handle known and extension fields.
 	m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		s := string(fd.Name())
 		if fd.IsExtension() {
 			s = "[" + string(fd.FullName()) + "]"
+			mt.xds[fd.FullName()] = fd
 		}
 		switch {
 		case fd.IsList():
@@ -161,6 +203,22 @@ func transformMessage(m protoreflect.Message) Message {
 		b = b[n:]
 	}
 
+	// Expand Any messages.
+	if mt.md.FullName() == "google.protobuf.Any" {
+		// TODO: Expose Transform option to specify a custom resolver?
+		s, _ := mx["type_url"].(string)
+		b, _ := mx["value"].([]byte)
+		mt, err := protoregistry.GlobalTypes.FindMessageByURL(s)
+		if mt != nil && err == nil {
+			m2 := mt.New()
+			err := proto.UnmarshalOptions{AllowPartial: true}.Unmarshal(b, m2.Interface())
+			if err == nil {
+				mx["value"] = transformMessage(m2)
+			}
+		}
+	}
+
+	mx[messageTypeKey] = mt
 	return mx
 }
 
