@@ -131,7 +131,7 @@ func generateLocalProtos() {
 			"internal/testprotos/irregular/irregular.proto": true,
 		}},
 	}
-	excludeRx := regexp.MustCompile(`legacy/proto[23]_[0-9]{8}_[0-9a-f]{8}/`)
+	excludeRx := regexp.MustCompile(`legacy/.*/`)
 	for _, d := range dirs {
 		subDirs := map[string]bool{}
 

@@ -414,12 +414,16 @@ type (
 //
 // If a naming conflict occurs, the type is not registered and an error is returned.
 func (r *Types) RegisterMessage(mt protoreflect.MessageType) error {
+	// Under rare circumstances getting the descriptor might recursively
+	// examine the registry, so fetch it before locking.
+	md := mt.Descriptor()
+
 	if r == GlobalTypes {
 		globalMutex.Lock()
 		defer globalMutex.Unlock()
 	}
 
-	if err := r.register("message", mt.Descriptor(), mt); err != nil {
+	if err := r.register("message", md, mt); err != nil {
 		return err
 	}
 	r.numMessages++
@@ -430,12 +434,16 @@ func (r *Types) RegisterMessage(mt protoreflect.MessageType) error {
 //
 // If a naming conflict occurs, the type is not registered and an error is returned.
 func (r *Types) RegisterEnum(et protoreflect.EnumType) error {
+	// Under rare circumstances getting the descriptor might recursively
+	// examine the registry, so fetch it before locking.
+	ed := et.Descriptor()
+
 	if r == GlobalTypes {
 		globalMutex.Lock()
 		defer globalMutex.Unlock()
 	}
 
-	if err := r.register("enum", et.Descriptor(), et); err != nil {
+	if err := r.register("enum", ed, et); err != nil {
 		return err
 	}
 	r.numEnums++
@@ -446,12 +454,18 @@ func (r *Types) RegisterEnum(et protoreflect.EnumType) error {
 //
 // If a naming conflict occurs, the type is not registered and an error is returned.
 func (r *Types) RegisterExtension(xt protoreflect.ExtensionType) error {
+	// Under rare circumstances getting the descriptor might recursively
+	// examine the registry, so fetch it before locking.
+	//
+	// A known case where this can happen: Fetching the TypeDescriptor for a
+	// legacy ExtensionDesc can consult the global registry.
+	xd := xt.TypeDescriptor()
+
 	if r == GlobalTypes {
 		globalMutex.Lock()
 		defer globalMutex.Unlock()
 	}
 
-	xd := xt.TypeDescriptor()
 	field := xd.Number()
 	message := xd.ContainingMessage().FullName()
 	if prev := r.extensionsByMessage[message][field]; prev != nil {
@@ -462,7 +476,7 @@ func (r *Types) RegisterExtension(xt protoreflect.ExtensionType) error {
 		}
 	}
 
-	if err := r.register("extension", xt.TypeDescriptor(), xt); err != nil {
+	if err := r.register("extension", xd, xt); err != nil {
 		return err
 	}
 	if r.extensionsByMessage == nil {
