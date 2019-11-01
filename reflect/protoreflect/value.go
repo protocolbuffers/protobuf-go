@@ -66,8 +66,8 @@ type Message interface {
 	// Some fields have the property of nullability where it is possible to
 	// distinguish between the default value of a field and whether the field
 	// was explicitly populated with the default value. Singular message fields,
-	// member fields of a oneof, proto2 scalar fields, and extension fields
-	// are nullable. Such fields are populated only if explicitly set.
+	// member fields of a oneof, and proto2 scalar fields are nullable. Such
+	// fields are populated only if explicitly set.
 	//
 	// In other cases (aside from the nullable cases above),
 	// a proto3 scalar field is populated if it contains a non-zero value, and

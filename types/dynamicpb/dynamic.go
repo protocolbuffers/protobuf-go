@@ -83,9 +83,9 @@ func (m *Message) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 		fd := m.ext[num]
 		if fd == nil {
 			fd = m.Descriptor().Fields().ByNumber(num)
-			if !isSet(fd, v) {
-				continue
-			}
+		}
+		if !isSet(fd, v) {
+			continue
 		}
 		if !f(fd, v) {
 			return
@@ -97,8 +97,8 @@ func (m *Message) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 // See protoreflect.Message for details.
 func (m *Message) Has(fd pref.FieldDescriptor) bool {
 	m.checkField(fd)
-	if fd.IsExtension() {
-		return m.ext[fd.Number()] == fd
+	if fd.IsExtension() && m.ext[fd.Number()] != fd {
+		return false
 	}
 	v, ok := m.known[fd.Number()]
 	if !ok {
@@ -371,7 +371,7 @@ func isSet(fd pref.FieldDescriptor, v pref.Value) bool {
 		return v.List().Len() > 0
 	case fd.ContainingOneof() != nil:
 		return true
-	case fd.Syntax() == pref.Proto3:
+	case fd.Syntax() == pref.Proto3 && !fd.IsExtension():
 		switch fd.Kind() {
 		case pref.BoolKind:
 			return v.Bool()

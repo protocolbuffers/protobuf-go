@@ -145,18 +145,33 @@ type extensionMap map[int32]ExtensionField
 func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 	if m != nil {
 		for _, x := range *m {
-			xt := x.Type()
-			if !f(xt.TypeDescriptor(), x.Value()) {
+			xd := x.Type().TypeDescriptor()
+			v := x.Value()
+			if xd.IsList() && v.List().Len() == 0 {
+				continue
+			}
+			if !f(xd, v) {
 				return
 			}
 		}
 	}
 }
 func (m *extensionMap) Has(xt pref.ExtensionType) (ok bool) {
-	if m != nil {
-		_, ok = (*m)[int32(xt.TypeDescriptor().Number())]
+	if m == nil {
+		return false
 	}
-	return ok
+	xd := xt.TypeDescriptor()
+	x, ok := (*m)[int32(xd.Number())]
+	if !ok {
+		return false
+	}
+	switch {
+	case xd.IsList():
+		return x.Value().List().Len() > 0
+	case xd.IsMap():
+		return x.Value().Map().Len() > 0
+	}
+	return true
 }
 func (m *extensionMap) Clear(xt pref.ExtensionType) {
 	delete(*m, int32(xt.TypeDescriptor().Number()))

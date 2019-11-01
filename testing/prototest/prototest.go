@@ -118,11 +118,11 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 			if fd.Syntax() == pref.Proto3 && fd.Message() == nil {
 				wantHas = false
 			}
-			if fd.Cardinality() == pref.Repeated {
-				wantHas = false
-			}
 			if fd.IsExtension() {
 				wantHas = true
+			}
+			if fd.Cardinality() == pref.Repeated {
+				wantHas = false
 			}
 			if fd.ContainingOneof() != nil {
 				wantHas = true
@@ -176,7 +176,7 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	switch {
 	case fd.IsList() || fd.IsMap():
 		m.Set(fd, m.Get(fd))
-		if got, want := m.Has(fd), fd.IsExtension() || fd.ContainingOneof() != nil; got != want {
+		if got, want := m.Has(fd), (fd.IsExtension() && fd.Cardinality() != pref.Repeated) || fd.ContainingOneof() != nil; got != want {
 			t.Errorf("after setting %q to default:\nMessage.Has(%v) = %v, want %v", name, num, got, want)
 		}
 	case fd.Message() == nil:
@@ -300,7 +300,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	// Append values.
 	var want pref.List = &testList{}
 	for i, n := range []seed{1, 0, minVal, maxVal} {
-		if got, want := m.Has(fd), i > 0 || fd.IsExtension(); got != want {
+		if got, want := m.Has(fd), i > 0; got != want {
 			t.Errorf("after appending %d elements to %q:\nMessage.Has(%v) = %v, want %v", i, name, num, got, want)
 		}
 		v := newListElement(fd, list, n, nil)
@@ -327,7 +327,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		n := want.Len() - 1
 		want.Truncate(n)
 		list.Truncate(n)
-		if got, want := m.Has(fd), want.Len() > 0 || fd.IsExtension(); got != want {
+		if got, want := m.Has(fd), want.Len() > 0; got != want {
 			t.Errorf("after truncating %q to %d:\nMessage.Has(%v) = %v, want %v", name, n, num, got, want)
 		}
 		if got, want := m.Get(fd), pref.ValueOfList(want); !valueEqual(got, want) {
