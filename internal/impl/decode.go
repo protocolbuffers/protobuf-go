@@ -136,7 +136,7 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 
 func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.Type, exts map[int32]ExtensionField, opts unmarshalOptions) (n int, err error) {
 	x := exts[int32(num)]
-	xt := x.GetType()
+	xt := x.Type()
 	if xt == nil {
 		var err error
 		xt, err = opts.Resolver().FindExtensionByNumber(mi.Desc.FullName(), num)

@@ -145,7 +145,7 @@ type extensionMap map[int32]ExtensionField
 func (m *extensionMap) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 	if m != nil {
 		for _, x := range *m {
-			xt := x.GetType()
+			xt := x.Type()
 			if !f(xt.TypeDescriptor(), x.Value()) {
 				return
 			}
