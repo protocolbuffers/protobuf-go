@@ -175,13 +175,11 @@ func Marshal(v pref.Value, ev pref.EnumValueDescriptor, k pref.Kind, f Format) (
 func unmarshalBytes(s string) ([]byte, bool) {
 	// Bytes values use the same escaping as the text format,
 	// however they lack the surrounding double quotes.
-	// TODO: Export unmarshalString in the text package to avoid this hack.
-	v, err := ptext.Unmarshal([]byte(`["` + s + `"]:0`))
-	if err == nil && len(v.Message()) == 1 {
-		s := v.Message()[0][0].String()
-		return []byte(s), true
+	v, err := ptext.UnmarshalString(`"` + s + `"`)
+	if err != nil {
+		return nil, false
 	}
-	return nil, false
+	return []byte(v), true
 }
 
 // marshalBytes serializes bytes by using C escaping.

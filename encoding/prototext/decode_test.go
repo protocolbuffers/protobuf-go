@@ -6,6 +6,7 @@ package prototext_test
 
 import (
 	"math"
+	"strings"
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
@@ -27,7 +28,7 @@ func TestUnmarshal(t *testing.T) {
 		inputMessage proto.Message
 		inputText    string
 		wantMessage  proto.Message
-		wantErr      bool // TODO: Verify error message content.
+		wantErr      string // Expected error substring.
 		skip         bool
 	}{{
 		desc:         "proto2 empty message",
@@ -125,7 +126,7 @@ opt_string: "谷歌"
 		desc:         "case sensitive",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `S_BOOL: true`,
-		wantErr:      true,
+		wantErr:      "unknown field: S_BOOL",
 	}, {
 		desc:         "proto3 scalars",
 		inputMessage: &pb3.Scalars{},
@@ -162,17 +163,17 @@ s_string: "谷歌"
 		desc:         "string with invalid UTF-8",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `s_string: "abc\xff"`,
-		wantErr:      true,
+		wantErr:      "(line 1:11): contains invalid UTF-8",
 	}, {
 		desc:         "proto2 message contains unknown field",
 		inputMessage: &pb2.Scalars{},
 		inputText:    "unknown_field: 123",
-		wantErr:      true,
+		wantErr:      "unknown field",
 	}, {
 		desc:         "proto3 message contains unknown field",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "unknown_field: 456",
-		wantErr:      true,
+		wantErr:      "unknown field",
 	}, {
 		desc:         "proto2 message contains discarded unknown field",
 		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
@@ -188,111 +189,104 @@ s_string: "谷歌"
 		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
 		inputMessage: &pb2.Scalars{},
 		inputText:    `13:"hello"`,
-		wantErr:      true,
+		wantErr:      "cannot specify field by number",
 	}, {
 		desc:         "proto3 message cannot parse field number",
 		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
 		inputMessage: &pb3.Scalars{},
 		inputText:    `13:"goodbye"`,
-		wantErr:      true,
+		wantErr:      "cannot specify field by number",
 	}, {
 		desc:         "proto2 numeric key field",
 		inputMessage: &pb2.Scalars{},
 		inputText:    "1: true",
-		wantErr:      true,
+		wantErr:      "cannot specify field by number",
 	}, {
 		desc:         "proto3 numeric key field",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "1: true",
-		wantErr:      true,
+		wantErr:      "cannot specify field by number",
 	}, {
 		desc:         "invalid bool value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_bool: 123",
-		wantErr:      true,
+		wantErr:      "invalid value for bool",
 	}, {
 		desc:         "invalid int32 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_int32: not_a_num",
-		wantErr:      true,
+		wantErr:      "invalid value for int32",
 	}, {
 		desc:         "invalid int64 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_int64: 'not a num either'",
-		wantErr:      true,
+		wantErr:      "invalid value for int64",
 	}, {
 		desc:         "invalid uint32 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_fixed32: -42",
-		wantErr:      true,
+		wantErr:      "invalid value for fixed32",
 	}, {
 		desc:         "invalid uint64 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_uint64: -47",
-		wantErr:      true,
+		wantErr:      "invalid value for uint64",
 	}, {
 		desc:         "invalid sint32 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_sint32: '42'",
-		wantErr:      true,
+		wantErr:      "invalid value for sint32",
 	}, {
 		desc:         "invalid sint64 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_sint64: '-47'",
-		wantErr:      true,
+		wantErr:      "invalid value for sint64",
 	}, {
 		desc:         "invalid fixed32 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_fixed32: -42",
-		wantErr:      true,
+		wantErr:      "invalid value for fixed32",
 	}, {
 		desc:         "invalid fixed64 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_fixed64: -42",
-		wantErr:      true,
+		wantErr:      "invalid value for fixed64",
 	}, {
 		desc:         "invalid sfixed32 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_sfixed32: 'not valid'",
-		wantErr:      true,
+		wantErr:      "invalid value for sfixed32",
 	}, {
 		desc:         "invalid sfixed64 value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_sfixed64: bad",
-		wantErr:      true,
+		wantErr:      "invalid value for sfixed64",
 	}, {
-		desc:         "float positive infinity",
-		inputMessage: &pb3.Scalars{},
-		inputText:    "s_float: inf",
-		wantMessage: &pb3.Scalars{
-			SFloat: float32(math.Inf(1)),
+		desc:         "conformance: FloatFieldMaxValue",
+		inputMessage: &pb2.Scalars{},
+		inputText:    `opt_float: 3.4028235e+38`,
+		wantMessage: &pb2.Scalars{
+			OptFloat: proto.Float32(3.40282347e+38),
 		},
 	}, {
-		desc:         "float negative infinity",
-		inputMessage: &pb3.Scalars{},
-		inputText:    "s_float: -inf",
-		wantMessage: &pb3.Scalars{
-			SFloat: float32(math.Inf(-1)),
+		desc:         "conformance: FloatFieldLargerThanUint64",
+		inputMessage: &pb2.Scalars{},
+		inputText:    `opt_float: 18446744073709551616`,
+		wantMessage: &pb2.Scalars{
+			OptFloat: proto.Float32(1.84467441e+19),
 		},
 	}, {
-		desc:         "double positive infinity",
-		inputMessage: &pb3.Scalars{},
-		inputText:    "s_double: inf",
-		wantMessage: &pb3.Scalars{
-			SDouble: math.Inf(1),
-		},
-	}, {
-		desc:         "double negative infinity",
-		inputMessage: &pb3.Scalars{},
-		inputText:    "s_double: -inf",
-		wantMessage: &pb3.Scalars{
-			SDouble: math.Inf(-1),
+		desc:         "conformance: FloatFieldTooLarge",
+		inputMessage: &pb2.Scalars{},
+		inputText:    `opt_float: 3.4028235e+39`,
+		wantMessage: &pb2.Scalars{
+			OptFloat: proto.Float32(float32(math.Inf(1))),
 		},
 	}, {
 		desc:         "invalid string value",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "s_string: invalid_string",
-		wantErr:      true,
+		wantErr:      "invalid value for string type",
 	}, {
 		desc:         "proto2 bytes set to empty string",
 		inputMessage: &pb2.Scalars{},
@@ -312,7 +306,7 @@ s_string: "谷歌"
 opt_bool: true
 opt_bool: false
 `,
-		wantErr: true,
+		wantErr: `(line 3:1): non-repeated field "opt_bool" is repeated`,
 	}, {
 		desc:         "proto2 more duplicate singular field",
 		inputMessage: &pb2.Scalars{},
@@ -321,14 +315,14 @@ opt_bool: true
 opt_string: "hello"
 opt_bool: false
 `,
-		wantErr: true,
+		wantErr: `(line 4:1): non-repeated field "opt_bool" is repeated`,
 	}, {
 		desc:         "proto2 invalid singular field",
 		inputMessage: &pb2.Scalars{},
 		inputText: `
 opt_bool: [true, false]
 `,
-		wantErr: true,
+		wantErr: "(line 2:11): unexpected token: [",
 	}, {
 		desc:         "proto3 duplicate singular field",
 		inputMessage: &pb3.Scalars{},
@@ -336,7 +330,7 @@ opt_bool: [true, false]
 s_bool: false
 s_bool: true
 `,
-		wantErr: true,
+		wantErr: `non-repeated field "s_bool" is repeated`,
 	}, {
 		desc:         "proto3 more duplicate singular field",
 		inputMessage: &pb3.Scalars{},
@@ -345,7 +339,7 @@ s_bool: false
 s_string: ""
 s_bool: true
 `,
-		wantErr: true,
+		wantErr: `non-repeated field "s_bool" is repeated`,
 	}, {
 		desc:         "proto2 enum",
 		inputMessage: &pb2.Enums{},
@@ -386,7 +380,7 @@ opt_nested_enum: -101
 opt_enum: UNNAMED
 opt_nested_enum: UNNAMED_TOO
 `,
-		wantErr: true,
+		wantErr: "invalid value for enum type: UNNAMED",
 	}, {
 		desc:         "proto3 enum name value",
 		inputMessage: &pb3.Enums{},
@@ -432,10 +426,21 @@ OptGroup: {}
 			Optgroup:  &pb2.Nests_OptGroup{},
 		},
 	}, {
+		desc:         "message fields with no field separator",
+		inputMessage: &pb2.Nests{},
+		inputText: `
+opt_nested {}
+OptGroup {}
+`,
+		wantMessage: &pb2.Nests{
+			OptNested: &pb2.Nested{},
+			Optgroup:  &pb2.Nests_OptGroup{},
+		},
+	}, {
 		desc:         "group field name",
 		inputMessage: &pb2.Nests{},
 		inputText:    `optgroup: {}`,
-		wantErr:      true,
+		wantErr:      "unknown field: optgroup",
 	}, {
 		desc:         "proto2 nested messages",
 		inputMessage: &pb2.Nests{},
@@ -488,7 +493,7 @@ s_nested: {
   s_string: "abc\xff"
 }
 `,
-		wantErr: true,
+		wantErr: "contains invalid UTF-8",
 	}, {
 		desc:         "oneof set to empty string",
 		inputMessage: &pb3.Oneofs{},
@@ -545,7 +550,7 @@ oneof_nested: {
 oneof_enum: ZERO
 oneof_string: "hello"
 `,
-		wantErr: true,
+		wantErr: `error parsing "oneof_string", oneof pb3.Oneofs.union is already set`,
 	}, {
 		desc:         "repeated scalar using same field name",
 		inputMessage: &pb2.Repeats{},
@@ -580,7 +585,7 @@ rpt_string: "b"
 		desc:         "repeated contains invalid UTF-8",
 		inputMessage: &pb2.Repeats{},
 		inputText:    `rpt_string: "abc\xff"`,
-		wantErr:      true,
+		wantErr:      "contains invalid UTF-8",
 	}, {
 		desc:         "repeated enums",
 		inputMessage: &pb2.Enums{},
@@ -643,6 +648,75 @@ RptGroup: {}
 			},
 		},
 	}, {
+		desc:         "repeated message fields without field separator",
+		inputMessage: &pb2.Nests{},
+		inputText: `
+rpt_nested {
+  opt_string: "repeat nested one"
+}
+rpt_nested: [
+  {
+    opt_string: "repeat nested two"
+  },
+  {}
+]
+`,
+		wantMessage: &pb2.Nests{
+			RptNested: []*pb2.Nested{
+				{
+					OptString: proto.String("repeat nested one"),
+				},
+				{
+					OptString: proto.String("repeat nested two"),
+				},
+				{},
+			},
+		},
+	}, {
+		desc:         "bools",
+		inputMessage: &pb2.Repeats{},
+		inputText: `
+rpt_bool: [ True, true, t, 1, False, false, f, 0 ]
+`,
+		wantMessage: &pb2.Repeats{
+			RptBool: []bool{true, true, true, true, false, false, false, false},
+		},
+	}, {
+		desc:         "special floats and doubles",
+		inputMessage: &pb2.Repeats{},
+		inputText: `
+rpt_float: [ inf, Inf, infinity, InFiniTy, -inf, -inF, -infinitY, -InfinitY, nan, NaN, Nan ],
+rpt_double: [ inf, Inf, infinity, InFiniTy, -inf, -inF, -infinitY, -InfinitY, nan, NaN, Nan ],
+`,
+		wantMessage: &pb2.Repeats{
+			RptFloat: []float32{
+				float32(math.Inf(1)),
+				float32(math.Inf(1)),
+				float32(math.Inf(1)),
+				float32(math.Inf(1)),
+				float32(math.Inf(-1)),
+				float32(math.Inf(-1)),
+				float32(math.Inf(-1)),
+				float32(math.Inf(-1)),
+				float32(math.NaN()),
+				float32(math.NaN()),
+				float32(math.NaN()),
+			},
+			RptDouble: []float64{
+				math.Inf(1),
+				math.Inf(1),
+				math.Inf(1),
+				math.Inf(1),
+				math.Inf(-1),
+				math.Inf(-1),
+				math.Inf(-1),
+				math.Inf(-1),
+				math.NaN(),
+				math.NaN(),
+				math.NaN(),
+			},
+		},
+	}, {
 		desc:         "map fields 1",
 		inputMessage: &pb3.Maps{},
 		inputText: `
@@ -650,7 +724,7 @@ int32_to_str: {
   key: -101
   value: "-101"
 }
-int32_to_str: {
+int32_to_str {
   key: 0
   value: "zero"
 }
@@ -662,7 +736,7 @@ int32_to_str: {
   key: 255
   value: "0xff"
 }
-bool_to_uint32: {
+bool_to_uint32 {
   key: true
   value: 42
 }
@@ -708,7 +782,7 @@ uint64_to_enum: {
 		inputText: `
 str_to_nested: {
   key: "nested_one"
-  value: {
+  value {
     s_string: "nested in a map"
   }
 }
@@ -783,7 +857,7 @@ int32_to_str: {
   value: "cero"
 }
 `,
-		wantErr: true,
+		wantErr: `map entry "key" cannot be repeated`,
 	}, {
 		desc:         "map contains duplicate value fields",
 		inputMessage: &pb3.Maps{},
@@ -794,7 +868,7 @@ int32_to_str: {
   value: "uno"
 }
 `,
-		wantErr: true,
+		wantErr: `map entry "value" cannot be repeated`,
 	}, {
 		desc:         "map contains missing key",
 		inputMessage: &pb3.Maps{},
@@ -899,7 +973,7 @@ int32_to_str: {}
   value: "abc\xff"
 }
 `,
-		wantErr: true,
+		wantErr: "contains invalid UTF-8",
 	}, {
 		desc:         "map field key contains invalid UTF-8",
 		inputMessage: &pb3.Maps{},
@@ -908,7 +982,7 @@ int32_to_str: {}
   value: {}
 }
 `,
-		wantErr: true,
+		wantErr: "contains invalid UTF-8",
 	}, {
 		desc:         "map contains unknown field",
 		inputMessage: &pb3.Maps{},
@@ -919,7 +993,7 @@ int32_to_str: {
   unknown: "bad"
 }
 `,
-		wantErr: true,
+		wantErr: `(line 5:3): unknown map entry field "unknown"`,
 	}, {
 		desc:         "map contains extension-like key field",
 		inputMessage: &pb3.Maps{},
@@ -929,7 +1003,7 @@ int32_to_str: {
   value: "ten"
 }
 `,
-		wantErr: true,
+		wantErr: `unknown map entry field "[key]"`,
 	}, {
 		desc:         "map contains invalid key",
 		inputMessage: &pb3.Maps{},
@@ -939,7 +1013,7 @@ int32_to_str: {
   value: "cero"
 }
 `,
-		wantErr: true,
+		wantErr: "(line 3:8): invalid value for int32 type",
 	}, {
 		desc:         "map contains invalid value",
 		inputMessage: &pb3.Maps{},
@@ -949,7 +1023,7 @@ int32_to_str: {
   value: 101
 }
 `,
-		wantErr: true,
+		wantErr: "(line 4:10): invalid value for string type",
 	}, {
 		desc:         "map contains invalid message value",
 		inputMessage: &pb3.Maps{},
@@ -959,7 +1033,7 @@ str_to_nested: {
   value: 1
 }
 `,
-		wantErr: true,
+		wantErr: "syntax error (line 4:10): unexpected token: 1",
 	}, {
 		desc:         "map using mix of [] and repeated",
 		inputMessage: &pb3.Maps{},
@@ -996,7 +1070,7 @@ int32_to_str: {
 	}, {
 		desc:         "required fields not set",
 		inputMessage: &pb2.Requireds{},
-		wantErr:      true,
+		wantErr:      "required field",
 	}, {
 		desc:         "required field set",
 		inputMessage: &pb2.PartialRequired{},
@@ -1019,7 +1093,7 @@ req_enum: ONE
 			ReqString:   proto.String("hello"),
 			ReqEnum:     pb2.Enum_ONE.Enum(),
 		},
-		wantErr: true,
+		wantErr: "required field",
 	}, {
 		desc:         "required fields partially set with AllowPartial",
 		umo:          prototext.UnmarshalOptions{AllowPartial: true},
@@ -1062,7 +1136,7 @@ req_nested: {}
 		wantMessage: &pb2.IndirectRequired{
 			OptNested: &pb2.NestedWithRequired{},
 		},
-		wantErr: true,
+		wantErr: "required field",
 	}, {
 		desc:         "indirect required field with AllowPartial",
 		umo:          prototext.UnmarshalOptions{AllowPartial: true},
@@ -1088,7 +1162,7 @@ rpt_nested: {}
 				{},
 			},
 		},
-		wantErr: true,
+		wantErr: "required field",
 	}, {
 		desc:         "indirect required field in repeated with AllowPartial",
 		umo:          prototext.UnmarshalOptions{AllowPartial: true},
@@ -1129,7 +1203,7 @@ str_to_nested: {
 				},
 			},
 		},
-		wantErr: true,
+		wantErr: "required field",
 	}, {
 		desc:         "indirect required field in map with AllowPartial",
 		umo:          prototext.UnmarshalOptions{AllowPartial: true},
@@ -1163,7 +1237,7 @@ str_to_nested: {
 				OneofNested: &pb2.NestedWithRequired{},
 			},
 		},
-		wantErr: true,
+		wantErr: "required field",
 	}, {
 		desc:         "indirect required field in oneof with AllowPartial",
 		umo:          prototext.UnmarshalOptions{AllowPartial: true},
@@ -1217,7 +1291,7 @@ opt_int32: 42
 		desc:         "extension field contains invalid UTF-8",
 		inputMessage: &pb2.Extensions{},
 		inputText:    `[pb2.opt_ext_string]: "abc\xff"`,
-		wantErr:      true,
+		wantErr:      "contains invalid UTF-8",
 	}, {
 		desc:         "extensions of repeated fields",
 		inputMessage: &pb2.Extensions{},
@@ -1313,7 +1387,7 @@ opt_int32: 42
 		desc:         "invalid extension field name",
 		inputMessage: &pb2.Extensions{},
 		inputText:    "[pb2.invalid_message_field]: true",
-		wantErr:      true,
+		wantErr:      "unknown field",
 	}, {
 		desc:         "MessageSet",
 		inputMessage: &pb2.MessageSet{},
@@ -1366,7 +1440,7 @@ opt_int32: 42
   opt_string: "not a messageset extension"
 }
 `,
-		wantErr: true,
+		wantErr: "unknown field: [pb2.FakeMessageSetExtension]",
 		skip:    !flags.ProtoLegacy,
 	}, {
 		desc:         "not real MessageSet 3",
@@ -1474,18 +1548,18 @@ value: "some bytes"
   s_string: "abc\xff"
 }
 `,
-		wantErr: true,
+		wantErr: "contains invalid UTF-8",
 	}, {
 		desc:         "Any expanded with unregistered type",
 		umo:          prototext.UnmarshalOptions{Resolver: new(preg.Types)},
 		inputMessage: &anypb.Any{},
 		inputText:    `[SomeMessage]: {}`,
-		wantErr:      true,
+		wantErr:      "unable to resolve message [SomeMessage]",
 	}, {
 		desc:         "Any expanded with invalid value",
 		inputMessage: &anypb.Any{},
 		inputText:    `[pb2.Nested]: 123`,
-		wantErr:      true,
+		wantErr:      "unexpected token: 123",
 	}, {
 		desc:         "Any expanded with unknown fields",
 		inputMessage: &anypb.Any{},
@@ -1493,7 +1567,7 @@ value: "some bytes"
 [pb2.Nested]: {}
 unknown: ""
 `,
-		wantErr: true,
+		wantErr: `invalid field name "unknown" in google.protobuf.Any message`,
 	}, {
 		desc:         "Any contains expanded and unexpanded fields",
 		inputMessage: &anypb.Any{},
@@ -1501,7 +1575,7 @@ unknown: ""
 [pb2.Nested]: {}
 type_url: "pb2.Nested"
 `,
-		wantErr: true,
+		wantErr: "(line 3:1): conflict with [pb2.Nested] field",
 	}, {
 		desc:         "weak fields",
 		inputMessage: &testpb.TestWeak{},
@@ -1516,7 +1590,7 @@ type_url: "pb2.Nested"
 		desc:         "weak fields; unknown field",
 		inputMessage: &testpb.TestWeak{},
 		inputText:    `weak_message1:{a:1} weak_message2:{a:1}`,
-		wantErr:      true, // weak_message2 is unknown since the package containing it is not imported
+		wantErr:      "unknown field: weak_message2", // weak_message2 is unknown since the package containing it is not imported
 		skip:         !flags.ProtoLegacy,
 	}}
 
@@ -1527,11 +1601,17 @@ type_url: "pb2.Nested"
 		}
 		t.Run(tt.desc, func(t *testing.T) {
 			err := tt.umo.Unmarshal([]byte(tt.inputText), tt.inputMessage)
-			if err != nil && !tt.wantErr {
-				t.Errorf("Unmarshal() returned error: %v\n\n", err)
+			if err != nil {
+				if tt.wantErr == "" {
+					t.Errorf("Unmarshal() got unexpected error: %v", err)
+				} else if !strings.Contains(err.Error(), tt.wantErr) {
+					t.Errorf("Unmarshal() error got %q, want %q", err, tt.wantErr)
+				}
+				return
 			}
-			if err == nil && tt.wantErr {
-				t.Error("Unmarshal() got nil error, want error\n\n")
+			if tt.wantErr != "" {
+				t.Errorf("Unmarshal() got nil error, want error %q", tt.wantErr)
+				return
 			}
 			if tt.wantMessage != nil && !proto.Equal(tt.inputMessage, tt.wantMessage) {
 				t.Errorf("Unmarshal()\n<got>\n%v\n<want>\n%v\n", tt.inputMessage, tt.wantMessage)

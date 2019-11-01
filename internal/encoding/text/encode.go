@@ -5,16 +5,45 @@
 package text
 
 import (
-	"regexp"
+	"math"
+	"math/bits"
+	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/errors"
 )
 
-// Marshal serializes v as the proto text format, where v must be a Message.
-// In the proto text format, the top-level value is always a message where the
-// delimiters are elided.
+// encType represents an encoding type.
+type encType uint8
+
+const (
+	_ encType = (1 << iota) / 2
+	name
+	scalar
+	messageOpen
+	messageClose
+)
+
+// Encoder provides methods to write out textproto constructs and values. The user is
+// responsible for producing valid sequences of constructs and values.
+type Encoder struct {
+	encoderState
+
+	indent      string
+	newline     string // set to "\n" if len(indent) > 0
+	delims      [2]byte
+	outputASCII bool
+}
+
+type encoderState struct {
+	lastType encType
+	indents  []byte
+	out      []byte
+}
+
+// NewEncoder returns an Encoder.
 //
 // If indent is a non-empty string, it causes every entry in a List or Message
 // to be preceded by the indent and trailed by a newline.
@@ -25,164 +54,214 @@ import (
 // If outputASCII is true, strings will be serialized in such a way that
 // multi-byte UTF-8 sequences are escaped. This property ensures that the
 // overall output is ASCII (as opposed to UTF-8).
-func Marshal(v Value, indent string, delims [2]byte, outputASCII bool) ([]byte, error) {
-	p := encoder{}
+func NewEncoder(indent string, delims [2]byte, outputASCII bool) (*Encoder, error) {
+	e := &Encoder{}
 	if len(indent) > 0 {
 		if strings.Trim(indent, " \t") != "" {
 			return nil, errors.New("indent may only be composed of space and tab characters")
 		}
-		p.indent = indent
-		p.newline = "\n"
+		e.indent = indent
+		e.newline = "\n"
 	}
 	switch delims {
 	case [2]byte{0, 0}:
-		p.delims = [2]byte{'{', '}'}
+		e.delims = [2]byte{'{', '}'}
 	case [2]byte{'{', '}'}, [2]byte{'<', '>'}:
-		p.delims = delims
+		e.delims = delims
 	default:
 		return nil, errors.New("delimiters may only be \"{}\" or \"<>\"")
 	}
-	p.outputASCII = outputASCII
+	e.outputASCII = outputASCII
 
-	err := p.marshalMessage(v, false)
-	if err != nil {
-		return nil, err
-	}
-	return p.out, nil
+	return e, nil
 }
 
-type encoder struct {
-	out []byte
-
-	indent      string
-	indents     []byte
-	newline     string // set to "\n" if len(indent) > 0
-	delims      [2]byte
-	outputASCII bool
+// Bytes returns the content of the written bytes.
+func (e *Encoder) Bytes() []byte {
+	return e.out
 }
 
-func (p *encoder) marshalList(v Value) error {
-	if v.Type() != List {
-		return errors.New("invalid type %v, expected list", v.Type())
-	}
-	elems := v.List()
-	p.out = append(p.out, '[')
-	p.indents = append(p.indents, p.indent...)
-	if len(elems) > 0 {
-		p.out = append(p.out, p.newline...)
-	}
-	for i, elem := range elems {
-		p.out = append(p.out, p.indents...)
-		if err := p.marshalValue(elem); err != nil {
-			return err
-		}
-		if i < len(elems)-1 {
-			p.out = append(p.out, ',')
-		}
-		p.out = append(p.out, p.newline...)
-	}
-	p.indents = p.indents[:len(p.indents)-len(p.indent)]
-	if len(elems) > 0 {
-		p.out = append(p.out, p.indents...)
-	}
-	p.out = append(p.out, ']')
-	return nil
+// StartMessage writes out the '{' or '<' symbol.
+func (e *Encoder) StartMessage() {
+	e.prepareNext(messageOpen)
+	e.out = append(e.out, e.delims[0])
 }
 
-func (p *encoder) marshalMessage(v Value, emitDelims bool) error {
-	if v.Type() != Message {
-		return errors.New("invalid type %v, expected message", v.Type())
+// EndMessage writes out the '}' or '>' symbol.
+func (e *Encoder) EndMessage() {
+	e.prepareNext(messageClose)
+	e.out = append(e.out, e.delims[1])
+}
+
+// Writname writes out the field name and the separator ':'.
+func (e *Encoder) WriteName(s string) {
+	e.prepareNext(name)
+	e.out = append(e.out, s...)
+	e.out = append(e.out, ':')
+}
+
+// WriteBool writes out the given boolean value.
+func (e *Encoder) WriteBool(b bool) {
+	if b {
+		e.WriteLiteral("true")
+	} else {
+		e.WriteLiteral("false")
 	}
-	items := v.Message()
-	if emitDelims {
-		p.out = append(p.out, p.delims[0])
-		p.indents = append(p.indents, p.indent...)
-		if len(items) > 0 {
-			p.out = append(p.out, p.newline...)
+}
+
+// WriteString writes out the given string value.
+func (e *Encoder) WriteString(s string) {
+	e.prepareNext(scalar)
+	e.out = appendString(e.out, s, e.outputASCII)
+}
+
+func appendString(out []byte, in string, outputASCII bool) []byte {
+	out = append(out, '"')
+	i := indexNeedEscapeInString(in)
+	in, out = in[i:], append(out, in[:i]...)
+	for len(in) > 0 {
+		switch r, n := utf8.DecodeRuneInString(in); {
+		case r == utf8.RuneError && n == 1:
+			// We do not report invalid UTF-8 because strings in the text format
+			// are used to represent both the proto string and bytes type.
+			r = rune(in[0])
+			fallthrough
+		case r < ' ' || r == '"' || r == '\\':
+			out = append(out, '\\')
+			switch r {
+			case '"', '\\':
+				out = append(out, byte(r))
+			case '\n':
+				out = append(out, 'n')
+			case '\r':
+				out = append(out, 'r')
+			case '\t':
+				out = append(out, 't')
+			default:
+				out = append(out, 'x')
+				out = append(out, "00"[1+(bits.Len32(uint32(r))-1)/4:]...)
+				out = strconv.AppendUint(out, uint64(r), 16)
+			}
+			in = in[n:]
+		case outputASCII && r >= utf8.RuneSelf:
+			out = append(out, '\\')
+			if r <= math.MaxUint16 {
+				out = append(out, 'u')
+				out = append(out, "0000"[1+(bits.Len32(uint32(r))-1)/4:]...)
+				out = strconv.AppendUint(out, uint64(r), 16)
+			} else {
+				out = append(out, 'U')
+				out = append(out, "00000000"[1+(bits.Len32(uint32(r))-1)/4:]...)
+				out = strconv.AppendUint(out, uint64(r), 16)
+			}
+			in = in[n:]
+		default:
+			i := indexNeedEscapeInString(in[n:])
+			in, out = in[n+i:], append(out, in[:n+i]...)
 		}
 	}
-	for i, item := range items {
-		p.out = append(p.out, p.indents...)
-		if err := p.marshalKey(item[0]); err != nil {
-			return err
+	out = append(out, '"')
+	return out
+}
+
+// indexNeedEscapeInString returns the index of the character that needs
+// escaping. If no characters need escaping, this returns the input length.
+func indexNeedEscapeInString(s string) int {
+	for i := 0; i < len(s); i++ {
+		if c := s[i]; c < ' ' || c == '"' || c == '\'' || c == '\\' || c >= utf8.RuneSelf {
+			return i
 		}
-		p.out = append(p.out, ':')
-		if len(p.indent) > 0 {
-			p.out = append(p.out, ' ')
-			// For multi-line output, add a random extra space after key:
-			// to make output unstable.
+	}
+	return len(s)
+}
+
+// WriteFloat writes out the given float value for given bitSize.
+func (e *Encoder) WriteFloat(n float64, bitSize int) {
+	e.prepareNext(scalar)
+	e.out = appendFloat(e.out, n, bitSize)
+}
+
+func appendFloat(out []byte, n float64, bitSize int) []byte {
+	switch {
+	case math.IsNaN(n):
+		return append(out, "nan"...)
+	case math.IsInf(n, +1):
+		return append(out, "inf"...)
+	case math.IsInf(n, -1):
+		return append(out, "-inf"...)
+	default:
+		return strconv.AppendFloat(out, n, 'g', -1, bitSize)
+	}
+}
+
+// WriteInt writes out the given signed integer value.
+func (e *Encoder) WriteInt(n int64) {
+	e.prepareNext(scalar)
+	e.out = append(e.out, strconv.FormatInt(n, 10)...)
+}
+
+// WriteUint writes out the given unsigned integer value.
+func (e *Encoder) WriteUint(n uint64) {
+	e.prepareNext(scalar)
+	e.out = append(e.out, strconv.FormatUint(n, 10)...)
+}
+
+// WriteLiteral writes out the given string as a literal value without quotes.
+// This is used for writing enum literal strings.
+func (e *Encoder) WriteLiteral(s string) {
+	e.prepareNext(scalar)
+	e.out = append(e.out, s...)
+}
+
+// prepareNext adds possible space and indentation for the next value based
+// on last encType and indent option. It also updates e.lastType to next.
+func (e *Encoder) prepareNext(next encType) {
+	defer func() {
+		e.lastType = next
+	}()
+
+	// Single line.
+	if len(e.indent) == 0 {
+		// Add space after each field before the next one.
+		if e.lastType&(scalar|messageClose) != 0 && next == name {
+			e.out = append(e.out, ' ')
+			// Add a random extra space to make output unstable.
 			if detrand.Bool() {
-				p.out = append(p.out, ' ')
+				e.out = append(e.out, ' ')
 			}
 		}
-
-		if err := p.marshalValue(item[1]); err != nil {
-			return err
-		}
-		if i < len(items)-1 && len(p.indent) == 0 {
-			p.out = append(p.out, ' ')
-			// For single-line output, add a random extra space after a field
-			// to make output unstable.
-			if detrand.Bool() {
-				p.out = append(p.out, ' ')
-			}
-		}
-		p.out = append(p.out, p.newline...)
+		return
 	}
-	if emitDelims {
-		p.indents = p.indents[:len(p.indents)-len(p.indent)]
-		if len(items) > 0 {
-			p.out = append(p.out, p.indents...)
-		}
-		p.out = append(p.out, p.delims[1])
-	}
-	return nil
-}
 
-// This expression is more liberal than ConsumeAnyTypeUrl in C++.
-// However, the C++ parser does not handle many legal URL strings.
-// The Go implementation is more liberal to be backwards compatible with
-// the historical Go implementation which was overly liberal (and buggy).
-var urlRegexp = regexp.MustCompile(`^[-_a-zA-Z0-9]+([./][-_a-zA-Z0-9]+)*`)
-
-func (p *encoder) marshalKey(v Value) error {
-	switch v.Type() {
-	case String:
-		var err error
-		p.out = append(p.out, '[')
-		if len(urlRegexp.FindString(v.str)) == len(v.str) {
-			p.out = append(p.out, v.str...)
-		} else {
-			err = p.marshalString(v)
+	// Multi-line.
+	switch {
+	case e.lastType == name:
+		e.out = append(e.out, ' ')
+		// Add a random extra space after name: to make output unstable.
+		if detrand.Bool() {
+			e.out = append(e.out, ' ')
 		}
-		p.out = append(p.out, ']')
-		return err
-	case Uint:
-		return p.marshalNumber(v)
-	case Name:
-		s, _ := v.Name()
-		p.out = append(p.out, s...)
-		return nil
-	default:
-		return errors.New("invalid type %v to encode key", v.Type())
+
+	case e.lastType == messageOpen && next != messageClose:
+		e.indents = append(e.indents, e.indent...)
+		e.out = append(e.out, '\n')
+		e.out = append(e.out, e.indents...)
+
+	case e.lastType&(scalar|messageClose) != 0:
+		if next == messageClose {
+			e.indents = e.indents[:len(e.indents)-len(e.indent)]
+		}
+		e.out = append(e.out, '\n')
+		e.out = append(e.out, e.indents...)
 	}
 }
 
-func (p *encoder) marshalValue(v Value) error {
-	switch v.Type() {
-	case Bool, Int, Uint, Float32, Float64:
-		return p.marshalNumber(v)
-	case String:
-		return p.marshalString(v)
-	case List:
-		return p.marshalList(v)
-	case Message:
-		return p.marshalMessage(v, true)
-	case Name:
-		s, _ := v.Name()
-		p.out = append(p.out, s...)
-		return nil
-	default:
-		return errors.New("invalid type %v to encode value", v.Type())
-	}
+// Snapshot returns the current snapshot for use in Reset.
+func (e *Encoder) Snapshot() encoderState {
+	return e.encoderState
+}
+
+// Reset resets the Encoder to the given encoderState from a Snapshot.
+func (e *Encoder) Reset(es encoderState) {
+	e.encoderState = es
 }

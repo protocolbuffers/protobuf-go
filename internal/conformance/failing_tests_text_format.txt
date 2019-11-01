@@ -1,9 +1,1 @@
 Recommended.Proto3.ProtobufInput.MessageUnknownFields_Print.TextFormatOutput
-Required.Proto3.TextFormatInput.FloatFieldLargerThanUint64.ProtobufOutput
-Required.Proto3.TextFormatInput.FloatFieldLargerThanUint64.TextFormatOutput
-Required.Proto3.TextFormatInput.FloatFieldMaxValue.ProtobufOutput
-Required.Proto3.TextFormatInput.FloatFieldMaxValue.TextFormatOutput
-Required.Proto3.TextFormatInput.FloatFieldNaNValue.ProtobufOutput
-Required.Proto3.TextFormatInput.FloatFieldNaNValue.TextFormatOutput
-Required.Proto3.TextFormatInput.FloatFieldTooLarge.ProtobufOutput
-Required.Proto3.TextFormatInput.FloatFieldTooLarge.TextFormatOutput

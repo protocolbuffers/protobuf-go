@@ -845,7 +845,7 @@ req_nested: {}
 			m.ProtoReflect().SetUnknown(pack.Message{
 				pack.Tag{101, pack.VarintType}, pack.Bool(true),
 				pack.Tag{102, pack.VarintType}, pack.Varint(0xff),
-				pack.Tag{103, pack.Fixed32Type}, pack.Uint32(47),
+				pack.Tag{103, pack.Fixed32Type}, pack.Uint32(0x47),
 				pack.Tag{104, pack.Fixed64Type}, pack.Int64(0xdeadbeef),
 			}.Marshal())
 			return m
@@ -853,8 +853,8 @@ req_nested: {}
 		want: `opt_string: "this message contains unknown fields"
 101: 1
 102: 255
-103: 47
-104: 3735928559
+103: 0x47
+104: 0xdeadbeef
 `,
 	}, {
 		desc: "unknown length-delimited",
@@ -1205,6 +1205,93 @@ value: "\n\x13embedded inside Any\x12\x0b\n\tinception"
 		},
 		want: `type_url: "foo/pb2.Nested"
 value: "\x80"
+`,
+	}, {
+		desc: "Any expanded in another message",
+		input: func() *pb2.KnownTypes {
+			m1 := &pb2.Nested{
+				OptString: proto.String("message inside Any of another Any field"),
+			}
+			b1, err := proto.MarshalOptions{Deterministic: true}.Marshal(m1)
+			if err != nil {
+				t.Fatalf("error in binary marshaling message for Any.value: %v", err)
+			}
+			m2 := &anypb.Any{
+				TypeUrl: "pb2.Nested",
+				Value:   b1,
+			}
+			b2, err := proto.MarshalOptions{Deterministic: true}.Marshal(m2)
+			if err != nil {
+				t.Fatalf("error in binary marshaling message for Any.value: %v", err)
+			}
+			return &pb2.KnownTypes{
+				OptAny: &anypb.Any{
+					TypeUrl: "google.protobuf.Any",
+					Value:   b2,
+				},
+			}
+		}(),
+		want: `opt_any: {
+  [google.protobuf.Any]: {
+    [pb2.Nested]: {
+      opt_string: "message inside Any of another Any field"
+    }
+  }
+}
+`,
+	}, {
+		desc: "Any not expanded due to invalid UTF-8",
+		input: func() *pb2.KnownTypes {
+			m := &pb2.Nested{
+				OptString: proto.String("invalid UTF-8 abc\xff"),
+			}
+			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
+			if err != nil {
+				t.Fatalf("error in binary marshaling message for Any.value: %v", err)
+			}
+			return &pb2.KnownTypes{
+				OptAny: &anypb.Any{
+					TypeUrl: "pb2.Nested",
+					Value:   b,
+				},
+			}
+		}(),
+		want: `opt_any: {
+  type_url: "pb2.Nested"
+  value: "\n\x12invalid UTF-8 abc\xff"
+}
+`,
+	}, {
+		desc: "Any inside Any not expanded",
+		input: func() *pb2.KnownTypes {
+			m1 := &pb2.Nested{
+				OptString: proto.String("invalid UTF-8 abc\xff"),
+			}
+			b1, err := proto.MarshalOptions{Deterministic: true}.Marshal(m1)
+			if err != nil {
+				t.Fatalf("error in binary marshaling message for Any.value: %v", err)
+			}
+			m2 := &anypb.Any{
+				TypeUrl: "pb2.Nested",
+				Value:   b1,
+			}
+			b2, err := proto.MarshalOptions{Deterministic: true}.Marshal(m2)
+			if err != nil {
+				t.Fatalf("error in binary marshaling message for Any.value: %v", err)
+			}
+			return &pb2.KnownTypes{
+				OptAny: &anypb.Any{
+					TypeUrl: "google.protobuf.Any",
+					Value:   b2,
+				},
+			}
+		}(),
+		want: `opt_any: {
+  [google.protobuf.Any]: {
+    type_url: "pb2.Nested"
+    value: "\n\x12invalid UTF-8 abc\xff"
+  }
+}
 `,
 	}}
 

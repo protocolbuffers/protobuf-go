@@ -6,6 +6,7 @@ package prototext
 
 import (
 	"fmt"
+	"io"
 	"strings"
 	"unicode/utf8"
 
@@ -55,53 +56,101 @@ type UnmarshalOptions struct {
 func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {
 	proto.Reset(m)
 
-	// Parse into text.Value of message type.
-	val, err := text.Unmarshal(b)
-	if err != nil {
-		return err
-	}
-
 	if o.Resolver == nil {
 		o.Resolver = protoregistry.GlobalTypes
 	}
-	err = o.unmarshalMessage(val.Message(), m.ProtoReflect())
-	if err != nil {
+
+	dec := decoder{text.NewDecoder(b), o}
+	if err := dec.unmarshalMessage(m.ProtoReflect(), false); err != nil {
 		return err
 	}
-
 	if o.AllowPartial {
 		return nil
 	}
 	return proto.IsInitialized(m)
 }
 
-// unmarshalMessage unmarshals a [][2]text.Value message into the given protoreflect.Message.
-func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message) error {
+type decoder struct {
+	*text.Decoder
+	opts UnmarshalOptions
+}
+
+// newError returns an error object with position info.
+func (d decoder) newError(pos int, f string, x ...interface{}) error {
+	line, column := d.Position(pos)
+	head := fmt.Sprintf("(line %d:%d): ", line, column)
+	return errors.New(head+f, x...)
+}
+
+// unexpectedTokenError returns a syntax error for the given unexpected token.
+func (d decoder) unexpectedTokenError(tok text.Token) error {
+	return d.syntaxError(tok.Pos(), "unexpected token: %s", tok.RawString())
+}
+
+// syntaxError returns a syntax error for given position.
+func (d decoder) syntaxError(pos int, f string, x ...interface{}) error {
+	line, column := d.Position(pos)
+	head := fmt.Sprintf("syntax error (line %d:%d): ", line, column)
+	return errors.New(head+f, x...)
+}
+
+// unmarshalMessage unmarshals into the given protoreflect.Message.
+func (d decoder) unmarshalMessage(m pref.Message, checkDelims bool) error {
 	messageDesc := m.Descriptor()
 	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
 		return errors.New("no support for proto1 MessageSets")
 	}
 
-	// Handle expanded Any message.
-	if messageDesc.FullName() == "google.protobuf.Any" && isExpandedAny(tmsg) {
-		return o.unmarshalAny(tmsg[0], m)
+	if messageDesc.FullName() == "google.protobuf.Any" {
+		return d.unmarshalAny(m, checkDelims)
+	}
+
+	if checkDelims {
+		tok, err := d.Read()
+		if err != nil {
+			return err
+		}
+
+		if tok.Kind() != text.MessageOpen {
+			return d.unexpectedTokenError(tok)
+		}
 	}
 
 	var seenNums set.Ints
 	var seenOneofs set.Ints
 	fieldDescs := messageDesc.Fields()
-	for _, tfield := range tmsg {
-		tkey := tfield[0]
-		tval := tfield[1]
+
+	for {
+		// Read field name.
+		tok, err := d.Read()
+		if err != nil {
+			return err
+		}
+		switch typ := tok.Kind(); typ {
+		case text.Name:
+			// Continue below.
+		case text.EOF:
+			if checkDelims {
+				return io.ErrUnexpectedEOF
+			}
+			return nil
+		default:
+			if checkDelims && typ == text.MessageClose {
+				return nil
+			}
+			return d.unexpectedTokenError(tok)
+		}
 
 		// Resolve the field descriptor.
 		var name pref.Name
 		var fd pref.FieldDescriptor
 		var xt pref.ExtensionType
 		var xtErr error
-		switch tkey.Type() {
-		case text.Name:
-			name, _ = tkey.Name()
+		var isFieldNumberName bool
+
+		switch tok.NameKind() {
+		case text.IdentName:
+			name = pref.Name(tok.IdentName())
 			fd = fieldDescs.ByName(name)
 			if fd == nil {
 				// The proto name of a group field is in all lowercase,
@@ -113,30 +162,30 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 			} else if fd.Kind() == pref.GroupKind && fd.Message().Name() != name {
 				fd = nil // reset since field name is actually the message name
 			}
-		case text.String:
+
+		case text.TypeName:
 			// Handle extensions only. This code path is not for Any.
-			if messageDesc.FullName() == "google.protobuf.Any" {
-				break
-			}
-			xt, xtErr = o.findExtension(pref.FullName(tkey.String()))
-		case text.Uint:
-			v, _ := tkey.Uint(false)
-			num := pref.FieldNumber(v)
+			xt, xtErr = d.findExtension(pref.FullName(tok.TypeName()))
+
+		case text.FieldNumber:
+			isFieldNumberName = true
+			num := pref.FieldNumber(tok.FieldNumber())
 			if !num.IsValid() {
-				return errors.New("invalid field number: %d", num)
+				return d.newError(tok.Pos(), "invalid field number: %d", num)
 			}
 			fd = fieldDescs.ByNumber(num)
 			if fd == nil {
-				xt, xtErr = o.Resolver.FindExtensionByNumber(messageDesc.FullName(), num)
+				xt, xtErr = d.opts.Resolver.FindExtensionByNumber(messageDesc.FullName(), num)
 			}
 		}
+
 		if xt != nil {
 			fd = xt.TypeDescriptor()
 			if !messageDesc.ExtensionRanges().Has(fd.Number()) || fd.ContainingMessage().FullName() != messageDesc.FullName() {
-				return errors.New("message %v cannot be extended by %v", messageDesc.FullName(), fd.FullName())
+				return d.newError(tok.Pos(), "message %v cannot be extended by %v", messageDesc.FullName(), fd.FullName())
 			}
 		} else if xtErr != nil && xtErr != protoregistry.NotFound {
-			return errors.New("unable to resolve: %v", xtErr)
+			return d.newError(tok.Pos(), "unable to resolve [%s]: %v", tok.RawString(), xtErr)
 		}
 		if flags.ProtoLegacy {
 			if fd != nil && fd.IsWeak() && fd.Message().IsPlaceholder() {
@@ -146,67 +195,64 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 
 		// Handle unknown fields.
 		if fd == nil {
-			if o.DiscardUnknown || messageDesc.ReservedNames().Has(name) {
+			if d.opts.DiscardUnknown || messageDesc.ReservedNames().Has(name) {
+				d.skipValue()
 				continue
 			}
-			return errors.New("%v contains unknown field: %v", messageDesc.FullName(), tkey)
+			return d.newError(tok.Pos(), "unknown field: %v", tok.RawString())
 		}
 
 		// Handle fields identified by field number.
-		if tkey.Type() == text.Uint {
+		if isFieldNumberName {
 			// TODO: Add an option to permit parsing field numbers.
 			//
 			// This requires careful thought as the MarshalOptions.EmitUnknown
-			// option allows formatting unknown fields as the field number
-			// and the best-effort textual representation of the field value.
-			// In that case, it may not be possible to unmarshal the value from
-			// a parser that does have information about the unknown field.
-			return errors.New("cannot specify field by number: %v", tkey)
+			// option allows formatting unknown fields as the field number and the
+			// best-effort textual representation of the field value.  In that case,
+			// it may not be possible to unmarshal the value from a parser that does
+			// have information about the unknown field.
+			return d.newError(tok.Pos(), "cannot specify field by number: %v", tok.RawString())
 		}
 
 		switch {
 		case fd.IsList():
-			// If input is not a list, turn it into a list.
-			var items []text.Value
-			if tval.Type() != text.List {
-				items = []text.Value{tval}
-			} else {
-				items = tval.List()
+			kind := fd.Kind()
+			if kind != pref.MessageKind && kind != pref.GroupKind && !tok.HasSeparator() {
+				return d.syntaxError(tok.Pos(), "missing field separator :")
 			}
 
 			list := m.Mutable(fd).List()
-			if err := o.unmarshalList(items, fd, list); err != nil {
+			if err := d.unmarshalList(fd, list); err != nil {
 				return err
-			}
-		case fd.IsMap():
-			// If input is not a list, turn it into a list.
-			var items []text.Value
-			if tval.Type() != text.List {
-				items = []text.Value{tval}
-			} else {
-				items = tval.List()
 			}
 
+		case fd.IsMap():
 			mmap := m.Mutable(fd).Map()
-			if err := o.unmarshalMap(items, fd, mmap); err != nil {
+			if err := d.unmarshalMap(fd, mmap); err != nil {
 				return err
 			}
+
 		default:
+			kind := fd.Kind()
+			if kind != pref.MessageKind && kind != pref.GroupKind && !tok.HasSeparator() {
+				return d.syntaxError(tok.Pos(), "missing field separator :")
+			}
+
 			// If field is a oneof, check if it has already been set.
 			if od := fd.ContainingOneof(); od != nil {
 				idx := uint64(od.Index())
 				if seenOneofs.Has(idx) {
-					return errors.New("oneof %v is already set", od.FullName())
+					return d.newError(tok.Pos(), "error parsing %q, oneof %v is already set", tok.RawString(), od.FullName())
 				}
 				seenOneofs.Set(idx)
 			}
 
-			// Required or optional fields.
 			num := uint64(fd.Number())
 			if seenNums.Has(num) {
-				return errors.New("non-repeated field %v is repeated", fd.FullName())
+				return d.newError(tok.Pos(), "non-repeated field %q is repeated", tok.RawString())
 			}
-			if err := o.unmarshalSingular(tval, fd, m); err != nil {
+
+			if err := d.unmarshalSingular(fd, m); err != nil {
 				return err
 			}
 			seenNums.Set(num)
@@ -217,285 +263,527 @@ func (o UnmarshalOptions) unmarshalMessage(tmsg [][2]text.Value, m pref.Message)
 }
 
 // findExtension returns protoreflect.ExtensionType from the Resolver if found.
-func (o UnmarshalOptions) findExtension(xtName pref.FullName) (pref.ExtensionType, error) {
-	xt, err := o.Resolver.FindExtensionByName(xtName)
+func (d decoder) findExtension(xtName pref.FullName) (pref.ExtensionType, error) {
+	xt, err := d.opts.Resolver.FindExtensionByName(xtName)
 	if err == nil {
 		return xt, nil
 	}
-	return messageset.FindMessageSetExtension(o.Resolver, xtName)
+	return messageset.FindMessageSetExtension(d.opts.Resolver, xtName)
 }
 
-// unmarshalSingular unmarshals given text.Value into the non-repeated field.
-func (o UnmarshalOptions) unmarshalSingular(input text.Value, fd pref.FieldDescriptor, m pref.Message) error {
+// unmarshalSingular unmarshals a non-repeated field value specified by the
+// given FieldDescriptor.
+func (d decoder) unmarshalSingular(fd pref.FieldDescriptor, m pref.Message) error {
 	var val pref.Value
+	var err error
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
-		if input.Type() != text.Message {
-			return errors.New("%v contains invalid message/group value: %v", fd.FullName(), input)
-		}
 		val = m.NewField(fd)
-		if err := o.unmarshalMessage(input.Message(), val.Message()); err != nil {
-			return err
-		}
+		err = d.unmarshalMessage(val.Message(), true)
 	default:
-		var err error
-		val, err = unmarshalScalar(input, fd)
-		if err != nil {
-			return err
-		}
+		val, err = d.unmarshalScalar(fd)
 	}
-	m.Set(fd, val)
-
-	return nil
+	if err == nil {
+		m.Set(fd, val)
+	}
+	return err
 }
 
-// unmarshalScalar converts the given text.Value to a scalar/enum protoreflect.Value specified in
-// the given FieldDescriptor. Caller should not pass in a FieldDescriptor for a message/group kind.
-func unmarshalScalar(input text.Value, fd pref.FieldDescriptor) (pref.Value, error) {
-	const b32 = false
-	const b64 = true
+// unmarshalScalar unmarshals a scalar/enum protoreflect.Value specified by the
+// given FieldDescriptor.
+func (d decoder) unmarshalScalar(fd pref.FieldDescriptor) (pref.Value, error) {
+	tok, err := d.Read()
+	if err != nil {
+		return pref.Value{}, err
+	}
 
-	switch kind := fd.Kind(); kind {
+	if tok.Kind() != text.Scalar {
+		return pref.Value{}, d.unexpectedTokenError(tok)
+	}
+
+	kind := fd.Kind()
+	switch kind {
 	case pref.BoolKind:
-		if b, ok := input.Bool(); ok {
-			return pref.ValueOfBool(bool(b)), nil
+		if b, ok := tok.Bool(); ok {
+			return pref.ValueOfBool(b), nil
 		}
+
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
-		if n, ok := input.Int(b32); ok {
-			return pref.ValueOfInt32(int32(n)), nil
+		if n, ok := tok.Int32(); ok {
+			return pref.ValueOfInt32(n), nil
 		}
+
 	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
-		if n, ok := input.Int(b64); ok {
-			return pref.ValueOfInt64(int64(n)), nil
+		if n, ok := tok.Int64(); ok {
+			return pref.ValueOfInt64(n), nil
 		}
+
 	case pref.Uint32Kind, pref.Fixed32Kind:
-		if n, ok := input.Uint(b32); ok {
-			return pref.ValueOfUint32(uint32(n)), nil
+		if n, ok := tok.Uint32(); ok {
+			return pref.ValueOfUint32(n), nil
 		}
+
 	case pref.Uint64Kind, pref.Fixed64Kind:
-		if n, ok := input.Uint(b64); ok {
-			return pref.ValueOfUint64(uint64(n)), nil
+		if n, ok := tok.Uint64(); ok {
+			return pref.ValueOfUint64(n), nil
 		}
+
 	case pref.FloatKind:
-		if n, ok := input.Float(b32); ok {
-			return pref.ValueOfFloat32(float32(n)), nil
+		if n, ok := tok.Float32(); ok {
+			return pref.ValueOfFloat32(n), nil
 		}
+
 	case pref.DoubleKind:
-		if n, ok := input.Float(b64); ok {
-			return pref.ValueOfFloat64(float64(n)), nil
+		if n, ok := tok.Float64(); ok {
+			return pref.ValueOfFloat64(n), nil
 		}
+
 	case pref.StringKind:
-		if input.Type() == text.String {
-			s := input.String()
+		if s, ok := tok.String(); ok {
 			if utf8.ValidString(s) {
 				return pref.ValueOfString(s), nil
 			}
-			return pref.Value{}, errors.InvalidUTF8(string(fd.FullName()))
+			return pref.Value{}, d.newError(tok.Pos(), "contains invalid UTF-8")
 		}
+
 	case pref.BytesKind:
-		if input.Type() == text.String {
-			return pref.ValueOfBytes([]byte(input.String())), nil
+		if b, ok := tok.String(); ok {
+			return pref.ValueOfBytes([]byte(b)), nil
 		}
+
 	case pref.EnumKind:
-		// If input is int32, use directly.
-		if n, ok := input.Int(b32); ok {
-			return pref.ValueOfEnum(pref.EnumNumber(n)), nil
-		}
-		if name, ok := input.Name(); ok {
+		if lit, ok := tok.Enum(); ok {
 			// Lookup EnumNumber based on name.
-			if enumVal := fd.Enum().Values().ByName(name); enumVal != nil {
+			if enumVal := fd.Enum().Values().ByName(pref.Name(lit)); enumVal != nil {
 				return pref.ValueOfEnum(enumVal.Number()), nil
 			}
 		}
+		if num, ok := tok.Int32(); ok {
+			return pref.ValueOfEnum(pref.EnumNumber(num)), nil
+		}
+
 	default:
 		panic(fmt.Sprintf("invalid scalar kind %v", kind))
 	}
 
-	return pref.Value{}, errors.New("%v contains invalid scalar value: %v", fd.FullName(), input)
+	return pref.Value{}, d.newError(tok.Pos(), "invalid value for %v type: %v", kind, tok.RawString())
 }
 
-// unmarshalList unmarshals given []text.Value into given protoreflect.List.
-func (o UnmarshalOptions) unmarshalList(inputList []text.Value, fd pref.FieldDescriptor, list pref.List) error {
+// unmarshalList unmarshals into given protoreflect.List. A list value can
+// either be in [] syntax or simply just a single scalar/message value.
+func (d decoder) unmarshalList(fd pref.FieldDescriptor, list pref.List) error {
+	tok, err := d.Peek()
+	if err != nil {
+		return err
+	}
+
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
-		for _, input := range inputList {
-			if input.Type() != text.Message {
-				return errors.New("%v contains invalid message/group value: %v", fd.FullName(), input)
+		switch tok.Kind() {
+		case text.ListOpen:
+			d.Read()
+			for {
+				tok, err := d.Peek()
+				if err != nil {
+					return err
+				}
+
+				switch tok.Kind() {
+				case text.ListClose:
+					d.Read()
+					return nil
+				case text.MessageOpen:
+					pval := list.NewElement()
+					if err := d.unmarshalMessage(pval.Message(), true); err != nil {
+						return err
+					}
+					list.Append(pval)
+				default:
+					return d.unexpectedTokenError(tok)
+				}
 			}
-			val := list.NewElement()
-			if err := o.unmarshalMessage(input.Message(), val.Message()); err != nil {
+
+		case text.MessageOpen:
+			pval := list.NewElement()
+			if err := d.unmarshalMessage(pval.Message(), true); err != nil {
 				return err
 			}
-			list.Append(val)
+			list.Append(pval)
+			return nil
 		}
+
 	default:
-		for _, input := range inputList {
-			val, err := unmarshalScalar(input, fd)
+		switch tok.Kind() {
+		case text.ListOpen:
+			d.Read()
+			for {
+				tok, err := d.Peek()
+				if err != nil {
+					return err
+				}
+
+				switch tok.Kind() {
+				case text.ListClose:
+					d.Read()
+					return nil
+				case text.Scalar:
+					pval, err := d.unmarshalScalar(fd)
+					if err != nil {
+						return err
+					}
+					list.Append(pval)
+				default:
+					return d.unexpectedTokenError(tok)
+				}
+			}
+
+		case text.Scalar:
+			pval, err := d.unmarshalScalar(fd)
 			if err != nil {
 				return err
 			}
-			list.Append(val)
+			list.Append(pval)
+			return nil
 		}
 	}
 
-	return nil
+	return d.unexpectedTokenError(tok)
 }
 
-// unmarshalMap unmarshals given []text.Value into given protoreflect.Map.
-func (o UnmarshalOptions) unmarshalMap(input []text.Value, fd pref.FieldDescriptor, mmap pref.Map) error {
-	// Determine ahead whether map entry is a scalar type or a message type in order to call the
-	// appropriate unmarshalMapValue func inside the for loop below.
-	unmarshalMapValue := unmarshalMapScalarValue
+// unmarshalMap unmarshals into given protoreflect.Map. A map value is a
+// textproto message containing {key: <kvalue>, value: <mvalue>}.
+func (d decoder) unmarshalMap(fd pref.FieldDescriptor, mmap pref.Map) error {
+	// Determine ahead whether map entry is a scalar type or a message type in
+	// order to call the appropriate unmarshalMapValue func inside
+	// unmarshalMapEntry.
+	var unmarshalMapValue func() (pref.Value, error)
 	switch fd.MapValue().Kind() {
 	case pref.MessageKind, pref.GroupKind:
-		unmarshalMapValue = o.unmarshalMapMessageValue
-	}
-
-	for _, entry := range input {
-		if entry.Type() != text.Message {
-			return errors.New("%v contains invalid map entry: %v", fd.FullName(), entry)
+		unmarshalMapValue = func() (pref.Value, error) {
+			pval := mmap.NewValue()
+			if err := d.unmarshalMessage(pval.Message(), true); err != nil {
+				return pref.Value{}, err
+			}
+			return pval, nil
 		}
-		tkey, tval, err := parseMapEntry(entry.Message(), fd.FullName())
-		if err != nil {
-			return err
-		}
-		pkey, err := unmarshalMapKey(tkey, fd.MapKey())
-		if err != nil {
-			return err
-		}
-		err = unmarshalMapValue(tval, pkey, fd.MapValue(), mmap)
-		if err != nil {
-			return err
+	default:
+		unmarshalMapValue = func() (pref.Value, error) {
+			return d.unmarshalScalar(fd.MapValue())
 		}
 	}
 
-	return nil
-}
+	tok, err := d.Read()
+	if err != nil {
+		return err
+	}
+	switch tok.Kind() {
+	case text.MessageOpen:
+		return d.unmarshalMapEntry(fd, mmap, unmarshalMapValue)
 
-// parseMapEntry parses [][2]text.Value for field names key and value, and return corresponding
-// field values. If there are duplicate field names, the value for the last field is returned. If
-// the field name does not exist, it will return the zero value of text.Value. It will return an
-// error if there are unknown field names.
-func parseMapEntry(mapEntry [][2]text.Value, name pref.FullName) (key text.Value, value text.Value, err error) {
-	for _, field := range mapEntry {
-		keyStr, ok := field[0].Name()
-		if ok {
-			switch keyStr {
-			case "key":
-				if key.Type() != 0 {
-					return key, value, errors.New("%v contains duplicate key field", name)
+	case text.ListOpen:
+		for {
+			tok, err := d.Read()
+			if err != nil {
+				return err
+			}
+			switch tok.Kind() {
+			case text.ListClose:
+				return nil
+			case text.MessageOpen:
+				if err := d.unmarshalMapEntry(fd, mmap, unmarshalMapValue); err != nil {
+					return err
 				}
-				key = field[1]
-			case "value":
-				if value.Type() != 0 {
-					return key, value, errors.New("%v contains duplicate value field", name)
-				}
-				value = field[1]
 			default:
-				ok = false
+				return d.unexpectedTokenError(tok)
 			}
 		}
-		if !ok {
-			// TODO: Do not return error if ignore unknown option is added and enabled.
-			return key, value, errors.New("%v contains unknown map entry name: %v", name, field[0])
-		}
-	}
-	return key, value, nil
-}
 
-// unmarshalMapKey converts given text.Value into a protoreflect.MapKey. A map key type is any
-// integral or string type.
-func unmarshalMapKey(input text.Value, fd pref.FieldDescriptor) (pref.MapKey, error) {
-	// If input is not set, use the zero value.
-	if input.Type() == 0 {
-		return fd.Default().MapKey(), nil
-	}
-
-	val, err := unmarshalScalar(input, fd)
-	if err != nil {
-		return pref.MapKey{}, errors.New("%v contains invalid key: %v", fd.FullName(), input)
-	}
-	return val.MapKey(), nil
-}
-
-// unmarshalMapMessageValue unmarshals given message-type text.Value into a protoreflect.Map for
-// the given MapKey.
-func (o UnmarshalOptions) unmarshalMapMessageValue(input text.Value, pkey pref.MapKey, fd pref.FieldDescriptor, mmap pref.Map) error {
-	var value [][2]text.Value
-	switch input.Type() {
-	case 0:
-	case text.Message:
-		value = input.Message()
 	default:
-		return errors.New("%v contains invalid value: %v", fd.FullName(), input)
+		return d.unexpectedTokenError(tok)
 	}
-	val := mmap.NewValue()
-	if err := o.unmarshalMessage(value, val.Message()); err != nil {
-		return err
-	}
-	mmap.Set(pkey, val)
-	return nil
 }
 
-// unmarshalMapScalarValue unmarshals given scalar-type text.Value into a protoreflect.Map
-// for the given MapKey.
-func unmarshalMapScalarValue(input text.Value, pkey pref.MapKey, fd pref.FieldDescriptor, mmap pref.Map) error {
-	var val pref.Value
-	if input.Type() == 0 {
-		val = fd.Default()
-	} else {
-		var err error
-		val, err = unmarshalScalar(input, fd)
+// unmarshalMap unmarshals into given protoreflect.Map. A map value is a
+// textproto message containing {key: <kvalue>, value: <mvalue>}.
+func (d decoder) unmarshalMapEntry(fd pref.FieldDescriptor, mmap pref.Map, unmarshalMapValue func() (pref.Value, error)) error {
+	var key pref.MapKey
+	var pval pref.Value
+Loop:
+	for {
+		// Read field name.
+		tok, err := d.Read()
 		if err != nil {
 			return err
 		}
+		switch tok.Kind() {
+		case text.Name:
+			if tok.NameKind() != text.IdentName {
+				if !d.opts.DiscardUnknown {
+					return d.newError(tok.Pos(), "unknown map entry field %q", tok.RawString())
+				}
+				d.skipValue()
+				continue Loop
+			}
+			// Continue below.
+		case text.MessageClose:
+			break Loop
+		default:
+			return d.unexpectedTokenError(tok)
+		}
+
+		name := tok.IdentName()
+		switch name {
+		case "key":
+			if !tok.HasSeparator() {
+				return d.syntaxError(tok.Pos(), "missing field separator :")
+			}
+			if key.IsValid() {
+				return d.newError(tok.Pos(), `map entry "key" cannot be repeated`)
+			}
+			val, err := d.unmarshalScalar(fd.MapKey())
+			if err != nil {
+				return err
+			}
+			key = val.MapKey()
+
+		case "value":
+			if kind := fd.MapValue().Kind(); (kind != pref.MessageKind) && (kind != pref.GroupKind) {
+				if !tok.HasSeparator() {
+					return d.syntaxError(tok.Pos(), "missing field separator :")
+				}
+			}
+			if pval.IsValid() {
+				return d.newError(tok.Pos(), `map entry "value" cannot be repeated`)
+			}
+			pval, err = unmarshalMapValue()
+			if err != nil {
+				return err
+			}
+
+		default:
+			if !d.opts.DiscardUnknown {
+				return d.newError(tok.Pos(), "unknown map entry field %q", name)
+			}
+			d.skipValue()
+		}
 	}
-	mmap.Set(pkey, val)
+
+	if !key.IsValid() {
+		key = fd.MapKey().Default().MapKey()
+	}
+	if !pval.IsValid() {
+		switch fd.MapValue().Kind() {
+		case pref.MessageKind, pref.GroupKind:
+			// If value field is not set for message/group types, construct an
+			// empty one as default.
+			pval = mmap.NewValue()
+		default:
+			pval = fd.MapValue().Default()
+		}
+	}
+	mmap.Set(key, pval)
 	return nil
 }
 
-// isExpandedAny returns true if given [][2]text.Value may be an expanded Any that contains only one
-// field with key type of text.String type and value type of text.Message.
-func isExpandedAny(tmsg [][2]text.Value) bool {
-	if len(tmsg) != 1 {
-		return false
+// unmarshalAny unmarshals an Any textproto. It can either be in expanded form
+// or non-expanded form.
+func (d decoder) unmarshalAny(m pref.Message, checkDelims bool) error {
+	var typeURL string
+	var bValue []byte
+
+	// hasFields tracks which valid fields have been seen in the loop below in
+	// order to flag an error if there are duplicates or conflicts. It may
+	// contain the strings "type_url", "value" and "expanded".  The literal
+	// "expanded" is used to indicate that the expanded form has been
+	// encountered already.
+	hasFields := map[string]bool{}
+
+	if checkDelims {
+		tok, err := d.Read()
+		if err != nil {
+			return err
+		}
+
+		if tok.Kind() != text.MessageOpen {
+			return d.unexpectedTokenError(tok)
+		}
 	}
 
-	field := tmsg[0]
-	return field[0].Type() == text.String && field[1].Type() == text.Message
-}
+Loop:
+	for {
+		// Read field name. Can only have 3 possible field names, i.e. type_url,
+		// value and type URL name inside [].
+		tok, err := d.Read()
+		if err != nil {
+			return err
+		}
+		if typ := tok.Kind(); typ != text.Name {
+			if checkDelims {
+				if typ == text.MessageClose {
+					break Loop
+				}
+			} else if typ == text.EOF {
+				break Loop
+			}
+			return d.unexpectedTokenError(tok)
+		}
 
-// unmarshalAny unmarshals an expanded Any textproto. This method assumes that the given
-// tfield has key type of text.String and value type of text.Message.
-func (o UnmarshalOptions) unmarshalAny(tfield [2]text.Value, m pref.Message) error {
-	typeURL := tfield[0].String()
-	value := tfield[1].Message()
+		switch tok.NameKind() {
+		case text.IdentName:
+			// Both type_url and value fields require field separator :.
+			if !tok.HasSeparator() {
+				return d.syntaxError(tok.Pos(), "missing field separator :")
+			}
 
-	mt, err := o.Resolver.FindMessageByURL(typeURL)
-	if err != nil {
-		return errors.New("unable to resolve message [%v]: %v", typeURL, err)
-	}
-	// Create new message for the embedded message type and unmarshal the
-	// value into it.
-	m2 := mt.New()
-	if err := o.unmarshalMessage(value, m2); err != nil {
-		return err
-	}
-	// Serialize the embedded message and assign the resulting bytes to the value field.
-	b, err := proto.MarshalOptions{
-		AllowPartial:  true, // never check required fields inside an Any
-		Deterministic: true,
-	}.Marshal(m2.Interface())
-	if err != nil {
-		return err
+			switch tok.IdentName() {
+			case "type_url":
+				if hasFields["type_url"] {
+					return d.newError(tok.Pos(), "duplicate Any type_url field")
+				}
+				if hasFields["expanded"] {
+					return d.newError(tok.Pos(), "conflict with [%s] field", typeURL)
+				}
+				tok, err := d.Read()
+				if err != nil {
+					return err
+				}
+				var ok bool
+				typeURL, ok = tok.String()
+				if !ok {
+					return d.newError(tok.Pos(), "invalid Any type_url: %v", tok.RawString())
+				}
+				hasFields["type_url"] = true
+
+			case "value":
+				if hasFields["value"] {
+					return d.newError(tok.Pos(), "duplicate Any value field")
+				}
+				if hasFields["expanded"] {
+					return d.newError(tok.Pos(), "conflict with [%s] field", typeURL)
+				}
+				tok, err := d.Read()
+				if err != nil {
+					return err
+				}
+				s, ok := tok.String()
+				if !ok {
+					return d.newError(tok.Pos(), "invalid Any value: %v", tok.RawString())
+				}
+				bValue = []byte(s)
+				hasFields["value"] = true
+
+			default:
+				if !d.opts.DiscardUnknown {
+					return d.newError(tok.Pos(), "invalid field name %q in google.protobuf.Any message", tok.RawString())
+				}
+			}
+
+		case text.TypeName:
+			if hasFields["expanded"] {
+				return d.newError(tok.Pos(), "cannot have more than one type")
+			}
+			if hasFields["type_url"] {
+				return d.newError(tok.Pos(), "conflict with type_url field")
+			}
+			typeURL = tok.TypeName()
+			var err error
+			bValue, err = d.unmarshalExpandedAny(typeURL, tok.Pos())
+			if err != nil {
+				return err
+			}
+			hasFields["expanded"] = true
+
+		default:
+			if !d.opts.DiscardUnknown {
+				return d.newError(tok.Pos(), "invalid field name %q in google.protobuf.Any message", tok.RawString())
+			}
+		}
 	}
 
 	fds := m.Descriptor().Fields()
-	fdType := fds.ByNumber(fieldnum.Any_TypeUrl)
-	fdValue := fds.ByNumber(fieldnum.Any_Value)
-
-	m.Set(fdType, pref.ValueOfString(typeURL))
-	m.Set(fdValue, pref.ValueOfBytes(b))
-
+	if len(typeURL) > 0 {
+		m.Set(fds.ByNumber(fieldnum.Any_TypeUrl), pref.ValueOfString(typeURL))
+	}
+	if len(bValue) > 0 {
+		m.Set(fds.ByNumber(fieldnum.Any_Value), pref.ValueOfBytes(bValue))
+	}
 	return nil
+}
+
+func (d decoder) unmarshalExpandedAny(typeURL string, pos int) ([]byte, error) {
+	mt, err := d.opts.Resolver.FindMessageByURL(typeURL)
+	if err != nil {
+		return nil, d.newError(pos, "unable to resolve message [%v]: %v", typeURL, err)
+	}
+	// Create new message for the embedded message type and unmarshal the value
+	// field into it.
+	m := mt.New()
+	if err := d.unmarshalMessage(m, true); err != nil {
+		return nil, err
+	}
+	// Serialize the embedded message and return the resulting bytes.
+	b, err := proto.MarshalOptions{
+		AllowPartial:  true, // Never check required fields inside an Any.
+		Deterministic: true,
+	}.Marshal(m.Interface())
+	if err != nil {
+		return nil, d.newError(pos, "error in marshaling message into Any.value: %v", err)
+	}
+	return b, nil
+}
+
+// skipValue makes the decoder parse a field value in order to advance the read
+// to the next field. It relies on Read returning an error if the types are not
+// in valid sequence.
+func (d decoder) skipValue() error {
+	tok, err := d.Read()
+	if err != nil {
+		return err
+	}
+	// Only need to continue reading for messages and lists.
+	switch tok.Kind() {
+	case text.MessageOpen:
+		return d.skipMessageValue()
+
+	case text.ListOpen:
+		for {
+			tok, err := d.Read()
+			if err != nil {
+				return err
+			}
+			switch tok.Kind() {
+			case text.ListClose:
+				return nil
+			case text.MessageOpen:
+				return d.skipMessageValue()
+			default:
+				// Skip items. This will not validate whether skipped values are
+				// of the same type or not, same behavior as C++
+				// TextFormat::Parser::AllowUnknownField(true) version 3.8.0.
+				if err := d.skipValue(); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	return nil
+}
+
+// skipMessageValue makes the decoder parse and skip over all fields in a
+// message. It assumes that the previous read type is MessageOpen.
+func (d decoder) skipMessageValue() error {
+	for {
+		tok, err := d.Read()
+		if err != nil {
+			return err
+		}
+		switch tok.Kind() {
+		case text.MessageClose:
+			return nil
+		case text.Name:
+			if err := d.skipValue(); err != nil {
+				return err
+			}
+		}
+	}
 }

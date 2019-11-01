@@ -7,6 +7,7 @@ package prototext
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/internal/encoding/messageset"
@@ -90,6 +91,9 @@ func (o MarshalOptions) Format(m proto.Message) string {
 // MarshalOptions object. Do not depend on the output being stable. It may
 // change over time across different versions of the program.
 func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
+	const outputASCII = false
+	var delims = [2]byte{'{', '}'}
+
 	if o.Multiline && o.Indent == "" {
 		o.Indent = defaultIndent
 	}
@@ -97,41 +101,52 @@ func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
 		o.Resolver = protoregistry.GlobalTypes
 	}
 
-	v, err := o.marshalMessage(m.ProtoReflect())
+	internalEnc, err := text.NewEncoder(o.Indent, delims, outputASCII)
 	if err != nil {
 		return nil, err
 	}
 
-	delims := [2]byte{'{', '}'}
-	const outputASCII = false
-	b, err := text.Marshal(v, o.Indent, delims, outputASCII)
+	enc := encoder{internalEnc, o}
+	err = enc.marshalMessage(m.ProtoReflect(), false)
 	if err != nil {
 		return nil, err
+	}
+	out := enc.Bytes()
+	if len(o.Indent) > 0 && len(out) > 0 {
+		out = append(out, '\n')
 	}
 	if o.AllowPartial {
-		return b, nil
+		return out, nil
 	}
-	return b, proto.IsInitialized(m)
+	return out, proto.IsInitialized(m)
 }
 
-// marshalMessage converts a protoreflect.Message to a text.Value.
-func (o MarshalOptions) marshalMessage(m pref.Message) (text.Value, error) {
+type encoder struct {
+	*text.Encoder
+	opts MarshalOptions
+}
+
+// marshalMessage marshals the given protoreflect.Message.
+func (e encoder) marshalMessage(m pref.Message, inclDelims bool) error {
 	messageDesc := m.Descriptor()
 	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
-		return text.Value{}, errors.New("no support for proto1 MessageSets")
+		return errors.New("no support for proto1 MessageSets")
+	}
+
+	if inclDelims {
+		e.StartMessage()
+		defer e.EndMessage()
 	}
 
 	// Handle Any expansion.
 	if messageDesc.FullName() == "google.protobuf.Any" {
-		if msg, err := o.marshalAny(m); err == nil {
-			// Return as is if no error.
-			return msg, nil
+		if e.marshalAny(m) {
+			return nil
 		}
-		// Otherwise continue on to marshal Any as a regular message.
+		// If unable to expand, continue on to marshal Any as a regular message.
 	}
 
-	// Handle known fields.
-	var msgFields [][2]text.Value
+	// Marshal known fields.
 	fieldDescs := messageDesc.Fields()
 	size := fieldDescs.Len()
 	for i := 0; i < size; {
@@ -142,262 +157,254 @@ func (o MarshalOptions) marshalMessage(m pref.Message) (text.Value, error) {
 		} else {
 			i++
 		}
+
 		if fd == nil || !m.Has(fd) {
 			continue
 		}
 
-		name := text.ValueOf(fd.Name())
+		name := fd.Name()
 		// Use type name for group field name.
 		if fd.Kind() == pref.GroupKind {
-			name = text.ValueOf(fd.Message().Name())
+			name = fd.Message().Name()
 		}
-		pval := m.Get(fd)
-		var err error
-		msgFields, err = o.appendField(msgFields, name, pval, fd)
-		if err != nil {
-			return text.Value{}, err
+		val := m.Get(fd)
+		if err := e.marshalField(string(name), val, fd); err != nil {
+			return err
 		}
 	}
 
-	// Handle extensions.
-	var err error
-	msgFields, err = o.appendExtensions(msgFields, m)
-	if err != nil {
-		return text.Value{}, err
+	// Marshal extensions.
+	if err := e.marshalExtensions(m); err != nil {
+		return err
 	}
 
-	// Handle unknown fields.
-	if o.EmitUnknown {
-		msgFields = appendUnknown(msgFields, m.GetUnknown())
+	// Marshal unknown fields.
+	if e.opts.EmitUnknown {
+		e.marshalUnknown(m.GetUnknown())
 	}
 
-	return text.ValueOf(msgFields), nil
+	return nil
 }
 
-// appendField marshals a protoreflect.Value and appends it to the given [][2]text.Value.
-func (o MarshalOptions) appendField(msgFields [][2]text.Value, name text.Value, pval pref.Value, fd pref.FieldDescriptor) ([][2]text.Value, error) {
+// marshalField marshals the given field with protoreflect.Value.
+func (e encoder) marshalField(name string, val pref.Value, fd pref.FieldDescriptor) error {
 	switch {
 	case fd.IsList():
-		items, err := o.marshalList(pval.List(), fd)
-		if err != nil {
-			return msgFields, err
-		}
-
-		for _, item := range items {
-			msgFields = append(msgFields, [2]text.Value{name, item})
-		}
+		return e.marshalList(name, val.List(), fd)
 	case fd.IsMap():
-		items, err := o.marshalMap(pval.Map(), fd)
-		if err != nil {
-			return msgFields, err
-		}
-
-		for _, item := range items {
-			msgFields = append(msgFields, [2]text.Value{name, item})
-		}
+		return e.marshalMap(name, val.Map(), fd)
 	default:
-		tval, err := o.marshalSingular(pval, fd)
-		if err != nil {
-			return msgFields, err
-		}
-		msgFields = append(msgFields, [2]text.Value{name, tval})
+		e.WriteName(name)
+		return e.marshalSingular(val, fd)
 	}
-
-	return msgFields, nil
 }
 
-// marshalSingular converts a non-repeated field value to text.Value.
-// This includes all scalar types, enums, messages, and groups.
-func (o MarshalOptions) marshalSingular(val pref.Value, fd pref.FieldDescriptor) (text.Value, error) {
+// marshalSingular marshals the given non-repeated field value. This includes
+// all scalar types, enums, messages, and groups.
+func (e encoder) marshalSingular(val pref.Value, fd pref.FieldDescriptor) error {
 	kind := fd.Kind()
 	switch kind {
-	case pref.BoolKind,
-		pref.Int32Kind, pref.Sint32Kind, pref.Uint32Kind,
-		pref.Int64Kind, pref.Sint64Kind, pref.Uint64Kind,
-		pref.Sfixed32Kind, pref.Fixed32Kind,
-		pref.Sfixed64Kind, pref.Fixed64Kind,
-		pref.FloatKind, pref.DoubleKind,
-		pref.BytesKind:
-		return text.ValueOf(val.Interface()), nil
+	case pref.BoolKind:
+		e.WriteBool(val.Bool())
 
 	case pref.StringKind:
 		s := val.String()
 		if !utf8.ValidString(s) {
-			return text.Value{}, errors.InvalidUTF8(string(fd.FullName()))
+			return errors.InvalidUTF8(string(fd.FullName()))
 		}
-		return text.ValueOf(s), nil
+		e.WriteString(s)
+
+	case pref.Int32Kind, pref.Int64Kind,
+		pref.Sint32Kind, pref.Sint64Kind,
+		pref.Sfixed32Kind, pref.Sfixed64Kind:
+		e.WriteInt(val.Int())
+
+	case pref.Uint32Kind, pref.Uint64Kind,
+		pref.Fixed32Kind, pref.Fixed64Kind:
+		e.WriteUint(val.Uint())
+
+	case pref.FloatKind:
+		// Encoder.WriteFloat handles the special numbers NaN and infinites.
+		e.WriteFloat(val.Float(), 32)
+
+	case pref.DoubleKind:
+		// Encoder.WriteFloat handles the special numbers NaN and infinites.
+		e.WriteFloat(val.Float(), 64)
+
+	case pref.BytesKind:
+		e.WriteString(string(val.Bytes()))
 
 	case pref.EnumKind:
 		num := val.Enum()
 		if desc := fd.Enum().Values().ByNumber(num); desc != nil {
-			return text.ValueOf(desc.Name()), nil
+			e.WriteLiteral(string(desc.Name()))
+		} else {
+			// Use numeric value if there is no enum description.
+			e.WriteInt(int64(num))
 		}
-		// Use numeric value if there is no enum description.
-		return text.ValueOf(int32(num)), nil
 
 	case pref.MessageKind, pref.GroupKind:
-		return o.marshalMessage(val.Message())
-	}
+		return e.marshalMessage(val.Message(), true)
 
-	panic(fmt.Sprintf("%v has unknown kind: %v", fd.FullName(), kind))
+	default:
+		panic(fmt.Sprintf("%v has unknown kind: %v", fd.FullName(), kind))
+	}
+	return nil
 }
 
-// marshalList converts a protoreflect.List to []text.Value.
-func (o MarshalOptions) marshalList(list pref.List, fd pref.FieldDescriptor) ([]text.Value, error) {
+// marshalList marshals the given protoreflect.List as multiple name-value fields.
+func (e encoder) marshalList(name string, list pref.List, fd pref.FieldDescriptor) error {
 	size := list.Len()
-	values := make([]text.Value, 0, size)
-
 	for i := 0; i < size; i++ {
-		item := list.Get(i)
-		val, err := o.marshalSingular(item, fd)
-		if err != nil {
-			// Return already marshaled values.
-			return values, err
+		e.WriteName(name)
+		if err := e.marshalSingular(list.Get(i), fd); err != nil {
+			return err
 		}
-		values = append(values, val)
 	}
-
-	return values, nil
+	return nil
 }
 
-var (
-	mapKeyName   = text.ValueOf(pref.Name("key"))
-	mapValueName = text.ValueOf(pref.Name("value"))
-)
-
-// marshalMap converts a protoreflect.Map to []text.Value.
-func (o MarshalOptions) marshalMap(mmap pref.Map, fd pref.FieldDescriptor) ([]text.Value, error) {
-	// values is a list of messages.
-	values := make([]text.Value, 0, mmap.Len())
-
+// marshalMap marshals the given protoreflect.Map as multiple name-value fields.
+func (e encoder) marshalMap(name string, mmap pref.Map, fd pref.FieldDescriptor) error {
 	var err error
 	mapsort.Range(mmap, fd.MapKey().Kind(), func(key pref.MapKey, val pref.Value) bool {
-		var keyTxtVal text.Value
-		keyTxtVal, err = o.marshalSingular(key.Value(), fd.MapKey())
+		e.WriteName(name)
+		e.StartMessage()
+		defer e.EndMessage()
+
+		e.WriteName("key")
+		err = e.marshalSingular(key.Value(), fd.MapKey())
 		if err != nil {
 			return false
 		}
-		var valTxtVal text.Value
-		valTxtVal, err = o.marshalSingular(val, fd.MapValue())
+
+		e.WriteName("value")
+		err = e.marshalSingular(val, fd.MapValue())
 		if err != nil {
 			return false
 		}
-		// Map entry (message) contains 2 fields, first field for key and second field for value.
-		msg := text.ValueOf([][2]text.Value{
-			{mapKeyName, keyTxtVal},
-			{mapValueName, valTxtVal},
-		})
-		values = append(values, msg)
-		err = nil
 		return true
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return values, nil
+	return err
 }
 
-// appendExtensions marshals extension fields and appends them to the given [][2]text.Value.
-func (o MarshalOptions) appendExtensions(msgFields [][2]text.Value, m pref.Message) ([][2]text.Value, error) {
-	var err error
-	var entries [][2]text.Value
+// marshalExtensions marshals extension fields.
+func (e encoder) marshalExtensions(m pref.Message) error {
+	type entry struct {
+		key   string
+		value pref.Value
+		desc  pref.FieldDescriptor
+	}
+
+	// Get a sorted list based on field key first.
+	var entries []entry
 	m.Range(func(fd pref.FieldDescriptor, v pref.Value) bool {
 		if !fd.IsExtension() {
 			return true
 		}
-
 		// For MessageSet extensions, the name used is the parent message.
 		name := fd.FullName()
 		if messageset.IsMessageSetExtension(fd) {
 			name = name.Parent()
 		}
-
-		// Use string type to produce [name] format.
-		tname := text.ValueOf(string(name))
-		entries, err = o.appendField(entries, tname, v, fd)
-		if err != nil {
-			return false
-		}
-		err = nil
+		entries = append(entries, entry{
+			key:   string(name),
+			value: v,
+			desc:  fd,
+		})
 		return true
 	})
-	if err != nil {
-		return msgFields, err
-	}
-
-	// Sort extensions lexicographically and append to output.
-	sort.SliceStable(entries, func(i, j int) bool {
-		return entries[i][0].String() < entries[j][0].String()
+	// Sort extensions lexicographically.
+	sort.Slice(entries, func(i, j int) bool {
+		return entries[i].key < entries[j].key
 	})
-	return append(msgFields, entries...), nil
+
+	// Write out sorted list.
+	for _, entry := range entries {
+		// Extension field name is the proto field name enclosed in [].
+		name := "[" + entry.key + "]"
+		if err := e.marshalField(name, entry.value, entry.desc); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-// appendUnknown parses the given []byte and appends field(s) into the given fields slice.
+// marshalUnknown parses the given []byte and marshals fields out.
 // This function assumes proper encoding in the given []byte.
-func appendUnknown(fields [][2]text.Value, b []byte) [][2]text.Value {
+func (e encoder) marshalUnknown(b []byte) {
+	const dec = 10
+	const hex = 16
 	for len(b) > 0 {
-		var value interface{}
 		num, wtype, n := wire.ConsumeTag(b)
 		b = b[n:]
+		e.WriteName(strconv.FormatInt(int64(num), dec))
 
 		switch wtype {
 		case wire.VarintType:
-			value, n = wire.ConsumeVarint(b)
+			var v uint64
+			v, n = wire.ConsumeVarint(b)
+			e.WriteUint(v)
 		case wire.Fixed32Type:
-			value, n = wire.ConsumeFixed32(b)
+			var v uint32
+			v, n = wire.ConsumeFixed32(b)
+			e.WriteLiteral("0x" + strconv.FormatUint(uint64(v), hex))
 		case wire.Fixed64Type:
-			value, n = wire.ConsumeFixed64(b)
+			var v uint64
+			v, n = wire.ConsumeFixed64(b)
+			e.WriteLiteral("0x" + strconv.FormatUint(v, hex))
 		case wire.BytesType:
-			value, n = wire.ConsumeBytes(b)
+			var v []byte
+			v, n = wire.ConsumeBytes(b)
+			e.WriteString(string(v))
 		case wire.StartGroupType:
+			e.StartMessage()
 			var v []byte
 			v, n = wire.ConsumeGroup(num, b)
-			var msg [][2]text.Value
-			value = appendUnknown(msg, v)
+			e.marshalUnknown(v)
+			e.EndMessage()
 		default:
-			panic(fmt.Sprintf("error parsing unknown field wire type: %v", wtype))
+			panic(fmt.Sprintf("prototext: error parsing unknown field wire type: %v", wtype))
 		}
 
-		fields = append(fields, [2]text.Value{text.ValueOf(uint32(num)), text.ValueOf(value)})
 		b = b[n:]
 	}
-	return fields
 }
 
-// marshalAny converts a google.protobuf.Any protoreflect.Message to a text.Value.
-func (o MarshalOptions) marshalAny(m pref.Message) (text.Value, error) {
-	fds := m.Descriptor().Fields()
+// marshalAny marshals the given google.protobuf.Any message in expanded form.
+// It returns true if it was able to marshal, else false.
+func (e encoder) marshalAny(any pref.Message) bool {
+	// Construct the embedded message.
+	fds := any.Descriptor().Fields()
 	fdType := fds.ByNumber(fieldnum.Any_TypeUrl)
-	fdValue := fds.ByNumber(fieldnum.Any_Value)
-
-	typeURL := m.Get(fdType).String()
-	value := m.Get(fdValue)
-
-	emt, err := o.Resolver.FindMessageByURL(typeURL)
+	typeURL := any.Get(fdType).String()
+	mt, err := e.opts.Resolver.FindMessageByURL(typeURL)
 	if err != nil {
-		return text.Value{}, err
+		return false
 	}
-	em := emt.New().Interface()
+	m := mt.New().Interface()
+
+	// Unmarshal bytes into embedded message.
+	fdValue := fds.ByNumber(fieldnum.Any_Value)
+	value := any.Get(fdValue)
 	err = proto.UnmarshalOptions{
 		AllowPartial: true,
-		Resolver:     o.Resolver,
-	}.Unmarshal(value.Bytes(), em)
+		Resolver:     e.opts.Resolver,
+	}.Unmarshal(value.Bytes(), m)
 	if err != nil {
-		return text.Value{}, err
+		return false
 	}
 
-	msg, err := o.marshalMessage(em.ProtoReflect())
+	// Get current encoder position. If marshaling fails, reset encoder output
+	// back to this position.
+	pos := e.Snapshot()
+
+	// Field name is the proto field name enclosed in [].
+	e.WriteName("[" + typeURL + "]")
+	err = e.marshalMessage(m.ProtoReflect(), true)
 	if err != nil {
-		return text.Value{}, err
+		e.Reset(pos)
+		return false
 	}
-	// Expanded Any field value contains only a single field with the type_url field value as the
-	// field name in [] and a text marshaled field value of the embedded message.
-	msgFields := [][2]text.Value{
-		{
-			text.ValueOf(typeURL),
-			msg,
-		},
-	}
-	return text.ValueOf(msgFields), nil
+	return true
 }
