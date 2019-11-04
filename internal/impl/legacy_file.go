@@ -67,7 +67,15 @@ func legacyLoadFileDesc(b []byte) protoreflect.FileDescriptor {
 }
 
 type resolverOnly struct {
-	*protoregistry.Files
+	reg *protoregistry.Files
 }
 
-func (resolverOnly) Register(protoreflect.FileDescriptor) error { return nil }
+func (r resolverOnly) FindFileByPath(path string) (protoreflect.FileDescriptor, error) {
+	return r.reg.FindFileByPath(path)
+}
+func (r resolverOnly) FindDescriptorByName(name protoreflect.FullName) (protoreflect.Descriptor, error) {
+	return r.reg.FindDescriptorByName(name)
+}
+func (resolverOnly) RegisterFile(protoreflect.FileDescriptor) error {
+	return nil
+}
