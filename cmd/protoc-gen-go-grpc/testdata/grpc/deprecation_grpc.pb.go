@@ -5,6 +5,8 @@ package grpc
 import (
 	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -21,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // Deprecated: Do not use.
 type DeprecatedServiceClient interface {
+	// Deprecated: Do not use.
 	DeprecatedCall(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -47,7 +50,16 @@ func (c *deprecatedServiceClient) DeprecatedCall(ctx context.Context, in *Reques
 //
 // Deprecated: Do not use.
 type DeprecatedServiceServer interface {
+	// Deprecated: Do not use.
 	DeprecatedCall(context.Context, *Request) (*Response, error)
+}
+
+// UnimplementedDeprecatedServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedDeprecatedServiceServer struct {
+}
+
+func (*UnimplementedDeprecatedServiceServer) DeprecatedCall(context.Context, *Request) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeprecatedCall not implemented")
 }
 
 // Deprecated: Do not use.

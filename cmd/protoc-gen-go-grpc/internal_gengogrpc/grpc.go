@@ -18,6 +18,8 @@ import (
 const (
 	contextPackage = protogen.GoImportPath("context")
 	grpcPackage    = protogen.GoImportPath("google.golang.org/grpc")
+	codesPackage   = protogen.GoImportPath("google.golang.org/grpc/codes")
+	statusPackage  = protogen.GoImportPath("google.golang.org/grpc/status")
 )
 
 // GenerateFile generates a _grpc.pb.go file containing gRPC service definitions.
@@ -72,6 +74,9 @@ func genService(gen *protogen.Plugin, file *protogen.File, g *protogen.Generated
 	g.P("type ", clientName, " interface {")
 	for _, method := range service.Methods {
 		g.Annotate(clientName+"."+method.GoName, method.Location)
+		if method.Desc.Options().(*descriptorpb.MethodOptions).GetDeprecated() {
+			g.P(deprecationComment)
+		}
 		g.P(method.Comments.Leading,
 			clientSignature(g, method))
 	}
@@ -118,10 +123,29 @@ func genService(gen *protogen.Plugin, file *protogen.File, g *protogen.Generated
 	g.P("type ", serverType, " interface {")
 	for _, method := range service.Methods {
 		g.Annotate(serverType+"."+method.GoName, method.Location)
+		if method.Desc.Options().(*descriptorpb.MethodOptions).GetDeprecated() {
+			g.P(deprecationComment)
+		}
 		g.P(method.Comments.Leading,
 			serverSignature(g, method))
 	}
 	g.P("}")
+	g.P()
+
+	// Server Unimplemented struct for forward compatibility.
+	g.P("// Unimplemented", serverType, " can be embedded to have forward compatible implementations.")
+	g.P("type Unimplemented", serverType, " struct {")
+	g.P("}")
+	g.P()
+	for _, method := range service.Methods {
+		nilArg := ""
+		if !method.Desc.IsStreamingClient() && !method.Desc.IsStreamingServer() {
+			nilArg = "nil,"
+		}
+		g.P("func (*Unimplemented", serverType, ") ", serverSignature(g, method), "{")
+		g.P("return ", nilArg, statusPackage.Ident("Errorf"), "(", codesPackage.Ident("Unimplemented"), `, "method `, method.GoName, ` not implemented")`)
+		g.P("}")
+	}
 	g.P()
 
 	// Server registration.

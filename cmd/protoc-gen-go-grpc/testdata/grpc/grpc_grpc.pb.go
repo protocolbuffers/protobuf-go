@@ -5,6 +5,8 @@ package grpc
 import (
 	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -151,6 +153,23 @@ type TestServiceServer interface {
 	UpstreamCall(TestService_UpstreamCallServer) error
 	// This one streams in both directions.
 	BidiCall(TestService_BidiCallServer) error
+}
+
+// UnimplementedTestServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedTestServiceServer struct {
+}
+
+func (*UnimplementedTestServiceServer) UnaryCall(context.Context, *Request) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnaryCall not implemented")
+}
+func (*UnimplementedTestServiceServer) DownstreamCall(*Request, TestService_DownstreamCallServer) error {
+	return status.Errorf(codes.Unimplemented, "method DownstreamCall not implemented")
+}
+func (*UnimplementedTestServiceServer) UpstreamCall(TestService_UpstreamCallServer) error {
+	return status.Errorf(codes.Unimplemented, "method UpstreamCall not implemented")
+}
+func (*UnimplementedTestServiceServer) BidiCall(TestService_BidiCallServer) error {
+	return status.Errorf(codes.Unimplemented, "method BidiCall not implemented")
 }
 
 func RegisterTestServiceServer(s *grpc.Server, srv TestServiceServer) {
