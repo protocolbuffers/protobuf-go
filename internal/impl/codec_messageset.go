@@ -13,48 +13,36 @@ import (
 	"google.golang.org/protobuf/internal/flags"
 )
 
-func makeMessageSetFieldCoder(mi *MessageInfo) pointerCoderFuncs {
-	return pointerCoderFuncs{
-		size: func(p pointer, tagsize int, opts marshalOptions) int {
-			return sizeMessageSet(mi, p, tagsize, opts)
-		},
-		marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-			return marshalMessageSet(mi, b, p, wiretag, opts)
-		},
-		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
-			return unmarshalMessageSet(mi, b, p, wtyp, opts)
-		},
-	}
-}
-
-func sizeMessageSet(mi *MessageInfo, p pointer, tagsize int, opts marshalOptions) (n int) {
-	ext := *p.Extensions()
-	if ext == nil {
+func sizeMessageSet(mi *MessageInfo, p pointer, opts marshalOptions) (size int) {
+	if !flags.ProtoLegacy {
 		return 0
 	}
+
+	ext := *p.Apply(mi.extensionOffset).Extensions()
 	for _, x := range ext {
 		xi := mi.extensionFieldInfo(x.Type())
 		if xi.funcs.size == nil {
 			continue
 		}
 		num, _ := wire.DecodeTag(xi.wiretag)
-		n += messageset.SizeField(num)
-		n += xi.funcs.size(x.Value(), wire.SizeTag(messageset.FieldMessage), opts)
+		size += messageset.SizeField(num)
+		size += xi.funcs.size(x.Value(), wire.SizeTag(messageset.FieldMessage), opts)
 	}
-	return n
+
+	unknown := *p.Apply(mi.unknownOffset).Bytes()
+	size += messageset.SizeUnknown(unknown)
+
+	return size
 }
 
-func marshalMessageSet(mi *MessageInfo, b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
+func marshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts marshalOptions) ([]byte, error) {
 	if !flags.ProtoLegacy {
 		return b, errors.New("no support for message_set_wire_format")
 	}
-	ext := *p.Extensions()
-	if ext == nil {
-		return b, nil
-	}
+
+	ext := *p.Apply(mi.extensionOffset).Extensions()
 	switch len(ext) {
 	case 0:
-		return b, nil
 	case 1:
 		// Fast-path for one extension: Don't bother sorting the keys.
 		for _, x := range ext {
@@ -64,7 +52,6 @@ func marshalMessageSet(mi *MessageInfo, b []byte, p pointer, wiretag uint64, opt
 				return b, err
 			}
 		}
-		return b, nil
 	default:
 		// Sort the keys to provide a deterministic encoding.
 		// Not sure this is required, but the old code does it.
@@ -80,8 +67,15 @@ func marshalMessageSet(mi *MessageInfo, b []byte, p pointer, wiretag uint64, opt
 				return b, err
 			}
 		}
-		return b, nil
 	}
+
+	unknown := *p.Apply(mi.unknownOffset).Bytes()
+	b, err := messageset.AppendUnknown(b, unknown)
+	if err != nil {
+		return b, err
+	}
+
+	return b, nil
 }
 
 func marshalMessageSetField(mi *MessageInfo, b []byte, x ExtensionField, opts marshalOptions) ([]byte, error) {
@@ -96,24 +90,25 @@ func marshalMessageSetField(mi *MessageInfo, b []byte, x ExtensionField, opts ma
 	return b, nil
 }
 
-func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
+func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts unmarshalOptions) (int, error) {
 	if !flags.ProtoLegacy {
 		return 0, errors.New("no support for message_set_wire_format")
 	}
-	if wtyp != wire.StartGroupType {
-		return 0, errUnknown
-	}
-	ep := p.Extensions()
+
+	ep := p.Apply(mi.extensionOffset).Extensions()
 	if *ep == nil {
 		*ep = make(map[int32]ExtensionField)
 	}
 	ext := *ep
-	num, v, n, err := messageset.ConsumeFieldValue(b, true)
-	if err != nil {
-		return 0, err
-	}
-	if _, err := mi.unmarshalExtension(v, num, wire.BytesType, ext, opts); err != nil {
-		return 0, err
-	}
-	return n, nil
+	unknown := p.Apply(mi.unknownOffset).Bytes()
+	err := messageset.Unmarshal(b, true, func(num wire.Number, v []byte) error {
+		_, err := mi.unmarshalExtension(v, num, wire.BytesType, ext, opts)
+		if err == errUnknown {
+			*unknown = wire.AppendTag(*unknown, num, wire.BytesType)
+			*unknown = append(*unknown, v...)
+			return nil
+		}
+		return err
+	})
+	return len(b), err
 }

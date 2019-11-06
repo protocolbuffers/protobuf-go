@@ -20,7 +20,7 @@ func sizeMessageSet(m protoreflect.Message) (size int) {
 		size += wire.SizeBytes(sizeMessage(v.Message()))
 		return true
 	})
-	size += len(m.GetUnknown())
+	size += messageset.SizeUnknown(m.GetUnknown())
 	return size
 }
 
@@ -36,8 +36,7 @@ func marshalMessageSet(b []byte, m protoreflect.Message, o MarshalOptions) ([]by
 	if err != nil {
 		return b, err
 	}
-	b = append(b, m.GetUnknown()...)
-	return b, nil
+	return messageset.AppendUnknown(b, m.GetUnknown())
 }
 
 func marshalMessageSetField(b []byte, fd protoreflect.FieldDescriptor, value protoreflect.Value, o MarshalOptions) ([]byte, error) {
@@ -56,48 +55,34 @@ func unmarshalMessageSet(b []byte, m protoreflect.Message, o UnmarshalOptions) e
 	if !flags.ProtoLegacy {
 		return errors.New("no support for message_set_wire_format")
 	}
-	md := m.Descriptor()
-	for len(b) > 0 {
-		err := func() error {
-			num, v, n, err := messageset.ConsumeField(b)
-			if err != nil {
-				// Not a message set field.
-				//
-				// Return errUnknown to try to add this to the unknown fields.
-				// If the field is completely unparsable, we'll catch it
-				// when trying to skip the field.
-				return errUnknown
-			}
-			if !md.ExtensionRanges().Has(num) {
-				return errUnknown
-			}
-			xt, err := o.Resolver.FindExtensionByNumber(md.FullName(), num)
-			if err == protoregistry.NotFound {
-				return errUnknown
-			}
-			if err != nil {
-				return err
-			}
-			xd := xt.TypeDescriptor()
-			if err := o.unmarshalMessage(v, m.Mutable(xd).Message()); err != nil {
-				// Contents cannot be unmarshaled.
-				return err
-			}
-			b = b[n:]
-			return nil
-		}()
+	return messageset.Unmarshal(b, false, func(num wire.Number, v []byte) error {
+		err := unmarshalMessageSetField(m, num, v, o)
 		if err == errUnknown {
-			_, _, n := wire.ConsumeField(b)
-			if n < 0 {
-				return wire.ParseError(n)
-			}
-			m.SetUnknown(append(m.GetUnknown(), b[:n]...))
-			b = b[n:]
-			continue
+			unknown := m.GetUnknown()
+			unknown = wire.AppendTag(unknown, num, wire.BytesType)
+			unknown = wire.AppendBytes(unknown, v)
+			m.SetUnknown(unknown)
+			return nil
 		}
-		if err != nil {
-			return err
-		}
+		return err
+	})
+}
+
+func unmarshalMessageSetField(m protoreflect.Message, num wire.Number, v []byte, o UnmarshalOptions) error {
+	md := m.Descriptor()
+	if !md.ExtensionRanges().Has(num) {
+		return errUnknown
+	}
+	xt, err := o.Resolver.FindExtensionByNumber(md.FullName(), num)
+	if err == protoregistry.NotFound {
+		return errUnknown
+	}
+	if err != nil {
+		return err
+	}
+	xd := xt.TypeDescriptor()
+	if err := o.unmarshalMessage(v, m.Mutable(xd).Message()); err != nil {
+		return err
 	}
 	return nil
 }

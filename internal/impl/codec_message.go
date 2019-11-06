@@ -29,6 +29,7 @@ type coderMessageInfo struct {
 	unknownOffset      offset
 	extensionOffset    offset
 	needsInitCheck     bool
+	isMessageSet       bool
 
 	extensionFieldInfosMu sync.RWMutex
 	extensionFieldInfos   map[pref.ExtensionType]*extensionFieldInfo
@@ -97,16 +98,10 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		if !mi.extensionOffset.IsValid() {
 			panic(fmt.Sprintf("%v: MessageSet with no extensions field", mi.Desc.FullName()))
 		}
-		cf := &coderFieldInfo{
-			num:       messageset.FieldItem,
-			offset:    si.extensionOffset,
-			isPointer: true,
-			funcs:     makeMessageSetFieldCoder(mi),
+		if !mi.unknownOffset.IsValid() {
+			panic(fmt.Sprintf("%v: MessageSet with no unknown field", mi.Desc.FullName()))
 		}
-		mi.orderedCoderFields = append(mi.orderedCoderFields, cf)
-		mi.coderFields[cf.num] = cf
-		// Invalidate the extension offset, since the field codec handles extensions.
-		mi.extensionOffset = invalidOffset
+		mi.isMessageSet = true
 	}
 	sort.Slice(mi.orderedCoderFields, func(i, j int) bool {
 		return mi.orderedCoderFields[i].num < mi.orderedCoderFields[j].num

@@ -8,6 +8,7 @@ import (
 	"sort"
 	"sync/atomic"
 
+	"google.golang.org/protobuf/internal/flags"
 	proto "google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
@@ -69,6 +70,13 @@ func (mi *MessageInfo) sizePointer(p pointer, opts marshalOptions) (size int) {
 }
 
 func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int) {
+	if flags.ProtoLegacy && mi.isMessageSet {
+		size = sizeMessageSet(mi, p, opts)
+		if mi.sizecacheOffset.IsValid() {
+			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), int32(size))
+		}
+		return size
+	}
 	if mi.extensionOffset.IsValid() {
 		e := p.Apply(mi.extensionOffset).Extensions()
 		size += mi.sizeExtensions(e, opts)
@@ -109,6 +117,9 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 	if p.IsNil() {
 		return b, nil
 	}
+	if flags.ProtoLegacy && mi.isMessageSet {
+		return marshalMessageSet(mi, b, p, opts)
+	}
 	var err error
 	// The old marshaler encodes extensions at beginning.
 	if mi.extensionOffset.IsValid() {
@@ -132,7 +143,7 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 			return b, err
 		}
 	}
-	if mi.unknownOffset.IsValid() {
+	if mi.unknownOffset.IsValid() && !mi.isMessageSet {
 		u := *p.Apply(mi.unknownOffset).Bytes()
 		b = append(b, u...)
 	}

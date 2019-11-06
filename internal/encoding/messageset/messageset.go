@@ -77,31 +77,50 @@ func SizeField(num wire.Number) int {
 	return 2*wire.SizeTag(FieldItem) + wire.SizeTag(FieldTypeID) + wire.SizeVarint(uint64(num))
 }
 
-// ConsumeField parses a MessageSet item field and returns the contents of the
-// type_id and message subfields and the total item length.
-func ConsumeField(b []byte) (typeid wire.Number, message []byte, n int, err error) {
-	num, wtyp, n := wire.ConsumeTag(b)
-	if n < 0 {
-		return 0, nil, 0, wire.ParseError(n)
+// Unmarshal parses a MessageSet.
+//
+// It calls fn with the type ID and value of each item in the MessageSet.
+// Unknown fields are discarded.
+//
+// If wantLen is true, the item values include the varint length prefix.
+// This is ugly, but simplifies the fast-path decoder in internal/impl.
+func Unmarshal(b []byte, wantLen bool, fn func(typeID wire.Number, value []byte) error) error {
+	for len(b) > 0 {
+		num, wtyp, n := wire.ConsumeTag(b)
+		if n < 0 {
+			return wire.ParseError(n)
+		}
+		b = b[n:]
+		if num != FieldItem || wtyp != wire.StartGroupType {
+			n := wire.ConsumeFieldValue(num, wtyp, b)
+			if n < 0 {
+				return wire.ParseError(n)
+			}
+			b = b[n:]
+			continue
+		}
+		typeID, value, n, err := consumeFieldValue(b, wantLen)
+		if err != nil {
+			return err
+		}
+		b = b[n:]
+		if typeID == 0 {
+			continue
+		}
+		if err := fn(typeID, value); err != nil {
+			return err
+		}
 	}
-	if num != FieldItem || wtyp != wire.StartGroupType {
-		return 0, nil, 0, errors.New("invalid MessageSet field number")
-	}
-	typeid, message, fieldLen, err := ConsumeFieldValue(b[n:], false)
-	if err != nil {
-		return 0, nil, 0, err
-	}
-	return typeid, message, n + fieldLen, nil
+	return nil
 }
 
-// ConsumeFieldValue parses b as a MessageSet item field value until and including
+// consumeFieldValue parses b as a MessageSet item field value until and including
 // the trailing end group marker. It assumes the start group tag has already been parsed.
 // It returns the contents of the type_id and message subfields and the total
 // item length.
 //
 // If wantLen is true, the returned message value includes the length prefix.
-// This is ugly, but simplifies the fast-path decoder in internal/impl.
-func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []byte, n int, err error) {
+func consumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []byte, n int, err error) {
 	ilen := len(b)
 	for {
 		num, wtyp, n := wire.ConsumeTag(b)
@@ -172,4 +191,52 @@ func AppendFieldStart(b []byte, num wire.Number) []byte {
 // AppendFieldEnd appends the trailing end group marker for a MessageSet item field.
 func AppendFieldEnd(b []byte) []byte {
 	return wire.AppendTag(b, FieldItem, wire.EndGroupType)
+}
+
+// SizeUnknown returns the size of an unknown fields section in MessageSet format.
+//
+// See AppendUnknown.
+func SizeUnknown(unknown []byte) (size int) {
+	for len(unknown) > 0 {
+		num, typ, n := wire.ConsumeTag(unknown)
+		if n < 0 || typ != wire.BytesType {
+			return 0
+		}
+		unknown = unknown[n:]
+		_, n = wire.ConsumeBytes(unknown)
+		if n < 0 {
+			return 0
+		}
+		unknown = unknown[n:]
+		size += SizeField(num) + wire.SizeTag(FieldMessage) + n
+	}
+	return size
+}
+
+// AppendUnknown appends unknown fields to b in MessageSet format.
+//
+// For historic reasons, unresolved items in a MessageSet are stored in a
+// message's unknown fields section in non-MessageSet format. That is, an
+// unknown item with typeID T and value V appears in the unknown fields as
+// a field with number T and value V.
+//
+// This function converts the unknown fields back into MessageSet form.
+func AppendUnknown(b, unknown []byte) ([]byte, error) {
+	for len(unknown) > 0 {
+		num, typ, n := wire.ConsumeTag(unknown)
+		if n < 0 || typ != wire.BytesType {
+			return nil, errors.New("invalid data in message set unknown fields")
+		}
+		unknown = unknown[n:]
+		_, n = wire.ConsumeBytes(unknown)
+		if n < 0 {
+			return nil, errors.New("invalid data in message set unknown fields")
+		}
+		b = AppendFieldStart(b, num)
+		b = wire.AppendTag(b, FieldMessage, wire.BytesType)
+		b = append(b, unknown[:n]...)
+		b = AppendFieldEnd(b)
+		unknown = unknown[n:]
+	}
+	return b, nil
 }

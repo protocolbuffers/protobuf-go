@@ -22,48 +22,51 @@ func init() {
 var messageSetTestProtos = []testProto{
 	{
 		desc: "MessageSet type_id before message content",
-		decodeTo: []proto.Message{build(
-			&messagesetpb.MessageSet{},
-			extend(msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
+		decodeTo: []proto.Message{func() proto.Message {
+			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
+			proto.SetExtension(m.MessageSet, msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
 				Ext1Field1: proto.Int32(10),
-			}),
-		)},
+			})
+			return m
+		}()},
 		wire: pack.Message{
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(10),
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{2, pack.VarintType}, pack.Varint(1000),
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
+					pack.Tag{1, pack.VarintType}, pack.Varint(10),
+				}),
+				pack.Tag{1, pack.EndGroupType},
 			}),
-			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
 	},
 	{
 		desc: "MessageSet type_id after message content",
-		decodeTo: []proto.Message{build(
-			&messagesetpb.MessageSet{},
-			extend(msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
+		decodeTo: []proto.Message{func() proto.Message {
+			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
+			proto.SetExtension(m.MessageSet, msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
 				Ext1Field1: proto.Int32(10),
-			}),
-		)},
+			})
+			return m
+		}()},
 		wire: pack.Message{
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(10),
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
+					pack.Tag{1, pack.VarintType}, pack.Varint(10),
+				}),
+				pack.Tag{2, pack.VarintType}, pack.Varint(1000),
+				pack.Tag{1, pack.EndGroupType},
 			}),
-			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
 	},
 	{
-		desc: "MessageSet preserves unknown field",
+		desc: "MessageSet does not preserve unknown field",
 		decodeTo: []proto.Message{build(
 			&messagesetpb.MessageSet{},
 			extend(msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
 				Ext1Field1: proto.Int32(10),
 			}),
-			unknown(pack.Message{
-				pack.Tag{4, pack.VarintType}, pack.Varint(30),
-			}.Marshal()),
 		)},
 		wire: pack.Message{
 			pack.Tag{1, pack.StartGroupType},
@@ -81,12 +84,9 @@ var messageSetTestProtos = []testProto{
 		decodeTo: []proto.Message{build(
 			&messagesetpb.MessageSet{},
 			unknown(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(1002),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1002, pack.BytesType}, pack.LengthPrefix(pack.Message{
 					pack.Tag{1, pack.VarintType}, pack.Varint(10),
 				}),
-				pack.Tag{1, pack.EndGroupType},
 			}.Marshal()),
 		)},
 		wire: pack.Message{
@@ -159,13 +159,6 @@ var messageSetTestProtos = []testProto{
 		desc: "MessageSet with missing type_id",
 		decodeTo: []proto.Message{build(
 			&messagesetpb.MessageSet{},
-			unknown(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-					pack.Tag{1, pack.VarintType}, pack.Varint(10),
-				}),
-				pack.Tag{1, pack.EndGroupType},
-			}.Marshal()),
 		)},
 		wire: pack.Message{
 			pack.Tag{1, pack.StartGroupType},

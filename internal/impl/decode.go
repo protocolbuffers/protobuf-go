@@ -7,6 +7,7 @@ package impl
 import (
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
@@ -72,6 +73,9 @@ var errUnknown = errors.New("unknown")
 
 func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Number, opts unmarshalOptions) (int, error) {
 	mi.init()
+	if flags.ProtoLegacy && mi.isMessageSet {
+		return unmarshalMessageSet(mi, b, p, opts)
+	}
 	var exts *map[int32]ExtensionField
 	start := len(b)
 	for len(b) > 0 {
