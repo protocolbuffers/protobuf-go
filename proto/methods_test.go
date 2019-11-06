@@ -58,6 +58,13 @@ func TestLegacyMarshalMethod(t *testing.T) {
 		if err != test.err || !bytes.Equal(b, want) {
 			t.Errorf("MarshalAppend(%v, %v) = %v, %v; want %v, %v", prefix, test, b, err, test.bytes, test.err)
 		}
+
+		b, err = proto.MarshalOptions{
+			Deterministic: true,
+		}.MarshalAppend(nil, m)
+		if err != test.err || !bytes.Equal(b, test.bytes) {
+			t.Errorf("MarshalOptions{Deterministic:true}.MarshalAppend(nil, %v) = %v, %v; want %v, %v", test, b, err, test.bytes, test.err)
+		}
 	}
 }
 
