@@ -314,6 +314,8 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 					posExtensions = len(b0) - len(b) - n - m
 				}
 				numExtensions++
+			case fieldnum.DescriptorProto_Options:
+				md.unmarshalSeedOptions(v)
 			}
 			prevField = num
 		default:
@@ -360,6 +362,27 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 			v, m := wire.ConsumeBytes(b[n:])
 			md.L1.Extensions.List[i].unmarshalSeed(v, sb, pf, md, i)
 			b = b[n+m:]
+		}
+	}
+}
+
+func (md *Message) unmarshalSeedOptions(b []byte) {
+	for len(b) > 0 {
+		num, typ, n := wire.ConsumeTag(b)
+		b = b[n:]
+		switch typ {
+		case wire.VarintType:
+			v, m := wire.ConsumeVarint(b)
+			b = b[m:]
+			switch num {
+			case fieldnum.MessageOptions_MapEntry:
+				md.L1.IsMapEntry = wire.DecodeBool(v)
+			case fieldnum.MessageOptions_MessageSetWireFormat:
+				md.L1.IsMessageSet = wire.DecodeBool(v)
+			}
+		default:
+			m := wire.ConsumeFieldValue(num, typ, b)
+			b = b[m:]
 		}
 	}
 }

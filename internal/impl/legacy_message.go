@@ -297,7 +297,7 @@ func aberrantAppendField(md *filedesc.Message, goType reflect.Type, tag, tagKey,
 				md2.L0.Parent = md
 				md2.L0.Index = n
 
-				md2.L2.IsMapEntry = true
+				md2.L1.IsMapEntry = true
 				md2.L2.Options = func() pref.ProtoMessage {
 					opts := descopts.Message.ProtoReflect().New()
 					opts.Set(opts.Descriptor().Fields().ByName("map_entry"), protoreflect.ValueOfBool(true))

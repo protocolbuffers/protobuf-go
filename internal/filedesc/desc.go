@@ -180,14 +180,14 @@ type (
 		L2 *MessageL2 // protected by fileDesc.once
 	}
 	MessageL1 struct {
-		Enums      Enums
-		Messages   Messages
-		Extensions Extensions
+		Enums        Enums
+		Messages     Messages
+		Extensions   Extensions
+		IsMapEntry   bool // promoted from google.protobuf.MessageOptions
+		IsMessageSet bool // promoted from google.protobuf.MessageOptions
 	}
 	MessageL2 struct {
 		Options               func() pref.ProtoMessage
-		IsMapEntry            bool // promoted from google.protobuf.MessageOptions
-		IsMessageSet          bool // promoted from google.protobuf.MessageOptions
 		Fields                Fields
 		Oneofs                Oneofs
 		ReservedNames         Names
@@ -234,7 +234,7 @@ func (md *Message) Options() pref.ProtoMessage {
 	}
 	return descopts.Message
 }
-func (md *Message) IsMapEntry() bool                   { return md.lazyInit().IsMapEntry }
+func (md *Message) IsMapEntry() bool                   { return md.L1.IsMapEntry }
 func (md *Message) Fields() pref.FieldDescriptors      { return &md.lazyInit().Fields }
 func (md *Message) Oneofs() pref.OneofDescriptors      { return &md.lazyInit().Oneofs }
 func (md *Message) ReservedNames() pref.Names          { return &md.lazyInit().ReservedNames }
@@ -263,7 +263,7 @@ func (md *Message) lazyInit() *MessageL2 {
 // WARNING: This method is exempt from the compatibility promise and may be
 // removed in the future without warning.
 func (md *Message) IsMessageSet() bool {
-	return md.lazyInit().IsMessageSet
+	return md.L1.IsMessageSet
 }
 
 func (fd *Field) Options() pref.ProtoMessage {

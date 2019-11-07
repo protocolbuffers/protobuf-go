@@ -348,9 +348,9 @@ func (md *Message) unmarshalOptions(b []byte) {
 			b = b[m:]
 			switch num {
 			case fieldnum.MessageOptions_MapEntry:
-				md.L2.IsMapEntry = wire.DecodeBool(v)
+				md.L1.IsMapEntry = wire.DecodeBool(v)
 			case fieldnum.MessageOptions_MessageSetWireFormat:
-				md.L2.IsMessageSet = wire.DecodeBool(v)
+				md.L1.IsMessageSet = wire.DecodeBool(v)
 			}
 		default:
 			m := wire.ConsumeFieldValue(num, typ, b)

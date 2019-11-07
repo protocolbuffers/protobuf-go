@@ -70,8 +70,8 @@ func (r descsByName) initMessagesDeclarations(mds []*descriptorpb.DescriptorProt
 		if opts := md.GetOptions(); opts != nil {
 			opts = clone(opts).(*descriptorpb.MessageOptions)
 			m.L2.Options = func() protoreflect.ProtoMessage { return opts }
-			m.L2.IsMapEntry = opts.GetMapEntry()
-			m.L2.IsMessageSet = opts.GetMessageSetWireFormat()
+			m.L1.IsMapEntry = opts.GetMapEntry()
+			m.L1.IsMessageSet = opts.GetMessageSetWireFormat()
 		}
 		for _, s := range md.GetReservedName() {
 			m.L2.ReservedNames.List = append(m.L2.ReservedNames.List, protoreflect.Name(s))
