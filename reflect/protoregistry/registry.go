@@ -73,31 +73,6 @@ type packageDescriptor struct {
 	files []protoreflect.FileDescriptor
 }
 
-// NewFiles returns a registry initialized with the provided set of files.
-// Files with a namespace conflict with an pre-existing file are not registered.
-//
-// Deprecated: Use Register.
-func NewFiles(files ...protoreflect.FileDescriptor) *Files {
-	r := new(Files)
-	for _, file := range files {
-		r.RegisterFile(file) // ignore errors; first takes precedence
-	}
-	return r
-}
-
-// Register registers the provided list of file descriptors.
-//
-// Deprecated: Use RegisterFile.
-func (r *Files) Register(files ...protoreflect.FileDescriptor) error {
-	var firstErr error
-	for _, file := range files {
-		if err := r.RegisterFile(file); err != nil && firstErr == nil {
-			firstErr = err
-		}
-	}
-	return firstErr
-}
-
 // RegisterFile registers the provided file descriptor.
 //
 // If any descriptor within the file conflicts with the descriptor of any
@@ -368,13 +343,6 @@ func rangeTopLevelDescriptors(fd protoreflect.FileDescriptor, f func(protoreflec
 	}
 }
 
-// A Type is a protoreflect.EnumType, protoreflect.MessageType, or protoreflect.ExtensionType.
-//
-// Deprecated: Do not use.
-//
-// TODO: Remove.
-type Type interface{}
-
 // MessageTypeResolver is an interface for looking up messages.
 //
 // A compliant implementation must deterministically return the same type
@@ -459,40 +427,6 @@ type (
 	extensionsByMessage map[protoreflect.FullName]extensionsByNumber
 	extensionsByNumber  map[protoreflect.FieldNumber]protoreflect.ExtensionType
 )
-
-// NewTypes returns a registry initialized with the provided set of types.
-// If there are conflicts, the first one takes precedence.
-//
-// Deprecated: Use RegisterMessage, RegisterEnum, or RegisterExtension.
-func NewTypes(typs ...Type) *Types {
-	r := new(Types)
-	r.Register(typs...) // ignore errors; first takes precedence
-	return r
-}
-
-// Register registers the provided list of descriptor types.
-//
-// Deprecated: Use RegisterMessage, RegisterEnum, or RegisterExtension.
-func (r *Types) Register(typs ...Type) error {
-	var firstErr error
-	for _, typ := range typs {
-		var err error
-		switch t := typ.(type) {
-		case protoreflect.EnumType:
-			err = r.RegisterEnum(t)
-		case protoreflect.MessageType:
-			err = r.RegisterMessage(t)
-		case protoreflect.ExtensionType:
-			err = r.RegisterExtension(t)
-		default:
-			panic(fmt.Sprintf("invalid type: %T", t))
-		}
-		if firstErr == nil {
-			firstErr = err
-		}
-	}
-	return firstErr
-}
 
 // RegisterMessage registers the provided message type.
 //
@@ -797,7 +731,7 @@ func (r *Types) RangeExtensionsByMessage(message protoreflect.FullName, f func(p
 	}
 }
 
-func typeName(t Type) string {
+func typeName(t interface{}) string {
 	switch t.(type) {
 	case protoreflect.EnumType:
 		return "enum"
