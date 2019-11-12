@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/internal/fieldsort"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
@@ -120,6 +121,15 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 			break
 		}
 		mi.denseCoderFields[cf.num] = cf
+	}
+
+	// To preserve compatibility with historic wire output, marshal oneofs last.
+	if mi.Desc.Oneofs().Len() > 0 {
+		sort.Slice(mi.orderedCoderFields, func(i, j int) bool {
+			fi := fields.ByNumber(mi.orderedCoderFields[i].num)
+			fj := fields.ByNumber(mi.orderedCoderFields[j].num)
+			return fieldsort.Less(fi, fj)
+		})
 	}
 
 	mi.needsInitCheck = needsInitCheck(mi.Desc)

@@ -7,12 +7,16 @@ package proto_test
 import (
 	"bytes"
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	pref "google.golang.org/protobuf/reflect/protoreflect"
 
+	orderpb "google.golang.org/protobuf/internal/testprotos/order"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 )
@@ -180,5 +184,50 @@ func TestMarshalAppendAllocations(t *testing.T) {
 		t.Errorf("%v allocs/op when writing to a preallocated buffer", marshalAllocs)
 		t.Errorf("%v allocs/op when repeatedly appending to a slice", marshalAppendAllocs)
 		t.Errorf("expect amortized allocs/op to be identical")
+	}
+}
+
+func TestEncodeOrder(t *testing.T) {
+	// We make no guarantees about the stability of wire marshal output.
+	// The order in which fields are marshaled may change over time.
+	// If deterministic marshaling is not enabled, it may change over
+	// successive calls to proto.Marshal in the same binary.
+	//
+	// Unfortunately, many users have come to rely on the specific current
+	// wire marshal output. Perhaps someday we will choose to deliberately
+	// change the marshal output; until that day comes, this test verifies
+	// that we don't unintentionally change it.
+	m := &orderpb.Message{
+		Field_1:  proto.String("one"),
+		Field_2:  proto.String("two"),
+		Field_20: proto.String("twenty"),
+		Oneof_1:  &orderpb.Message_Field_10{"ten"},
+	}
+	proto.SetExtension(m, orderpb.E_Field_30, "thirty")
+	proto.SetExtension(m, orderpb.E_Field_31, "thirty-one")
+	proto.SetExtension(m, orderpb.E_Field_32, "thirty-two")
+	want := []pref.FieldNumber{
+		30, 31, 32, // extensions first, in number order
+		1, 2, 20, // non-extension, non-oneof in number order
+		10, // oneofs last, undefined order
+	}
+
+	// Test with deterministic serialization, since fields are not sorted without
+	// it when -tags=protoreflect.
+	b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var got []pref.FieldNumber
+	for len(b) > 0 {
+		num, _, n := wire.ConsumeField(b)
+		if n < 0 {
+			t.Fatal(wire.ParseError(n))
+		}
+		b = b[n:]
+		got = append(got, num)
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("unexpected field marshal order:\ngot:  %v\nwant: %v\nmessage:\n%v", got, want, m)
 	}
 }

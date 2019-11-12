@@ -9,6 +9,7 @@ import (
 
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/internal/fieldsort"
 	"google.golang.org/protobuf/internal/mapsort"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -146,7 +147,7 @@ func (o MarshalOptions) marshalMessageSlow(b []byte, m protoreflect.Message) ([]
 	// It is not deterministic, since Message.Range does not return fields in any
 	// defined order.
 	//
-	// When using deterministic serialization, we sort the known fields by field number.
+	// When using deterministic serialization, we sort the known fields.
 	var err error
 	o.rangeFields(m, func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		b, err = o.marshalField(b, fd, v)
@@ -159,8 +160,7 @@ func (o MarshalOptions) marshalMessageSlow(b []byte, m protoreflect.Message) ([]
 	return b, nil
 }
 
-// rangeFields visits fields in field number order when deterministic
-// serialization is enabled.
+// rangeFields visits fields in a defined order when deterministic serialization is enabled.
 func (o MarshalOptions) rangeFields(m protoreflect.Message, f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if !o.Deterministic {
 		m.Range(f)
@@ -172,7 +172,7 @@ func (o MarshalOptions) rangeFields(m protoreflect.Message, f func(protoreflect.
 		return true
 	})
 	sort.Slice(fds, func(a, b int) bool {
-		return fds[a].Number() < fds[b].Number()
+		return fieldsort.Less(fds[a], fds[b])
 	})
 	for _, fd := range fds {
 		if !f(fd, m.Get(fd)) {
