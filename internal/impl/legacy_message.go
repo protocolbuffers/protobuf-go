@@ -93,7 +93,20 @@ func legacyLoadMessageDesc(t reflect.Type, name pref.FullName) pref.MessageDescr
 	if !ok {
 		return aberrantLoadMessageDesc(t, name)
 	}
-	b, idxs := mdV1.Descriptor()
+
+	// If this is a dynamic message type where there isn't a 1-1 mapping between
+	// Go and protobuf types, calling the Descriptor method on the zero value of
+	// the message type isn't likely to work. If it panics, swallow the panic and
+	// continue as if the Descriptor method wasn't present.
+	b, idxs := func() ([]byte, []int) {
+		defer func() {
+			recover()
+		}()
+		return mdV1.Descriptor()
+	}()
+	if b == nil {
+		return aberrantLoadMessageDesc(t, name)
+	}
 
 	md := legacyLoadFileDesc(b).Messages().Get(idxs[0])
 	for _, i := range idxs[1:] {

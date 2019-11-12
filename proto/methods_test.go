@@ -79,3 +79,24 @@ func TestLegacyUnmarshalMethod(t *testing.T) {
 		t.Fatalf("proto.Unmarshal(selfMarshaler{}): Marshal method not called")
 	}
 }
+
+type descPanicSelfMarshaler struct{}
+
+const descPanicSelfMarshalerBytes = "bytes"
+
+func (m descPanicSelfMarshaler) Reset()                      {}
+func (m descPanicSelfMarshaler) ProtoMessage()               {}
+func (m descPanicSelfMarshaler) Descriptor() ([]byte, []int) { panic("Descriptor method panics") }
+func (m descPanicSelfMarshaler) String() string              { return "descPanicSelfMarshaler{}" }
+func (m descPanicSelfMarshaler) Marshal() ([]byte, error) {
+	return []byte(descPanicSelfMarshalerBytes), nil
+}
+
+func TestSelfMarshalerDescriptorPanics(t *testing.T) {
+	m := descPanicSelfMarshaler{}
+	got, err := proto.Marshal(impl.Export{}.MessageOf(m).Interface())
+	want := []byte(descPanicSelfMarshalerBytes)
+	if err != nil || !bytes.Equal(got, want) {
+		t.Fatalf("proto.Marshal(%v) = %v, %v; want %v, nil", m, got, err, want)
+	}
+}
