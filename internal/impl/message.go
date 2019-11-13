@@ -132,45 +132,37 @@ func (mi *MessageInfo) makeStructInfo(t reflect.Type) structInfo {
 		oneofWrappersByNumber: map[pref.FieldNumber]reflect.Type{},
 	}
 
-	if f, _ := t.FieldByName("sizeCache"); f.Type == sizecacheType {
-		si.sizecacheOffset = offsetOf(f, mi.Exporter)
-	}
-	if f, _ := t.FieldByName("XXX_sizecache"); f.Type == sizecacheType {
-		si.sizecacheOffset = offsetOf(f, mi.Exporter)
-	}
-	if f, _ := t.FieldByName("XXX_weak"); f.Type == weakFieldsType {
-		si.weakOffset = offsetOf(f, mi.Exporter)
-	}
-	if f, _ := t.FieldByName("unknownFields"); f.Type == unknownFieldsType {
-		si.unknownOffset = offsetOf(f, mi.Exporter)
-	}
-	if f, _ := t.FieldByName("XXX_unrecognized"); f.Type == unknownFieldsType {
-		si.unknownOffset = offsetOf(f, mi.Exporter)
-	}
-	if f, _ := t.FieldByName("extensionFields"); f.Type == extensionFieldsType {
-		si.extensionOffset = offsetOf(f, mi.Exporter)
-	}
-	if f, _ := t.FieldByName("XXX_InternalExtensions"); f.Type == extensionFieldsType {
-		si.extensionOffset = offsetOf(f, mi.Exporter)
-	}
-	if f, _ := t.FieldByName("XXX_extensions"); f.Type == extensionFieldsType {
-		si.extensionOffset = offsetOf(f, mi.Exporter)
-	}
-
-	// Generate a mapping of field numbers and names to Go struct field or type.
 fieldLoop:
 	for i := 0; i < t.NumField(); i++ {
-		f := t.Field(i)
-		for _, s := range strings.Split(f.Tag.Get("protobuf"), ",") {
-			if len(s) > 0 && strings.Trim(s, "0123456789") == "" {
-				n, _ := strconv.ParseUint(s, 10, 64)
-				si.fieldsByNumber[pref.FieldNumber(n)] = f
+		switch f := t.Field(i); f.Name {
+		case "sizeCache", "XXX_sizecache":
+			if f.Type == sizecacheType {
+				si.sizecacheOffset = offsetOf(f, mi.Exporter)
+			}
+		case "weakFields", "XXX_weak":
+			if f.Type == weakFieldsType {
+				si.weakOffset = offsetOf(f, mi.Exporter)
+			}
+		case "unknownFields", "XXX_unrecognized":
+			if f.Type == unknownFieldsType {
+				si.unknownOffset = offsetOf(f, mi.Exporter)
+			}
+		case "extensionFields", "XXX_InternalExtensions", "XXX_extensions":
+			if f.Type == extensionFieldsType {
+				si.extensionOffset = offsetOf(f, mi.Exporter)
+			}
+		default:
+			for _, s := range strings.Split(f.Tag.Get("protobuf"), ",") {
+				if len(s) > 0 && strings.Trim(s, "0123456789") == "" {
+					n, _ := strconv.ParseUint(s, 10, 64)
+					si.fieldsByNumber[pref.FieldNumber(n)] = f
+					continue fieldLoop
+				}
+			}
+			if s := f.Tag.Get("protobuf_oneof"); len(s) > 0 {
+				si.oneofsByName[pref.Name(s)] = f
 				continue fieldLoop
 			}
-		}
-		if s := f.Tag.Get("protobuf_oneof"); len(s) > 0 {
-			si.oneofsByName[pref.Name(s)] = f
-			continue fieldLoop
 		}
 	}
 
