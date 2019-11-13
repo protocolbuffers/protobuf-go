@@ -20,8 +20,8 @@ import (
 // Enum is a dynamic representation of a protocol buffer enum that is
 // suitable for cmp.Equal and cmp.Diff to compare upon.
 type Enum struct {
-	Number protoreflect.EnumNumber
-	ed     protoreflect.EnumDescriptor
+	num protoreflect.EnumNumber
+	ed  protoreflect.EnumDescriptor
 }
 
 // Descriptor returns the enum descriptor.
@@ -29,21 +29,26 @@ func (e Enum) Descriptor() protoreflect.EnumDescriptor {
 	return e.ed
 }
 
+// Number returns the enum value as an integer.
+func (e Enum) Number() protoreflect.EnumNumber {
+	return e.num
+}
+
 // Equal reports whether e1 and e2 represent the same enum value.
 func (e1 Enum) Equal(e2 Enum) bool {
 	if e1.ed.FullName() != e2.ed.FullName() {
 		return false
 	}
-	return e1.Number == e2.Number
+	return e1.num == e2.num
 }
 
 // String returns the name of the enum value if known (e.g., "ENUM_VALUE"),
 // otherwise it returns the formatted decimal enum number (e.g., "14").
 func (e Enum) String() string {
-	if ev := e.ed.Values().ByNumber(e.Number); ev != nil {
+	if ev := e.ed.Values().ByNumber(e.num); ev != nil {
 		return string(ev.Name())
 	}
-	return strconv.Itoa(int(e.Number))
+	return strconv.Itoa(int(e.num))
 }
 
 const messageTypeKey = "@type"
@@ -187,7 +192,7 @@ func transformMap(fd protoreflect.FieldDescriptor, mv protoreflect.Map) interfac
 func transformSingular(fd protoreflect.FieldDescriptor, v protoreflect.Value) interface{} {
 	switch fd.Kind() {
 	case protoreflect.EnumKind:
-		return Enum{Number: v.Enum(), ed: fd.Enum()}
+		return Enum{num: v.Enum(), ed: fd.Enum()}
 	case protoreflect.MessageKind, protoreflect.GroupKind:
 		return transformMessage(v.Message())
 	default:
