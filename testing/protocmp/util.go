@@ -22,8 +22,90 @@ var (
 	messageReflectType = reflect.TypeOf(Message{})
 )
 
+// FilterEnum filters opt to only be applicable on standalone Enums,
+// singular fields of enums, list fields of enums, or map fields of enum values,
+// where the enum is the same type as the specified enum.
+//
+// The Go type of the last path step may be an:
+//	• Enum for singular fields, elements of a repeated field,
+//	values of a map field, or standalone Enums
+//	• []Enum for list fields
+//	• map[K]Enum for map fields
+//	• interface{} for a Message map entry value
+//
+// This must be used in conjunction with Transform.
+func FilterEnum(enum protoreflect.Enum, opt cmp.Option) cmp.Option {
+	return FilterDescriptor(enum.Descriptor(), opt)
+}
+
+// FilterMessage filters opt to only be applicable on standalone Messages,
+// singular fields of messages, list fields of messages, or map fields of
+// message values, where the message is the same type as the specified message.
+//
+// The Go type of the last path step may be an:
+//	• Message for singular fields, elements of a repeated field,
+//	values of a map field, or standalone Messages
+//	• []Message for list fields
+//	• map[K]Message for map fields
+//	• interface{} for a Message map entry value
+//
+// This must be used in conjunction with Transform.
+func FilterMessage(message proto.Message, opt cmp.Option) cmp.Option {
+	return FilterDescriptor(message.ProtoReflect().Descriptor(), opt)
+}
+
+// FilterField filters opt to only be applicable on the specified field
+// in the message. It panics if a field of the given name does not exist.
+//
+// The Go type of the last path step may be an:
+//	• T for singular fields
+//	• []T for list fields
+//	• map[K]T for map fields
+//	• interface{} for a Message map entry value
+//
+// This must be used in conjunction with Transform.
+func FilterField(message proto.Message, name protoreflect.Name, opt cmp.Option) cmp.Option {
+	md := message.ProtoReflect().Descriptor()
+	return FilterDescriptor(mustFindFieldDescriptor(md, name), opt)
+}
+
+// FilterOneof filters opt to only be applicable on all fields within the
+// specified oneof in the message. It panics if a oneof of the given name
+// does not exist.
+//
+// The Go type of the last path step may be an:
+//	• T for singular fields
+//	• []T for list fields
+//	• map[K]T for map fields
+//	• interface{} for a Message map entry value
+//
+// This must be used in conjunction with Transform.
+func FilterOneof(message proto.Message, name protoreflect.Name, opt cmp.Option) cmp.Option {
+	md := message.ProtoReflect().Descriptor()
+	return FilterDescriptor(mustFindOneofDescriptor(md, name), opt)
+}
+
+// FilterDescriptor ignores the specified descriptor.
+//
+// The following descriptor types may be specified:
+//	• protoreflect.EnumDescriptor
+//	• protoreflect.MessageDescriptor
+//	• protoreflect.FieldDescriptor
+//	• protoreflect.OneofDescriptor
+//
+// For the behavior of each, see the corresponding filter function.
+// Since this filter accepts a protoreflect.FieldDescriptor, it can be used
+// to also filter for extension fields as a protoreflect.ExtensionDescriptor
+// is just an alias to protoreflect.FieldDescriptor.
+//
+// This must be used in conjunction with Transform.
+func FilterDescriptor(desc protoreflect.Descriptor, opt cmp.Option) cmp.Option {
+	f := newNameFilters(desc)
+	return cmp.FilterPath(f.Filter, opt)
+}
+
 // IgnoreEnums ignores all enums of the specified types.
-// See IgnoreDescriptors with regard to EnumDescriptors for more information.
+// It is equivalent to FilterEnum(enum, cmp.Ignore()) for each enum.
 //
 // This must be used in conjunction with Transform.
 func IgnoreEnums(enums ...protoreflect.Enum) cmp.Option {
@@ -35,7 +117,7 @@ func IgnoreEnums(enums ...protoreflect.Enum) cmp.Option {
 }
 
 // IgnoreMessages ignores all messages of the specified types.
-// See IgnoreDescriptors with regard to MessageDescriptors for more information.
+// It is equivalent to FilterMessage(message, cmp.Ignore()) for each message.
 //
 // This must be used in conjunction with Transform.
 func IgnoreMessages(messages ...proto.Message) cmp.Option {
@@ -46,9 +128,9 @@ func IgnoreMessages(messages ...proto.Message) cmp.Option {
 	return IgnoreDescriptors(ds...)
 }
 
-// IgnoreFields ignores the specified fields in messages of type m.
-// This panics if a field of the given name does not exist.
-// See IgnoreDescriptors with regard to FieldDescriptors for more information.
+// IgnoreFields ignores the specified fields in the specified message.
+// It is equivalent to FilterField(message, name, cmp.Ignore()) for each field
+// in the message.
 //
 // This must be used in conjunction with Transform.
 func IgnoreFields(message proto.Message, names ...protoreflect.Name) cmp.Option {
@@ -60,9 +142,9 @@ func IgnoreFields(message proto.Message, names ...protoreflect.Name) cmp.Option 
 	return IgnoreDescriptors(ds...)
 }
 
-// IgnoreOneofs ignores fields in the specified oneofs in messages of type m.
-// This panics if a oneof of the given name does not exist.
-// See IgnoreDescriptors with regard to OneofDescriptors for more information.
+// IgnoreOneofs ignores fields of the specified oneofs in the specified message.
+// It is equivalent to FilterOneof(message, name, cmp.Ignore()) for each oneof
+// in the message.
 //
 // This must be used in conjunction with Transform.
 func IgnoreOneofs(message proto.Message, names ...protoreflect.Name) cmp.Option {
@@ -75,24 +157,7 @@ func IgnoreOneofs(message proto.Message, names ...protoreflect.Name) cmp.Option 
 }
 
 // IgnoreDescriptors ignores the specified set of descriptors.
-// The following descriptor types may be specified:
-//
-// • EnumDescriptor: Enums of this type or messages containing singular fields,
-// list fields, or map fields with enum values of this type are ignored.
-// Enums are matched based on their full name.
-//
-// • MessageDescriptor: Messages of this type or messages containing
-// singular fields, list fields, or map fields with message values of this type
-// are ignored. Messages are matched based on their full name.
-//
-// • ExtensionDescriptor: Extensions fields that match the given descriptor
-// by full name are ignored.
-//
-// • FieldDescriptor: Message fields that match the given descriptor
-// by full name are ignored.
-//
-// • OneofDescriptor: Message fields that match the set of fields in the given
-// oneof descriptor by full name are ignored.
+// It is equivalent to FilterDescriptor(desc, cmp.Ignore()) for each descriptor.
 //
 // This must be used in conjunction with Transform.
 func IgnoreDescriptors(descs ...protoreflect.Descriptor) cmp.Option {
@@ -192,6 +257,12 @@ func (f *nameFilters) Filter(p cmp.Path) bool {
 }
 
 func (f *nameFilters) filterFields(p cmp.Path) bool {
+	// Trim off trailing type-assertions so that the filter can match on the
+	// concrete value held within an interface value.
+	if _, ok := p.Last().(cmp.TypeAssertion); ok {
+		p = p[:len(p)-1]
+	}
+
 	// Filter for Message maps.
 	mi, ok := p.Index(-1).(cmp.MapIndex)
 	if !ok {

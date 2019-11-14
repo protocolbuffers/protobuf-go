@@ -368,8 +368,6 @@ func TestEqual(t *testing.T) {
 		y:    &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{{}, {}, nil, {}, {C: proto.Int32(5)}, {}}},
 		opts: cmp.Options{Transform(), IgnoreEmptyMessages()},
 		want: true,
-
-		// TODO
 	}, {
 		x:    &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{}},
 		y:    &testpb.TestAllTypes{MapStringNestedMessage: nil},
@@ -529,6 +527,436 @@ func TestEqual(t *testing.T) {
 		opts: cmp.Options{Transform(),
 			IgnoreDescriptors(testpb.E_OptionalInt32.TypeDescriptor())},
 		want: false,
+	}}...)
+
+	// Test FilterEnum.
+	tests = append(tests, []test{{
+		x:    &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+		y:    &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+		y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter type
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+		y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y int) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+		y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y testpb.TestAllTypes_NestedEnum) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+		y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+		y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y Enum) bool { return true })),
+		},
+		want: true,
+	}, {
+		x:    &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO}},
+		y:    &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter type
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y int) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y []testpb.TestAllTypes_NestedEnum) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y []Enum) bool { return true })),
+		},
+		want: true,
+	}, {
+		x:    &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_FOO}},
+		y:    &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter type
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y int) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y map[string]testpb.TestAllTypes_NestedEnum) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_FOO}},
+		y: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_BAR}},
+		opts: cmp.Options{
+			Transform(),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y map[string]Enum) bool { return true })),
+		},
+		want: true,
+	}}...)
+
+	// Test FilterMessage.
+	tests = append(tests, []test{{
+		x:    &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(1)}},
+		y:    &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(2)}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(1)}},
+		y: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(2)}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter type
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(1)}},
+		y: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(2)}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y int) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(1)}},
+		y: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(2)}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y *testpb.TestAllTypes_NestedMessage) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(1)}},
+		y: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(2)}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(1)}},
+		y: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(2)}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y Message) bool { return true })),
+		},
+		want: true,
+	}, {
+		x:    &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(1)}}},
+		y:    &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(2)}}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter type
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y int) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y []*testpb.TestAllTypes_NestedMessage) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y []Message) bool { return true })),
+		},
+		want: true,
+	}, {
+		x:    &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(1)}}},
+		y:    &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(2)}}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter type
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y int) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y map[string]*testpb.TestAllTypes_NestedMessage) bool { return true })),
+		},
+		want: false, // matching filter type, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(1)}}},
+		y: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(2)}}},
+		opts: cmp.Options{
+			Transform(),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y map[string]Message) bool { return true })),
+		},
+		want: true,
+	}}...)
+
+	// Test FilterField.
+	tests = append(tests, []test{{
+		x:    &testpb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+		y:    &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+		y: &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "optional_int64", cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter name
+	}, {
+		x: &testpb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+		y: &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "optional_int32", cmp.Comparer(func(x, y int64) bool { return true })),
+		},
+		want: false, // matching filter name, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+		y: &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "optional_int32", cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+		y: &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "optional_int32", cmp.Comparer(func(x, y int32) bool { return true })),
+		},
+		want: true,
+	}, {
+		x:    &testpb.TestAllTypes{RepeatedInt32: []int32{1}},
+		y:    &testpb.TestAllTypes{RepeatedInt32: []int32{2}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedInt32: []int32{1}},
+		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "repeated_int64", cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter name
+	}, {
+		x: &testpb.TestAllTypes{RepeatedInt32: []int32{1}},
+		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "repeated_int32", cmp.Comparer(func(x, y []int64) bool { return true })),
+		},
+		want: false, // matching filter name, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{RepeatedInt32: []int32{1}},
+		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "repeated_int32", cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedInt32: []int32{1}},
+		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "repeated_int32", cmp.Comparer(func(x, y []int32) bool { return true })),
+		},
+		want: true,
+	}, {
+		x:    &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 1}},
+		y:    &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{2: 2}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 1}},
+		y: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{2: 2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "map_int64_int64", cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter name
+	}, {
+		x: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 1}},
+		y: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{2: 2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "map_int32_int32", cmp.Comparer(func(x, y map[int64]int64) bool { return true })),
+		},
+		want: false, // matching filter name, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 1}},
+		y: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{2: 2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "map_int32_int32", cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 1}},
+		y: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{2: 2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterField(new(testpb.TestAllTypes), "map_int32_int32", cmp.Comparer(func(x, y map[int32]int32) bool { return true })),
+		},
+		want: true,
+	}}...)
+
+	// Test FilterOneof
+	tests = append(tests, []test{{
+		x:    &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{1}},
+		y:    &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{2}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{1}},
+		y: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterOneof(new(testpb.TestAllTypes), "oneof_optional", cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: false, // mismatching filter name
+	}, {
+		x: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{1}},
+		y: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterOneof(new(testpb.TestAllTypes), "oneof_field", cmp.Comparer(func(x, y string) bool { return true })),
+		},
+		want: false, // matching filter name, but mismatching comparer type
+	}, {
+		x: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{1}},
+		y: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterOneof(new(testpb.TestAllTypes), "oneof_field", cmp.Comparer(func(x, y uint32) bool { return true })),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{1}},
+		y: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{2}},
+		opts: cmp.Options{
+			Transform(),
+			FilterOneof(new(testpb.TestAllTypes), "oneof_field", cmp.Comparer(func(x, y interface{}) bool { return true })),
+		},
+		want: true,
 	}}...)
 
 	for _, tt := range tests {
