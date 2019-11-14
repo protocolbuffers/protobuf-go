@@ -12,6 +12,7 @@ import (
 	"sync"
 	"sync/atomic"
 
+	"google.golang.org/protobuf/internal/genname"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
@@ -135,19 +136,19 @@ func (mi *MessageInfo) makeStructInfo(t reflect.Type) structInfo {
 fieldLoop:
 	for i := 0; i < t.NumField(); i++ {
 		switch f := t.Field(i); f.Name {
-		case "sizeCache", "XXX_sizecache":
+		case genname.SizeCache, genname.SizeCacheA:
 			if f.Type == sizecacheType {
 				si.sizecacheOffset = offsetOf(f, mi.Exporter)
 			}
-		case "weakFields", "XXX_weak":
+		case genname.WeakFields, genname.WeakFieldsA:
 			if f.Type == weakFieldsType {
 				si.weakOffset = offsetOf(f, mi.Exporter)
 			}
-		case "unknownFields", "XXX_unrecognized":
+		case genname.UnknownFields, genname.UnknownFieldsA:
 			if f.Type == unknownFieldsType {
 				si.unknownOffset = offsetOf(f, mi.Exporter)
 			}
-		case "extensionFields", "XXX_InternalExtensions", "XXX_extensions":
+		case genname.ExtensionFields, genname.ExtensionFieldsA, genname.ExtensionFieldsB:
 			if f.Type == extensionFieldsType {
 				si.extensionOffset = offsetOf(f, mi.Exporter)
 			}

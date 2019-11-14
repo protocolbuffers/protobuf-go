@@ -20,6 +20,7 @@ import (
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/fieldnum"
+	"google.golang.org/protobuf/internal/genname"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
 
@@ -398,19 +399,19 @@ func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 }
 
 func genMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, sf *structFields) {
-	g.P("state ", protoimplPackage.Ident("MessageState"))
-	sf.append("state")
-	g.P("sizeCache", " ", protoimplPackage.Ident("SizeCache"))
-	sf.append("sizeCache")
+	g.P(genname.State, " ", protoimplPackage.Ident("MessageState"))
+	sf.append(genname.State)
+	g.P(genname.SizeCache, " ", protoimplPackage.Ident("SizeCache"))
+	sf.append(genname.SizeCache)
 	if m.HasWeak {
-		g.P("XXX_weak", " ", protoimplPackage.Ident("WeakFields"), jsonIgnoreTags)
-		sf.append("XXX_weak")
+		g.P(genname.WeakFields, " ", protoimplPackage.Ident("WeakFields"), jsonIgnoreTags)
+		sf.append(genname.WeakFields)
 	}
-	g.P("unknownFields", " ", protoimplPackage.Ident("UnknownFields"))
-	sf.append("unknownFields")
+	g.P(genname.UnknownFields, " ", protoimplPackage.Ident("UnknownFields"))
+	sf.append(genname.UnknownFields)
 	if m.Desc.ExtensionRanges().Len() > 0 {
-		g.P("extensionFields", " ", protoimplPackage.Ident("ExtensionFields"))
-		sf.append("extensionFields")
+		g.P(genname.ExtensionFields, " ", protoimplPackage.Ident("ExtensionFields"))
+		sf.append(genname.ExtensionFields)
 	}
 	if sf.count > 0 {
 		g.P()
@@ -471,7 +472,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 
 	name := field.GoName
 	if field.Desc.IsWeak() {
-		name = "XXX_weak_" + name
+		name = genname.WeakFieldPrefix + name
 	}
 	g.Annotate(m.GoIdent.GoName+"."+name, field.Location)
 	leadingComments := appendDeprecationSuffix(field.Comments.Leading,
@@ -627,8 +628,8 @@ func genMessageGetterMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f 
 		case field.Desc.IsWeak():
 			g.P(leadingComments, "func (x *", m.GoIdent, ") Get", field.GoName, "() ", protoifacePackage.Ident("MessageV1"), "{")
 			g.P("if x != nil {")
-			g.P("v := x.XXX_weak[", field.Desc.Number(), "]")
-			g.P("_ = x.XXX_weak_" + field.GoName) // for field-tracking
+			g.P("v := x.", genname.WeakFields, "[", field.Desc.Number(), "]")
+			g.P("_ = x.", genname.WeakFieldPrefix+field.GoName) // for field-tracking
 			g.P("if v != nil {")
 			g.P("return v")
 			g.P("}")
@@ -674,14 +675,14 @@ func genMessageSetterMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f 
 		leadingComments := appendDeprecationSuffix("",
 			field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
 		g.P(leadingComments, "func (x *", m.GoIdent, ") Set", field.GoName, "(v ", protoifacePackage.Ident("MessageV1"), ") {")
-		g.P("if x.XXX_weak == nil {")
-		g.P("x.XXX_weak = make(", protoimplPackage.Ident("WeakFields"), ")")
+		g.P("if x.", genname.WeakFields, " == nil {")
+		g.P("x.", genname.WeakFields, " = make(", protoimplPackage.Ident("WeakFields"), ")")
 		g.P("}")
 		g.P("if v == nil {")
-		g.P("delete(x.XXX_weak, ", field.Desc.Number(), ")")
+		g.P("delete(x.", genname.WeakFields, ", ", field.Desc.Number(), ")")
 		g.P("} else {")
-		g.P("x.XXX_weak[", field.Desc.Number(), "] = v")
-		g.P("x.XXX_weak_"+field.GoName, " = struct{}{}") // for field-tracking
+		g.P("x.", genname.WeakFields, "[", field.Desc.Number(), "] = v")
+		g.P("x.", genname.WeakFieldPrefix+field.GoName, " = struct{}{}") // for field-tracking
 		g.P("}")
 		g.P("}")
 		g.P()

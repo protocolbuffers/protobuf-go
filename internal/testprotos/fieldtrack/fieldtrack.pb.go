@@ -20,7 +20,7 @@ import (
 type TestFieldTrack struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
-	XXX_weak      protoimpl.WeakFields `json:"-"`
+	weakFields    protoimpl.WeakFields `json:"-"`
 	unknownFields protoimpl.UnknownFields
 
 	OptionalInt32         *int32                                      `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty" go:"track"`
@@ -573,7 +573,7 @@ func (x *TestFieldTrack) GetMapStringMessage() map[string]*test.TestAllTypes_Nes
 
 func (x *TestFieldTrack) GetWeakMessage1() protoiface.MessageV1 {
 	if x != nil {
-		v := x.XXX_weak[100]
+		v := x.weakFields[100]
 		_ = x.XXX_weak_WeakMessage1
 		if v != nil {
 			return v
@@ -586,7 +586,7 @@ func (x *TestFieldTrack) GetWeakMessage1() protoiface.MessageV1 {
 
 func (x *TestFieldTrack) GetWeakMessage2() protoiface.MessageV1 {
 	if x != nil {
-		v := x.XXX_weak[101]
+		v := x.weakFields[101]
 		_ = x.XXX_weak_WeakMessage2
 		if v != nil {
 			return v
@@ -598,13 +598,13 @@ func (x *TestFieldTrack) GetWeakMessage2() protoiface.MessageV1 {
 //go:nointerface
 
 func (x *TestFieldTrack) SetWeakMessage1(v protoiface.MessageV1) {
-	if x.XXX_weak == nil {
-		x.XXX_weak = make(protoimpl.WeakFields)
+	if x.weakFields == nil {
+		x.weakFields = make(protoimpl.WeakFields)
 	}
 	if v == nil {
-		delete(x.XXX_weak, 100)
+		delete(x.weakFields, 100)
 	} else {
-		x.XXX_weak[100] = v
+		x.weakFields[100] = v
 		x.XXX_weak_WeakMessage1 = struct{}{}
 	}
 }
@@ -612,13 +612,13 @@ func (x *TestFieldTrack) SetWeakMessage1(v protoiface.MessageV1) {
 //go:nointerface
 
 func (x *TestFieldTrack) SetWeakMessage2(v protoiface.MessageV1) {
-	if x.XXX_weak == nil {
-		x.XXX_weak = make(protoimpl.WeakFields)
+	if x.weakFields == nil {
+		x.weakFields = make(protoimpl.WeakFields)
 	}
 	if v == nil {
-		delete(x.XXX_weak, 101)
+		delete(x.weakFields, 101)
 	} else {
-		x.XXX_weak[101] = v
+		x.weakFields[101] = v
 		x.XXX_weak_WeakMessage2 = struct{}{}
 	}
 }
@@ -1016,6 +1016,8 @@ func file_fieldtrack_fieldtrack_proto_init() {
 				return &v.state
 			case 1:
 				return &v.sizeCache
+			case 2:
+				return &v.weakFields
 			case 3:
 				return &v.unknownFields
 			default:

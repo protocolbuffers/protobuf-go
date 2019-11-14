@@ -1648,7 +1648,7 @@ func (x *TestRequiredGroupFields) GetRepeatedgroup() []*TestRequiredGroupFields_
 type TestWeak struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
-	XXX_weak      protoimpl.WeakFields `json:"-"`
+	weakFields    protoimpl.WeakFields `json:"-"`
 	unknownFields protoimpl.UnknownFields
 
 	XXX_weak_WeakMessage1 struct{} `protobuf:"bytes,1,opt,name=weak_message1,json=weakMessage1,weak=goproto.proto.test.weak.WeakImportMessage1" json:"weak_message1,omitempty"`
@@ -1689,7 +1689,7 @@ func (*TestWeak) Descriptor() ([]byte, []int) {
 
 func (x *TestWeak) GetWeakMessage1() protoiface.MessageV1 {
 	if x != nil {
-		v := x.XXX_weak[1]
+		v := x.weakFields[1]
 		_ = x.XXX_weak_WeakMessage1
 		if v != nil {
 			return v
@@ -1700,7 +1700,7 @@ func (x *TestWeak) GetWeakMessage1() protoiface.MessageV1 {
 
 func (x *TestWeak) GetWeakMessage2() protoiface.MessageV1 {
 	if x != nil {
-		v := x.XXX_weak[2]
+		v := x.weakFields[2]
 		_ = x.XXX_weak_WeakMessage2
 		if v != nil {
 			return v
@@ -1710,25 +1710,25 @@ func (x *TestWeak) GetWeakMessage2() protoiface.MessageV1 {
 }
 
 func (x *TestWeak) SetWeakMessage1(v protoiface.MessageV1) {
-	if x.XXX_weak == nil {
-		x.XXX_weak = make(protoimpl.WeakFields)
+	if x.weakFields == nil {
+		x.weakFields = make(protoimpl.WeakFields)
 	}
 	if v == nil {
-		delete(x.XXX_weak, 1)
+		delete(x.weakFields, 1)
 	} else {
-		x.XXX_weak[1] = v
+		x.weakFields[1] = v
 		x.XXX_weak_WeakMessage1 = struct{}{}
 	}
 }
 
 func (x *TestWeak) SetWeakMessage2(v protoiface.MessageV1) {
-	if x.XXX_weak == nil {
-		x.XXX_weak = make(protoimpl.WeakFields)
+	if x.weakFields == nil {
+		x.weakFields = make(protoimpl.WeakFields)
 	}
 	if v == nil {
-		delete(x.XXX_weak, 2)
+		delete(x.weakFields, 2)
 	} else {
-		x.XXX_weak[2] = v
+		x.weakFields[2] = v
 		x.XXX_weak_WeakMessage2 = struct{}{}
 	}
 }
@@ -4919,6 +4919,8 @@ func file_test_test_proto_init() {
 				return &v.state
 			case 1:
 				return &v.sizeCache
+			case 2:
+				return &v.weakFields
 			case 3:
 				return &v.unknownFields
 			default:
