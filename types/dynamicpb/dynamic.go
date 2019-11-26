@@ -128,7 +128,18 @@ func (m *Message) Get(fd pref.FieldDescriptor) pref.Value {
 		return m.known[num]
 	}
 	if v, ok := m.known[num]; ok {
-		return v
+		switch {
+		case fd.IsMap():
+			if v.Map().Len() > 0 {
+				return v
+			}
+		case fd.IsList():
+			if v.List().Len() > 0 {
+				return v
+			}
+		default:
+			return v
+		}
 	}
 	switch {
 	case fd.IsMap():
@@ -413,18 +424,18 @@ func typecheck(fd pref.FieldDescriptor, v pref.Value) {
 func typeIsValid(fd pref.FieldDescriptor, v pref.Value) error {
 	switch {
 	case fd.IsMap():
-		if mapv, ok := v.Interface().(*dynamicMap); !ok || mapv.desc != fd {
+		if mapv, ok := v.Interface().(*dynamicMap); !ok || mapv.desc != fd || !mapv.IsValid() {
 			return errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface())
 		}
 		return nil
 	case fd.IsList():
 		switch list := v.Interface().(type) {
 		case *dynamicList:
-			if list.desc == fd {
+			if list.desc == fd && list.IsValid() {
 				return nil
 			}
 		case emptyList:
-			if list.desc == fd {
+			if list.desc == fd && list.IsValid() {
 				return nil
 			}
 		}

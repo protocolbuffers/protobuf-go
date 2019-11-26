@@ -138,11 +138,18 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter
 				return conv.Zero()
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			if rv.Len() == 0 {
+				return conv.Zero()
+			}
 			return conv.PBValueOf(rv)
 		},
 		set: func(p pointer, v pref.Value) {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			rv.Set(conv.GoValueOf(v))
+			pv := conv.GoValueOf(v)
+			if pv.IsNil() {
+				panic(fmt.Sprintf("invalid value: setting map field to read-only value"))
+			}
+			rv.Set(pv)
 		},
 		mutable: func(p pointer) pref.Value {
 			v := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
@@ -184,11 +191,18 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporte
 				return conv.Zero()
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type)
+			if rv.Elem().Len() == 0 {
+				return conv.Zero()
+			}
 			return conv.PBValueOf(rv)
 		},
 		set: func(p pointer, v pref.Value) {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			rv.Set(reflect.ValueOf(v.List().(unwrapper).protoUnwrap()).Elem())
+			pv := conv.GoValueOf(v)
+			if pv.IsNil() {
+				panic(fmt.Sprintf("invalid value: setting repeated field to read-only value"))
+			}
+			rv.Set(pv.Elem())
 		},
 		mutable: func(p pointer) pref.Value {
 			v := p.Apply(fieldOffset).AsValueOf(fs.Type)

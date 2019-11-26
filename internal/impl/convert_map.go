@@ -43,7 +43,7 @@ func (c *mapConverter) IsValidPB(v pref.Value) bool {
 	if !ok {
 		return false
 	}
-	return mapv.v.Type() == c.goType
+	return mapv.v.Type() == c.goType && mapv.IsValid()
 }
 
 func (c *mapConverter) IsValidGo(v reflect.Value) bool {

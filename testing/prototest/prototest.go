@@ -19,7 +19,6 @@ import (
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 )
 
-// TODO: Test read-only properties of unpopulated composite values.
 // TODO: Test invalid field descriptors or oneof descriptors.
 // TODO: This should test the functionality that can be provided by fast-paths.
 
@@ -175,7 +174,7 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	// Set to the default value.
 	switch {
 	case fd.IsList() || fd.IsMap():
-		m.Set(fd, m.Get(fd))
+		m.Set(fd, m.Mutable(fd))
 		if got, want := m.Has(fd), (fd.IsExtension() && fd.Cardinality() != pref.Repeated) || fd.ContainingOneof() != nil; got != want {
 			t.Errorf("after setting %q to default:\nMessage.Has(%v) = %v, want %v", name, num, got, want)
 		}
@@ -207,10 +206,26 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	// New values.
 	m.Clear(fd) // start with an empty map
 	mapv := m.Get(fd).Map()
+	if mapv.IsValid() {
+		t.Errorf("after clearing field: message.Get(%v).IsValid() = true, want false", name)
+	}
 	if got, want := mapv.NewValue(), newMapValue(fd, mapv, 0, nil); !valueEqual(got, want) {
 		t.Errorf("message.Get(%v).NewValue() = %v, want %v", name, formatValue(got), formatValue(want))
 	}
+	if !panics(func() {
+		m.Set(fd, pref.ValueOfMap(mapv))
+	}) {
+		t.Errorf("message.Set(%v, <invalid>) does not panic", name)
+	}
+	if !panics(func() {
+		mapv.Set(newMapKey(fd, 0), newMapValue(fd, mapv, 0, nil))
+	}) {
+		t.Errorf("message.Get(%v).Set(...) of invalid map does not panic", name)
+	}
 	mapv = m.Mutable(fd).Map() // mutable map
+	if !mapv.IsValid() {
+		t.Errorf("message.Mutable(%v).IsValid() = false, want true", name)
+	}
 	if got, want := mapv.NewValue(), newMapValue(fd, mapv, 0, nil); !valueEqual(got, want) {
 		t.Errorf("message.Mutable(%v).NewValue() = %v, want %v", name, formatValue(got), formatValue(want))
 	}
@@ -254,6 +269,9 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		}
 		return true
 	})
+	if mapv := m.Get(fd).Map(); mapv.IsValid() {
+		t.Errorf("after clearing all elements: message.Get(%v).IsValid() = true, want false %v", name, formatValue(pref.ValueOfMap(mapv)))
+	}
 
 	// Non-existent map keys.
 	missingKey := newMapKey(fd, 1)
@@ -290,10 +308,26 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 
 	m.Clear(fd) // start with an empty list
 	list := m.Get(fd).List()
+	if list.IsValid() {
+		t.Errorf("message.Get(%v).IsValid() = true, want false", name)
+	}
+	if !panics(func() {
+		m.Set(fd, pref.ValueOfList(list))
+	}) {
+		t.Errorf("message.Set(%v, <invalid>) does not panic", name)
+	}
+	if !panics(func() {
+		list.Append(newListElement(fd, list, 0, nil))
+	}) {
+		t.Errorf("message.Get(%v).Append(...) of invalid list does not panic", name)
+	}
 	if got, want := list.NewElement(), newListElement(fd, list, 0, nil); !valueEqual(got, want) {
 		t.Errorf("message.Get(%v).NewElement() = %v, want %v", name, formatValue(got), formatValue(want))
 	}
 	list = m.Mutable(fd).List() // mutable list
+	if !list.IsValid() {
+		t.Errorf("message.Get(%v).IsValid() = false, want true", name)
+	}
 	if got, want := list.NewElement(), newListElement(fd, list, 0, nil); !valueEqual(got, want) {
 		t.Errorf("message.Mutable(%v).NewElement() = %v, want %v", name, formatValue(got), formatValue(want))
 	}
@@ -538,7 +572,7 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 	switch {
 	case fd.IsList():
 		if n == 0 {
-			return m.New().Get(fd)
+			return m.New().Mutable(fd)
 		}
 		list := m.NewField(fd).List()
 		list.Append(newListElement(fd, list, 0, stack))
@@ -548,7 +582,7 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 		return pref.ValueOfList(list)
 	case fd.IsMap():
 		if n == 0 {
-			return m.New().Get(fd)
+			return m.New().Mutable(fd)
 		}
 		mapv := m.NewField(fd).Map()
 		mapv.Set(newMapKey(fd, 0), newMapValue(fd, mapv, 0, stack))

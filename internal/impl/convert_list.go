@@ -48,7 +48,7 @@ func (c *listConverter) IsValidPB(v pref.Value) bool {
 	if !ok {
 		return false
 	}
-	return list.v.Type().Elem() == c.goType
+	return list.v.Type().Elem() == c.goType && list.IsValid()
 }
 
 func (c *listConverter) IsValidGo(v reflect.Value) bool {
