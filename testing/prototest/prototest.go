@@ -281,6 +281,7 @@ func (m testMap) Range(f func(pref.MapKey, pref.Value) bool) {
 		}
 	}
 }
+func (m testMap) IsValid() bool { return true }
 
 // testFieldList exercises set/get/append/truncate of values in a list.
 func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
@@ -346,6 +347,7 @@ func (l *testList) Len() int                { return len(l.a) }
 func (l *testList) Set(n int, v pref.Value) { l.a[n] = v }
 func (l *testList) Truncate(n int)          { l.a = l.a[:n] }
 func (l *testList) NewElement() pref.Value  { panic("unimplemented") }
+func (l *testList) IsValid() bool           { return true }
 
 // testFieldFloat exercises some interesting floating-point scalar field values.
 func testFieldFloat(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {

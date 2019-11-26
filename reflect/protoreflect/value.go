@@ -140,6 +140,16 @@ type Message interface {
 	// SetUnknown is a mutating operation and unsafe for concurrent use.
 	SetUnknown(RawFields)
 
+	// IsValid reports whether the message is valid.
+	//
+	// An invalid message is an empty, read-only value.
+	//
+	// An invalid message often corresponds to a nil pointer of the concrete
+	// message type, but the details are implementation dependent.
+	// Validity is not part of the protobuf data model, and may not
+	// be preserved in marshaling or other operations.
+	IsValid() bool
+
 	// TODO: Add method to retrieve ExtensionType by FieldNumber?
 }
 
@@ -200,6 +210,14 @@ type List interface {
 	// For other scalars, this returns the zero value.
 	// For messages, this returns a new, empty, mutable value.
 	NewElement() Value
+
+	// IsValid reports whether the list is valid.
+	//
+	// An invalid list is an empty, read-only value.
+	//
+	// Validity is not part of the protobuf data model, and may not
+	// be preserved in marshaling or other operations.
+	IsValid() bool
 }
 
 // Map is an unordered, associative map.
@@ -245,4 +263,14 @@ type Map interface {
 	// For other scalars, this returns the zero value.
 	// For messages, this returns a new, empty, mutable value.
 	NewValue() Value
+
+	// IsValid reports whether the map is valid.
+	//
+	// An invalid map is an empty, read-only value.
+	//
+	// An invalid message often corresponds to a nil Go map value,
+	// but the details are implementation dependent.
+	// Validity is not part of the protobuf data model, and may not
+	// be preserved in marshaling or other operations.
+	IsValid() bool
 }

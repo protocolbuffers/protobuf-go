@@ -125,6 +125,9 @@ func (ls *listReflect) Truncate(i int) {
 func (ls *listReflect) NewElement() pref.Value {
 	return ls.conv.New()
 }
+func (ls *listReflect) IsValid() bool {
+	return !ls.v.IsNil()
+}
 func (ls *listReflect) protoUnwrap() interface{} {
 	return ls.v.Interface()
 }

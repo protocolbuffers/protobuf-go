@@ -124,6 +124,9 @@ func (m *messageState) SetUnknown(b protoreflect.RawFields) {
 	m.messageInfo().init()
 	m.messageInfo().setUnknown(m.pointer(), b)
 }
+func (m *messageState) IsValid() bool {
+	return m.pointer().IsNil()
+}
 
 func (m *messageReflectWrapper) Descriptor() protoreflect.MessageDescriptor {
 	return m.messageInfo().Desc
@@ -240,4 +243,7 @@ func (m *messageReflectWrapper) GetUnknown() protoreflect.RawFields {
 func (m *messageReflectWrapper) SetUnknown(b protoreflect.RawFields) {
 	m.messageInfo().init()
 	m.messageInfo().setUnknown(m.pointer(), b)
+}
+func (m *messageReflectWrapper) IsValid() bool {
+	return m.pointer().IsNil()
 }

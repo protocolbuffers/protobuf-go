@@ -230,7 +230,7 @@ type MessageType interface {
 	// New returns a newly allocated empty message.
 	New() Message
 
-	// Zero returns an immutable empty message.
+	// Zero returns an empty, read-only message.
 	Zero() Message
 
 	// Descriptor returns the message descriptor.
@@ -445,7 +445,7 @@ type ExtensionType interface {
 
 	// Zero returns a new value for the field.
 	// For scalars, this returns the default value in native Go form.
-	// For composite types, this returns an empty, immutable message, list, or map.
+	// For composite types, this returns an empty, read-only message, list, or map.
 	Zero() Value
 
 	// TypeDescriptor returns the extension type descriptor.

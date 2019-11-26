@@ -253,6 +253,12 @@ func (m *Message) SetUnknown(r pref.RawFields) {
 	m.unknown = r
 }
 
+// IsValid reports whether the message is valid.
+// See protoreflect.Message for details.
+func (m *Message) IsValid() bool {
+	return m.known != nil
+}
+
 func (m *Message) checkField(fd pref.FieldDescriptor) {
 	if fd.IsExtension() && fd.ContainingMessage().FullName() == m.Descriptor().FullName() {
 		if _, ok := fd.(pref.ExtensionTypeDescriptor); !ok {
@@ -295,9 +301,8 @@ func (x emptyList) Get(n int) pref.Value    { panic(errors.New("out of range")) 
 func (x emptyList) Set(n int, v pref.Value) { panic(errors.New("modification of immutable list")) }
 func (x emptyList) Append(v pref.Value)     { panic(errors.New("modification of immutable list")) }
 func (x emptyList) Truncate(n int)          { panic(errors.New("modification of immutable list")) }
-func (x emptyList) NewElement() pref.Value {
-	return newListEntry(x.desc)
-}
+func (x emptyList) NewElement() pref.Value  { return newListEntry(x.desc) }
+func (x emptyList) IsValid() bool           { return false }
 
 type dynamicList struct {
 	desc pref.FieldDescriptor
@@ -334,6 +339,10 @@ func (x *dynamicList) NewElement() pref.Value {
 	return newListEntry(x.desc)
 }
 
+func (x *dynamicList) IsValid() bool {
+	return true
+}
+
 type dynamicMap struct {
 	desc pref.FieldDescriptor
 	mapv map[interface{}]pref.Value
@@ -353,6 +362,9 @@ func (x *dynamicMap) NewValue() pref.Value {
 		return pref.ValueOfMessage(NewMessage(md).ProtoReflect())
 	}
 	return x.desc.MapValue().Default()
+}
+func (x *dynamicMap) IsValid() bool {
+	return x.mapv != nil
 }
 
 func (x *dynamicMap) Range(f func(pref.MapKey, pref.Value) bool) {

@@ -457,6 +457,12 @@ func (m aberrantMessage) GetUnknown() pref.RawFields {
 func (m aberrantMessage) SetUnknown(pref.RawFields) {
 	// SetUnknown discards its input on messages which don't support unknown field storage.
 }
+func (m aberrantMessage) IsValid() bool {
+	// An invalid message is a read-only, empty message. Since we don't know anything
+	// about the alleged contents of this message, we can't say with confidence that
+	// it is invalid in this sense. Therefore, report it as valid.
+	return true
+}
 func (m aberrantMessage) ProtoMethods() *piface.Methods {
 	return legacyProtoMethods
 }

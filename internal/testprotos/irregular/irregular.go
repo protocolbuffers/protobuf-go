@@ -82,6 +82,10 @@ func (m *message) WhichOneof(pref.OneofDescriptor) pref.FieldDescriptor {
 func (m *message) GetUnknown() pref.RawFields { return nil }
 func (m *message) SetUnknown(pref.RawFields)  { return }
 
+func (m *message) IsValid() bool {
+	return m != nil
+}
+
 var fileDesc = func() pref.FileDescriptor {
 	p := &descriptorpb.FileDescriptorProto{}
 	if err := prototext.Unmarshal([]byte(descriptorText), p); err != nil {

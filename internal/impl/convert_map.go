@@ -102,6 +102,9 @@ func (ms *mapReflect) Range(f func(pref.MapKey, pref.Value) bool) {
 func (ms *mapReflect) NewValue() pref.Value {
 	return ms.valConv.New()
 }
+func (ms *mapReflect) IsValid() bool {
+	return !ms.v.IsNil()
+}
 func (ms *mapReflect) protoUnwrap() interface{} {
 	return ms.v.Interface()
 }
