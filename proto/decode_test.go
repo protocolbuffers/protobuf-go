@@ -1773,6 +1773,22 @@ var invalidFieldNumberTestProtos = []struct {
 	},
 }
 
+func TestDecodeEmptyBytes(t *testing.T) {
+	// There's really nothing wrong with a nil entry in a [][]byte,
+	// but we take care to produce non-nil []bytes for zero-length
+	// byte strings, so test for it.
+	m := &testpb.TestAllTypes{}
+	b := pack.Message{
+		pack.Tag{45, pack.BytesType}, pack.Bytes(nil),
+	}.Marshal()
+	if err := proto.Unmarshal(b, m); err != nil {
+		t.Fatal(err)
+	}
+	if m.RepeatedBytes[0] == nil {
+		t.Errorf("unmarshaling repeated bytes field containing zero-length value: Got nil bytes, want non-nil")
+	}
+}
+
 func build(m proto.Message, opts ...buildOpt) proto.Message {
 	for _, opt := range opts {
 		opt(m)

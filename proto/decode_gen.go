@@ -167,7 +167,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 		if n < 0 {
 			return val, 0, wire.ParseError(n)
 		}
-		return protoreflect.ValueOfBytes(append(([]byte)(nil), v...)), n, nil
+		return protoreflect.ValueOfBytes(append(emptyBuf[:], v...)), n, nil
 	case protoreflect.MessageKind:
 		if wtyp != wire.BytesType {
 			return val, 0, errUnknown
@@ -564,7 +564,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
-		list.Append(protoreflect.ValueOfBytes(append(([]byte)(nil), v...)))
+		list.Append(protoreflect.ValueOfBytes(append(emptyBuf[:], v...)))
 		return n, nil
 	case protoreflect.MessageKind:
 		if wtyp != wire.BytesType {
@@ -598,3 +598,6 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		return 0, errUnknown
 	}
 }
+
+// We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.
+var emptyBuf [0]byte

@@ -4711,7 +4711,7 @@ func consumeBytesValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.
 	if n < 0 {
 		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	return protoreflect.ValueOfBytes(append(([]byte)(nil), v...)), n, nil
+	return protoreflect.ValueOfBytes(append(emptyBuf[:], v...)), n, nil
 }
 
 var coderBytesValue = valueCoderFuncs{
@@ -4751,7 +4751,7 @@ func consumeBytesSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 	if n < 0 {
 		return protoreflect.Value{}, 0, wire.ParseError(n)
 	}
-	list.Append(protoreflect.ValueOfBytes(append(([]byte)(nil), v...)))
+	list.Append(protoreflect.ValueOfBytes(append(emptyBuf[:], v...)))
 	return listv, n, nil
 }
 

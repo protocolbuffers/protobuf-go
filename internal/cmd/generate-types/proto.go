@@ -233,7 +233,7 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:           "Bytes",
 		WireType:       WireBytes,
-		ToValue:        "protoreflect.ValueOfBytes(append(([]byte)(nil), v...))",
+		ToValue:        "protoreflect.ValueOfBytes(append(emptyBuf[:], v...))",
 		FromValue:      "v.Bytes()",
 		GoType:         GoBytes,
 		ToGoType:       "append(emptyBuf[:], v...)",
@@ -344,6 +344,9 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 		return 0, errUnknown
 	}
 }
+
+// We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.
+var emptyBuf [0]byte
 `))
 
 func generateProtoEncode() string {
