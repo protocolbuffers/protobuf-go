@@ -82,11 +82,11 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 		size += mi.sizeExtensions(e, opts)
 	}
 	for _, f := range mi.orderedCoderFields {
-		fptr := p.Apply(f.offset)
-		if f.isPointer && fptr.Elem().IsNil() {
+		if f.funcs.size == nil {
 			continue
 		}
-		if f.funcs.size == nil {
+		fptr := p.Apply(f.offset)
+		if f.isPointer && fptr.Elem().IsNil() {
 			continue
 		}
 		size += f.funcs.size(fptr, f.tagsize, opts)
@@ -131,11 +131,11 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 		}
 	}
 	for _, f := range mi.orderedCoderFields {
-		fptr := p.Apply(f.offset)
-		if f.isPointer && fptr.Elem().IsNil() {
+		if f.funcs.marshal == nil {
 			continue
 		}
-		if f.funcs.marshal == nil {
+		fptr := p.Apply(f.offset)
+		if f.isPointer && fptr.Elem().IsNil() {
 			continue
 		}
 		b, err = f.funcs.marshal(b, fptr, f.wiretag, opts)

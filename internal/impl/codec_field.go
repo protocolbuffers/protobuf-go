@@ -20,40 +20,39 @@ type errInvalidUTF8 struct{}
 func (errInvalidUTF8) Error() string     { return "string field contains invalid UTF-8" }
 func (errInvalidUTF8) InvalidUTF8() bool { return true }
 
-func makeOneofFieldCoder(fd pref.FieldDescriptor, si structInfo) pointerCoderFuncs {
-	ot := si.oneofWrappersByNumber[fd.Number()]
-	funcs := fieldCoder(fd, ot.Field(0).Type)
-	fs := si.oneofsByName[fd.ContainingOneof().Name()]
-	ft := fs.Type
-	wiretag := wire.EncodeTag(fd.Number(), wireTypes[fd.Kind()])
-	tagsize := wire.SizeVarint(wiretag)
-	getInfo := func(p pointer) (pointer, bool) {
-		v := p.AsValueOf(ft).Elem()
-		if v.IsNil() {
-			return pointer{}, false
-		}
-		v = v.Elem() // interface -> *struct
-		if v.IsNil() || v.Elem().Type() != ot {
-			return pointer{}, false
-		}
-		return pointerOfValue(v).Apply(zeroOffset), true
+// initOneofFieldCoders initializes the fast-path functions for the fields in a oneof.
+//
+// For size, marshal, and isInit operations, functions are set only on the first field
+// in the oneof. The functions are called when the oneof is non-nil, and will dispatch
+// to the appropriate field-specific function as necessary.
+//
+// The unmarshal function is set on each field individually as usual.
+func (mi *MessageInfo) initOneofFieldCoders(od pref.OneofDescriptor, si structInfo) {
+	type oneofFieldInfo struct {
+		wiretag uint64 // field tag (number + wire type)
+		tagsize int    // size of the varint-encoded tag
+		funcs   pointerCoderFuncs
 	}
-	pcf := pointerCoderFuncs{
-		size: func(p pointer, _ int, opts marshalOptions) int {
-			v, ok := getInfo(p)
-			if !ok {
-				return 0
-			}
-			return funcs.size(v, tagsize, opts)
-		},
-		marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-			v, ok := getInfo(p)
-			if !ok {
-				return b, nil
-			}
-			return funcs.marshal(b, v, wiretag, opts)
-		},
-		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
+	fs := si.oneofsByName[od.Name()]
+	ft := fs.Type
+	oneofFields := make(map[reflect.Type]*oneofFieldInfo)
+	needIsInit := false
+	fields := od.Fields()
+	for i, lim := 0, fields.Len(); i < lim; i++ {
+		fd := od.Fields().Get(i)
+		num := fd.Number()
+		cf := mi.coderFields[num]
+		ot := si.oneofWrappersByNumber[num]
+		funcs := fieldCoder(fd, ot.Field(0).Type)
+		oneofFields[ot] = &oneofFieldInfo{
+			wiretag: cf.wiretag,
+			tagsize: cf.tagsize,
+			funcs:   funcs,
+		}
+		if funcs.isInit != nil {
+			needIsInit = true
+		}
+		cf.funcs.unmarshal = func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
 			var vw reflect.Value         // pointer to wrapper type
 			vi := p.AsValueOf(ft).Elem() // oneof field value of interface kind
 			if !vi.IsNil() && !vi.Elem().IsNil() && vi.Elem().Elem().Type() == ot {
@@ -67,18 +66,43 @@ func makeOneofFieldCoder(fd pref.FieldDescriptor, si structInfo) pointerCoderFun
 			}
 			vi.Set(vw)
 			return n, nil
-		},
-	}
-	if funcs.isInit != nil {
-		pcf.isInit = func(p pointer) error {
-			v, ok := getInfo(p)
-			if !ok {
-				return nil
-			}
-			return funcs.isInit(v)
 		}
 	}
-	return pcf
+	getInfo := func(p pointer) (pointer, *oneofFieldInfo) {
+		v := p.AsValueOf(ft).Elem()
+		if v.IsNil() {
+			return pointer{}, nil
+		}
+		v = v.Elem() // interface -> *struct
+		if v.IsNil() {
+			return pointer{}, nil
+		}
+		return pointerOfValue(v).Apply(zeroOffset), oneofFields[v.Elem().Type()]
+	}
+	first := mi.coderFields[od.Fields().Get(0).Number()]
+	first.funcs.size = func(p pointer, tagsize int, opts marshalOptions) int {
+		p, info := getInfo(p)
+		if info == nil || info.funcs.size == nil {
+			return 0
+		}
+		return info.funcs.size(p, info.tagsize, opts)
+	}
+	first.funcs.marshal = func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
+		p, info := getInfo(p)
+		if info == nil || info.funcs.marshal == nil {
+			return b, nil
+		}
+		return info.funcs.marshal(b, p, info.wiretag, opts)
+	}
+	if needIsInit {
+		first.funcs.isInit = func(p pointer) error {
+			p, info := getInfo(p)
+			if info == nil || info.funcs.isInit == nil {
+				return nil
+			}
+			return info.funcs.isInit(p)
+		}
+	}
 }
 
 func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {

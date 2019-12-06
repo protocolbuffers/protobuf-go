@@ -68,7 +68,6 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		switch {
 		case fd.ContainingOneof() != nil:
 			fieldOffset = offsetOf(fs, mi.Exporter)
-			funcs = makeOneofFieldCoder(fd, si)
 		case fd.IsWeak():
 			fieldOffset = si.weakOffset
 			funcs = makeWeakMessageFieldCoder(fd)
@@ -90,6 +89,9 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		}
 		mi.orderedCoderFields = append(mi.orderedCoderFields, cf)
 		mi.coderFields[cf.num] = cf
+	}
+	for i, oneofs := 0, mi.Desc.Oneofs(); i < oneofs.Len(); i++ {
+		mi.initOneofFieldCoders(oneofs.Get(i), si)
 	}
 	if messageset.IsMessageSet(mi.Desc) {
 		if !mi.extensionOffset.IsValid() {
