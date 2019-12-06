@@ -1762,14 +1762,12 @@ var invalidFieldNumberTestProtos = []struct {
 			pack.Tag{pack.MaxValidNumber, pack.VarintType}, pack.Varint(1006),
 			pack.Tag{pack.MaxValidNumber + 1, pack.VarintType}, pack.Varint(1007),
 		}.Marshal(),
-		allowed: flags.ProtoLegacy,
 	},
 	{
 		desc: "max+1",
 		wire: pack.Message{
 			pack.Tag{pack.MaxValidNumber + 1, pack.VarintType}, pack.Varint(1008),
 		}.Marshal(),
-		allowed: flags.ProtoLegacy,
 	},
 }
 

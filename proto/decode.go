@@ -88,6 +88,9 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 		if tagLen < 0 {
 			return wire.ParseError(tagLen)
 		}
+		if num > wire.MaxValidNumber {
+			return errors.New("invalid field number")
+		}
 
 		// Find the field descriptor for this field number.
 		fd := fields.ByNumber(num)

@@ -6,6 +6,7 @@ package proto_test
 
 import (
 	"google.golang.org/protobuf/internal/encoding/pack"
+	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 
@@ -178,6 +179,42 @@ var messageSetTestProtos = []testProto{
 			pack.Tag{1, pack.StartGroupType},
 			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
 			pack.Tag{1, pack.EndGroupType},
+		}.Marshal(),
+	},
+	{
+		desc: "MessageSet with type id out of valid field number range",
+		decodeTo: []proto.Message{func() proto.Message {
+			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
+			proto.SetExtension(m.MessageSet, msetextpb.E_ExtLargeNumber_MessageSetExtension, &msetextpb.ExtLargeNumber{})
+			return m
+		}()},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{2, pack.VarintType}, pack.Varint(wire.MaxValidNumber + 1),
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
+				pack.Tag{1, pack.EndGroupType},
+			}),
+		}.Marshal(),
+	},
+	{
+		desc: "MessageSet with unknown type id out of valid field number range",
+		decodeTo: []proto.Message{func() proto.Message {
+			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
+			m.MessageSet.ProtoReflect().SetUnknown(
+				pack.Message{
+					pack.Tag{wire.MaxValidNumber + 2, pack.BytesType}, pack.LengthPrefix{},
+				}.Marshal(),
+			)
+			return m
+		}()},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{2, pack.VarintType}, pack.Varint(wire.MaxValidNumber + 2),
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
+				pack.Tag{1, pack.EndGroupType},
+			}),
 		}.Marshal(),
 	},
 }
