@@ -108,6 +108,23 @@ func legacyLoadMessageDesc(t reflect.Type, name pref.FullName) pref.MessageDescr
 		return aberrantLoadMessageDesc(t, name)
 	}
 
+	// If the Go type has no fields, then this might be a proto3 empty message
+	// from before the size cache was added. If there are any fields, check to
+	// see that at least one of them looks like something we generated.
+	if nfield := t.Elem().NumField(); nfield > 0 {
+		hasProtoField := false
+		for i := 0; i < nfield; i++ {
+			f := t.Elem().Field(i)
+			if tag := f.Tag.Get("protobuf"); tag != "" || strings.HasPrefix(f.Name, "XXX_") {
+				hasProtoField = true
+				break
+			}
+		}
+		if !hasProtoField {
+			return aberrantLoadMessageDesc(t, name)
+		}
+	}
+
 	md := legacyLoadFileDesc(b).Messages().Get(idxs[0])
 	for _, i := range idxs[1:] {
 		md = md.Messages().Get(i)

@@ -15,6 +15,8 @@ import (
 
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
+
+	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
 )
 
 type selfMarshaler struct {
@@ -84,18 +86,45 @@ type descPanicSelfMarshaler struct{}
 
 const descPanicSelfMarshalerBytes = "bytes"
 
-func (m descPanicSelfMarshaler) Reset()                      {}
-func (m descPanicSelfMarshaler) ProtoMessage()               {}
-func (m descPanicSelfMarshaler) Descriptor() ([]byte, []int) { panic("Descriptor method panics") }
-func (m descPanicSelfMarshaler) String() string              { return "descPanicSelfMarshaler{}" }
-func (m descPanicSelfMarshaler) Marshal() ([]byte, error) {
+func (m *descPanicSelfMarshaler) Reset()                      {}
+func (m *descPanicSelfMarshaler) ProtoMessage()               {}
+func (m *descPanicSelfMarshaler) Descriptor() ([]byte, []int) { panic("Descriptor method panics") }
+func (m *descPanicSelfMarshaler) String() string              { return "descPanicSelfMarshaler{}" }
+func (m *descPanicSelfMarshaler) Marshal() ([]byte, error) {
 	return []byte(descPanicSelfMarshalerBytes), nil
 }
 
 func TestSelfMarshalerDescriptorPanics(t *testing.T) {
-	m := descPanicSelfMarshaler{}
+	m := &descPanicSelfMarshaler{}
 	got, err := proto.Marshal(impl.Export{}.MessageOf(m).Interface())
 	want := []byte(descPanicSelfMarshalerBytes)
+	if err != nil || !bytes.Equal(got, want) {
+		t.Fatalf("proto.Marshal(%v) = %v, %v; want %v, nil", m, got, err, want)
+	}
+}
+
+type descSelfMarshaler struct {
+	someField int // some non-generated field
+}
+
+const descSelfMarshalerBytes = "bytes"
+
+func (m *descSelfMarshaler) Reset()        {}
+func (m *descSelfMarshaler) ProtoMessage() {}
+func (m *descSelfMarshaler) Descriptor() ([]byte, []int) {
+	return ((*legacypb.Legacy)(nil)).GetF1().Descriptor()
+}
+func (m *descSelfMarshaler) String() string {
+	return "descSelfMarshaler{}"
+}
+func (m *descSelfMarshaler) Marshal() ([]byte, error) {
+	return []byte(descSelfMarshalerBytes), nil
+}
+
+func TestSelfMarshalerWithDescriptor(t *testing.T) {
+	m := &descSelfMarshaler{}
+	got, err := proto.Marshal(impl.Export{}.MessageOf(m).Interface())
+	want := []byte(descSelfMarshalerBytes)
 	if err != nil || !bytes.Equal(got, want) {
 		t.Fatalf("proto.Marshal(%v) = %v, %v; want %v, nil", m, got, err, want)
 	}
