@@ -155,7 +155,7 @@ func (mi *MessageInfo) sizeExtensions(ext *map[int32]ExtensionField, opts marsha
 		return 0
 	}
 	for _, x := range *ext {
-		xi := mi.extensionFieldInfo(x.Type())
+		xi := getExtensionFieldInfo(x.Type())
 		if xi.funcs.size == nil {
 			continue
 		}
@@ -176,7 +176,7 @@ func (mi *MessageInfo) appendExtensions(b []byte, ext *map[int32]ExtensionField,
 		// Fast-path for one extension: Don't bother sorting the keys.
 		var err error
 		for _, x := range *ext {
-			xi := mi.extensionFieldInfo(x.Type())
+			xi := getExtensionFieldInfo(x.Type())
 			b, err = xi.funcs.marshal(b, x.Value(), xi.wiretag, opts)
 		}
 		return b, err
@@ -191,7 +191,7 @@ func (mi *MessageInfo) appendExtensions(b []byte, ext *map[int32]ExtensionField,
 		var err error
 		for _, k := range keys {
 			x := (*ext)[int32(k)]
-			xi := mi.extensionFieldInfo(x.Type())
+			xi := getExtensionFieldInfo(x.Type())
 			b, err = xi.funcs.marshal(b, x.Value(), xi.wiretag, opts)
 			if err != nil {
 				return b, err

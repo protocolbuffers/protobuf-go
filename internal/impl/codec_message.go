@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"reflect"
 	"sort"
-	"sync"
 
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
@@ -31,9 +30,6 @@ type coderMessageInfo struct {
 	extensionOffset    offset
 	needsInitCheck     bool
 	isMessageSet       bool
-
-	extensionFieldInfosMu sync.RWMutex
-	extensionFieldInfos   map[pref.ExtensionType]*extensionFieldInfo
 }
 
 type coderFieldInfo struct {

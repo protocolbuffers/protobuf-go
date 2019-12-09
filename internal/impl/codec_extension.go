@@ -19,24 +19,36 @@ type extensionFieldInfo struct {
 	funcs               valueCoderFuncs
 }
 
-func (mi *MessageInfo) extensionFieldInfo(xt pref.ExtensionType) *extensionFieldInfo {
-	// As of this time (Go 1.12, linux/amd64), an RWMutex benchmarks as faster
-	// than a sync.Map.
-	mi.extensionFieldInfosMu.RLock()
-	e, ok := mi.extensionFieldInfos[xt]
-	mi.extensionFieldInfosMu.RUnlock()
-	if ok {
-		return e
-	}
+var legacyExtensionFieldInfoCache sync.Map // map[protoreflect.ExtensionType]*extensionFieldInfo
 
-	xd := xt.TypeDescriptor()
+func getExtensionFieldInfo(xt pref.ExtensionType) *extensionFieldInfo {
+	if xi, ok := xt.(*ExtensionInfo); ok {
+		xi.lazyInit()
+		return xi.info
+	}
+	return legacyLoadExtensionFieldInfo(xt)
+}
+
+// legacyLoadExtensionFieldInfo dynamically loads a *ExtensionInfo for xt.
+func legacyLoadExtensionFieldInfo(xt pref.ExtensionType) *extensionFieldInfo {
+	if xi, ok := legacyExtensionFieldInfoCache.Load(xt); ok {
+		return xi.(*extensionFieldInfo)
+	}
+	e := makeExtensionFieldInfo(xt.TypeDescriptor())
+	if e, ok := legacyMessageTypeCache.LoadOrStore(xt, e); ok {
+		return e.(*extensionFieldInfo)
+	}
+	return e
+}
+
+func makeExtensionFieldInfo(xd pref.ExtensionDescriptor) *extensionFieldInfo {
 	var wiretag uint64
 	if !xd.IsPacked() {
 		wiretag = wire.EncodeTag(xd.Number(), wireTypes[xd.Kind()])
 	} else {
 		wiretag = wire.EncodeTag(xd.Number(), wire.BytesType)
 	}
-	e = &extensionFieldInfo{
+	e := &extensionFieldInfo{
 		wiretag: wiretag,
 		tagsize: wire.SizeVarint(wiretag),
 		funcs:   encoderFuncsForValue(xd),
@@ -52,12 +64,6 @@ func (mi *MessageInfo) extensionFieldInfo(xt pref.ExtensionType) *extensionField
 			e.unmarshalNeedsValue = true
 		}
 	}
-	mi.extensionFieldInfosMu.Lock()
-	if mi.extensionFieldInfos == nil {
-		mi.extensionFieldInfos = make(map[pref.ExtensionType]*extensionFieldInfo)
-	}
-	mi.extensionFieldInfos[xt] = e
-	mi.extensionFieldInfosMu.Unlock()
 	return e
 }
 

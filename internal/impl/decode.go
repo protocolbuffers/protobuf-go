@@ -154,7 +154,7 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 			return 0, err
 		}
 	}
-	xi := mi.extensionFieldInfo(xt)
+	xi := getExtensionFieldInfo(xt)
 	if xi.funcs.unmarshal == nil {
 		return 0, errUnknown
 	}

@@ -38,6 +38,7 @@ type ExtensionInfo struct {
 	goType reflect.Type
 	desc   extensionTypeDescriptor
 	conv   Converter
+	info   *extensionFieldInfo // for fast-path method implementations
 
 	// ExtendedType is a typed nil-pointer to the parent message type that
 	// is being extended. It is possible for this to be unpopulated in v2
@@ -136,7 +137,8 @@ func (xi *ExtensionInfo) lazyInitSlow() {
 		if xi.ExtensionType == nil {
 			xi.initToLegacy()
 		}
-		xi.conv = NewConverter(xi.goType, xi.desc)
+		xi.conv = NewConverter(xi.goType, xi.desc.ExtensionDescriptor)
+		xi.info = makeExtensionFieldInfo(xi.desc.ExtensionDescriptor)
 	}
 }
 
