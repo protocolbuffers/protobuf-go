@@ -404,7 +404,7 @@ func genMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *message
 	g.P(genname.SizeCache, " ", protoimplPackage.Ident("SizeCache"))
 	sf.append(genname.SizeCache)
 	if m.HasWeak {
-		g.P(genname.WeakFields, " ", protoimplPackage.Ident("WeakFields"), jsonIgnoreTags)
+		g.P(genname.WeakFields, " ", protoimplPackage.Ident("WeakFields"))
 		sf.append(genname.WeakFields)
 	}
 	g.P(genname.UnknownFields, " ", protoimplPackage.Ident("UnknownFields"))
@@ -900,10 +900,7 @@ func genNoInterfacePragma(g *protogen.GeneratedFile, tracked bool) {
 	}
 }
 
-var (
-	gotrackTags    = structTags{{"go", "track"}}
-	jsonIgnoreTags = structTags{{"json", "-"}}
-)
+var gotrackTags = structTags{{"go", "track"}}
 
 // structTags is a data structure for build idiomatic Go struct tags.
 // Each [2]string is a key-value pair, where value is the unescaped string.

@@ -1648,7 +1648,7 @@ func (x *TestRequiredGroupFields) GetRepeatedgroup() []*TestRequiredGroupFields_
 type TestWeak struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
-	weakFields    protoimpl.WeakFields `json:"-"`
+	weakFields    protoimpl.WeakFields
 	unknownFields protoimpl.UnknownFields
 
 	XXX_weak_WeakMessage1 struct{} `protobuf:"bytes,1,opt,name=weak_message1,json=weakMessage1,weak=goproto.proto.test.weak.WeakImportMessage1" json:"weak_message1,omitempty"`

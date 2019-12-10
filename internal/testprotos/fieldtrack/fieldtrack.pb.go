@@ -20,7 +20,7 @@ import (
 type TestFieldTrack struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
-	weakFields    protoimpl.WeakFields `json:"-"`
+	weakFields    protoimpl.WeakFields
 	unknownFields protoimpl.UnknownFields
 
 	OptionalInt32         *int32                                      `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty" go:"track"`
