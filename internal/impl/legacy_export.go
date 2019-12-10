@@ -45,7 +45,7 @@ func (Export) UnmarshalJSONEnum(ed pref.EnumDescriptor, b []byte) (pref.EnumNumb
 			return 0, errors.New("invalid input for enum %v: %s", ed.FullName(), b)
 		}
 		ev := ed.Values().ByName(name)
-		if ev != nil {
+		if ev == nil {
 			return 0, errors.New("invalid value for enum %v: %s", ed.FullName(), name)
 		}
 		return ev.Number(), nil
