@@ -115,7 +115,7 @@ func legacyLoadMessageDesc(t reflect.Type, name pref.FullName) pref.MessageDescr
 		hasProtoField := false
 		for i := 0; i < nfield; i++ {
 			f := t.Elem().Field(i)
-			if tag := f.Tag.Get("protobuf"); tag != "" || strings.HasPrefix(f.Name, "XXX_") {
+			if f.Tag.Get("protobuf") != "" || f.Tag.Get("protobuf_oneof") != "" || strings.HasPrefix(f.Name, "XXX_") {
 				hasProtoField = true
 				break
 			}
