@@ -17,6 +17,7 @@ type extensionFieldInfo struct {
 	tagsize             int
 	unmarshalNeedsValue bool
 	funcs               valueCoderFuncs
+	validation          validationInfo
 }
 
 var legacyExtensionFieldInfoCache sync.Map // map[protoreflect.ExtensionType]*extensionFieldInfo

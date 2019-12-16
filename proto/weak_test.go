@@ -15,44 +15,54 @@ import (
 	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
 )
 
-func TestWeak(t *testing.T) {
-	if !flags.ProtoLegacy {
-		t.SkipNow()
+func init() {
+	if flags.ProtoLegacy {
+		testValidMessages = append(testValidMessages, testWeakValidMessages...)
+		testInvalidMessages = append(testInvalidMessages, testWeakInvalidMessages...)
 	}
+}
 
-	m := new(testpb.TestWeak)
-	b := pack.Message{
-		pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-			pack.Tag{1, pack.VarintType}, pack.Varint(1000),
-		}),
-		pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
-			pack.Tag{1, pack.VarintType}, pack.Varint(2000),
-		}),
-	}.Marshal()
-	if err := proto.Unmarshal(b, m); err != nil {
-		t.Errorf("Unmarshal error: %v", err)
-	}
+var testWeakValidMessages = []testProto{
+	{
+		desc: "weak message",
+		decodeTo: []proto.Message{
+			func() proto.Message {
+				if !flags.ProtoLegacy {
+					return nil
+				}
+				m := &testpb.TestWeak{}
+				m.SetWeakMessage1(&weakpb.WeakImportMessage1{
+					A: proto.Int32(1000),
+				})
+				m.ProtoReflect().SetUnknown(pack.Message{
+					pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
+						pack.Tag{1, pack.VarintType}, pack.Varint(2000),
+					}),
+				}.Marshal())
+				return m
+			}(),
+		},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.VarintType}, pack.Varint(1000),
+			}),
+			pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.VarintType}, pack.Varint(2000),
+			}),
+		}.Marshal(),
+	},
+}
 
-	mw := m.GetWeakMessage1().(*weakpb.WeakImportMessage1)
-	if mw.GetA() != 1000 {
-		t.Errorf("m.WeakMessage1.a = %d, want %d", mw.GetA(), 1000)
-	}
-
-	if len(m.ProtoReflect().GetUnknown()) == 0 {
-		t.Errorf("m has no unknown fields, expected at least something")
-	}
-
-	if n := proto.Size(m); n != len(b) {
-		t.Errorf("Size() = %d, want %d", n, len(b))
-	}
-
-	b2, err := proto.Marshal(m)
-	if err != nil {
-		t.Errorf("Marshal error: %v", err)
-	}
-	if len(b2) != len(b) {
-		t.Errorf("len(Marshal) = %d, want %d", len(b2), len(b))
-	}
+var testWeakInvalidMessages = []testProto{
+	{
+		desc:     "invalid field number 0 in weak message",
+		decodeTo: []proto.Message{(*testpb.TestWeak)(nil)},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{0, pack.VarintType}, pack.Varint(1000),
+			}),
+		}.Marshal(),
+	},
 }
 
 func TestWeakNil(t *testing.T) {

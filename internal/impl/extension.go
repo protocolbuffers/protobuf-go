@@ -139,6 +139,7 @@ func (xi *ExtensionInfo) lazyInitSlow() {
 		}
 		xi.conv = NewConverter(xi.goType, xi.desc.ExtensionDescriptor)
 		xi.info = makeExtensionFieldInfo(xi.desc.ExtensionDescriptor)
+		xi.info.validation = newValidationInfo(xi.desc.ExtensionDescriptor, xi.goType)
 	}
 }
 

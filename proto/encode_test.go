@@ -126,7 +126,6 @@ func TestEncodeInvalidMessages(t *testing.T) {
 				continue
 			}
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, m), func(t *testing.T) {
-				t.Logf("%v %v", m, m.ProtoReflect().IsValid())
 				opts := proto.MarshalOptions{
 					AllowPartial: test.partial,
 				}

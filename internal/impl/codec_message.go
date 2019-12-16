@@ -30,10 +30,12 @@ type coderMessageInfo struct {
 	extensionOffset    offset
 	needsInitCheck     bool
 	isMessageSet       bool
+	numRequiredFields  uint8
 }
 
 type coderFieldInfo struct {
 	funcs      pointerCoderFuncs // fast-path per-field functions
+	validation validationInfo    // information used by message validation
 	num        pref.FieldNumber  // field number
 	offset     offset            // struct field offset
 	wiretag    uint64            // field tag (number + wire type)
@@ -76,11 +78,12 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 			funcs = fieldCoder(fd, ft)
 		}
 		cf := &coderFieldInfo{
-			num:     fd.Number(),
-			offset:  fieldOffset,
-			wiretag: wiretag,
-			tagsize: wire.SizeVarint(wiretag),
-			funcs:   funcs,
+			num:        fd.Number(),
+			offset:     fieldOffset,
+			wiretag:    wiretag,
+			tagsize:    wire.SizeVarint(wiretag),
+			funcs:      funcs,
+			validation: newFieldValidationInfo(mi, si, fd, ft),
 			isPointer: (fd.Cardinality() == pref.Repeated ||
 				fd.Kind() == pref.MessageKind ||
 				fd.Kind() == pref.GroupKind ||

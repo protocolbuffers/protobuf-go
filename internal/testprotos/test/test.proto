@@ -43,6 +43,7 @@ message TestAllTypes {
   optional bytes         optional_bytes    = 15;
   optional group OptionalGroup = 16 {
     optional int32 a = 17;
+    optional NestedMessage optional_nested_message = 1000;
   }
   optional NestedMessage  optional_nested_message  = 18;
   optional ForeignMessage optional_foreign_message = 19;
@@ -68,6 +69,7 @@ message TestAllTypes {
   repeated bytes         repeated_bytes    = 45;
   repeated group RepeatedGroup = 46 {
     optional int32 a = 47;
+    optional NestedMessage optional_nested_message = 1001;
   }
   repeated NestedMessage  repeated_nested_message  = 48;
   repeated ForeignMessage repeated_foreign_message = 49;
@@ -188,6 +190,7 @@ extend TestAllExtensions {
 
   optional group OptionalGroup_extension = 16 {
     optional int32 a = 17;
+    optional TestAllTypes.NestedMessage optional_nested_message = 1000;
   }
 
   optional TestAllTypes.NestedMessage optional_nested_message_extension = 18;
@@ -211,6 +214,7 @@ extend TestAllExtensions {
 
   repeated group RepeatedGroup_extension = 46 {
     optional int32 a = 47;
+    optional TestAllTypes.NestedMessage optional_nested_message = 1001;
   }
 
   repeated TestAllTypes.NestedMessage repeated_nested_message_extension = 48;
