@@ -1437,6 +1437,17 @@ func TestReset(t *testing.T) {
 	m.Descriptor()
 }
 
+func TestIsValid(t *testing.T) {
+	var m *testpb.TestAllTypes
+	if got, want := m.ProtoReflect().IsValid(), false; got != want {
+		t.Errorf("((*M)(nil)).ProtoReflect().IsValid() = %v, want %v", got, want)
+	}
+	m = &testpb.TestAllTypes{}
+	if got, want := m.ProtoReflect().IsValid(), true; got != want {
+		t.Errorf("(&M{}).ProtoReflect().IsValid() = %v, want %v", got, want)
+	}
+}
+
 // The MessageState implementation makes the assumption that when a
 // concrete message is unsafe casted as a *MessageState, the Go GC does
 // not reclaim the memory for the remainder of the concrete message.

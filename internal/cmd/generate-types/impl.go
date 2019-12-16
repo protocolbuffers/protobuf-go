@@ -741,7 +741,7 @@ func (m *{{.}}) SetUnknown(b protoreflect.RawFields) {
 	m.messageInfo().setUnknown(m.pointer(), b)
 }
 func (m *{{.}}) IsValid() bool {
-	return m.pointer().IsNil()
+	return !m.pointer().IsNil()
 }
 
 {{end}}
