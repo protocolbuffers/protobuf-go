@@ -12,7 +12,6 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"google.golang.org/protobuf/internal/encoding/wire"
-	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 
@@ -22,7 +21,7 @@ import (
 )
 
 func TestEncode(t *testing.T) {
-	for _, test := range testProtos {
+	for _, test := range testValidMessages {
 		for _, want := range test.decodeTo {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
 				opts := proto.MarshalOptions{
@@ -55,7 +54,7 @@ func TestEncode(t *testing.T) {
 }
 
 func TestEncodeDeterministic(t *testing.T) {
-	for _, test := range testProtos {
+	for _, test := range testValidMessages {
 		for _, want := range test.decodeTo {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
 				opts := proto.MarshalOptions{
@@ -90,37 +89,8 @@ func TestEncodeDeterministic(t *testing.T) {
 	}
 }
 
-func TestEncodeInvalidUTF8(t *testing.T) {
-	for _, test := range invalidUTF8TestProtos {
-		for _, want := range test.decodeTo {
-			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
-				_, err := proto.Marshal(want)
-				if err == nil {
-					t.Errorf("Marshal did not return expected error for invalid UTF8: %v\nMessage:\n%v", err, marshalText(want))
-				}
-			})
-		}
-	}
-}
-
-func TestEncodeNoEnforceUTF8(t *testing.T) {
-	for _, test := range noEnforceUTF8TestProtos {
-		for _, want := range test.decodeTo {
-			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
-				_, err := proto.Marshal(want)
-				switch {
-				case flags.ProtoLegacy && err != nil:
-					t.Errorf("Marshal returned unexpected error: %v\nMessage:\n%v", err, marshalText(want))
-				case !flags.ProtoLegacy && err == nil:
-					t.Errorf("Marshal did not return expected error for invalid UTF8: %v\nMessage:\n%v", err, marshalText(want))
-				}
-			})
-		}
-	}
-}
-
 func TestEncodeRequiredFieldChecks(t *testing.T) {
-	for _, test := range testProtos {
+	for _, test := range testValidMessages {
 		if !test.partial {
 			continue
 		}
@@ -146,6 +116,26 @@ func TestEncodeAppend(t *testing.T) {
 	}
 	if !bytes.HasPrefix(got, want) {
 		t.Fatalf("MarshalAppend modified prefix: got %v, want prefix %v", got, want)
+	}
+}
+
+func TestEncodeInvalidMessages(t *testing.T) {
+	for _, test := range testInvalidMessages {
+		for _, m := range test.decodeTo {
+			if !m.ProtoReflect().IsValid() {
+				continue
+			}
+			t.Run(fmt.Sprintf("%s (%T)", test.desc, m), func(t *testing.T) {
+				t.Logf("%v %v", m, m.ProtoReflect().IsValid())
+				opts := proto.MarshalOptions{
+					AllowPartial: test.partial,
+				}
+				got, err := opts.Marshal(m)
+				if err == nil {
+					t.Fatalf("Marshal unexpectedly succeeded\noutput bytes: [%x]\nMessage:\n%v", got, marshalText(m))
+				}
+			})
+		}
 	}
 }
 

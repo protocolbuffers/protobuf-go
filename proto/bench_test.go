@@ -25,7 +25,7 @@ var (
 
 // BenchmarkEncode benchmarks encoding all the test messages.
 func BenchmarkEncode(b *testing.B) {
-	for _, test := range testProtos {
+	for _, test := range testValidMessages {
 		for _, want := range test.decodeTo {
 			v1 := want.(protoV1.Message)
 			opts := proto.MarshalOptions{AllowPartial: *allowPartial}
@@ -50,7 +50,7 @@ func BenchmarkEncode(b *testing.B) {
 
 // BenchmarkDecode benchmarks decoding all the test messages.
 func BenchmarkDecode(b *testing.B) {
-	for _, test := range testProtos {
+	for _, test := range testValidMessages {
 		for _, want := range test.decodeTo {
 			opts := proto.UnmarshalOptions{AllowPartial: *allowPartial}
 			b.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(b *testing.B) {
