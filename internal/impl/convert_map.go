@@ -16,7 +16,7 @@ type mapConverter struct {
 	keyConv, valConv Converter
 }
 
-func newMapConverter(t reflect.Type, fd pref.FieldDescriptor) Converter {
+func newMapConverter(t reflect.Type, fd pref.FieldDescriptor) *mapConverter {
 	if t.Kind() != reflect.Map {
 		panic(fmt.Sprintf("invalid Go type %v for field %v", t, fd.FullName()))
 	}
