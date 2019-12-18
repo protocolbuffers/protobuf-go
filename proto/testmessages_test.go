@@ -875,6 +875,52 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc: "map with value before key",
+		decodeTo: []proto.Message{&testpb.TestAllTypes{
+			MapInt32Int32: map[int32]int32{1056: 1156},
+			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
+				"71.1.key": {A: proto.Int32(1171)},
+			},
+		}},
+		wire: pack.Message{
+			pack.Tag{56, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{2, pack.VarintType}, pack.Varint(1156),
+				pack.Tag{1, pack.VarintType}, pack.Varint(1056),
+			}),
+			pack.Tag{71, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
+					pack.Tag{1, pack.VarintType}, pack.Varint(1171),
+				}),
+				pack.Tag{1, pack.BytesType}, pack.String("71.1.key"),
+			}),
+		}.Marshal(),
+	},
+	{
+		desc: "map with repeated key and value",
+		decodeTo: []proto.Message{&testpb.TestAllTypes{
+			MapInt32Int32: map[int32]int32{1056: 1156},
+			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
+				"71.1.key": {A: proto.Int32(1171)},
+			},
+		}},
+		wire: pack.Message{
+			pack.Tag{56, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.VarintType}, pack.Varint(0),
+				pack.Tag{2, pack.VarintType}, pack.Varint(0),
+				pack.Tag{1, pack.VarintType}, pack.Varint(1056),
+				pack.Tag{2, pack.VarintType}, pack.Varint(1156),
+			}),
+			pack.Tag{71, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.BytesType}, pack.String(0),
+				pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
+				pack.Tag{1, pack.BytesType}, pack.String("71.1.key"),
+				pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
+					pack.Tag{1, pack.VarintType}, pack.Varint(1171),
+				}),
+			}),
+		}.Marshal(),
+	},
+	{
 		desc: "oneof (uint32)",
 		decodeTo: []proto.Message{
 			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{1111}},

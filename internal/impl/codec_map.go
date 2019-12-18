@@ -183,11 +183,12 @@ func consumeMapOfMessage(b []byte, mapv reflect.Value, wtyp wire.Type, mapi *map
 			if wtyp != wire.BytesType {
 				break
 			}
-			v, n := wire.ConsumeBytes(b)
+			var v []byte
+			v, n = wire.ConsumeBytes(b)
 			if n < 0 {
 				return 0, wire.ParseError(n)
 			}
-			n, err = mapi.valMessageInfo.unmarshalPointer(v, pointerOfValue(val), 0, opts)
+			_, err = mapi.valMessageInfo.unmarshalPointer(v, pointerOfValue(val), 0, opts)
 		}
 		if err == errUnknown {
 			n = wire.ConsumeFieldValue(num, wtyp, b)
