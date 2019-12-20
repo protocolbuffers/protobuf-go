@@ -5,6 +5,7 @@
 package impl
 
 import (
+	"errors"
 	"reflect"
 	"sort"
 
@@ -120,6 +121,9 @@ func consumeMap(b []byte, mapv reflect.Value, wtyp wire.Type, mapi *mapInfo, opt
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
+		if num > wire.MaxValidNumber {
+			return 0, errors.New("invalid field number")
+		}
 		b = b[n:]
 		err := errUnknown
 		switch num {
@@ -168,6 +172,9 @@ func consumeMapOfMessage(b []byte, mapv reflect.Value, wtyp wire.Type, mapi *map
 		num, wtyp, n := wire.ConsumeTag(b)
 		if n < 0 {
 			return 0, wire.ParseError(n)
+		}
+		if num > wire.MaxValidNumber {
+			return 0, errors.New("invalid field number")
 		}
 		b = b[n:]
 		err := errUnknown

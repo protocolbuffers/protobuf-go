@@ -183,6 +183,9 @@ func (o UnmarshalOptions) unmarshalMap(b []byte, wtyp wire.Type, mapv protorefle
 		if n < 0 {
 			return 0, wire.ParseError(n)
 		}
+		if num > wire.MaxValidNumber {
+			return 0, errors.New("invalid field number")
+		}
 		b = b[n:]
 		err = errUnknown
 		switch num {

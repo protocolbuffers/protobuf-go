@@ -1608,4 +1608,15 @@ var testInvalidMessages = []testProto{
 			pack.Tag{pack.MaxValidNumber + 1, pack.VarintType}, pack.Varint(1008),
 		}.Marshal(),
 	},
+	{
+		desc:     "invalid field number in map",
+		decodeTo: []proto.Message{(*testpb.TestAllTypes)(nil)},
+		wire: pack.Message{
+			pack.Tag{56, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.VarintType}, pack.Varint(1056),
+				pack.Tag{2, pack.VarintType}, pack.Varint(1156),
+				pack.Tag{pack.MaxValidNumber + 1, pack.VarintType}, pack.Varint(0),
+			}),
+		}.Marshal(),
+	},
 }
