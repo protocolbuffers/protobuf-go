@@ -10,3 +10,16 @@ $ cd internal/fuzz/{fuzzer}
 $ GOFUZZ111MODULE=on go-fuzz-build .
 $ go-fuzz
 ```
+
+## OSS-Fuzz
+
+Fuzzers are automatically run by
+[OSS-Fuzz](https://github.com/google/oss-fuzz).
+
+The OSS-Fuzz
+[configuration](https://github.com/google/oss-fuzz/blob/master/projects/golang-protobuf/build.sh)
+currently builds fuzzers in every directory under internal/fuzz.
+Only add fuzzers (not support packages) in this directory.
+
+Fuzzing results are available at the [OSS-Fuzz console](https://oss-fuzz.com/),
+under `golang-protobuf`.

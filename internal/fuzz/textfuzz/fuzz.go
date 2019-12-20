@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package textfuzz includes a fuzzer for the text marshaler and unmarshaler.
+// Package textfuzz includes fuzzers for prototext.Marshal and prototext.Unmarshal.
 package textfuzz
 
 import (

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package textfuzz includes a fuzzer for the text marshaler and unmarshaler.
-package textfuzz
+// Package jsonfuzz includes fuzzers for protojson.Marshal and protojson.Unmarshal.
+package jsonfuzz
 
 import (
 	"google.golang.org/protobuf/encoding/protojson"
