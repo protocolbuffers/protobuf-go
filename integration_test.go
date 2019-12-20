@@ -33,7 +33,7 @@ var (
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
 	protobufVersion = "3.9.1"
-	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.9", "1.13"}
+	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.17", "1.13.8", "1.14"}
 	golangLatest    = golangVersions[len(golangVersions)-1]
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
@@ -53,13 +53,13 @@ func Test(t *testing.T) {
 	// going through all the presubmits.
 	//
 	// Fail the test late, so we can test uncommitted changes with -failfast.
-	diff := mustRunCommand(t, "git", "diff", "HEAD")
-	if strings.TrimSpace(diff) != "" {
-		fmt.Printf("WARNING: working tree contains uncommitted changes:\n%v\n", diff)
+	gitDiff := mustRunCommand(t, "git", "diff", "HEAD")
+	if strings.TrimSpace(gitDiff) != "" {
+		fmt.Printf("WARNING: working tree contains uncommitted changes:\n%v\n", gitDiff)
 	}
-	untracked := mustRunCommand(t, "git", "ls-files", "--others", "--exclude-standard")
-	if strings.TrimSpace(untracked) != "" {
-		fmt.Printf("WARNING: working tree contains untracked files:\n%v", untracked)
+	gitUntracked := mustRunCommand(t, "git", "ls-files", "--others", "--exclude-standard")
+	if strings.TrimSpace(gitUntracked) != "" {
+		fmt.Printf("WARNING: working tree contains untracked files:\n%v\n", gitUntracked)
 	}
 
 	// Do the relatively fast checks up-front.
@@ -116,12 +116,12 @@ func Test(t *testing.T) {
 	wg.Wait()
 
 	t.Run("CommittedGitChanges", func(t *testing.T) {
-		if strings.TrimSpace(diff) != "" {
+		if strings.TrimSpace(gitDiff) != "" {
 			t.Fatalf("uncommitted changes")
 		}
 	})
 	t.Run("TrackedGitFiles", func(t *testing.T) {
-		if strings.TrimSpace(untracked) != "" {
+		if strings.TrimSpace(gitUntracked) != "" {
 			t.Fatalf("untracked files")
 		}
 	})
@@ -171,7 +171,7 @@ func mustInitDeps(t *testing.T) {
 
 	// Delete other sub-directories that are no longer relevant.
 	defer func() {
-		subDirs := map[string]bool{"bin": true, "gocache": true, "gopath": true}
+		subDirs := map[string]bool{"bin": true, "gopath": true}
 		subDirs["protobuf-"+protobufVersion] = true
 		for _, v := range golangVersions {
 			subDirs["go"+v] = true
