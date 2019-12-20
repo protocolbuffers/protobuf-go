@@ -10,6 +10,7 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
+	"crypto/sha256"
 	"flag"
 	"fmt"
 	"io"
@@ -33,8 +34,18 @@ var (
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
 	protobufVersion = "ef7cc811" // v3.12.0-rc1
-	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.17", "1.13.11", "1.14.3"}
-	golangLatest    = golangVersions[len(golangVersions)-1]
+	protobufSHA256  = ""         // ignored if protobufVersion is a git hash
+
+	golangVersions = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.17", "1.13.11", "1.14.3"}
+	golangLatest   = golangVersions[len(golangVersions)-1]
+
+	staticcheckVersion = "2020.1.4"
+	staticcheckSHA256s = map[string]string{
+		"darwin/386":   "05ccb332a0c5ba812af165b0e69ffe317cb3e8bb10b0f4b4c4eaaf956ba9a50b",
+		"darwin/amd64": "5706d101426c025e8f165309e0cb2932e54809eb035ff23ebe19df0f810699d8",
+		"linux/386":    "e4dbf94e940678ae7108f0d22c7c2992339bc10a8fb384e7e734b1531a429a1c",
+		"linux/amd64":  "09d2c2002236296de2c757df111fe3ae858b89f9e183f645ad01f8135c83c519",
+	}
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
 	purgeTimeout = 30 * 24 * time.Hour // 1 month
@@ -115,6 +126,29 @@ func Test(t *testing.T) {
 	}
 	wg.Wait()
 
+	t.Run("GoStaticCheck", func(t *testing.T) {
+		checks := []string{
+			"all",     // start with all checks enabled
+			"-SA1019", // disable deprecated usage check
+			"-S*",     // disable code simplication checks
+			"-ST*",    // disable coding style checks
+			"-U*",     // disable unused declaration checks
+		}
+		out := mustRunCommand(t, "staticcheck", "-checks="+strings.Join(checks, ","), "-fail=none", "./...")
+
+		// Filter out findings from certain paths.
+		var findings []string
+		for _, finding := range strings.Split(strings.TrimSpace(out), "\n") {
+			switch {
+			case strings.HasPrefix(finding, "internal/testprotos/legacy/"):
+			default:
+				findings = append(findings, finding)
+			}
+		}
+		if len(findings) > 0 {
+			t.Fatalf("staticcheck findings:\n%v", strings.Join(findings, "\n"))
+		}
+	})
 	t.Run("CommittedGitChanges", func(t *testing.T) {
 		if strings.TrimSpace(gitDiff) != "" {
 			t.Fatalf("uncommitted changes")
@@ -214,7 +248,7 @@ func mustInitDeps(t *testing.T) {
 			command{Dir: protobufPath}.mustRun(t, "git", "checkout", protobufVersion)
 		} else {
 			url := fmt.Sprintf("https://github.com/google/protobuf/releases/download/v%v/protobuf-all-%v.tar.gz", protobufVersion, protobufVersion)
-			downloadArchive(check, protobufPath, url, "protobuf-"+protobufVersion)
+			downloadArchive(check, protobufPath, url, "protobuf-"+protobufVersion, protobufSHA256)
 		}
 
 		fmt.Printf("build %v\n", filepath.Base(protobufPath))
@@ -234,12 +268,22 @@ func mustInitDeps(t *testing.T) {
 		if _, err := os.Stat(workingDir); err != nil {
 			fmt.Printf("download %v\n", filepath.Base(workingDir))
 			url := fmt.Sprintf("https://dl.google.com/go/go%v.%v-%v.tar.gz", v, runtime.GOOS, runtime.GOARCH)
-			downloadArchive(check, workingDir, url, "go")
+			downloadArchive(check, workingDir, url, "go", "") // skip SHA256 check as we fetch over https from a trusted domain
 		}
 		registerBinary("go"+v, filepath.Join(workingDir, "bin", "go"))
 	}
 	registerBinary("go", filepath.Join(testDir, "go"+golangLatest, "bin", "go"))
 	registerBinary("gofmt", filepath.Join(testDir, "go"+golangLatest, "bin", "gofmt"))
+	workingDir = ""
+
+	// Download the staticcheck tool.
+	workingDir = filepath.Join(testDir, "staticcheck-"+staticcheckVersion)
+	if _, err := os.Stat(workingDir); err != nil {
+		fmt.Printf("download %v\n", filepath.Base(workingDir))
+		url := fmt.Sprintf("https://github.com/dominikh/go-tools/releases/download/%v/staticcheck_%v_%v.tar.gz", staticcheckVersion, runtime.GOOS, runtime.GOARCH)
+		downloadArchive(check, workingDir, url, "staticcheck", staticcheckSHA256s[runtime.GOOS+"/"+runtime.GOARCH])
+	}
+	registerBinary("staticcheck", filepath.Join(workingDir, "staticcheck"))
 	workingDir = ""
 
 	// Travis-CI sets GOROOT, which confuses invocations of the Go toolchain.
@@ -273,14 +317,25 @@ func downloadFile(check func(error), dstPath, srcURL string) {
 	check(err)
 }
 
-func downloadArchive(check func(error), dstPath, srcURL, skipPrefix string) {
+func downloadArchive(check func(error), dstPath, srcURL, skipPrefix, wantSHA256 string) {
 	check(os.RemoveAll(dstPath))
 
 	resp, err := http.Get(srcURL)
 	check(err)
 	defer resp.Body.Close()
 
-	zr, err := gzip.NewReader(resp.Body)
+	var r io.Reader = resp.Body
+	if wantSHA256 != "" {
+		b, err := ioutil.ReadAll(resp.Body)
+		check(err)
+		r = bytes.NewReader(b)
+
+		if gotSHA256 := fmt.Sprintf("%x", sha256.Sum256(b)); gotSHA256 != wantSHA256 {
+			check(fmt.Errorf("checksum validation error:\ngot  %v\nwant %v", gotSHA256, wantSHA256))
+		}
+	}
+
+	zr, err := gzip.NewReader(r)
 	check(err)
 
 	tr := tar.NewReader(zr)
