@@ -556,11 +556,15 @@ var coder{{.Name}}SliceValue = valueCoderFuncs{
 // size{{.Name}}PackedSliceValue returns the size of wire encoding a []{{.GoType}} value as a packed repeated {{.Name}}.
 func size{{.Name}}PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	{{if .WireType.ConstSize -}}
-	n := list.Len() * {{template "SizeValue" .}}
+	n := llen * {{template "SizeValue" .}}
 	{{- else -}}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += {{template "SizeValue" .}}
 	}

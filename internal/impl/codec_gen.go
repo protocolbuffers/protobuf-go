@@ -296,8 +296,12 @@ var coderBoolSliceValue = valueCoderFuncs{
 // sizeBoolPackedSliceValue returns the size of wire encoding a []bool value as a packed repeated Bool.
 func sizeBoolPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += wire.SizeVarint(wire.EncodeBool(v.Bool()))
 	}
@@ -420,8 +424,12 @@ var coderEnumSliceValue = valueCoderFuncs{
 // sizeEnumPackedSliceValue returns the size of wire encoding a [] value as a packed repeated Enum.
 func sizeEnumPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += wire.SizeVarint(uint64(v.Enum()))
 	}
@@ -737,8 +745,12 @@ var coderInt32SliceValue = valueCoderFuncs{
 // sizeInt32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Int32.
 func sizeInt32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += wire.SizeVarint(uint64(int32(v.Int())))
 	}
@@ -1054,8 +1066,12 @@ var coderSint32SliceValue = valueCoderFuncs{
 // sizeSint32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Sint32.
 func sizeSint32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
 	}
@@ -1371,8 +1387,12 @@ var coderUint32SliceValue = valueCoderFuncs{
 // sizeUint32PackedSliceValue returns the size of wire encoding a []uint32 value as a packed repeated Uint32.
 func sizeUint32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += wire.SizeVarint(uint64(uint32(v.Uint())))
 	}
@@ -1688,8 +1708,12 @@ var coderInt64SliceValue = valueCoderFuncs{
 // sizeInt64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Int64.
 func sizeInt64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += wire.SizeVarint(uint64(v.Int()))
 	}
@@ -2005,8 +2029,12 @@ var coderSint64SliceValue = valueCoderFuncs{
 // sizeSint64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Sint64.
 func sizeSint64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += wire.SizeVarint(wire.EncodeZigZag(v.Int()))
 	}
@@ -2322,8 +2350,12 @@ var coderUint64SliceValue = valueCoderFuncs{
 // sizeUint64PackedSliceValue returns the size of wire encoding a []uint64 value as a packed repeated Uint64.
 func sizeUint64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
 	n := 0
-	for i, llen := 0, list.Len(); i < llen; i++ {
+	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
 		n += wire.SizeVarint(v.Uint())
 	}
@@ -2627,7 +2659,11 @@ var coderSfixed32SliceValue = valueCoderFuncs{
 // sizeSfixed32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Sfixed32.
 func sizeSfixed32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	n := list.Len() * wire.SizeFixed32()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
+	n := llen * wire.SizeFixed32()
 	return tagsize + wire.SizeBytes(n)
 }
 
@@ -2924,7 +2960,11 @@ var coderFixed32SliceValue = valueCoderFuncs{
 // sizeFixed32PackedSliceValue returns the size of wire encoding a []uint32 value as a packed repeated Fixed32.
 func sizeFixed32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	n := list.Len() * wire.SizeFixed32()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
+	n := llen * wire.SizeFixed32()
 	return tagsize + wire.SizeBytes(n)
 }
 
@@ -3221,7 +3261,11 @@ var coderFloatSliceValue = valueCoderFuncs{
 // sizeFloatPackedSliceValue returns the size of wire encoding a []float32 value as a packed repeated Float.
 func sizeFloatPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	n := list.Len() * wire.SizeFixed32()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
+	n := llen * wire.SizeFixed32()
 	return tagsize + wire.SizeBytes(n)
 }
 
@@ -3518,7 +3562,11 @@ var coderSfixed64SliceValue = valueCoderFuncs{
 // sizeSfixed64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Sfixed64.
 func sizeSfixed64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	n := list.Len() * wire.SizeFixed64()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
+	n := llen * wire.SizeFixed64()
 	return tagsize + wire.SizeBytes(n)
 }
 
@@ -3815,7 +3863,11 @@ var coderFixed64SliceValue = valueCoderFuncs{
 // sizeFixed64PackedSliceValue returns the size of wire encoding a []uint64 value as a packed repeated Fixed64.
 func sizeFixed64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	n := list.Len() * wire.SizeFixed64()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
+	n := llen * wire.SizeFixed64()
 	return tagsize + wire.SizeBytes(n)
 }
 
@@ -4112,7 +4164,11 @@ var coderDoubleSliceValue = valueCoderFuncs{
 // sizeDoublePackedSliceValue returns the size of wire encoding a []float64 value as a packed repeated Double.
 func sizeDoublePackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	n := list.Len() * wire.SizeFixed64()
+	llen := list.Len()
+	if llen == 0 {
+		return 0
+	}
+	n := llen * wire.SizeFixed64()
 	return tagsize + wire.SizeBytes(n)
 }
 
