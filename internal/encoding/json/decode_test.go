@@ -873,6 +873,13 @@ func TestDecoder(t *testing.T) {
 			},
 		},
 		{
+			input: `{""`,
+			want: []R{
+				{T: json.StartObject},
+				{E: `syntax error (line 1:4): unexpected EOF`},
+			},
+		},
+		{
 			input: `{"34":"89",}`,
 			want: []R{
 				{T: json.StartObject},

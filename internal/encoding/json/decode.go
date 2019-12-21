@@ -102,6 +102,9 @@ func (d *Decoder) Read() (Value, error) {
 		}
 		d.in = d.in[n:]
 		d.consume(0)
+		if len(d.in) == 0 {
+			return Value{}, d.newSyntaxError(`unexpected EOF, missing ":" after object name`)
+		}
 		if c := d.in[0]; c != ':' {
 			return Value{}, d.newSyntaxError(`unexpected character %v, missing ":" after object name`, string(c))
 		}
