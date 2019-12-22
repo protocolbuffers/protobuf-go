@@ -420,10 +420,14 @@ func unmarshalMapKey(input text.Value, fd pref.FieldDescriptor) (pref.MapKey, er
 
 // unmarshalMapMessageValue unmarshals given message-type text.Value into a protoreflect.Map for
 // the given MapKey.
-func (o UnmarshalOptions) unmarshalMapMessageValue(input text.Value, pkey pref.MapKey, _ pref.FieldDescriptor, mmap pref.Map) error {
+func (o UnmarshalOptions) unmarshalMapMessageValue(input text.Value, pkey pref.MapKey, fd pref.FieldDescriptor, mmap pref.Map) error {
 	var value [][2]text.Value
-	if input.Type() != 0 {
+	switch input.Type() {
+	case 0:
+	case text.Message:
 		value = input.Message()
+	default:
+		return errors.New("%v contains invalid value: %v", fd.FullName(), input)
 	}
 	val := mmap.NewValue()
 	if err := o.unmarshalMessage(value, val.Message()); err != nil {

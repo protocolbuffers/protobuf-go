@@ -951,6 +951,16 @@ int32_to_str: {
 `,
 		wantErr: true,
 	}, {
+		desc:         "map contains invalid message value",
+		inputMessage: &pb3.Maps{},
+		inputText: `
+str_to_nested: {
+  key: "one"
+  value: 1
+}
+`,
+		wantErr: true,
+	}, {
 		desc:         "map using mix of [] and repeated",
 		inputMessage: &pb3.Maps{},
 		inputText: `
