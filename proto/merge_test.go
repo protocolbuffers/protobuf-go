@@ -15,18 +15,22 @@ import (
 )
 
 func TestMerge(t *testing.T) {
-	dst := new(testpb.TestAllTypes)
-	src := (*testpb.TestAllTypes)(nil)
-	proto.Merge(dst, src)
 
-	// Mutating the source should not affect dst.
+	t.Run("Deep", func(t *testing.T) { testMerge(t, false) })
+	t.Run("Shallow", func(t *testing.T) { testMerge(t, true) })
+}
 
+func testMerge(t *testing.T, shallow bool) {
 	tests := []struct {
-		desc    string
-		dst     proto.Message
-		src     proto.Message
-		want    proto.Message
-		mutator func(proto.Message) // if provided, is run on src after merging
+		desc string
+		dst  proto.Message
+		src  proto.Message
+		want proto.Message
+
+		// If provided, mutator is run on src after merging.
+		// It reports whether a mutation is expected to be observable in dst
+		// if Shallow is enabled.
+		mutator func(proto.Message) bool
 	}{{
 		desc: "merge from nil message",
 		dst:  new(testpb.TestAllTypes),
@@ -85,7 +89,7 @@ func TestMerge(t *testing.T) {
 				},
 			},
 		},
-		mutator: func(mi proto.Message) {
+		mutator: func(mi proto.Message) bool {
 			m := mi.(*testpb.TestAllTypes)
 			*m.OptionalInt64++
 			*m.OptionalNestedEnum++
@@ -95,6 +99,7 @@ func TestMerge(t *testing.T) {
 			delete(m.MapStringNestedEnum, "fizz")
 			*m.MapStringNestedMessage["foo"].A++
 			*m.OneofField.(*testpb.TestAllTypes_OneofNestedMessage).OneofNestedMessage.A++
+			return true
 		},
 	}, {
 		desc: "merge bytes",
@@ -113,11 +118,12 @@ func TestMerge(t *testing.T) {
 			RepeatedBytes:  [][]byte{{1, 2}, {3, 4}, {5, 6}, {7, 8}},
 			MapStringBytes: map[string][]byte{"alpha": {4, 5, 6}, "bravo": {1, 2, 3}},
 		},
-		mutator: func(mi proto.Message) {
+		mutator: func(mi proto.Message) bool {
 			m := mi.(*testpb.TestAllTypes)
 			m.OptionalBytes[0]++
 			m.RepeatedBytes[0][0]++
 			m.MapStringBytes["alpha"][0]++
+			return true
 		},
 	}, {
 		desc: "merge singular fields",
@@ -150,11 +156,12 @@ func TestMerge(t *testing.T) {
 				},
 			},
 		},
-		mutator: func(mi proto.Message) {
+		mutator: func(mi proto.Message) bool {
 			m := mi.(*testpb.TestAllTypes)
 			*m.OptionalInt64++
 			*m.OptionalNestedEnum++
 			*m.OptionalNestedMessage.A++
+			return false // scalar mutations are not observable in shallow copy
 		},
 	}, {
 		desc: "merge list fields",
@@ -181,10 +188,11 @@ func TestMerge(t *testing.T) {
 				{A: proto.Int32(400)},
 			},
 		},
-		mutator: func(mi proto.Message) {
+		mutator: func(mi proto.Message) bool {
 			m := mi.(*testpb.TestAllTypes)
 			m.RepeatedSfixed32[0]++
 			*m.RepeatedNestedMessage[0].A++
+			return true
 		},
 	}, {
 		desc: "merge map fields",
@@ -219,10 +227,11 @@ func TestMerge(t *testing.T) {
 				"bar": {},
 			},
 		},
-		mutator: func(mi proto.Message) {
+		mutator: func(mi proto.Message) bool {
 			m := mi.(*testpb.TestAllTypes)
 			delete(m.MapStringNestedEnum, "fizz")
 			m.MapStringNestedMessage["bar"].A = proto.Int32(1)
+			return true
 		},
 	}, {
 		desc: "merge oneof message fields",
@@ -252,9 +261,10 @@ func TestMerge(t *testing.T) {
 				},
 			},
 		},
-		mutator: func(mi proto.Message) {
+		mutator: func(mi proto.Message) bool {
 			m := mi.(*testpb.TestAllTypes)
 			*m.OneofField.(*testpb.TestAllTypes_OneofNestedMessage).OneofNestedMessage.Corecursive.OptionalInt64++
+			return true
 		},
 	}, {
 		desc: "merge oneof scalar fields",
@@ -267,9 +277,10 @@ func TestMerge(t *testing.T) {
 		want: &testpb.TestAllTypes{
 			OneofField: &testpb.TestAllTypes_OneofFloat{3.14152},
 		},
-		mutator: func(mi proto.Message) {
+		mutator: func(mi proto.Message) bool {
 			m := mi.(*testpb.TestAllTypes)
 			m.OneofField.(*testpb.TestAllTypes_OneofFloat).OneofFloat++
+			return false // scalar mutations are not observable in shallow copy
 		},
 	}, {
 		desc: "merge extension fields",
@@ -359,12 +370,16 @@ func TestMerge(t *testing.T) {
 				t.Fatalf("Unmarshal(Marshal(dst)+Marshal(src)) mismatch: got %v, want %v", dst, tt.want)
 			}
 
-			proto.Merge(tt.dst, tt.src)
-			if tt.mutator != nil {
-				tt.mutator(tt.src) // should not be observable by dst
-			}
+			proto.MergeOptions{Shallow: shallow}.Merge(tt.dst, tt.src)
 			if !proto.Equal(tt.dst, tt.want) {
 				t.Fatalf("Merge() mismatch:\n got %v\nwant %v", tt.dst, tt.want)
+			}
+			if tt.mutator != nil {
+				wantObservable := tt.mutator(tt.src) && shallow
+				gotObservable := !proto.Equal(tt.dst, tt.want)
+				if gotObservable != wantObservable {
+					t.Fatalf("mutation observed:\n got %v\nwant %v", gotObservable, wantObservable)
+				}
 			}
 		})
 	}
