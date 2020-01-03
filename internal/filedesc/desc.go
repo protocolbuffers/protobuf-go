@@ -490,14 +490,16 @@ func (d *Base) Syntax() pref.Syntax                 { return d.L0.ParentFile.Syn
 func (d *Base) IsPlaceholder() bool                 { return false }
 func (d *Base) ProtoInternal(pragma.DoNotImplement) {}
 
-func JSONName(s string) jsonName {
-	return jsonName{has: true, name: s}
-}
-
 type jsonName struct {
 	has  bool
 	once sync.Once
 	name string
+}
+
+// Init initializes the name. It is exported for use by other internal packages.
+func (js *jsonName) Init(s string) {
+	js.has = true
+	js.name = s
 }
 
 func (js *jsonName) get(fd pref.FieldDescriptor) string {

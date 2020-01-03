@@ -133,7 +133,7 @@ func (r descsByName) initFieldsFromDescriptorProto(fds []*descriptorpb.FieldDesc
 			f.L1.Kind = protoreflect.Kind(fd.GetType())
 		}
 		if fd.JsonName != nil {
-			f.L1.JSONName = filedesc.JSONName(fd.GetJsonName())
+			f.L1.JSONName.Init(fd.GetJsonName())
 		}
 	}
 	return fs, nil
@@ -173,7 +173,7 @@ func (r descsByName) initExtensionDeclarations(xds []*descriptorpb.FieldDescript
 			x.L1.Kind = protoreflect.Kind(xd.GetType())
 		}
 		if xd.JsonName != nil {
-			x.L2.JSONName = filedesc.JSONName(xd.GetJsonName())
+			x.L2.JSONName.Init(xd.GetJsonName())
 		}
 	}
 	return xs, nil
