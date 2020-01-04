@@ -26,9 +26,7 @@ func mustParseFile(s string) *descriptorpb.FileDescriptorProto {
 }
 
 func cloneFile(in *descriptorpb.FileDescriptorProto) *descriptorpb.FileDescriptorProto {
-	out := new(descriptorpb.FileDescriptorProto)
-	proto.Merge(out, in)
-	return out
+	return proto.Clone(in).(*descriptorpb.FileDescriptorProto)
 }
 
 var (

@@ -6,7 +6,6 @@ package protodesc
 
 import (
 	"fmt"
-	"reflect"
 	"strings"
 
 	"google.golang.org/protobuf/internal/encoding/defval"
@@ -22,7 +21,7 @@ func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileD
 	p := &descriptorpb.FileDescriptorProto{
 		Name:    proto.String(file.Path()),
 		Package: proto.String(string(file.Package())),
-		Options: clone(file.Options()).(*descriptorpb.FileOptions),
+		Options: proto.Clone(file.Options()).(*descriptorpb.FileOptions),
 	}
 	for i, imports := 0, file.Imports(); i < imports.Len(); i++ {
 		imp := imports.Get(i)
@@ -79,7 +78,7 @@ func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileD
 func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.DescriptorProto {
 	p := &descriptorpb.DescriptorProto{
 		Name:    proto.String(string(message.Name())),
-		Options: clone(message.Options()).(*descriptorpb.MessageOptions),
+		Options: proto.Clone(message.Options()).(*descriptorpb.MessageOptions),
 	}
 	for i, fields := 0, message.Fields(); i < fields.Len(); i++ {
 		p.Field = append(p.Field, ToFieldDescriptorProto(fields.Get(i)))
@@ -98,7 +97,7 @@ func ToDescriptorProto(message protoreflect.MessageDescriptor) *descriptorpb.Des
 		p.ExtensionRange = append(p.ExtensionRange, &descriptorpb.DescriptorProto_ExtensionRange{
 			Start:   proto.Int32(int32(xrange[0])),
 			End:     proto.Int32(int32(xrange[1])),
-			Options: clone(message.ExtensionRangeOptions(i)).(*descriptorpb.ExtensionRangeOptions),
+			Options: proto.Clone(message.ExtensionRangeOptions(i)).(*descriptorpb.ExtensionRangeOptions),
 		})
 	}
 	for i, oneofs := 0, message.Oneofs(); i < oneofs.Len(); i++ {
@@ -124,7 +123,7 @@ func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.Fi
 		Name:    proto.String(string(field.Name())),
 		Number:  proto.Int32(int32(field.Number())),
 		Label:   descriptorpb.FieldDescriptorProto_Label(field.Cardinality()).Enum(),
-		Options: clone(field.Options()).(*descriptorpb.FieldOptions),
+		Options: proto.Clone(field.Options()).(*descriptorpb.FieldOptions),
 	}
 	if field.IsExtension() {
 		p.Extendee = fullNameOf(field.ContainingMessage())
@@ -161,7 +160,7 @@ func ToFieldDescriptorProto(field protoreflect.FieldDescriptor) *descriptorpb.Fi
 func ToOneofDescriptorProto(oneof protoreflect.OneofDescriptor) *descriptorpb.OneofDescriptorProto {
 	return &descriptorpb.OneofDescriptorProto{
 		Name:    proto.String(string(oneof.Name())),
-		Options: clone(oneof.Options()).(*descriptorpb.OneofOptions),
+		Options: proto.Clone(oneof.Options()).(*descriptorpb.OneofOptions),
 	}
 }
 
@@ -170,7 +169,7 @@ func ToOneofDescriptorProto(oneof protoreflect.OneofDescriptor) *descriptorpb.On
 func ToEnumDescriptorProto(enum protoreflect.EnumDescriptor) *descriptorpb.EnumDescriptorProto {
 	p := &descriptorpb.EnumDescriptorProto{
 		Name:    proto.String(string(enum.Name())),
-		Options: clone(enum.Options()).(*descriptorpb.EnumOptions),
+		Options: proto.Clone(enum.Options()).(*descriptorpb.EnumOptions),
 	}
 	for i, values := 0, enum.Values(); i < values.Len(); i++ {
 		p.Value = append(p.Value, ToEnumValueDescriptorProto(values.Get(i)))
@@ -194,7 +193,7 @@ func ToEnumValueDescriptorProto(value protoreflect.EnumValueDescriptor) *descrip
 	return &descriptorpb.EnumValueDescriptorProto{
 		Name:    proto.String(string(value.Name())),
 		Number:  proto.Int32(int32(value.Number())),
-		Options: clone(value.Options()).(*descriptorpb.EnumValueOptions),
+		Options: proto.Clone(value.Options()).(*descriptorpb.EnumValueOptions),
 	}
 }
 
@@ -203,7 +202,7 @@ func ToEnumValueDescriptorProto(value protoreflect.EnumValueDescriptor) *descrip
 func ToServiceDescriptorProto(service protoreflect.ServiceDescriptor) *descriptorpb.ServiceDescriptorProto {
 	p := &descriptorpb.ServiceDescriptorProto{
 		Name:    proto.String(string(service.Name())),
-		Options: clone(service.Options()).(*descriptorpb.ServiceOptions),
+		Options: proto.Clone(service.Options()).(*descriptorpb.ServiceOptions),
 	}
 	for i, methods := 0, service.Methods(); i < methods.Len(); i++ {
 		p.Method = append(p.Method, ToMethodDescriptorProto(methods.Get(i)))
@@ -218,7 +217,7 @@ func ToMethodDescriptorProto(method protoreflect.MethodDescriptor) *descriptorpb
 		Name:       proto.String(string(method.Name())),
 		InputType:  fullNameOf(method.Input()),
 		OutputType: fullNameOf(method.Output()),
-		Options:    clone(method.Options()).(*descriptorpb.MethodOptions),
+		Options:    proto.Clone(method.Options()).(*descriptorpb.MethodOptions),
 	}
 	if method.IsStreamingClient() {
 		p.ClientStreaming = proto.Bool(true)
@@ -237,13 +236,4 @@ func fullNameOf(d protoreflect.Descriptor) *string {
 		return proto.String(string(d.FullName()[len(unknownPrefix):]))
 	}
 	return proto.String("." + string(d.FullName()))
-}
-
-func clone(src proto.Message) proto.Message {
-	if reflect.ValueOf(src).IsNil() {
-		return src
-	}
-	dst := src.ProtoReflect().New().Interface()
-	proto.Merge(dst, src)
-	return dst
 }

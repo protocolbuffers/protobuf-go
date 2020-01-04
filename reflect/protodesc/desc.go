@@ -11,6 +11,7 @@ import (
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/internal/strs"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
@@ -98,7 +99,7 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 		return nil, errors.New("invalid package: %q", f.L1.Package)
 	}
 	if opts := fd.GetOptions(); opts != nil {
-		opts = clone(opts).(*descriptorpb.FileOptions)
+		opts = proto.Clone(opts).(*descriptorpb.FileOptions)
 		f.L2.Options = func() protoreflect.ProtoMessage { return opts }
 	}
 

@@ -34,10 +34,40 @@ type MergeOptions struct {
 	Shallow bool
 }
 
+// Clone returns a deep copy of m.
+// See MergeOptions.Clone for details.
+func Clone(m Message) Message {
+	return MergeOptions{}.Clone(m)
+}
+
 // Merge merges src into dst, which must be messages with the same descriptor.
 // See MergeOptions.Merge for details.
 func Merge(dst, src Message) {
 	MergeOptions{}.Merge(dst, src)
+}
+
+// Clone returns a copy of m.
+// If Shallow is specified it makes a new message and shallow copies m into it.
+// If the top-level message is invalid, it returns an invalid message as well.
+func (o MergeOptions) Clone(m Message) Message {
+	// NOTE: Most usages of Clone assume the following properties:
+	//	t := reflect.TypeOf(m)
+	//	t == reflect.TypeOf(m.ProtoReflect().New().Interface())
+	//	t == reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface())
+	//
+	// Embedding protobuf messages breaks this since the parent type will have
+	// a forwarded ProtoReflect method, but the Interface method will return
+	// the underlying embedded message type.
+	return o.cloneMessage(m.ProtoReflect()).Interface()
+}
+
+func (o MergeOptions) cloneMessage(src protoreflect.Message) (dst protoreflect.Message) {
+	if !src.IsValid() {
+		return src.Type().Zero()
+	}
+	dst = src.New()
+	o.mergeMessage(dst, src)
+	return dst
 }
 
 // Merge merges src into dst, which must be messages with the same descriptor.

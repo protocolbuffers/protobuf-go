@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"reflect"
 	"sort"
 	"testing"
 
@@ -39,6 +40,8 @@ type MessageOptions struct {
 // TestMessage runs the provided m through a series of tests
 // exercising the protobuf reflection API.
 func TestMessage(t testing.TB, m proto.Message, opts MessageOptions) {
+	testType(t, m)
+
 	md := m.ProtoReflect().Descriptor()
 	m1 := m.ProtoReflect().New()
 	for i := 0; i < md.Fields().Len(); i++ {
@@ -86,6 +89,19 @@ func TestMessage(t testing.TB, m proto.Message, opts MessageOptions) {
 func marshalText(m proto.Message) string {
 	b, _ := prototext.MarshalOptions{Indent: "  "}.Marshal(m)
 	return string(b)
+}
+
+func testType(t testing.TB, m proto.Message) {
+	want := reflect.TypeOf(m)
+	if got := reflect.TypeOf(m.ProtoReflect().Interface()); got != want {
+		t.Errorf("type mismatch: reflect.TypeOf(m) != reflect.TypeOf(m.ProtoReflect().Interface()): %v != %v", got, want)
+	}
+	if got := reflect.TypeOf(m.ProtoReflect().New().Interface()); got != want {
+		t.Errorf("type mismatch: reflect.TypeOf(m) != reflect.TypeOf(m.ProtoReflect().New().Interface()): %v != %v", got, want)
+	}
+	if got := reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface()); got != want {
+		t.Errorf("type mismatch: reflect.TypeOf(m) != reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface()): %v != %v", got, want)
+	}
 }
 
 // testField exercises set/get/has/clear of a field.

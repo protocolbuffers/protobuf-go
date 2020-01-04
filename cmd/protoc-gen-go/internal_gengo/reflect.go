@@ -232,8 +232,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 }
 
 func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo) {
-	descProto := new(descriptorpb.FileDescriptorProto)
-	proto.Merge(descProto, f.Proto)
+	descProto := proto.Clone(f.Proto).(*descriptorpb.FileDescriptorProto)
 	descProto.SourceCodeInfo = nil // drop source code information
 
 	b, err := proto.MarshalOptions{AllowPartial: true, Deterministic: true}.Marshal(descProto)
