@@ -30,6 +30,14 @@ func TestEqual(t *testing.T) {
 			eq: false,
 		}, {
 			x:  (*testpb.TestAllTypes)(nil),
+			y:  (*testpb.TestAllTypes)(nil),
+			eq: true,
+		}, {
+			x:  new(testpb.TestAllTypes),
+			y:  (*testpb.TestAllTypes)(nil),
+			eq: false,
+		}, {
+			x:  new(testpb.TestAllTypes),
 			y:  new(testpb.TestAllTypes),
 			eq: true,
 		},

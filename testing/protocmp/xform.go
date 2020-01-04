@@ -153,18 +153,12 @@ func Transform(...option) cmp.Option {
 		}
 
 		return false
-	}, cmp.Transformer("protocmp.Transform", func(m interface{}) Message {
-		if m == nil {
+	}, cmp.Transformer("protocmp.Transform", func(v interface{}) Message {
+		m := protoimpl.X.MessageOf(v)
+		if m == nil || !m.IsValid() {
 			return nil
 		}
-
-		// TODO: Should typed nil messages result in a nil Message?
-		// For now, do so as it is easier to remove this check than to add it.
-		if v := reflect.ValueOf(m); v.Kind() == reflect.Ptr && v.IsNil() {
-			return nil
-		}
-
-		return transformMessage(protoimpl.X.MessageOf(m))
+		return transformMessage(m)
 	}))
 }
 

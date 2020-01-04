@@ -19,7 +19,8 @@ import (
 //
 // Two messages are equal if they belong to the same message descriptor,
 // have the same set of populated known and extension field values,
-// and the same set of unknown fields values.
+// and the same set of unknown fields values. If either of the top-level
+// messages are invalid, then Equal reports true only if both are invalid.
 //
 // Scalar values are compared with the equivalent of the == operator in Go,
 // except bytes values which are compared using bytes.Equal and
@@ -32,7 +33,12 @@ func Equal(x, y Message) bool {
 	if x == nil || y == nil {
 		return x == nil && y == nil
 	}
-	return equalMessage(x.ProtoReflect(), y.ProtoReflect())
+	mx := x.ProtoReflect()
+	my := y.ProtoReflect()
+	if !mx.IsValid() || !my.IsValid() {
+		return !mx.IsValid() && !my.IsValid()
+	}
+	return equalMessage(mx, my)
 }
 
 // equalMessage compares two messages.

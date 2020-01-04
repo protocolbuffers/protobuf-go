@@ -40,7 +40,7 @@ func TestDecode(t *testing.T) {
 				for i := range wire {
 					wire[i] = 0
 				}
-				if !proto.Equal(got, want) {
+				if !proto.Equal(got, want) && got.ProtoReflect().IsValid() && want.ProtoReflect().IsValid() {
 					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", marshalText(got), marshalText(want))
 				}
 			})
