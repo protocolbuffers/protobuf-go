@@ -24,27 +24,42 @@ type Export struct{}
 type enum = interface{}
 
 // EnumOf returns the protoreflect.Enum interface over e.
+// It returns nil if e is nil.
 func (Export) EnumOf(e enum) pref.Enum {
-	if ev, ok := e.(pref.Enum); ok {
-		return ev
+	switch e := e.(type) {
+	case nil:
+		return nil
+	case pref.Enum:
+		return e
+	default:
+		return legacyWrapEnum(reflect.ValueOf(e))
 	}
-	return legacyWrapEnum(reflect.ValueOf(e))
 }
 
 // EnumDescriptorOf returns the protoreflect.EnumDescriptor for e.
+// It returns nil if e is nil.
 func (Export) EnumDescriptorOf(e enum) pref.EnumDescriptor {
-	if ev, ok := e.(pref.Enum); ok {
-		return ev.Descriptor()
+	switch e := e.(type) {
+	case nil:
+		return nil
+	case pref.Enum:
+		return e.Descriptor()
+	default:
+		return LegacyLoadEnumDesc(reflect.TypeOf(e))
 	}
-	return LegacyLoadEnumDesc(reflect.TypeOf(e))
 }
 
 // EnumTypeOf returns the protoreflect.EnumType for e.
+// It returns nil if e is nil.
 func (Export) EnumTypeOf(e enum) pref.EnumType {
-	if ev, ok := e.(pref.Enum); ok {
-		return ev.Type()
+	switch e := e.(type) {
+	case nil:
+		return nil
+	case pref.Enum:
+		return e.Type()
+	default:
+		return legacyLoadEnumType(reflect.TypeOf(e))
 	}
-	return legacyLoadEnumType(reflect.TypeOf(e))
 }
 
 // EnumStringOf returns the enum value as a string, either as the name if
@@ -69,6 +84,7 @@ func (m legacyMessageWrapper) String() string { return Export{}.MessageStringOf(
 func (m legacyMessageWrapper) ProtoMessage()  {}
 
 // ProtoMessageV1Of converts either a v1 or v2 message to a v1 message.
+// It returns nil if m is nil.
 func (Export) ProtoMessageV1Of(m message) piface.MessageV1 {
 	switch mv := m.(type) {
 	case nil:
@@ -100,15 +116,23 @@ func (Export) protoMessageV2Of(m message) pref.ProtoMessage {
 }
 
 // ProtoMessageV2Of converts either a v1 or v2 message to a v2 message.
+// It returns nil if m is nil.
 func (Export) ProtoMessageV2Of(m message) pref.ProtoMessage {
-	if mv := (Export{}).protoMessageV2Of(m); mv != nil || m == nil {
+	if m == nil {
+		return nil
+	}
+	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv
 	}
 	return legacyWrapMessage(reflect.ValueOf(m))
 }
 
 // MessageOf returns the protoreflect.Message interface over m.
+// It returns nil if m is nil.
 func (Export) MessageOf(m message) pref.Message {
+	if m == nil {
+		return nil
+	}
 	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv.ProtoReflect()
 	}
@@ -116,7 +140,11 @@ func (Export) MessageOf(m message) pref.Message {
 }
 
 // MessageDescriptorOf returns the protoreflect.MessageDescriptor for m.
+// It returns nil if m is nil.
 func (Export) MessageDescriptorOf(m message) pref.MessageDescriptor {
+	if m == nil {
+		return nil
+	}
 	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv.ProtoReflect().Descriptor()
 	}
@@ -124,7 +152,11 @@ func (Export) MessageDescriptorOf(m message) pref.MessageDescriptor {
 }
 
 // MessageTypeOf returns the protoreflect.MessageType for m.
+// It returns nil if m is nil.
 func (Export) MessageTypeOf(m message) pref.MessageType {
+	if m == nil {
+		return nil
+	}
 	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv.ProtoReflect().Type()
 	}
@@ -134,8 +166,7 @@ func (Export) MessageTypeOf(m message) pref.MessageType {
 // MessageStringOf returns the message value as a string,
 // which is the message serialized in the protobuf text format.
 func (Export) MessageStringOf(m pref.ProtoMessage) string {
-	v := reflect.ValueOf(m)
-	if m == nil || (v.Kind() == reflect.Ptr && v.IsNil()) {
+	if m == nil || !m.ProtoReflect().IsValid() {
 		return "<nil>"
 	}
 	b, _ := prototext.MarshalOptions{
