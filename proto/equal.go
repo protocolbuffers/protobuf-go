@@ -35,8 +35,8 @@ func Equal(x, y Message) bool {
 	}
 	mx := x.ProtoReflect()
 	my := y.ProtoReflect()
-	if !mx.IsValid() || !my.IsValid() {
-		return !mx.IsValid() && !my.IsValid()
+	if mx.IsValid() != my.IsValid() {
+		return false
 	}
 	return equalMessage(mx, my)
 }

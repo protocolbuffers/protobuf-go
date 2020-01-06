@@ -41,6 +41,21 @@ func TestEqual(t *testing.T) {
 			y:  new(testpb.TestAllTypes),
 			eq: true,
 		},
+		{
+			x:  (*testpb.TestAllTypes)(nil),
+			y:  (*testpb.TestAllExtensions)(nil),
+			eq: false,
+		},
+		{
+			x:  (*testpb.TestAllTypes)(nil),
+			y:  new(testpb.TestAllExtensions),
+			eq: false,
+		},
+		{
+			x:  new(testpb.TestAllTypes),
+			y:  new(testpb.TestAllExtensions),
+			eq: false,
+		},
 
 		// Proto2 scalars.
 		{
