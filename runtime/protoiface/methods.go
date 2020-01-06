@@ -34,7 +34,7 @@ type Methods struct {
 	Size func(m protoreflect.Message, opts MarshalOptions) int
 
 	// MarshalAppend appends the wire-format encoding of m to b, returning the result.
-	// Size must be provided if a custom MarshalAppend is provided.
+	// Size should be provided if a custom MarshalAppend is provided.
 	// It must not perform required field checks.
 	MarshalAppend func(b []byte, m protoreflect.Message, opts MarshalOptions) ([]byte, error)
 

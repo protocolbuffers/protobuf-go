@@ -51,7 +51,6 @@ func legacyLoadMessageInfo(t reflect.Type, name pref.FullName) *MessageInfo {
 	v := reflect.Zero(t).Interface()
 	if _, ok := v.(legacyMarshaler); ok {
 		mi.methods.MarshalAppend = legacyMarshalAppend
-		mi.methods.Size = legacySize
 
 		// We have no way to tell whether the type's Marshal method
 		// supports deterministic serialization or not, but this
@@ -364,7 +363,6 @@ type legacyUnmarshaler interface {
 }
 
 var legacyProtoMethods = &piface.Methods{
-	Size:          legacySize,
 	MarshalAppend: legacyMarshalAppend,
 	Unmarshal:     legacyUnmarshal,
 
@@ -373,11 +371,6 @@ var legacyProtoMethods = &piface.Methods{
 	// preserves the v1 implementation's behavior of always
 	// calling Marshal methods when present.
 	Flags: piface.SupportMarshalDeterministic,
-}
-
-func legacySize(m protoreflect.Message, opts piface.MarshalOptions) int {
-	b, _ := legacyMarshalAppend(nil, m, opts)
-	return len(b)
 }
 
 func legacyMarshalAppend(b []byte, m protoreflect.Message, opts piface.MarshalOptions) ([]byte, error) {

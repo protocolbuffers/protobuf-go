@@ -100,13 +100,15 @@ func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
 func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte, error) {
 	if methods := protoMethods(m); methods != nil && methods.MarshalAppend != nil &&
 		!(o.Deterministic && methods.Flags&protoiface.SupportMarshalDeterministic == 0) {
-		sz := methods.Size(m, protoiface.MarshalOptions(o))
-		if cap(b) < len(b)+sz {
-			x := make([]byte, len(b), growcap(cap(b), len(b)+sz))
-			copy(x, b)
-			b = x
+		if methods.Size != nil {
+			sz := methods.Size(m, protoiface.MarshalOptions(o))
+			if cap(b) < len(b)+sz {
+				x := make([]byte, len(b), growcap(cap(b), len(b)+sz))
+				copy(x, b)
+				b = x
+			}
+			o.UseCachedSize = true
 		}
-		o.UseCachedSize = true
 		return methods.MarshalAppend(b, m, protoiface.MarshalOptions(o))
 	}
 	return o.marshalMessageSlow(b, m)
