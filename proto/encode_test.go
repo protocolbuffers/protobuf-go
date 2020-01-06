@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -29,12 +30,12 @@ func TestEncode(t *testing.T) {
 				}
 				wire, err := opts.Marshal(want)
 				if err != nil {
-					t.Fatalf("Marshal error: %v\nMessage:\n%v", err, marshalText(want))
+					t.Fatalf("Marshal error: %v\nMessage:\n%v", err, prototext.Format(want))
 				}
 
 				size := proto.Size(want)
 				if size != len(wire) {
-					t.Errorf("Size and marshal disagree: Size(m)=%v; len(Marshal(m))=%v\nMessage:\n%v", size, len(wire), marshalText(want))
+					t.Errorf("Size and marshal disagree: Size(m)=%v; len(Marshal(m))=%v\nMessage:\n%v", size, len(wire), prototext.Format(want))
 				}
 
 				got := want.ProtoReflect().New().Interface()
@@ -42,11 +43,11 @@ func TestEncode(t *testing.T) {
 					AllowPartial: test.partial,
 				}
 				if err := uopts.Unmarshal(wire, got); err != nil {
-					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, marshalText(want))
+					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, prototext.Format(want))
 					return
 				}
 				if !proto.Equal(got, want) && got.ProtoReflect().IsValid() && want.ProtoReflect().IsValid() {
-					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", marshalText(got), marshalText(want))
+					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", prototext.Format(got), prototext.Format(want))
 				}
 			})
 		}
@@ -63,11 +64,11 @@ func TestEncodeDeterministic(t *testing.T) {
 				}
 				wire, err := opts.Marshal(want)
 				if err != nil {
-					t.Fatalf("Marshal error: %v\nMessage:\n%v", err, marshalText(want))
+					t.Fatalf("Marshal error: %v\nMessage:\n%v", err, prototext.Format(want))
 				}
 				wire2, err := opts.Marshal(want)
 				if err != nil {
-					t.Fatalf("Marshal error: %v\nMessage:\n%v", err, marshalText(want))
+					t.Fatalf("Marshal error: %v\nMessage:\n%v", err, prototext.Format(want))
 				}
 				if !bytes.Equal(wire, wire2) {
 					t.Fatalf("deterministic marshal returned varying results:\n%v", cmp.Diff(wire, wire2))
@@ -78,11 +79,11 @@ func TestEncodeDeterministic(t *testing.T) {
 					AllowPartial: test.partial,
 				}
 				if err := uopts.Unmarshal(wire, got); err != nil {
-					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, marshalText(want))
+					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, prototext.Format(want))
 					return
 				}
 				if !proto.Equal(got, want) && got.ProtoReflect().IsValid() && want.ProtoReflect().IsValid() {
-					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", marshalText(got), marshalText(want))
+					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", prototext.Format(got), prototext.Format(want))
 				}
 			})
 		}
@@ -98,7 +99,7 @@ func TestEncodeRequiredFieldChecks(t *testing.T) {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, m), func(t *testing.T) {
 				_, err := proto.Marshal(m)
 				if err == nil {
-					t.Fatalf("Marshal succeeded (want error)\nMessage:\n%v", marshalText(m))
+					t.Fatalf("Marshal succeeded (want error)\nMessage:\n%v", prototext.Format(m))
 				}
 			})
 		}
@@ -131,7 +132,7 @@ func TestEncodeInvalidMessages(t *testing.T) {
 				}
 				got, err := opts.Marshal(m)
 				if err == nil {
-					t.Fatalf("Marshal unexpectedly succeeded\noutput bytes: [%x]\nMessage:\n%v", got, marshalText(m))
+					t.Fatalf("Marshal unexpectedly succeeded\noutput bytes: [%x]\nMessage:\n%v", got, prototext.Format(m))
 				}
 			})
 		}

@@ -30,7 +30,7 @@ func TestDecode(t *testing.T) {
 				wire := append(([]byte)(nil), test.wire...)
 				got := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
 				if err := opts.Unmarshal(wire, got); err != nil {
-					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, marshalText(want))
+					t.Errorf("Unmarshal error: %v\nMessage:\n%v", err, prototext.Format(want))
 					return
 				}
 
@@ -40,7 +40,7 @@ func TestDecode(t *testing.T) {
 					wire[i] = 0
 				}
 				if !proto.Equal(got, want) && got.ProtoReflect().IsValid() && want.ProtoReflect().IsValid() {
-					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", marshalText(got), marshalText(want))
+					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", prototext.Format(got), prototext.Format(want))
 				}
 			})
 		}
@@ -58,7 +58,7 @@ func TestDecodeRequiredFieldChecks(t *testing.T) {
 				opts.AllowPartial = false
 				got := reflect.New(reflect.TypeOf(m).Elem()).Interface().(proto.Message)
 				if err := proto.Unmarshal(test.wire, got); err == nil {
-					t.Fatalf("Unmarshal succeeded (want error)\nMessage:\n%v", marshalText(got))
+					t.Fatalf("Unmarshal succeeded (want error)\nMessage:\n%v", prototext.Format(got))
 				}
 			})
 		}
@@ -76,7 +76,7 @@ func TestDecodeInvalidMessages(t *testing.T) {
 				opts.AllowPartial = test.partial
 				got := want.ProtoReflect().New().Interface()
 				if err := opts.Unmarshal(test.wire, got); err == nil {
-					t.Errorf("Unmarshal unexpectedly succeeded\ninput bytes: [%x]\nMessage:\n%v", test.wire, marshalText(got))
+					t.Errorf("Unmarshal unexpectedly succeeded\ninput bytes: [%x]\nMessage:\n%v", test.wire, prototext.Format(got))
 				}
 			})
 		}
@@ -146,16 +146,4 @@ func extend(desc protoreflect.ExtensionType, value interface{}) buildOpt {
 	return func(m proto.Message) {
 		proto.SetExtension(m, desc, value)
 	}
-}
-
-func marshalText(m proto.Message) string {
-	if m == nil {
-		return "<nil>\n"
-	}
-	b, _ := prototext.MarshalOptions{
-		AllowPartial: true,
-		EmitUnknown:  true,
-		Indent:       "\t",
-	}.Marshal(m)
-	return string(b)
 }

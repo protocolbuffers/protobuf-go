@@ -72,23 +72,18 @@ func TestMessage(t testing.TB, m proto.Message, opts MessageOptions) {
 		AllowPartial: true,
 	}.Marshal(m2)
 	if err != nil {
-		t.Errorf("Marshal() = %v, want nil\n%v", err, marshalText(m2))
+		t.Errorf("Marshal() = %v, want nil\n%v", err, prototext.Format(m2))
 	}
 	m3 := m.ProtoReflect().New().Interface()
 	if err := (proto.UnmarshalOptions{
 		AllowPartial: true,
 		Resolver:     opts.Resolver,
 	}.Unmarshal(b, m3)); err != nil {
-		t.Errorf("Unmarshal() = %v, want nil\n%v", err, marshalText(m2))
+		t.Errorf("Unmarshal() = %v, want nil\n%v", err, prototext.Format(m2))
 	}
 	if !proto.Equal(m2, m3) {
-		t.Errorf("round-trip marshal/unmarshal did not preserve message\nOriginal:\n%v\nNew:\n%v", marshalText(m2), marshalText(m3))
+		t.Errorf("round-trip marshal/unmarshal did not preserve message\nOriginal:\n%v\nNew:\n%v", prototext.Format(m2), prototext.Format(m3))
 	}
-}
-
-func marshalText(m proto.Message) string {
-	b, _ := prototext.MarshalOptions{Indent: "  "}.Marshal(m)
-	return string(b)
 }
 
 func testType(t testing.TB, m proto.Message) {

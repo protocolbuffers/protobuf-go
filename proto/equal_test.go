@@ -8,6 +8,7 @@ import (
 	"math"
 	"testing"
 
+	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/proto"
 
@@ -431,13 +432,13 @@ func TestEqual(t *testing.T) {
 
 	for _, tt := range tests {
 		if !tt.eq && !proto.Equal(tt.x, tt.x) {
-			t.Errorf("Equal(x, x) = false, want true\n==== x ====\n%v", marshalText(tt.x))
+			t.Errorf("Equal(x, x) = false, want true\n==== x ====\n%v", prototext.Format(tt.x))
 		}
 		if !tt.eq && !proto.Equal(tt.y, tt.y) {
-			t.Errorf("Equal(y, y) = false, want true\n==== y ====\n%v", marshalText(tt.y))
+			t.Errorf("Equal(y, y) = false, want true\n==== y ====\n%v", prototext.Format(tt.y))
 		}
 		if eq := proto.Equal(tt.x, tt.y); eq != tt.eq {
-			t.Errorf("Equal(x, y) = %v, want %v\n==== x ====\n%v==== y ====\n%v", eq, tt.eq, marshalText(tt.x), marshalText(tt.y))
+			t.Errorf("Equal(x, y) = %v, want %v\n==== x ====\n%v==== y ====\n%v", eq, tt.eq, prototext.Format(tt.x), prototext.Format(tt.y))
 		}
 	}
 }

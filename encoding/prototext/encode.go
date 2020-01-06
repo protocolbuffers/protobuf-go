@@ -22,6 +22,16 @@ import (
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
+const defaultIndent = "  "
+
+// Format formats the message as a multiline string.
+// This function is only intended for human consumption and ignores errors.
+// Do not depend on the output being stable. It may change over time across
+// different versions of the program.
+func Format(m proto.Message) string {
+	return MarshalOptions{Multiline: true}.Format(m)
+}
+
 // Marshal writes the given proto.Message in textproto format using default
 // options. Do not depend on the output being stable. It may change over time
 // across different versions of the program.
@@ -43,9 +53,15 @@ type MarshalOptions struct {
 	// The default is to exclude unknown fields.
 	EmitUnknown bool
 
-	// If Indent is a non-empty string, it causes entries for a Message to be
-	// preceded by the indent and trailed by a newline. Indent can only be
-	// composed of space or tab characters.
+	// Multiline specifies whether the marshaler should format the output in
+	// indented-form with every textual element on a new line.
+	// If Indent is an empty string, then an arbitrary indent is chosen.
+	Multiline bool
+
+	// Indent specifies the set of indentation characters to use in a multiline
+	// formatted output such that every entry is preceded by Indent and
+	// terminated by a newline. If non-empty, then Multiline is treated as true.
+	// Indent can only be composed of space or tab characters.
 	Indent string
 
 	// Resolver is used for looking up types when expanding google.protobuf.Any
@@ -56,10 +72,27 @@ type MarshalOptions struct {
 	}
 }
 
+// Format formats the message as a string.
+// This method is only intended for human consumption and ignores errors.
+// Do not depend on the output being stable. It may change over time across
+// different versions of the program.
+func (o MarshalOptions) Format(m proto.Message) string {
+	if m == nil || !m.ProtoReflect().IsValid() {
+		return "<nil>" // invalid syntax, but okay since this is for debugging
+	}
+	o.AllowPartial = true
+	o.EmitUnknown = true
+	b, _ := o.Marshal(m)
+	return string(b)
+}
+
 // Marshal writes the given proto.Message in textproto format using options in
 // MarshalOptions object. Do not depend on the output being stable. It may
 // change over time across different versions of the program.
 func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
+	if o.Multiline && o.Indent == "" {
+		o.Indent = defaultIndent
+	}
 	if o.Resolver == nil {
 		o.Resolver = protoregistry.GlobalTypes
 	}

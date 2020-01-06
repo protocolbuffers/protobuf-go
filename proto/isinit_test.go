@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 
@@ -81,7 +82,7 @@ func TestIsInitializedErrors(t *testing.T) {
 				got = fmt.Sprintf("%q", err)
 			}
 			if !strings.Contains(got, tt.want) {
-				t.Errorf("IsInitialized(m):\n got: %v\nwant contains: %v\nMessage:\n%v", got, tt.want, marshalText(tt.m))
+				t.Errorf("IsInitialized(m):\n got: %v\nwant contains: %v\nMessage:\n%v", got, tt.want, prototext.Format(tt.m))
 			}
 		})
 	}
