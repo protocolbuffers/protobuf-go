@@ -239,6 +239,14 @@ func normalizeToIntString(n numberParts) (string, bool) {
 			return "", false
 		}
 
+		// Make sure resulting digits are within max value limit to avoid
+		// unnecessarily constructing a large byte slice that may simply fail
+		// later on.
+		const maxDigits = 20 // Max uint64 value has 20 decimal digits.
+		if intpSize+exp > maxDigits {
+			return "", false
+		}
+
 		// Set cap to make a copy of integer part when appended.
 		num = n.intp[:len(n.intp):len(n.intp)]
 		num = append(num, n.frac...)
