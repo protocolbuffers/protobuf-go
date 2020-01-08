@@ -5,84 +5,374 @@
 package json_test
 
 import (
+	"fmt"
 	"math"
 	"strings"
 	"testing"
 	"unicode/utf8"
 
+	"github.com/google/go-cmp/cmp"
 	"google.golang.org/protobuf/internal/encoding/json"
 )
 
 type R struct {
-	// T is expected Type returned from calling Decoder.Read.
-	T json.Type
 	// E is expected error substring from calling Decoder.Read if set.
 	E string
-	// V is expected value from calling
-	// Value.{Bool()|Float()|Int()|Uint()|String()} depending on type.
-	V interface{}
-	// VE is expected error substring from calling
-	// Value.{Bool()|Float()|Int()|Uint()|String()} depending on type if set.
-	VE string
+	// V is one of the checker implementations that validates the token value.
+	V checker
+	// P is expected Token.Pos() if set > 0.
+	P int
+	// RS is expected result from Token.RawString() if not empty.
+	RS string
 }
+
+// checker defines API for Token validation.
+type checker interface {
+	// check checks and expects for token API call to return and compare
+	// against implementation-stored value. Returns empty string if success,
+	// else returns error message describing the error.
+	check(json.Token) string
+}
+
+// checkers that checks the token kind only.
+var (
+	EOF         = kindOnly{json.EOF}
+	Null        = kindOnly{json.Null}
+	ObjectOpen  = kindOnly{json.ObjectOpen}
+	ObjectClose = kindOnly{json.ObjectClose}
+	ArrayOpen   = kindOnly{json.ArrayOpen}
+	ArrayClose  = kindOnly{json.ArrayClose}
+)
+
+type kindOnly struct {
+	want json.Kind
+}
+
+func (x kindOnly) check(tok json.Token) string {
+	if got := tok.Kind(); got != x.want {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, x.want)
+	}
+	return ""
+}
+
+type Name struct {
+	val string
+}
+
+func (x Name) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Name {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Name)
+	}
+
+	if got := tok.Name(); got != x.val {
+		return fmt.Sprintf("Token.Name(): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+type Bool struct {
+	val bool
+}
+
+func (x Bool) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Bool {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Bool)
+	}
+
+	if got := tok.Bool(); got != x.val {
+		return fmt.Sprintf("Token.Bool(): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+type Str struct {
+	val string
+}
+
+func (x Str) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.String {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.String)
+	}
+
+	if got := tok.ParsedString(); got != x.val {
+		return fmt.Sprintf("Token.ParsedString(): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+type F64 struct {
+	val float64
+}
+
+func (x F64) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	got, ok := tok.Float(64)
+	if !ok {
+		return fmt.Sprintf("Token.Float(64): returned not ok")
+	}
+	if got != x.val {
+		return fmt.Sprintf("Token.Float(64): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+type F32 struct {
+	val float32
+}
+
+func (x F32) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	got, ok := tok.Float(32)
+	if !ok {
+		return fmt.Sprintf("Token.Float(32): returned not ok")
+	}
+	if float32(got) != x.val {
+		return fmt.Sprintf("Token.Float(32): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+// NotF64 is a checker to validate a Number token where Token.Float(64) returns not ok.
+var NotF64 = xf64{}
+
+type xf64 struct{}
+
+func (x xf64) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	_, ok := tok.Float(64)
+	if ok {
+		return fmt.Sprintf("Token.Float(64): returned ok")
+	}
+	return ""
+}
+
+// NotF32 is a checker to validate a Number token where Token.Float(32) returns not ok.
+var NotF32 = xf32{}
+
+type xf32 struct{}
+
+func (x xf32) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	_, ok := tok.Float(32)
+	if ok {
+		return fmt.Sprintf("Token.Float(32): returned ok")
+	}
+	return ""
+}
+
+type I64 struct {
+	val int64
+}
+
+func (x I64) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	got, ok := tok.Int(64)
+	if !ok {
+		return fmt.Sprintf("Token.Int(64): returned not ok")
+	}
+	if got != x.val {
+		return fmt.Sprintf("Token.Int(64): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+type I32 struct {
+	val int32
+}
+
+func (x I32) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	got, ok := tok.Int(32)
+	if !ok {
+		return fmt.Sprintf("Token.Int(32): returned not ok")
+	}
+	if int32(got) != x.val {
+		return fmt.Sprintf("Token.Int(32): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+// NotI64 is a checker to validate a Number token where Token.Int(64) returns not ok.
+var NotI64 = xi64{}
+
+type xi64 struct{}
+
+func (x xi64) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	_, ok := tok.Int(64)
+	if ok {
+		return fmt.Sprintf("Token.Int(64): returned ok")
+	}
+	return ""
+}
+
+// NotI32 is a checker to validate a Number token where Token.Int(32) returns not ok.
+var NotI32 = xi32{}
+
+type xi32 struct{}
+
+func (x xi32) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	_, ok := tok.Int(32)
+	if ok {
+		return fmt.Sprintf("Token.Int(32): returned ok")
+	}
+	return ""
+}
+
+type Ui64 struct {
+	val uint64
+}
+
+func (x Ui64) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	got, ok := tok.Uint(64)
+	if !ok {
+		return fmt.Sprintf("Token.Uint(64): returned not ok")
+	}
+	if got != x.val {
+		return fmt.Sprintf("Token.Uint(64): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+type Ui32 struct {
+	val uint32
+}
+
+func (x Ui32) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	got, ok := tok.Uint(32)
+	if !ok {
+		return fmt.Sprintf("Token.Uint(32): returned not ok")
+	}
+	if uint32(got) != x.val {
+		return fmt.Sprintf("Token.Uint(32): got %v, want %v", got, x.val)
+	}
+	return ""
+}
+
+// NotUi64 is a checker to validate a Number token where Token.Uint(64) returns not ok.
+var NotUi64 = xui64{}
+
+type xui64 struct{}
+
+func (x xui64) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	_, ok := tok.Uint(64)
+	if ok {
+		return fmt.Sprintf("Token.Uint(64): returned ok")
+	}
+	return ""
+}
+
+// NotI32 is a checker to validate a Number token where Token.Uint(32) returns not ok.
+var NotUi32 = xui32{}
+
+type xui32 struct{}
+
+func (x xui32) check(tok json.Token) string {
+	if got := tok.Kind(); got != json.Number {
+		return fmt.Sprintf("Token.Kind(): got %v, want %v", got, json.Number)
+	}
+
+	_, ok := tok.Uint(32)
+	if ok {
+		return fmt.Sprintf("Token.Uint(32): returned ok")
+	}
+	return ""
+}
+
+var errEOF = json.ErrUnexpectedEOF.Error()
 
 func TestDecoder(t *testing.T) {
 	const space = " \n\r\t"
 
 	tests := []struct {
-		input string
+		in string
 		// want is a list of expected values returned from calling
 		// Decoder.Read. An item makes the test code invoke
-		// Decoder.Read and compare against R.T and R.E.  For Bool,
-		// Number and String tokens, it invokes the corresponding getter method
-		// and compares the returned value against R.V or R.VE if it returned an
-		// error.
+		// Decoder.Read and compare against R.E for error returned or use R.V to
+		// validate the returned Token object.
 		want []R
 	}{
 		{
-			input: ``,
-			want:  []R{{T: json.EOF}},
+			in:   ``,
+			want: []R{{V: EOF}},
 		},
 		{
-			input: space,
-			want:  []R{{T: json.EOF}},
+			in:   space,
+			want: []R{{V: EOF}},
 		},
 		{
 			// Calling Read after EOF will keep returning EOF for
 			// succeeding Read calls.
-			input: space,
+			in: space,
 			want: []R{
-				{T: json.EOF},
-				{T: json.EOF},
-				{T: json.EOF},
+				{V: EOF},
+				{V: EOF},
+				{V: EOF},
 			},
 		},
 
 		// JSON literals.
 		{
-			input: space + `null` + space,
+			in: space + `null` + space,
 			want: []R{
-				{T: json.Null},
-				{T: json.EOF},
+				{V: Null, P: len(space), RS: `null`},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `true` + space,
+			in: space + `true` + space,
 			want: []R{
-				{T: json.Bool, V: true},
-				{T: json.EOF},
+				{V: Bool{true}},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `false` + space,
+			in: space + `false` + space,
 			want: []R{
-				{T: json.Bool, V: false},
-				{T: json.EOF},
+				{V: Bool{false}},
+				{V: EOF},
 			},
 		},
 		{
 			// Error returned will produce the same error again.
-			input: space + `foo` + space,
+			in: space + `foo` + space,
 			want: []R{
 				{E: `invalid value foo`},
 				{E: `invalid value foo`},
@@ -91,941 +381,932 @@ func TestDecoder(t *testing.T) {
 
 		// JSON strings.
 		{
-			input: space + `""` + space,
+			in: space + `""` + space,
 			want: []R{
-				{T: json.String, V: ""},
-				{T: json.EOF},
+				{V: Str{}},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `"hello"` + space,
+			in: space + `"hello"` + space,
 			want: []R{
-				{T: json.String, V: "hello"},
-				{T: json.EOF},
+				{V: Str{"hello"}, RS: `"hello"`},
+				{V: EOF},
 			},
 		},
 		{
-			input: `"hello`,
-			want:  []R{{E: `unexpected EOF`}},
+			in:   `"hello`,
+			want: []R{{E: errEOF}},
 		},
 		{
-			input: "\"\x00\"",
-			want:  []R{{E: `invalid character '\x00' in string`}},
+			in:   "\"\x00\"",
+			want: []R{{E: `invalid character '\x00' in string`}},
 		},
 		{
-			input: "\"\u0031\u0032\"",
+			in: "\"\u0031\u0032\"",
 			want: []R{
-				{T: json.String, V: "12"},
-				{T: json.EOF},
+				{V: Str{"12"}, RS: "\"\u0031\u0032\""},
+				{V: EOF},
 			},
 		},
 		{
 			// Invalid UTF-8 error is returned in ReadString instead of Read.
-			input: "\"\xff\"",
-			want:  []R{{E: `syntax error (line 1:1): invalid UTF-8 in string`}},
+			in:   "\"\xff\"",
+			want: []R{{E: `syntax error (line 1:1): invalid UTF-8 in string`}},
 		},
 		{
-			input: `"` + string(utf8.RuneError) + `"`,
+			in: `"` + string(utf8.RuneError) + `"`,
 			want: []R{
-				{T: json.String, V: string(utf8.RuneError)},
-				{T: json.EOF},
+				{V: Str{string(utf8.RuneError)}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `"\uFFFD"`,
+			in: `"\uFFFD"`,
 			want: []R{
-				{T: json.String, V: string(utf8.RuneError)},
-				{T: json.EOF},
+				{V: Str{string(utf8.RuneError)}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `"\x"`,
-			want:  []R{{E: `invalid escape code "\\x" in string`}},
+			in:   `"\x"`,
+			want: []R{{E: `invalid escape code "\\x" in string`}},
 		},
 		{
-			input: `"\uXXXX"`,
-			want:  []R{{E: `invalid escape code "\\uXXXX" in string`}},
+			in:   `"\uXXXX"`,
+			want: []R{{E: `invalid escape code "\\uXXXX" in string`}},
 		},
 		{
-			input: `"\uDEAD"`, // unmatched surrogate pair
-			want:  []R{{E: `unexpected EOF`}},
+			in:   `"\uDEAD"`, // unmatched surrogate pair
+			want: []R{{E: errEOF}},
 		},
 		{
-			input: `"\uDEAD\uBEEF"`, // invalid surrogate half
-			want:  []R{{E: `invalid escape code "\\uBEEF" in string`}},
+			in:   `"\uDEAD\uBEEF"`, // invalid surrogate half
+			want: []R{{E: `invalid escape code "\\uBEEF" in string`}},
 		},
 		{
-			input: `"\uD800\udead"`, // valid surrogate pair
+			in: `"\uD800\udead"`, // valid surrogate pair
 			want: []R{
-				{T: json.String, V: `𐊭`},
-				{T: json.EOF},
+				{V: Str{`𐊭`}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `"\u0000\"\\\/\b\f\n\r\t"`,
+			in: `"\u0000\"\\\/\b\f\n\r\t"`,
 			want: []R{
-				{T: json.String, V: "\u0000\"\\/\b\f\n\r\t"},
-				{T: json.EOF},
+				{V: Str{"\u0000\"\\/\b\f\n\r\t"}},
+				{V: EOF},
 			},
 		},
 
 		// Invalid JSON numbers.
 		{
-			input: `-`,
-			want:  []R{{E: `invalid number -`}},
+			in:   `-`,
+			want: []R{{E: `invalid value -`}},
 		},
 		{
-			input: `+0`,
-			want:  []R{{E: `invalid value +0`}},
+			in:   `+0`,
+			want: []R{{E: `invalid value +0`}},
 		},
 		{
-			input: `-+`,
-			want:  []R{{E: `invalid number -+`}},
+			in:   `-+`,
+			want: []R{{E: `invalid value -+`}},
 		},
 		{
-			input: `0.`,
-			want:  []R{{E: `invalid number 0.`}},
+			in:   `0.`,
+			want: []R{{E: `invalid value 0.`}},
 		},
 		{
-			input: `.1`,
-			want:  []R{{E: `invalid value .1`}},
+			in:   `.1`,
+			want: []R{{E: `invalid value .1`}},
 		},
 		{
-			input: `1.0.1`,
-			want:  []R{{E: `invalid number 1.0.1`}},
+			in:   `1.0.1`,
+			want: []R{{E: `invalid value 1.0.1`}},
 		},
 		{
-			input: `1..1`,
-			want:  []R{{E: `invalid number 1..1`}},
+			in:   `1..1`,
+			want: []R{{E: `invalid value 1..1`}},
 		},
 		{
-			input: `-1-2`,
-			want:  []R{{E: `invalid number -1-2`}},
+			in:   `-1-2`,
+			want: []R{{E: `invalid value -1-2`}},
 		},
 		{
-			input: `01`,
-			want:  []R{{E: `invalid number 01`}},
+			in:   `01`,
+			want: []R{{E: `invalid value 01`}},
 		},
 		{
-			input: `1e`,
-			want:  []R{{E: `invalid number 1e`}},
+			in:   `1e`,
+			want: []R{{E: `invalid value 1e`}},
 		},
 		{
-			input: `1e1.2`,
-			want:  []R{{E: `invalid number 1e1.2`}},
+			in:   `1e1.2`,
+			want: []R{{E: `invalid value 1e1.2`}},
 		},
 		{
-			input: `1Ee`,
-			want:  []R{{E: `invalid number 1Ee`}},
+			in:   `1Ee`,
+			want: []R{{E: `invalid value 1Ee`}},
 		},
 		{
-			input: `1.e1`,
-			want:  []R{{E: `invalid number 1.e1`}},
+			in:   `1.e1`,
+			want: []R{{E: `invalid value 1.e1`}},
 		},
 		{
-			input: `1.e+`,
-			want:  []R{{E: `invalid number 1.e+`}},
+			in:   `1.e+`,
+			want: []R{{E: `invalid value 1.e+`}},
 		},
 		{
-			input: `1e+-2`,
-			want:  []R{{E: `invalid number 1e+-2`}},
+			in:   `1e+-2`,
+			want: []R{{E: `invalid value 1e+-2`}},
 		},
 		{
-			input: `1e--2`,
-			want:  []R{{E: `invalid number 1e--2`}},
+			in:   `1e--2`,
+			want: []R{{E: `invalid value 1e--2`}},
 		},
 		{
-			input: `1.0true`,
-			want:  []R{{E: `invalid number 1.0true`}},
+			in:   `1.0true`,
+			want: []R{{E: `invalid value 1.0true`}},
 		},
 
 		// JSON numbers as floating point.
 		{
-			input: space + `0.0` + space,
+			in: space + `0.0` + space,
 			want: []R{
-				{T: json.Number, V: float32(0)},
-				{T: json.EOF},
+				{V: F32{0}, P: len(space), RS: `0.0`},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `0` + space,
+			in: space + `0` + space,
 			want: []R{
-				{T: json.Number, V: float32(0)},
-				{T: json.EOF},
+				{V: F32{0}},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `-0` + space,
+			in: space + `-0` + space,
 			want: []R{
-				{T: json.Number, V: float32(math.Copysign(0, -1))},
-				{T: json.EOF},
+				{V: F32{float32(math.Copysign(0, -1))}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-0`,
+			in: `-0`,
 			want: []R{
-				{T: json.Number, V: math.Copysign(0, -1)},
-				{T: json.EOF},
+				{V: F64{math.Copysign(0, -1)}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-0.0`,
+			in: `-0.0`,
 			want: []R{
-				{T: json.Number, V: float32(math.Copysign(0, -1))},
-				{T: json.EOF},
+				{V: F32{float32(math.Copysign(0, -1))}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-0.0`,
+			in: `-0.0`,
 			want: []R{
-				{T: json.Number, V: math.Copysign(0, -1)},
-				{T: json.EOF},
+				{V: F64{math.Copysign(0, -1)}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-1.02`,
+			in: `-1.02`,
 			want: []R{
-				{T: json.Number, V: float32(-1.02)},
-				{T: json.EOF},
+				{V: F32{-1.02}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `1.020000`,
+			in: `1.020000`,
 			want: []R{
-				{T: json.Number, V: float32(1.02)},
-				{T: json.EOF},
+				{V: F32{1.02}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-1.0e0`,
+			in: `-1.0e0`,
 			want: []R{
-				{T: json.Number, V: float32(-1)},
-				{T: json.EOF},
+				{V: F32{-1}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `1.0e-000`,
+			in: `1.0e-000`,
 			want: []R{
-				{T: json.Number, V: float32(1)},
-				{T: json.EOF},
+				{V: F32{1}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `1e+00`,
+			in: `1e+00`,
 			want: []R{
-				{T: json.Number, V: float32(1)},
-				{T: json.EOF},
+				{V: F32{1}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `1.02e3`,
+			in: `1.02e3`,
 			want: []R{
-				{T: json.Number, V: float32(1.02e3)},
-				{T: json.EOF},
+				{V: F32{1.02e3}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-1.02E03`,
+			in: `-1.02E03`,
 			want: []R{
-				{T: json.Number, V: float32(-1.02e3)},
-				{T: json.EOF},
+				{V: F32{-1.02e3}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `1.0200e+3`,
+			in: `1.0200e+3`,
 			want: []R{
-				{T: json.Number, V: float32(1.02e3)},
-				{T: json.EOF},
+				{V: F32{1.02e3}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-1.0200E+03`,
+			in: `-1.0200E+03`,
 			want: []R{
-				{T: json.Number, V: float32(-1.02e3)},
-				{T: json.EOF},
+				{V: F32{-1.02e3}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `1.0200e-3`,
+			in: `1.0200e-3`,
 			want: []R{
-				{T: json.Number, V: float32(1.02e-3)},
-				{T: json.EOF},
+				{V: F32{1.02e-3}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-1.0200E-03`,
+			in: `-1.0200E-03`,
 			want: []R{
-				{T: json.Number, V: float32(-1.02e-3)},
-				{T: json.EOF},
+				{V: F32{-1.02e-3}},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds max float32 limit, but should be ok for float64.
-			input: `3.4e39`,
+			in: `3.4e39`,
 			want: []R{
-				{T: json.Number, V: float64(3.4e39)},
-				{T: json.EOF},
+				{V: F64{3.4e39}},
+				{V: EOF},
 			},
 		},
+
 		{
 			// Exceeds max float32 limit.
-			input: `3.4e39`,
+			in: `3.4e39`,
 			want: []R{
-				{T: json.Number, V: float32(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotF32},
+				{V: EOF},
 			},
 		},
 		{
 			// Less than negative max float32 limit.
-			input: `-3.4e39`,
+			in: `-3.4e39`,
 			want: []R{
-				{T: json.Number, V: float32(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotF32},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds max float64 limit.
-			input: `1.79e+309`,
+			in: `1.79e+309`,
 			want: []R{
-				{T: json.Number, V: float64(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotF64},
+				{V: EOF},
 			},
 		},
 		{
 			// Less than negative max float64 limit.
-			input: `-1.79e+309`,
+			in: `-1.79e+309`,
 			want: []R{
-				{T: json.Number, V: float64(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotF64},
+				{V: EOF},
 			},
 		},
 
 		// JSON numbers as signed integers.
 		{
-			input: space + `0` + space,
+			in: space + `0` + space,
 			want: []R{
-				{T: json.Number, V: int32(0)},
-				{T: json.EOF},
+				{V: I32{0}},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `-0` + space,
+			in: space + `-0` + space,
 			want: []R{
-				{T: json.Number, V: int32(0)},
-				{T: json.EOF},
+				{V: I32{0}},
+				{V: EOF},
 			},
 		},
 		{
 			// Fractional part equals 0 is ok.
-			input: `1.00000`,
+			in: `1.00000`,
 			want: []R{
-				{T: json.Number, V: int32(1)},
-				{T: json.EOF},
+				{V: I32{1}},
+				{V: EOF},
 			},
 		},
 		{
 			// Fractional part not equals 0 returns error.
-			input: `1.0000000001`,
+			in: `1.0000000001`,
 			want: []R{
-				{T: json.Number, V: int32(0), VE: `cannot convert 1.0000000001 to integer`},
-				{T: json.EOF},
+				{V: NotI32},
+				{V: EOF},
 			},
 		},
 		{
-			input: `0e0`,
+			in: `0e0`,
 			want: []R{
-				{T: json.Number, V: int32(0)},
-				{T: json.EOF},
+				{V: I32{0}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `0.0E0`,
+			in: `0.0E0`,
 			want: []R{
-				{T: json.Number, V: int32(0)},
-				{T: json.EOF},
+				{V: I32{0}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `0.0E10`,
+			in: `0.0E10`,
 			want: []R{
-				{T: json.Number, V: int32(0)},
-				{T: json.EOF},
+				{V: I32{0}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-1`,
+			in: `-1`,
 			want: []R{
-				{T: json.Number, V: int32(-1)},
-				{T: json.EOF},
+				{V: I32{-1}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `1.0e+0`,
+			in: `1.0e+0`,
 			want: []R{
-				{T: json.Number, V: int32(1)},
-				{T: json.EOF},
+				{V: I32{1}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-1E-0`,
+			in: `-1E-0`,
 			want: []R{
-				{T: json.Number, V: int32(-1)},
-				{T: json.EOF},
+				{V: I32{-1}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `1E1`,
+			in: `1E1`,
 			want: []R{
-				{T: json.Number, V: int32(10)},
-				{T: json.EOF},
+				{V: I32{10}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-100.00e-02`,
+			in: `-100.00e-02`,
 			want: []R{
-				{T: json.Number, V: int32(-1)},
-				{T: json.EOF},
+				{V: I32{-1}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `0.1200E+02`,
+			in: `0.1200E+02`,
 			want: []R{
-				{T: json.Number, V: int64(12)},
-				{T: json.EOF},
+				{V: I64{12}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `0.012e2`,
+			in: `0.012e2`,
 			want: []R{
-				{T: json.Number, V: int32(0), VE: `cannot convert 0.012e2 to integer`},
-				{T: json.EOF},
+				{V: NotI32},
+				{V: EOF},
 			},
 		},
 		{
-			input: `12e-2`,
+			in: `12e-2`,
 			want: []R{
-				{T: json.Number, V: int32(0), VE: `cannot convert 12e-2 to integer`},
-				{T: json.EOF},
+				{V: NotI32},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds math.MaxInt32.
-			input: `2147483648`,
+			in: `2147483648`,
 			want: []R{
-				{T: json.Number, V: int32(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotI32},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds math.MinInt32.
-			input: `-2147483649`,
+			in: `-2147483649`,
 			want: []R{
-				{T: json.Number, V: int32(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotI32},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds math.MaxInt32, but ok for int64.
-			input: `2147483648`,
+			in: `2147483648`,
 			want: []R{
-				{T: json.Number, V: int64(2147483648)},
-				{T: json.EOF},
+				{V: I64{2147483648}},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds math.MinInt32, but ok for int64.
-			input: `-2147483649`,
+			in: `-2147483649`,
 			want: []R{
-				{T: json.Number, V: int64(-2147483649)},
-				{T: json.EOF},
+				{V: I64{-2147483649}},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds math.MaxInt64.
-			input: `9223372036854775808`,
+			in: `9223372036854775808`,
 			want: []R{
-				{T: json.Number, V: int64(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotI64},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds math.MinInt64.
-			input: `-9223372036854775809`,
+			in: `-9223372036854775809`,
 			want: []R{
-				{T: json.Number, V: int64(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotI64},
+				{V: EOF},
 			},
 		},
 
 		// JSON numbers as unsigned integers.
 		{
-			input: space + `0` + space,
+			in: space + `0` + space,
 			want: []R{
-				{T: json.Number, V: uint32(0)},
-				{T: json.EOF},
+				{V: Ui32{0}},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `-0` + space,
+			in: space + `-0` + space,
 			want: []R{
-				{T: json.Number, V: uint32(0)},
-				{T: json.EOF},
+				{V: Ui32{0}},
+				{V: EOF},
 			},
 		},
 		{
-			input: `-1`,
+			in: `-1`,
 			want: []R{
-				{T: json.Number, V: uint32(0), VE: `invalid syntax`},
-				{T: json.EOF},
+				{V: NotUi32},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds math.MaxUint32.
-			input: `4294967296`,
+			in: `4294967296`,
 			want: []R{
-				{T: json.Number, V: uint32(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotUi32},
+				{V: EOF},
 			},
 		},
 		{
 			// Exceeds math.MaxUint64.
-			input: `18446744073709551616`,
+			in: `18446744073709551616`,
 			want: []R{
-				{T: json.Number, V: uint64(0), VE: `value out of range`},
-				{T: json.EOF},
+				{V: NotUi64},
+				{V: EOF},
 			},
 		},
 
 		// JSON sequence of values.
 		{
-			input: `true null`,
+			in: `true null`,
 			want: []R{
-				{T: json.Bool, V: true},
-				{E: `unexpected value null`},
+				{V: Bool{true}},
+				{E: `(line 1:6): unexpected token null`},
 			},
 		},
 		{
-			input: "null false",
+			in: "null false",
 			want: []R{
-				{T: json.Null},
-				{E: `unexpected value false`},
+				{V: Null},
+				{E: `unexpected token false`},
 			},
 		},
 		{
-			input: `true,false`,
+			in: `true,false`,
 			want: []R{
-				{T: json.Bool, V: true},
-				{E: `unexpected character ,`},
+				{V: Bool{true}},
+				{E: `unexpected token ,`},
 			},
 		},
 		{
-			input: `47"hello"`,
+			in: `47"hello"`,
 			want: []R{
-				{T: json.Number, V: int32(47)},
-				{E: `unexpected value "hello"`},
+				{V: I32{47}},
+				{E: `unexpected token "hello"`},
 			},
 		},
 		{
-			input: `47 "hello"`,
+			in: `47 "hello"`,
 			want: []R{
-				{T: json.Number, V: int32(47)},
-				{E: `unexpected value "hello"`},
+				{V: I32{47}},
+				{E: `unexpected token "hello"`},
 			},
 		},
 		{
-			input: `true 42`,
+			in: `true 42`,
 			want: []R{
-				{T: json.Bool, V: true},
-				{E: `unexpected value 42`},
+				{V: Bool{true}},
+				{E: `unexpected token 42`},
 			},
 		},
 
 		// JSON arrays.
 		{
-			input: space + `[]` + space,
+			in: space + `[]` + space,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.EndArray},
-				{T: json.EOF},
+				{V: ArrayOpen},
+				{V: ArrayClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `[` + space + `]` + space,
+			in: space + `[` + space + `]` + space,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.EndArray},
-				{T: json.EOF},
+				{V: ArrayOpen, P: len(space), RS: `[`},
+				{V: ArrayClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `[` + space,
+			in: space + `[` + space,
 			want: []R{
-				{T: json.StartArray},
-				{E: `unexpected EOF`},
+				{V: ArrayOpen},
+				{E: errEOF},
 			},
 		},
 		{
-			input: space + `]` + space,
-			want:  []R{{E: `unexpected character ]`}},
+			in:   space + `]` + space,
+			want: []R{{E: `unexpected token ]`}},
 		},
 		{
-			input: `[null,true,false,  1e1, "hello"   ]`,
+			in: `[null,true,false,  1e1, "hello"   ]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.Null},
-				{T: json.Bool, V: true},
-				{T: json.Bool, V: false},
-				{T: json.Number, V: int32(10)},
-				{T: json.String, V: "hello"},
-				{T: json.EndArray},
-				{T: json.EOF},
+				{V: ArrayOpen},
+				{V: Null},
+				{V: Bool{true}},
+				{V: Bool{false}},
+				{V: I32{10}},
+				{V: Str{"hello"}},
+				{V: ArrayClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: `[` + space + `true` + space + `,` + space + `"hello"` + space + `]`,
+			in: `[` + space + `true` + space + `,` + space + `"hello"` + space + `]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.Bool, V: true},
-				{T: json.String, V: "hello"},
-				{T: json.EndArray},
-				{T: json.EOF},
+				{V: ArrayOpen},
+				{V: Bool{true}},
+				{V: Str{"hello"}},
+				{V: ArrayClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: `[` + space + `true` + space + `,` + space + `]`,
+			in: `[` + space + `true` + space + `,` + space + `]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.Bool, V: true},
-				{E: `unexpected character ]`},
+				{V: ArrayOpen},
+				{V: Bool{true}},
+				{E: `unexpected token ]`},
 			},
 		},
 		{
-			input: `[` + space + `false` + space + `]`,
+			in: `[` + space + `false` + space + `]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.Bool, V: false},
-				{T: json.EndArray},
-				{T: json.EOF},
+				{V: ArrayOpen},
+				{V: Bool{false}},
+				{V: ArrayClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: `[` + space + `1` + space + `0` + space + `]`,
+			in: `[` + space + `1` + space + `0` + space + `]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.Number, V: int64(1)},
-				{E: `unexpected value 0`},
+				{V: ArrayOpen},
+				{V: I64{1}},
+				{E: `unexpected token 0`},
 			},
 		},
 		{
-			input: `[null`,
+			in: `[null`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.Null},
-				{E: `unexpected EOF`},
+				{V: ArrayOpen},
+				{V: Null},
+				{E: errEOF},
 			},
 		},
 		{
-			input: `[foo]`,
+			in: `[foo]`,
 			want: []R{
-				{T: json.StartArray},
+				{V: ArrayOpen},
 				{E: `invalid value foo`},
 			},
 		},
 		{
-			input: `[{}, "hello", [true, false], null]`,
+			in: `[{}, "hello", [true, false], null]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.StartObject},
-				{T: json.EndObject},
-				{T: json.String, V: "hello"},
-				{T: json.StartArray},
-				{T: json.Bool, V: true},
-				{T: json.Bool, V: false},
-				{T: json.EndArray},
-				{T: json.Null},
-				{T: json.EndArray},
-				{T: json.EOF},
+				{V: ArrayOpen},
+				{V: ObjectOpen},
+				{V: ObjectClose},
+				{V: Str{"hello"}},
+				{V: ArrayOpen},
+				{V: Bool{true}},
+				{V: Bool{false}},
+				{V: ArrayClose},
+				{V: Null},
+				{V: ArrayClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: `[{ ]`,
+			in: `[{ ]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.StartObject},
-				{E: `unexpected character ]`},
+				{V: ArrayOpen},
+				{V: ObjectOpen},
+				{E: `unexpected token ]`},
 			},
 		},
 		{
-			input: `[[ ]`,
+			in: `[[ ]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.StartArray},
-				{T: json.EndArray},
-				{E: `unexpected EOF`},
+				{V: ArrayOpen},
+				{V: ArrayOpen},
+				{V: ArrayClose},
+				{E: errEOF},
 			},
 		},
 		{
-			input: `[,]`,
+			in: `[,]`,
 			want: []R{
-				{T: json.StartArray},
-				{E: `unexpected character ,`},
+				{V: ArrayOpen},
+				{E: `unexpected token ,`},
 			},
 		},
 		{
-			input: `[true "hello"]`,
+			in: `[true "hello"]`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.Bool, V: true},
-				{E: `unexpected value "hello"`},
+				{V: ArrayOpen},
+				{V: Bool{true}},
+				{E: `unexpected token "hello"`},
 			},
 		},
 		{
-			input: `[] null`,
+			in: `[] null`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.EndArray},
-				{E: `unexpected value null`},
+				{V: ArrayOpen},
+				{V: ArrayClose},
+				{E: `unexpected token null`},
 			},
 		},
 		{
-			input: `true []`,
+			in: `true []`,
 			want: []R{
-				{T: json.Bool, V: true},
-				{E: `unexpected character [`},
+				{V: Bool{true}},
+				{E: `unexpected token [`},
 			},
 		},
 
 		// JSON objects.
 		{
-			input: space + `{}` + space,
+			in: space + `{}` + space,
 			want: []R{
-				{T: json.StartObject},
-				{T: json.EndObject},
-				{T: json.EOF},
+				{V: ObjectOpen},
+				{V: ObjectClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `{` + space + `}` + space,
+			in: space + `{` + space + `}` + space,
 			want: []R{
-				{T: json.StartObject},
-				{T: json.EndObject},
-				{T: json.EOF},
+				{V: ObjectOpen},
+				{V: ObjectClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: space + `{` + space,
+			in: space + `{` + space,
 			want: []R{
-				{T: json.StartObject},
-				{E: `unexpected EOF`},
+				{V: ObjectOpen},
+				{E: errEOF},
 			},
 		},
 		{
-			input: space + `}` + space,
-			want:  []R{{E: `unexpected character }`}},
+			in:   space + `}` + space,
+			want: []R{{E: `unexpected token }`}},
 		},
 		{
-			input: `{` + space + `null` + space + `}`,
+			in: `{` + space + `null` + space + `}`,
 			want: []R{
-				{T: json.StartObject},
-				{E: `unexpected value null`},
+				{V: ObjectOpen},
+				{E: `unexpected token null`},
 			},
 		},
 		{
-			input: `{[]}`,
+			in: `{[]}`,
 			want: []R{
-				{T: json.StartObject},
-				{E: `unexpected character [`},
+				{V: ObjectOpen},
+				{E: `(line 1:2): unexpected token [`},
 			},
 		},
 		{
-			input: `{,}`,
+			in: `{,}`,
 			want: []R{
-				{T: json.StartObject},
-				{E: `unexpected character ,`},
+				{V: ObjectOpen},
+				{E: `unexpected token ,`},
 			},
 		},
 		{
-			input: `{"345678"}`,
+			in: `{"345678"}`,
 			want: []R{
-				{T: json.StartObject},
-				{E: `unexpected character }, missing ":" after object name`},
+				{V: ObjectOpen},
+				{E: `(line 1:10): unexpected character }, missing ":" after field name`},
 			},
 		},
 		{
-			input: `{` + space + `"hello"` + space + `:` + space + `"world"` + space + `}`,
+			in: `{` + space + `"hello"` + space + `:` + space + `"world"` + space + `}`,
 			want: []R{
-				{T: json.StartObject},
-				{T: json.Name, V: "hello"},
-				{T: json.String, V: "world"},
-				{T: json.EndObject},
-				{T: json.EOF},
+				{V: ObjectOpen},
+				{V: Name{"hello"}, P: len(space) + 1, RS: `"hello"`},
+				{V: Str{"world"}, RS: `"world"`},
+				{V: ObjectClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: `{"hello" "world"}`,
+			in: `{"hello" "world"}`,
 			want: []R{
-				{T: json.StartObject},
-				{E: `unexpected character ", missing ":" after object name`},
+				{V: ObjectOpen},
+				{E: `(line 1:10): unexpected character ", missing ":" after field name`},
 			},
 		},
 		{
-			input: `{"hello":`,
+			in: `{"hello":`,
 			want: []R{
-				{T: json.StartObject},
-				{T: json.Name, V: "hello"},
-				{E: `unexpected EOF`},
+				{V: ObjectOpen},
+				{V: Name{"hello"}},
+				{E: errEOF},
 			},
 		},
 		{
-			input: `{"hello":"world"`,
+			in: `{"hello":"world"`,
 			want: []R{
-				{T: json.StartObject},
-				{T: json.Name, V: "hello"},
-				{T: json.String, V: "world"},
-				{E: `unexpected EOF`},
+				{V: ObjectOpen},
+				{V: Name{"hello"}},
+				{V: Str{"world"}},
+				{E: errEOF},
 			},
 		},
 		{
-			input: `{"hello":"world",`,
+			in: `{"hello":"world",`,
 			want: []R{
-				{T: json.StartObject},
-				{T: json.Name, V: "hello"},
-				{T: json.String, V: "world"},
-				{E: `unexpected EOF`},
+				{V: ObjectOpen},
+				{V: Name{"hello"}},
+				{V: Str{"world"}},
+				{E: errEOF},
 			},
 		},
 		{
-			input: `{""`,
+			in: `{""`,
 			want: []R{
-				{T: json.StartObject},
-				{E: `syntax error (line 1:4): unexpected EOF`},
+				{V: ObjectOpen},
+				{E: errEOF},
 			},
 		},
 		{
-			input: `{"34":"89",}`,
+			in: `{"34":"89",}`,
 			want: []R{
-				{T: json.StartObject},
-				{T: json.Name, V: "34"},
-				{T: json.String, V: "89"},
-				{E: `syntax error (line 1:12): unexpected character }`},
+				{V: ObjectOpen},
+				{V: Name{"34"}, RS: `"34"`},
+				{V: Str{"89"}},
+				{E: `syntax error (line 1:12): unexpected token }`},
 			},
 		},
 		{
-			input: `{
-  "number": 123e2,
-  "bool"  : false,
-  "object": {"string": "world"},
-  "null"  : null,
-  "array" : [1.01, "hello", true],
-  "string": "hello"
-}`,
+			in: `{
+			  "number": 123e2,
+			  "bool"  : false,
+			  "object": {"string": "world"},
+			  "null"  : null,
+			  "array" : [1.01, "hello", true],
+			  "string": "hello"
+			}`,
 			want: []R{
-				{T: json.StartObject},
+				{V: ObjectOpen},
 
-				{T: json.Name, V: "number"},
-				{T: json.Number, V: int32(12300)},
+				{V: Name{"number"}},
+				{V: I32{12300}},
 
-				{T: json.Name, V: "bool"},
-				{T: json.Bool, V: false},
+				{V: Name{"bool"}},
+				{V: Bool{false}},
 
-				{T: json.Name, V: "object"},
-				{T: json.StartObject},
-				{T: json.Name, V: "string"},
-				{T: json.String, V: "world"},
-				{T: json.EndObject},
+				{V: Name{"object"}},
+				{V: ObjectOpen},
+				{V: Name{"string"}},
+				{V: Str{"world"}},
+				{V: ObjectClose},
 
-				{T: json.Name, V: "null"},
-				{T: json.Null},
+				{V: Name{"null"}},
+				{V: Null},
 
-				{T: json.Name, V: "array"},
-				{T: json.StartArray},
-				{T: json.Number, V: float32(1.01)},
-				{T: json.String, V: "hello"},
-				{T: json.Bool, V: true},
-				{T: json.EndArray},
+				{V: Name{"array"}},
+				{V: ArrayOpen},
+				{V: F32{1.01}},
+				{V: Str{"hello"}},
+				{V: Bool{true}},
+				{V: ArrayClose},
 
-				{T: json.Name, V: "string"},
-				{T: json.String, V: "hello"},
+				{V: Name{"string"}},
+				{V: Str{"hello"}},
 
-				{T: json.EndObject},
-				{T: json.EOF},
+				{V: ObjectClose},
+				{V: EOF},
 			},
 		},
 		{
-			input: `[
-  {"object": {"number": 47}},
-  ["list"],
-  null
-]`,
+			in: `[
+			  {"object": {"number": 47}},
+			  ["list"],
+			  null
+			]`,
 			want: []R{
-				{T: json.StartArray},
+				{V: ArrayOpen},
 
-				{T: json.StartObject},
-				{T: json.Name, V: "object"},
-				{T: json.StartObject},
-				{T: json.Name, V: "number"},
-				{T: json.Number, V: uint32(47)},
-				{T: json.EndObject},
-				{T: json.EndObject},
+				{V: ObjectOpen},
+				{V: Name{"object"}},
+				{V: ObjectOpen},
+				{V: Name{"number"}},
+				{V: I32{47}},
+				{V: ObjectClose},
+				{V: ObjectClose},
 
-				{T: json.StartArray},
-				{T: json.String, V: "list"},
-				{T: json.EndArray},
+				{V: ArrayOpen},
+				{V: Str{"list"}},
+				{V: ArrayClose},
 
-				{T: json.Null},
+				{V: Null},
 
-				{T: json.EndArray},
-				{T: json.EOF},
+				{V: ArrayClose},
+				{V: EOF},
 			},
 		},
 
 		// Tests for line and column info.
 		{
-			input: `12345678 x`,
+			in: `12345678 x`,
 			want: []R{
-				{T: json.Number, V: int64(12345678)},
+				{V: I64{12345678}},
 				{E: `syntax error (line 1:10): invalid value x`},
 			},
 		},
 		{
-			input: "\ntrue\n   x",
+			in: "\ntrue\n   x",
 			want: []R{
-				{T: json.Bool, V: true},
+				{V: Bool{true}},
 				{E: `syntax error (line 3:4): invalid value x`},
 			},
 		},
 		{
-			input: `"💩"x`,
+			in: `"💩"x`,
 			want: []R{
-				{T: json.String, V: "💩"},
+				{V: Str{"💩"}},
 				{E: `syntax error (line 1:4): invalid value x`},
 			},
 		},
 		{
-			input: "\n\n[\"🔥🔥🔥\"x",
+			in: "\n\n[\"🔥🔥🔥\"x",
 			want: []R{
-				{T: json.StartArray},
-				{T: json.String, V: "🔥🔥🔥"},
+				{V: ArrayOpen},
+				{V: Str{"🔥🔥🔥"}},
 				{E: `syntax error (line 3:7): invalid value x`},
 			},
 		},
 		{
 			// Multi-rune emojis.
-			input: `["👍🏻👍🏿"x`,
+			in: `["👍🏻👍🏿"x`,
 			want: []R{
-				{T: json.StartArray},
-				{T: json.String, V: "👍🏻👍🏿"},
+				{V: ArrayOpen},
+				{V: Str{"👍🏻👍🏿"}},
 				{E: `syntax error (line 1:8): invalid value x`},
-			},
-		},
-		{
-			input: `{
-  "45678":-1
-}`,
-			want: []R{
-				{T: json.StartObject},
-				{T: json.Name, V: "45678"},
-				{T: json.Number, V: uint64(1), VE: "error (line 2:11)"},
 			},
 		},
 	}
@@ -1033,85 +1314,68 @@ func TestDecoder(t *testing.T) {
 	for _, tc := range tests {
 		tc := tc
 		t.Run("", func(t *testing.T) {
-			dec := json.NewDecoder([]byte(tc.input))
+			dec := json.NewDecoder([]byte(tc.in))
 			for i, want := range tc.want {
-				typ := dec.Peek()
-				if typ != want.T {
-					t.Errorf("input: %v\nPeek() got %v want %v", tc.input, typ, want.T)
-				}
-				value, err := dec.Read()
+				peekTok, peekErr := dec.Peek()
+				tok, err := dec.Read()
 				if err != nil {
 					if want.E == "" {
-						t.Errorf("input: %v\nRead() got unexpected error: %v", tc.input, err)
-
+						errorf(t, tc.in, "want#%d: Read() got unexpected error: %v", i, err)
 					} else if !strings.Contains(err.Error(), want.E) {
-						t.Errorf("input: %v\nRead() got %q, want %q", tc.input, err, want.E)
+						errorf(t, tc.in, "want#%d: Read() got %q, want %q", i, err, want.E)
 					}
-				} else {
-					if want.E != "" {
-						t.Errorf("input: %v\nRead() got nil error, want %q", tc.input, want.E)
-					}
+					return
 				}
-				token := value.Type()
-				if token != want.T {
-					t.Errorf("input: %v\nRead() got %v, want %v", tc.input, token, want.T)
-					break
+				if want.E != "" {
+					errorf(t, tc.in, "want#%d: Read() got nil error, want %q", i, want.E)
+					return
 				}
-				checkValue(t, value, i, want)
+				checkToken(t, tok, i, want, tc.in)
+				if !cmp.Equal(tok, peekTok, cmp.Comparer(json.TokenEquals)) {
+					errorf(t, tc.in, "want#%d: Peek() %+v != Read() token %+v", i, peekTok, tok)
+				}
+				if err != peekErr {
+					errorf(t, tc.in, "want#%d: Peek() error %v != Read() error %v", i, err, peekErr)
+				}
 			}
 		})
 	}
 }
 
-func checkValue(t *testing.T, value json.Value, wantIdx int, want R) {
-	var got interface{}
-	var err error
-	switch value.Type() {
-	case json.Bool:
-		got, err = value.Bool()
-	case json.String:
-		got = value.String()
-	case json.Name:
-		got, err = value.Name()
-	case json.Number:
-		switch want.V.(type) {
-		case float32:
-			got, err = value.Float(32)
-			got = float32(got.(float64))
-		case float64:
-			got, err = value.Float(64)
-		case int32:
-			got, err = value.Int(32)
-			got = int32(got.(int64))
-		case int64:
-			got, err = value.Int(64)
-		case uint32:
-			got, err = value.Uint(32)
-			got = uint32(got.(uint64))
-		case uint64:
-			got, err = value.Uint(64)
+func checkToken(t *testing.T, tok json.Token, idx int, r R, in string) {
+	// Validate Token.Pos() if R.P is set.
+	if r.P > 0 {
+		got := tok.Pos()
+		if got != r.P {
+			errorf(t, in, "want#%d: Token.Pos() got %v want %v", idx, got, r.P)
 		}
-	default:
-		return
 	}
-
-	if err != nil {
-		if want.VE == "" {
-			t.Errorf("want%d: %v got unexpected error: %v", wantIdx, value, err)
-		} else if !strings.Contains(err.Error(), want.VE) {
-			t.Errorf("want#%d: %v got %q, want %q", wantIdx, value, err, want.VE)
-		}
-		return
-	} else {
-		if want.VE != "" {
-			t.Errorf("want#%d: %v got nil error, want %q", wantIdx, value, want.VE)
-			return
+	// Validate Token.RawString if R.RS is set.
+	if len(r.RS) > 0 {
+		got := tok.RawString()
+		if got != r.RS {
+			errorf(t, in, "want#%d: Token.RawString() got %v want %v", idx, got, r.P)
 		}
 	}
 
-	if got != want.V {
-		t.Errorf("want#%d: %v got %v, want %v", wantIdx, value, got, want.V)
+	// Skip checking for Token details if r.V is not set.
+	if r.V == nil {
+		return
 	}
+
+	if err := r.V.check(tok); err != "" {
+		errorf(t, in, "want#%d: %s", idx, err)
+	}
+	return
+}
+
+func errorf(t *testing.T, in string, fmtStr string, args ...interface{}) {
+	t.Helper()
+	vargs := []interface{}{in}
+	for _, arg := range args {
+		vargs = append(vargs, arg)
+	}
+	t.Errorf("input:\n%s\n~end~\n"+fmtStr, vargs...)
 }
 
 func TestClone(t *testing.T) {
@@ -1123,7 +1387,7 @@ func TestClone(t *testing.T) {
 	compareDecoders(t, dec, clone)
 
 	// Advance to inner object, clone and compare again.
-	dec.Read() // Read StartObject.
+	dec.Read() // Read ObjectOpen.
 	dec.Read() // Read Name.
 	clone = dec.Clone()
 	compareDecoders(t, dec, clone)
@@ -1131,18 +1395,18 @@ func TestClone(t *testing.T) {
 
 func compareDecoders(t *testing.T, d1 *json.Decoder, d2 *json.Decoder) {
 	for {
-		v1, err1 := d1.Read()
-		v2, err2 := d2.Read()
-		if v1.Type() != v2.Type() {
-			t.Errorf("cloned decoder: got Type %v, want %v", v2.Type(), v1.Type())
+		tok1, err1 := d1.Read()
+		tok2, err2 := d2.Read()
+		if tok1.Kind() != tok2.Kind() {
+			t.Errorf("cloned decoder: got Kind %v, want %v", tok2.Kind(), tok1.Kind())
 		}
-		if v1.Raw() != v2.Raw() {
-			t.Errorf("cloned decoder: got Raw %v, want %v", v2.Raw(), v1.Raw())
+		if tok1.RawString() != tok2.RawString() {
+			t.Errorf("cloned decoder: got RawString %v, want %v", tok2.RawString(), tok1.RawString())
 		}
 		if err1 != err2 {
 			t.Errorf("cloned decoder: got error %v, want %v", err2, err1)
 		}
-		if v1.Type() == json.EOF {
+		if tok1.Kind() == json.EOF {
 			break
 		}
 	}

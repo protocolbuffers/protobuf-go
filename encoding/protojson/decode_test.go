@@ -6,9 +6,11 @@ package protojson_test
 
 import (
 	"math"
+	"strings"
 	"testing"
 
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
@@ -33,9 +35,8 @@ func TestUnmarshal(t *testing.T) {
 		inputMessage proto.Message
 		inputText    string
 		wantMessage  proto.Message
-		// TODO: verify expected error message substring.
-		wantErr bool
-		skip    bool
+		wantErr      string // Expected error substring.
+		skip         bool
 	}{{
 		desc:         "proto2 empty message",
 		inputMessage: &pb2.Scalars{},
@@ -45,7 +46,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "unexpected value instead of EOF",
 		inputMessage: &pb2.Scalars{},
 		inputText:    "{} {}",
-		wantErr:      true,
+		wantErr:      `(line 1:4): unexpected token {`,
 	}, {
 		desc:         "proto2 optional scalars set to zero values",
 		inputMessage: &pb2.Scalars{},
@@ -157,7 +158,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "not boolean",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sBool": "true"}`,
-		wantErr:      true,
+		wantErr:      `invalid value for bool type: "true"`,
 	}, {
 		desc:         "float and double",
 		inputMessage: &pb3.Scalars{},
@@ -206,22 +207,22 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "float exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sFloat": 3.4e39}`,
-		wantErr:      true,
+		wantErr:      `invalid value for float type: 3.4e39`,
 	}, {
 		desc:         "float in string exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sFloat": "-3.4e39"}`,
-		wantErr:      true,
+		wantErr:      `invalid value for float type: "-3.4e39"`,
 	}, {
 		desc:         "double exceeds limit",
 		inputMessage: &pb3.Scalars{},
-		inputText:    `{"sFloat": -1.79e+309}`,
-		wantErr:      true,
+		inputText:    `{"sDouble": -1.79e+309}`,
+		wantErr:      `invalid value for double type: -1.79e+309`,
 	}, {
 		desc:         "double in string exceeds limit",
 		inputMessage: &pb3.Scalars{},
-		inputText:    `{"sFloat": "1.79e+309"}`,
-		wantErr:      true,
+		inputText:    `{"sDouble": "1.79e+309"}`,
+		wantErr:      `invalid value for double type: "1.79e+309"`,
 	}, {
 		desc:         "infinites",
 		inputMessage: &pb3.Scalars{},
@@ -234,22 +235,22 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "float string with leading space",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sFloat": " 1.234"}`,
-		wantErr:      true,
+		wantErr:      `invalid value for float type: " 1.234"`,
 	}, {
 		desc:         "double string with trailing space",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sDouble": "5.678 "}`,
-		wantErr:      true,
+		wantErr:      `invalid value for double type: "5.678 "`,
 	}, {
 		desc:         "not float",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sFloat": true}`,
-		wantErr:      true,
+		wantErr:      `invalid value for float type: true`,
 	}, {
 		desc:         "not double",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sDouble": "not a number"}`,
-		wantErr:      true,
+		wantErr:      `invalid value for double type: "not a number"`,
 	}, {
 		desc:         "integers",
 		inputMessage: &pb3.Scalars{},
@@ -315,42 +316,42 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "integer string with leading space",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sInt32": " 1234"}`,
-		wantErr:      true,
+		wantErr:      `invalid value for int32 type: " 1234"`,
 	}, {
 		desc:         "integer string with trailing space",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sUint32": "1e2 "}`,
-		wantErr:      true,
+		wantErr:      `invalid value for uint32 type: "1e2 "`,
 	}, {
 		desc:         "number is not an integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sInt32": 1.001}`,
-		wantErr:      true,
+		wantErr:      `invalid value for int32 type: 1.001`,
 	}, {
 		desc:         "32-bit int exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sInt32": 2e10}`,
-		wantErr:      true,
+		wantErr:      `invalid value for int32 type: 2e10`,
 	}, {
 		desc:         "64-bit int exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sSfixed64": -9e19}`,
-		wantErr:      true,
+		wantErr:      `invalid value for sfixed64 type: -9e19`,
 	}, {
 		desc:         "not integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sInt32": "not a number"}`,
-		wantErr:      true,
+		wantErr:      `invalid value for int32 type: "not a number"`,
 	}, {
 		desc:         "not unsigned integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sUint32": "not a number"}`,
-		wantErr:      true,
+		wantErr:      `invalid value for uint32 type: "not a number"`,
 	}, {
 		desc:         "number is not an unsigned integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sUint32": -1}`,
-		wantErr:      true,
+		wantErr:      `invalid value for uint32 type: -1`,
 	}, {
 		desc:         "string",
 		inputMessage: &pb2.Scalars{},
@@ -362,12 +363,12 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "string with invalid UTF-8",
 		inputMessage: &pb3.Scalars{},
 		inputText:    "{\"sString\": \"\xff\"}",
-		wantErr:      true,
+		wantErr:      `(line 1:13): invalid UTF-8 in string`,
 	}, {
 		desc:         "not string",
 		inputMessage: &pb2.Scalars{},
 		inputText:    `{"optString": 42}`,
-		wantErr:      true,
+		wantErr:      `invalid value for string type: 42`,
 	}, {
 		desc:         "bytes",
 		inputMessage: &pb3.Scalars{},
@@ -386,7 +387,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "not bytes",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sBytes": true}`,
-		wantErr:      true,
+		wantErr:      `invalid value for bytes type: true`,
 	}, {
 		desc:         "proto2 enum",
 		inputMessage: &pb2.Enums{},
@@ -437,21 +438,21 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "sEnum": "1"
 }`,
-		wantErr: true,
+		wantErr: `invalid value for enum type: "1"`,
 	}, {
 		desc:         "enum set to invalid named",
 		inputMessage: &pb3.Enums{},
 		inputText: `{
   "sEnum": "UNNAMED"
 }`,
-		wantErr: true,
+		wantErr: `invalid value for enum type: "UNNAMED"`,
 	}, {
 		desc:         "enum set to not enum",
 		inputMessage: &pb3.Enums{},
 		inputText: `{
   "sEnum": true
 }`,
-		wantErr: true,
+		wantErr: `invalid value for enum type: true`,
 	}, {
 		desc:         "enum set to JSON null",
 		inputMessage: &pb3.Enums{},
@@ -494,7 +495,7 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "sString": "camelcase used"
 }`,
-		wantErr: true,
+		wantErr: `unknown field "sString"`,
 	}, {
 		desc:         "proto name and json_name",
 		inputMessage: &pb3.JSONNames{},
@@ -502,7 +503,7 @@ func TestUnmarshal(t *testing.T) {
   "foo_bar": "json_name used",
   "s_string": "proto name used"
 }`,
-		wantErr: true,
+		wantErr: `(line 3:3): duplicate field "s_string"`,
 	}, {
 		desc:         "duplicate field names",
 		inputMessage: &pb3.JSONNames{},
@@ -510,12 +511,12 @@ func TestUnmarshal(t *testing.T) {
   "foo_bar": "one",
   "foo_bar": "two",
 }`,
-		wantErr: true,
+		wantErr: `(line 3:3): duplicate field "foo_bar"`,
 	}, {
 		desc:         "null message",
 		inputMessage: &pb2.Nests{},
 		inputText:    "null",
-		wantErr:      true,
+		wantErr:      `unexpected token null`,
 	}, {
 		desc:         "proto2 nested message not set",
 		inputMessage: &pb2.Nests{},
@@ -624,12 +625,12 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "message set to non-message",
 		inputMessage: &pb3.Nests{},
 		inputText:    `"not valid"`,
-		wantErr:      true,
+		wantErr:      `unexpected token "not valid"`,
 	}, {
 		desc:         "nested message set to non-message",
 		inputMessage: &pb3.Nests{},
 		inputText:    `{"sNested": true}`,
-		wantErr:      true,
+		wantErr:      `(line 1:13): unexpected token true`,
 	}, {
 		desc:         "oneof not set",
 		inputMessage: &pb3.Oneofs{},
@@ -691,7 +692,7 @@ func TestUnmarshal(t *testing.T) {
   "oneofEnum": "ZERO",
   "oneofString": "hello"
 }`,
-		wantErr: true,
+		wantErr: `(line 3:3): error parsing "oneofString", oneof pb3.Oneofs.union is already set`,
 	}, {
 		desc:         "oneof set to null and value",
 		inputMessage: &pb3.Oneofs{},
@@ -793,22 +794,22 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "repeated string contains invalid UTF8",
 		inputMessage: &pb2.Repeats{},
 		inputText:    `{"rptString": ["` + "abc\xff" + `"]}`,
-		wantErr:      true,
+		wantErr:      `invalid UTF-8`,
 	}, {
 		desc:         "repeated messages contain invalid UTF8",
 		inputMessage: &pb2.Nests{},
 		inputText:    `{"rptNested": [{"optString": "` + "abc\xff" + `"}]}`,
-		wantErr:      true,
+		wantErr:      `invalid UTF-8`,
 	}, {
 		desc:         "repeated scalars contain invalid type",
 		inputMessage: &pb2.Repeats{},
 		inputText:    `{"rptString": ["hello", null, "world"]}`,
-		wantErr:      true,
+		wantErr:      `invalid value for string type: null`,
 	}, {
 		desc:         "repeated messages contain invalid type",
 		inputMessage: &pb2.Nests{},
 		inputText:    `{"rptNested": [{}, null]}`,
-		wantErr:      true,
+		wantErr:      `unexpected token null`,
 	}, {
 		desc:         "map fields 1",
 		inputMessage: &pb3.Maps{},
@@ -907,11 +908,11 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "int32ToStr": {
     "0": "cero",
-	"0": "zero"
+    "0": "zero"
   }
 }
 `,
-		wantErr: true,
+		wantErr: `(line 4:5): duplicate map key "0"`,
 	}, {
 		desc:         "map key empty string",
 		inputMessage: &pb3.Maps{},
@@ -931,24 +932,27 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "int32ToStr": {
     "invalid": "cero"
+  }
 }`,
-		wantErr: true,
+		wantErr: `invalid value for int32 key: "invalid"`,
 	}, {
 		desc:         "map contains invalid key 2",
 		inputMessage: &pb3.Maps{},
 		inputText: `{
   "int32ToStr": {
     "1.02": "float"
+  }
 }`,
-		wantErr: true,
+		wantErr: `invalid value for int32 key: "1.02"`,
 	}, {
 		desc:         "map contains invalid key 3",
 		inputMessage: &pb3.Maps{},
 		inputText: `{
   "int32ToStr": {
     "2147483648": "exceeds 32-bit integer max limit"
+  }
 }`,
-		wantErr: true,
+		wantErr: `invalid value for int32 key: "2147483648"`,
 	}, {
 		desc:         "map contains invalid key 4",
 		inputMessage: &pb3.Maps{},
@@ -957,7 +961,7 @@ func TestUnmarshal(t *testing.T) {
     "-1": 0
   }
 }`,
-		wantErr: true,
+		wantErr: `invalid value for uint64 key: "-1"`,
 	}, {
 		desc:         "map contains invalid value",
 		inputMessage: &pb3.Maps{},
@@ -965,7 +969,7 @@ func TestUnmarshal(t *testing.T) {
   "int32ToStr": {
     "101": true
 }`,
-		wantErr: true,
+		wantErr: `invalid value for string type: true`,
 	}, {
 		desc:         "map contains null for scalar value",
 		inputMessage: &pb3.Maps{},
@@ -973,7 +977,7 @@ func TestUnmarshal(t *testing.T) {
   "int32ToStr": {
     "101": null
 }`,
-		wantErr: true,
+		wantErr: `invalid value for string type: null`,
 	}, {
 		desc:         "map contains null for message value",
 		inputMessage: &pb3.Maps{},
@@ -982,7 +986,7 @@ func TestUnmarshal(t *testing.T) {
     "hello": null
   }
 }`,
-		wantErr: true,
+		wantErr: `unexpected token null`,
 	}, {
 		desc:         "map contains contains message value with invalid UTF8",
 		inputMessage: &pb3.Maps{},
@@ -993,7 +997,7 @@ func TestUnmarshal(t *testing.T) {
 	}
   }
 }`,
-		wantErr: true,
+		wantErr: `invalid UTF-8`,
 	}, {
 		desc:         "map key contains invalid UTF8",
 		inputMessage: &pb3.Maps{},
@@ -1002,11 +1006,12 @@ func TestUnmarshal(t *testing.T) {
     "` + "abc\xff" + `": {}
   }
 }`,
-		wantErr: true,
+		wantErr: `invalid UTF-8`,
 	}, {
 		desc:         "required fields not set",
 		inputMessage: &pb2.Requireds{},
-		wantErr:      true,
+		inputText:    `{}`,
+		wantErr:      errors.RequiredNotSet("pb2.Requireds.req_bool").Error(),
 	}, {
 		desc:         "required field set",
 		inputMessage: &pb2.PartialRequired{},
@@ -1031,7 +1036,7 @@ func TestUnmarshal(t *testing.T) {
 			ReqString:   proto.String("hello"),
 			ReqEnum:     pb2.Enum_ONE.Enum(),
 		},
-		wantErr: true,
+		wantErr: errors.RequiredNotSet("pb2.Requireds.req_double").Error(),
 	}, {
 		desc:         "required fields partially set with AllowPartial",
 		umo:          protojson.UnmarshalOptions{AllowPartial: true},
@@ -1076,7 +1081,7 @@ func TestUnmarshal(t *testing.T) {
 		wantMessage: &pb2.IndirectRequired{
 			OptNested: &pb2.NestedWithRequired{},
 		},
-		wantErr: true,
+		wantErr: errors.RequiredNotSet("pb2.NestedWithRequired.req_string").Error(),
 	}, {
 		desc:         "indirect required field with AllowPartial",
 		umo:          protojson.UnmarshalOptions{AllowPartial: true},
@@ -1104,7 +1109,7 @@ func TestUnmarshal(t *testing.T) {
 				{},
 			},
 		},
-		wantErr: true,
+		wantErr: errors.RequiredNotSet("pb2.NestedWithRequired.req_string").Error(),
 	}, {
 		desc:         "indirect required field in repeated with AllowPartial",
 		umo:          protojson.UnmarshalOptions{AllowPartial: true},
@@ -1142,7 +1147,7 @@ func TestUnmarshal(t *testing.T) {
 				},
 			},
 		},
-		wantErr: true,
+		wantErr: errors.RequiredNotSet("pb2.NestedWithRequired.req_string").Error(),
 	}, {
 		desc:         "indirect required field in map with AllowPartial",
 		umo:          protojson.UnmarshalOptions{AllowPartial: true},
@@ -1174,7 +1179,7 @@ func TestUnmarshal(t *testing.T) {
 				OneofNested: &pb2.NestedWithRequired{},
 			},
 		},
-		wantErr: true,
+		wantErr: errors.RequiredNotSet("pb2.NestedWithRequired.req_string").Error(),
 	}, {
 		desc:         "indirect required field in oneof with AllowPartial",
 		umo:          protojson.UnmarshalOptions{AllowPartial: true},
@@ -1305,18 +1310,18 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "invalid extension field name",
 		inputMessage: &pb2.Extensions{},
 		inputText:    `{ "[pb2.invalid_message_field]": true }`,
-		wantErr:      true,
+		wantErr:      `(line 1:3): unknown field "[pb2.invalid_message_field]"`,
 	}, {
 		desc:         "extensions of repeated field contains null",
 		inputMessage: &pb2.Extensions{},
 		inputText: `{
   "[pb2.ExtensionsContainer.rpt_ext_nested]": [
     {"optString": "one"},
-	null,
+    null,
     {"optString": "three"}
   ],
 }`,
-		wantErr: true,
+		wantErr: `(line 4:5): unexpected token null`,
 	}, {
 		desc:         "MessageSet",
 		inputMessage: &pb2.MessageSet{},
@@ -1369,7 +1374,7 @@ func TestUnmarshal(t *testing.T) {
     "optString": "not a messageset extension"
   }
 }`,
-		wantErr: true,
+		wantErr: `unknown field "[pb2.FakeMessageSetExtension]"`,
 		skip:    !flags.ProtoLegacy,
 	}, {
 		desc:         "not real MessageSet 3",
@@ -1396,7 +1401,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "Empty contains unknown",
 		inputMessage: &emptypb.Empty{},
 		inputText:    `{"unknown": null}`,
-		wantErr:      true,
+		wantErr:      `unknown field "unknown"`,
 	}, {
 		desc:         "BoolValue false",
 		inputMessage: &wrapperspb.BoolValue{},
@@ -1411,7 +1416,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "BoolValue invalid value",
 		inputMessage: &wrapperspb.BoolValue{},
 		inputText:    `{}`,
-		wantErr:      true,
+		wantErr:      `invalid value for bool type: {`,
 	}, {
 		desc:         "Int32Value",
 		inputMessage: &wrapperspb.Int32Value{},
@@ -1445,8 +1450,8 @@ func TestUnmarshal(t *testing.T) {
 	}, {
 		desc:         "FloatValue exceeds max limit",
 		inputMessage: &wrapperspb.FloatValue{},
-		inputText:    `1.23+40`,
-		wantErr:      true,
+		inputText:    `1.23e+40`,
+		wantErr:      `invalid value for float type: 1.23e+40`,
 	}, {
 		desc:         "FloatValue Infinity",
 		inputMessage: &wrapperspb.FloatValue{},
@@ -1476,12 +1481,12 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "StringValue with invalid UTF8 error",
 		inputMessage: &wrapperspb.StringValue{},
 		inputText:    "\"abc\xff\"",
-		wantErr:      true,
+		wantErr:      `invalid UTF-8`,
 	}, {
 		desc:         "StringValue field with invalid UTF8 error",
 		inputMessage: &pb2.KnownTypes{},
 		inputText:    "{\n  \"optString\": \"abc\xff\"\n}",
-		wantErr:      true,
+		wantErr:      `invalid UTF-8`,
 	}, {
 		desc:         "NullValue field with JSON null",
 		inputMessage: &pb2.KnownTypes{},
@@ -1552,7 +1557,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "Value string with invalid UTF8",
 		inputMessage: &structpb.Value{},
 		inputText:    "\"\xff\"",
-		wantErr:      true,
+		wantErr:      `invalid UTF-8`,
 	}, {
 		desc:         "Value field string",
 		inputMessage: &pb2.KnownTypes{},
@@ -1568,7 +1573,7 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "optValue": "` + "\xff" + `"
 }`,
-		wantErr: true,
+		wantErr: `invalid UTF-8`,
 	}, {
 		desc:         "Value empty struct",
 		inputMessage: &structpb.Value{},
@@ -1619,7 +1624,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "Value struct with invalid UTF8 string",
 		inputMessage: &structpb.Value{},
 		inputText:    "{\"string\": \"abc\xff\"}",
-		wantErr:      true,
+		wantErr:      `invalid UTF-8`,
 	}, {
 		desc:         "Value field struct",
 		inputMessage: &pb2.KnownTypes{},
@@ -1693,19 +1698,19 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "Value list with invalid UTF8 string",
 		inputMessage: &structpb.Value{},
 		inputText:    "[\"abc\xff\"]",
-		wantErr:      true,
+		wantErr:      `invalid UTF-8`,
 	}, {
 		desc:         "Value field list with invalid UTF8 string",
 		inputMessage: &pb2.KnownTypes{},
 		inputText: `{
   "optValue": [ "` + "abc\xff" + `"]
 }`,
-		wantErr: true,
+		wantErr: `(line 2:17): invalid UTF-8`,
 	}, {
 		desc:         "Duration empty string",
 		inputMessage: &durationpb.Duration{},
 		inputText:    `""`,
-		wantErr:      true,
+		wantErr:      `invalid google.protobuf.Duration value ""`,
 	}, {
 		desc:         "Duration with secs",
 		inputMessage: &durationpb.Duration{},
@@ -1780,37 +1785,37 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "Duration with +secs out of range",
 		inputMessage: &durationpb.Duration{},
 		inputText:    `"315576000001s"`,
-		wantErr:      true,
+		wantErr:      `google.protobuf.Duration value out of range: "315576000001s"`,
 	}, {
 		desc:         "Duration with -secs out of range",
 		inputMessage: &durationpb.Duration{},
 		inputText:    `"-315576000001s"`,
-		wantErr:      true,
+		wantErr:      `google.protobuf.Duration value out of range: "-315576000001s"`,
 	}, {
 		desc:         "Duration with nanos beyond 9 digits",
 		inputMessage: &durationpb.Duration{},
 		inputText:    `"0.1000000000s"`,
-		wantErr:      true,
+		wantErr:      `invalid google.protobuf.Duration value "0.1000000000s"`,
 	}, {
 		desc:         "Duration without suffix s",
 		inputMessage: &durationpb.Duration{},
 		inputText:    `"123"`,
-		wantErr:      true,
+		wantErr:      `invalid google.protobuf.Duration value "123"`,
 	}, {
 		desc:         "Duration invalid signed fraction",
 		inputMessage: &durationpb.Duration{},
 		inputText:    `"123.+123s"`,
-		wantErr:      true,
+		wantErr:      `invalid google.protobuf.Duration value "123.+123s"`,
 	}, {
 		desc:         "Duration invalid multiple .",
 		inputMessage: &durationpb.Duration{},
 		inputText:    `"123.123.s"`,
-		wantErr:      true,
+		wantErr:      `invalid google.protobuf.Duration value "123.123.s"`,
 	}, {
 		desc:         "Duration invalid integer",
 		inputMessage: &durationpb.Duration{},
 		inputText:    `"01s"`,
-		wantErr:      true,
+		wantErr:      `invalid google.protobuf.Duration value "01s"`,
 	}, {
 		desc:         "Timestamp zero",
 		inputMessage: &timestamppb.Timestamp{},
@@ -1845,7 +1850,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "Timestamp above max value",
 		inputMessage: &timestamppb.Timestamp{},
 		inputText:    `"9999-12-31T23:59:59-01:00"`,
-		wantErr:      true,
+		wantErr:      `google.protobuf.Timestamp value out of range: "9999-12-31T23:59:59-01:00"`,
 	}, {
 		desc:         "Timestamp min value",
 		inputMessage: &timestamppb.Timestamp{},
@@ -1855,12 +1860,12 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "Timestamp below min value",
 		inputMessage: &timestamppb.Timestamp{},
 		inputText:    `"0001-01-01T00:00:00+01:00"`,
-		wantErr:      true,
+		wantErr:      `google.protobuf.Timestamp value out of range: "0001-01-01T00:00:00+01:00"`,
 	}, {
 		desc:         "Timestamp with nanos beyond 9 digits",
 		inputMessage: &timestamppb.Timestamp{},
 		inputText:    `"1970-01-01T00:00:00.0000000001Z"`,
-		wantErr:      true,
+		wantErr:      `invalid google.protobuf.Timestamp value`,
 	}, {
 		desc:         "FieldMask empty",
 		inputMessage: &fieldmaskpb.FieldMask{},
@@ -1933,7 +1938,7 @@ func TestUnmarshal(t *testing.T) {
 		umo:          protojson.UnmarshalOptions{Resolver: new(preg.Types)},
 		inputMessage: &anypb.Any{},
 		inputText:    `{"@type": "foo/pb2.Nested"}`,
-		wantErr:      true,
+		wantErr:      `(line 1:11): unable to resolve "foo/pb2.Nested":`,
 	}, {
 		desc:         "Any with missing required",
 		inputMessage: &anypb.Any{},
@@ -1990,7 +1995,7 @@ func TestUnmarshal(t *testing.T) {
   "optString": "` + "abc\xff" + `",
   "@type": "foo/pb2.Nested"
 }`,
-		wantErr: true,
+		wantErr: `(line 2:16): invalid UTF-8`,
 	}, {
 		desc:         "Any with BoolValue",
 		inputMessage: &anypb.Any{},
@@ -2025,7 +2030,7 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "@type": "type.googleapis.com/google.protobuf.Empty"
 }`,
-		wantErr: true,
+		wantErr: `(line 3:1): missing "value" field`,
 	}, {
 		desc:         "Any with StringValue containing invalid UTF8",
 		inputMessage: &anypb.Any{},
@@ -2033,7 +2038,7 @@ func TestUnmarshal(t *testing.T) {
   "@type": "google.protobuf.StringValue",
   "value": "` + "abc\xff" + `"
 }`,
-		wantErr: true,
+		wantErr: `(line 3:12): invalid UTF-8`,
 	}, {
 		desc:         "Any with Int64Value",
 		inputMessage: &anypb.Any{},
@@ -2059,7 +2064,7 @@ func TestUnmarshal(t *testing.T) {
   "@type": "google.protobuf.Int64Value",
   "value": "forty-two"
 }`,
-		wantErr: true,
+		wantErr: `(line 3:12): invalid value for int64 type: "forty-two"`,
 	}, {
 		desc:         "Any with invalid UInt64Value",
 		inputMessage: &anypb.Any{},
@@ -2067,7 +2072,7 @@ func TestUnmarshal(t *testing.T) {
   "@type": "google.protobuf.UInt64Value",
   "value": -42
 }`,
-		wantErr: true,
+		wantErr: `(line 3:12): invalid value for uint64 type: -42`,
 	}, {
 		desc:         "Any with Duration",
 		inputMessage: &anypb.Any{},
@@ -2093,7 +2098,7 @@ func TestUnmarshal(t *testing.T) {
   "@type": "google.protobuf.Value",
   "value": "` + "abc\xff" + `"
 }`,
-		wantErr: true,
+		wantErr: `(line 3:12): invalid UTF-8`,
 	}, {
 		desc:         "Any with Value of NullValue",
 		inputMessage: &anypb.Any{},
@@ -2159,14 +2164,14 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "value": {}
 }`,
-		wantErr: true,
+		wantErr: `(line 1:1): missing "@type" field`,
 	}, {
 		desc:         "Any with empty @type",
 		inputMessage: &anypb.Any{},
 		inputText: `{
   "@type": ""
 }`,
-		wantErr: true,
+		wantErr: `(line 2:12): @type field contains empty value`,
 	}, {
 		desc:         "Any with duplicate @type",
 		inputMessage: &anypb.Any{},
@@ -2175,7 +2180,7 @@ func TestUnmarshal(t *testing.T) {
   "value": "hello",
   "@type": "pb2.Nested"
 }`,
-		wantErr: true,
+		wantErr: `(line 4:3): duplicate "@type" field`,
 	}, {
 		desc:         "Any with duplicate value",
 		inputMessage: &anypb.Any{},
@@ -2184,7 +2189,7 @@ func TestUnmarshal(t *testing.T) {
   "value": "hello",
   "value": "world"
 }`,
-		wantErr: true,
+		wantErr: `(line 4:3): duplicate "value" field`,
 	}, {
 		desc:         "Any with unknown field",
 		inputMessage: &anypb.Any{},
@@ -2193,7 +2198,7 @@ func TestUnmarshal(t *testing.T) {
   "optString": "hello",
   "unknown": "world"
 }`,
-		wantErr: true,
+		wantErr: `(line 4:3): unknown field "unknown"`,
 	}, {
 		desc:         "Any with embedded type containing Any",
 		inputMessage: &anypb.Any{},
@@ -2201,10 +2206,10 @@ func TestUnmarshal(t *testing.T) {
   "@type": "pb2.KnownTypes",
   "optAny": {
     "@type": "google.protobuf.StringValue",
-	"value": "` + "abc\xff" + `"
+    "value": "` + "abc\xff" + `"
   }
 }`,
-		wantErr: true,
+		wantErr: `(line 5:14): invalid UTF-8`,
 	}, {
 		desc:         "well known types as field values",
 		inputMessage: &pb2.KnownTypes{},
@@ -2396,7 +2401,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "weak fields; unknown field",
 		inputMessage: &testpb.TestWeak{},
 		inputText:    `{"weak_message1":{"a":1}, "weak_message2":{"a":1}}`,
-		wantErr:      true, // weak_message2 is unknown since the package containing it is not imported
+		wantErr:      `unknown field "weak_message2"`, // weak_message2 is unknown since the package containing it is not imported
 		skip:         !flags.ProtoLegacy,
 	}}
 
@@ -2407,11 +2412,16 @@ func TestUnmarshal(t *testing.T) {
 		}
 		t.Run(tt.desc, func(t *testing.T) {
 			err := tt.umo.Unmarshal([]byte(tt.inputText), tt.inputMessage)
-			if err != nil && !tt.wantErr {
-				t.Errorf("Unmarshal() returned error: %v\n\n", err)
+			if err != nil {
+				if tt.wantErr == "" {
+					t.Errorf("Unmarshal() got unexpected error: %v", err)
+				} else if !strings.Contains(err.Error(), tt.wantErr) {
+					t.Errorf("Unmarshal() error got %q, want %q", err, tt.wantErr)
+				}
+				return
 			}
-			if err == nil && tt.wantErr {
-				t.Error("Unmarshal() got nil error, want error\n\n")
+			if tt.wantErr != "" {
+				t.Errorf("Unmarshal() got nil error, want error %q", tt.wantErr)
 			}
 			if tt.wantMessage != nil && !proto.Equal(tt.inputMessage, tt.wantMessage) {
 				t.Errorf("Unmarshal()\n<got>\n%v\n<want>\n%v\n", tt.inputMessage, tt.wantMessage)

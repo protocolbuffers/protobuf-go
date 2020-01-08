@@ -49,11 +49,11 @@ func isCustomType(name pref.FullName) bool {
 // marshalCustomType marshals given well-known type message that have special
 // JSON conversion rules. It needs to be a message type where isCustomType
 // returns true, else it will panic.
-func (o MarshalOptions) marshalCustomType(m pref.Message) error {
+func (e encoder) marshalCustomType(m pref.Message) error {
 	name := m.Descriptor().FullName()
 	switch name {
 	case "google.protobuf.Any":
-		return o.marshalAny(m)
+		return e.marshalAny(m)
 
 	case "google.protobuf.BoolValue",
 		"google.protobuf.DoubleValue",
@@ -64,41 +64,41 @@ func (o MarshalOptions) marshalCustomType(m pref.Message) error {
 		"google.protobuf.UInt64Value",
 		"google.protobuf.StringValue",
 		"google.protobuf.BytesValue":
-		return o.marshalWrapperType(m)
+		return e.marshalWrapperType(m)
 
 	case "google.protobuf.Empty":
-		return o.marshalEmpty(m)
+		return e.marshalEmpty(m)
 
 	case "google.protobuf.Struct":
-		return o.marshalStruct(m)
+		return e.marshalStruct(m)
 
 	case "google.protobuf.ListValue":
-		return o.marshalListValue(m)
+		return e.marshalListValue(m)
 
 	case "google.protobuf.Value":
-		return o.marshalKnownValue(m)
+		return e.marshalKnownValue(m)
 
 	case "google.protobuf.Duration":
-		return o.marshalDuration(m)
+		return e.marshalDuration(m)
 
 	case "google.protobuf.Timestamp":
-		return o.marshalTimestamp(m)
+		return e.marshalTimestamp(m)
 
 	case "google.protobuf.FieldMask":
-		return o.marshalFieldMask(m)
+		return e.marshalFieldMask(m)
 	}
 
-	panic(fmt.Sprintf("%q does not have a custom marshaler", name))
+	panic(fmt.Sprintf("%s does not have a custom marshaler", name))
 }
 
 // unmarshalCustomType unmarshals given well-known type message that have
 // special JSON conversion rules. It needs to be a message type where
 // isCustomType returns true, else it will panic.
-func (o UnmarshalOptions) unmarshalCustomType(m pref.Message) error {
+func (d decoder) unmarshalCustomType(m pref.Message) error {
 	name := m.Descriptor().FullName()
 	switch name {
 	case "google.protobuf.Any":
-		return o.unmarshalAny(m)
+		return d.unmarshalAny(m)
 
 	case "google.protobuf.BoolValue",
 		"google.protobuf.DoubleValue",
@@ -109,31 +109,31 @@ func (o UnmarshalOptions) unmarshalCustomType(m pref.Message) error {
 		"google.protobuf.UInt64Value",
 		"google.protobuf.StringValue",
 		"google.protobuf.BytesValue":
-		return o.unmarshalWrapperType(m)
+		return d.unmarshalWrapperType(m)
 
 	case "google.protobuf.Empty":
-		return o.unmarshalEmpty(m)
+		return d.unmarshalEmpty(m)
 
 	case "google.protobuf.Struct":
-		return o.unmarshalStruct(m)
+		return d.unmarshalStruct(m)
 
 	case "google.protobuf.ListValue":
-		return o.unmarshalListValue(m)
+		return d.unmarshalListValue(m)
 
 	case "google.protobuf.Value":
-		return o.unmarshalKnownValue(m)
+		return d.unmarshalKnownValue(m)
 
 	case "google.protobuf.Duration":
-		return o.unmarshalDuration(m)
+		return d.unmarshalDuration(m)
 
 	case "google.protobuf.Timestamp":
-		return o.unmarshalTimestamp(m)
+		return d.unmarshalTimestamp(m)
 
 	case "google.protobuf.FieldMask":
-		return o.unmarshalFieldMask(m)
+		return d.unmarshalFieldMask(m)
 	}
 
-	panic(fmt.Sprintf("%q does not have a custom unmarshaler", name))
+	panic(fmt.Sprintf("%s does not have a custom unmarshaler", name))
 }
 
 // The JSON representation of an Any message uses the regular representation of
@@ -142,14 +142,14 @@ func (o UnmarshalOptions) unmarshalCustomType(m pref.Message) error {
 // custom JSON representation, that representation will be embedded adding a
 // field `value` which holds the custom JSON in addition to the `@type` field.
 
-func (o MarshalOptions) marshalAny(m pref.Message) error {
+func (e encoder) marshalAny(m pref.Message) error {
 	fds := m.Descriptor().Fields()
 	fdType := fds.ByNumber(fieldnum.Any_TypeUrl)
 	fdValue := fds.ByNumber(fieldnum.Any_Value)
 
 	// Start writing the JSON object.
-	o.encoder.StartObject()
-	defer o.encoder.EndObject()
+	e.StartObject()
+	defer e.EndObject()
 
 	if !m.Has(fdType) {
 		if !m.Has(fdValue) {
@@ -166,13 +166,13 @@ func (o MarshalOptions) marshalAny(m pref.Message) error {
 
 	// Marshal out @type field.
 	typeURL := typeVal.String()
-	o.encoder.WriteName("@type")
-	if err := o.encoder.WriteString(typeURL); err != nil {
+	e.WriteName("@type")
+	if err := e.WriteString(typeURL); err != nil {
 		return err
 	}
 
 	// Resolve the type in order to unmarshal value field.
-	emt, err := o.Resolver.FindMessageByURL(typeURL)
+	emt, err := e.opts.Resolver.FindMessageByURL(typeURL)
 	if err != nil {
 		return errors.New("%s: unable to resolve %q: %v", m.Descriptor().FullName(), typeURL, err)
 	}
@@ -180,7 +180,7 @@ func (o MarshalOptions) marshalAny(m pref.Message) error {
 	em := emt.New()
 	err = proto.UnmarshalOptions{
 		AllowPartial: true, // never check required fields inside an Any
-		Resolver:     o.Resolver,
+		Resolver:     e.opts.Resolver,
 	}.Unmarshal(valueVal.Bytes(), em.Interface())
 	if err != nil {
 		return errors.New("%s: unable to unmarshal %q: %v", m.Descriptor().FullName(), typeURL, err)
@@ -190,71 +190,82 @@ func (o MarshalOptions) marshalAny(m pref.Message) error {
 	// with corresponding custom JSON encoding of the embedded message as a
 	// field.
 	if isCustomType(emt.Descriptor().FullName()) {
-		o.encoder.WriteName("value")
-		return o.marshalCustomType(em)
+		e.WriteName("value")
+		return e.marshalCustomType(em)
 	}
 
 	// Else, marshal out the embedded message's fields in this Any object.
-	if err := o.marshalFields(em); err != nil {
+	if err := e.marshalFields(em); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (o UnmarshalOptions) unmarshalAny(m pref.Message) error {
-	// Use Peek to check for json.StartObject to avoid advancing a read.
-	if o.decoder.Peek() != json.StartObject {
-		jval, _ := o.decoder.Read()
-		return unexpectedJSONError{jval}
+func (d decoder) unmarshalAny(m pref.Message) error {
+	// Peek to check for json.ObjectOpen to avoid advancing a read.
+	start, err := d.Peek()
+	if err != nil {
+		return err
+	}
+	if start.Kind() != json.ObjectOpen {
+		return d.unexpectedTokenError(start)
 	}
 
-	// Use another json.Decoder to parse the unread bytes from o.decoder for
-	// @type field. This avoids advancing a read from o.decoder because the
-	// current JSON object may contain the fields of the embedded type.
-	dec := o.decoder.Clone()
-	typeURL, err := findTypeURL(dec)
-	if err == errEmptyObject {
+	// Use another decoder to parse the unread bytes for @type field. This
+	// avoids advancing a read from current decoder because the current JSON
+	// object may contain the fields of the embedded type.
+	dec := decoder{d.Clone(), UnmarshalOptions{}}
+	tok, err := findTypeURL(dec)
+	switch err {
+	case errEmptyObject:
 		// An empty JSON object translates to an empty Any message.
-		o.decoder.Read() // Read json.StartObject.
-		o.decoder.Read() // Read json.EndObject.
+		d.Read() // Read json.ObjectOpen.
+		d.Read() // Read json.ObjectClose.
 		return nil
-	}
-	if o.DiscardUnknown && err == errMissingType {
-		// Treat all fields as unknowns, similar to an empty object.
-		return skipJSONValue(o.decoder)
-	}
-	if err != nil {
-		return errors.New("google.protobuf.Any: %v", err)
+
+	case errMissingType:
+		if d.opts.DiscardUnknown {
+			// Treat all fields as unknowns, similar to an empty object.
+			return d.skipJSONValue()
+		}
+		// Use start.Pos() for line position.
+		return d.newError(start.Pos(), err.Error())
+
+	default:
+		if err != nil {
+			return err
+		}
 	}
 
-	emt, err := o.Resolver.FindMessageByURL(typeURL)
+	typeURL := tok.ParsedString()
+	emt, err := d.opts.Resolver.FindMessageByURL(typeURL)
 	if err != nil {
-		return errors.New("google.protobuf.Any: unable to resolve type %q: %v", typeURL, err)
+		return d.newError(tok.Pos(), "unable to resolve %v: %q", tok.RawString(), err)
 	}
 
 	// Create new message for the embedded message type and unmarshal into it.
 	em := emt.New()
 	if isCustomType(emt.Descriptor().FullName()) {
-		// If embedded message is a custom type, unmarshal the JSON "value" field
-		// into it.
-		if err := o.unmarshalAnyValue(em); err != nil {
-			return errors.New("google.protobuf.Any: %v", err)
+		// If embedded message is a custom type,
+		// unmarshal the JSON "value" field into it.
+		if err := d.unmarshalAnyValue(em); err != nil {
+			return err
 		}
 	} else {
 		// Else unmarshal the current JSON object into it.
-		if err := o.unmarshalMessage(em, true); err != nil {
-			return errors.New("google.protobuf.Any: %v", err)
+		if err := d.unmarshalMessage(em, true); err != nil {
+			return err
 		}
 	}
 	// Serialize the embedded message and assign the resulting bytes to the
 	// proto value field.
 	b, err := proto.MarshalOptions{
-		AllowPartial:  true, // never check required fields inside an Any
+		AllowPartial:  true, // No need to check required fields inside an Any.
 		Deterministic: true,
 	}.Marshal(em.Interface())
 	if err != nil {
-		return errors.New("google.protobuf.Any: %v", err)
+		return d.newError(start.Pos(), "error in marshaling Any.value field: %v", err)
 	}
 
 	fds := m.Descriptor().Fields()
@@ -266,113 +277,112 @@ func (o UnmarshalOptions) unmarshalAny(m pref.Message) error {
 	return nil
 }
 
-var errEmptyObject = errors.New(`empty object`)
-var errMissingType = errors.New(`missing "@type" field`)
+var errEmptyObject = fmt.Errorf(`empty object`)
+var errMissingType = fmt.Errorf(`missing "@type" field`)
 
-// findTypeURL returns the "@type" field value from the given JSON bytes. It is
-// expected that the given bytes start with json.StartObject. It returns
-// errEmptyObject if the JSON object is empty. It returns error if the object
-// does not contain the field or other decoding problems.
-func findTypeURL(dec *json.Decoder) (string, error) {
+// findTypeURL returns the token for the "@type" field value from the given
+// JSON bytes. It is expected that the given bytes start with json.ObjectOpen.
+// It returns errEmptyObject if the JSON object is empty or errMissingType if
+// @type field does not exist. It returns other error if the @type field is not
+// valid or other decoding issues.
+func findTypeURL(d decoder) (json.Token, error) {
 	var typeURL string
+	var typeTok json.Token
 	numFields := 0
 	// Skip start object.
-	dec.Read()
+	d.Read()
 
 Loop:
 	for {
-		jval, err := dec.Read()
+		tok, err := d.Read()
 		if err != nil {
-			return "", err
+			return json.Token{}, err
 		}
 
-		switch jval.Type() {
-		case json.EndObject:
+		switch tok.Kind() {
+		case json.ObjectClose:
 			if typeURL == "" {
 				// Did not find @type field.
 				if numFields > 0 {
-					return "", errMissingType
+					return json.Token{}, errMissingType
 				}
-				return "", errEmptyObject
+				return json.Token{}, errEmptyObject
 			}
 			break Loop
 
 		case json.Name:
 			numFields++
-			name, err := jval.Name()
-			if err != nil {
-				return "", err
-			}
-			if name != "@type" {
+			if tok.Name() != "@type" {
 				// Skip value.
-				if err := skipJSONValue(dec); err != nil {
-					return "", err
+				if err := d.skipJSONValue(); err != nil {
+					return json.Token{}, err
 				}
 				continue
 			}
 
 			// Return error if this was previously set already.
 			if typeURL != "" {
-				return "", errors.New(`duplicate "@type" field`)
+				return json.Token{}, d.newError(tok.Pos(), `duplicate "@type" field`)
 			}
 			// Read field value.
-			jval, err := dec.Read()
+			tok, err := d.Read()
 			if err != nil {
-				return "", err
+				return json.Token{}, err
 			}
-			if jval.Type() != json.String {
-				return "", unexpectedJSONError{jval}
+			if tok.Kind() != json.String {
+				return json.Token{}, d.newError(tok.Pos(), `@type field value is not a string: %v`, tok.RawString())
 			}
-			typeURL = jval.String()
+			typeURL = tok.ParsedString()
 			if typeURL == "" {
-				return "", errors.New(`"@type" field contains empty value`)
+				return json.Token{}, d.newError(tok.Pos(), `@type field contains empty value`)
 			}
+			typeTok = tok
 		}
 	}
 
-	return typeURL, nil
+	return typeTok, nil
 }
 
-// skipJSONValue makes the given decoder parse a JSON value (null, boolean,
-// string, number, object and array) in order to advance the read to the next
-// JSON value. It relies on Decoder.Read returning an error if the types are
-// not in valid sequence.
-func skipJSONValue(dec *json.Decoder) error {
-	jval, err := dec.Read()
+// skipJSONValue parses a JSON value (null, boolean, string, number, object and
+// array) in order to advance the read to the next JSON value. It relies on
+// the decoder returning an error if the types are not in valid sequence.
+func (d decoder) skipJSONValue() error {
+	tok, err := d.Read()
 	if err != nil {
 		return err
 	}
 	// Only need to continue reading for objects and arrays.
-	switch jval.Type() {
-	case json.StartObject:
+	switch tok.Kind() {
+	case json.ObjectOpen:
 		for {
-			jval, err := dec.Read()
+			tok, err := d.Read()
 			if err != nil {
 				return err
 			}
-			switch jval.Type() {
-			case json.EndObject:
+			switch tok.Kind() {
+			case json.ObjectClose:
 				return nil
 			case json.Name:
 				// Skip object field value.
-				if err := skipJSONValue(dec); err != nil {
+				if err := d.skipJSONValue(); err != nil {
 					return err
 				}
 			}
 		}
 
-	case json.StartArray:
+	case json.ArrayOpen:
 		for {
-			switch dec.Peek() {
-			case json.EndArray:
-				dec.Read()
-				return nil
-			case json.Invalid:
-				_, err := dec.Read()
+			tok, err := d.Peek()
+			if err != nil {
 				return err
+			}
+			switch tok.Kind() {
+			case json.ArrayClose:
+				d.Read()
+				return nil
 			default:
 				// Skip array item.
-				if err := skipJSONValue(dec); err != nil {
+				if err := d.skipJSONValue(); err != nil {
 					return err
 				}
 			}
@@ -383,51 +393,47 @@ func skipJSONValue(dec *json.Decoder) error {
 
 // unmarshalAnyValue unmarshals the given custom-type message from the JSON
 // object's "value" field.
-func (o UnmarshalOptions) unmarshalAnyValue(m pref.Message) error {
-	// Skip StartObject, and start reading the fields.
-	o.decoder.Read()
+func (d decoder) unmarshalAnyValue(m pref.Message) error {
+	// Skip ObjectOpen, and start reading the fields.
+	d.Read()
 
 	var found bool // Used for detecting duplicate "value".
 	for {
-		jval, err := o.decoder.Read()
+		tok, err := d.Read()
 		if err != nil {
 			return err
 		}
-		switch jval.Type() {
-		case json.EndObject:
+		switch tok.Kind() {
+		case json.ObjectClose:
 			if !found {
-				return errors.New(`missing "value" field`)
+				return d.newError(tok.Pos(), `missing "value" field`)
 			}
 			return nil
 
 		case json.Name:
-			name, err := jval.Name()
-			if err != nil {
-				return err
-			}
-			switch name {
+			switch tok.Name() {
+			case "@type":
+				// Skip the value as this was previously parsed already.
+				d.Read()
+
+			case "value":
+				if found {
+					return d.newError(tok.Pos(), `duplicate "value" field`)
+				}
+				// Unmarshal the field value into the given message.
+				if err := d.unmarshalCustomType(m); err != nil {
+					return err
+				}
+				found = true
+
 			default:
-				if o.DiscardUnknown {
-					if err := skipJSONValue(o.decoder); err != nil {
+				if d.opts.DiscardUnknown {
+					if err := d.skipJSONValue(); err != nil {
 						return err
 					}
 					continue
 				}
-				return errors.New("unknown field %q", name)
-
-			case "@type":
-				// Skip the value as this was previously parsed already.
-				o.decoder.Read()
-
-			case "value":
-				if found {
-					return errors.New(`duplicate "value" field`)
-				}
-				// Unmarshal the field value into the given message.
-				if err := o.unmarshalCustomType(m); err != nil {
-					return err
-				}
-				found = true
+				return d.newError(tok.Pos(), "unknown field %v", tok.RawString())
 			}
 		}
 	}
@@ -438,15 +444,15 @@ func (o UnmarshalOptions) unmarshalAnyValue(m pref.Message) error {
 // The "value" field has the same field number for all wrapper types.
 const wrapperFieldNumber = fieldnum.BoolValue_Value
 
-func (o MarshalOptions) marshalWrapperType(m pref.Message) error {
+func (e encoder) marshalWrapperType(m pref.Message) error {
 	fd := m.Descriptor().Fields().ByNumber(wrapperFieldNumber)
 	val := m.Get(fd)
-	return o.marshalSingular(val, fd)
+	return e.marshalSingular(val, fd)
 }
 
-func (o UnmarshalOptions) unmarshalWrapperType(m pref.Message) error {
+func (d decoder) unmarshalWrapperType(m pref.Message) error {
 	fd := m.Descriptor().Fields().ByNumber(wrapperFieldNumber)
-	val, err := o.unmarshalScalar(fd)
+	val, err := d.unmarshalScalar(fd)
 	if err != nil {
 		return err
 	}
@@ -456,42 +462,41 @@ func (o UnmarshalOptions) unmarshalWrapperType(m pref.Message) error {
 
 // The JSON representation for Empty is an empty JSON object.
 
-func (o MarshalOptions) marshalEmpty(pref.Message) error {
-	o.encoder.StartObject()
-	o.encoder.EndObject()
+func (e encoder) marshalEmpty(pref.Message) error {
+	e.StartObject()
+	e.EndObject()
 	return nil
 }
 
-func (o UnmarshalOptions) unmarshalEmpty(pref.Message) error {
-	jval, err := o.decoder.Read()
+func (d decoder) unmarshalEmpty(pref.Message) error {
+	tok, err := d.Read()
 	if err != nil {
 		return err
 	}
-	if jval.Type() != json.StartObject {
-		return unexpectedJSONError{jval}
+	if tok.Kind() != json.ObjectOpen {
+		return d.unexpectedTokenError(tok)
 	}
 
 	for {
-		jval, err := o.decoder.Read()
+		tok, err := d.Read()
 		if err != nil {
 			return err
 		}
-		switch jval.Type() {
-		case json.EndObject:
+		switch tok.Kind() {
+		case json.ObjectClose:
 			return nil
 
 		case json.Name:
-			if o.DiscardUnknown {
-				if err := skipJSONValue(o.decoder); err != nil {
+			if d.opts.DiscardUnknown {
+				if err := d.skipJSONValue(); err != nil {
 					return err
 				}
 				continue
 			}
-			name, _ := jval.Name()
-			return errors.New("unknown field %q", name)
+			return d.newError(tok.Pos(), "unknown field %v", tok.RawString())
 
 		default:
-			return unexpectedJSONError{jval}
+			return d.unexpectedTokenError(tok)
 		}
 	}
 }
@@ -499,73 +504,76 @@ func (o UnmarshalOptions) unmarshalEmpty(pref.Message) error {
 // The JSON representation for Struct is a JSON object that contains the encoded
 // Struct.fields map and follows the serialization rules for a map.
 
-func (o MarshalOptions) marshalStruct(m pref.Message) error {
+func (e encoder) marshalStruct(m pref.Message) error {
 	fd := m.Descriptor().Fields().ByNumber(fieldnum.Struct_Fields)
-	return o.marshalMap(m.Get(fd).Map(), fd)
+	return e.marshalMap(m.Get(fd).Map(), fd)
 }
 
-func (o UnmarshalOptions) unmarshalStruct(m pref.Message) error {
+func (d decoder) unmarshalStruct(m pref.Message) error {
 	fd := m.Descriptor().Fields().ByNumber(fieldnum.Struct_Fields)
-	return o.unmarshalMap(m.Mutable(fd).Map(), fd)
+	return d.unmarshalMap(m.Mutable(fd).Map(), fd)
 }
 
 // The JSON representation for ListValue is JSON array that contains the encoded
 // ListValue.values repeated field and follows the serialization rules for a
 // repeated field.
 
-func (o MarshalOptions) marshalListValue(m pref.Message) error {
+func (e encoder) marshalListValue(m pref.Message) error {
 	fd := m.Descriptor().Fields().ByNumber(fieldnum.ListValue_Values)
-	return o.marshalList(m.Get(fd).List(), fd)
+	return e.marshalList(m.Get(fd).List(), fd)
 }
 
-func (o UnmarshalOptions) unmarshalListValue(m pref.Message) error {
+func (d decoder) unmarshalListValue(m pref.Message) error {
 	fd := m.Descriptor().Fields().ByNumber(fieldnum.ListValue_Values)
-	return o.unmarshalList(m.Mutable(fd).List(), fd)
+	return d.unmarshalList(m.Mutable(fd).List(), fd)
 }
 
 // The JSON representation for a Value is dependent on the oneof field that is
 // set. Each of the field in the oneof has its own custom serialization rule. A
 // Value message needs to be a oneof field set, else it is an error.
 
-func (o MarshalOptions) marshalKnownValue(m pref.Message) error {
+func (e encoder) marshalKnownValue(m pref.Message) error {
 	od := m.Descriptor().Oneofs().ByName("kind")
 	fd := m.WhichOneof(od)
 	if fd == nil {
 		return errors.New("%s: none of the oneof fields is set", m.Descriptor().FullName())
 	}
-	return o.marshalSingular(m.Get(fd), fd)
+	return e.marshalSingular(m.Get(fd), fd)
 }
 
-func (o UnmarshalOptions) unmarshalKnownValue(m pref.Message) error {
-	switch o.decoder.Peek() {
+func (d decoder) unmarshalKnownValue(m pref.Message) error {
+	tok, err := d.Peek()
+	if err != nil {
+		return err
+	}
+
+	var fd pref.FieldDescriptor
+	var val pref.Value
+	switch tok.Kind() {
 	case json.Null:
-		o.decoder.Read()
-		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_NullValue)
-		m.Set(fd, pref.ValueOfEnum(0))
+		d.Read()
+		fd = m.Descriptor().Fields().ByNumber(fieldnum.Value_NullValue)
+		val = pref.ValueOfEnum(0)
 
 	case json.Bool:
-		jval, err := o.decoder.Read()
+		tok, err := d.Read()
 		if err != nil {
 			return err
 		}
-		val, err := unmarshalBool(jval)
-		if err != nil {
-			return err
-		}
-		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_BoolValue)
-		m.Set(fd, val)
+		fd = m.Descriptor().Fields().ByNumber(fieldnum.Value_BoolValue)
+		val = pref.ValueOfBool(tok.Bool())
 
 	case json.Number:
-		jval, err := o.decoder.Read()
+		tok, err := d.Read()
 		if err != nil {
 			return err
 		}
-		val, err := unmarshalFloat(jval, 64)
-		if err != nil {
-			return err
+		fd = m.Descriptor().Fields().ByNumber(fieldnum.Value_NumberValue)
+		var ok bool
+		val, ok = unmarshalFloat(tok, 64)
+		if !ok {
+			return d.newError(tok.Pos(), "invalid google.protobuf.Value: %v", tok.RawString())
 		}
-		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_NumberValue)
-		m.Set(fd, val)
 
 	case json.String:
 		// A JSON string may have been encoded from the number_value field,
@@ -574,40 +582,32 @@ func (o UnmarshalOptions) unmarshalKnownValue(m pref.Message) error {
 		// however, there is no way to identify that and hence a JSON string is
 		// always assigned to the string_value field, which means that certain
 		// encoding cannot be parsed back to the same field.
-		jval, err := o.decoder.Read()
+		tok, err := d.Read()
 		if err != nil {
 			return err
 		}
-		val, err := unmarshalString(jval)
-		if err != nil {
-			return err
-		}
-		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_StringValue)
-		m.Set(fd, val)
+		fd = m.Descriptor().Fields().ByNumber(fieldnum.Value_StringValue)
+		val = pref.ValueOfString(tok.ParsedString())
 
-	case json.StartObject:
-		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_StructValue)
-		val := m.NewField(fd)
-		if err := o.unmarshalStruct(val.Message()); err != nil {
+	case json.ObjectOpen:
+		fd = m.Descriptor().Fields().ByNumber(fieldnum.Value_StructValue)
+		val = m.NewField(fd)
+		if err := d.unmarshalStruct(val.Message()); err != nil {
 			return err
 		}
-		m.Set(fd, val)
 
-	case json.StartArray:
-		fd := m.Descriptor().Fields().ByNumber(fieldnum.Value_ListValue)
-		val := m.NewField(fd)
-		if err := o.unmarshalListValue(val.Message()); err != nil {
+	case json.ArrayOpen:
+		fd = m.Descriptor().Fields().ByNumber(fieldnum.Value_ListValue)
+		val = m.NewField(fd)
+		if err := d.unmarshalListValue(val.Message()); err != nil {
 			return err
 		}
-		m.Set(fd, val)
 
 	default:
-		jval, err := o.decoder.Read()
-		if err != nil {
-			return err
-		}
-		return unexpectedJSONError{jval}
+		return d.newError(tok.Pos(), "invalid google.protobuf.Value: %v", tok.RawString())
 	}
+
+	m.Set(fd, val)
 	return nil
 }
 
@@ -628,7 +628,7 @@ const (
 	maxSecondsInDuration = 315576000000
 )
 
-func (o MarshalOptions) marshalDuration(m pref.Message) error {
+func (e encoder) marshalDuration(m pref.Message) error {
 	fds := m.Descriptor().Fields()
 	fdSeconds := fds.ByNumber(fieldnum.Duration_Seconds)
 	fdNanos := fds.ByNumber(fieldnum.Duration_Nanos)
@@ -659,28 +659,27 @@ func (o MarshalOptions) marshalDuration(m pref.Message) error {
 	x = strings.TrimSuffix(x, "000")
 	x = strings.TrimSuffix(x, "000")
 	x = strings.TrimSuffix(x, ".000")
-	o.encoder.WriteString(x + "s")
+	e.WriteString(x + "s")
 	return nil
 }
 
-func (o UnmarshalOptions) unmarshalDuration(m pref.Message) error {
-	jval, err := o.decoder.Read()
+func (d decoder) unmarshalDuration(m pref.Message) error {
+	tok, err := d.Read()
 	if err != nil {
 		return err
 	}
-	if jval.Type() != json.String {
-		return unexpectedJSONError{jval}
+	if tok.Kind() != json.String {
+		return d.unexpectedTokenError(tok)
 	}
 
-	input := jval.String()
-	secs, nanos, ok := parseDuration(input)
+	secs, nanos, ok := parseDuration(tok.ParsedString())
 	if !ok {
-		return errors.New("%s: invalid duration value %q", m.Descriptor().FullName(), input)
+		return d.newError(tok.Pos(), "invalid google.protobuf.Duration value %v", tok.RawString())
 	}
 	// Validate seconds. No need to validate nanos because parseDuration would
 	// have covered that already.
 	if secs < -maxSecondsInDuration || secs > maxSecondsInDuration {
-		return errors.New("%s: out of range %q", m.Descriptor().FullName(), input)
+		return d.newError(tok.Pos(), "google.protobuf.Duration value out of range: %v", tok.RawString())
 	}
 
 	fds := m.Descriptor().Fields()
@@ -820,7 +819,7 @@ const (
 	minTimestampSeconds = -62135596800
 )
 
-func (o MarshalOptions) marshalTimestamp(m pref.Message) error {
+func (e encoder) marshalTimestamp(m pref.Message) error {
 	fds := m.Descriptor().Fields()
 	fdSeconds := fds.ByNumber(fieldnum.Timestamp_Seconds)
 	fdNanos := fds.ByNumber(fieldnum.Timestamp_Nanos)
@@ -842,29 +841,28 @@ func (o MarshalOptions) marshalTimestamp(m pref.Message) error {
 	x = strings.TrimSuffix(x, "000")
 	x = strings.TrimSuffix(x, "000")
 	x = strings.TrimSuffix(x, ".000")
-	o.encoder.WriteString(x + "Z")
+	e.WriteString(x + "Z")
 	return nil
 }
 
-func (o UnmarshalOptions) unmarshalTimestamp(m pref.Message) error {
-	jval, err := o.decoder.Read()
+func (d decoder) unmarshalTimestamp(m pref.Message) error {
+	tok, err := d.Read()
 	if err != nil {
 		return err
 	}
-	if jval.Type() != json.String {
-		return unexpectedJSONError{jval}
+	if tok.Kind() != json.String {
+		return d.unexpectedTokenError(tok)
 	}
 
-	input := jval.String()
-	t, err := time.Parse(time.RFC3339Nano, input)
+	t, err := time.Parse(time.RFC3339Nano, tok.ParsedString())
 	if err != nil {
-		return errors.New("%s: invalid timestamp value %q", m.Descriptor().FullName(), input)
+		return d.newError(tok.Pos(), "invalid google.protobuf.Timestamp value %v", tok.RawString())
 	}
 	// Validate seconds. No need to validate nanos because time.Parse would have
 	// covered that already.
 	secs := t.Unix()
 	if secs < minTimestampSeconds || secs > maxTimestampSeconds {
-		return errors.New("%s: out of range %q", m.Descriptor().FullName(), input)
+		return d.newError(tok.Pos(), "google.protobuf.Timestamp value out of range: %v", tok.RawString())
 	}
 
 	fds := m.Descriptor().Fields()
@@ -881,7 +879,7 @@ func (o UnmarshalOptions) unmarshalTimestamp(m pref.Message) error {
 // lower-camel naming conventions. Encoding should fail if the path name would
 // end up differently after a round-trip.
 
-func (o MarshalOptions) marshalFieldMask(m pref.Message) error {
+func (e encoder) marshalFieldMask(m pref.Message) error {
 	fd := m.Descriptor().Fields().ByNumber(fieldnum.FieldMask_Paths)
 	list := m.Get(fd).List()
 	paths := make([]string, 0, list.Len())
@@ -896,19 +894,19 @@ func (o MarshalOptions) marshalFieldMask(m pref.Message) error {
 		paths = append(paths, cc)
 	}
 
-	o.encoder.WriteString(strings.Join(paths, ","))
+	e.WriteString(strings.Join(paths, ","))
 	return nil
 }
 
-func (o UnmarshalOptions) unmarshalFieldMask(m pref.Message) error {
-	jval, err := o.decoder.Read()
+func (d decoder) unmarshalFieldMask(m pref.Message) error {
+	tok, err := d.Read()
 	if err != nil {
 		return err
 	}
-	if jval.Type() != json.String {
-		return unexpectedJSONError{jval}
+	if tok.Kind() != json.String {
+		return d.unexpectedTokenError(tok)
 	}
-	str := strings.TrimSpace(jval.String())
+	str := strings.TrimSpace(tok.ParsedString())
 	if str == "" {
 		return nil
 	}

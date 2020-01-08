@@ -18,9 +18,8 @@ func BenchmarkFloat(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
-		_, err = val.Float(64)
-		if err != nil {
-			b.Fatal(err)
+		if _, ok := val.Float(64); !ok {
+			b.Fatal("not a flaot")
 		}
 	}
 }
@@ -33,9 +32,8 @@ func BenchmarkInt(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
-		_, err = val.Int(64)
-		if err != nil {
-			b.Fatal(err)
+		if _, ok := val.Int(64); !ok {
+			b.Fatal("not an int64")
 		}
 	}
 }
@@ -48,7 +46,7 @@ func BenchmarkString(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
-		_ = val.String()
+		_ = val.ParsedString()
 	}
 }
 
@@ -60,9 +58,6 @@ func BenchmarkBool(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
-		_, err = val.Bool()
-		if err != nil {
-			b.Fatal(err)
-		}
+		_ = val.Bool()
 	}
 }

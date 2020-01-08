@@ -6,46 +6,14 @@ package json
 
 import (
 	"bytes"
-	"math"
 	"strconv"
 )
 
-// appendFloat formats given float in bitSize, and appends to the given []byte.
-func appendFloat(out []byte, n float64, bitSize int) []byte {
-	switch {
-	case math.IsNaN(n):
-		return append(out, `"NaN"`...)
-	case math.IsInf(n, +1):
-		return append(out, `"Infinity"`...)
-	case math.IsInf(n, -1):
-		return append(out, `"-Infinity"`...)
-	}
-
-	// JSON number formatting logic based on encoding/json.
-	// See floatEncoder.encode for reference.
-	fmt := byte('f')
-	if abs := math.Abs(n); abs != 0 {
-		if bitSize == 64 && (abs < 1e-6 || abs >= 1e21) ||
-			bitSize == 32 && (float32(abs) < 1e-6 || float32(abs) >= 1e21) {
-			fmt = 'e'
-		}
-	}
-	out = strconv.AppendFloat(out, n, fmt, -1, bitSize)
-	if fmt == 'e' {
-		n := len(out)
-		if n >= 4 && out[n-4] == 'e' && out[n-3] == '-' && out[n-2] == '0' {
-			out[n-2] = out[n-1]
-			out = out[:n-1]
-		}
-	}
-	return out
-}
-
-// consumeNumber reads the given []byte for a valid JSON number. If it is valid,
+// parseNumber reads the given []byte for a valid JSON number. If it is valid,
 // it returns the number of bytes.  Parsing logic follows the definition in
 // https://tools.ietf.org/html/rfc7159#section-6, and is based off
 // encoding/json.isValidNumber function.
-func consumeNumber(input []byte) (int, bool) {
+func parseNumber(input []byte) (int, bool) {
 	var n int
 
 	s := input
@@ -128,7 +96,7 @@ type numberParts struct {
 // parseNumber constructs numberParts from given []byte. The logic here is
 // similar to consumeNumber above with the difference of having to construct
 // numberParts. The slice fields in numberParts are subslices of the input.
-func parseNumber(input []byte) (numberParts, bool) {
+func parseNumberParts(input []byte) (numberParts, bool) {
 	var neg bool
 	var intp []byte
 	var frac []byte

@@ -39,7 +39,6 @@ func Marshal(m proto.Message) ([]byte, error) {
 // MarshalOptions is a configurable JSON format marshaler.
 type MarshalOptions struct {
 	pragma.NoUnkeyedLiterals
-	encoder *json.Encoder
 
 	// AllowPartial allows messages that have missing required fields to marshal
 	// without returning an error. If AllowPartial is false (the default),
@@ -112,31 +111,35 @@ func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
 		o.Resolver = protoregistry.GlobalTypes
 	}
 
-	var err error
-	o.encoder, err = json.NewEncoder(o.Indent)
+	internalEnc, err := json.NewEncoder(o.Indent)
 	if err != nil {
 		return nil, err
 	}
 
-	err = o.marshalMessage(m.ProtoReflect())
-	if err != nil {
+	enc := encoder{internalEnc, o}
+	if err := enc.marshalMessage(m.ProtoReflect()); err != nil {
 		return nil, err
 	}
 	if o.AllowPartial {
-		return o.encoder.Bytes(), nil
+		return enc.Bytes(), nil
 	}
-	return o.encoder.Bytes(), proto.IsInitialized(m)
+	return enc.Bytes(), proto.IsInitialized(m)
+}
+
+type encoder struct {
+	*json.Encoder
+	opts MarshalOptions
 }
 
 // marshalMessage marshals the given protoreflect.Message.
-func (o MarshalOptions) marshalMessage(m pref.Message) error {
+func (e encoder) marshalMessage(m pref.Message) error {
 	if isCustomType(m.Descriptor().FullName()) {
-		return o.marshalCustomType(m)
+		return e.marshalCustomType(m)
 	}
 
-	o.encoder.StartObject()
-	defer o.encoder.EndObject()
-	if err := o.marshalFields(m); err != nil {
+	e.StartObject()
+	defer e.EndObject()
+	if err := e.marshalFields(m); err != nil {
 		return err
 	}
 
@@ -144,7 +147,7 @@ func (o MarshalOptions) marshalMessage(m pref.Message) error {
 }
 
 // marshalFields marshals the fields in the given protoreflect.Message.
-func (o MarshalOptions) marshalFields(m pref.Message) error {
+func (e encoder) marshalFields(m pref.Message) error {
 	messageDesc := m.Descriptor()
 	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
 		return errors.New("no support for proto1 MessageSets")
@@ -166,7 +169,7 @@ func (o MarshalOptions) marshalFields(m pref.Message) error {
 
 		val := m.Get(fd)
 		if !m.Has(fd) {
-			if !o.EmitUnpopulated {
+			if !e.opts.EmitUnpopulated {
 				continue
 			}
 			isProto2Scalar := fd.Syntax() == pref.Proto2 && fd.Default().IsValid()
@@ -178,99 +181,93 @@ func (o MarshalOptions) marshalFields(m pref.Message) error {
 		}
 
 		name := fd.JSONName()
-		if o.UseProtoNames {
+		if e.opts.UseProtoNames {
 			name = string(fd.Name())
 			// Use type name for group field name.
 			if fd.Kind() == pref.GroupKind {
 				name = string(fd.Message().Name())
 			}
 		}
-		if err := o.encoder.WriteName(name); err != nil {
+		if err := e.WriteName(name); err != nil {
 			return err
 		}
-		if err := o.marshalValue(val, fd); err != nil {
+		if err := e.marshalValue(val, fd); err != nil {
 			return err
 		}
 	}
 
 	// Marshal out extensions.
-	if err := o.marshalExtensions(m); err != nil {
+	if err := e.marshalExtensions(m); err != nil {
 		return err
 	}
 	return nil
 }
 
 // marshalValue marshals the given protoreflect.Value.
-func (o MarshalOptions) marshalValue(val pref.Value, fd pref.FieldDescriptor) error {
+func (e encoder) marshalValue(val pref.Value, fd pref.FieldDescriptor) error {
 	switch {
 	case fd.IsList():
-		return o.marshalList(val.List(), fd)
+		return e.marshalList(val.List(), fd)
 	case fd.IsMap():
-		return o.marshalMap(val.Map(), fd)
+		return e.marshalMap(val.Map(), fd)
 	default:
-		return o.marshalSingular(val, fd)
+		return e.marshalSingular(val, fd)
 	}
 }
 
 // marshalSingular marshals the given non-repeated field value. This includes
 // all scalar types, enums, messages, and groups.
-func (o MarshalOptions) marshalSingular(val pref.Value, fd pref.FieldDescriptor) error {
+func (e encoder) marshalSingular(val pref.Value, fd pref.FieldDescriptor) error {
 	if !val.IsValid() {
-		o.encoder.WriteNull()
+		e.WriteNull()
 		return nil
 	}
 
 	switch kind := fd.Kind(); kind {
 	case pref.BoolKind:
-		o.encoder.WriteBool(val.Bool())
+		e.WriteBool(val.Bool())
 
 	case pref.StringKind:
-		if err := o.encoder.WriteString(val.String()); err != nil {
-			return err
+		if e.WriteString(val.String()) != nil {
+			return errors.InvalidUTF8(string(fd.FullName()))
 		}
 
 	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
-		o.encoder.WriteInt(val.Int())
+		e.WriteInt(val.Int())
 
 	case pref.Uint32Kind, pref.Fixed32Kind:
-		o.encoder.WriteUint(val.Uint())
+		e.WriteUint(val.Uint())
 
 	case pref.Int64Kind, pref.Sint64Kind, pref.Uint64Kind,
 		pref.Sfixed64Kind, pref.Fixed64Kind:
 		// 64-bit integers are written out as JSON string.
-		o.encoder.WriteString(val.String())
+		e.WriteString(val.String())
 
 	case pref.FloatKind:
 		// Encoder.WriteFloat handles the special numbers NaN and infinites.
-		o.encoder.WriteFloat(val.Float(), 32)
+		e.WriteFloat(val.Float(), 32)
 
 	case pref.DoubleKind:
 		// Encoder.WriteFloat handles the special numbers NaN and infinites.
-		o.encoder.WriteFloat(val.Float(), 64)
+		e.WriteFloat(val.Float(), 64)
 
 	case pref.BytesKind:
-		err := o.encoder.WriteString(base64.StdEncoding.EncodeToString(val.Bytes()))
-		if err != nil {
-			return err
-		}
+		e.WriteString(base64.StdEncoding.EncodeToString(val.Bytes()))
 
 	case pref.EnumKind:
 		if fd.Enum().FullName() == "google.protobuf.NullValue" {
-			o.encoder.WriteNull()
+			e.WriteNull()
 		} else {
 			desc := fd.Enum().Values().ByNumber(val.Enum())
-			if o.UseEnumNumbers || desc == nil {
-				o.encoder.WriteInt(int64(val.Enum()))
+			if e.opts.UseEnumNumbers || desc == nil {
+				e.WriteInt(int64(val.Enum()))
 			} else {
-				err := o.encoder.WriteString(string(desc.Name()))
-				if err != nil {
-					return err
-				}
+				e.WriteString(string(desc.Name()))
 			}
 		}
 
 	case pref.MessageKind, pref.GroupKind:
-		if err := o.marshalMessage(val.Message()); err != nil {
+		if err := e.marshalMessage(val.Message()); err != nil {
 			return err
 		}
 
@@ -281,13 +278,13 @@ func (o MarshalOptions) marshalSingular(val pref.Value, fd pref.FieldDescriptor)
 }
 
 // marshalList marshals the given protoreflect.List.
-func (o MarshalOptions) marshalList(list pref.List, fd pref.FieldDescriptor) error {
-	o.encoder.StartArray()
-	defer o.encoder.EndArray()
+func (e encoder) marshalList(list pref.List, fd pref.FieldDescriptor) error {
+	e.StartArray()
+	defer e.EndArray()
 
 	for i := 0; i < list.Len(); i++ {
 		item := list.Get(i)
-		if err := o.marshalSingular(item, fd); err != nil {
+		if err := e.marshalSingular(item, fd); err != nil {
 			return err
 		}
 	}
@@ -300,9 +297,9 @@ type mapEntry struct {
 }
 
 // marshalMap marshals given protoreflect.Map.
-func (o MarshalOptions) marshalMap(mmap pref.Map, fd pref.FieldDescriptor) error {
-	o.encoder.StartObject()
-	defer o.encoder.EndObject()
+func (e encoder) marshalMap(mmap pref.Map, fd pref.FieldDescriptor) error {
+	e.StartObject()
+	defer e.EndObject()
 
 	// Get a sorted list based on keyType first.
 	entries := make([]mapEntry, 0, mmap.Len())
@@ -314,10 +311,10 @@ func (o MarshalOptions) marshalMap(mmap pref.Map, fd pref.FieldDescriptor) error
 
 	// Write out sorted list.
 	for _, entry := range entries {
-		if err := o.encoder.WriteName(entry.key.String()); err != nil {
+		if err := e.WriteName(entry.key.String()); err != nil {
 			return err
 		}
-		if err := o.marshalSingular(entry.value, fd.MapValue()); err != nil {
+		if err := e.marshalSingular(entry.value, fd.MapValue()); err != nil {
 			return err
 		}
 	}
@@ -341,7 +338,7 @@ func sortMap(keyKind pref.Kind, values []mapEntry) {
 }
 
 // marshalExtensions marshals extension fields.
-func (o MarshalOptions) marshalExtensions(m pref.Message) error {
+func (e encoder) marshalExtensions(m pref.Message) error {
 	type entry struct {
 		key   string
 		value pref.Value
@@ -380,10 +377,10 @@ func (o MarshalOptions) marshalExtensions(m pref.Message) error {
 		// JSON field name is the proto field name enclosed in [], similar to
 		// textproto. This is consistent with Go v1 lib. C++ lib v3.7.0 does not
 		// marshal out extension fields.
-		if err := o.encoder.WriteName("[" + entry.key + "]"); err != nil {
+		if err := e.WriteName("[" + entry.key + "]"); err != nil {
 			return err
 		}
-		if err := o.marshalValue(entry.value, entry.desc); err != nil {
+		if err := e.marshalValue(entry.value, entry.desc); err != nil {
 			return err
 		}
 	}

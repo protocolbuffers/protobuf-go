@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"io"
 	"regexp"
-	"strconv"
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/internal/errors"
@@ -23,22 +22,27 @@ const (
 	peekCall
 )
 
+const unexpectedFmt = "unexpected token %s"
+
+// ErrUnexpectedEOF means that EOF was encountered in the middle of the input.
+var ErrUnexpectedEOF = errors.New("%v", io.ErrUnexpectedEOF)
+
 // Decoder is a token-based JSON decoder.
 type Decoder struct {
 	// lastCall is last method called, either readCall or peekCall.
 	// Initial value is readCall.
 	lastCall call
 
-	// value contains the last read value.
-	value Value
+	// lastToken contains the last read token.
+	lastToken Token
 
-	// err contains the last read error.
-	err error
+	// lastErr contains the last read error.
+	lastErr error
 
-	// startStack is a stack containing StartObject and StartArray types. The
+	// openStack is a stack containing ObjectOpen and ArrayOpen values. The
 	// top of stack represents the object or the array the current value is
 	// directly located in.
-	startStack []Type
+	openStack []Kind
 
 	// orig is used in reporting line and column.
 	orig []byte
@@ -51,191 +55,186 @@ func NewDecoder(b []byte) *Decoder {
 	return &Decoder{orig: b, in: b}
 }
 
-// Peek looks ahead and returns the next JSON type without advancing a read.
-func (d *Decoder) Peek() Type {
+// Peek looks ahead and returns the next token kind without advancing a read.
+func (d *Decoder) Peek() (Token, error) {
 	defer func() { d.lastCall = peekCall }()
 	if d.lastCall == readCall {
-		d.value, d.err = d.Read()
+		d.lastToken, d.lastErr = d.Read()
 	}
-	return d.value.typ
+	return d.lastToken, d.lastErr
 }
 
-// Read returns the next JSON value. It will return an error if there is no
-// valid value. For String types containing invalid UTF8 characters, a non-fatal
-// error is returned and caller can call Read for the next value.
-func (d *Decoder) Read() (Value, error) {
+// Read returns the next JSON token.
+// It will return an error if there is no valid token.
+func (d *Decoder) Read() (Token, error) {
+	const scalar = Null | Bool | Number | String
+
 	defer func() { d.lastCall = readCall }()
 	if d.lastCall == peekCall {
-		return d.value, d.err
+		return d.lastToken, d.lastErr
 	}
 
-	value, err := d.parseNext()
+	tok, err := d.parseNext()
 	if err != nil {
-		return Value{}, err
+		return Token{}, err
 	}
-	n := value.size
 
-	switch value.typ {
+	switch tok.kind {
 	case EOF:
-		if len(d.startStack) != 0 ||
-			d.value.typ&Null|Bool|Number|String|EndObject|EndArray == 0 {
-			return Value{}, io.ErrUnexpectedEOF
+		if len(d.openStack) != 0 ||
+			d.lastToken.kind&scalar|ObjectClose|ArrayClose == 0 {
+			return Token{}, ErrUnexpectedEOF
 		}
 
 	case Null:
 		if !d.isValueNext() {
-			return Value{}, d.newSyntaxError("unexpected value null")
+			return Token{}, d.newSyntaxError(tok.pos, unexpectedFmt, tok.RawString())
 		}
 
 	case Bool, Number:
 		if !d.isValueNext() {
-			return Value{}, d.newSyntaxError("unexpected value %v", value.Raw())
+			return Token{}, d.newSyntaxError(tok.pos, unexpectedFmt, tok.RawString())
 		}
 
 	case String:
 		if d.isValueNext() {
 			break
 		}
-		// Check if this is for an object name.
-		if d.value.typ&(StartObject|comma) == 0 {
-			return Value{}, d.newSyntaxError("unexpected value %v", value.Raw())
+		// This string token should only be for a field name.
+		if d.lastToken.kind&(ObjectOpen|comma) == 0 {
+			return Token{}, d.newSyntaxError(tok.pos, unexpectedFmt, tok.RawString())
 		}
-		d.in = d.in[n:]
-		d.consume(0)
 		if len(d.in) == 0 {
-			return Value{}, d.newSyntaxError(`unexpected EOF, missing ":" after object name`)
+			return Token{}, ErrUnexpectedEOF
 		}
 		if c := d.in[0]; c != ':' {
-			return Value{}, d.newSyntaxError(`unexpected character %v, missing ":" after object name`, string(c))
+			return Token{}, d.newSyntaxError(d.currPos(), `unexpected character %s, missing ":" after field name`, string(c))
 		}
-		n = 1
-		value.typ = Name
+		tok.kind = Name
+		d.consume(1)
 
-	case StartObject, StartArray:
+	case ObjectOpen, ArrayOpen:
 		if !d.isValueNext() {
-			return Value{}, d.newSyntaxError("unexpected character %v", value.Raw())
+			return Token{}, d.newSyntaxError(tok.pos, unexpectedFmt, tok.RawString())
 		}
-		d.startStack = append(d.startStack, value.typ)
+		d.openStack = append(d.openStack, tok.kind)
 
-	case EndObject:
-		if len(d.startStack) == 0 ||
-			d.value.typ == comma ||
-			d.startStack[len(d.startStack)-1] != StartObject {
-			return Value{}, d.newSyntaxError("unexpected character }")
+	case ObjectClose:
+		if len(d.openStack) == 0 ||
+			d.lastToken.kind == comma ||
+			d.openStack[len(d.openStack)-1] != ObjectOpen {
+			return Token{}, d.newSyntaxError(tok.pos, unexpectedFmt, tok.RawString())
 		}
-		d.startStack = d.startStack[:len(d.startStack)-1]
+		d.openStack = d.openStack[:len(d.openStack)-1]
 
-	case EndArray:
-		if len(d.startStack) == 0 ||
-			d.value.typ == comma ||
-			d.startStack[len(d.startStack)-1] != StartArray {
-			return Value{}, d.newSyntaxError("unexpected character ]")
+	case ArrayClose:
+		if len(d.openStack) == 0 ||
+			d.lastToken.kind == comma ||
+			d.openStack[len(d.openStack)-1] != ArrayOpen {
+			return Token{}, d.newSyntaxError(tok.pos, unexpectedFmt, tok.RawString())
 		}
-		d.startStack = d.startStack[:len(d.startStack)-1]
+		d.openStack = d.openStack[:len(d.openStack)-1]
 
 	case comma:
-		if len(d.startStack) == 0 ||
-			d.value.typ&(Null|Bool|Number|String|EndObject|EndArray) == 0 {
-			return Value{}, d.newSyntaxError("unexpected character ,")
+		if len(d.openStack) == 0 ||
+			d.lastToken.kind&(scalar|ObjectClose|ArrayClose) == 0 {
+			return Token{}, d.newSyntaxError(tok.pos, unexpectedFmt, tok.RawString())
 		}
 	}
 
-	// Update d.value only after validating value to be in the right sequence.
-	d.value = value
-	d.in = d.in[n:]
+	// Update d.lastToken only after validating token to be in the right sequence.
+	d.lastToken = tok
 
-	if d.value.typ == comma {
+	if d.lastToken.kind == comma {
 		return d.Read()
 	}
-	return value, nil
+	return tok, nil
 }
 
 // Any sequence that looks like a non-delimiter (for error reporting).
 var errRegexp = regexp.MustCompile(`^([-+._a-zA-Z0-9]{1,32}|.)`)
 
-// parseNext parses for the next JSON value. It returns a Value object for
-// different types, except for Name. It does not handle whether the next value
+// parseNext parses for the next JSON token. It returns a Token object for
+// different types, except for Name. It does not handle whether the next token
 // is in a valid sequence or not.
-func (d *Decoder) parseNext() (value Value, err error) {
+func (d *Decoder) parseNext() (Token, error) {
 	// Trim leading spaces.
 	d.consume(0)
 
 	in := d.in
 	if len(in) == 0 {
-		return d.newValue(EOF, nil, 0), nil
+		return d.consumeToken(EOF, 0), nil
 	}
 
 	switch in[0] {
 	case 'n':
-		n := matchWithDelim("null", in)
-		if n == 0 {
-			return Value{}, d.newSyntaxError("invalid value %s", errRegexp.Find(in))
+		if n := matchWithDelim("null", in); n != 0 {
+			return d.consumeToken(Null, n), nil
 		}
-		return d.newValue(Null, in, n), nil
 
 	case 't':
-		n := matchWithDelim("true", in)
-		if n == 0 {
-			return Value{}, d.newSyntaxError("invalid value %s", errRegexp.Find(in))
+		if n := matchWithDelim("true", in); n != 0 {
+			return d.consumeBoolToken(true, n), nil
 		}
-		return d.newBoolValue(in, n, true), nil
 
 	case 'f':
-		n := matchWithDelim("false", in)
-		if n == 0 {
-			return Value{}, d.newSyntaxError("invalid value %s", errRegexp.Find(in))
+		if n := matchWithDelim("false", in); n != 0 {
+			return d.consumeBoolToken(false, n), nil
 		}
-		return d.newBoolValue(in, n, false), nil
 
 	case '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
-		n, ok := consumeNumber(in)
-		if !ok {
-			return Value{}, d.newSyntaxError("invalid number %s", errRegexp.Find(in))
+		if n, ok := parseNumber(in); ok {
+			return d.consumeToken(Number, n), nil
 		}
-		return d.newValue(Number, in, n), nil
 
 	case '"':
 		s, n, err := d.parseString(in)
 		if err != nil {
-			return Value{}, err
+			return Token{}, err
 		}
-		return d.newStringValue(in, n, s), nil
+		return d.consumeStringToken(s, n), nil
 
 	case '{':
-		return d.newValue(StartObject, in, 1), nil
+		return d.consumeToken(ObjectOpen, 1), nil
 
 	case '}':
-		return d.newValue(EndObject, in, 1), nil
+		return d.consumeToken(ObjectClose, 1), nil
 
 	case '[':
-		return d.newValue(StartArray, in, 1), nil
+		return d.consumeToken(ArrayOpen, 1), nil
 
 	case ']':
-		return d.newValue(EndArray, in, 1), nil
+		return d.consumeToken(ArrayClose, 1), nil
 
 	case ',':
-		return d.newValue(comma, in, 1), nil
+		return d.consumeToken(comma, 1), nil
 	}
-	return Value{}, d.newSyntaxError("invalid value %s", errRegexp.Find(in))
-}
-
-// position returns line and column number of index in given orig slice.
-func position(orig []byte, idx int) (int, int) {
-	b := orig[:idx]
-	line := bytes.Count(b, []byte("\n")) + 1
-	if i := bytes.LastIndexByte(b, '\n'); i >= 0 {
-		b = b[i+1:]
-	}
-	column := utf8.RuneCount(b) + 1 // ignore multi-rune characters
-	return line, column
+	return Token{}, d.newSyntaxError(d.currPos(), "invalid value %s", errRegexp.Find(in))
 }
 
 // newSyntaxError returns an error with line and column information useful for
 // syntax errors.
-func (d *Decoder) newSyntaxError(f string, x ...interface{}) error {
+func (d *Decoder) newSyntaxError(pos int, f string, x ...interface{}) error {
 	e := errors.New(f, x...)
-	line, column := position(d.orig, len(d.orig)-len(d.in))
+	line, column := d.Position(pos)
 	return errors.New("syntax error (line %d:%d): %v", line, column, e)
+}
+
+// Position returns line and column number of given index of the original input.
+// It will panic if index is out of range.
+func (d *Decoder) Position(idx int) (line int, column int) {
+	b := d.orig[:idx]
+	line = bytes.Count(b, []byte("\n")) + 1
+	if i := bytes.LastIndexByte(b, '\n'); i >= 0 {
+		b = b[i+1:]
+	}
+	column = utf8.RuneCount(b) + 1 // ignore multi-rune characters
+	return line, column
+}
+
+// currPos returns the current index position of d.in from d.orig.
+func (d *Decoder) currPos() int {
+	return len(d.orig) - len(d.in)
 }
 
 // matchWithDelim matches s with the input b and verifies that the match
@@ -278,193 +277,64 @@ func (d *Decoder) consume(n int) {
 // isValueNext returns true if next type should be a JSON value: Null,
 // Number, String or Bool.
 func (d *Decoder) isValueNext() bool {
-	if len(d.startStack) == 0 {
-		return d.value.typ == 0
+	if len(d.openStack) == 0 {
+		return d.lastToken.kind == 0
 	}
 
-	start := d.startStack[len(d.startStack)-1]
+	start := d.openStack[len(d.openStack)-1]
 	switch start {
-	case StartObject:
-		return d.value.typ&Name != 0
-	case StartArray:
-		return d.value.typ&(StartArray|comma) != 0
+	case ObjectOpen:
+		return d.lastToken.kind&Name != 0
+	case ArrayOpen:
+		return d.lastToken.kind&(ArrayOpen|comma) != 0
 	}
 	panic(fmt.Sprintf(
-		"unreachable logic in Decoder.isValueNext, lastType: %v, startStack: %v",
-		d.value.typ, start))
+		"unreachable logic in Decoder.isValueNext, lastToken.kind: %v, openStack: %v",
+		d.lastToken.kind, start))
 }
 
-// newValue constructs a Value for given Type.
-func (d *Decoder) newValue(typ Type, input []byte, size int) Value {
-	return Value{
-		typ:   typ,
-		input: d.orig,
-		start: len(d.orig) - len(input),
-		size:  size,
+// consumeToken constructs a Token for given Kind with raw value derived from
+// current d.in and given size, and consumes the given size-lenght of it.
+func (d *Decoder) consumeToken(kind Kind, size int) Token {
+	tok := Token{
+		kind: kind,
+		raw:  d.in[:size],
+		pos:  len(d.orig) - len(d.in),
 	}
+	d.consume(size)
+	return tok
 }
 
-// newBoolValue constructs a Value for a JSON boolean.
-func (d *Decoder) newBoolValue(input []byte, size int, b bool) Value {
-	return Value{
-		typ:   Bool,
-		input: d.orig,
-		start: len(d.orig) - len(input),
-		size:  size,
-		boo:   b,
+// consumeBoolToken constructs a Token for a Bool kind with raw value derived from
+// current d.in and given size.
+func (d *Decoder) consumeBoolToken(b bool, size int) Token {
+	tok := Token{
+		kind: Bool,
+		raw:  d.in[:size],
+		pos:  len(d.orig) - len(d.in),
+		boo:  b,
 	}
+	d.consume(size)
+	return tok
 }
 
-// newStringValue constructs a Value for a JSON string.
-func (d *Decoder) newStringValue(input []byte, size int, s string) Value {
-	return Value{
-		typ:   String,
-		input: d.orig,
-		start: len(d.orig) - len(input),
-		size:  size,
-		str:   s,
+// consumeStringToken constructs a Token for a String kind with raw value derived
+// from current d.in and given size.
+func (d *Decoder) consumeStringToken(s string, size int) Token {
+	tok := Token{
+		kind: String,
+		raw:  d.in[:size],
+		pos:  len(d.orig) - len(d.in),
+		str:  s,
 	}
+	d.consume(size)
+	return tok
 }
 
 // Clone returns a copy of the Decoder for use in reading ahead the next JSON
 // object, array or other values without affecting current Decoder.
 func (d *Decoder) Clone() *Decoder {
 	ret := *d
-	ret.startStack = append([]Type(nil), ret.startStack...)
+	ret.openStack = append([]Kind(nil), ret.openStack...)
 	return &ret
-}
-
-// Value provides a parsed JSON type and value.
-//
-// The original input slice is stored in this struct in order to compute for
-// position as needed. The raw JSON value is derived from the original input
-// slice given start and size.
-//
-// For JSON boolean and string, it holds the converted value in boo and str
-// fields respectively. For JSON number, the raw JSON value holds a valid number
-// which is converted only in Int or Float. Other JSON types do not require any
-// additional data.
-type Value struct {
-	typ   Type
-	input []byte
-	start int
-	size  int
-	boo   bool
-	str   string
-}
-
-func (v Value) newError(f string, x ...interface{}) error {
-	e := errors.New(f, x...)
-	line, col := v.Position()
-	return errors.New("error (line %d:%d): %v", line, col, e)
-}
-
-// Type returns the JSON type.
-func (v Value) Type() Type {
-	return v.typ
-}
-
-// Position returns the line and column of the value.
-func (v Value) Position() (int, int) {
-	return position(v.input, v.start)
-}
-
-// Bool returns the bool value if token is Bool, else it will return an error.
-func (v Value) Bool() (bool, error) {
-	if v.typ != Bool {
-		return false, v.newError("%s is not a bool", v.Raw())
-	}
-	return v.boo, nil
-}
-
-// String returns the string value for a JSON string token or the read value in
-// string if token is not a string.
-func (v Value) String() string {
-	if v.typ != String {
-		return v.Raw()
-	}
-	return v.str
-}
-
-// Name returns the object name if token is Name, else it will return an error.
-func (v Value) Name() (string, error) {
-	if v.typ != Name {
-		return "", v.newError("%s is not an object name", v.Raw())
-	}
-	return v.str, nil
-}
-
-// Raw returns the read value in string.
-func (v Value) Raw() string {
-	return string(v.input[v.start : v.start+v.size])
-}
-
-// Float returns the floating-point number if token is Number, else it will
-// return an error.
-//
-// The floating-point precision is specified by the bitSize parameter: 32 for
-// float32 or 64 for float64. If bitSize=32, the result still has type float64,
-// but it will be convertible to float32 without changing its value. It will
-// return an error if the number exceeds the floating point limits for given
-// bitSize.
-func (v Value) Float(bitSize int) (float64, error) {
-	if v.typ != Number {
-		return 0, v.newError("%s is not a number", v.Raw())
-	}
-	f, err := strconv.ParseFloat(v.Raw(), bitSize)
-	if err != nil {
-		return 0, v.newError("%v", err)
-	}
-	return f, nil
-}
-
-// Int returns the signed integer number if token is Number, else it will
-// return an error.
-//
-// The given bitSize specifies the integer type that the result must fit into.
-// It returns an error if the number is not an integer value or if the result
-// exceeds the limits for given bitSize.
-func (v Value) Int(bitSize int) (int64, error) {
-	s, err := v.getIntStr()
-	if err != nil {
-		return 0, err
-	}
-	n, err := strconv.ParseInt(s, 10, bitSize)
-	if err != nil {
-		return 0, v.newError("%v", err)
-	}
-	return n, nil
-}
-
-// Uint returns the signed integer number if token is Number, else it will
-// return an error.
-//
-// The given bitSize specifies the unsigned integer type that the result must
-// fit into.  It returns an error if the number is not an unsigned integer value
-// or if the result exceeds the limits for given bitSize.
-func (v Value) Uint(bitSize int) (uint64, error) {
-	s, err := v.getIntStr()
-	if err != nil {
-		return 0, err
-	}
-	n, err := strconv.ParseUint(s, 10, bitSize)
-	if err != nil {
-		return 0, v.newError("%v", err)
-	}
-	return n, nil
-}
-
-func (v Value) getIntStr() (string, error) {
-	if v.typ != Number {
-		return "", v.newError("%s is not a number", v.input)
-	}
-	parts, ok := parseNumber(v.input[v.start : v.start+v.size])
-	if !ok {
-		return "", v.newError("%s is not a number", v.input)
-	}
-	num, ok := normalizeToIntString(parts)
-	if !ok {
-		return "", v.newError("cannot convert %s to integer", v.input)
-	}
-	return num, nil
 }
