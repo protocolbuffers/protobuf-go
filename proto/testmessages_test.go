@@ -1271,6 +1271,20 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc:    "required field in absent map message value",
+		partial: true,
+		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
+			MapMessage: map[int32]*testpb.TestRequired{
+				2: {},
+			},
+		}},
+		wire: pack.Message{
+			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.VarintType}, pack.Varint(2),
+			}),
+		}.Marshal(),
+	},
+	{
 		desc: "required field in map message set",
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			MapMessage: map[int32]*testpb.TestRequired{

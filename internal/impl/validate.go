@@ -266,6 +266,7 @@ State:
 				case 2:
 					vi.typ = st.valType
 					vi.mi = st.mi
+					vi.requiredIndex = 1
 				}
 			default:
 				var f *coderFieldInfo
@@ -436,14 +437,22 @@ State:
 		}
 		b = st.tail
 	PopState:
+		numRequiredFields := 0
 		switch st.typ {
 		case validationTypeMessage, validationTypeGroup:
-			// If there are more than 64 required fields, this check will
-			// always fail and we will report that the message is potentially
-			// uninitialized.
-			if st.mi.numRequiredFields > 0 && bits.OnesCount64(st.requiredMask) != int(st.mi.numRequiredFields) {
-				initialized = false
+			numRequiredFields = int(st.mi.numRequiredFields)
+		case validationTypeMap:
+			// If this is a map field with a message value that contains
+			// required fields, require that the value be present.
+			if st.mi != nil && st.mi.numRequiredFields > 0 {
+				numRequiredFields = 1
 			}
+		}
+		// If there are more than 64 required fields, this check will
+		// always fail and we will report that the message is potentially
+		// uninitialized.
+		if numRequiredFields > 0 && bits.OnesCount64(st.requiredMask) != numRequiredFields {
+			initialized = false
 		}
 		states = states[:len(states)-1]
 	}
