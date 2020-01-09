@@ -164,7 +164,7 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 
 func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	if mi := getMessageInfo(ft); mi != nil {
-		return pointerCoderFuncs{
+		funcs := pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
 				return sizeMessageInfo(p, mi, tagsize, opts)
 			},
@@ -174,10 +174,13 @@ func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCode
 			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
 				return consumeMessageInfo(b, p, mi, wtyp, opts)
 			},
-			isInit: func(p pointer) error {
-				return mi.isInitializedPointer(p.Elem())
-			},
 		}
+		if needsInitCheck(mi.Desc) {
+			funcs.isInit = func(p pointer) error {
+				return mi.isInitializedPointer(p.Elem())
+			}
+		}
+		return funcs
 	} else {
 		return pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
@@ -308,7 +311,7 @@ var coderGroupValue = valueCoderFuncs{
 func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	num := fd.Number()
 	if mi := getMessageInfo(ft); mi != nil {
-		return pointerCoderFuncs{
+		funcs := pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
 				return sizeGroupType(p, mi, tagsize, opts)
 			},
@@ -318,10 +321,13 @@ func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderF
 			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
 				return consumeGroupType(b, p, mi, num, wtyp, opts)
 			},
-			isInit: func(p pointer) error {
-				return mi.isInitializedPointer(p.Elem())
-			},
 		}
+		if needsInitCheck(mi.Desc) {
+			funcs.isInit = func(p pointer) error {
+				return mi.isInitializedPointer(p.Elem())
+			}
+		}
+		return funcs
 	} else {
 		return pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
@@ -392,7 +398,7 @@ func consumeGroup(b []byte, m proto.Message, num wire.Number, wtyp wire.Type, op
 
 func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	if mi := getMessageInfo(ft); mi != nil {
-		return pointerCoderFuncs{
+		funcs := pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
 				return sizeMessageSliceInfo(p, mi, tagsize, opts)
 			},
@@ -402,10 +408,13 @@ func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointe
 			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
 				return consumeMessageSliceInfo(b, p, mi, wtyp, opts)
 			},
-			isInit: func(p pointer) error {
-				return isInitMessageSliceInfo(p, mi)
-			},
 		}
+		if needsInitCheck(mi.Desc) {
+			funcs.isInit = func(p pointer) error {
+				return isInitMessageSliceInfo(p, mi)
+			}
+		}
+		return funcs
 	}
 	return pointerCoderFuncs{
 		size: func(p pointer, tagsize int, opts marshalOptions) int {
@@ -644,7 +653,7 @@ var coderGroupSliceValue = valueCoderFuncs{
 func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	num := fd.Number()
 	if mi := getMessageInfo(ft); mi != nil {
-		return pointerCoderFuncs{
+		funcs := pointerCoderFuncs{
 			size: func(p pointer, tagsize int, opts marshalOptions) int {
 				return sizeGroupSliceInfo(p, mi, tagsize, opts)
 			},
@@ -654,10 +663,13 @@ func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerC
 			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error) {
 				return consumeGroupSliceInfo(b, p, num, wtyp, mi, opts)
 			},
-			isInit: func(p pointer) error {
-				return isInitMessageSliceInfo(p, mi)
-			},
 		}
+		if needsInitCheck(mi.Desc) {
+			funcs.isInit = func(p pointer) error {
+				return isInitMessageSliceInfo(p, mi)
+			}
+		}
+		return funcs
 	}
 	return pointerCoderFuncs{
 		size: func(p pointer, tagsize int, opts marshalOptions) int {
