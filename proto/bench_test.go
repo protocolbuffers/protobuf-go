@@ -10,7 +10,6 @@ import (
 	"reflect"
 	"testing"
 
-	protoV1 "github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -19,7 +18,6 @@ import (
 // detect unexpected regressions and for profiling specific cases.
 
 var (
-	benchV1      = flag.Bool("v1", false, "benchmark the v1 implementation")
 	allowPartial = flag.Bool("allow_partial", false, "set AllowPartial")
 )
 
@@ -27,17 +25,11 @@ var (
 func BenchmarkEncode(b *testing.B) {
 	for _, test := range testValidMessages {
 		for _, want := range test.decodeTo {
-			v1 := want.(protoV1.Message)
 			opts := proto.MarshalOptions{AllowPartial: *allowPartial}
 			b.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(b *testing.B) {
 				b.RunParallel(func(pb *testing.PB) {
 					for pb.Next() {
-						var err error
-						if *benchV1 {
-							_, err = protoV1.Marshal(v1)
-						} else {
-							_, err = opts.Marshal(want)
-						}
+						_, err := opts.Marshal(want)
 						if err != nil && !test.partial {
 							b.Fatal(err)
 						}
@@ -57,13 +49,7 @@ func BenchmarkDecode(b *testing.B) {
 				b.RunParallel(func(pb *testing.PB) {
 					for pb.Next() {
 						m := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
-						v1 := m.(protoV1.Message)
-						var err error
-						if *benchV1 {
-							err = protoV1.Unmarshal(test.wire, v1)
-						} else {
-							err = opts.Unmarshal(test.wire, m)
-						}
+						err := opts.Unmarshal(test.wire, m)
 						if err != nil && !test.partial {
 							b.Fatal(err)
 						}

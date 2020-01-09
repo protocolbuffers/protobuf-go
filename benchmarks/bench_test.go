@@ -5,7 +5,6 @@
 package bench_test
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -16,8 +15,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang/protobuf/jsonpb"
-	protoV1 "github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
@@ -32,16 +29,12 @@ import (
 	_ "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4"
 )
 
-var (
-	benchV1 = flag.Bool("v1", false, "benchmark the v1 implementation")
-)
-
 func BenchmarkWire(b *testing.B) {
 	bench(b, "Unmarshal", func(ds dataset, pb *testing.PB) {
 		for pb.Next() {
 			for _, p := range ds.wire {
 				m := ds.messageType.New().Interface()
-				if err := Unmarshal(p, m); err != nil {
+				if err := proto.Unmarshal(p, m); err != nil {
 					b.Fatal(err)
 				}
 			}
@@ -50,7 +43,7 @@ func BenchmarkWire(b *testing.B) {
 	bench(b, "Marshal", func(ds dataset, pb *testing.PB) {
 		for pb.Next() {
 			for _, m := range ds.messages {
-				if _, err := Marshal(m); err != nil {
+				if _, err := proto.Marshal(m); err != nil {
 					b.Fatal(err)
 				}
 			}
@@ -59,7 +52,7 @@ func BenchmarkWire(b *testing.B) {
 	bench(b, "Size", func(ds dataset, pb *testing.PB) {
 		for pb.Next() {
 			for _, m := range ds.messages {
-				Size(m)
+				proto.Size(m)
 			}
 		}
 	})
@@ -70,7 +63,7 @@ func BenchmarkText(b *testing.B) {
 		for pb.Next() {
 			for _, p := range ds.text {
 				m := ds.messageType.New().Interface()
-				if err := UnmarshalText(p, m); err != nil {
+				if err := prototext.Unmarshal(p, m); err != nil {
 					b.Fatal(err)
 				}
 			}
@@ -79,7 +72,7 @@ func BenchmarkText(b *testing.B) {
 	bench(b, "Marshal", func(ds dataset, pb *testing.PB) {
 		for pb.Next() {
 			for _, m := range ds.messages {
-				if _, err := MarshalText(m); err != nil {
+				if _, err := prototext.Marshal(m); err != nil {
 					b.Fatal(err)
 				}
 			}
@@ -92,7 +85,7 @@ func BenchmarkJSON(b *testing.B) {
 		for pb.Next() {
 			for _, p := range ds.json {
 				m := ds.messageType.New().Interface()
-				if err := UnmarshalJSON(p, m); err != nil {
+				if err := protojson.Unmarshal(p, m); err != nil {
 					b.Fatal(err)
 				}
 			}
@@ -101,7 +94,7 @@ func BenchmarkJSON(b *testing.B) {
 	bench(b, "Marshal", func(ds dataset, pb *testing.PB) {
 		for pb.Next() {
 			for _, m := range ds.messages {
-				if _, err := MarshalJSON(m); err != nil {
+				if _, err := protojson.Marshal(m); err != nil {
 					b.Fatal(err)
 				}
 			}
@@ -210,58 +203,4 @@ func TestMain(m *testing.M) {
 		return nil
 	})
 	os.Exit(m.Run())
-}
-
-func Unmarshal(b []byte, m proto.Message) error {
-	if *benchV1 {
-		return protoV1.Unmarshal(b, m.(protoV1.Message))
-	}
-	return proto.Unmarshal(b, m)
-}
-
-func Marshal(m proto.Message) ([]byte, error) {
-	if *benchV1 {
-		return protoV1.Marshal(m.(protoV1.Message))
-	}
-	return proto.Marshal(m)
-}
-
-func Size(m proto.Message) int {
-	if *benchV1 {
-		return protoV1.Size(m.(protoV1.Message))
-	}
-	return proto.Size(m)
-}
-
-func UnmarshalText(b []byte, m proto.Message) error {
-	if *benchV1 {
-		// Extra string conversion makes this not quite right.
-		return protoV1.UnmarshalText(string(b), m.(protoV1.Message))
-	}
-	return prototext.Unmarshal(b, m)
-}
-
-func MarshalText(m proto.Message) ([]byte, error) {
-	if *benchV1 {
-		var b bytes.Buffer
-		err := protoV1.MarshalText(&b, m.(protoV1.Message))
-		return b.Bytes(), err
-	}
-	return prototext.Marshal(m)
-}
-
-func UnmarshalJSON(b []byte, m proto.Message) error {
-	if *benchV1 {
-		return jsonpb.Unmarshal(bytes.NewBuffer(b), m.(protoV1.Message))
-	}
-	return protojson.Unmarshal(b, m)
-}
-
-func MarshalJSON(m proto.Message) ([]byte, error) {
-	if *benchV1 {
-		var b bytes.Buffer
-		err := (&jsonpb.Marshaler{}).Marshal(&b, m.(protoV1.Message))
-		return b.Bytes(), err
-	}
-	return protojson.Marshal(m)
 }

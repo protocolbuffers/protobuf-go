@@ -9,8 +9,6 @@ import (
 	"fmt"
 	"testing"
 
-	jsonpbV1 "github.com/golang/protobuf/jsonpb"
-	protoV1 "github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/encoding/prototext"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -132,13 +130,9 @@ func setMap(mmap pref.Map, fd pref.FieldDescriptor, level int) {
 func BenchmarkTextEncode(b *testing.B) {
 	m := makeProto()
 	for i := 0; i < b.N; i++ {
-		if *benchV1 {
-			protoV1.MarshalTextString(m)
-		} else {
-			_, err := prototext.MarshalOptions{Indent: "  "}.Marshal(m)
-			if err != nil {
-				b.Fatal(err)
-			}
+		_, err := prototext.MarshalOptions{Indent: "  "}.Marshal(m)
+		if err != nil {
+			b.Fatal(err)
 		}
 	}
 }
@@ -152,13 +146,7 @@ func BenchmarkTextDecode(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		m := &tpb.TestAllTypes{}
-		var err error
-		if *benchV1 {
-			err = protoV1.UnmarshalText(string(in), m)
-		} else {
-			err = prototext.Unmarshal(in, m)
-		}
-		if err != nil {
+		if err := prototext.Unmarshal(in, m); err != nil {
 			b.Fatal(err)
 		}
 	}
@@ -167,13 +155,7 @@ func BenchmarkTextDecode(b *testing.B) {
 func BenchmarkJSONEncode(b *testing.B) {
 	m := makeProto()
 	for i := 0; i < b.N; i++ {
-		var err error
-		if *benchV1 {
-			jsm := &jsonpbV1.Marshaler{Indent: "  "}
-			_, err = jsm.MarshalToString(m)
-		} else {
-			_, err = protojson.MarshalOptions{Indent: "  "}.Marshal(m)
-		}
+		_, err := protojson.MarshalOptions{Indent: "  "}.Marshal(m)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -189,13 +171,7 @@ func BenchmarkJSONDecode(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		m := &tpb.TestAllTypes{}
-		var err error
-		if *benchV1 {
-			err = jsonpbV1.UnmarshalString(string(out), m)
-		} else {
-			err = protojson.Unmarshal(out, m)
-		}
-		if err != nil {
+		if err := protojson.Unmarshal(out, m); err != nil {
 			b.Fatal(err)
 		}
 	}
