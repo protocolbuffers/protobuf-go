@@ -12,7 +12,6 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
 	reflect "reflect"
-	sync "sync"
 )
 
 var file_annotation_annotation_proto_extTypes = []protoimpl.ExtensionInfo{
@@ -54,18 +53,6 @@ var file_annotation_annotation_proto_rawDesc = []byte{
 	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61,
 	0x6c, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x73, 0x2f, 0x61, 0x6e, 0x6e,
 	0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-}
-
-var (
-	file_annotation_annotation_proto_rawDescOnce sync.Once
-	file_annotation_annotation_proto_rawDescData = file_annotation_annotation_proto_rawDesc
-)
-
-func file_annotation_annotation_proto_rawDescGZIP() []byte {
-	file_annotation_annotation_proto_rawDescOnce.Do(func() {
-		file_annotation_annotation_proto_rawDescData = protoimpl.X.CompressGZIP(file_annotation_annotation_proto_rawDescData)
-	})
-	return file_annotation_annotation_proto_rawDescData
 }
 
 var file_annotation_annotation_proto_goTypes = []interface{}{

@@ -53,68 +53,11 @@ type goImportPath interface {
 	Ident(string) protogen.GoIdent
 }
 
-type fileInfo struct {
-	*protogen.File
-
-	allEnums      []*protogen.Enum
-	allMessages   []*protogen.Message
-	allExtensions []*protogen.Extension
-
-	allEnumsByPtr         map[*protogen.Enum]int    // value is index into allEnums
-	allMessagesByPtr      map[*protogen.Message]int // value is index into allMessages
-	allMessageFieldsByPtr map[*protogen.Message]*structFields
-}
-
-type structFields struct {
-	count      int
-	unexported map[int]string
-}
-
-func (sf *structFields) append(name string) {
-	if r, _ := utf8.DecodeRuneInString(name); !unicode.IsUpper(r) {
-		if sf.unexported == nil {
-			sf.unexported = make(map[int]string)
-		}
-		sf.unexported[sf.count] = name
-	}
-	sf.count++
-}
-
 // GenerateFile generates the contents of a .pb.go file.
 func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.GeneratedFile {
 	filename := file.GeneratedFilenamePrefix + ".pb.go"
 	g := gen.NewGeneratedFile(filename, file.GoImportPath)
-	f := &fileInfo{
-		File: file,
-	}
-
-	// Collect all enums, messages, and extensions in "flattened ordering".
-	// See filetype.TypeBuilder.
-	f.allEnums = append(f.allEnums, f.Enums...)
-	f.allMessages = append(f.allMessages, f.Messages...)
-	f.allExtensions = append(f.allExtensions, f.Extensions...)
-	walkMessages(f.Messages, func(m *protogen.Message) {
-		f.allEnums = append(f.allEnums, m.Enums...)
-		f.allMessages = append(f.allMessages, m.Messages...)
-		f.allExtensions = append(f.allExtensions, m.Extensions...)
-	})
-
-	// Derive a reverse mapping of enum and message pointers to their index
-	// in allEnums and allMessages.
-	if len(f.allEnums) > 0 {
-		f.allEnumsByPtr = make(map[*protogen.Enum]int)
-		for i, e := range f.allEnums {
-			f.allEnumsByPtr[e] = i
-		}
-	}
-	if len(f.allMessages) > 0 {
-		f.allMessagesByPtr = make(map[*protogen.Message]int)
-		f.allMessageFieldsByPtr = make(map[*protogen.Message]*structFields)
-		for i, m := range f.allMessages {
-			f.allMessagesByPtr[m] = i
-			f.allMessageFieldsByPtr[m] = new(structFields)
-		}
-	}
+	f := newFileInfo(file)
 
 	genStandaloneComments(g, f, fieldnum.FileDescriptorProto_Syntax)
 	genGeneratedHeader(gen, g, f)
@@ -137,24 +80,16 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 		genImport(gen, g, f, imps.Get(i))
 	}
 	for _, enum := range f.allEnums {
-		genEnum(gen, g, f, enum)
+		genEnum(g, f, enum)
 	}
 	for _, message := range f.allMessages {
-		genMessage(gen, g, f, message)
+		genMessage(g, f, message)
 	}
-	genExtensions(gen, g, f)
+	genExtensions(g, f)
 
 	genReflectFileDescriptor(gen, g, f)
 
 	return g
-}
-
-// walkMessages calls f on each message and all of its descendants.
-func walkMessages(messages []*protogen.Message, f func(*protogen.Message)) {
-	for _, m := range messages {
-		f(m)
-		walkMessages(m.Messages, f)
-	}
 }
 
 // genStandaloneComments prints all leading comments for a FileDescriptorProto
@@ -276,41 +211,41 @@ func genImport(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, imp
 	g.P()
 }
 
-func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum *protogen.Enum) {
+func genEnum(g *protogen.GeneratedFile, f *fileInfo, e *enumInfo) {
 	// Enum type declaration.
-	g.Annotate(enum.GoIdent.GoName, enum.Location)
-	leadingComments := appendDeprecationSuffix(enum.Comments.Leading,
-		enum.Desc.Options().(*descriptorpb.EnumOptions).GetDeprecated())
+	g.Annotate(e.GoIdent.GoName, e.Location)
+	leadingComments := appendDeprecationSuffix(e.Comments.Leading,
+		e.Desc.Options().(*descriptorpb.EnumOptions).GetDeprecated())
 	g.P(leadingComments,
-		"type ", enum.GoIdent, " int32")
+		"type ", e.GoIdent, " int32")
 
 	// Enum value constants.
 	g.P("const (")
-	for _, value := range enum.Values {
+	for _, value := range e.Values {
 		g.Annotate(value.GoIdent.GoName, value.Location)
 		leadingComments := appendDeprecationSuffix(value.Comments.Leading,
 			value.Desc.Options().(*descriptorpb.EnumValueOptions).GetDeprecated())
 		g.P(leadingComments,
-			value.GoIdent, " ", enum.GoIdent, " = ", value.Desc.Number(),
+			value.GoIdent, " ", e.GoIdent, " = ", value.Desc.Number(),
 			trailingComment(value.Comments.Trailing))
 	}
 	g.P(")")
 	g.P()
 
 	// Enum value maps.
-	g.P("// Enum value maps for ", enum.GoIdent, ".")
+	g.P("// Enum value maps for ", e.GoIdent, ".")
 	g.P("var (")
-	g.P(enum.GoIdent.GoName+"_name", " = map[int32]string{")
-	for _, value := range enum.Values {
+	g.P(e.GoIdent.GoName+"_name", " = map[int32]string{")
+	for _, value := range e.Values {
 		duplicate := ""
-		if value.Desc != enum.Desc.Values().ByNumber(value.Desc.Number()) {
+		if value.Desc != e.Desc.Values().ByNumber(value.Desc.Number()) {
 			duplicate = "// Duplicate value: "
 		}
 		g.P(duplicate, value.Desc.Number(), ": ", strconv.Quote(string(value.Desc.Name())), ",")
 	}
 	g.P("}")
-	g.P(enum.GoIdent.GoName+"_value", " = map[string]int32{")
-	for _, value := range enum.Values {
+	g.P(e.GoIdent.GoName+"_value", " = map[string]int32{")
+	for _, value := range e.Values {
 		g.P(strconv.Quote(string(value.Desc.Name())), ": ", value.Desc.Number(), ",")
 	}
 	g.P("}")
@@ -322,58 +257,54 @@ func genEnum(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum 
 	// NOTE: A pointer value is needed to represent presence in proto2.
 	// Since a proto2 message can reference a proto3 enum, it is useful to
 	// always generate this method (even on proto3 enums) to support that case.
-	g.P("func (x ", enum.GoIdent, ") Enum() *", enum.GoIdent, " {")
-	g.P("p := new(", enum.GoIdent, ")")
+	g.P("func (x ", e.GoIdent, ") Enum() *", e.GoIdent, " {")
+	g.P("p := new(", e.GoIdent, ")")
 	g.P("*p = x")
 	g.P("return p")
 	g.P("}")
 	g.P()
 
 	// String method.
-	g.P("func (x ", enum.GoIdent, ") String() string {")
+	g.P("func (x ", e.GoIdent, ") String() string {")
 	g.P("return ", protoimplPackage.Ident("X"), ".EnumStringOf(x.Descriptor(), ", protoreflectPackage.Ident("EnumNumber"), "(x))")
 	g.P("}")
 	g.P()
 
-	genEnumReflectMethods(gen, g, f, enum)
+	genEnumReflectMethods(g, f, e)
 
 	// UnmarshalJSON method.
-	if enum.Desc.Syntax() == protoreflect.Proto2 {
+	if e.genJSONMethod && e.Desc.Syntax() == protoreflect.Proto2 {
 		g.P("// Deprecated: Do not use.")
-		g.P("func (x *", enum.GoIdent, ") UnmarshalJSON(b []byte) error {")
+		g.P("func (x *", e.GoIdent, ") UnmarshalJSON(b []byte) error {")
 		g.P("num, err := ", protoimplPackage.Ident("X"), ".UnmarshalJSONEnum(x.Descriptor(), b)")
 		g.P("if err != nil {")
 		g.P("return err")
 		g.P("}")
-		g.P("*x = ", enum.GoIdent, "(num)")
+		g.P("*x = ", e.GoIdent, "(num)")
 		g.P("return nil")
 		g.P("}")
 		g.P()
 	}
 
 	// EnumDescriptor method.
-	var indexes []string
-	for i := 1; i < len(enum.Location.Path); i += 2 {
-		indexes = append(indexes, strconv.Itoa(int(enum.Location.Path[i])))
+	if e.genRawDescMethod {
+		var indexes []string
+		for i := 1; i < len(e.Location.Path); i += 2 {
+			indexes = append(indexes, strconv.Itoa(int(e.Location.Path[i])))
+		}
+		g.P("// Deprecated: Use ", e.GoIdent, ".Descriptor instead.")
+		g.P("func (", e.GoIdent, ") EnumDescriptor() ([]byte, []int) {")
+		g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
+		g.P("}")
+		g.P()
+		f.needRawDesc = true
 	}
-	g.P("// Deprecated: Use ", enum.GoIdent, ".Descriptor instead.")
-	g.P("func (", enum.GoIdent, ") EnumDescriptor() ([]byte, []int) {")
-	g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
-	g.P("}")
-	g.P()
 }
 
-type messageInfo struct {
-	*protogen.Message
-	messageFlags
-}
-
-func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, message *protogen.Message) {
-	if message.Desc.IsMapEntry() {
+func genMessage(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+	if m.Desc.IsMapEntry() {
 		return
 	}
-
-	m := &messageInfo{message, loadMessageFlags(message)}
 
 	// Message type declaration.
 	g.Annotate(m.GoIdent.GoName, m.Location)
@@ -386,12 +317,12 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, me
 	g.P()
 
 	genMessageDefaultDecls(g, f, m)
-	genMessageMethods(gen, g, f, m)
-	genMessageOneofWrapperTypes(gen, g, f, m)
+	genMessageMethods(g, f, m)
+	genMessageOneofWrapperTypes(g, f, m)
 }
 
 func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
-	sf := f.allMessageFieldsByPtr[m.Message]
+	sf := f.allMessageFieldsByPtr[m]
 	genMessageInternalFields(g, f, m, sf)
 	for _, field := range m.Fields {
 		genMessageField(g, f, m, field, sf)
@@ -403,7 +334,7 @@ func genMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *message
 	sf.append(genname.State)
 	g.P(genname.SizeCache, " ", protoimplPackage.Ident("SizeCache"))
 	sf.append(genname.SizeCache)
-	if m.HasWeak {
+	if m.hasWeak {
 		g.P(genname.WeakFields, " ", protoimplPackage.Ident("WeakFields"))
 		sf.append(genname.WeakFields)
 	}
@@ -431,7 +362,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		tags := structTags{
 			{"protobuf_oneof", string(oneof.Desc.Name())},
 		}
-		if m.IsTracked {
+		if m.isTracked {
 			tags = append(tags, gotrackTags...)
 		}
 
@@ -466,7 +397,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 			{"protobuf_val", fieldProtobufTagValue(val)},
 		}...)
 	}
-	if m.IsTracked {
+	if m.isTracked {
 		tags = append(tags, gotrackTags...)
 	}
 
@@ -541,18 +472,18 @@ func genMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageIn
 	g.P()
 }
 
-func genMessageMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
-	genMessageBaseMethods(gen, g, f, m)
-	genMessageGetterMethods(gen, g, f, m)
-	genMessageSetterMethods(gen, g, f, m)
+func genMessageMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+	genMessageBaseMethods(g, f, m)
+	genMessageGetterMethods(g, f, m)
+	genMessageSetterMethods(g, f, m)
 }
 
-func genMessageBaseMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func genMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	// Reset method.
 	g.P("func (x *", m.GoIdent, ") Reset() {")
 	g.P("*x = ", m.GoIdent, "{}")
 	g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " {")
-	g.P("mi := &", messageTypesVarName(f), "[", f.allMessagesByPtr[m.Message], "]")
+	g.P("mi := &", messageTypesVarName(f), "[", f.allMessagesByPtr[m], "]")
 	g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
 	g.P("ms.StoreMessageInfo(mi)")
 	g.P("}")
@@ -570,26 +501,30 @@ func genMessageBaseMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 	g.P()
 
 	// ProtoReflect method.
-	genMessageReflectMethods(gen, g, f, m)
+	genMessageReflectMethods(g, f, m)
 
 	// Descriptor method.
-	var indexes []string
-	for i := 1; i < len(m.Location.Path); i += 2 {
-		indexes = append(indexes, strconv.Itoa(int(m.Location.Path[i])))
+	if m.genRawDescMethod {
+		var indexes []string
+		for i := 1; i < len(m.Location.Path); i += 2 {
+			indexes = append(indexes, strconv.Itoa(int(m.Location.Path[i])))
+		}
+		g.P("// Deprecated: Use ", m.GoIdent, ".ProtoReflect.Descriptor instead.")
+		g.P("func (*", m.GoIdent, ") Descriptor() ([]byte, []int) {")
+		g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
+		g.P("}")
+		g.P()
+		f.needRawDesc = true
 	}
-	g.P("// Deprecated: Use ", m.GoIdent, ".ProtoReflect.Descriptor instead.")
-	g.P("func (*", m.GoIdent, ") Descriptor() ([]byte, []int) {")
-	g.P("return ", rawDescVarName(f), "GZIP(), []int{", strings.Join(indexes, ","), "}")
-	g.P("}")
-	g.P()
 
 	// ExtensionRangeArray method.
-	if extranges := m.Desc.ExtensionRanges(); extranges.Len() > 0 {
+	extRanges := m.Desc.ExtensionRanges()
+	if m.genExtRangeMethod && extRanges.Len() > 0 {
 		protoExtRange := protoifacePackage.Ident("ExtensionRangeV1")
 		extRangeVar := "extRange_" + m.GoIdent.GoName
 		g.P("var ", extRangeVar, " = []", protoExtRange, " {")
-		for i := 0; i < extranges.Len(); i++ {
-			r := extranges.Get(i)
+		for i := 0; i < extRanges.Len(); i++ {
+			r := extRanges.Get(i)
 			g.P("{Start:", r[0], ", End:", r[1]-1 /* inclusive */, "},")
 		}
 		g.P("}")
@@ -602,9 +537,9 @@ func genMessageBaseMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *f
 	}
 }
 
-func genMessageGetterMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, field := range m.Fields {
-		genNoInterfacePragma(g, m.IsTracked)
+		genNoInterfacePragma(g, m.isTracked)
 
 		// Getter for parent oneof.
 		if oneof := field.Oneof; oneof != nil && oneof.Fields[0] == field {
@@ -663,13 +598,13 @@ func genMessageGetterMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f 
 	}
 }
 
-func genMessageSetterMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func genMessageSetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, field := range m.Fields {
 		if !field.Desc.IsWeak() {
 			continue
 		}
 
-		genNoInterfacePragma(g, m.IsTracked)
+		genNoInterfacePragma(g, m.isTracked)
 
 		g.Annotate(m.GoIdent.GoName+".Set"+field.GoName, field.Location)
 		leadingComments := appendDeprecationSuffix("",
@@ -778,29 +713,29 @@ func fieldJSONTagValue(field *protogen.Field) string {
 	return string(field.Desc.Name()) + ",omitempty"
 }
 
-func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo) {
+func genExtensions(g *protogen.GeneratedFile, f *fileInfo) {
 	if len(f.allExtensions) == 0 {
 		return
 	}
 
 	g.P("var ", extensionTypesVarName(f), " = []", protoimplPackage.Ident("ExtensionInfo"), "{")
-	for _, extension := range f.allExtensions {
+	for _, x := range f.allExtensions {
 		// For MessageSet extensions, the name used is the parent message.
-		name := extension.Desc.FullName()
-		if messageset.IsMessageSetExtension(extension.Desc) {
+		name := x.Desc.FullName()
+		if messageset.IsMessageSetExtension(x.Desc) {
 			name = name.Parent()
 		}
 
 		g.P("{")
-		g.P("ExtendedType: (*", extension.Extendee.GoIdent, ")(nil),")
-		goType, pointer := fieldGoType(g, f, extension)
+		g.P("ExtendedType: (*", x.Extendee.GoIdent, ")(nil),")
+		goType, pointer := fieldGoType(g, f, x.Extension)
 		if pointer {
 			goType = "*" + goType
 		}
 		g.P("ExtensionType: (", goType, ")(nil),")
-		g.P("Field: ", extension.Desc.Number(), ",")
+		g.P("Field: ", x.Desc.Number(), ",")
 		g.P("Name: ", strconv.Quote(string(name)), ",")
-		g.P("Tag: ", strconv.Quote(fieldProtobufTagValue(extension)), ",")
+		g.P("Tag: ", strconv.Quote(fieldProtobufTagValue(x.Extension)), ",")
 		g.P("Filename: ", strconv.Quote(f.Desc.Path()), ",")
 		g.P("},")
 	}
@@ -809,21 +744,21 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 
 	// Group extensions by the target message.
 	var orderedTargets []protogen.GoIdent
-	allExtensionsByTarget := make(map[protogen.GoIdent][]*protogen.Extension)
-	allExtensionsByPtr := make(map[*protogen.Extension]int)
-	for i, extension := range f.allExtensions {
-		target := extension.Extendee.GoIdent
+	allExtensionsByTarget := make(map[protogen.GoIdent][]*extensionInfo)
+	allExtensionsByPtr := make(map[*extensionInfo]int)
+	for i, x := range f.allExtensions {
+		target := x.Extendee.GoIdent
 		if len(allExtensionsByTarget[target]) == 0 {
 			orderedTargets = append(orderedTargets, target)
 		}
-		allExtensionsByTarget[target] = append(allExtensionsByTarget[target], extension)
-		allExtensionsByPtr[extension] = i
+		allExtensionsByTarget[target] = append(allExtensionsByTarget[target], x)
+		allExtensionsByPtr[x] = i
 	}
 	for _, target := range orderedTargets {
 		g.P("// Extension fields to ", target, ".")
 		g.P("var (")
-		for _, extension := range allExtensionsByTarget[target] {
-			xd := extension.Desc
+		for _, x := range allExtensionsByTarget[target] {
+			xd := x.Desc
 			typeName := xd.Kind().String()
 			switch xd.Kind() {
 			case protoreflect.EnumKind:
@@ -833,17 +768,17 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 			}
 			fieldName := string(xd.Name())
 
-			leadingComments := extension.Comments.Leading
+			leadingComments := x.Comments.Leading
 			if leadingComments != "" {
 				leadingComments += "\n"
 			}
 			leadingComments += protogen.Comments(fmt.Sprintf(" %v %v %v = %v;\n",
 				xd.Cardinality(), typeName, fieldName, xd.Number()))
 			leadingComments = appendDeprecationSuffix(leadingComments,
-				extension.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
+				x.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
 			g.P(leadingComments,
-				"E_", extension.GoIdent, " = &", extensionTypesVarName(f), "[", allExtensionsByPtr[extension], "]",
-				trailingComment(extension.Comments.Trailing))
+				"E_", x.GoIdent, " = &", extensionTypesVarName(f), "[", allExtensionsByPtr[x], "]",
+				trailingComment(x.Comments.Trailing))
 		}
 		g.P(")")
 		g.P()
@@ -852,7 +787,7 @@ func genExtensions(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo)
 
 // genMessageOneofWrapperTypes generates the oneof wrapper types and
 // associates the types with the parent message type.
-func genMessageOneofWrapperTypes(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func genMessageOneofWrapperTypes(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, oneof := range m.Oneofs {
 		ifName := oneofInterfaceName(oneof)
 		g.P("type ", ifName, " interface {")
@@ -867,7 +802,7 @@ func genMessageOneofWrapperTypes(gen *protogen.Plugin, g *protogen.GeneratedFile
 			tags := structTags{
 				{"protobuf", fieldProtobufTagValue(field)},
 			}
-			if m.IsTracked {
+			if m.isTracked {
 				tags = append(tags, gotrackTags...)
 			}
 			leadingComments := appendDeprecationSuffix(field.Comments.Leading,

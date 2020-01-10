@@ -11,7 +11,6 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
-	sync "sync"
 )
 
 var File_grpc_deprecation_proto protoreflect.FileDescriptor
@@ -33,18 +32,6 @@ var file_grpc_deprecation_proto_rawDesc = []byte{
 	0x72, 0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67, 0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2f, 0x74, 0x65, 0x73,
 	0x74, 0x64, 0x61, 0x74, 0x61, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x33,
-}
-
-var (
-	file_grpc_deprecation_proto_rawDescOnce sync.Once
-	file_grpc_deprecation_proto_rawDescData = file_grpc_deprecation_proto_rawDesc
-)
-
-func file_grpc_deprecation_proto_rawDescGZIP() []byte {
-	file_grpc_deprecation_proto_rawDescOnce.Do(func() {
-		file_grpc_deprecation_proto_rawDescData = protoimpl.X.CompressGZIP(file_grpc_deprecation_proto_rawDescData)
-	})
-	return file_grpc_deprecation_proto_rawDescData
 }
 
 var file_grpc_deprecation_proto_goTypes = []interface{}{

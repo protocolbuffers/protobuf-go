@@ -79,10 +79,10 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	}
 	var depOffsets []offsetEntry
 	for _, enum := range f.allEnums {
-		genEnum(enum, "")
+		genEnum(enum.Enum, "")
 	}
 	for _, message := range f.allMessages {
-		genMessage(message, "")
+		genMessage(message.Message, "")
 	}
 	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "field type_name"})
 	for _, message := range f.allMessages {
@@ -259,48 +259,50 @@ func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 	g.P("}")
 	g.P()
 
-	onceVar := rawDescVarName(f) + "Once"
-	dataVar := rawDescVarName(f) + "Data"
-	g.P("var (")
-	g.P(onceVar, " ", syncPackage.Ident("Once"))
-	g.P(dataVar, " = ", rawDescVarName(f))
-	g.P(")")
-	g.P()
+	if f.needRawDesc {
+		onceVar := rawDescVarName(f) + "Once"
+		dataVar := rawDescVarName(f) + "Data"
+		g.P("var (")
+		g.P(onceVar, " ", syncPackage.Ident("Once"))
+		g.P(dataVar, " = ", rawDescVarName(f))
+		g.P(")")
+		g.P()
 
-	g.P("func ", rawDescVarName(f), "GZIP() []byte {")
-	g.P(onceVar, ".Do(func() {")
-	g.P(dataVar, " = ", protoimplPackage.Ident("X"), ".CompressGZIP(", dataVar, ")")
-	g.P("})")
-	g.P("return ", dataVar)
-	g.P("}")
-	g.P()
+		g.P("func ", rawDescVarName(f), "GZIP() []byte {")
+		g.P(onceVar, ".Do(func() {")
+		g.P(dataVar, " = ", protoimplPackage.Ident("X"), ".CompressGZIP(", dataVar, ")")
+		g.P("})")
+		g.P("return ", dataVar)
+		g.P("}")
+		g.P()
+	}
 }
 
-func genEnumReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, enum *protogen.Enum) {
-	idx := f.allEnumsByPtr[enum]
+func genEnumReflectMethods(g *protogen.GeneratedFile, f *fileInfo, e *enumInfo) {
+	idx := f.allEnumsByPtr[e]
 	typesVar := enumTypesVarName(f)
 
 	// Descriptor method.
-	g.P("func (", enum.GoIdent, ") Descriptor() ", protoreflectPackage.Ident("EnumDescriptor"), " {")
+	g.P("func (", e.GoIdent, ") Descriptor() ", protoreflectPackage.Ident("EnumDescriptor"), " {")
 	g.P("return ", typesVar, "[", idx, "].Descriptor()")
 	g.P("}")
 	g.P()
 
 	// Type method.
-	g.P("func (", enum.GoIdent, ") Type() ", protoreflectPackage.Ident("EnumType"), " {")
+	g.P("func (", e.GoIdent, ") Type() ", protoreflectPackage.Ident("EnumType"), " {")
 	g.P("return &", typesVar, "[", idx, "]")
 	g.P("}")
 	g.P()
 
 	// Number method.
-	g.P("func (x ", enum.GoIdent, ") Number() ", protoreflectPackage.Ident("EnumNumber"), " {")
+	g.P("func (x ", e.GoIdent, ") Number() ", protoreflectPackage.Ident("EnumNumber"), " {")
 	g.P("return ", protoreflectPackage.Ident("EnumNumber"), "(x)")
 	g.P("}")
 	g.P()
 }
 
-func genMessageReflectMethods(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
-	idx := f.allMessagesByPtr[m.Message]
+func genMessageReflectMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+	idx := f.allMessagesByPtr[m]
 	typesVar := messageTypesVarName(f)
 
 	// ProtoReflect method.
