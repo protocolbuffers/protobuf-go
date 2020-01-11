@@ -21,7 +21,7 @@ import (
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 
-	proto2_20180125 "google.golang.org/protobuf/internal/testprotos/legacy/proto2.v1.0.0-20180125-92554152"
+	proto2_20180125 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20180125_92554152"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
@@ -121,12 +121,12 @@ var (
 			reflect.TypeOf(([]byte)(nil)), depReg,
 		),
 		mustMakeExtensionType(
-			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
+			`package:"fizz.buzz" dependency:["legacy.proto", "proto2_20180125_92554152/test.proto"]`,
 			`name:"optional_enum_v1" number:10006 label:LABEL_OPTIONAL type:TYPE_ENUM type_name:".google.golang.org.proto2_20180125.Message.ChildEnum" default_value:"ALPHA" extendee:".LegacyTestMessage"`,
 			reflect.TypeOf(proto2_20180125.Message_ChildEnum(0)), depReg,
 		),
 		mustMakeExtensionType(
-			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
+			`package:"fizz.buzz" dependency:["legacy.proto", "proto2_20180125_92554152/test.proto"]`,
 			`name:"optional_message_v1" number:10007 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".google.golang.org.proto2_20180125.Message.ChildMessage" extendee:".LegacyTestMessage"`,
 			reflect.TypeOf((*proto2_20180125.Message_ChildMessage)(nil)), depReg,
 		),
@@ -171,12 +171,12 @@ var (
 			reflect.TypeOf([][]byte(nil)), depReg,
 		),
 		mustMakeExtensionType(
-			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
+			`package:"fizz.buzz" dependency:["legacy.proto", "proto2_20180125_92554152/test.proto"]`,
 			`name:"repeated_enum_v1" number:10016 label:LABEL_REPEATED type:TYPE_ENUM type_name:".google.golang.org.proto2_20180125.Message.ChildEnum" extendee:".LegacyTestMessage"`,
 			reflect.TypeOf([]proto2_20180125.Message_ChildEnum(nil)), depReg,
 		),
 		mustMakeExtensionType(
-			`package:"fizz.buzz" dependency:["legacy.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]`,
+			`package:"fizz.buzz" dependency:["legacy.proto", "proto2_20180125_92554152/test.proto"]`,
 			`name:"repeated_message_v1" number:10017 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google.golang.org.proto2_20180125.Message.ChildMessage" extendee:".LegacyTestMessage"`,
 			reflect.TypeOf([]*proto2_20180125.Message_ChildMessage(nil)), depReg,
 		),

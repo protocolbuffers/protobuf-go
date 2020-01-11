@@ -1,6 +1,6 @@
 // Copyright 2018 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// license that can be found in the LICEqNSE file.
 
 package impl
 
@@ -166,7 +166,7 @@ func aberrantLoadEnumDesc(t reflect.Type) pref.EnumDescriptor {
 
 	// Slow-path: construct a bogus, but unique EnumDescriptor.
 	ed := &filedesc.Enum{L2: new(filedesc.EnumL2)}
-	ed.L0.FullName = aberrantDeriveFullName(t) // e.g., github_com.user.repo.MyEnum
+	ed.L0.FullName = AberrantDeriveFullName(t) // e.g., github_com.user.repo.MyEnum
 	ed.L0.ParentFile = filedesc.SurrogateProto3
 	ed.L2.Values.List = append(ed.L2.Values.List, filedesc.EnumValue{})
 
@@ -187,10 +187,12 @@ func aberrantLoadEnumDesc(t reflect.Type) pref.EnumDescriptor {
 	return ed
 }
 
-// aberrantDeriveFullName derives a fully qualified protobuf name for the given Go type
+// AberrantDeriveFullName derives a fully qualified protobuf name for the given Go type
 // The provided name is not guaranteed to be stable nor universally unique.
 // It should be sufficiently unique within a program.
-func aberrantDeriveFullName(t reflect.Type) pref.FullName {
+//
+// This is exported for testing purposes.
+func AberrantDeriveFullName(t reflect.Type) pref.FullName {
 	sanitize := func(r rune) rune {
 		switch {
 		case r == '/':

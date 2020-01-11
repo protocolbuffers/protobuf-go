@@ -15,7 +15,7 @@ import (
 
 	irregularpb "google.golang.org/protobuf/internal/testprotos/irregular"
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
-	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2.v0.0.0-20160225-2fc053c5"
+	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	_ "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	_ "google.golang.org/protobuf/internal/testprotos/test/weak2"

@@ -267,7 +267,7 @@ func aberrantDeriveMessageName(t reflect.Type, name pref.FullName) pref.FullName
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
-	return aberrantDeriveFullName(t)
+	return AberrantDeriveFullName(t)
 }
 
 func aberrantAppendField(md *filedesc.Message, goType reflect.Type, tag, tagKey, tagVal string) {

@@ -114,7 +114,7 @@ func generateLocalProtos() {
 		{path: "encoding/testprotos"},
 		{path: "reflect/protoregistry/testprotos"},
 	}
-	semVerRx := regexp.MustCompile(`v[0-9]+\.[0-9]+\.[0-9]+`)
+	excludeRx := regexp.MustCompile(`legacy/proto[23]_[0-9]{8}_[0-9a-f]{8}/`)
 	for _, d := range dirs {
 		subDirs := map[string]bool{}
 
@@ -123,7 +123,7 @@ func generateLocalProtos() {
 
 		srcDir := filepath.Join(repoRoot, filepath.FromSlash(d.path))
 		filepath.Walk(srcDir, func(srcPath string, _ os.FileInfo, _ error) error {
-			if !strings.HasSuffix(srcPath, ".proto") || semVerRx.MatchString(srcPath) {
+			if !strings.HasSuffix(srcPath, ".proto") || excludeRx.MatchString(srcPath) {
 				return nil
 			}
 			relPath, err := filepath.Rel(srcDir, srcPath)

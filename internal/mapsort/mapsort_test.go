@@ -9,8 +9,9 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/internal/mapsort"
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
 )
 
 func TestRange(t *testing.T) {

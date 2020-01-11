@@ -10,12 +10,13 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/impl"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoiface"
+	"google.golang.org/protobuf/testing/protocmp"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -181,6 +182,9 @@ func (OneofMessage) isOneofUnion()  {}
 type AberrantEnum int32
 
 func TestAberrantMessages(t *testing.T) {
+	enumName := impl.AberrantDeriveFullName(reflect.TypeOf(AberrantEnum(0)))
+	messageName := impl.AberrantDeriveFullName(reflect.TypeOf(AberrantMessage{}))
+
 	want := new(descriptorpb.DescriptorProto)
 	if err := prototext.Unmarshal([]byte(`
 		name: "AberrantMessage"
@@ -200,8 +204,8 @@ func TestAberrantMessages(t *testing.T) {
 			{name:"opt_double"   number:13 label:LABEL_OPTIONAL type:TYPE_DOUBLE   default_value:"3.14159265359"},
 			{name:"opt_string"   number:14 label:LABEL_OPTIONAL type:TYPE_STRING   default_value:"hello, \"world!\"\n"},
 			{name:"opt_bytes"    number:15 label:LABEL_OPTIONAL type:TYPE_BYTES    default_value:"dead\\336\\255\\276\\357beef"},
-			{name:"opt_enum"     number:16 label:LABEL_OPTIONAL type:TYPE_ENUM     type_name:".google_golang_org.protobuf.internal.impl_test.AberrantEnum" default_value:"UNKNOWN_0"},
-			{name:"opt_message"  number:17 label:LABEL_OPTIONAL type:TYPE_MESSAGE  type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage"},
+			{name:"opt_enum"     number:16 label:LABEL_OPTIONAL type:TYPE_ENUM     type_name:".`+enumName+`" default_value:"UNKNOWN_0"},
+			{name:"opt_message"  number:17 label:LABEL_OPTIONAL type:TYPE_MESSAGE  type_name:".`+messageName+`"},
 
 			{name:"rep_bool"     number:18 label:LABEL_REPEATED type:TYPE_BOOL     options:{packed:true}},
 			{name:"rep_int32"    number:19 label:LABEL_REPEATED type:TYPE_INT32    options:{packed:true}},
@@ -218,26 +222,26 @@ func TestAberrantMessages(t *testing.T) {
 			{name:"rep_double"   number:30 label:LABEL_REPEATED type:TYPE_DOUBLE   options:{packed:true}},
 			{name:"rep_string"   number:31 label:LABEL_REPEATED type:TYPE_STRING},
 			{name:"rep_bytes"    number:32 label:LABEL_REPEATED type:TYPE_BYTES},
-			{name:"rep_enum"     number:33 label:LABEL_REPEATED type:TYPE_ENUM     type_name:".google_golang_org.protobuf.internal.impl_test.AberrantEnum"},
-			{name:"rep_message"  number:34 label:LABEL_REPEATED type:TYPE_MESSAGE  type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage"},
+			{name:"rep_enum"     number:33 label:LABEL_REPEATED type:TYPE_ENUM     type_name:".`+enumName+`"},
+			{name:"rep_message"  number:34 label:LABEL_REPEATED type:TYPE_MESSAGE  type_name:".`+messageName+`"},
 
-			{name:"map_string_bool"     number:35 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringBoolEntry"},
-			{name:"map_string_int32"    number:36 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringInt32Entry"},
-			{name:"map_string_sint32"   number:37 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringSint32Entry"},
-			{name:"map_string_uint32"   number:38 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringUint32Entry"},
-			{name:"map_string_int64"    number:39 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringInt64Entry"},
-			{name:"map_string_sint64"   number:40 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringSint64Entry"},
-			{name:"map_string_uint64"   number:41 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringUint64Entry"},
-			{name:"map_string_fixed32"  number:42 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringFixed32Entry"},
-			{name:"map_string_sfixed32" number:43 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringSfixed32Entry"},
-			{name:"map_string_float"    number:44 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringFloatEntry"},
-			{name:"map_string_fixed64"  number:45 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringFixed64Entry"},
-			{name:"map_string_sfixed64" number:46 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringSfixed64Entry"},
-			{name:"map_string_double"   number:47 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringDoubleEntry"},
-			{name:"map_string_string"   number:48 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringStringEntry"},
-			{name:"map_string_bytes"    number:49 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringBytesEntry"},
-			{name:"map_string_enum"     number:50 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringEnumEntry"},
-			{name:"map_string_message"  number:51 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage.MapStringMessageEntry"},
+			{name:"map_string_bool"     number:35 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringBoolEntry"},
+			{name:"map_string_int32"    number:36 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringInt32Entry"},
+			{name:"map_string_sint32"   number:37 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringSint32Entry"},
+			{name:"map_string_uint32"   number:38 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringUint32Entry"},
+			{name:"map_string_int64"    number:39 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringInt64Entry"},
+			{name:"map_string_sint64"   number:40 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringSint64Entry"},
+			{name:"map_string_uint64"   number:41 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringUint64Entry"},
+			{name:"map_string_fixed32"  number:42 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringFixed32Entry"},
+			{name:"map_string_sfixed32" number:43 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringSfixed32Entry"},
+			{name:"map_string_float"    number:44 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringFloatEntry"},
+			{name:"map_string_fixed64"  number:45 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringFixed64Entry"},
+			{name:"map_string_sfixed64" number:46 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringSfixed64Entry"},
+			{name:"map_string_double"   number:47 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringDoubleEntry"},
+			{name:"map_string_string"   number:48 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringStringEntry"},
+			{name:"map_string_bytes"    number:49 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringBytesEntry"},
+			{name:"map_string_enum"     number:50 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringEnumEntry"},
+			{name:"map_string_message"  number:51 label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".`+messageName+`.MapStringMessageEntry"},
 
 			{name:"oneof_bool"     number:52 label:LABEL_OPTIONAL type:TYPE_BOOL     oneof_index:0 default_value:"true"},
 			{name:"oneof_int32"    number:53 label:LABEL_OPTIONAL type:TYPE_INT32    oneof_index:0 default_value:"-12345"},
@@ -254,8 +258,8 @@ func TestAberrantMessages(t *testing.T) {
 			{name:"oneof_double"   number:64 label:LABEL_OPTIONAL type:TYPE_DOUBLE   oneof_index:0 default_value:"3.14159265359"},
 			{name:"oneof_string"   number:65 label:LABEL_OPTIONAL type:TYPE_STRING   oneof_index:0 default_value:"hello, \"world!\"\n"},
 			{name:"oneof_bytes"    number:66 label:LABEL_OPTIONAL type:TYPE_BYTES    oneof_index:0 default_value:"dead\\336\\255\\276\\357beef"},
-			{name:"oneof_enum"     number:67 label:LABEL_OPTIONAL type:TYPE_ENUM     oneof_index:0 type_name:".google_golang_org.protobuf.internal.impl_test.AberrantEnum" default_value:"UNKNOWN_0"},
-			{name:"oneof_message"  number:68 label:LABEL_OPTIONAL type:TYPE_MESSAGE  oneof_index:0 type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage"}
+			{name:"oneof_enum"     number:67 label:LABEL_OPTIONAL type:TYPE_ENUM     oneof_index:0 type_name:".`+enumName+`" default_value:"UNKNOWN_0"},
+			{name:"oneof_message"  number:68 label:LABEL_OPTIONAL type:TYPE_MESSAGE  oneof_index:0 type_name:".`+messageName+`"}
 		]
 		oneof_decl: [{name:"oneof_union"}]
 		extension_range: [{start:10 end:101}]
@@ -275,8 +279,8 @@ func TestAberrantMessages(t *testing.T) {
 			{name:"MapStringDoubleEntry"   field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_DOUBLE}]   options:{map_entry:true}},
 			{name:"MapStringStringEntry"   field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_STRING}]   options:{map_entry:true}},
 			{name:"MapStringBytesEntry"    field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_BYTES}]    options:{map_entry:true}},
-			{name:"MapStringEnumEntry"     field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_ENUM    type_name:".google_golang_org.protobuf.internal.impl_test.AberrantEnum"}] options:{map_entry:true}},
-			{name:"MapStringMessageEntry"  field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".google_golang_org.protobuf.internal.impl_test.AberrantMessage"}]                  options:{map_entry:true}}
+			{name:"MapStringEnumEntry"     field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_ENUM    type_name:".`+enumName+`"}] options:{map_entry:true}},
+			{name:"MapStringMessageEntry"  field:[{name:"key" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}, {name:"value" number:2 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".`+messageName+`"}]                  options:{map_entry:true}}
 		]
 	`), want); err != nil {
 		t.Fatalf("prototext.Unmarshal() error: %v", err)
@@ -284,8 +288,8 @@ func TestAberrantMessages(t *testing.T) {
 
 	md := impl.LegacyLoadMessageDesc(reflect.TypeOf(&AberrantMessage{}))
 	got := protodesc.ToDescriptorProto(md)
-	if !proto.Equal(got, want) {
-		t.Errorf("mismatching descriptor:\ngot  %v\nwant %v", got, want)
+	if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
+		t.Errorf("mismatching descriptor (-want +got):\n%s", diff)
 	}
 }
 

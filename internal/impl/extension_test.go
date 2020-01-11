@@ -8,10 +8,11 @@ import (
 	"fmt"
 	"testing"
 
-	cmp "github.com/google/go-cmp/cmp"
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	"github.com/google/go-cmp/cmp"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
 )
 
 func TestExtensionType(t *testing.T) {

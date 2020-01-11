@@ -22,7 +22,7 @@ import (
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
-	proto2_20180125 "google.golang.org/protobuf/internal/testprotos/legacy/proto2.v1.0.0-20180125-92554152"
+	proto2_20180125 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20180125_92554152"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -968,7 +968,7 @@ type EnumMessages struct {
 }
 
 var enumMessagesType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(EnumMessages)), Desc: mustMakeMessageDesc("enum-messages.proto", pref.Proto2, `
-		dependency: ["enum2.proto", "enum3.proto", "scalar2.proto", "scalar3.proto", "proto2.v1.0.0-20180125-92554152/test.proto"]
+		dependency: ["enum2.proto", "enum3.proto", "scalar2.proto", "scalar3.proto", "proto2_20180125_92554152/test.proto"]
 	`, `
 		name: "EnumMessages"
 		field: [

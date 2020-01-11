@@ -45,16 +45,18 @@ func TestInit(t *testing.T) {
 	visitFields(want.ProtoReflect(), func(field protoreflect.FieldDescriptor) {
 		seen[field.FullName()] = true
 	})
+	descFile := new(descriptorpb.DescriptorProto).ProtoReflect().Descriptor().ParentFile()
+	descPkg := descFile.Package()
 	ignore := map[protoreflect.FullName]bool{
 		// The protoreflect descriptors don't include source info.
-		"google.protobuf.FileDescriptorProto.source_code_info": true,
-		"google.protobuf.FileDescriptorProto.syntax":           true,
+		descPkg.Append("FileDescriptorProto.source_code_info"): true,
+		descPkg.Append("FileDescriptorProto.syntax"):           true,
 
 		// TODO: Test oneof and extension options. Testing these requires extending the
 		// options messages (because they contain no user-settable fields), but importing
 		// decriptor.proto from test.proto currently causes an import cycle. Add test
 		// cases when that import cycle has been fixed.
-		"google.protobuf.OneofDescriptorProto.options": true,
+		descPkg.Append("OneofDescriptorProto.options"): true,
 	}
 	for _, messageName := range []protoreflect.Name{
 		"FileDescriptorProto",
@@ -63,10 +65,8 @@ func TestInit(t *testing.T) {
 		"OneofDescriptorProto",
 		"EnumDescriptorProto",
 		"EnumValueDescriptorProto",
-		"ServiceDescriptorProto",
-		"MethodDescriptorProto",
 	} {
-		message := descriptorpb.File_google_protobuf_descriptor_proto.Messages().ByName(messageName)
+		message := descFile.Messages().ByName(messageName)
 		for i, fields := 0, message.Fields(); i < fields.Len(); i++ {
 			if name := fields.Get(i).FullName(); !seen[name] && !ignore[name] {
 				t.Errorf("No test for descriptor field: %v", name)
