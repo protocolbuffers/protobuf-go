@@ -11,7 +11,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
-	"google.golang.org/protobuf/encoding/testprotos/pb2"
+	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/emptypb"

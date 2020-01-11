@@ -111,8 +111,6 @@ func generateLocalProtos() {
 		{path: "cmd/protoc-gen-go/testdata", annotateFor: map[string]bool{"annotations/annotations.proto": true}},
 		{path: "cmd/protoc-gen-go-grpc/testdata", grpcPlugin: true},
 		{path: "internal/testprotos", exclude: map[string]bool{"irregular/irregular.proto": true}},
-		{path: "encoding/testprotos"},
-		{path: "reflect/protoregistry/testprotos"},
 	}
 	excludeRx := regexp.MustCompile(`legacy/proto[23]_[0-9]{8}_[0-9a-f]{8}/`)
 	for _, d := range dirs {

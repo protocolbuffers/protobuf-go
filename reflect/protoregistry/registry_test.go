@@ -18,7 +18,7 @@ import (
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
-	testpb "google.golang.org/protobuf/reflect/protoregistry/testprotos"
+	testpb "google.golang.org/protobuf/internal/testprotos/registry"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 

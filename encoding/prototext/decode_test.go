@@ -13,10 +13,10 @@ import (
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
-	"google.golang.org/protobuf/encoding/testprotos/pb2"
-	"google.golang.org/protobuf/encoding/testprotos/pb3"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
+	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
+	pb3 "google.golang.org/protobuf/internal/testprotos/textpb3"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
