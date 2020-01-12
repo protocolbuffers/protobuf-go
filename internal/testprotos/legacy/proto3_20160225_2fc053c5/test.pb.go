@@ -3,7 +3,7 @@
 // DO NOT EDIT!
 
 /*
-Package google_golang_org_protobuf_internal_testprotos_legacy_proto3_20160225_2fc053c5 is a generated protocol buffer package.
+Package proto3_20160225_2fc053c5 is a generated protocol buffer package.
 
 It is generated from these files:
 	proto3_20160225_2fc053c5/test.proto
@@ -12,7 +12,7 @@ It has these top-level messages:
 	SiblingMessage
 	Message
 */
-package google_golang_org_protobuf_internal_testprotos_legacy_proto3_20160225_2fc053c5
+package proto3_20160225_2fc053c5
 
 import proto "google.golang.org/protobuf/internal/protolegacy"
 import fmt "fmt"
