@@ -158,17 +158,20 @@ var testValidMessages = []testProto{
 		desc: "groups",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			Optionalgroup: &testpb.TestAllTypes_OptionalGroup{
-				A: proto.Int32(1017),
+				A:               proto.Int32(1017),
+				SameFieldNumber: proto.Int32(1016),
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_OptionalgroupExtension, &testpb.OptionalGroupExtension{
-				A: proto.Int32(1017),
+				A:               proto.Int32(1017),
+				SameFieldNumber: proto.Int32(1016),
 			}),
 		)},
 		wire: pack.Message{
 			pack.Tag{16, pack.StartGroupType},
 			pack.Tag{17, pack.VarintType}, pack.Varint(1017),
+			pack.Tag{16, pack.VarintType}, pack.Varint(1016),
 			pack.Tag{16, pack.EndGroupType},
 		}.Marshal(),
 	},

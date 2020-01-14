@@ -90,6 +90,13 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 		}
 		b = b[n:]
 
+		if wtyp == wire.EndGroupType {
+			if num != groupTag {
+				return 0, errors.New("mismatching end group marker")
+			}
+			return start - len(b), nil
+		}
+
 		var f *coderFieldInfo
 		if int(num) < len(mi.denseCoderFields) {
 			f = mi.denseCoderFields[num]
@@ -103,9 +110,6 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 				break
 			}
 			n, err = f.funcs.unmarshal(b, p.Apply(f.offset), wtyp, opts)
-		case num == groupTag && wtyp == wire.EndGroupType:
-			// End of group.
-			return start - len(b), nil
 		default:
 			// Possible extension.
 			if exts == nil && mi.extensionOffset.IsValid() {

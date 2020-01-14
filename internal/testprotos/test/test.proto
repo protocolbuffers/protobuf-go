@@ -44,6 +44,7 @@ message TestAllTypes {
   optional group OptionalGroup = 16 {
     optional int32 a = 17;
     optional NestedMessage optional_nested_message = 1000;
+    optional int32 same_field_number = 16;
   }
   optional NestedMessage  optional_nested_message  = 18;
   optional ForeignMessage optional_foreign_message = 19;
@@ -190,6 +191,7 @@ extend TestAllExtensions {
 
   optional group OptionalGroup_extension = 16 {
     optional int32 a = 17;
+    optional int32 same_field_number = 16;
     optional TestAllTypes.NestedMessage optional_nested_message = 1000;
   }
 
