@@ -12,6 +12,7 @@ import (
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
+	requiredpb "google.golang.org/protobuf/internal/testprotos/required"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 )
@@ -1154,17 +1155,59 @@ var testValidMessages = []testProto{
 		decodeTo: []proto.Message{(*testpb.TestRequired)(nil)},
 	},
 	{
-		desc:     "required field unset",
+		desc:     "required int32 unset",
 		partial:  true,
-		decodeTo: []proto.Message{&testpb.TestRequired{}},
+		decodeTo: []proto.Message{&requiredpb.Int32{}},
 	},
 	{
-		desc: "required field set",
-		decodeTo: []proto.Message{&testpb.TestRequired{
-			RequiredField: proto.Int32(1),
+		desc: "required int32 set",
+		decodeTo: []proto.Message{&requiredpb.Int32{
+			V: proto.Int32(1),
 		}},
 		wire: pack.Message{
 			pack.Tag{1, pack.VarintType}, pack.Varint(1),
+		}.Marshal(),
+	},
+	{
+		desc:     "required fixed32 unset",
+		partial:  true,
+		decodeTo: []proto.Message{&requiredpb.Fixed32{}},
+	},
+	{
+		desc: "required fixed32 set",
+		decodeTo: []proto.Message{&requiredpb.Fixed32{
+			V: proto.Uint32(1),
+		}},
+		wire: pack.Message{
+			pack.Tag{1, pack.Fixed32Type}, pack.Int32(1),
+		}.Marshal(),
+	},
+	{
+		desc:     "required fixed64 unset",
+		partial:  true,
+		decodeTo: []proto.Message{&requiredpb.Fixed64{}},
+	},
+	{
+		desc: "required fixed64 set",
+		decodeTo: []proto.Message{&requiredpb.Fixed64{
+			V: proto.Uint64(1),
+		}},
+		wire: pack.Message{
+			pack.Tag{1, pack.Fixed64Type}, pack.Int64(1),
+		}.Marshal(),
+	},
+	{
+		desc:     "required bytes unset",
+		partial:  true,
+		decodeTo: []proto.Message{&requiredpb.Bytes{}},
+	},
+	{
+		desc: "required bytes set",
+		decodeTo: []proto.Message{&requiredpb.Bytes{
+			V: []byte{},
+		}},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.Bytes(nil),
 		}.Marshal(),
 	},
 	{

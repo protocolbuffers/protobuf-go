@@ -208,6 +208,8 @@ func newValidationInfo(fd pref.FieldDescriptor, ft reflect.Type) validationInfo 
 				vi.typ = validationTypeFixed32
 			case wire.Fixed64Type:
 				vi.typ = validationTypeFixed64
+			case wire.BytesType:
+				vi.typ = validationTypeBytes
 			}
 		}
 	}
