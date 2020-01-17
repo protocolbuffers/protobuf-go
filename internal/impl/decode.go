@@ -189,7 +189,7 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 			if err == preg.NotFound {
 				return out, errUnknown
 			}
-			return out, err
+			return out, errors.New("%v: unable to resolve extension %v: %v", mi.Desc.FullName(), num, err)
 		}
 	}
 	xi := getExtensionFieldInfo(xt)

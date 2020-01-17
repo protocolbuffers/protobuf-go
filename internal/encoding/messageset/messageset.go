@@ -61,9 +61,13 @@ func IsMessageSetExtension(fd pref.FieldDescriptor) bool {
 // In text and JSON formats, the extension name used is the message itself.
 // The extension field name is derived by appending ExtensionName.
 func FindMessageSetExtension(r preg.ExtensionTypeResolver, s pref.FullName) (pref.ExtensionType, error) {
-	xt, err := r.FindExtensionByName(s.Append(ExtensionName))
+	name := s.Append(ExtensionName)
+	xt, err := r.FindExtensionByName(name)
 	if err != nil {
-		return nil, err
+		if err == preg.NotFound {
+			return nil, err
+		}
+		return nil, errors.Wrap(err, "%q", name)
 	}
 	if !IsMessageSetExtension(xt.TypeDescriptor()) {
 		return nil, preg.NotFound

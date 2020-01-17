@@ -47,6 +47,9 @@ var GlobalFiles *Files = new(Files)
 var GlobalTypes *Types = new(Types)
 
 // NotFound is a sentinel error value to indicate that the type was not found.
+//
+// Since registry lookup can happen in the critical performance path, resolvers
+// must return this exact error value, not an error wrapping it.
 var NotFound = errors.New("not found")
 
 // Files is a registry for looking up or iterating over files and the

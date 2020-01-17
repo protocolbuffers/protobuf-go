@@ -78,7 +78,7 @@ func unmarshalMessageSetField(m protoreflect.Message, num wire.Number, v []byte,
 		return errUnknown
 	}
 	if err != nil {
-		return err
+		return errors.New("%v: unable to resolve extension %v: %v", md.FullName(), num, err)
 	}
 	xd := xt.TypeDescriptor()
 	if err := o.unmarshalMessage(v, m.Mutable(xd).Message()); err != nil {

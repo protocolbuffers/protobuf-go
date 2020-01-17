@@ -187,7 +187,7 @@ func (r *resolver) findDescriptor(scope protoreflect.FullName, ref partialName) 
 			}
 			foundButNotImported = d
 		} else if err != protoregistry.NotFound {
-			return nil, err
+			return nil, errors.Wrap(err, "%q", s)
 		}
 
 		// Continue on at a higher level of scoping.

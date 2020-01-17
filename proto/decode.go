@@ -124,7 +124,7 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 		if fd == nil && md.ExtensionRanges().Has(num) {
 			extType, err := o.Resolver.FindExtensionByNumber(md.FullName(), num)
 			if err != nil && err != protoregistry.NotFound {
-				return err
+				return errors.New("%v: unable to resolve extension %v: %v", md.FullName(), num, err)
 			}
 			if extType != nil {
 				fd = extType.TypeDescriptor()

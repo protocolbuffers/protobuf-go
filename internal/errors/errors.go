@@ -6,20 +6,19 @@
 package errors
 
 import (
+	"errors"
 	"fmt"
 
 	"google.golang.org/protobuf/internal/detrand"
 )
 
+// Error is a sentinel matching all errors produced by this package.
+var Error = errors.New("protobuf error")
+
 // New formats a string according to the format specifier and arguments and
 // returns an error that has a "proto" prefix.
 func New(f string, x ...interface{}) error {
-	for i := 0; i < len(x); i++ {
-		if e, ok := x[i].(*prefixError); ok {
-			x[i] = e.s // avoid "proto: " prefix when chaining
-		}
-	}
-	return &prefixError{s: fmt.Sprintf(f, x...)}
+	return &prefixError{s: format(f, x...)}
 }
 
 type prefixError struct{ s string }
@@ -36,6 +35,49 @@ var prefix = func() string {
 
 func (e *prefixError) Error() string {
 	return prefix + e.s
+}
+
+func (e *prefixError) Unwrap() error {
+	return Error
+}
+
+// Wrap returns an error that has a "proto" prefix, the formatted string described
+// by the format specifier and arguments, and a suffix of err. The error wraps err.
+func Wrap(err error, f string, x ...interface{}) error {
+	return &wrapError{
+		s:   format(f, x...),
+		err: err,
+	}
+}
+
+type wrapError struct {
+	s   string
+	err error
+}
+
+func (e *wrapError) Error() string {
+	return format("%v%v: %v", prefix, e.s, e.err)
+}
+
+func (e *wrapError) Unwrap() error {
+	return e.err
+}
+
+func (e *wrapError) Is(target error) bool {
+	return target == Error
+}
+
+func format(f string, x ...interface{}) string {
+	// avoid "proto: " prefix when chaining
+	for i := 0; i < len(x); i++ {
+		switch e := x[i].(type) {
+		case *prefixError:
+			x[i] = e.s
+		case *wrapError:
+			x[i] = format("%v: %v", e.s, e.err)
+		}
+	}
+	return fmt.Sprintf(f, x...)
 }
 
 func InvalidUTF8(name string) error {
