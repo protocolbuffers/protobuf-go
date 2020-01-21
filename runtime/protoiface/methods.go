@@ -25,14 +25,14 @@ type Methods = struct {
 	// MarshalAppend must be provided if a custom Size is provided.
 	Size func(m protoreflect.Message, opts MarshalOptions) int
 
-	// MarshalAppend appends the wire-format encoding of m to b, returning the result.
+	// Marshal writes the wire-format encoding of m to the provided buffer.
 	// Size should be provided if a custom MarshalAppend is provided.
 	// It must not perform required field checks.
-	MarshalAppend func(b []byte, m protoreflect.Message, opts MarshalOptions) ([]byte, error)
+	Marshal func(m protoreflect.Message, in MarshalInput) (MarshalOutput, error)
 
-	// Unmarshal parses the wire-format message in b and merges the result in m.
+	// Unmarshal parses the wire-format encoding of a message and merges the result to m.
 	// It must not reset m or perform required field checks.
-	Unmarshal func(b []byte, m protoreflect.Message, opts UnmarshalOptions) error
+	Unmarshal func(m protoreflect.Message, in UnmarshalInput) (UnmarshalOutput, error)
 
 	// IsInitialized returns an error if any required fields in m are not set.
 	IsInitialized func(m protoreflect.Message) error
@@ -48,6 +48,21 @@ const (
 	SupportUnmarshalDiscardUnknown
 )
 
+// MarshalInput is input to the marshaler.
+type MarshalInput = struct {
+	pragma.NoUnkeyedLiterals
+
+	Buf     []byte // output is appended to this buffer
+	Options MarshalOptions
+}
+
+// MarshalOutput is output from the marshaler.
+type MarshalOutput = struct {
+	pragma.NoUnkeyedLiterals
+
+	Buf []byte // contains marshaled message
+}
+
 // MarshalOptions configure the marshaler.
 //
 // This type is identical to the one in package proto.
@@ -57,6 +72,21 @@ type MarshalOptions = struct {
 	AllowPartial  bool // must be treated as true by method implementations
 	Deterministic bool
 	UseCachedSize bool
+}
+
+// UnmarshalInput is input to the unmarshaler.
+type UnmarshalInput = struct {
+	pragma.NoUnkeyedLiterals
+
+	Buf     []byte // input buffer
+	Options UnmarshalOptions
+}
+
+// UnmarshalOutput is output from the unmarshaler.
+type UnmarshalOutput = struct {
+	pragma.NoUnkeyedLiterals
+
+	// Contents available for future expansion.
 }
 
 // UnmarshalOptions configures the unmarshaler.

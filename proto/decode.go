@@ -72,7 +72,11 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m Message) error {
 func (o UnmarshalOptions) unmarshalMessage(b []byte, m protoreflect.Message) error {
 	if methods := protoMethods(m); methods != nil && methods.Unmarshal != nil &&
 		!(o.DiscardUnknown && methods.Flags&protoiface.SupportUnmarshalDiscardUnknown == 0) {
-		return methods.Unmarshal(b, m, protoiface.UnmarshalOptions(o))
+		_, err := methods.Unmarshal(m, protoiface.UnmarshalInput{
+			Buf:     b,
+			Options: protoiface.UnmarshalOptions(o),
+		})
+		return err
 	}
 	return o.unmarshalMessageSlow(b, m)
 }

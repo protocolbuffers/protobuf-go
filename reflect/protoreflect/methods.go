@@ -19,18 +19,34 @@ type (
 		pragma.NoUnkeyedLiterals
 		Flags         supportFlags
 		Size          func(m Message, opts marshalOptions) int
-		MarshalAppend func(b []byte, m Message, opts marshalOptions) ([]byte, error)
-		Unmarshal     func(b []byte, m Message, opts unmarshalOptions) error
+		Marshal       func(m Message, in marshalInput) (marshalOutput, error)
+		Unmarshal     func(m Message, in unmarshalInput) (unmarshalOutput, error)
 		IsInitialized func(m Message) error
 	}
-	supportFlags   = uint64
+	supportFlags = uint64
+	marshalInput = struct {
+		pragma.NoUnkeyedLiterals
+		Buf     []byte
+		Options marshalOptions
+	}
+	marshalOutput = struct {
+		pragma.NoUnkeyedLiterals
+		Buf []byte
+	}
 	marshalOptions = struct {
 		pragma.NoUnkeyedLiterals
 		AllowPartial  bool
 		Deterministic bool
 		UseCachedSize bool
 	}
-
+	unmarshalInput = struct {
+		pragma.NoUnkeyedLiterals
+		Buf     []byte
+		Options unmarshalOptions
+	}
+	unmarshalOutput = struct {
+		pragma.NoUnkeyedLiterals
+	}
 	unmarshalOptions = struct {
 		pragma.NoUnkeyedLiterals
 		Merge          bool

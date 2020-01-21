@@ -50,7 +50,7 @@ func legacyLoadMessageInfo(t reflect.Type, name pref.FullName) *MessageInfo {
 
 	v := reflect.Zero(t).Interface()
 	if _, ok := v.(legacyMarshaler); ok {
-		mi.methods.MarshalAppend = legacyMarshalAppend
+		mi.methods.Marshal = legacyMarshal
 
 		// We have no way to tell whether the type's Marshal method
 		// supports deterministic serialization or not, but this
@@ -363,8 +363,8 @@ type legacyUnmarshaler interface {
 }
 
 var legacyProtoMethods = &piface.Methods{
-	MarshalAppend: legacyMarshalAppend,
-	Unmarshal:     legacyUnmarshal,
+	Marshal:   legacyMarshal,
+	Unmarshal: legacyUnmarshal,
 
 	// We have no way to tell whether the type's Marshal method
 	// supports deterministic serialization or not, but this
@@ -373,26 +373,28 @@ var legacyProtoMethods = &piface.Methods{
 	Flags: piface.SupportMarshalDeterministic,
 }
 
-func legacyMarshalAppend(b []byte, m protoreflect.Message, opts piface.MarshalOptions) ([]byte, error) {
+func legacyMarshal(m protoreflect.Message, in piface.MarshalInput) (piface.MarshalOutput, error) {
 	v := m.(unwrapper).protoUnwrap()
 	marshaler, ok := v.(legacyMarshaler)
 	if !ok {
-		return nil, errors.New("%T does not implement Marshal", v)
+		return piface.MarshalOutput{}, errors.New("%T does not implement Marshal", v)
 	}
 	out, err := marshaler.Marshal()
-	if b != nil {
-		out = append(b, out...)
+	if in.Buf != nil {
+		out = append(in.Buf, out...)
 	}
-	return out, err
+	return piface.MarshalOutput{
+		Buf: out,
+	}, err
 }
 
-func legacyUnmarshal(b []byte, m protoreflect.Message, opts piface.UnmarshalOptions) error {
+func legacyUnmarshal(m protoreflect.Message, in piface.UnmarshalInput) (piface.UnmarshalOutput, error) {
 	v := m.(unwrapper).protoUnwrap()
 	unmarshaler, ok := v.(legacyUnmarshaler)
 	if !ok {
-		return errors.New("%T does not implement Marshal", v)
+		return piface.UnmarshalOutput{}, errors.New("%T does not implement Marshal", v)
 	}
-	return unmarshaler.Unmarshal(b)
+	return piface.UnmarshalOutput{}, unmarshaler.Unmarshal(in.Buf)
 }
 
 // aberrantMessageType implements MessageType for all types other than pointer-to-struct.

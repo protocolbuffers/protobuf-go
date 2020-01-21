@@ -134,9 +134,9 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 	}
 
 	mi.needsInitCheck = needsInitCheck(mi.Desc)
-	if mi.methods.MarshalAppend == nil && mi.methods.Size == nil {
+	if mi.methods.Marshal == nil && mi.methods.Size == nil {
 		mi.methods.Flags |= piface.SupportMarshalDeterministic
-		mi.methods.MarshalAppend = mi.marshalAppend
+		mi.methods.Marshal = mi.marshal
 		mi.methods.Size = mi.size
 	}
 	if mi.methods.Unmarshal == nil {

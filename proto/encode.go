@@ -98,7 +98,7 @@ func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
 }
 
 func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte, error) {
-	if methods := protoMethods(m); methods != nil && methods.MarshalAppend != nil &&
+	if methods := protoMethods(m); methods != nil && methods.Marshal != nil &&
 		!(o.Deterministic && methods.Flags&protoiface.SupportMarshalDeterministic == 0) {
 		if methods.Size != nil {
 			sz := methods.Size(m, protoiface.MarshalOptions(o))
@@ -109,7 +109,11 @@ func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte
 			}
 			o.UseCachedSize = true
 		}
-		return methods.MarshalAppend(b, m, protoiface.MarshalOptions(o))
+		out, err := methods.Marshal(m, protoiface.MarshalInput{
+			Buf:     b,
+			Options: protoiface.MarshalOptions(o),
+		})
+		return out.Buf, err
 	}
 	return o.marshalMessageSlow(b, m)
 }
