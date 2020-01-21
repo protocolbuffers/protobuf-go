@@ -27,9 +27,11 @@ type Methods = struct {
 
 	// Marshal writes the wire-format encoding of m to the provided buffer.
 	// Size should be provided if a custom MarshalAppend is provided.
+	// It should not return an error for a partial message.
 	Marshal func(m protoreflect.Message, in MarshalInput, opts MarshalOptions) (MarshalOutput, error)
 
 	// Unmarshal parses the wire-format encoding of a message and merges the result to m.
+	// It should not reset the target message or return an error for a partial message.
 	Unmarshal func(m protoreflect.Message, in UnmarshalInput, opts UnmarshalOptions) (UnmarshalOutput, error)
 
 	// IsInitialized returns an error if any required fields in m are not set.
@@ -82,7 +84,10 @@ type UnmarshalInput = struct {
 type UnmarshalOutput = struct {
 	pragma.NoUnkeyedLiterals
 
-	// Contents available for future expansion.
+	// Initialized may be set on return if all required fields are known to be set.
+	// A value of false does not indicate that the message is uninitialized, only
+	// that its status could not be confirmed.
+	Initialized bool
 }
 
 // UnmarshalOptions configures the unmarshaler.

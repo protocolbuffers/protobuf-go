@@ -15,6 +15,7 @@ import (
 
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/runtime/protoiface"
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
 )
@@ -127,5 +128,30 @@ func TestSelfMarshalerWithDescriptor(t *testing.T) {
 	want := []byte(descSelfMarshalerBytes)
 	if err != nil || !bytes.Equal(got, want) {
 		t.Fatalf("proto.Marshal(%v) = %v, %v; want %v, nil", m, got, err, want)
+	}
+}
+
+func TestDecodeFastIsInitialized(t *testing.T) {
+	for _, test := range testValidMessages {
+		if !test.checkFastInit {
+			continue
+		}
+		for _, message := range test.decodeTo {
+			t.Run(fmt.Sprintf("%s (%T)", test.desc, message), func(t *testing.T) {
+				m := message.ProtoReflect().New()
+				opts := proto.UnmarshalOptions{
+					AllowPartial: true,
+				}
+				out, err := opts.UnmarshalState(m.Interface(), protoiface.UnmarshalInput{
+					Buf: test.wire,
+				})
+				if err != nil {
+					t.Fatalf("Unmarshal error: %v", err)
+				}
+				if got, want := out.Initialized, !test.partial; got != want {
+					t.Errorf("out.Initialized = %v, want %v", got, want)
+				}
+			})
+		}
 	}
 }

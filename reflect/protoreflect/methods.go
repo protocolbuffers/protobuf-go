@@ -44,6 +44,7 @@ type (
 	}
 	unmarshalOutput = struct {
 		pragma.NoUnkeyedLiterals
+		Initialized bool
 	}
 	unmarshalOptions = struct {
 		pragma.NoUnkeyedLiterals

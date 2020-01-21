@@ -5,6 +5,8 @@
 package impl
 
 import (
+	"math/bits"
+
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
@@ -58,7 +60,8 @@ func (o unmarshalOptions) DiscardUnknown() bool                 { return o.flags
 func (o unmarshalOptions) Resolver() preg.ExtensionTypeResolver { return o.resolver }
 
 type unmarshalOutput struct {
-	n int // number of bytes consumed
+	n           int // number of bytes consumed
+	initialized bool
 }
 
 // unmarshal is protoreflect.Methods.Unmarshal.
@@ -69,8 +72,10 @@ func (mi *MessageInfo) unmarshal(m pref.Message, in piface.UnmarshalInput, opts 
 	} else {
 		p = m.(*messageReflectWrapper).pointer()
 	}
-	_, err := mi.unmarshalPointer(in.Buf, p, 0, newUnmarshalOptions(opts))
-	return piface.UnmarshalOutput{}, err
+	out, err := mi.unmarshalPointer(in.Buf, p, 0, newUnmarshalOptions(opts))
+	return piface.UnmarshalOutput{
+		Initialized: out.initialized,
+	}, err
 }
 
 // errUnknown is returned during unmarshaling to indicate a parse error that
@@ -86,6 +91,8 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 	if flags.ProtoLegacy && mi.isMessageSet {
 		return unmarshalMessageSet(mi, b, p, opts)
 	}
+	initialized := true
+	var requiredMask uint64
 	var exts *map[int32]ExtensionField
 	start := len(b)
 	for len(b) > 0 {
@@ -104,8 +111,8 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			if num != groupTag {
 				return out, errors.New("mismatching end group marker")
 			}
-			out.n = start - len(b)
-			return out, nil
+			groupTag = 0
+			break
 		}
 
 		var f *coderFieldInfo
@@ -123,6 +130,12 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			var o unmarshalOutput
 			o, err = f.funcs.unmarshal(b, p.Apply(f.offset), wtyp, opts)
 			n = o.n
+			if reqi := f.validation.requiredIndex; reqi > 0 && err == nil {
+				requiredMask |= 1 << (reqi - 1)
+			}
+			if f.funcs.isInit != nil && !o.initialized {
+				initialized = false
+			}
 		default:
 			// Possible extension.
 			if exts == nil && mi.extensionOffset.IsValid() {
@@ -137,6 +150,9 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			var o unmarshalOutput
 			o, err = mi.unmarshalExtension(b, num, wtyp, *exts, opts)
 			n = o.n
+			if !o.initialized {
+				initialized = false
+			}
 		}
 		if err != nil {
 			if err != errUnknown {
@@ -157,7 +173,13 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 	if groupTag != 0 {
 		return out, errors.New("missing end group marker")
 	}
-	out.n = start
+	if mi.numRequiredFields > 0 && bits.OnesCount64(requiredMask) != int(mi.numRequiredFields) {
+		initialized = false
+	}
+	if initialized {
+		out.initialized = true
+	}
+	out.n = start - len(b)
 	return out, nil
 }
 

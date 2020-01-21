@@ -23,6 +23,7 @@ type testProto struct {
 	wire             []byte
 	partial          bool
 	noEncode         bool
+	checkFastInit    bool
 	validationStatus impl.ValidationStatus
 }
 
@@ -1150,17 +1151,20 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:     "required field in nil message unset",
-		partial:  true,
-		decodeTo: []proto.Message{(*testpb.TestRequired)(nil)},
+		desc:          "required field in nil message unset",
+		checkFastInit: true,
+		partial:       true,
+		decodeTo:      []proto.Message{(*testpb.TestRequired)(nil)},
 	},
 	{
-		desc:     "required int32 unset",
-		partial:  true,
-		decodeTo: []proto.Message{&requiredpb.Int32{}},
+		desc:          "required int32 unset",
+		checkFastInit: true,
+		partial:       true,
+		decodeTo:      []proto.Message{&requiredpb.Int32{}},
 	},
 	{
-		desc: "required int32 set",
+		desc:          "required int32 set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&requiredpb.Int32{
 			V: proto.Int32(1),
 		}},
@@ -1169,12 +1173,14 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:     "required fixed32 unset",
-		partial:  true,
-		decodeTo: []proto.Message{&requiredpb.Fixed32{}},
+		desc:          "required fixed32 unset",
+		checkFastInit: true,
+		partial:       true,
+		decodeTo:      []proto.Message{&requiredpb.Fixed32{}},
 	},
 	{
-		desc: "required fixed32 set",
+		desc:          "required fixed32 set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&requiredpb.Fixed32{
 			V: proto.Uint32(1),
 		}},
@@ -1183,12 +1189,14 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:     "required fixed64 unset",
-		partial:  true,
-		decodeTo: []proto.Message{&requiredpb.Fixed64{}},
+		desc:          "required fixed64 unset",
+		checkFastInit: true,
+		partial:       true,
+		decodeTo:      []proto.Message{&requiredpb.Fixed64{}},
 	},
 	{
-		desc: "required fixed64 set",
+		desc:          "required fixed64 set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&requiredpb.Fixed64{
 			V: proto.Uint64(1),
 		}},
@@ -1197,12 +1205,14 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:     "required bytes unset",
-		partial:  true,
-		decodeTo: []proto.Message{&requiredpb.Bytes{}},
+		desc:          "required bytes unset",
+		checkFastInit: true,
+		partial:       true,
+		decodeTo:      []proto.Message{&requiredpb.Bytes{}},
 	},
 	{
-		desc: "required bytes set",
+		desc:          "required bytes set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&requiredpb.Bytes{
 			V: []byte{},
 		}},
@@ -1211,8 +1221,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:    "required field with incompatible wire type",
-		partial: true,
+		desc:          "required field with incompatible wire type",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{build(
 			&testpb.TestRequired{},
 			unknown(pack.Message{
@@ -1224,8 +1235,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:    "required field in optional message unset",
-		partial: true,
+		desc:          "required field in optional message unset",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			OptionalMessage: &testpb.TestRequired{},
 		}},
@@ -1234,7 +1246,8 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "required field in optional message set",
+		desc:          "required field in optional message set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			OptionalMessage: &testpb.TestRequired{
 				RequiredField: proto.Int32(1),
@@ -1247,7 +1260,8 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "required field in optional message set (split across multiple tags)",
+		desc:          "required field in optional message set (split across multiple tags)",
+		checkFastInit: false, // fast init checks don't handle split messages
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			OptionalMessage: &testpb.TestRequired{
 				RequiredField: proto.Int32(1),
@@ -1262,8 +1276,9 @@ var testValidMessages = []testProto{
 		validationStatus: impl.ValidationValidMaybeUninitalized,
 	},
 	{
-		desc:    "required field in repeated message unset",
-		partial: true,
+		desc:          "required field in repeated message unset",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			RepeatedMessage: []*testpb.TestRequired{
 				{RequiredField: proto.Int32(1)},
@@ -1278,7 +1293,8 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "required field in repeated message set",
+		desc:          "required field in repeated message set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			RepeatedMessage: []*testpb.TestRequired{
 				{RequiredField: proto.Int32(1)},
@@ -1295,8 +1311,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:    "required field in map message unset",
-		partial: true,
+		desc:          "required field in map message unset",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			MapMessage: map[int32]*testpb.TestRequired{
 				1: {RequiredField: proto.Int32(1)},
@@ -1317,8 +1334,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:    "required field in absent map message value",
-		partial: true,
+		desc:          "required field in absent map message value",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			MapMessage: map[int32]*testpb.TestRequired{
 				2: {},
@@ -1331,7 +1349,8 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "required field in map message set",
+		desc:          "required field in map message set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
 			MapMessage: map[int32]*testpb.TestRequired{
 				1: {RequiredField: proto.Int32(1)},
@@ -1354,8 +1373,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:    "required field in optional group unset",
-		partial: true,
+		desc:          "required field in optional group unset",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
 			Optionalgroup: &testpb.TestRequiredGroupFields_OptionalGroup{},
 		}},
@@ -1365,7 +1385,8 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "required field in optional group set",
+		desc:          "required field in optional group set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
 			Optionalgroup: &testpb.TestRequiredGroupFields_OptionalGroup{
 				A: proto.Int32(1),
@@ -1378,8 +1399,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:    "required field in repeated group unset",
-		partial: true,
+		desc:          "required field in repeated group unset",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
 			Repeatedgroup: []*testpb.TestRequiredGroupFields_RepeatedGroup{
 				{A: proto.Int32(1)},
@@ -1395,7 +1417,8 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "required field in repeated group set",
+		desc:          "required field in repeated group set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
 			Repeatedgroup: []*testpb.TestRequiredGroupFields_RepeatedGroup{
 				{A: proto.Int32(1)},
@@ -1412,8 +1435,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:    "required field in oneof message unset",
-		partial: true,
+		desc:          "required field in oneof message unset",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{
 			&testpb.TestRequiredForeign{OneofField: &testpb.TestRequiredForeign_OneofMessage{
 				&testpb.TestRequired{},
@@ -1422,7 +1446,8 @@ var testValidMessages = []testProto{
 		wire: pack.Message{pack.Tag{4, pack.BytesType}, pack.LengthPrefix(pack.Message{})}.Marshal(),
 	},
 	{
-		desc: "required field in oneof message set",
+		desc:          "required field in oneof message set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{
 			&testpb.TestRequiredForeign{OneofField: &testpb.TestRequiredForeign_OneofMessage{
 				&testpb.TestRequired{
@@ -1435,8 +1460,9 @@ var testValidMessages = []testProto{
 		})}.Marshal(),
 	},
 	{
-		desc:    "required field in extension message unset",
-		partial: true,
+		desc:          "required field in extension message unset",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Single, &testpb.TestRequired{}),
@@ -1446,7 +1472,8 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "required field in extension message set",
+		desc:          "required field in extension message set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Single, &testpb.TestRequired{
@@ -1460,8 +1487,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:    "required field in repeated extension message unset",
-		partial: true,
+		desc:          "required field in repeated extension message unset",
+		checkFastInit: true,
+		partial:       true,
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Multi, []*testpb.TestRequired{
@@ -1477,7 +1505,8 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "required field in repeated extension message set",
+		desc:          "required field in repeated extension message set",
+		checkFastInit: true,
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllExtensions{},
 			extend(testpb.E_TestRequired_Multi, []*testpb.TestRequired{

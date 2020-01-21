@@ -13,6 +13,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
+	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
 type errInvalidUTF8 struct{}
@@ -227,10 +228,12 @@ func consumeMessageInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Type, op
 	if p.Elem().IsNil() {
 		p.SetPointer(pointerOfValue(reflect.New(mi.GoReflectType.Elem())))
 	}
-	if _, err := mi.unmarshalPointer(v, p.Elem(), 0, opts); err != nil {
+	o, err := mi.unmarshalPointer(v, p.Elem(), 0, opts)
+	if err != nil {
 		return out, err
 	}
 	out.n = n
+	out.initialized = o.initialized
 	return out, nil
 }
 
@@ -252,10 +255,14 @@ func consumeMessage(b []byte, m proto.Message, wtyp wire.Type, opts unmarshalOpt
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
-	if err := opts.Options().Unmarshal(v, m); err != nil {
+	o, err := opts.Options().UnmarshalState(m, piface.UnmarshalInput{
+		Buf: v,
+	})
+	if err != nil {
 		return out, err
 	}
 	out.n = n
+	out.initialized = o.Initialized
 	return out, nil
 }
 
@@ -395,8 +402,15 @@ func consumeGroup(b []byte, m proto.Message, num wire.Number, wtyp wire.Type, op
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
+	o, err := opts.Options().UnmarshalState(m, piface.UnmarshalInput{
+		Buf: b,
+	})
+	if err != nil {
+		return out, err
+	}
 	out.n = n
-	return out, opts.Options().Unmarshal(b, m)
+	out.initialized = o.Initialized
+	return out, nil
 }
 
 func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
@@ -469,11 +483,13 @@ func consumeMessageSliceInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Typ
 	}
 	m := reflect.New(mi.GoReflectType.Elem()).Interface()
 	mp := pointerOfIface(m)
-	if _, err := mi.unmarshalPointer(v, mp, 0, opts); err != nil {
+	o, err := mi.unmarshalPointer(v, mp, 0, opts)
+	if err != nil {
 		return out, err
 	}
 	p.AppendPointerSlice(mp)
 	out.n = n
+	out.initialized = o.initialized
 	return out, nil
 }
 
@@ -522,11 +538,15 @@ func consumeMessageSlice(b []byte, p pointer, goType reflect.Type, wtyp wire.Typ
 		return out, wire.ParseError(n)
 	}
 	mp := reflect.New(goType.Elem())
-	if err := opts.Options().Unmarshal(v, asMessage(mp)); err != nil {
+	o, err := opts.Options().UnmarshalState(asMessage(mp), piface.UnmarshalInput{
+		Buf: v,
+	})
+	if err != nil {
 		return out, err
 	}
 	p.AppendPointerSlice(pointerOfValue(mp))
 	out.n = n
+	out.initialized = o.Initialized
 	return out, nil
 }
 
@@ -580,11 +600,15 @@ func consumeMessageSliceValue(b []byte, listv pref.Value, _ wire.Number, wtyp wi
 		return pref.Value{}, out, wire.ParseError(n)
 	}
 	m := list.NewElement()
-	if err := opts.Options().Unmarshal(v, m.Message().Interface()); err != nil {
+	o, err := opts.Options().UnmarshalState(m.Message().Interface(), piface.UnmarshalInput{
+		Buf: v,
+	})
+	if err != nil {
 		return pref.Value{}, out, err
 	}
 	list.Append(m)
 	out.n = n
+	out.initialized = o.Initialized
 	return listv, out, nil
 }
 
@@ -642,11 +666,15 @@ func consumeGroupSliceValue(b []byte, listv pref.Value, num wire.Number, wtyp wi
 		return pref.Value{}, out, wire.ParseError(n)
 	}
 	m := list.NewElement()
-	if err := opts.Options().Unmarshal(b, m.Message().Interface()); err != nil {
+	o, err := opts.Options().UnmarshalState(m.Message().Interface(), piface.UnmarshalInput{
+		Buf: b,
+	})
+	if err != nil {
 		return pref.Value{}, out, err
 	}
 	list.Append(m)
 	out.n = n
+	out.initialized = o.Initialized
 	return listv, out, nil
 }
 
@@ -728,11 +756,15 @@ func consumeGroupSlice(b []byte, p pointer, num wire.Number, wtyp wire.Type, goT
 		return out, wire.ParseError(n)
 	}
 	mp := reflect.New(goType.Elem())
-	if err := opts.Options().Unmarshal(b, asMessage(mp)); err != nil {
+	o, err := opts.Options().UnmarshalState(asMessage(mp), piface.UnmarshalInput{
+		Buf: b,
+	})
+	if err != nil {
 		return out, err
 	}
 	p.AppendPointerSlice(pointerOfValue(mp))
 	out.n = n
+	out.initialized = o.Initialized
 	return out, nil
 }
 

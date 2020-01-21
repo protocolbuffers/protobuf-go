@@ -202,7 +202,13 @@ func consumeMapOfMessage(b []byte, mapv reflect.Value, wtyp wire.Type, mapi *map
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
-			_, err = mapi.valMessageInfo.unmarshalPointer(v, pointerOfValue(val), 0, opts)
+			var o unmarshalOutput
+			o, err = mapi.valMessageInfo.unmarshalPointer(v, pointerOfValue(val), 0, opts)
+			if o.initialized {
+				// Consider this map item initialized so long as we see
+				// an initialized value.
+				out.initialized = true
+			}
 		}
 		if err == errUnknown {
 			n = wire.ConsumeFieldValue(num, wtyp, b)
