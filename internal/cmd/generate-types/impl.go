@@ -96,16 +96,17 @@ func append{{.Name}}(b []byte, p pointer, wiretag uint64, _ marshalOptions) ([]b
 }
 
 // consume{{.Name}} wire decodes a {{.GoType}} pointer as a {{.Name}}.
-func consume{{.Name}}(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+func consume{{.Name}}(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
-	return n, nil
+	out.n = n
+	return out, nil
 }
 
 var coder{{.Name}} = pointerCoderFuncs{
@@ -127,19 +128,20 @@ func append{{.Name}}ValidateUTF8(b []byte, p pointer, wiretag uint64, _ marshalO
 }
 
 // consume{{.Name}}ValidateUTF8 wire decodes a {{.GoType}} pointer as a {{.Name}}.
-func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
-		return 0, errInvalidUTF8{}
+		return out, errInvalidUTF8{}
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
-	return n, nil
+	out.n = n
+	return out, nil
 }
 
 var coder{{.Name}}ValidateUTF8 = pointerCoderFuncs{
@@ -174,16 +176,17 @@ func append{{.Name}}NoZero(b []byte, p pointer, wiretag uint64, _ marshalOptions
 {{if .ToGoTypeNoZero}}
 // consume{{.Name}}NoZero wire decodes a {{.GoType}} pointer as a {{.Name}}.
 // The zero value is not decoded.
-func consume{{.Name}}NoZero(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+func consume{{.Name}}NoZero(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
-	return n, nil
+	out.n = n
+	return out, nil
 }
 {{end}}
 
@@ -211,19 +214,20 @@ func append{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wiretag uint64, _ ma
 
 {{if .ToGoTypeNoZero}}
 // consume{{.Name}}NoZeroValidateUTF8 wire decodes a {{.GoType}} pointer as a {{.Name}}.
-func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
-		return 0, errInvalidUTF8{}
+		return out, errInvalidUTF8{}
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
-	return n, nil
+	out.n = n
+	return out, nil
 }
 {{end}}
 
@@ -254,20 +258,21 @@ func append{{.Name}}Ptr(b []byte, p pointer, wiretag uint64, _ marshalOptions) (
 }
 
 // consume{{.Name}}Ptr wire decodes a *{{.GoType}} pointer as a {{.Name}}.
-func consume{{.Name}}Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+func consume{{.Name}}Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	vp := p.{{.GoType.PointerMethod}}Ptr()
 	if *vp == nil {
 		*vp = new({{.GoType}})
 	}
 	**vp = {{.ToGoType}}
-	return n, nil
+	out.n = n
+	return out, nil
 }
 
 var coder{{.Name}}Ptr = pointerCoderFuncs{
@@ -301,36 +306,38 @@ func append{{.Name}}Slice(b []byte, p pointer, wiretag uint64, _ marshalOptions)
 }
 
 // consume{{.Name}}Slice wire decodes a []{{.GoType}} pointer as a repeated {{.Name}}.
-func consume{{.Name}}Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+func consume{{.Name}}Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.{{.GoType.PointerMethod}}Slice()
 	{{- if .WireType.Packable}}
 	if wtyp == wire.BytesType {
 		s := *sp
-		b, n = wire.ConsumeBytes(b)
+		b, n := wire.ConsumeBytes(b)
 		if n < 0 {
-			return 0, wire.ParseError(n)
+			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := {{template "Consume" .}}
 			if n < 0 {
-				return 0, wire.ParseError(n)
+				return out, wire.ParseError(n)
 			}
 			s = append(s, {{.ToGoType}})
 			b = b[n:]
 		}
 		*sp = s
-		return n, nil
+		out.n = n
+		return out, nil
 	}
 	{{- end}}
 	if wtyp != {{.WireType.Expr}} {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	*sp = append(*sp, {{.ToGoType}})
-	return n, nil
+	out.n = n
+	return out, nil
 }
 
 var coder{{.Name}}Slice = pointerCoderFuncs{
@@ -354,20 +361,21 @@ func append{{.Name}}SliceValidateUTF8(b []byte, p pointer, wiretag uint64, _ mar
 }
 
 // consume{{.Name}}SliceValidateUTF8 wire decodes a []{{.GoType}} pointer as a repeated {{.Name}}.
-func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.{{.GoType.PointerMethod}}Slice()
 	if wtyp != {{.WireType.Expr}} {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
-		return 0, errInvalidUTF8{}
+		return out, errInvalidUTF8{}
 	}
 	*sp = append(*sp, {{.ToGoType}})
-	return n, nil
+	out.n = n
+	return out, nil
 }
 
 var coder{{.Name}}SliceValidateUTF8 = pointerCoderFuncs{
@@ -440,15 +448,16 @@ func append{{.Name}}Value(b []byte, v protoreflect.Value, wiretag uint64, _ mars
 }
 
 // consume{{.Name}}Value decodes a {{.GoType}} value as a {{.Name}}.
-func consume{{.Name}}Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
+func consume{{.Name}}Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
-		return protoreflect.Value{}, 0, errUnknown
+		return protoreflect.Value{}, out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, 0, wire.ParseError(n)
+		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
-	return {{.ToValue}}, n, nil
+	out.n = n
+	return {{.ToValue}}, out, nil
 }
 
 var coder{{.Name}}Value = valueCoderFuncs{
@@ -469,18 +478,19 @@ func append{{.Name}}ValueValidateUTF8(b []byte, v protoreflect.Value, wiretag ui
 }
 
 // consume{{.Name}}ValueValidateUTF8 decodes a {{.GoType}} value as a {{.Name}}.
-func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (protoreflect.Value, int, error) {
+func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
-		return protoreflect.Value{}, 0, errUnknown
+		return protoreflect.Value{}, out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, 0, wire.ParseError(n)
+		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
 	if !utf8.ValidString(v) {
-		return protoreflect.Value{}, 0, errInvalidUTF8{}
+		return protoreflect.Value{}, out, errInvalidUTF8{}
 	}
-	return {{.ToValue}}, n, nil
+	out.n = n
+	return {{.ToValue}}, out, nil
 }
 
 var coder{{.Name}}ValueValidateUTF8 = valueCoderFuncs{
@@ -516,34 +526,36 @@ func append{{.Name}}SliceValue(b []byte, listv protoreflect.Value, wiretag uint6
 }
 
 // consume{{.Name}}SliceValue wire decodes a []{{.GoType}} value as a repeated {{.Name}}.
-func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, n int, err error) {
+func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
 	{{- if .WireType.Packable}}
 	if wtyp == wire.BytesType {
-		b, n = wire.ConsumeBytes(b)
+		b, n := wire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, 0, wire.ParseError(n)
+			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := {{template "Consume" .}}
 			if n < 0 {
-				return protoreflect.Value{}, 0, wire.ParseError(n)
+				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
 			list.Append({{.ToValue}})
 			b = b[n:]
 		}
-		return listv, n, nil
+		out.n = n
+		return listv, out, nil
 	}
 	{{- end}}
 	if wtyp != {{.WireType.Expr}} {
-		return protoreflect.Value{}, 0, errUnknown
+		return protoreflect.Value{}, out, errUnknown
 	}
 	v, n := {{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, 0, wire.ParseError(n)
+		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
 	list.Append({{.ToValue}})
-	return listv, n, nil
+	out.n = n
+	return listv, out, nil
 }
 
 var coder{{.Name}}SliceValue = valueCoderFuncs{

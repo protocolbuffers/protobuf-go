@@ -90,9 +90,9 @@ func marshalMessageSetField(mi *MessageInfo, b []byte, x ExtensionField, opts ma
 	return b, nil
 }
 
-func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts unmarshalOptions) (int, error) {
+func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	if !flags.ProtoLegacy {
-		return 0, errors.New("no support for message_set_wire_format")
+		return out, errors.New("no support for message_set_wire_format")
 	}
 
 	ep := p.Apply(mi.extensionOffset).Extensions()
@@ -101,7 +101,7 @@ func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts unmarshalOpt
 	}
 	ext := *ep
 	unknown := p.Apply(mi.unknownOffset).Bytes()
-	err := messageset.Unmarshal(b, true, func(num wire.Number, v []byte) error {
+	err = messageset.Unmarshal(b, true, func(num wire.Number, v []byte) error {
 		_, err := mi.unmarshalExtension(v, num, wire.BytesType, ext, opts)
 		if err == errUnknown {
 			*unknown = wire.AppendTag(*unknown, num, wire.BytesType)
@@ -110,5 +110,6 @@ func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts unmarshalOpt
 		}
 		return err
 	})
-	return len(b), err
+	out.n = len(b)
+	return out, err
 }

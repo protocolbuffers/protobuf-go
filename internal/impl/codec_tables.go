@@ -17,7 +17,7 @@ import (
 type pointerCoderFuncs struct {
 	size      func(p pointer, tagsize int, opts marshalOptions) int
 	marshal   func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error)
-	unmarshal func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (int, error)
+	unmarshal func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error)
 	isInit    func(p pointer) error
 }
 
@@ -25,7 +25,7 @@ type pointerCoderFuncs struct {
 type valueCoderFuncs struct {
 	size      func(v pref.Value, tagsize int, opts marshalOptions) int
 	marshal   func(b []byte, v pref.Value, wiretag uint64, opts marshalOptions) ([]byte, error)
-	unmarshal func(b []byte, v pref.Value, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, int, error)
+	unmarshal func(b []byte, v pref.Value, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, unmarshalOutput, error)
 	isInit    func(v pref.Value) error
 }
 

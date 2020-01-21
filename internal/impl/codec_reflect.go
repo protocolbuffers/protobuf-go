@@ -24,16 +24,17 @@ func appendEnum(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byt
 	return b, nil
 }
 
-func consumeEnum(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (n int, err error) {
+func consumeEnum(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != wire.VarintType {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	p.v.Elem().SetInt(int64(v))
-	return n, nil
+	out.n = n
+	return out, nil
 }
 
 var coderEnum = pointerCoderFuncs{
@@ -70,9 +71,9 @@ func appendEnumPtr(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]
 	return appendEnum(b, pointer{p.v.Elem()}, wiretag, opts)
 }
 
-func consumeEnumPtr(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (n int, err error) {
+func consumeEnumPtr(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != wire.VarintType {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	if p.v.Elem().IsNil() {
 		p.v.Elem().Set(reflect.New(p.v.Elem().Type().Elem()))
@@ -103,36 +104,38 @@ func appendEnumSlice(b []byte, p pointer, wiretag uint64, opts marshalOptions) (
 	return b, nil
 }
 
-func consumeEnumSlice(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (n int, err error) {
+func consumeEnumSlice(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	s := p.v.Elem()
 	if wtyp == wire.BytesType {
-		b, n = wire.ConsumeBytes(b)
+		b, n := wire.ConsumeBytes(b)
 		if n < 0 {
-			return 0, wire.ParseError(n)
+			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
 			v, n := wire.ConsumeVarint(b)
 			if n < 0 {
-				return 0, wire.ParseError(n)
+				return out, wire.ParseError(n)
 			}
 			rv := reflect.New(s.Type().Elem()).Elem()
 			rv.SetInt(int64(v))
 			s.Set(reflect.Append(s, rv))
 			b = b[n:]
 		}
-		return n, nil
+		out.n = n
+		return out, nil
 	}
 	if wtyp != wire.VarintType {
-		return 0, errUnknown
+		return out, errUnknown
 	}
 	v, n := wire.ConsumeVarint(b)
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return out, wire.ParseError(n)
 	}
 	rv := reflect.New(s.Type().Elem()).Elem()
 	rv.SetInt(int64(v))
 	s.Set(reflect.Append(s, rv))
-	return n, nil
+	out.n = n
+	return out, nil
 }
 
 var coderEnumSlice = pointerCoderFuncs{
