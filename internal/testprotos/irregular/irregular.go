@@ -8,6 +8,7 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/reflect/protodesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/runtime/protoiface"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -26,6 +27,7 @@ func (m *message) Type() pref.MessageType             { return m }
 func (m *message) New() pref.Message                  { return &message{} }
 func (m *message) Zero() pref.Message                 { return (*message)(nil) }
 func (m *message) Interface() pref.ProtoMessage       { return (*IrregularMessage)(m) }
+func (m *message) ProtoMethods() *protoiface.Methods  { return nil }
 
 var fieldDescS = fileDesc.Messages().Get(0).Fields().Get(0)
 

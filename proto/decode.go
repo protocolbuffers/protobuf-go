@@ -38,7 +38,8 @@ type UnmarshalOptions struct {
 	// Resolver is used for looking up types when unmarshaling extension fields.
 	// If nil, this defaults to using protoregistry.GlobalTypes.
 	Resolver interface {
-		protoregistry.ExtensionTypeResolver
+		FindExtensionByName(field protoreflect.FullName) (protoreflect.ExtensionType, error)
+		FindExtensionByNumber(message protoreflect.FullName, field protoreflect.FieldNumber) (protoreflect.ExtensionType, error)
 	}
 }
 

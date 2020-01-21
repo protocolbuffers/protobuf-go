@@ -150,6 +150,14 @@ type Message interface {
 	// be preserved in marshaling or other operations.
 	IsValid() bool
 
+	// ProtoMethods returns optional fast-path implementions of various operations.
+	// This method may return nil.
+	//
+	// The returned methods type is identical to
+	// "google.golang.org/protobuf/runtime/protoiface".Methods.
+	// Consult the protoiface package documentation for details.
+	ProtoMethods() *methods
+
 	// TODO: Add method to retrieve ExtensionType by FieldNumber?
 }
 

@@ -15,8 +15,5 @@ import (
 const hasProtoMethods = true
 
 func protoMethods(m protoreflect.Message) *protoiface.Methods {
-	if x, ok := m.(protoiface.Methoder); ok {
-		return x.ProtoMethods()
-	}
-	return nil
+	return m.ProtoMethods()
 }

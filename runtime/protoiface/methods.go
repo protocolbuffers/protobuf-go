@@ -12,18 +12,10 @@ package protoiface
 import (
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
-// Methoder is an optional interface implemented by protoreflect.Message to
-// provide fast-path implementations of various operations.
-// The returned Methods struct must not be mutated.
-type Methoder interface {
-	ProtoMethods() *Methods // may return nil
-}
-
 // Methods is a set of optional fast-path implementations of various operations.
-type Methods struct {
+type Methods = struct {
 	pragma.NoUnkeyedLiterals
 
 	// Flags indicate support for optional features.
@@ -46,7 +38,7 @@ type Methods struct {
 	IsInitialized func(m protoreflect.Message) error
 }
 
-type SupportFlags uint64
+type SupportFlags = uint64
 
 const (
 	// SupportMarshalDeterministic reports whether MarshalOptions.Deterministic is supported.
@@ -59,7 +51,7 @@ const (
 // MarshalOptions configure the marshaler.
 //
 // This type is identical to the one in package proto.
-type MarshalOptions struct {
+type MarshalOptions = struct {
 	pragma.NoUnkeyedLiterals
 
 	AllowPartial  bool // must be treated as true by method implementations
@@ -70,13 +62,14 @@ type MarshalOptions struct {
 // UnmarshalOptions configures the unmarshaler.
 //
 // This type is identical to the one in package proto.
-type UnmarshalOptions struct {
+type UnmarshalOptions = struct {
 	pragma.NoUnkeyedLiterals
 
 	Merge          bool // must be treated as true by method implementations
 	AllowPartial   bool // must be treated as true by method implementations
 	DiscardUnknown bool
 	Resolver       interface {
-		protoregistry.ExtensionTypeResolver
+		FindExtensionByName(field protoreflect.FullName) (protoreflect.ExtensionType, error)
+		FindExtensionByNumber(message protoreflect.FullName, field protoreflect.FieldNumber) (protoreflect.ExtensionType, error)
 	}
 }

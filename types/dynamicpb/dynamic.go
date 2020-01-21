@@ -10,7 +10,8 @@ import (
 
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	"google.golang.org/protobuf/runtime/protoiface"
+	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
 // A Message is a dynamically constructed protocol buffer message.
@@ -74,6 +75,12 @@ func (m *Message) New() pref.Message {
 // See protoreflect.Message for details.
 func (m *Message) Interface() pref.ProtoMessage {
 	return m
+}
+
+// ProtoMethods is an internal detail of the protoreflect.Message interface.
+// Users should never call this directly.
+func (m *Message) ProtoMethods() *protoiface.Methods {
+	return nil
 }
 
 // Range visits every populated field in undefined order.

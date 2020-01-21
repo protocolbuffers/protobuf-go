@@ -24,7 +24,8 @@ type unmarshalOptions struct {
 	// Keep this field's type identical to (proto.UnmarshalOptions).Resolver
 	// to avoid a type conversion on assignment.
 	resolver interface {
-		preg.ExtensionTypeResolver
+		FindExtensionByName(field pref.FullName) (pref.ExtensionType, error)
+		FindExtensionByNumber(message pref.FullName, field pref.FieldNumber) (pref.ExtensionType, error)
 	}
 }
 
