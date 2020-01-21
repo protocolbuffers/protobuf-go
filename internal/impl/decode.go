@@ -19,8 +19,13 @@ import (
 // We don't preserve the AllowPartial flag, because fast-path (un)marshal
 // operations always allow partial messages.
 type unmarshalOptions struct {
-	flags    unmarshalOptionFlags
-	resolver preg.ExtensionTypeResolver
+	flags unmarshalOptionFlags
+
+	// Keep this field's type identical to (proto.UnmarshalOptions).Resolver
+	// to avoid a type conversion on assignment.
+	resolver interface {
+		preg.ExtensionTypeResolver
+	}
 }
 
 type unmarshalOptionFlags uint8
