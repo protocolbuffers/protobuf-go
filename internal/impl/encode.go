@@ -102,14 +102,14 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 }
 
 // marshal is protoreflect.Methods.Marshal.
-func (mi *MessageInfo) marshal(m pref.Message, in piface.MarshalInput) (piface.MarshalOutput, error) {
+func (mi *MessageInfo) marshal(m pref.Message, in piface.MarshalInput, opts piface.MarshalOptions) (piface.MarshalOutput, error) {
 	var p pointer
 	if ms, ok := m.(*messageState); ok {
 		p = ms.pointer()
 	} else {
 		p = m.(*messageReflectWrapper).pointer()
 	}
-	b, err := mi.marshalAppendPointer(in.Buf, p, newMarshalOptions(in.Options))
+	b, err := mi.marshalAppendPointer(in.Buf, p, newMarshalOptions(opts))
 	return piface.MarshalOutput{Buf: b}, err
 }
 

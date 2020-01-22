@@ -29,7 +29,7 @@ func sizeMessage(m protoreflect.Message) (size int) {
 	if methods != nil && methods.Marshal != nil {
 		// This is not efficient, but we don't have any choice.
 		// This case is mainly used for legacy types with a Marshal method.
-		out, _ := methods.Marshal(m, protoiface.MarshalInput{})
+		out, _ := methods.Marshal(m, protoiface.MarshalInput{}, protoiface.MarshalOptions{})
 		return len(out.Buf)
 	}
 	return sizeMessageSlow(m)

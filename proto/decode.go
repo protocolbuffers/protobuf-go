@@ -47,38 +47,56 @@ var _ = protoiface.UnmarshalOptions(UnmarshalOptions{})
 
 // Unmarshal parses the wire-format message in b and places the result in m.
 func Unmarshal(b []byte, m Message) error {
-	return UnmarshalOptions{}.Unmarshal(b, m)
+	_, err := UnmarshalOptions{}.unmarshal(b, m)
+	return err
 }
 
 // Unmarshal parses the wire-format message in b and places the result in m.
 func (o UnmarshalOptions) Unmarshal(b []byte, m Message) error {
+	_, err := o.unmarshal(b, m)
+	return err
+}
+
+// UnmarshalState parses a wire-format message and places the result in m.
+//
+// This method permits fine-grained control over the unmarshaler.
+// Most users should use Unmarshal instead.
+func (o UnmarshalOptions) UnmarshalState(m Message, in protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+	return o.unmarshal(in.Buf, m)
+}
+
+func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.UnmarshalOutput, err error) {
 	if o.Resolver == nil {
 		o.Resolver = protoregistry.GlobalTypes
 	}
-
 	if !o.Merge {
-		Reset(m)
+		Reset(message)
 	}
-	err := o.unmarshalMessage(b, m.ProtoReflect())
+	allowPartial := o.AllowPartial
+	o.Merge = true
+	o.AllowPartial = true
+	m := message.ProtoReflect()
+	methods := protoMethods(m)
+	if methods != nil && methods.Unmarshal != nil &&
+		!(o.DiscardUnknown && methods.Flags&protoiface.SupportUnmarshalDiscardUnknown == 0) {
+		out, err = methods.Unmarshal(m, protoiface.UnmarshalInput{
+			Buf: b,
+		}, protoiface.UnmarshalOptions(o))
+	} else {
+		err = o.unmarshalMessageSlow(b, m)
+	}
 	if err != nil {
-		return err
+		return out, err
 	}
-	if o.AllowPartial {
-		return nil
+	if allowPartial {
+		return out, nil
 	}
-	return IsInitialized(m)
+	return out, isInitialized(m)
 }
 
 func (o UnmarshalOptions) unmarshalMessage(b []byte, m protoreflect.Message) error {
-	if methods := protoMethods(m); methods != nil && methods.Unmarshal != nil &&
-		!(o.DiscardUnknown && methods.Flags&protoiface.SupportUnmarshalDiscardUnknown == 0) {
-		_, err := methods.Unmarshal(m, protoiface.UnmarshalInput{
-			Buf:     b,
-			Options: protoiface.UnmarshalOptions(o),
-		})
-		return err
-	}
-	return o.unmarshalMessageSlow(b, m)
+	_, err := o.unmarshal(b, m.Interface())
+	return err
 }
 
 func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message) error {

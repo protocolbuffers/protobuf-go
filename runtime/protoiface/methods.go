@@ -27,12 +27,10 @@ type Methods = struct {
 
 	// Marshal writes the wire-format encoding of m to the provided buffer.
 	// Size should be provided if a custom MarshalAppend is provided.
-	// It must not perform required field checks.
-	Marshal func(m protoreflect.Message, in MarshalInput) (MarshalOutput, error)
+	Marshal func(m protoreflect.Message, in MarshalInput, opts MarshalOptions) (MarshalOutput, error)
 
 	// Unmarshal parses the wire-format encoding of a message and merges the result to m.
-	// It must not reset m or perform required field checks.
-	Unmarshal func(m protoreflect.Message, in UnmarshalInput) (UnmarshalOutput, error)
+	Unmarshal func(m protoreflect.Message, in UnmarshalInput, opts UnmarshalOptions) (UnmarshalOutput, error)
 
 	// IsInitialized returns an error if any required fields in m are not set.
 	IsInitialized func(m protoreflect.Message) error
@@ -52,8 +50,7 @@ const (
 type MarshalInput = struct {
 	pragma.NoUnkeyedLiterals
 
-	Buf     []byte // output is appended to this buffer
-	Options MarshalOptions
+	Buf []byte // output is appended to this buffer
 }
 
 // MarshalOutput is output from the marshaler.
@@ -69,7 +66,7 @@ type MarshalOutput = struct {
 type MarshalOptions = struct {
 	pragma.NoUnkeyedLiterals
 
-	AllowPartial  bool // must be treated as true by method implementations
+	AllowPartial  bool // may be treated as true by method implementations
 	Deterministic bool
 	UseCachedSize bool
 }
@@ -78,8 +75,7 @@ type MarshalOptions = struct {
 type UnmarshalInput = struct {
 	pragma.NoUnkeyedLiterals
 
-	Buf     []byte // input buffer
-	Options UnmarshalOptions
+	Buf []byte // input buffer
 }
 
 // UnmarshalOutput is output from the unmarshaler.
@@ -95,8 +91,8 @@ type UnmarshalOutput = struct {
 type UnmarshalOptions = struct {
 	pragma.NoUnkeyedLiterals
 
-	Merge          bool // must be treated as true by method implementations
-	AllowPartial   bool // must be treated as true by method implementations
+	Merge          bool // may be treated as true by method implementations
+	AllowPartial   bool // may be treated as true by method implementations
 	DiscardUnknown bool
 	Resolver       interface {
 		FindExtensionByName(field protoreflect.FullName) (protoreflect.ExtensionType, error)

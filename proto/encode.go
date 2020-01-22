@@ -76,28 +76,35 @@ var _ = protoiface.MarshalOptions(MarshalOptions{})
 
 // Marshal returns the wire-format encoding of m.
 func Marshal(m Message) ([]byte, error) {
-	return MarshalOptions{}.MarshalAppend(nil, m)
+	out, err := MarshalOptions{}.marshal(nil, m)
+	return out.Buf, err
 }
 
 // Marshal returns the wire-format encoding of m.
 func (o MarshalOptions) Marshal(m Message) ([]byte, error) {
-	return o.MarshalAppend(nil, m)
+	out, err := o.marshal(nil, m)
+	return out.Buf, err
 }
 
 // MarshalAppend appends the wire-format encoding of m to b,
 // returning the result.
 func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
-	out, err := o.marshalMessage(b, m.ProtoReflect())
-	if err != nil {
-		return out, err
-	}
-	if o.AllowPartial {
-		return out, nil
-	}
-	return out, IsInitialized(m)
+	out, err := o.marshal(b, m)
+	return out.Buf, err
 }
 
-func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte, error) {
+// MarshalState returns the wire-format encoding of m.
+//
+// This method permits fine-grained control over the marshaler.
+// Most users should use Marshal instead.
+func (o MarshalOptions) MarshalState(m Message, in protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+	return o.marshal(in.Buf, m)
+}
+
+func (o MarshalOptions) marshal(b []byte, message Message) (out protoiface.MarshalOutput, err error) {
+	allowPartial := o.AllowPartial
+	o.AllowPartial = true
+	m := message.ProtoReflect()
 	if methods := protoMethods(m); methods != nil && methods.Marshal != nil &&
 		!(o.Deterministic && methods.Flags&protoiface.SupportMarshalDeterministic == 0) {
 		if methods.Size != nil {
@@ -109,13 +116,24 @@ func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte
 			}
 			o.UseCachedSize = true
 		}
-		out, err := methods.Marshal(m, protoiface.MarshalInput{
-			Buf:     b,
-			Options: protoiface.MarshalOptions(o),
-		})
-		return out.Buf, err
+		out, err = methods.Marshal(m, protoiface.MarshalInput{
+			Buf: b,
+		}, protoiface.MarshalOptions(o))
+	} else {
+		out.Buf, err = o.marshalMessageSlow(b, m)
 	}
-	return o.marshalMessageSlow(b, m)
+	if err != nil {
+		return out, err
+	}
+	if allowPartial {
+		return out, nil
+	}
+	return out, isInitialized(m)
+}
+
+func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte, error) {
+	out, err := o.marshal(b, m.Interface())
+	return out.Buf, err
 }
 
 // growcap scales up the capacity of a slice.

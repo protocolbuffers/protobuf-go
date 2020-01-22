@@ -373,7 +373,7 @@ var legacyProtoMethods = &piface.Methods{
 	Flags: piface.SupportMarshalDeterministic,
 }
 
-func legacyMarshal(m protoreflect.Message, in piface.MarshalInput) (piface.MarshalOutput, error) {
+func legacyMarshal(m protoreflect.Message, in piface.MarshalInput, opts piface.MarshalOptions) (piface.MarshalOutput, error) {
 	v := m.(unwrapper).protoUnwrap()
 	marshaler, ok := v.(legacyMarshaler)
 	if !ok {
@@ -388,7 +388,7 @@ func legacyMarshal(m protoreflect.Message, in piface.MarshalInput) (piface.Marsh
 	}, err
 }
 
-func legacyUnmarshal(m protoreflect.Message, in piface.UnmarshalInput) (piface.UnmarshalOutput, error) {
+func legacyUnmarshal(m protoreflect.Message, in piface.UnmarshalInput, opts piface.UnmarshalOptions) (piface.UnmarshalOutput, error) {
 	v := m.(unwrapper).protoUnwrap()
 	unmarshaler, ok := v.(legacyUnmarshaler)
 	if !ok {

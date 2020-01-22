@@ -18,16 +18,15 @@ type (
 	methods = struct {
 		pragma.NoUnkeyedLiterals
 		Flags         supportFlags
-		Size          func(m Message, opts marshalOptions) int
-		Marshal       func(m Message, in marshalInput) (marshalOutput, error)
-		Unmarshal     func(m Message, in unmarshalInput) (unmarshalOutput, error)
-		IsInitialized func(m Message) error
+		Size          func(Message, marshalOptions) int
+		Marshal       func(Message, marshalInput, marshalOptions) (marshalOutput, error)
+		Unmarshal     func(Message, unmarshalInput, unmarshalOptions) (unmarshalOutput, error)
+		IsInitialized func(Message) error
 	}
 	supportFlags = uint64
 	marshalInput = struct {
 		pragma.NoUnkeyedLiterals
-		Buf     []byte
-		Options marshalOptions
+		Buf []byte
 	}
 	marshalOutput = struct {
 		pragma.NoUnkeyedLiterals
@@ -41,8 +40,7 @@ type (
 	}
 	unmarshalInput = struct {
 		pragma.NoUnkeyedLiterals
-		Buf     []byte
-		Options unmarshalOptions
+		Buf []byte
 	}
 	unmarshalOutput = struct {
 		pragma.NoUnkeyedLiterals

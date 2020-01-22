@@ -62,14 +62,14 @@ type unmarshalOutput struct {
 }
 
 // unmarshal is protoreflect.Methods.Unmarshal.
-func (mi *MessageInfo) unmarshal(m pref.Message, in piface.UnmarshalInput) (piface.UnmarshalOutput, error) {
+func (mi *MessageInfo) unmarshal(m pref.Message, in piface.UnmarshalInput, opts piface.UnmarshalOptions) (piface.UnmarshalOutput, error) {
 	var p pointer
 	if ms, ok := m.(*messageState); ok {
 		p = ms.pointer()
 	} else {
 		p = m.(*messageReflectWrapper).pointer()
 	}
-	_, err := mi.unmarshalPointer(in.Buf, p, 0, newUnmarshalOptions(in.Options))
+	_, err := mi.unmarshalPointer(in.Buf, p, 0, newUnmarshalOptions(opts))
 	return piface.UnmarshalOutput{}, err
 }
 
