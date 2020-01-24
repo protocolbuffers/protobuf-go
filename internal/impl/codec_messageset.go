@@ -101,15 +101,20 @@ func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts unmarshalOpt
 	}
 	ext := *ep
 	unknown := p.Apply(mi.unknownOffset).Bytes()
+	initialized := true
 	err = messageset.Unmarshal(b, true, func(num wire.Number, v []byte) error {
-		_, err := mi.unmarshalExtension(v, num, wire.BytesType, ext, opts)
+		o, err := mi.unmarshalExtension(v, num, wire.BytesType, ext, opts)
 		if err == errUnknown {
 			*unknown = wire.AppendTag(*unknown, num, wire.BytesType)
 			*unknown = append(*unknown, v...)
 			return nil
 		}
+		if !o.initialized {
+			initialized = false
+		}
 		return err
 	})
 	out.n = len(b)
+	out.initialized = initialized
 	return out, err
 }

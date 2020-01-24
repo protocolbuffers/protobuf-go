@@ -25,6 +25,13 @@ message Ext2 {
   optional int32 ext2_field1 = 1;
 }
 
+message ExtRequired {
+  extend MessageSet {
+    optional ExtRequired message_set_extension = 1002;
+  }
+  required int32 required_field1 = 1;
+}
+
 message ExtLargeNumber {
   extend MessageSet {
     optional ExtLargeNumber message_set_extension = 536870912; // 1<<29

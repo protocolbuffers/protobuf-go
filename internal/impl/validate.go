@@ -12,6 +12,7 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
@@ -242,6 +243,9 @@ State:
 		st := &states[len(states)-1]
 		if st.mi != nil {
 			st.mi.init()
+			if flags.ProtoLegacy && st.mi.isMessageSet {
+				return ValidationUnknown
+			}
 		}
 	Field:
 		for len(b) > 0 {

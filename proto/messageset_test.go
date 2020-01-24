@@ -8,6 +8,7 @@ import (
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/flags"
+	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 
 	messagesetpb "google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
@@ -40,6 +41,7 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet type_id after message content",
@@ -60,6 +62,7 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet does not preserve unknown field",
@@ -79,25 +82,27 @@ var messageSetTestProtos = []testProto{
 			// Unknown field
 			pack.Tag{4, pack.VarintType}, pack.Varint(30),
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with unknown type_id",
 		decodeTo: []proto.Message{build(
 			&messagesetpb.MessageSet{},
 			unknown(pack.Message{
-				pack.Tag{1002, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{999, pack.BytesType}, pack.LengthPrefix(pack.Message{
 					pack.Tag{1, pack.VarintType}, pack.Varint(10),
 				}),
 			}.Marshal()),
 		)},
 		wire: pack.Message{
 			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(1002),
+			pack.Tag{2, pack.VarintType}, pack.Varint(999),
 			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(10),
 			}),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet merges repeated message fields in item",
@@ -119,6 +124,7 @@ var messageSetTestProtos = []testProto{
 			}),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet merges message fields in repeated items",
@@ -155,6 +161,7 @@ var messageSetTestProtos = []testProto{
 			}),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with missing type_id",
@@ -168,6 +175,7 @@ var messageSetTestProtos = []testProto{
 			}),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with missing message",
@@ -180,6 +188,7 @@ var messageSetTestProtos = []testProto{
 			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with type id out of valid field number range",
@@ -196,6 +205,7 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with unknown type id out of valid field number range",
@@ -216,5 +226,47 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
+	},
+	{
+		desc:          "MessageSet with required field set",
+		checkFastInit: true,
+		decodeTo: []proto.Message{func() proto.Message {
+			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
+			proto.SetExtension(m.MessageSet, msetextpb.E_ExtRequired_MessageSetExtension, &msetextpb.ExtRequired{
+				RequiredField1: proto.Int32(1),
+			})
+			return m
+		}()},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{2, pack.VarintType}, pack.Varint(1002),
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
+					pack.Tag{1, pack.VarintType}, pack.Varint(1),
+				}),
+				pack.Tag{1, pack.EndGroupType},
+			}),
+		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
+	},
+	{
+		desc:          "MessageSet with required field unset",
+		checkFastInit: true,
+		partial:       true,
+		decodeTo: []proto.Message{func() proto.Message {
+			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
+			proto.SetExtension(m.MessageSet, msetextpb.E_ExtRequired_MessageSetExtension, &msetextpb.ExtRequired{})
+			return m
+		}()},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{2, pack.VarintType}, pack.Varint(1002),
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
+				pack.Tag{1, pack.EndGroupType},
+			}),
+		}.Marshal(),
+		validationStatus: impl.ValidationUnknown,
 	},
 }
