@@ -143,9 +143,10 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			var o unmarshalOutput
 			o, err = f.funcs.unmarshal(b, p.Apply(f.offset), wtyp, opts)
 			n = o.n
-			if reqi := f.validation.requiredIndex; reqi > 0 && err == nil {
-				requiredMask |= 1 << (reqi - 1)
+			if err != nil {
+				break
 			}
+			requiredMask |= f.validation.requiredBit
 			if f.funcs.isInit != nil && !o.initialized {
 				initialized = false
 			}

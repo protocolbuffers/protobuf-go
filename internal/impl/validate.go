@@ -77,11 +77,13 @@ type validationInfo struct {
 	typ              validationType
 	keyType, valType validationType
 
-	// For non-required fields, requiredIndex is 0.
+	// For non-required fields, requiredBit is 0.
 	//
-	// For required fields, requiredIndex is unique index in the range
-	// (0, MessageInfo.numRequiredFields].
-	requiredIndex uint8
+	// For required fields, requiredBit's nth bit is set, where n is a
+	// unique index in the range [0, MessageInfo.numRequiredFields).
+	//
+	// If there are more than 64 required fields, requiredBit is 0.
+	requiredBit uint64
 }
 
 type validationType uint8
@@ -131,7 +133,7 @@ func newFieldValidationInfo(mi *MessageInfo, si structInfo, fd pref.FieldDescrip
 		// of the required fields past 64.
 		if mi.numRequiredFields < math.MaxUint8 {
 			mi.numRequiredFields++
-			vi.requiredIndex = mi.numRequiredFields
+			vi.requiredBit = 1 << (mi.numRequiredFields - 1)
 		}
 	}
 	return vi
@@ -272,7 +274,7 @@ State:
 				case 2:
 					vi.typ = st.valType
 					vi.mi = st.mi
-					vi.requiredIndex = 1
+					vi.requiredBit = 1
 				}
 			default:
 				var f *coderFieldInfo
@@ -321,7 +323,7 @@ State:
 					vi = getExtensionFieldInfo(xt).validation
 				}
 			}
-			if vi.requiredIndex > 0 {
+			if vi.requiredBit != 0 {
 				// Check that the field has a compatible wire type.
 				// We only need to consider non-repeated field types,
 				// since repeated fields (and maps) can never be required.
@@ -337,7 +339,7 @@ State:
 					ok = wtyp == wire.BytesType
 				}
 				if ok {
-					st.requiredMask |= 1 << (vi.requiredIndex - 1)
+					st.requiredMask |= vi.requiredBit
 				}
 			}
 			switch vi.typ {
