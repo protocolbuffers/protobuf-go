@@ -97,15 +97,27 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 	start := len(b)
 	for len(b) > 0 {
 		// Parse the tag (field number and wire type).
-		// TODO: inline 1 and 2 byte variants?
-		num, wtyp, n := wire.ConsumeTag(b)
-		if n < 0 {
-			return out, wire.ParseError(n)
+		var tag uint64
+		if b[0] < 0x80 {
+			tag = uint64(b[0])
+			b = b[1:]
+		} else if len(b) >= 2 && b[1] < 128 {
+			tag = uint64(b[0]&0x7f) + uint64(b[1])<<7
+			b = b[2:]
+		} else {
+			var n int
+			tag, n = wire.ConsumeVarint(b)
+			if n < 0 {
+				return out, wire.ParseError(n)
+			}
+			b = b[n:]
 		}
-		if num > wire.MaxValidNumber {
+		num := wire.Number(tag >> 3)
+		wtyp := wire.Type(tag & 7)
+
+		if num < wire.MinValidNumber || num > wire.MaxValidNumber {
 			return out, errors.New("invalid field number")
 		}
-		b = b[n:]
 
 		if wtyp == wire.EndGroupType {
 			if num != groupTag {
@@ -121,6 +133,7 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 		} else {
 			f = mi.coderFields[num]
 		}
+		var n int
 		err := errUnknown
 		switch {
 		case f != nil:

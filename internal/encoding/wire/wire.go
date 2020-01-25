@@ -176,7 +176,6 @@ func SizeTag(num Number) int {
 
 // AppendVarint appends v to b as a varint-encoded uint64.
 func AppendVarint(b []byte, v uint64) []byte {
-	// TODO: Specialize for sizes 1 and 2 with mid-stack inlining.
 	switch {
 	case v < 1<<7:
 		b = append(b, byte(v))
@@ -259,7 +258,6 @@ func AppendVarint(b []byte, v uint64) []byte {
 // ConsumeVarint parses b as a varint-encoded uint64, reporting its length.
 // This returns a negative length upon an error (see ParseError).
 func ConsumeVarint(b []byte) (v uint64, n int) {
-	// TODO: Specialize for sizes 1 and 2 with mid-stack inlining.
 	var y uint64
 	if len(b) <= 0 {
 		return 0, errCodeTruncated
