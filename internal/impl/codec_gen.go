@@ -33,7 +33,17 @@ func consumeBool(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out u
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -97,7 +107,17 @@ func consumeBoolPtr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (ou
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -145,7 +165,17 @@ func consumeBoolSlice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (
 			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
@@ -159,7 +189,17 @@ func consumeBoolSlice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -228,7 +268,17 @@ func consumeBoolValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.T
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -272,7 +322,17 @@ func consumeBoolSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -285,7 +345,17 @@ func consumeBoolSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -359,7 +429,17 @@ func consumeEnumValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.T
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -403,7 +483,17 @@ func consumeEnumSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -416,7 +506,17 @@ func consumeEnumSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -492,7 +592,17 @@ func consumeInt32(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out 
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -556,7 +666,17 @@ func consumeInt32Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (o
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -604,7 +724,17 @@ func consumeInt32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) 
 			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
@@ -618,7 +748,17 @@ func consumeInt32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) 
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -687,7 +827,17 @@ func consumeInt32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -731,7 +881,17 @@ func consumeInt32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -744,7 +904,17 @@ func consumeInt32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -820,7 +990,17 @@ func consumeSint32(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -884,7 +1064,17 @@ func consumeSint32Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -932,7 +1122,17 @@ func consumeSint32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions)
 			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
@@ -946,7 +1146,17 @@ func consumeSint32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions)
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1015,7 +1225,17 @@ func consumeSint32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -1059,7 +1279,17 @@ func consumeSint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -1072,7 +1302,17 @@ func consumeSint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -1148,7 +1388,17 @@ func consumeUint32(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1212,7 +1462,17 @@ func consumeUint32Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1260,7 +1520,17 @@ func consumeUint32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions)
 			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
@@ -1274,7 +1544,17 @@ func consumeUint32Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions)
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1343,7 +1623,17 @@ func consumeUint32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -1387,7 +1677,17 @@ func consumeUint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -1400,7 +1700,17 @@ func consumeUint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -1476,7 +1786,17 @@ func consumeInt64(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out 
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1540,7 +1860,17 @@ func consumeInt64Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (o
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1588,7 +1918,17 @@ func consumeInt64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) 
 			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
@@ -1602,7 +1942,17 @@ func consumeInt64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) 
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1671,7 +2021,17 @@ func consumeInt64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -1715,7 +2075,17 @@ func consumeInt64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -1728,7 +2098,17 @@ func consumeInt64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -1804,7 +2184,17 @@ func consumeSint64(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1868,7 +2258,17 @@ func consumeSint64Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1916,7 +2316,17 @@ func consumeSint64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions)
 			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
@@ -1930,7 +2340,17 @@ func consumeSint64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions)
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -1999,7 +2419,17 @@ func consumeSint64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -2043,7 +2473,17 @@ func consumeSint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -2056,7 +2496,17 @@ func consumeSint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -2132,7 +2582,17 @@ func consumeUint64(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (out
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -2196,7 +2656,17 @@ func consumeUint64Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -2244,7 +2714,17 @@ func consumeUint64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions)
 			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
@@ -2258,7 +2738,17 @@ func consumeUint64Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions)
 	if wtyp != wire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -2327,7 +2817,17 @@ func consumeUint64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -2371,7 +2871,17 @@ func consumeUint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			var v uint64
+			var n int
+			if len(b) >= 1 && b[0] < 0x80 {
+				v = uint64(b[0])
+				n = 1
+			} else if len(b) >= 2 && b[1] < 128 {
+				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				n = 2
+			} else {
+				v, n = wire.ConsumeVarint(b)
+			}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -2384,7 +2894,17 @@ func consumeUint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 	if wtyp != wire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	var v uint64
+	var n int
+	if len(b) >= 1 && b[0] < 0x80 {
+		v = uint64(b[0])
+		n = 1
+	} else if len(b) >= 2 && b[1] < 128 {
+		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+		n = 2
+	} else {
+		v, n = wire.ConsumeVarint(b)
+	}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}

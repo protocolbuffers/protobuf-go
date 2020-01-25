@@ -70,9 +70,21 @@ b = wire.Append{{.WireType}}(b, {{.FromValue}})
 
 {{- define "Consume" -}}
 {{- if eq .Name "String" -}}
-wire.ConsumeString(b)
+v, n := wire.ConsumeString(b)
+{{- else if eq .WireType "Varint" -}}
+var v uint64
+var n int
+if len(b) >= 1 && b[0] < 0x80 {
+	v = uint64(b[0])
+	n = 1
+} else if len(b) >= 2 && b[1] < 128 {
+	v = uint64(b[0]&0x7f) + uint64(b[1])<<7
+	n = 2
+} else {
+	v, n = wire.ConsumeVarint(b)
+}
 {{- else -}}
-wire.Consume{{.WireType}}(b)
+v, n := wire.Consume{{.WireType}}(b)
 {{- end -}}
 {{- end -}}
 
@@ -100,7 +112,7 @@ func consume{{.Name}}(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions) (
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -132,7 +144,7 @@ func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ unmarsh
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -180,7 +192,7 @@ func consume{{.Name}}NoZero(b []byte, p pointer, wtyp wire.Type, _ unmarshalOpti
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -218,7 +230,7 @@ func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ u
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -262,7 +274,7 @@ func consume{{.Name}}Ptr(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptions
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -316,7 +328,7 @@ func consume{{.Name}}Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptio
 			return out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := {{template "Consume" .}}
+			{{template "Consume" .}}
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
@@ -331,7 +343,7 @@ func consume{{.Name}}Slice(b []byte, p pointer, wtyp wire.Type, _ unmarshalOptio
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -366,7 +378,7 @@ func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, _ un
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
@@ -452,7 +464,7 @@ func consume{{.Name}}Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp w
 	if wtyp != {{.WireType.Expr}} {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -482,7 +494,7 @@ func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Nu
 	if wtyp != {{.WireType.Expr}} {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
@@ -535,7 +547,7 @@ func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ wire.Numbe
 			return protoreflect.Value{}, out, wire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := {{template "Consume" .}}
+			{{template "Consume" .}}
 			if n < 0 {
 				return protoreflect.Value{}, out, wire.ParseError(n)
 			}
@@ -549,7 +561,7 @@ func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ wire.Numbe
 	if wtyp != {{.WireType.Expr}} {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := {{template "Consume" .}}
+	{{template "Consume" .}}
 	if n < 0 {
 		return protoreflect.Value{}, out, wire.ParseError(n)
 	}
