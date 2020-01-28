@@ -63,15 +63,20 @@ type MarshalOutput = struct {
 }
 
 // MarshalOptions configure the marshaler.
-//
-// This type is identical to the one in package proto.
 type MarshalOptions = struct {
 	pragma.NoUnkeyedLiterals
 
-	AllowPartial  bool // may be treated as true by method implementations
-	Deterministic bool
-	UseCachedSize bool
+	Flags MarshalFlags
 }
+
+// MarshalFlags are configure the marshaler.
+// Most flags correspond to fields in proto.MarshalOptions.
+type MarshalFlags = uint8
+
+const (
+	MarshalDeterministic MarshalFlags = 1 << iota
+	MarshalUseCachedSize
+)
 
 // UnmarshalInput is input to the unmarshaler.
 type UnmarshalInput = struct {
@@ -91,16 +96,20 @@ type UnmarshalOutput = struct {
 }
 
 // UnmarshalOptions configures the unmarshaler.
-//
-// This type is identical to the one in package proto.
 type UnmarshalOptions = struct {
 	pragma.NoUnkeyedLiterals
 
-	Merge          bool // may be treated as true by method implementations
-	AllowPartial   bool // may be treated as true by method implementations
-	DiscardUnknown bool
-	Resolver       interface {
+	Flags    UnmarshalFlags
+	Resolver interface {
 		FindExtensionByName(field protoreflect.FullName) (protoreflect.ExtensionType, error)
 		FindExtensionByNumber(message protoreflect.FullName, field protoreflect.FieldNumber) (protoreflect.ExtensionType, error)
 	}
 }
+
+// UnmarshalFlags configure the unmarshaler.
+// Most flags correspond to fields in proto.UnmarshalOptions.
+type UnmarshalFlags = uint8
+
+const (
+	UnmarshalDiscardUnknown UnmarshalFlags = 1 << iota
+)

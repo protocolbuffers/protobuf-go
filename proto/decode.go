@@ -43,8 +43,6 @@ type UnmarshalOptions struct {
 	}
 }
 
-var _ = protoiface.UnmarshalOptions(UnmarshalOptions{})
-
 // Unmarshal parses the wire-format message in b and places the result in m.
 func Unmarshal(b []byte, m Message) error {
 	_, err := UnmarshalOptions{}.unmarshal(b, m)
@@ -79,9 +77,15 @@ func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.U
 	methods := protoMethods(m)
 	if methods != nil && methods.Unmarshal != nil &&
 		!(o.DiscardUnknown && methods.Flags&protoiface.SupportUnmarshalDiscardUnknown == 0) {
+		opts := protoiface.UnmarshalOptions{
+			Resolver: o.Resolver,
+		}
+		if o.DiscardUnknown {
+			opts.Flags |= protoiface.UnmarshalDiscardUnknown
+		}
 		out, err = methods.Unmarshal(m, protoiface.UnmarshalInput{
 			Buf: b,
-		}, protoiface.UnmarshalOptions(o))
+		}, opts)
 	} else {
 		err = o.unmarshalMessageSlow(b, m)
 	}

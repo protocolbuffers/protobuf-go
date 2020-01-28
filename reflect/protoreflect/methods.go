@@ -34,9 +34,7 @@ type (
 	}
 	marshalOptions = struct {
 		pragma.NoUnkeyedLiterals
-		AllowPartial  bool
-		Deterministic bool
-		UseCachedSize bool
+		Flags uint8
 	}
 	unmarshalInput = struct {
 		pragma.NoUnkeyedLiterals
@@ -48,10 +46,8 @@ type (
 	}
 	unmarshalOptions = struct {
 		pragma.NoUnkeyedLiterals
-		Merge          bool
-		AllowPartial   bool
-		DiscardUnknown bool
-		Resolver       interface {
+		Flags    uint8
+		Resolver interface {
 			FindExtensionByName(field FullName) (ExtensionType, error)
 			FindExtensionByNumber(message FullName, field FieldNumber) (ExtensionType, error)
 		}

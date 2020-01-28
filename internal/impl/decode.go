@@ -16,48 +16,18 @@ import (
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-// unmarshalOptions is a more efficient representation of UnmarshalOptions.
-//
-// We don't preserve the AllowPartial flag, because fast-path (un)marshal
-// operations always allow partial messages.
-type unmarshalOptions struct {
-	flags unmarshalOptionFlags
-
-	// Keep this field's type identical to (proto.UnmarshalOptions).Resolver
-	// to avoid a type conversion on assignment.
-	resolver interface {
-		FindExtensionByName(field pref.FullName) (pref.ExtensionType, error)
-		FindExtensionByNumber(message pref.FullName, field pref.FieldNumber) (pref.ExtensionType, error)
-	}
-}
-
-type unmarshalOptionFlags uint8
-
-const (
-	unmarshalDiscardUnknown unmarshalOptionFlags = 1 << iota
-)
-
-func newUnmarshalOptions(opts piface.UnmarshalOptions) unmarshalOptions {
-	o := unmarshalOptions{
-		resolver: opts.Resolver,
-	}
-	if opts.DiscardUnknown {
-		o.flags |= unmarshalDiscardUnknown
-	}
-	return o
-}
+type unmarshalOptions piface.UnmarshalOptions
 
 func (o unmarshalOptions) Options() proto.UnmarshalOptions {
 	return proto.UnmarshalOptions{
 		Merge:          true,
 		AllowPartial:   true,
 		DiscardUnknown: o.DiscardUnknown(),
-		Resolver:       o.Resolver(),
+		Resolver:       o.Resolver,
 	}
 }
 
-func (o unmarshalOptions) DiscardUnknown() bool                 { return o.flags&unmarshalDiscardUnknown != 0 }
-func (o unmarshalOptions) Resolver() preg.ExtensionTypeResolver { return o.resolver }
+func (o unmarshalOptions) DiscardUnknown() bool { return o.Flags&piface.UnmarshalDiscardUnknown != 0 }
 
 type unmarshalOutput struct {
 	n           int // number of bytes consumed
@@ -72,7 +42,7 @@ func (mi *MessageInfo) unmarshal(m pref.Message, in piface.UnmarshalInput, opts 
 	} else {
 		p = m.(*messageReflectWrapper).pointer()
 	}
-	out, err := mi.unmarshalPointer(in.Buf, p, 0, newUnmarshalOptions(opts))
+	out, err := mi.unmarshalPointer(in.Buf, p, 0, unmarshalOptions(opts))
 	return piface.UnmarshalOutput{
 		Initialized: out.initialized,
 	}, err
@@ -202,7 +172,7 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	xt := x.Type()
 	if xt == nil {
 		var err error
-		xt, err = opts.Resolver().FindExtensionByNumber(mi.Desc.FullName(), num)
+		xt, err = opts.Resolver.FindExtensionByNumber(mi.Desc.FullName(), num)
 		if err != nil {
 			if err == preg.NotFound {
 				return out, errUnknown

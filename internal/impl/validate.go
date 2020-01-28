@@ -69,7 +69,7 @@ func Validate(b []byte, mt pref.MessageType, opts piface.UnmarshalOptions) Valid
 	if !ok {
 		return ValidationUnknown
 	}
-	return mi.validate(b, 0, newUnmarshalOptions(opts))
+	return mi.validate(b, 0, unmarshalOptions(opts))
 }
 
 type validationInfo struct {
@@ -330,7 +330,7 @@ State:
 				// In this case, a type added to the resolver in the future could cause
 				// unmarshaling to begin failing. Supporting this requires some way to
 				// determine if the resolver is frozen.
-				xt, err := opts.Resolver().FindExtensionByNumber(st.mi.Desc.FullName(), num)
+				xt, err := opts.Resolver.FindExtensionByNumber(st.mi.Desc.FullName(), num)
 				if err != nil && err != preg.NotFound {
 					return ValidationUnknown
 				}

@@ -72,8 +72,6 @@ type MarshalOptions struct {
 	UseCachedSize bool
 }
 
-var _ = protoiface.MarshalOptions(MarshalOptions{})
-
 // Marshal returns the wire-format encoding of m.
 func Marshal(m Message) ([]byte, error) {
 	out, err := MarshalOptions{}.marshal(nil, m)
@@ -107,18 +105,25 @@ func (o MarshalOptions) marshal(b []byte, message Message) (out protoiface.Marsh
 	m := message.ProtoReflect()
 	if methods := protoMethods(m); methods != nil && methods.Marshal != nil &&
 		!(o.Deterministic && methods.Flags&protoiface.SupportMarshalDeterministic == 0) {
+		opts := protoiface.MarshalOptions{}
+		if o.Deterministic {
+			opts.Flags |= protoiface.MarshalDeterministic
+		}
+		if o.UseCachedSize {
+			opts.Flags |= protoiface.MarshalUseCachedSize
+		}
 		if methods.Size != nil {
-			sz := methods.Size(m, protoiface.MarshalOptions(o))
+			sz := methods.Size(m, opts)
 			if cap(b) < len(b)+sz {
 				x := make([]byte, len(b), growcap(cap(b), len(b)+sz))
 				copy(x, b)
 				b = x
 			}
-			o.UseCachedSize = true
+			opts.Flags |= protoiface.MarshalUseCachedSize
 		}
 		out, err = methods.Marshal(m, protoiface.MarshalInput{
 			Buf: b,
-		}, protoiface.MarshalOptions(o))
+		}, opts)
 	} else {
 		out.Buf, err = o.marshalMessageSlow(b, m)
 	}

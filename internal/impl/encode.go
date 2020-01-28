@@ -14,27 +14,7 @@ import (
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-// marshalOptions is a more efficient representation of MarshalOptions.
-//
-// We don't preserve the AllowPartial flag, because fast-path (un)marshal
-// operations always allow partial messages.
-type marshalOptions uint
-
-const (
-	marshalDeterministic marshalOptions = 1 << iota
-	marshalUseCachedSize
-)
-
-func newMarshalOptions(opts piface.MarshalOptions) marshalOptions {
-	var o marshalOptions
-	if opts.Deterministic {
-		o |= marshalDeterministic
-	}
-	if opts.UseCachedSize {
-		o |= marshalUseCachedSize
-	}
-	return o
-}
+type marshalOptions piface.MarshalOptions
 
 func (o marshalOptions) Options() proto.MarshalOptions {
 	return proto.MarshalOptions{
@@ -44,8 +24,8 @@ func (o marshalOptions) Options() proto.MarshalOptions {
 	}
 }
 
-func (o marshalOptions) Deterministic() bool { return o&marshalDeterministic != 0 }
-func (o marshalOptions) UseCachedSize() bool { return o&marshalUseCachedSize != 0 }
+func (o marshalOptions) Deterministic() bool { return o.Flags&piface.MarshalDeterministic != 0 }
+func (o marshalOptions) UseCachedSize() bool { return o.Flags&piface.MarshalUseCachedSize != 0 }
 
 // size is protoreflect.Methods.Size.
 func (mi *MessageInfo) size(m pref.Message, opts piface.MarshalOptions) (size int) {
@@ -55,7 +35,7 @@ func (mi *MessageInfo) size(m pref.Message, opts piface.MarshalOptions) (size in
 	} else {
 		p = m.(*messageReflectWrapper).pointer()
 	}
-	return mi.sizePointer(p, newMarshalOptions(opts))
+	return mi.sizePointer(p, marshalOptions(opts))
 }
 
 func (mi *MessageInfo) sizePointer(p pointer, opts marshalOptions) (size int) {
@@ -109,7 +89,7 @@ func (mi *MessageInfo) marshal(m pref.Message, in piface.MarshalInput, opts pifa
 	} else {
 		p = m.(*messageReflectWrapper).pointer()
 	}
-	b, err := mi.marshalAppendPointer(in.Buf, p, newMarshalOptions(opts))
+	b, err := mi.marshalAppendPointer(in.Buf, p, marshalOptions(opts))
 	return piface.MarshalOutput{Buf: b}, err
 }
 
