@@ -5,10 +5,12 @@
 package proto_test
 
 import (
+	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoregistry"
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
@@ -24,6 +26,7 @@ type testProto struct {
 	partial          bool
 	noEncode         bool
 	checkFastInit    bool
+	unmarshalOptions proto.UnmarshalOptions
 	validationStatus impl.ValidationStatus
 }
 
@@ -1118,6 +1121,19 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc: "discarded unknown fields",
+		unmarshalOptions: proto.UnmarshalOptions{
+			DiscardUnknown: true,
+		},
+		decodeTo: []proto.Message{
+			&testpb.TestAllTypes{},
+			&test3pb.TestAllTypes{},
+		},
+		wire: pack.Message{
+			pack.Tag{100000, pack.VarintType}, pack.Varint(1),
+		}.Marshal(),
+	},
+	{
 		desc: "field type mismatch",
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllTypes{},
@@ -1613,6 +1629,46 @@ var testValidMessages = []testProto{
 		)},
 		wire: pack.Message{
 			pack.Tag{pack.LastReservedNumber, pack.VarintType}, pack.Varint(1005),
+		}.Marshal(),
+	},
+	{
+		desc: "nested unknown extension",
+		unmarshalOptions: proto.UnmarshalOptions{
+			DiscardUnknown: true,
+			Resolver: func() protoregistry.ExtensionTypeResolver {
+				types := &protoregistry.Types{}
+				types.RegisterExtension(testpb.E_OptionalNestedMessageExtension)
+				types.RegisterExtension(testpb.E_OptionalInt32Extension)
+				return types
+			}(),
+		},
+		decodeTo: []proto.Message{func() proto.Message {
+			m := &testpb.TestAllExtensions{}
+			if err := prototext.Unmarshal([]byte(`
+				[goproto.proto.test.optional_nested_message_extension]: {
+					corecursive: {
+						[goproto.proto.test.optional_nested_message_extension]: {
+							corecursive: {
+								[goproto.proto.test.optional_int32_extension]: 42
+							}
+						}
+					}
+				}`), m); err != nil {
+				panic(err)
+			}
+			return m
+		}()},
+		wire: pack.Message{
+			pack.Tag{18, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
+					pack.Tag{18, pack.BytesType}, pack.LengthPrefix(pack.Message{
+						pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
+							pack.Tag{1, pack.VarintType}, pack.Varint(42),
+							pack.Tag{2, pack.VarintType}, pack.Varint(43),
+						}),
+					}),
+				}),
+			}),
 		}.Marshal(),
 	},
 }

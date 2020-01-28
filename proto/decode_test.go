@@ -25,9 +25,8 @@ func TestDecode(t *testing.T) {
 		}
 		for _, want := range test.decodeTo {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
-				opts := proto.UnmarshalOptions{
-					AllowPartial: test.partial,
-				}
+				opts := test.unmarshalOptions
+				opts.AllowPartial = test.partial
 				wire := append(([]byte)(nil), test.wire...)
 				got := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
 				if err := opts.Unmarshal(wire, got); err != nil {
@@ -55,6 +54,8 @@ func TestDecodeRequiredFieldChecks(t *testing.T) {
 		}
 		for _, m := range test.decodeTo {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, m), func(t *testing.T) {
+				opts := test.unmarshalOptions
+				opts.AllowPartial = false
 				got := reflect.New(reflect.TypeOf(m).Elem()).Interface().(proto.Message)
 				if err := proto.Unmarshal(test.wire, got); err == nil {
 					t.Fatalf("Unmarshal succeeded (want error)\nMessage:\n%v", marshalText(got))
@@ -71,9 +72,8 @@ func TestDecodeInvalidMessages(t *testing.T) {
 		}
 		for _, want := range test.decodeTo {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
-				opts := proto.UnmarshalOptions{
-					AllowPartial: test.partial,
-				}
+				opts := test.unmarshalOptions
+				opts.AllowPartial = test.partial
 				got := want.ProtoReflect().New().Interface()
 				if err := opts.Unmarshal(test.wire, got); err == nil {
 					t.Errorf("Unmarshal unexpectedly succeeded\ninput bytes: [%x]\nMessage:\n%v", test.wire, marshalText(got))

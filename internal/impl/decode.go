@@ -176,7 +176,7 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			if n < 0 {
 				return out, wire.ParseError(n)
 			}
-			if mi.unknownOffset.IsValid() {
+			if !opts.DiscardUnknown() && mi.unknownOffset.IsValid() {
 				u := p.Apply(mi.unknownOffset).Bytes()
 				*u = wire.AppendTag(*u, num, wtyp)
 				*u = append(*u, b[:n]...)

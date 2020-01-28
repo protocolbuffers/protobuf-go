@@ -154,7 +154,9 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 			if valLen < 0 {
 				return wire.ParseError(valLen)
 			}
-			m.SetUnknown(append(m.GetUnknown(), b[:tagLen+valLen]...))
+			if !o.DiscardUnknown {
+				m.SetUnknown(append(m.GetUnknown(), b[:tagLen+valLen]...))
+			}
 		}
 		b = b[tagLen+valLen:]
 	}
