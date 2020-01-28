@@ -219,11 +219,12 @@ var testValidMessages = []testProto{
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllTypes_NestedMessage{
+			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{
 				A: proto.Int32(42),
-				Corecursive: &testpb.TestAllTypes{
-					OptionalInt32: proto.Int32(43),
-				},
+				Corecursive: build(
+					&testpb.TestAllExtensions{},
+					extend(testpb.E_OptionalInt32Extension, int32(43)),
+				).(*testpb.TestAllExtensions),
 			}),
 		)},
 		wire: pack.Message{
@@ -253,11 +254,12 @@ var testValidMessages = []testProto{
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllTypes_NestedMessage{
+			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{
 				A: proto.Int32(42),
-				Corecursive: &testpb.TestAllTypes{
-					OptionalInt32: proto.Int32(43),
-				},
+				Corecursive: build(
+					&testpb.TestAllExtensions{},
+					extend(testpb.E_OptionalInt32Extension, int32(43)),
+				).(*testpb.TestAllExtensions),
 			}),
 		)},
 		wire: pack.Message{
@@ -283,7 +285,7 @@ var testValidMessages = []testProto{
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllTypes_NestedMessage{
+			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{
 				A: proto.Int32(2),
 			}),
 		)},
@@ -678,7 +680,7 @@ var testValidMessages = []testProto{
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
-			extend(testpb.E_RepeatedNestedMessageExtension, []*testpb.TestAllTypes_NestedMessage{
+			extend(testpb.E_RepeatedNestedMessageExtension, []*testpb.TestAllExtensions_NestedMessage{
 				{A: proto.Int32(1)},
 				nil,
 				{A: proto.Int32(2)},

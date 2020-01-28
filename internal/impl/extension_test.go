@@ -63,7 +63,7 @@ func TestExtensionType(t *testing.T) {
 		},
 		{
 			xt:    testpb.E_OptionalNestedMessageExtension,
-			value: &testpb.TestAllTypes_NestedMessage{},
+			value: &testpb.TestAllExtensions_NestedMessage{},
 		},
 		{
 			xt:    testpb.E_OptionalNestedEnumExtension,
@@ -107,7 +107,7 @@ func TestExtensionType(t *testing.T) {
 		},
 		{
 			xt:    testpb.E_RepeatedNestedMessageExtension,
-			value: []*testpb.TestAllTypes_NestedMessage{{}},
+			value: []*testpb.TestAllExtensions_NestedMessage{{}},
 		},
 		{
 			xt:    testpb.E_RepeatedNestedEnumExtension,

@@ -288,7 +288,7 @@ func testMerge(t *testing.T, shallow bool) {
 			m := new(testpb.TestAllExtensions)
 			proto.SetExtension(m, testpb.E_OptionalInt32Extension, int32(32))
 			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
-				&testpb.TestAllTypes_NestedMessage{
+				&testpb.TestAllExtensions_NestedMessage{
 					A: proto.Int32(50),
 				},
 			)
@@ -296,28 +296,28 @@ func testMerge(t *testing.T, shallow bool) {
 			return m
 		}(),
 		src: func() proto.Message {
+			m2 := new(testpb.TestAllExtensions)
+			proto.SetExtension(m2, testpb.E_OptionalInt64Extension, int64(1000))
 			m := new(testpb.TestAllExtensions)
 			proto.SetExtension(m, testpb.E_OptionalInt64Extension, int64(64))
 			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
-				&testpb.TestAllTypes_NestedMessage{
-					Corecursive: &testpb.TestAllTypes{
-						OptionalInt64: proto.Int64(1000),
-					},
+				&testpb.TestAllExtensions_NestedMessage{
+					Corecursive: m2,
 				},
 			)
 			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, []uint32{4, 5, 6})
 			return m
 		}(),
 		want: func() proto.Message {
+			m2 := new(testpb.TestAllExtensions)
+			proto.SetExtension(m2, testpb.E_OptionalInt64Extension, int64(1000))
 			m := new(testpb.TestAllExtensions)
 			proto.SetExtension(m, testpb.E_OptionalInt32Extension, int32(32))
 			proto.SetExtension(m, testpb.E_OptionalInt64Extension, int64(64))
 			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
-				&testpb.TestAllTypes_NestedMessage{
-					A: proto.Int32(50),
-					Corecursive: &testpb.TestAllTypes{
-						OptionalInt64: proto.Int64(1000),
-					},
+				&testpb.TestAllExtensions_NestedMessage{
+					A:           proto.Int32(50),
+					Corecursive: m2,
 				},
 			)
 			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, []uint32{1, 2, 3, 4, 5, 6})

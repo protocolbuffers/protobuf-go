@@ -146,7 +146,7 @@ func TestTransform(t *testing.T) {
 			proto.SetExtension(m, testpb.E_OptionalStringExtension, string("string"))
 			proto.SetExtension(m, testpb.E_OptionalBytesExtension, []byte("bytes"))
 			proto.SetExtension(m, testpb.E_OptionalNestedEnumExtension, testpb.TestAllTypes_NEG)
-			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension, &testpb.TestAllTypes_NestedMessage{A: proto.Int32(5)})
+			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(5)})
 			return m
 		}(),
 		want: Message{
@@ -161,7 +161,7 @@ func TestTransform(t *testing.T) {
 			"[goproto.proto.test.optional_string_extension]":         string("string"),
 			"[goproto.proto.test.optional_bytes_extension]":          []byte("bytes"),
 			"[goproto.proto.test.optional_nested_enum_extension]":    enumOf(testpb.TestAllTypes_NEG),
-			"[goproto.proto.test.optional_nested_message_extension]": Message{messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
+			"[goproto.proto.test.optional_nested_message_extension]": Message{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
 		},
 		wantString: `{[goproto.proto.test.optional_bool_extension]:false, [goproto.proto.test.optional_bytes_extension]:"bytes", [goproto.proto.test.optional_double_extension]:64.64, [goproto.proto.test.optional_float_extension]:32.32, [goproto.proto.test.optional_int32_extension]:-32, [goproto.proto.test.optional_int64_extension]:-64, [goproto.proto.test.optional_nested_enum_extension]:NEG, [goproto.proto.test.optional_nested_message_extension]:{a:5}, [goproto.proto.test.optional_string_extension]:"string", [goproto.proto.test.optional_uint32_extension]:32, [goproto.proto.test.optional_uint64_extension]:64}`,
 	}, {
@@ -180,7 +180,7 @@ func TestTransform(t *testing.T) {
 				testpb.TestAllTypes_FOO,
 				testpb.TestAllTypes_BAR,
 			})
-			proto.SetExtension(m, testpb.E_RepeatedNestedMessageExtension, []*testpb.TestAllTypes_NestedMessage{
+			proto.SetExtension(m, testpb.E_RepeatedNestedMessageExtension, []*testpb.TestAllExtensions_NestedMessage{
 				{A: proto.Int32(5)},
 				{A: proto.Int32(-5)},
 			})
@@ -202,8 +202,8 @@ func TestTransform(t *testing.T) {
 				enumOf(testpb.TestAllTypes_BAR),
 			},
 			"[goproto.proto.test.repeated_nested_message_extension]": []Message{
-				{messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
-				{messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(-5)},
+				{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
+				{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(-5)},
 			},
 		},
 		wantString: `{[goproto.proto.test.repeated_bool_extension]:[false, true], [goproto.proto.test.repeated_bytes_extension]:["\x01", "\x02"], [goproto.proto.test.repeated_double_extension]:[0, 64.64], [goproto.proto.test.repeated_float_extension]:[0, 32.32], [goproto.proto.test.repeated_int32_extension]:[32, -32], [goproto.proto.test.repeated_int64_extension]:[64, -64], [goproto.proto.test.repeated_nested_enum_extension]:[FOO, BAR], [goproto.proto.test.repeated_nested_message_extension]:[{a:5}, {a:-5}], [goproto.proto.test.repeated_string_extension]:["s1", "s2"], [goproto.proto.test.repeated_uint32_extension]:[0, 32], [goproto.proto.test.repeated_uint64_extension]:[0, 64]}`,

@@ -169,6 +169,11 @@ enum TestReservedEnumFields {
 }
 
 message TestAllExtensions {
+  message NestedMessage {
+    optional int32 a = 1;
+    optional TestAllExtensions corecursive = 2;
+  }
+
   extensions 1 to max;
 }
 
@@ -192,10 +197,10 @@ extend TestAllExtensions {
   optional group OptionalGroup_extension = 16 {
     optional int32 a = 17;
     optional int32 same_field_number = 16;
-    optional TestAllTypes.NestedMessage optional_nested_message = 1000;
+    optional TestAllExtensions.NestedMessage optional_nested_message = 1000;
   }
 
-  optional TestAllTypes.NestedMessage optional_nested_message_extension = 18;
+  optional TestAllExtensions.NestedMessage optional_nested_message_extension = 18;
   optional TestAllTypes.NestedEnum optional_nested_enum_extension = 21;
 
   repeated int32    repeated_int32_extension    = 31;
@@ -216,10 +221,10 @@ extend TestAllExtensions {
 
   repeated group RepeatedGroup_extension = 46 {
     optional int32 a = 47;
-    optional TestAllTypes.NestedMessage optional_nested_message = 1001;
+    optional TestAllExtensions.NestedMessage optional_nested_message = 1001;
   }
 
-  repeated TestAllTypes.NestedMessage repeated_nested_message_extension = 48;
+  repeated TestAllExtensions.NestedMessage repeated_nested_message_extension = 48;
   repeated TestAllTypes.NestedEnum repeated_nested_enum_extension = 51;
 
   optional int32    default_int32_extension    = 81 [default =  81    ];
