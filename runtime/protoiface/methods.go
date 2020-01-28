@@ -112,4 +112,8 @@ type UnmarshalFlags = uint8
 
 const (
 	UnmarshalDiscardUnknown UnmarshalFlags = 1 << iota
+
+	// UnmarshalDefaultResolver indicates that the provided extension type
+	// resolver is protoregistry.GlobalTypes.
+	UnmarshalDefaultResolver
 )

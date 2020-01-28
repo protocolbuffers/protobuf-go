@@ -9,6 +9,7 @@ import (
 	"sync/atomic"
 
 	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -68,6 +69,15 @@ func makeExtensionFieldInfo(xd pref.ExtensionDescriptor) *extensionFieldInfo {
 	return e
 }
 
+type lazyExtensionValue struct {
+	atomicOnce uint32 // atomically set if value is valid
+	mu         sync.Mutex
+	xi         *extensionFieldInfo
+	value      pref.Value
+	b          []byte
+	fn         func() pref.Value
+}
+
 type ExtensionField struct {
 	typ pref.ExtensionType
 
@@ -77,25 +87,91 @@ type ExtensionField struct {
 	lazy  *lazyExtensionValue
 }
 
+func (f *ExtensionField) appendLazyBytes(xt pref.ExtensionType, xi *extensionFieldInfo, num wire.Number, wtyp wire.Type, b []byte) {
+	if f.lazy == nil {
+		f.lazy = &lazyExtensionValue{xi: xi}
+	}
+	f.typ = xt
+	f.lazy.xi = xi
+	f.lazy.b = wire.AppendTag(f.lazy.b, num, wtyp)
+	f.lazy.b = append(f.lazy.b, b...)
+}
+
+func (f *ExtensionField) canLazy(xt pref.ExtensionType) bool {
+	if f.typ == nil {
+		return true
+	}
+	if f.typ == xt && f.lazy != nil && atomic.LoadUint32(&f.lazy.atomicOnce) == 0 {
+		return true
+	}
+	return false
+}
+
+func (f *ExtensionField) lazyInit() {
+	f.lazy.mu.Lock()
+	defer f.lazy.mu.Unlock()
+	if f.lazy.xi != nil {
+		b := f.lazy.b
+		val := f.typ.New()
+		for len(b) > 0 {
+			var tag uint64
+			if b[0] < 0x80 {
+				tag = uint64(b[0])
+				b = b[1:]
+			} else if len(b) >= 2 && b[1] < 128 {
+				tag = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				b = b[2:]
+			} else {
+				var n int
+				tag, n = wire.ConsumeVarint(b)
+				if n < 0 {
+					panic(errors.New("bad tag in lazy extension decoding"))
+				}
+				b = b[n:]
+			}
+			num := wire.Number(tag >> 3)
+			wtyp := wire.Type(tag & 7)
+			var out unmarshalOutput
+			var err error
+			val, out, err = f.lazy.xi.funcs.unmarshal(b, val, num, wtyp, unmarshalOptions{}) // TODO: options
+			if err != nil {
+				panic(errors.New("decode failure in lazy extension decoding: %v", err))
+			}
+			b = b[out.n:]
+		}
+		f.lazy.value = val
+	} else {
+		f.lazy.value = f.lazy.fn()
+	}
+	f.lazy.xi = nil
+	f.lazy.fn = nil
+	f.lazy.b = nil
+	atomic.StoreUint32(&f.lazy.atomicOnce, 1)
+}
+
 // Set sets the type and value of the extension field.
 // This must not be called concurrently.
 func (f *ExtensionField) Set(t pref.ExtensionType, v pref.Value) {
 	f.typ = t
 	f.value = v
+	f.lazy = nil
 }
 
 // SetLazy sets the type and a value that is to be lazily evaluated upon first use.
 // This must not be called concurrently.
 func (f *ExtensionField) SetLazy(t pref.ExtensionType, fn func() pref.Value) {
 	f.typ = t
-	f.lazy = &lazyExtensionValue{value: fn}
+	f.lazy = &lazyExtensionValue{fn: fn}
 }
 
 // Value returns the value of the extension field.
 // This may be called concurrently.
 func (f *ExtensionField) Value() pref.Value {
 	if f.lazy != nil {
-		return f.lazy.GetValue()
+		if atomic.LoadUint32(&f.lazy.atomicOnce) == 0 {
+			f.lazyInit()
+		}
+		return f.lazy.value
 	}
 	return f.value
 }
@@ -144,25 +220,7 @@ func (f *ExtensionField) SetEagerValue(ival interface{}) {
 
 // Deprecated: Do not use.
 func (f *ExtensionField) SetLazyValue(fn func() interface{}) {
-	f.lazy = &lazyExtensionValue{value: func() pref.Value {
+	f.SetLazy(f.typ, func() pref.Value {
 		return f.typ.ValueOf(fn())
-	}}
-}
-
-type lazyExtensionValue struct {
-	once  uint32      // atomically set if value is valid
-	mu    sync.Mutex  // protects value
-	value interface{} // either a pref.Value itself or a func() pref.ValueOf
-}
-
-func (v *lazyExtensionValue) GetValue() pref.Value {
-	if atomic.LoadUint32(&v.once) == 0 {
-		v.mu.Lock()
-		if f, ok := v.value.(func() pref.Value); ok {
-			v.value = f()
-		}
-		atomic.StoreUint32(&v.once, 1)
-		v.mu.Unlock()
-	}
-	return v.value.(pref.Value)
+	})
 }

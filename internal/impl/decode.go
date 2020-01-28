@@ -29,6 +29,12 @@ func (o unmarshalOptions) Options() proto.UnmarshalOptions {
 
 func (o unmarshalOptions) DiscardUnknown() bool { return o.Flags&piface.UnmarshalDiscardUnknown != 0 }
 
+func (o unmarshalOptions) IsDefault() bool {
+	// The UnmarshalDefaultResolver flag indicates that we're using the default resolver.
+	// No other flag bit should be set.
+	return o.Flags == piface.UnmarshalDefaultResolver
+}
+
 type unmarshalOutput struct {
 	n           int // number of bytes consumed
 	initialized bool
@@ -185,6 +191,17 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	if xi.funcs.unmarshal == nil {
 		return out, errUnknown
 	}
+	if flags.LazyUnmarshalExtensions {
+		if opts.IsDefault() && x.canLazy(xt) {
+			if n, ok := skipExtension(b, xi, num, wtyp, opts); ok {
+				x.appendLazyBytes(xt, xi, num, wtyp, b[:n])
+				exts[int32(num)] = x
+				out.n = n
+				out.initialized = true
+				return out, nil
+			}
+		}
+	}
 	ival := x.Value()
 	if !ival.IsValid() && xi.unmarshalNeedsValue {
 		// Create a new message, list, or map value to fill in.
@@ -199,4 +216,37 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	x.Set(xt, v)
 	exts[int32(num)] = x
 	return out, nil
+}
+
+func skipExtension(b []byte, xi *extensionFieldInfo, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (n int, ok bool) {
+	if xi.validation.mi == nil {
+		return 0, false
+	}
+	xi.validation.mi.init()
+	var v []byte
+	switch xi.validation.typ {
+	case validationTypeMessage:
+		if wtyp != wire.BytesType {
+			return 0, false
+		}
+		v, n = wire.ConsumeBytes(b)
+		if n < 0 {
+			return 0, false
+		}
+	case validationTypeGroup:
+		if wtyp != wire.StartGroupType {
+			return 0, false
+		}
+		v, n = wire.ConsumeGroup(num, b)
+		if n < 0 {
+			return 0, false
+		}
+	default:
+		return 0, false
+	}
+	if xi.validation.mi.validate(v, 0, opts) != ValidationValidInitialized {
+		return 0, false
+	}
+	return n, true
+
 }

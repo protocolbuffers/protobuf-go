@@ -64,8 +64,12 @@ func (o UnmarshalOptions) UnmarshalState(m Message, in protoiface.UnmarshalInput
 }
 
 func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.UnmarshalOutput, err error) {
+	defaultResolver := false
 	if o.Resolver == nil {
 		o.Resolver = protoregistry.GlobalTypes
+		defaultResolver = true
+	} else if o.Resolver == protoregistry.GlobalTypes {
+		defaultResolver = true
 	}
 	if !o.Merge {
 		Reset(message)
@@ -82,6 +86,9 @@ func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.U
 		}
 		if o.DiscardUnknown {
 			opts.Flags |= protoiface.UnmarshalDiscardUnknown
+		}
+		if defaultResolver {
+			opts.Flags |= protoiface.UnmarshalDefaultResolver
 		}
 		out, err = methods.Unmarshal(m, protoiface.UnmarshalInput{
 			Buf: b,
