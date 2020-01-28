@@ -1786,6 +1786,16 @@ var testInvalidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc: "invalid field number wraps int32",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+		},
+		wire: pack.Message{
+			pack.Varint(2234993595104), pack.Varint(0),
+		}.Marshal(),
+	},
+	{
 		desc:     "invalid field number in map",
 		decodeTo: []proto.Message{(*testpb.TestAllTypes)(nil)},
 		wire: pack.Message{

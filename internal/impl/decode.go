@@ -82,12 +82,13 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			}
 			b = b[n:]
 		}
-		num := wire.Number(tag >> 3)
-		wtyp := wire.Type(tag & 7)
-
-		if num < wire.MinValidNumber || num > wire.MaxValidNumber {
+		var num wire.Number
+		if n := tag >> 3; n < uint64(wire.MinValidNumber) || n > uint64(wire.MaxValidNumber) {
 			return out, errors.New("invalid field number")
+		} else {
+			num = wire.Number(n)
 		}
+		wtyp := wire.Type(tag & 7)
 
 		if wtyp == wire.EndGroupType {
 			if num != groupTag {
