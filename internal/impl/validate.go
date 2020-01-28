@@ -220,6 +220,7 @@ func newValidationInfo(fd pref.FieldDescriptor, ft reflect.Type) validationInfo 
 }
 
 func (mi *MessageInfo) validate(b []byte, groupTag wire.Number, opts unmarshalOptions) (result ValidationStatus) {
+	mi.init()
 	type validationState struct {
 		typ              validationType
 		keyType, valType validationType
@@ -244,7 +245,6 @@ State:
 	for len(states) > 0 {
 		st := &states[len(states)-1]
 		if st.mi != nil {
-			st.mi.init()
 			if flags.ProtoLegacy && st.mi.isMessageSet {
 				return ValidationUnknown
 			}
@@ -434,10 +434,13 @@ State:
 				v := b[:size]
 				b = b[size:]
 				switch vi.typ {
-				case validationTypeMessage, validationTypeMap:
-					if vi.mi == nil && vi.typ == validationTypeMessage {
+				case validationTypeMessage:
+					if vi.mi == nil {
 						return ValidationUnknown
 					}
+					vi.mi.init()
+					fallthrough
+				case validationTypeMap:
 					states = append(states, validationState{
 						typ:     vi.typ,
 						keyType: vi.keyType,
@@ -487,6 +490,7 @@ State:
 					if vi.mi == nil {
 						return ValidationUnknown
 					}
+					vi.mi.init()
 					states = append(states, validationState{
 						typ:      validationTypeGroup,
 						mi:       vi.mi,
