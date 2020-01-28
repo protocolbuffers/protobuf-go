@@ -251,14 +251,30 @@ State:
 		}
 	Field:
 		for len(b) > 0 {
-			num, wtyp, n := wire.ConsumeTag(b)
-			if n < 0 {
-				return ValidationInvalid
+			// Parse the tag (field number and wire type).
+			var tag uint64
+			if b[0] < 0x80 {
+				tag = uint64(b[0])
+				b = b[1:]
+			} else if len(b) >= 2 && b[1] < 128 {
+				tag = uint64(b[0]&0x7f) + uint64(b[1])<<7
+				b = b[2:]
+			} else {
+				var n int
+				tag, n = wire.ConsumeVarint(b)
+				if n < 0 {
+					return ValidationInvalid
+				}
+				b = b[n:]
 			}
-			b = b[n:]
-			if num > wire.MaxValidNumber {
+			var num wire.Number
+			if n := tag >> 3; n < uint64(wire.MinValidNumber) || n > uint64(wire.MaxValidNumber) {
 				return ValidationInvalid
+			} else {
+				num = wire.Number(n)
 			}
+			wtyp := wire.Type(tag & 7)
+
 			if wtyp == wire.EndGroupType {
 				if st.endGroup == num {
 					goto PopState
@@ -431,7 +447,7 @@ State:
 				b = b[n:]
 				continue Field
 			}
-			n = wire.ConsumeFieldValue(num, wtyp, b)
+			n := wire.ConsumeFieldValue(num, wtyp, b)
 			if n < 0 {
 				return ValidationInvalid
 			}
