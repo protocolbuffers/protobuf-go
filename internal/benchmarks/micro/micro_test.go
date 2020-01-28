@@ -11,7 +11,10 @@ package micro_test
 import (
 	"testing"
 
+	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/runtime/protoiface"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	micropb "google.golang.org/protobuf/internal/testprotos/benchmarks/micro"
@@ -41,6 +44,19 @@ func BenchmarkEmptyMessage(b *testing.B) {
 			for pb.Next() {
 				if err := opts.Unmarshal([]byte{}, m); err != nil {
 					b.Fatal(err)
+				}
+			}
+		})
+	})
+	b.Run("Wire/Validate", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			mt := (&emptypb.Empty{}).ProtoReflect().Type()
+			opts := protoiface.UnmarshalOptions{
+				Resolver: protoregistry.GlobalTypes,
+			}
+			for pb.Next() {
+				if got, want := impl.Validate([]byte{}, mt, opts), impl.ValidationValidInitialized; got != want {
+					b.Fatalf("Validate = %v, want %v", got, want)
 				}
 			}
 		})
@@ -79,6 +95,19 @@ func BenchmarkRepeatedInt32(b *testing.B) {
 				m.RepeatedInt32 = m.RepeatedInt32[:0]
 				if err := opts.Unmarshal(w, m); err != nil {
 					b.Fatal(err)
+				}
+			}
+		})
+	})
+	b.Run("Wire/Validate", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			mt := (&testpb.TestAllTypes{}).ProtoReflect().Type()
+			opts := protoiface.UnmarshalOptions{
+				Resolver: protoregistry.GlobalTypes,
+			}
+			for pb.Next() {
+				if got, want := impl.Validate(w, mt, opts), impl.ValidationValidInitialized; got != want {
+					b.Fatalf("Validate = %v, want %v", got, want)
 				}
 			}
 		})
@@ -127,6 +156,19 @@ func BenchmarkRequired(b *testing.B) {
 			for pb.Next() {
 				if err := opts.Unmarshal(w, m); err != nil {
 					b.Fatal(err)
+				}
+			}
+		})
+	})
+	b.Run("Wire/Validate", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			mt := (&micropb.SixteenRequired{}).ProtoReflect().Type()
+			opts := protoiface.UnmarshalOptions{
+				Resolver: protoregistry.GlobalTypes,
+			}
+			for pb.Next() {
+				if got, want := impl.Validate(w, mt, opts), impl.ValidationValidInitialized; got != want {
+					b.Fatalf("Validate = %v, want %v", got, want)
 				}
 			}
 		})
