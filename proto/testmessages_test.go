@@ -2068,4 +2068,24 @@ var testInvalidMessages = []testProto{
 			}},
 		}.Marshal(),
 	},
+	{
+		desc: "varint field overruns message",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+		},
+		wire: pack.Message{
+			pack.Tag{1, pack.VarintType},
+		}.Marshal(),
+	},
+	{
+		desc: "bytes field lacks size",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+		},
+		wire: pack.Message{
+			pack.Tag{18, pack.BytesType},
+		}.Marshal(),
+	},
 }

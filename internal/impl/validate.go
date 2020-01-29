@@ -414,7 +414,7 @@ State:
 				continue State
 			case wire.BytesType:
 				var size uint64
-				if b[0] < 0x80 {
+				if len(b) >= 1 && b[0] < 0x80 {
 					size = uint64(b[0])
 					b = b[1:]
 				} else if len(b) >= 2 && b[1] < 128 {
