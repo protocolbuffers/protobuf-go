@@ -99,7 +99,7 @@ func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.U
 	if err != nil {
 		return out, err
 	}
-	if allowPartial {
+	if allowPartial || out.Initialized {
 		return out, nil
 	}
 	return out, isInitialized(m)
