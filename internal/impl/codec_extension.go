@@ -110,6 +110,9 @@ func (f *ExtensionField) canLazy(xt pref.ExtensionType) bool {
 func (f *ExtensionField) lazyInit() {
 	f.lazy.mu.Lock()
 	defer f.lazy.mu.Unlock()
+	if atomic.LoadUint32(&f.lazy.atomicOnce) == 1 {
+		return
+	}
 	if f.lazy.xi != nil {
 		b := f.lazy.b
 		val := f.typ.New()
@@ -133,7 +136,7 @@ func (f *ExtensionField) lazyInit() {
 			wtyp := wire.Type(tag & 7)
 			var out unmarshalOutput
 			var err error
-			val, out, err = f.lazy.xi.funcs.unmarshal(b, val, num, wtyp, unmarshalOptions{}) // TODO: options
+			val, out, err = f.lazy.xi.funcs.unmarshal(b, val, num, wtyp, unmarshalOptions{})
 			if err != nil {
 				panic(errors.New("decode failure in lazy extension decoding: %v", err))
 			}

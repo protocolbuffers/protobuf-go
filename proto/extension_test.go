@@ -6,6 +6,7 @@ package proto_test
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -65,4 +66,40 @@ func TestExtensionFuncs(t *testing.T) {
 		}
 
 	}
+}
+
+func TestExtensionGetRace(t *testing.T) {
+	// Concurrently fetch an extension value while marshaling the message containing it.
+	// Create the message with proto.Unmarshal to give lazy extension decoding (if present)
+	// a chance to occur.
+	want := int32(42)
+	m1 := &testpb.TestAllExtensions{}
+	proto.SetExtension(m1, testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(want)})
+	b, err := proto.Marshal(m1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := &testpb.TestAllExtensions{}
+	if err := proto.Unmarshal(b, m); err != nil {
+		t.Fatal(err)
+	}
+	var wg sync.WaitGroup
+	for i := 0; i < 3; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if _, err := proto.Marshal(m); err != nil {
+				t.Error(err)
+			}
+		}()
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			got := proto.GetExtension(m, testpb.E_OptionalNestedMessageExtension).(*testpb.TestAllExtensions_NestedMessage).GetA()
+			if got != want {
+				t.Errorf("GetExtension(optional_nested_message).a = %v, want %v", got, want)
+			}
+		}()
+	}
+	wg.Wait()
 }
