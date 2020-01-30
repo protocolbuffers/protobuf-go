@@ -46,6 +46,7 @@ var (
 	protoifacePackage   goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoiface")
 	protoimplPackage    goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoimpl")
 	protoreflectPackage goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
+	protoV1Package      goImportPath = protogen.GoImportPath("github.com/golang/protobuf/proto")
 )
 
 type goImportPath interface {
@@ -73,6 +74,12 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 		g.P("// Verify that runtime/protoimpl is sufficiently up-to-date.")
 		g.P("_ = ", protoimplPackage.Ident("EnforceVersion"), "(", protoimplPackage.Ident("MaxVersion"), " - ", protoimpl.GenVersion, ")")
 		g.P(")")
+		g.P()
+
+		// TODO: Remove this after some soak-in period after the v2 release.
+		g.P("// This is a compile-time assertion that a sufficiently up-to-date version")
+		g.P("// of the legacy proto package is being used.")
+		g.P("const _ = ", protoV1Package.Ident("ProtoPackageIsVersion4"))
 		g.P()
 	}
 
