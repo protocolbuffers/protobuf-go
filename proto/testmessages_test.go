@@ -32,7 +32,8 @@ type testProto struct {
 
 var testValidMessages = []testProto{
 	{
-		desc: "basic scalar types",
+		desc:          "basic scalar types",
+		checkFastInit: true,
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			OptionalInt32:      proto.Int32(1001),
 			OptionalInt64:      proto.Int64(1002),
@@ -1106,7 +1107,8 @@ var testValidMessages = []testProto{
 	// considers equivalent to those of the v1 decoder. Figure out if
 	// that's a problem or not.
 	{
-		desc: "unknown fields",
+		desc:          "unknown fields",
+		checkFastInit: true,
 		decodeTo: []proto.Message{build(
 			&testpb.TestAllTypes{},
 			unknown(pack.Message{
@@ -1114,6 +1116,11 @@ var testValidMessages = []testProto{
 			}.Marshal()),
 		), build(
 			&test3pb.TestAllTypes{},
+			unknown(pack.Message{
+				pack.Tag{100000, pack.VarintType}, pack.Varint(1),
+			}.Marshal()),
+		), build(
+			&testpb.TestAllExtensions{},
 			unknown(pack.Message{
 				pack.Tag{100000, pack.VarintType}, pack.Varint(1),
 			}.Marshal()),

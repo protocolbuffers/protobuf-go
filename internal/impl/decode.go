@@ -140,6 +140,9 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			}
 			var o unmarshalOutput
 			o, err = mi.unmarshalExtension(b, num, wtyp, *exts, opts)
+			if err != nil {
+				break
+			}
 			n = o.n
 			if !o.initialized {
 				initialized = false
@@ -212,6 +215,9 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	v, out, err := xi.funcs.unmarshal(b, ival, num, wtyp, opts)
 	if err != nil {
 		return out, err
+	}
+	if xi.funcs.isInit == nil {
+		out.initialized = true
 	}
 	x.Set(xt, v)
 	exts[int32(num)] = x
