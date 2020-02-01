@@ -2095,4 +2095,15 @@ var testInvalidMessages = []testProto{
 			pack.Tag{18, pack.BytesType},
 		}.Marshal(),
 	},
+	{
+		desc: "varint overflow",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+		},
+		wire: pack.Message{
+			pack.Tag{1, pack.VarintType},
+			pack.Raw("\xff\xff\xff\xff\xff\xff\xff\xff\xff\x02"),
+		}.Marshal(),
+	},
 }

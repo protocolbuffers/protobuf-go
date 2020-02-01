@@ -360,7 +360,7 @@ State:
 
 			switch wtyp {
 			case wire.VarintType:
-				if len(b) >= 10 {
+				if len(b) >= 9 {
 					switch {
 					case b[0] < 0x80:
 						b = b[1:]
@@ -380,7 +380,7 @@ State:
 						b = b[8:]
 					case b[8] < 0x80:
 						b = b[9:]
-					case b[9] < 0x80:
+					case b[9] < 0x80 && b[9] < 2:
 						b = b[10:]
 					default:
 						return ValidationInvalid
@@ -405,7 +405,7 @@ State:
 						b = b[8:]
 					case len(b) > 8 && b[8] < 0x80:
 						b = b[9:]
-					case len(b) > 9 && b[9] < 0x80:
+					case len(b) > 9 && b[9] < 2:
 						b = b[10:]
 					default:
 						return ValidationInvalid
