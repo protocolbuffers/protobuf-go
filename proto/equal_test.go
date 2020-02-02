@@ -402,15 +402,15 @@ func TestEqual(t *testing.T) {
 		// Extensions.
 		{
 			x: build(&testpb.TestAllExtensions{},
-				extend(testpb.E_OptionalInt32Extension, int32(1)),
+				extend(testpb.E_OptionalInt32, int32(1)),
 			),
 			y: build(&testpb.TestAllExtensions{},
-				extend(testpb.E_OptionalInt32Extension, int32(2)),
+				extend(testpb.E_OptionalInt32, int32(2)),
 			),
 		}, {
 			x: &testpb.TestAllExtensions{},
 			y: build(&testpb.TestAllExtensions{},
-				extend(testpb.E_OptionalInt32Extension, int32(2)),
+				extend(testpb.E_OptionalInt32, int32(2)),
 			),
 		},
 

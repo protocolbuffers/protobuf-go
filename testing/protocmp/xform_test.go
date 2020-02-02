@@ -136,77 +136,77 @@ func TestTransform(t *testing.T) {
 	}, {
 		in: func() proto.Message {
 			m := &testpb.TestAllExtensions{}
-			proto.SetExtension(m, testpb.E_OptionalBoolExtension, bool(false))
-			proto.SetExtension(m, testpb.E_OptionalInt32Extension, int32(-32))
-			proto.SetExtension(m, testpb.E_OptionalInt64Extension, int64(-64))
-			proto.SetExtension(m, testpb.E_OptionalUint32Extension, uint32(32))
-			proto.SetExtension(m, testpb.E_OptionalUint64Extension, uint64(64))
-			proto.SetExtension(m, testpb.E_OptionalFloatExtension, float32(32.32))
-			proto.SetExtension(m, testpb.E_OptionalDoubleExtension, float64(64.64))
-			proto.SetExtension(m, testpb.E_OptionalStringExtension, string("string"))
-			proto.SetExtension(m, testpb.E_OptionalBytesExtension, []byte("bytes"))
-			proto.SetExtension(m, testpb.E_OptionalNestedEnumExtension, testpb.TestAllTypes_NEG)
-			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(5)})
+			proto.SetExtension(m, testpb.E_OptionalBool, bool(false))
+			proto.SetExtension(m, testpb.E_OptionalInt32, int32(-32))
+			proto.SetExtension(m, testpb.E_OptionalInt64, int64(-64))
+			proto.SetExtension(m, testpb.E_OptionalUint32, uint32(32))
+			proto.SetExtension(m, testpb.E_OptionalUint64, uint64(64))
+			proto.SetExtension(m, testpb.E_OptionalFloat, float32(32.32))
+			proto.SetExtension(m, testpb.E_OptionalDouble, float64(64.64))
+			proto.SetExtension(m, testpb.E_OptionalString, string("string"))
+			proto.SetExtension(m, testpb.E_OptionalBytes, []byte("bytes"))
+			proto.SetExtension(m, testpb.E_OptionalNestedEnum, testpb.TestAllTypes_NEG)
+			proto.SetExtension(m, testpb.E_OptionalNestedMessage, &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(5)})
 			return m
 		}(),
 		want: Message{
-			messageTypeKey: messageTypeOf(&testpb.TestAllExtensions{}),
-			"[goproto.proto.test.optional_bool_extension]":           bool(false),
-			"[goproto.proto.test.optional_int32_extension]":          int32(-32),
-			"[goproto.proto.test.optional_int64_extension]":          int64(-64),
-			"[goproto.proto.test.optional_uint32_extension]":         uint32(32),
-			"[goproto.proto.test.optional_uint64_extension]":         uint64(64),
-			"[goproto.proto.test.optional_float_extension]":          float32(32.32),
-			"[goproto.proto.test.optional_double_extension]":         float64(64.64),
-			"[goproto.proto.test.optional_string_extension]":         string("string"),
-			"[goproto.proto.test.optional_bytes_extension]":          []byte("bytes"),
-			"[goproto.proto.test.optional_nested_enum_extension]":    enumOf(testpb.TestAllTypes_NEG),
-			"[goproto.proto.test.optional_nested_message_extension]": Message{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
+			messageTypeKey:                                 messageTypeOf(&testpb.TestAllExtensions{}),
+			"[goproto.proto.test.optional_bool]":           bool(false),
+			"[goproto.proto.test.optional_int32]":          int32(-32),
+			"[goproto.proto.test.optional_int64]":          int64(-64),
+			"[goproto.proto.test.optional_uint32]":         uint32(32),
+			"[goproto.proto.test.optional_uint64]":         uint64(64),
+			"[goproto.proto.test.optional_float]":          float32(32.32),
+			"[goproto.proto.test.optional_double]":         float64(64.64),
+			"[goproto.proto.test.optional_string]":         string("string"),
+			"[goproto.proto.test.optional_bytes]":          []byte("bytes"),
+			"[goproto.proto.test.optional_nested_enum]":    enumOf(testpb.TestAllTypes_NEG),
+			"[goproto.proto.test.optional_nested_message]": Message{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
 		},
-		wantString: `{[goproto.proto.test.optional_bool_extension]:false, [goproto.proto.test.optional_bytes_extension]:"bytes", [goproto.proto.test.optional_double_extension]:64.64, [goproto.proto.test.optional_float_extension]:32.32, [goproto.proto.test.optional_int32_extension]:-32, [goproto.proto.test.optional_int64_extension]:-64, [goproto.proto.test.optional_nested_enum_extension]:NEG, [goproto.proto.test.optional_nested_message_extension]:{a:5}, [goproto.proto.test.optional_string_extension]:"string", [goproto.proto.test.optional_uint32_extension]:32, [goproto.proto.test.optional_uint64_extension]:64}`,
+		wantString: `{[goproto.proto.test.optional_bool]:false, [goproto.proto.test.optional_bytes]:"bytes", [goproto.proto.test.optional_double]:64.64, [goproto.proto.test.optional_float]:32.32, [goproto.proto.test.optional_int32]:-32, [goproto.proto.test.optional_int64]:-64, [goproto.proto.test.optional_nested_enum]:NEG, [goproto.proto.test.optional_nested_message]:{a:5}, [goproto.proto.test.optional_string]:"string", [goproto.proto.test.optional_uint32]:32, [goproto.proto.test.optional_uint64]:64}`,
 	}, {
 		in: func() proto.Message {
 			m := &testpb.TestAllExtensions{}
-			proto.SetExtension(m, testpb.E_RepeatedBoolExtension, []bool{false, true})
-			proto.SetExtension(m, testpb.E_RepeatedInt32Extension, []int32{32, -32})
-			proto.SetExtension(m, testpb.E_RepeatedInt64Extension, []int64{64, -64})
-			proto.SetExtension(m, testpb.E_RepeatedUint32Extension, []uint32{0, 32})
-			proto.SetExtension(m, testpb.E_RepeatedUint64Extension, []uint64{0, 64})
-			proto.SetExtension(m, testpb.E_RepeatedFloatExtension, []float32{0, 32.32})
-			proto.SetExtension(m, testpb.E_RepeatedDoubleExtension, []float64{0, 64.64})
-			proto.SetExtension(m, testpb.E_RepeatedStringExtension, []string{"s1", "s2"})
-			proto.SetExtension(m, testpb.E_RepeatedBytesExtension, [][]byte{{1}, {2}})
-			proto.SetExtension(m, testpb.E_RepeatedNestedEnumExtension, []testpb.TestAllTypes_NestedEnum{
+			proto.SetExtension(m, testpb.E_RepeatedBool, []bool{false, true})
+			proto.SetExtension(m, testpb.E_RepeatedInt32, []int32{32, -32})
+			proto.SetExtension(m, testpb.E_RepeatedInt64, []int64{64, -64})
+			proto.SetExtension(m, testpb.E_RepeatedUint32, []uint32{0, 32})
+			proto.SetExtension(m, testpb.E_RepeatedUint64, []uint64{0, 64})
+			proto.SetExtension(m, testpb.E_RepeatedFloat, []float32{0, 32.32})
+			proto.SetExtension(m, testpb.E_RepeatedDouble, []float64{0, 64.64})
+			proto.SetExtension(m, testpb.E_RepeatedString, []string{"s1", "s2"})
+			proto.SetExtension(m, testpb.E_RepeatedBytes, [][]byte{{1}, {2}})
+			proto.SetExtension(m, testpb.E_RepeatedNestedEnum, []testpb.TestAllTypes_NestedEnum{
 				testpb.TestAllTypes_FOO,
 				testpb.TestAllTypes_BAR,
 			})
-			proto.SetExtension(m, testpb.E_RepeatedNestedMessageExtension, []*testpb.TestAllExtensions_NestedMessage{
+			proto.SetExtension(m, testpb.E_RepeatedNestedMessage, []*testpb.TestAllExtensions_NestedMessage{
 				{A: proto.Int32(5)},
 				{A: proto.Int32(-5)},
 			})
 			return m
 		}(),
 		want: Message{
-			messageTypeKey: messageTypeOf(&testpb.TestAllExtensions{}),
-			"[goproto.proto.test.repeated_bool_extension]":   []bool{false, true},
-			"[goproto.proto.test.repeated_int32_extension]":  []int32{32, -32},
-			"[goproto.proto.test.repeated_int64_extension]":  []int64{64, -64},
-			"[goproto.proto.test.repeated_uint32_extension]": []uint32{0, 32},
-			"[goproto.proto.test.repeated_uint64_extension]": []uint64{0, 64},
-			"[goproto.proto.test.repeated_float_extension]":  []float32{0, 32.32},
-			"[goproto.proto.test.repeated_double_extension]": []float64{0, 64.64},
-			"[goproto.proto.test.repeated_string_extension]": []string{"s1", "s2"},
-			"[goproto.proto.test.repeated_bytes_extension]":  [][]byte{{1}, {2}},
-			"[goproto.proto.test.repeated_nested_enum_extension]": []Enum{
+			messageTypeKey:                         messageTypeOf(&testpb.TestAllExtensions{}),
+			"[goproto.proto.test.repeated_bool]":   []bool{false, true},
+			"[goproto.proto.test.repeated_int32]":  []int32{32, -32},
+			"[goproto.proto.test.repeated_int64]":  []int64{64, -64},
+			"[goproto.proto.test.repeated_uint32]": []uint32{0, 32},
+			"[goproto.proto.test.repeated_uint64]": []uint64{0, 64},
+			"[goproto.proto.test.repeated_float]":  []float32{0, 32.32},
+			"[goproto.proto.test.repeated_double]": []float64{0, 64.64},
+			"[goproto.proto.test.repeated_string]": []string{"s1", "s2"},
+			"[goproto.proto.test.repeated_bytes]":  [][]byte{{1}, {2}},
+			"[goproto.proto.test.repeated_nested_enum]": []Enum{
 				enumOf(testpb.TestAllTypes_FOO),
 				enumOf(testpb.TestAllTypes_BAR),
 			},
-			"[goproto.proto.test.repeated_nested_message_extension]": []Message{
+			"[goproto.proto.test.repeated_nested_message]": []Message{
 				{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
 				{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(-5)},
 			},
 		},
-		wantString: `{[goproto.proto.test.repeated_bool_extension]:[false, true], [goproto.proto.test.repeated_bytes_extension]:["\x01", "\x02"], [goproto.proto.test.repeated_double_extension]:[0, 64.64], [goproto.proto.test.repeated_float_extension]:[0, 32.32], [goproto.proto.test.repeated_int32_extension]:[32, -32], [goproto.proto.test.repeated_int64_extension]:[64, -64], [goproto.proto.test.repeated_nested_enum_extension]:[FOO, BAR], [goproto.proto.test.repeated_nested_message_extension]:[{a:5}, {a:-5}], [goproto.proto.test.repeated_string_extension]:["s1", "s2"], [goproto.proto.test.repeated_uint32_extension]:[0, 32], [goproto.proto.test.repeated_uint64_extension]:[0, 64]}`,
+		wantString: `{[goproto.proto.test.repeated_bool]:[false, true], [goproto.proto.test.repeated_bytes]:["\x01", "\x02"], [goproto.proto.test.repeated_double]:[0, 64.64], [goproto.proto.test.repeated_float]:[0, 32.32], [goproto.proto.test.repeated_int32]:[32, -32], [goproto.proto.test.repeated_int64]:[64, -64], [goproto.proto.test.repeated_nested_enum]:[FOO, BAR], [goproto.proto.test.repeated_nested_message]:[{a:5}, {a:-5}], [goproto.proto.test.repeated_string]:["s1", "s2"], [goproto.proto.test.repeated_uint32]:[0, 32], [goproto.proto.test.repeated_uint64]:[0, 64]}`,
 	}, {
 		in: func() proto.Message {
 			m := &testpb.TestAllTypes{}

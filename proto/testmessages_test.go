@@ -5,15 +5,14 @@
 package proto_test
 
 import (
-	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/impl"
+	"google.golang.org/protobuf/internal/protobuild"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
-	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	requiredpb "google.golang.org/protobuf/internal/testprotos/required"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
@@ -30,63 +29,42 @@ type testProto struct {
 	validationStatus impl.ValidationStatus
 }
 
+func makeMessages(in protobuild.Message, messages ...proto.Message) []proto.Message {
+	if len(messages) == 0 {
+		messages = []proto.Message{
+			&testpb.TestAllTypes{},
+			&test3pb.TestAllTypes{},
+			&testpb.TestAllExtensions{},
+		}
+	}
+	for _, m := range messages {
+		in.Build(m.ProtoReflect())
+	}
+	return messages
+}
+
 var testValidMessages = []testProto{
 	{
 		desc:          "basic scalar types",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			OptionalInt32:      proto.Int32(1001),
-			OptionalInt64:      proto.Int64(1002),
-			OptionalUint32:     proto.Uint32(1003),
-			OptionalUint64:     proto.Uint64(1004),
-			OptionalSint32:     proto.Int32(1005),
-			OptionalSint64:     proto.Int64(1006),
-			OptionalFixed32:    proto.Uint32(1007),
-			OptionalFixed64:    proto.Uint64(1008),
-			OptionalSfixed32:   proto.Int32(1009),
-			OptionalSfixed64:   proto.Int64(1010),
-			OptionalFloat:      proto.Float32(1011.5),
-			OptionalDouble:     proto.Float64(1012.5),
-			OptionalBool:       proto.Bool(true),
-			OptionalString:     proto.String("string"),
-			OptionalBytes:      []byte("bytes"),
-			OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum(),
-		}, &test3pb.TestAllTypes{
-			OptionalInt32:      1001,
-			OptionalInt64:      1002,
-			OptionalUint32:     1003,
-			OptionalUint64:     1004,
-			OptionalSint32:     1005,
-			OptionalSint64:     1006,
-			OptionalFixed32:    1007,
-			OptionalFixed64:    1008,
-			OptionalSfixed32:   1009,
-			OptionalSfixed64:   1010,
-			OptionalFloat:      1011.5,
-			OptionalDouble:     1012.5,
-			OptionalBool:       true,
-			OptionalString:     "string",
-			OptionalBytes:      []byte("bytes"),
-			OptionalNestedEnum: test3pb.TestAllTypes_BAR,
-		}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalInt32Extension, int32(1001)),
-			extend(testpb.E_OptionalInt64Extension, int64(1002)),
-			extend(testpb.E_OptionalUint32Extension, uint32(1003)),
-			extend(testpb.E_OptionalUint64Extension, uint64(1004)),
-			extend(testpb.E_OptionalSint32Extension, int32(1005)),
-			extend(testpb.E_OptionalSint64Extension, int64(1006)),
-			extend(testpb.E_OptionalFixed32Extension, uint32(1007)),
-			extend(testpb.E_OptionalFixed64Extension, uint64(1008)),
-			extend(testpb.E_OptionalSfixed32Extension, int32(1009)),
-			extend(testpb.E_OptionalSfixed64Extension, int64(1010)),
-			extend(testpb.E_OptionalFloatExtension, float32(1011.5)),
-			extend(testpb.E_OptionalDoubleExtension, float64(1012.5)),
-			extend(testpb.E_OptionalBoolExtension, bool(true)),
-			extend(testpb.E_OptionalStringExtension, string("string")),
-			extend(testpb.E_OptionalBytesExtension, []byte("bytes")),
-			extend(testpb.E_OptionalNestedEnumExtension, testpb.TestAllTypes_BAR),
-		)},
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_int32":       1001,
+			"optional_int64":       1002,
+			"optional_uint32":      1003,
+			"optional_uint64":      1004,
+			"optional_sint32":      1005,
+			"optional_sint64":      1006,
+			"optional_fixed32":     1007,
+			"optional_fixed64":     1008,
+			"optional_sfixed32":    1009,
+			"optional_sfixed64":    1010,
+			"optional_float":       1011.5,
+			"optional_double":      1012.5,
+			"optional_bool":        true,
+			"optional_string":      "string",
+			"optional_bytes":       []byte("bytes"),
+			"optional_nested_enum": "BAR",
+		}),
 		wire: pack.Message{
 			pack.Tag{1, pack.VarintType}, pack.Varint(1001),
 			pack.Tag{2, pack.VarintType}, pack.Varint(1002),
@@ -108,40 +86,23 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "zero values",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			OptionalInt32:    proto.Int32(0),
-			OptionalInt64:    proto.Int64(0),
-			OptionalUint32:   proto.Uint32(0),
-			OptionalUint64:   proto.Uint64(0),
-			OptionalSint32:   proto.Int32(0),
-			OptionalSint64:   proto.Int64(0),
-			OptionalFixed32:  proto.Uint32(0),
-			OptionalFixed64:  proto.Uint64(0),
-			OptionalSfixed32: proto.Int32(0),
-			OptionalSfixed64: proto.Int64(0),
-			OptionalFloat:    proto.Float32(0),
-			OptionalDouble:   proto.Float64(0),
-			OptionalBool:     proto.Bool(false),
-			OptionalString:   proto.String(""),
-			OptionalBytes:    []byte{},
-		}, &test3pb.TestAllTypes{}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalInt32Extension, int32(0)),
-			extend(testpb.E_OptionalInt64Extension, int64(0)),
-			extend(testpb.E_OptionalUint32Extension, uint32(0)),
-			extend(testpb.E_OptionalUint64Extension, uint64(0)),
-			extend(testpb.E_OptionalSint32Extension, int32(0)),
-			extend(testpb.E_OptionalSint64Extension, int64(0)),
-			extend(testpb.E_OptionalFixed32Extension, uint32(0)),
-			extend(testpb.E_OptionalFixed64Extension, uint64(0)),
-			extend(testpb.E_OptionalSfixed32Extension, int32(0)),
-			extend(testpb.E_OptionalSfixed64Extension, int64(0)),
-			extend(testpb.E_OptionalFloatExtension, float32(0)),
-			extend(testpb.E_OptionalDoubleExtension, float64(0)),
-			extend(testpb.E_OptionalBoolExtension, bool(false)),
-			extend(testpb.E_OptionalStringExtension, string("")),
-			extend(testpb.E_OptionalBytesExtension, []byte{}),
-		)},
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_int32":    0,
+			"optional_int64":    0,
+			"optional_uint32":   0,
+			"optional_uint64":   0,
+			"optional_sint32":   0,
+			"optional_sint64":   0,
+			"optional_fixed32":  0,
+			"optional_fixed64":  0,
+			"optional_sfixed32": 0,
+			"optional_sfixed64": 0,
+			"optional_float":    0,
+			"optional_double":   0,
+			"optional_bool":     false,
+			"optional_string":   "",
+			"optional_bytes":    []byte{},
+		}),
 		wire: pack.Message{
 			pack.Tag{1, pack.VarintType}, pack.Varint(0),
 			pack.Tag{2, pack.VarintType}, pack.Varint(0),
@@ -162,18 +123,12 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "groups",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			Optionalgroup: &testpb.TestAllTypes_OptionalGroup{
-				A:               proto.Int32(1017),
-				SameFieldNumber: proto.Int32(1016),
+		decodeTo: makeMessages(protobuild.Message{
+			"optionalgroup": protobuild.Message{
+				"a":                 1017,
+				"same_field_number": 1016,
 			},
-		}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalgroupExtension, &testpb.OptionalGroupExtension{
-				A:               proto.Int32(1017),
-				SameFieldNumber: proto.Int32(1016),
-			}),
-		)},
+		}, &testpb.TestAllTypes{}, &testpb.TestAllExtensions{}),
 		wire: pack.Message{
 			pack.Tag{16, pack.StartGroupType},
 			pack.Tag{17, pack.VarintType}, pack.Varint(1017),
@@ -183,16 +138,11 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "groups (field overridden)",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			Optionalgroup: &testpb.TestAllTypes_OptionalGroup{
-				A: proto.Int32(2),
+		decodeTo: makeMessages(protobuild.Message{
+			"optionalgroup": protobuild.Message{
+				"a": 2,
 			},
-		}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalgroupExtension, &testpb.OptionalGroupExtension{
-				A: proto.Int32(2),
-			}),
-		)},
+		}, &testpb.TestAllTypes{}, &testpb.TestAllExtensions{}),
 		wire: pack.Message{
 			pack.Tag{16, pack.StartGroupType},
 			pack.Tag{17, pack.VarintType}, pack.Varint(1),
@@ -204,30 +154,14 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "messages",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: proto.Int32(42),
-				Corecursive: &testpb.TestAllTypes{
-					OptionalInt32: proto.Int32(43),
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_nested_message": protobuild.Message{
+				"a": 42,
+				"corecursive": protobuild.Message{
+					"optional_int32": 43,
 				},
 			},
-		}, &test3pb.TestAllTypes{
-			OptionalNestedMessage: &test3pb.TestAllTypes_NestedMessage{
-				A: 42,
-				Corecursive: &test3pb.TestAllTypes{
-					OptionalInt32: 43,
-				},
-			},
-		}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{
-				A: proto.Int32(42),
-				Corecursive: build(
-					&testpb.TestAllExtensions{},
-					extend(testpb.E_OptionalInt32Extension, int32(43)),
-				).(*testpb.TestAllExtensions),
-			}),
-		)},
+		}),
 		wire: pack.Message{
 			pack.Tag{18, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(42),
@@ -239,30 +173,14 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "messages (split across multiple tags)",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: proto.Int32(42),
-				Corecursive: &testpb.TestAllTypes{
-					OptionalInt32: proto.Int32(43),
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_nested_message": protobuild.Message{
+				"a": 42,
+				"corecursive": protobuild.Message{
+					"optional_int32": 43,
 				},
 			},
-		}, &test3pb.TestAllTypes{
-			OptionalNestedMessage: &test3pb.TestAllTypes_NestedMessage{
-				A: 42,
-				Corecursive: &test3pb.TestAllTypes{
-					OptionalInt32: 43,
-				},
-			},
-		}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{
-				A: proto.Int32(42),
-				Corecursive: build(
-					&testpb.TestAllExtensions{},
-					extend(testpb.E_OptionalInt32Extension, int32(43)),
-				).(*testpb.TestAllExtensions),
-			}),
-		)},
+		}),
 		wire: pack.Message{
 			pack.Tag{18, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(42),
@@ -276,20 +194,11 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "messages (field overridden)",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
-				A: proto.Int32(2),
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_nested_message": protobuild.Message{
+				"a": 2,
 			},
-		}, &test3pb.TestAllTypes{
-			OptionalNestedMessage: &test3pb.TestAllTypes_NestedMessage{
-				A: 2,
-			},
-		}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{
-				A: proto.Int32(2),
-			}),
-		)},
+		}),
 		wire: pack.Message{
 			pack.Tag{18, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -301,68 +210,24 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "basic repeated types",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			RepeatedInt32:    []int32{1001, 2001},
-			RepeatedInt64:    []int64{1002, 2002},
-			RepeatedUint32:   []uint32{1003, 2003},
-			RepeatedUint64:   []uint64{1004, 2004},
-			RepeatedSint32:   []int32{1005, 2005},
-			RepeatedSint64:   []int64{1006, 2006},
-			RepeatedFixed32:  []uint32{1007, 2007},
-			RepeatedFixed64:  []uint64{1008, 2008},
-			RepeatedSfixed32: []int32{1009, 2009},
-			RepeatedSfixed64: []int64{1010, 2010},
-			RepeatedFloat:    []float32{1011.5, 2011.5},
-			RepeatedDouble:   []float64{1012.5, 2012.5},
-			RepeatedBool:     []bool{true, false},
-			RepeatedString:   []string{"foo", "bar"},
-			RepeatedBytes:    [][]byte{[]byte("FOO"), []byte("BAR")},
-			RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{
-				testpb.TestAllTypes_FOO,
-				testpb.TestAllTypes_BAR,
-			},
-		}, &test3pb.TestAllTypes{
-			RepeatedInt32:    []int32{1001, 2001},
-			RepeatedInt64:    []int64{1002, 2002},
-			RepeatedUint32:   []uint32{1003, 2003},
-			RepeatedUint64:   []uint64{1004, 2004},
-			RepeatedSint32:   []int32{1005, 2005},
-			RepeatedSint64:   []int64{1006, 2006},
-			RepeatedFixed32:  []uint32{1007, 2007},
-			RepeatedFixed64:  []uint64{1008, 2008},
-			RepeatedSfixed32: []int32{1009, 2009},
-			RepeatedSfixed64: []int64{1010, 2010},
-			RepeatedFloat:    []float32{1011.5, 2011.5},
-			RepeatedDouble:   []float64{1012.5, 2012.5},
-			RepeatedBool:     []bool{true, false},
-			RepeatedString:   []string{"foo", "bar"},
-			RepeatedBytes:    [][]byte{[]byte("FOO"), []byte("BAR")},
-			RepeatedNestedEnum: []test3pb.TestAllTypes_NestedEnum{
-				test3pb.TestAllTypes_FOO,
-				test3pb.TestAllTypes_BAR,
-			},
-		}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_RepeatedInt32Extension, []int32{1001, 2001}),
-			extend(testpb.E_RepeatedInt64Extension, []int64{1002, 2002}),
-			extend(testpb.E_RepeatedUint32Extension, []uint32{1003, 2003}),
-			extend(testpb.E_RepeatedUint64Extension, []uint64{1004, 2004}),
-			extend(testpb.E_RepeatedSint32Extension, []int32{1005, 2005}),
-			extend(testpb.E_RepeatedSint64Extension, []int64{1006, 2006}),
-			extend(testpb.E_RepeatedFixed32Extension, []uint32{1007, 2007}),
-			extend(testpb.E_RepeatedFixed64Extension, []uint64{1008, 2008}),
-			extend(testpb.E_RepeatedSfixed32Extension, []int32{1009, 2009}),
-			extend(testpb.E_RepeatedSfixed64Extension, []int64{1010, 2010}),
-			extend(testpb.E_RepeatedFloatExtension, []float32{1011.5, 2011.5}),
-			extend(testpb.E_RepeatedDoubleExtension, []float64{1012.5, 2012.5}),
-			extend(testpb.E_RepeatedBoolExtension, []bool{true, false}),
-			extend(testpb.E_RepeatedStringExtension, []string{"foo", "bar"}),
-			extend(testpb.E_RepeatedBytesExtension, [][]byte{[]byte("FOO"), []byte("BAR")}),
-			extend(testpb.E_RepeatedNestedEnumExtension, []testpb.TestAllTypes_NestedEnum{
-				testpb.TestAllTypes_FOO,
-				testpb.TestAllTypes_BAR,
-			}),
-		)},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_int32":       []int32{1001, 2001},
+			"repeated_int64":       []int64{1002, 2002},
+			"repeated_uint32":      []uint32{1003, 2003},
+			"repeated_uint64":      []uint64{1004, 2004},
+			"repeated_sint32":      []int32{1005, 2005},
+			"repeated_sint64":      []int64{1006, 2006},
+			"repeated_fixed32":     []uint32{1007, 2007},
+			"repeated_fixed64":     []uint64{1008, 2008},
+			"repeated_sfixed32":    []int32{1009, 2009},
+			"repeated_sfixed64":    []int64{1010, 2010},
+			"repeated_float":       []float32{1011.5, 2011.5},
+			"repeated_double":      []float64{1012.5, 2012.5},
+			"repeated_bool":        []bool{true, false},
+			"repeated_string":      []string{"foo", "bar"},
+			"repeated_bytes":       []string{"FOO", "BAR"},
+			"repeated_nested_enum": []string{"FOO", "BAR"},
+		}),
 		wire: pack.Message{
 			pack.Tag{31, pack.VarintType}, pack.Varint(1001),
 			pack.Tag{31, pack.VarintType}, pack.Varint(2001),
@@ -400,62 +265,22 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "basic repeated types (packed encoding)",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			RepeatedInt32:    []int32{1001, 2001},
-			RepeatedInt64:    []int64{1002, 2002},
-			RepeatedUint32:   []uint32{1003, 2003},
-			RepeatedUint64:   []uint64{1004, 2004},
-			RepeatedSint32:   []int32{1005, 2005},
-			RepeatedSint64:   []int64{1006, 2006},
-			RepeatedFixed32:  []uint32{1007, 2007},
-			RepeatedFixed64:  []uint64{1008, 2008},
-			RepeatedSfixed32: []int32{1009, 2009},
-			RepeatedSfixed64: []int64{1010, 2010},
-			RepeatedFloat:    []float32{1011.5, 2011.5},
-			RepeatedDouble:   []float64{1012.5, 2012.5},
-			RepeatedBool:     []bool{true, false},
-			RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{
-				testpb.TestAllTypes_FOO,
-				testpb.TestAllTypes_BAR,
-			},
-		}, &test3pb.TestAllTypes{
-			RepeatedInt32:    []int32{1001, 2001},
-			RepeatedInt64:    []int64{1002, 2002},
-			RepeatedUint32:   []uint32{1003, 2003},
-			RepeatedUint64:   []uint64{1004, 2004},
-			RepeatedSint32:   []int32{1005, 2005},
-			RepeatedSint64:   []int64{1006, 2006},
-			RepeatedFixed32:  []uint32{1007, 2007},
-			RepeatedFixed64:  []uint64{1008, 2008},
-			RepeatedSfixed32: []int32{1009, 2009},
-			RepeatedSfixed64: []int64{1010, 2010},
-			RepeatedFloat:    []float32{1011.5, 2011.5},
-			RepeatedDouble:   []float64{1012.5, 2012.5},
-			RepeatedBool:     []bool{true, false},
-			RepeatedNestedEnum: []test3pb.TestAllTypes_NestedEnum{
-				test3pb.TestAllTypes_FOO,
-				test3pb.TestAllTypes_BAR,
-			},
-		}, build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_RepeatedInt32Extension, []int32{1001, 2001}),
-			extend(testpb.E_RepeatedInt64Extension, []int64{1002, 2002}),
-			extend(testpb.E_RepeatedUint32Extension, []uint32{1003, 2003}),
-			extend(testpb.E_RepeatedUint64Extension, []uint64{1004, 2004}),
-			extend(testpb.E_RepeatedSint32Extension, []int32{1005, 2005}),
-			extend(testpb.E_RepeatedSint64Extension, []int64{1006, 2006}),
-			extend(testpb.E_RepeatedFixed32Extension, []uint32{1007, 2007}),
-			extend(testpb.E_RepeatedFixed64Extension, []uint64{1008, 2008}),
-			extend(testpb.E_RepeatedSfixed32Extension, []int32{1009, 2009}),
-			extend(testpb.E_RepeatedSfixed64Extension, []int64{1010, 2010}),
-			extend(testpb.E_RepeatedFloatExtension, []float32{1011.5, 2011.5}),
-			extend(testpb.E_RepeatedDoubleExtension, []float64{1012.5, 2012.5}),
-			extend(testpb.E_RepeatedBoolExtension, []bool{true, false}),
-			extend(testpb.E_RepeatedNestedEnumExtension, []testpb.TestAllTypes_NestedEnum{
-				testpb.TestAllTypes_FOO,
-				testpb.TestAllTypes_BAR,
-			}),
-		)},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_int32":       []int32{1001, 2001},
+			"repeated_int64":       []int64{1002, 2002},
+			"repeated_uint32":      []uint32{1003, 2003},
+			"repeated_uint64":      []uint64{1004, 2004},
+			"repeated_sint32":      []int32{1005, 2005},
+			"repeated_sint64":      []int64{1006, 2006},
+			"repeated_fixed32":     []uint32{1007, 2007},
+			"repeated_fixed64":     []uint64{1008, 2008},
+			"repeated_sfixed32":    []int32{1009, 2009},
+			"repeated_sfixed64":    []int64{1010, 2010},
+			"repeated_float":       []float32{1011.5, 2011.5},
+			"repeated_double":      []float64{1012.5, 2012.5},
+			"repeated_bool":        []bool{true, false},
+			"repeated_nested_enum": []string{"FOO", "BAR"},
+		}),
 		wire: pack.Message{
 			pack.Tag{31, pack.BytesType}, pack.LengthPrefix{
 				pack.Varint(1001), pack.Varint(2001),
@@ -504,26 +329,22 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "basic repeated types (zero-length packed encoding)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{},
-			&test3pb.TestAllTypes{},
-			build(
-				&testpb.TestAllExtensions{},
-				extend(testpb.E_RepeatedInt32Extension, []int32{}),
-				extend(testpb.E_RepeatedInt64Extension, []int64{}),
-				extend(testpb.E_RepeatedUint32Extension, []uint32{}),
-				extend(testpb.E_RepeatedUint64Extension, []uint64{}),
-				extend(testpb.E_RepeatedSint32Extension, []int32{}),
-				extend(testpb.E_RepeatedSint64Extension, []int64{}),
-				extend(testpb.E_RepeatedFixed32Extension, []uint32{}),
-				extend(testpb.E_RepeatedFixed64Extension, []uint64{}),
-				extend(testpb.E_RepeatedSfixed32Extension, []int32{}),
-				extend(testpb.E_RepeatedSfixed64Extension, []int64{}),
-				extend(testpb.E_RepeatedFloatExtension, []float32{}),
-				extend(testpb.E_RepeatedDoubleExtension, []float64{}),
-				extend(testpb.E_RepeatedBoolExtension, []bool{}),
-				extend(testpb.E_RepeatedNestedEnumExtension, []testpb.TestAllTypes_NestedEnum{}),
-			)},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_int32":       []int32{},
+			"repeated_int64":       []int64{},
+			"repeated_uint32":      []uint32{},
+			"repeated_uint64":      []uint64{},
+			"repeated_sint32":      []int32{},
+			"repeated_sint64":      []int64{},
+			"repeated_fixed32":     []uint32{},
+			"repeated_fixed64":     []uint64{},
+			"repeated_sfixed32":    []int32{},
+			"repeated_sfixed64":    []int64{},
+			"repeated_float":       []float32{},
+			"repeated_double":      []float64{},
+			"repeated_bool":        []bool{},
+			"repeated_nested_enum": []string{},
+		}),
 		wire: pack.Message{
 			pack.Tag{31, pack.BytesType}, pack.LengthPrefix{},
 			pack.Tag{32, pack.BytesType}, pack.LengthPrefix{},
@@ -543,44 +364,22 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "packed repeated types",
-		decodeTo: []proto.Message{&testpb.TestPackedTypes{
-			PackedInt32:    []int32{1001, 2001},
-			PackedInt64:    []int64{1002, 2002},
-			PackedUint32:   []uint32{1003, 2003},
-			PackedUint64:   []uint64{1004, 2004},
-			PackedSint32:   []int32{1005, 2005},
-			PackedSint64:   []int64{1006, 2006},
-			PackedFixed32:  []uint32{1007, 2007},
-			PackedFixed64:  []uint64{1008, 2008},
-			PackedSfixed32: []int32{1009, 2009},
-			PackedSfixed64: []int64{1010, 2010},
-			PackedFloat:    []float32{1011.5, 2011.5},
-			PackedDouble:   []float64{1012.5, 2012.5},
-			PackedBool:     []bool{true, false},
-			PackedEnum: []testpb.ForeignEnum{
-				testpb.ForeignEnum_FOREIGN_FOO,
-				testpb.ForeignEnum_FOREIGN_BAR,
-			},
-		}, build(
-			&testpb.TestPackedExtensions{},
-			extend(testpb.E_PackedInt32Extension, []int32{1001, 2001}),
-			extend(testpb.E_PackedInt64Extension, []int64{1002, 2002}),
-			extend(testpb.E_PackedUint32Extension, []uint32{1003, 2003}),
-			extend(testpb.E_PackedUint64Extension, []uint64{1004, 2004}),
-			extend(testpb.E_PackedSint32Extension, []int32{1005, 2005}),
-			extend(testpb.E_PackedSint64Extension, []int64{1006, 2006}),
-			extend(testpb.E_PackedFixed32Extension, []uint32{1007, 2007}),
-			extend(testpb.E_PackedFixed64Extension, []uint64{1008, 2008}),
-			extend(testpb.E_PackedSfixed32Extension, []int32{1009, 2009}),
-			extend(testpb.E_PackedSfixed64Extension, []int64{1010, 2010}),
-			extend(testpb.E_PackedFloatExtension, []float32{1011.5, 2011.5}),
-			extend(testpb.E_PackedDoubleExtension, []float64{1012.5, 2012.5}),
-			extend(testpb.E_PackedBoolExtension, []bool{true, false}),
-			extend(testpb.E_PackedEnumExtension, []testpb.ForeignEnum{
-				testpb.ForeignEnum_FOREIGN_FOO,
-				testpb.ForeignEnum_FOREIGN_BAR,
-			}),
-		)},
+		decodeTo: makeMessages(protobuild.Message{
+			"packed_int32":    []int32{1001, 2001},
+			"packed_int64":    []int64{1002, 2002},
+			"packed_uint32":   []uint32{1003, 2003},
+			"packed_uint64":   []uint64{1004, 2004},
+			"packed_sint32":   []int32{1005, 2005},
+			"packed_sint64":   []int64{1006, 2006},
+			"packed_fixed32":  []uint32{1007, 2007},
+			"packed_fixed64":  []uint64{1008, 2008},
+			"packed_sfixed32": []int32{1009, 2009},
+			"packed_sfixed64": []int64{1010, 2010},
+			"packed_float":    []float32{1011.5, 2011.5},
+			"packed_double":   []float64{1012.5, 2012.5},
+			"packed_bool":     []bool{true, false},
+			"packed_enum":     []string{"FOREIGN_FOO", "FOREIGN_BAR"},
+		}, &testpb.TestPackedTypes{}, &testpb.TestPackedExtensions{}),
 		wire: pack.Message{
 			pack.Tag{90, pack.BytesType}, pack.LengthPrefix{
 				pack.Varint(1001), pack.Varint(2001),
@@ -629,25 +428,22 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "packed repeated types (zero length)",
-		decodeTo: []proto.Message{
-			&testpb.TestPackedTypes{},
-			build(
-				&testpb.TestPackedExtensions{},
-				extend(testpb.E_PackedInt32Extension, []int32{}),
-				extend(testpb.E_PackedInt64Extension, []int64{}),
-				extend(testpb.E_PackedUint32Extension, []uint32{}),
-				extend(testpb.E_PackedUint64Extension, []uint64{}),
-				extend(testpb.E_PackedSint32Extension, []int32{}),
-				extend(testpb.E_PackedSint64Extension, []int64{}),
-				extend(testpb.E_PackedFixed32Extension, []uint32{}),
-				extend(testpb.E_PackedFixed64Extension, []uint64{}),
-				extend(testpb.E_PackedSfixed32Extension, []int32{}),
-				extend(testpb.E_PackedSfixed64Extension, []int64{}),
-				extend(testpb.E_PackedFloatExtension, []float32{}),
-				extend(testpb.E_PackedDoubleExtension, []float64{}),
-				extend(testpb.E_PackedBoolExtension, []bool{}),
-				extend(testpb.E_PackedEnumExtension, []testpb.ForeignEnum{}),
-			)},
+		decodeTo: makeMessages(protobuild.Message{
+			"packed_int32":    []int32{},
+			"packed_int64":    []int64{},
+			"packed_uint32":   []uint32{},
+			"packed_uint64":   []uint64{},
+			"packed_sint32":   []int32{},
+			"packed_sint64":   []int64{},
+			"packed_fixed32":  []uint32{},
+			"packed_fixed64":  []uint64{},
+			"packed_sfixed32": []int32{},
+			"packed_sfixed64": []int64{},
+			"packed_float":    []float32{},
+			"packed_double":   []float64{},
+			"packed_bool":     []bool{},
+			"packed_enum":     []string{},
+		}, &testpb.TestPackedTypes{}, &testpb.TestPackedExtensions{}),
 		wire: pack.Message{
 			pack.Tag{90, pack.BytesType}, pack.LengthPrefix{},
 			pack.Tag{91, pack.BytesType}, pack.LengthPrefix{},
@@ -667,6 +463,25 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "repeated messages",
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_nested_message": []protobuild.Message{
+				{"a": 1},
+				{},
+				{"a": 2},
+			},
+		}),
+		wire: pack.Message{
+			pack.Tag{48, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.VarintType}, pack.Varint(1),
+			}),
+			pack.Tag{48, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
+			pack.Tag{48, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.VarintType}, pack.Varint(2),
+			}),
+		}.Marshal(),
+	},
+	{
+		desc: "repeated nil messages",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{
 				{A: proto.Int32(1)},
@@ -681,7 +496,7 @@ var testValidMessages = []testProto{
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
-			extend(testpb.E_RepeatedNestedMessageExtension, []*testpb.TestAllExtensions_NestedMessage{
+			extend(testpb.E_RepeatedNestedMessage, []*testpb.TestAllExtensions_NestedMessage{
 				{A: proto.Int32(1)},
 				nil,
 				{A: proto.Int32(2)},
@@ -699,6 +514,26 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "repeated groups",
+		decodeTo: makeMessages(protobuild.Message{
+			"repeatedgroup": []protobuild.Message{
+				{"a": 1017},
+				{},
+				{"a": 2017},
+			},
+		}, &testpb.TestAllTypes{}, &testpb.TestAllExtensions{}),
+		wire: pack.Message{
+			pack.Tag{46, pack.StartGroupType},
+			pack.Tag{47, pack.VarintType}, pack.Varint(1017),
+			pack.Tag{46, pack.EndGroupType},
+			pack.Tag{46, pack.StartGroupType},
+			pack.Tag{46, pack.EndGroupType},
+			pack.Tag{46, pack.StartGroupType},
+			pack.Tag{47, pack.VarintType}, pack.Varint(2017),
+			pack.Tag{46, pack.EndGroupType},
+		}.Marshal(),
+	},
+	{
+		desc: "repeated nil groups",
 		decodeTo: []proto.Message{&testpb.TestAllTypes{
 			Repeatedgroup: []*testpb.TestAllTypes_RepeatedGroup{
 				{A: proto.Int32(1017)},
@@ -707,7 +542,7 @@ var testValidMessages = []testProto{
 			},
 		}, build(
 			&testpb.TestAllExtensions{},
-			extend(testpb.E_RepeatedgroupExtension, []*testpb.RepeatedGroupExtension{
+			extend(testpb.E_Repeatedgroup, []*testpb.RepeatedGroup{
 				{A: proto.Int32(1017)},
 				nil,
 				{A: proto.Int32(2017)},
@@ -726,55 +561,28 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "maps",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			MapInt32Int32:       map[int32]int32{1056: 1156, 2056: 2156},
-			MapInt64Int64:       map[int64]int64{1057: 1157, 2057: 2157},
-			MapUint32Uint32:     map[uint32]uint32{1058: 1158, 2058: 2158},
-			MapUint64Uint64:     map[uint64]uint64{1059: 1159, 2059: 2159},
-			MapSint32Sint32:     map[int32]int32{1060: 1160, 2060: 2160},
-			MapSint64Sint64:     map[int64]int64{1061: 1161, 2061: 2161},
-			MapFixed32Fixed32:   map[uint32]uint32{1062: 1162, 2062: 2162},
-			MapFixed64Fixed64:   map[uint64]uint64{1063: 1163, 2063: 2163},
-			MapSfixed32Sfixed32: map[int32]int32{1064: 1164, 2064: 2164},
-			MapSfixed64Sfixed64: map[int64]int64{1065: 1165, 2065: 2165},
-			MapInt32Float:       map[int32]float32{1066: 1166.5, 2066: 2166.5},
-			MapInt32Double:      map[int32]float64{1067: 1167.5, 2067: 2167.5},
-			MapBoolBool:         map[bool]bool{true: false, false: true},
-			MapStringString:     map[string]string{"69.1.key": "69.1.val", "69.2.key": "69.2.val"},
-			MapStringBytes:      map[string][]byte{"70.1.key": []byte("70.1.val"), "70.2.key": []byte("70.2.val")},
-			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"71.1.key": {A: proto.Int32(1171)},
-				"71.2.key": {A: proto.Int32(2171)},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_int32_int32":       map[int32]int32{1056: 1156, 2056: 2156},
+			"map_int64_int64":       map[int64]int64{1057: 1157, 2057: 2157},
+			"map_uint32_uint32":     map[uint32]uint32{1058: 1158, 2058: 2158},
+			"map_uint64_uint64":     map[uint64]uint64{1059: 1159, 2059: 2159},
+			"map_sint32_sint32":     map[int32]int32{1060: 1160, 2060: 2160},
+			"map_sint64_sint64":     map[int64]int64{1061: 1161, 2061: 2161},
+			"map_fixed32_fixed32":   map[uint32]uint32{1062: 1162, 2062: 2162},
+			"map_fixed64_fixed64":   map[uint64]uint64{1063: 1163, 2063: 2163},
+			"map_sfixed32_sfixed32": map[int32]int32{1064: 1164, 2064: 2164},
+			"map_sfixed64_sfixed64": map[int64]int64{1065: 1165, 2065: 2165},
+			"map_int32_float":       map[int32]float32{1066: 1166.5, 2066: 2166.5},
+			"map_int32_double":      map[int32]float64{1067: 1167.5, 2067: 2167.5},
+			"map_bool_bool":         map[bool]bool{true: false, false: true},
+			"map_string_string":     map[string]string{"69.1.key": "69.1.val", "69.2.key": "69.2.val"},
+			"map_string_bytes":      map[string][]byte{"70.1.key": []byte("70.1.val"), "70.2.key": []byte("70.2.val")},
+			"map_string_nested_message": map[string]protobuild.Message{
+				"71.1.key": {"a": 1171},
+				"71.2.key": {"a": 2171},
 			},
-			MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{
-				"73.1.key": testpb.TestAllTypes_FOO,
-				"73.2.key": testpb.TestAllTypes_BAR,
-			},
-		}, &test3pb.TestAllTypes{
-			MapInt32Int32:       map[int32]int32{1056: 1156, 2056: 2156},
-			MapInt64Int64:       map[int64]int64{1057: 1157, 2057: 2157},
-			MapUint32Uint32:     map[uint32]uint32{1058: 1158, 2058: 2158},
-			MapUint64Uint64:     map[uint64]uint64{1059: 1159, 2059: 2159},
-			MapSint32Sint32:     map[int32]int32{1060: 1160, 2060: 2160},
-			MapSint64Sint64:     map[int64]int64{1061: 1161, 2061: 2161},
-			MapFixed32Fixed32:   map[uint32]uint32{1062: 1162, 2062: 2162},
-			MapFixed64Fixed64:   map[uint64]uint64{1063: 1163, 2063: 2163},
-			MapSfixed32Sfixed32: map[int32]int32{1064: 1164, 2064: 2164},
-			MapSfixed64Sfixed64: map[int64]int64{1065: 1165, 2065: 2165},
-			MapInt32Float:       map[int32]float32{1066: 1166.5, 2066: 2166.5},
-			MapInt32Double:      map[int32]float64{1067: 1167.5, 2067: 2167.5},
-			MapBoolBool:         map[bool]bool{true: false, false: true},
-			MapStringString:     map[string]string{"69.1.key": "69.1.val", "69.2.key": "69.2.val"},
-			MapStringBytes:      map[string][]byte{"70.1.key": []byte("70.1.val"), "70.2.key": []byte("70.2.val")},
-			MapStringNestedMessage: map[string]*test3pb.TestAllTypes_NestedMessage{
-				"71.1.key": {A: 1171},
-				"71.2.key": {A: 2171},
-			},
-			MapStringNestedEnum: map[string]test3pb.TestAllTypes_NestedEnum{
-				"73.1.key": test3pb.TestAllTypes_FOO,
-				"73.2.key": test3pb.TestAllTypes_BAR,
-			},
-		}},
+			"map_string_nested_enum": map[string]string{"73.1.key": "FOO", "73.2.key": "BAR"},
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{56, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1056),
@@ -920,12 +728,12 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "map with value before key",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			MapInt32Int32: map[int32]int32{1056: 1156},
-			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"71.1.key": {A: proto.Int32(1171)},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_int32_int32": map[int32]int32{1056: 1156},
+			"map_string_nested_message": map[string]protobuild.Message{
+				"71.1.key": {"a": 1171},
 			},
-		}},
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{56, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{2, pack.VarintType}, pack.Varint(1156),
@@ -941,12 +749,12 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "map with repeated key and value",
-		decodeTo: []proto.Message{&testpb.TestAllTypes{
-			MapInt32Int32: map[int32]int32{1056: 1156},
-			MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{
-				"71.1.key": {A: proto.Int32(1171)},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_int32_int32": map[int32]int32{1056: 1156},
+			"map_string_nested_message": map[string]protobuild.Message{
+				"71.1.key": {"a": 1171},
 			},
-		}},
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{56, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(0),
@@ -966,55 +774,39 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "oneof (uint32)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{1111}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofUint32{1111}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_uint32": 1111,
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{111, pack.VarintType}, pack.Varint(1111)}.Marshal(),
 	},
 	{
 		desc: "oneof (message)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofNestedMessage{
-				&testpb.TestAllTypes_NestedMessage{A: proto.Int32(1112)},
-			}}, &test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofNestedMessage{
-				&test3pb.TestAllTypes_NestedMessage{A: 1112},
-			}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_nested_message": protobuild.Message{
+				"a": 1112,
+			},
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{112, pack.BytesType}, pack.LengthPrefix(pack.Message{
 			pack.Message{pack.Tag{1, pack.VarintType}, pack.Varint(1112)},
 		})}.Marshal(),
 	},
 	{
 		desc: "oneof (empty message)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofNestedMessage{
-				&testpb.TestAllTypes_NestedMessage{},
-			}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofNestedMessage{
-				&test3pb.TestAllTypes_NestedMessage{},
-			}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_nested_message": protobuild.Message{},
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{112, pack.BytesType}, pack.LengthPrefix(pack.Message{})}.Marshal(),
 	},
 	{
 		desc: "oneof (merged message)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofNestedMessage{
-				&testpb.TestAllTypes_NestedMessage{
-					A: proto.Int32(1),
-					Corecursive: &testpb.TestAllTypes{
-						OptionalInt32: proto.Int32(43),
-					},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_nested_message": protobuild.Message{
+				"a": 1,
+				"corecursive": protobuild.Message{
+					"optional_int32": 43,
 				},
-			}}, &test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofNestedMessage{
-				&test3pb.TestAllTypes_NestedMessage{
-					A: 1,
-					Corecursive: &test3pb.TestAllTypes{
-						OptionalInt32: 43,
-					},
-				},
-			}}},
+			},
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{112, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Message{pack.Tag{1, pack.VarintType}, pack.Varint(1)},
@@ -1028,74 +820,65 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "oneof (string)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofString{"1113"}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofString{"1113"}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_string": "1113",
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{113, pack.BytesType}, pack.String("1113")}.Marshal(),
 	},
 	{
 		desc: "oneof (bytes)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofBytes{[]byte("1114")}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofBytes{[]byte("1114")}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_bytes": "1114",
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{114, pack.BytesType}, pack.String("1114")}.Marshal(),
 	},
 	{
 		desc: "oneof (bool)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofBool{true}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofBool{true}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_bool": true,
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{115, pack.VarintType}, pack.Bool(true)}.Marshal(),
 	},
 	{
 		desc: "oneof (uint64)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint64{116}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofUint64{116}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_uint64": 116,
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{116, pack.VarintType}, pack.Varint(116)}.Marshal(),
 	},
 	{
 		desc: "oneof (float)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofFloat{117.5}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofFloat{117.5}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_float": 117.5,
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{117, pack.Fixed32Type}, pack.Float32(117.5)}.Marshal(),
 	},
 	{
 		desc: "oneof (double)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofDouble{118.5}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofDouble{118.5}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_double": 118.5,
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{118, pack.Fixed64Type}, pack.Float64(118.5)}.Marshal(),
 	},
 	{
 		desc: "oneof (enum)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofEnum{testpb.TestAllTypes_BAR}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofEnum{test3pb.TestAllTypes_BAR}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_enum": "BAR",
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{119, pack.VarintType}, pack.Varint(int(testpb.TestAllTypes_BAR))}.Marshal(),
 	},
 	{
 		desc: "oneof (zero)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint64{0}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofUint64{0}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_uint64": 0,
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{116, pack.VarintType}, pack.Varint(0)}.Marshal(),
 	},
 	{
 		desc: "oneof (overridden value)",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint64{2}},
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofUint64{2}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_uint64": 2,
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{111, pack.VarintType}, pack.Varint(1),
 			pack.Tag{116, pack.VarintType}, pack.Varint(2),
@@ -1109,22 +892,11 @@ var testValidMessages = []testProto{
 	{
 		desc:          "unknown fields",
 		checkFastInit: true,
-		decodeTo: []proto.Message{build(
-			&testpb.TestAllTypes{},
-			unknown(pack.Message{
+		decodeTo: makeMessages(protobuild.Message{
+			protobuild.Unknown: pack.Message{
 				pack.Tag{100000, pack.VarintType}, pack.Varint(1),
-			}.Marshal()),
-		), build(
-			&test3pb.TestAllTypes{},
-			unknown(pack.Message{
-				pack.Tag{100000, pack.VarintType}, pack.Varint(1),
-			}.Marshal()),
-		), build(
-			&testpb.TestAllExtensions{},
-			unknown(pack.Message{
-				pack.Tag{100000, pack.VarintType}, pack.Varint(1),
-			}.Marshal()),
-		)},
+			}.Marshal(),
+		}),
 		wire: pack.Message{
 			pack.Tag{100000, pack.VarintType}, pack.Varint(1),
 		}.Marshal(),
@@ -1134,40 +906,27 @@ var testValidMessages = []testProto{
 		unmarshalOptions: proto.UnmarshalOptions{
 			DiscardUnknown: true,
 		},
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{},
-			&test3pb.TestAllTypes{},
-		},
+		decodeTo: makeMessages(protobuild.Message{}),
 		wire: pack.Message{
 			pack.Tag{100000, pack.VarintType}, pack.Varint(1),
 		}.Marshal(),
 	},
 	{
 		desc: "field type mismatch",
-		decodeTo: []proto.Message{build(
-			&testpb.TestAllTypes{},
-			unknown(pack.Message{
+		decodeTo: makeMessages(protobuild.Message{
+			protobuild.Unknown: pack.Message{
 				pack.Tag{1, pack.BytesType}, pack.String("string"),
-			}.Marshal()),
-		), build(
-			&test3pb.TestAllTypes{},
-			unknown(pack.Message{
-				pack.Tag{1, pack.BytesType}, pack.String("string"),
-			}.Marshal()),
-		)},
+			}.Marshal(),
+		}),
 		wire: pack.Message{
 			pack.Tag{1, pack.BytesType}, pack.String("string"),
 		}.Marshal(),
 	},
 	{
 		desc: "map field element mismatch",
-		decodeTo: []proto.Message{
-			&testpb.TestAllTypes{
-				MapInt32Int32: map[int32]int32{1: 0},
-			}, &test3pb.TestAllTypes{
-				MapInt32Int32: map[int32]int32{1: 0},
-			},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_int32_int32": map[int32]int32{1: 0},
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{56, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1185,14 +944,14 @@ var testValidMessages = []testProto{
 		desc:          "required int32 unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo:      []proto.Message{&requiredpb.Int32{}},
+		decodeTo:      makeMessages(protobuild.Message{}, &requiredpb.Int32{}),
 	},
 	{
 		desc:          "required int32 set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&requiredpb.Int32{
-			V: proto.Int32(1),
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"v": 1,
+		}, &requiredpb.Int32{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.VarintType}, pack.Varint(1),
 		}.Marshal(),
@@ -1201,14 +960,14 @@ var testValidMessages = []testProto{
 		desc:          "required fixed32 unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo:      []proto.Message{&requiredpb.Fixed32{}},
+		decodeTo:      makeMessages(protobuild.Message{}, &requiredpb.Fixed32{}),
 	},
 	{
 		desc:          "required fixed32 set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&requiredpb.Fixed32{
-			V: proto.Uint32(1),
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"v": 1,
+		}, &requiredpb.Fixed32{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.Fixed32Type}, pack.Int32(1),
 		}.Marshal(),
@@ -1217,14 +976,14 @@ var testValidMessages = []testProto{
 		desc:          "required fixed64 unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo:      []proto.Message{&requiredpb.Fixed64{}},
+		decodeTo:      makeMessages(protobuild.Message{}, &requiredpb.Fixed64{}),
 	},
 	{
 		desc:          "required fixed64 set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&requiredpb.Fixed64{
-			V: proto.Uint64(1),
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"v": 1,
+		}, &requiredpb.Fixed64{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.Fixed64Type}, pack.Int64(1),
 		}.Marshal(),
@@ -1233,14 +992,14 @@ var testValidMessages = []testProto{
 		desc:          "required bytes unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo:      []proto.Message{&requiredpb.Bytes{}},
+		decodeTo:      makeMessages(protobuild.Message{}, &requiredpb.Bytes{}),
 	},
 	{
 		desc:          "required bytes set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&requiredpb.Bytes{
-			V: []byte{},
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"v": "",
+		}, &requiredpb.Bytes{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.BytesType}, pack.Bytes(nil),
 		}.Marshal(),
@@ -1263,9 +1022,9 @@ var testValidMessages = []testProto{
 		desc:          "required field in optional message unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
-			OptionalMessage: &testpb.TestRequired{},
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_message": protobuild.Message{},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
 		}.Marshal(),
@@ -1273,11 +1032,11 @@ var testValidMessages = []testProto{
 	{
 		desc:          "required field in optional message set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
-			OptionalMessage: &testpb.TestRequired{
-				RequiredField: proto.Int32(1),
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_message": protobuild.Message{
+				"required_field": 1,
 			},
-		}},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1287,11 +1046,11 @@ var testValidMessages = []testProto{
 	{
 		desc:          "required field in optional message set (split across multiple tags)",
 		checkFastInit: false, // fast init checks don't handle split messages
-		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
-			OptionalMessage: &testpb.TestRequired{
-				RequiredField: proto.Int32(1),
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_message": protobuild.Message{
+				"required_field": 1,
 			},
-		}},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
 			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
@@ -1304,12 +1063,12 @@ var testValidMessages = []testProto{
 		desc:          "required field in repeated message unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
-			RepeatedMessage: []*testpb.TestRequired{
-				{RequiredField: proto.Int32(1)},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_message": []protobuild.Message{
+				{"required_field": 1},
 				{},
 			},
-		}},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{
 			pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1320,12 +1079,12 @@ var testValidMessages = []testProto{
 	{
 		desc:          "required field in repeated message set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
-			RepeatedMessage: []*testpb.TestRequired{
-				{RequiredField: proto.Int32(1)},
-				{RequiredField: proto.Int32(2)},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_message": []protobuild.Message{
+				{"required_field": 1},
+				{"required_field": 2},
 			},
-		}},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{
 			pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1339,12 +1098,12 @@ var testValidMessages = []testProto{
 		desc:          "required field in map message unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
-			MapMessage: map[int32]*testpb.TestRequired{
-				1: {RequiredField: proto.Int32(1)},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_message": map[int32]protobuild.Message{
+				1: {"required_field": 1},
 				2: {},
 			},
-		}},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{
 			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1362,11 +1121,11 @@ var testValidMessages = []testProto{
 		desc:          "required field in absent map message value",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
-			MapMessage: map[int32]*testpb.TestRequired{
+		decodeTo: makeMessages(protobuild.Message{
+			"map_message": map[int32]protobuild.Message{
 				2: {},
 			},
-		}},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{
 			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(2),
@@ -1376,12 +1135,12 @@ var testValidMessages = []testProto{
 	{
 		desc:          "required field in map message set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&testpb.TestRequiredForeign{
-			MapMessage: map[int32]*testpb.TestRequired{
-				1: {RequiredField: proto.Int32(1)},
-				2: {RequiredField: proto.Int32(2)},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_message": map[int32]protobuild.Message{
+				1: {"required_field": 1},
+				2: {"required_field": 2},
 			},
-		}},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{
 			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1401,9 +1160,9 @@ var testValidMessages = []testProto{
 		desc:          "required field in optional group unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
-			Optionalgroup: &testpb.TestRequiredGroupFields_OptionalGroup{},
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"optionalgroup": protobuild.Message{},
+		}, &testpb.TestRequiredGroupFields{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.StartGroupType},
 			pack.Tag{1, pack.EndGroupType},
@@ -1412,11 +1171,11 @@ var testValidMessages = []testProto{
 	{
 		desc:          "required field in optional group set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
-			Optionalgroup: &testpb.TestRequiredGroupFields_OptionalGroup{
-				A: proto.Int32(1),
+		decodeTo: makeMessages(protobuild.Message{
+			"optionalgroup": protobuild.Message{
+				"a": 1,
 			},
-		}},
+		}, &testpb.TestRequiredGroupFields{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.StartGroupType},
 			pack.Tag{2, pack.VarintType}, pack.Varint(1),
@@ -1427,12 +1186,12 @@ var testValidMessages = []testProto{
 		desc:          "required field in repeated group unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
-			Repeatedgroup: []*testpb.TestRequiredGroupFields_RepeatedGroup{
-				{A: proto.Int32(1)},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeatedgroup": []protobuild.Message{
+				{"a": 1},
 				{},
 			},
-		}},
+		}, &testpb.TestRequiredGroupFields{}),
 		wire: pack.Message{
 			pack.Tag{3, pack.StartGroupType},
 			pack.Tag{4, pack.VarintType}, pack.Varint(1),
@@ -1444,12 +1203,12 @@ var testValidMessages = []testProto{
 	{
 		desc:          "required field in repeated group set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{&testpb.TestRequiredGroupFields{
-			Repeatedgroup: []*testpb.TestRequiredGroupFields_RepeatedGroup{
-				{A: proto.Int32(1)},
-				{A: proto.Int32(2)},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeatedgroup": []protobuild.Message{
+				{"a": 1},
+				{"a": 2},
 			},
-		}},
+		}, &testpb.TestRequiredGroupFields{}),
 		wire: pack.Message{
 			pack.Tag{3, pack.StartGroupType},
 			pack.Tag{4, pack.VarintType}, pack.Varint(1),
@@ -1463,23 +1222,19 @@ var testValidMessages = []testProto{
 		desc:          "required field in oneof message unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{
-			&testpb.TestRequiredForeign{OneofField: &testpb.TestRequiredForeign_OneofMessage{
-				&testpb.TestRequired{},
-			}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_message": protobuild.Message{},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{pack.Tag{4, pack.BytesType}, pack.LengthPrefix(pack.Message{})}.Marshal(),
 	},
 	{
 		desc:          "required field in oneof message set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{
-			&testpb.TestRequiredForeign{OneofField: &testpb.TestRequiredForeign_OneofMessage{
-				&testpb.TestRequired{
-					RequiredField: proto.Int32(1),
-				},
-			}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_message": protobuild.Message{
+				"required_field": 1,
+			},
+		}, &testpb.TestRequiredForeign{}),
 		wire: pack.Message{pack.Tag{4, pack.BytesType}, pack.LengthPrefix(pack.Message{
 			pack.Tag{1, pack.VarintType}, pack.Varint(1),
 		})}.Marshal(),
@@ -1488,10 +1243,9 @@ var testValidMessages = []testProto{
 		desc:          "required field in extension message unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_TestRequired_Single, &testpb.TestRequired{}),
-		)},
+		decodeTo: makeMessages(protobuild.Message{
+			"single": protobuild.Message{},
+		}, &testpb.TestAllExtensions{}),
 		wire: pack.Message{
 			pack.Tag{1000, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
 		}.Marshal(),
@@ -1499,12 +1253,11 @@ var testValidMessages = []testProto{
 	{
 		desc:          "required field in extension message set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_TestRequired_Single, &testpb.TestRequired{
-				RequiredField: proto.Int32(1),
-			}),
-		)},
+		decodeTo: makeMessages(protobuild.Message{
+			"single": protobuild.Message{
+				"required_field": 1,
+			},
+		}, &testpb.TestAllExtensions{}),
 		wire: pack.Message{
 			pack.Tag{1000, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1515,13 +1268,12 @@ var testValidMessages = []testProto{
 		desc:          "required field in repeated extension message unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_TestRequired_Multi, []*testpb.TestRequired{
-				{RequiredField: proto.Int32(1)},
+		decodeTo: makeMessages(protobuild.Message{
+			"multi": []protobuild.Message{
+				{"required_field": 1},
 				{},
-			}),
-		)},
+			},
+		}, &testpb.TestAllExtensions{}),
 		wire: pack.Message{
 			pack.Tag{1001, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1532,13 +1284,12 @@ var testValidMessages = []testProto{
 	{
 		desc:          "required field in repeated extension message set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{build(
-			&testpb.TestAllExtensions{},
-			extend(testpb.E_TestRequired_Multi, []*testpb.TestRequired{
-				{RequiredField: proto.Int32(1)},
-				{RequiredField: proto.Int32(2)},
-			}),
-		)},
+		decodeTo: makeMessages(protobuild.Message{
+			"multi": []protobuild.Message{
+				{"required_field": 1},
+				{"required_field": 2},
+			},
+		}, &testpb.TestAllExtensions{}),
 		wire: pack.Message{
 			pack.Tag{1001, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
@@ -1559,34 +1310,30 @@ var testValidMessages = []testProto{
 	{
 		desc:    "legacy",
 		partial: true,
-		decodeTo: []proto.Message{
-			&legacypb.Legacy{
-				F1: &legacy1pb.Message{
-					OptionalInt32:     proto.Int32(1),
-					OptionalChildEnum: legacy1pb.Message_ALPHA.Enum(),
-					OptionalChildMessage: &legacy1pb.Message_ChildMessage{
-						F1: proto.String("x"),
-					},
-					Optionalgroup: &legacy1pb.Message_OptionalGroup{
-						F1: proto.String("x"),
-					},
-					RepeatedChildMessage: []*legacy1pb.Message_ChildMessage{
-						{F1: proto.String("x")},
-					},
-					Repeatedgroup: []*legacy1pb.Message_RepeatedGroup{
-						{F1: proto.String("x")},
-					},
-					MapBoolChildMessage: map[bool]*legacy1pb.Message_ChildMessage{
-						true: {F1: proto.String("x")},
-					},
-					OneofUnion: &legacy1pb.Message_OneofChildMessage{
-						&legacy1pb.Message_ChildMessage{
-							F1: proto.String("x"),
-						},
-					},
+		decodeTo: makeMessages(protobuild.Message{
+			"f1": protobuild.Message{
+				"optional_int32":      1,
+				"optional_child_enum": "ALPHA",
+				"optional_child_message": protobuild.Message{
+					"f1": "x",
+				},
+				"optionalgroup": protobuild.Message{
+					"f1": "x",
+				},
+				"repeated_child_message": []protobuild.Message{
+					{"f1": "x"},
+				},
+				"repeatedgroup": []protobuild.Message{
+					{"f1": "x"},
+				},
+				"map_bool_child_message": map[bool]protobuild.Message{
+					true: {"f1": "x"},
+				},
+				"oneof_child_message": protobuild.Message{
+					"f1": "x",
 				},
 			},
-		},
+		}, &legacypb.Legacy{}),
 		wire: pack.Message{
 			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{101, pack.VarintType}, pack.Varint(1),
@@ -1618,24 +1365,22 @@ var testValidMessages = []testProto{
 	},
 	{
 		desc: "first reserved field number",
-		decodeTo: []proto.Message{build(
-			&testpb.TestAllTypes{},
-			unknown(pack.Message{
+		decodeTo: makeMessages(protobuild.Message{
+			protobuild.Unknown: pack.Message{
 				pack.Tag{pack.FirstReservedNumber, pack.VarintType}, pack.Varint(1004),
-			}.Marshal()),
-		)},
+			}.Marshal(),
+		}),
 		wire: pack.Message{
 			pack.Tag{pack.FirstReservedNumber, pack.VarintType}, pack.Varint(1004),
 		}.Marshal(),
 	},
 	{
 		desc: "last reserved field number",
-		decodeTo: []proto.Message{build(
-			&testpb.TestAllTypes{},
-			unknown(pack.Message{
+		decodeTo: makeMessages(protobuild.Message{
+			protobuild.Unknown: pack.Message{
 				pack.Tag{pack.LastReservedNumber, pack.VarintType}, pack.Varint(1005),
-			}.Marshal()),
-		)},
+			}.Marshal(),
+		}),
 		wire: pack.Message{
 			pack.Tag{pack.LastReservedNumber, pack.VarintType}, pack.Varint(1005),
 		}.Marshal(),
@@ -1646,27 +1391,22 @@ var testValidMessages = []testProto{
 			DiscardUnknown: true,
 			Resolver: func() protoregistry.ExtensionTypeResolver {
 				types := &protoregistry.Types{}
-				types.RegisterExtension(testpb.E_OptionalNestedMessageExtension)
-				types.RegisterExtension(testpb.E_OptionalInt32Extension)
+				types.RegisterExtension(testpb.E_OptionalNestedMessage)
+				types.RegisterExtension(testpb.E_OptionalInt32)
 				return types
 			}(),
 		},
-		decodeTo: []proto.Message{func() proto.Message {
-			m := &testpb.TestAllExtensions{}
-			if err := prototext.Unmarshal([]byte(`
-				[goproto.proto.test.optional_nested_message_extension]: {
-					corecursive: {
-						[goproto.proto.test.optional_nested_message_extension]: {
-							corecursive: {
-								[goproto.proto.test.optional_int32_extension]: 42
-							}
-						}
-					}
-				}`), m); err != nil {
-				panic(err)
-			}
-			return m
-		}()},
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_nested_message": protobuild.Message{
+				"corecursive": protobuild.Message{
+					"optional_nested_message": protobuild.Message{
+						"corecursive": protobuild.Message{
+							"optional_int32": 42,
+						},
+					},
+				},
+			},
+		}, &testpb.TestAllExtensions{}),
 		wire: pack.Message{
 			pack.Tag{18, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
@@ -1685,18 +1425,18 @@ var testValidMessages = []testProto{
 var testInvalidMessages = []testProto{
 	{
 		desc: "invalid UTF-8 in optional string field",
-		decodeTo: []proto.Message{&test3pb.TestAllTypes{
-			OptionalString: "abc\xff",
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_string": "abc\xff",
+		}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{14, pack.BytesType}, pack.String("abc\xff"),
 		}.Marshal(),
 	},
 	{
 		desc: "invalid UTF-8 in repeated string field",
-		decodeTo: []proto.Message{&test3pb.TestAllTypes{
-			RepeatedString: []string{"foo", "abc\xff"},
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_string": []string{"foo", "abc\xff"},
+		}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{44, pack.BytesType}, pack.String("foo"),
 			pack.Tag{44, pack.BytesType}, pack.String("abc\xff"),
@@ -1704,13 +1444,13 @@ var testInvalidMessages = []testProto{
 	},
 	{
 		desc: "invalid UTF-8 in nested message",
-		decodeTo: []proto.Message{&test3pb.TestAllTypes{
-			OptionalNestedMessage: &test3pb.TestAllTypes_NestedMessage{
-				Corecursive: &test3pb.TestAllTypes{
-					OptionalString: "abc\xff",
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_nested_message": protobuild.Message{
+				"corecursive": protobuild.Message{
+					"optional_string": "abc\xff",
 				},
 			},
-		}},
+		}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{18, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
@@ -1721,16 +1461,16 @@ var testInvalidMessages = []testProto{
 	},
 	{
 		desc: "invalid UTF-8 in oneof field",
-		decodeTo: []proto.Message{
-			&test3pb.TestAllTypes{OneofField: &test3pb.TestAllTypes_OneofString{"abc\xff"}},
-		},
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_string": "abc\xff",
+		}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{pack.Tag{113, pack.BytesType}, pack.String("abc\xff")}.Marshal(),
 	},
 	{
 		desc: "invalid UTF-8 in map key",
-		decodeTo: []proto.Message{&test3pb.TestAllTypes{
-			MapStringString: map[string]string{"key\xff": "val"},
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_string_string": map[string]string{"key\xff": "val"},
+		}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{69, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.BytesType}, pack.String("key\xff"),
@@ -1740,9 +1480,9 @@ var testInvalidMessages = []testProto{
 	},
 	{
 		desc: "invalid UTF-8 in map value",
-		decodeTo: []proto.Message{&test3pb.TestAllTypes{
-			MapStringString: map[string]string{"key": "val\xff"},
-		}},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_string_string": map[string]string{"key": "val\xff"},
+		}, &test3pb.TestAllTypes{}),
 		wire: pack.Message{
 			pack.Tag{69, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.BytesType}, pack.String("key"),

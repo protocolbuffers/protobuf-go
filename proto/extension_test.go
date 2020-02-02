@@ -27,13 +27,13 @@ func TestExtensionFuncs(t *testing.T) {
 	}{
 		{
 			message:     &testpb.TestAllExtensions{},
-			ext:         testpb.E_OptionalInt32Extension,
+			ext:         testpb.E_OptionalInt32,
 			wantDefault: int32(0),
 			value:       int32(1),
 		},
 		{
 			message:     &testpb.TestAllExtensions{},
-			ext:         testpb.E_RepeatedStringExtension,
+			ext:         testpb.E_RepeatedString,
 			wantDefault: ([]string)(nil),
 			value:       []string{"a", "b", "c"},
 		},
@@ -74,7 +74,7 @@ func TestExtensionGetRace(t *testing.T) {
 	// a chance to occur.
 	want := int32(42)
 	m1 := &testpb.TestAllExtensions{}
-	proto.SetExtension(m1, testpb.E_OptionalNestedMessageExtension, &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(want)})
+	proto.SetExtension(m1, testpb.E_OptionalNestedMessage, &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(want)})
 	b, err := proto.Marshal(m1)
 	if err != nil {
 		t.Fatal(err)
@@ -95,7 +95,7 @@ func TestExtensionGetRace(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			got := proto.GetExtension(m, testpb.E_OptionalNestedMessageExtension).(*testpb.TestAllExtensions_NestedMessage).GetA()
+			got := proto.GetExtension(m, testpb.E_OptionalNestedMessage).(*testpb.TestAllExtensions_NestedMessage).GetA()
 			if got != want {
 				t.Errorf("GetExtension(optional_nested_message).a = %v, want %v", got, want)
 			}

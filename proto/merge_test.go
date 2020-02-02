@@ -286,41 +286,41 @@ func testMerge(t *testing.T, shallow bool) {
 		desc: "merge extension fields",
 		dst: func() proto.Message {
 			m := new(testpb.TestAllExtensions)
-			proto.SetExtension(m, testpb.E_OptionalInt32Extension, int32(32))
-			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
+			proto.SetExtension(m, testpb.E_OptionalInt32, int32(32))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessage,
 				&testpb.TestAllExtensions_NestedMessage{
 					A: proto.Int32(50),
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, []uint32{1, 2, 3})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32, []uint32{1, 2, 3})
 			return m
 		}(),
 		src: func() proto.Message {
 			m2 := new(testpb.TestAllExtensions)
-			proto.SetExtension(m2, testpb.E_OptionalInt64Extension, int64(1000))
+			proto.SetExtension(m2, testpb.E_OptionalInt64, int64(1000))
 			m := new(testpb.TestAllExtensions)
-			proto.SetExtension(m, testpb.E_OptionalInt64Extension, int64(64))
-			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
+			proto.SetExtension(m, testpb.E_OptionalInt64, int64(64))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessage,
 				&testpb.TestAllExtensions_NestedMessage{
 					Corecursive: m2,
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, []uint32{4, 5, 6})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32, []uint32{4, 5, 6})
 			return m
 		}(),
 		want: func() proto.Message {
 			m2 := new(testpb.TestAllExtensions)
-			proto.SetExtension(m2, testpb.E_OptionalInt64Extension, int64(1000))
+			proto.SetExtension(m2, testpb.E_OptionalInt64, int64(1000))
 			m := new(testpb.TestAllExtensions)
-			proto.SetExtension(m, testpb.E_OptionalInt32Extension, int32(32))
-			proto.SetExtension(m, testpb.E_OptionalInt64Extension, int64(64))
-			proto.SetExtension(m, testpb.E_OptionalNestedMessageExtension,
+			proto.SetExtension(m, testpb.E_OptionalInt32, int32(32))
+			proto.SetExtension(m, testpb.E_OptionalInt64, int64(64))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessage,
 				&testpb.TestAllExtensions_NestedMessage{
 					A:           proto.Int32(50),
 					Corecursive: m2,
 				},
 			)
-			proto.SetExtension(m, testpb.E_RepeatedFixed32Extension, []uint32{1, 2, 3, 4, 5, 6})
+			proto.SetExtension(m, testpb.E_RepeatedFixed32, []uint32{1, 2, 3, 4, 5, 6})
 			return m
 		}(),
 	}, {

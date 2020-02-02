@@ -26,91 +26,91 @@ func TestExtensionType(t *testing.T) {
 		value interface{}
 	}{
 		{
-			xt:    testpb.E_OptionalInt32Extension,
+			xt:    testpb.E_OptionalInt32,
 			value: int32(0),
 		},
 		{
-			xt:    testpb.E_OptionalInt64Extension,
+			xt:    testpb.E_OptionalInt64,
 			value: int64(0),
 		},
 		{
-			xt:    testpb.E_OptionalUint32Extension,
+			xt:    testpb.E_OptionalUint32,
 			value: uint32(0),
 		},
 		{
-			xt:    testpb.E_OptionalUint64Extension,
+			xt:    testpb.E_OptionalUint64,
 			value: uint64(0),
 		},
 		{
-			xt:    testpb.E_OptionalFloatExtension,
+			xt:    testpb.E_OptionalFloat,
 			value: float32(0),
 		},
 		{
-			xt:    testpb.E_OptionalDoubleExtension,
+			xt:    testpb.E_OptionalDouble,
 			value: float64(0),
 		},
 		{
-			xt:    testpb.E_OptionalBoolExtension,
+			xt:    testpb.E_OptionalBool,
 			value: true,
 		},
 		{
-			xt:    testpb.E_OptionalStringExtension,
+			xt:    testpb.E_OptionalString,
 			value: "",
 		},
 		{
-			xt:    testpb.E_OptionalBytesExtension,
+			xt:    testpb.E_OptionalBytes,
 			value: []byte{},
 		},
 		{
-			xt:    testpb.E_OptionalNestedMessageExtension,
+			xt:    testpb.E_OptionalNestedMessage,
 			value: &testpb.TestAllExtensions_NestedMessage{},
 		},
 		{
-			xt:    testpb.E_OptionalNestedEnumExtension,
+			xt:    testpb.E_OptionalNestedEnum,
 			value: testpb.TestAllTypes_FOO,
 		},
 		{
-			xt:    testpb.E_RepeatedInt32Extension,
+			xt:    testpb.E_RepeatedInt32,
 			value: []int32{0},
 		},
 		{
-			xt:    testpb.E_RepeatedInt64Extension,
+			xt:    testpb.E_RepeatedInt64,
 			value: []int64{0},
 		},
 		{
-			xt:    testpb.E_RepeatedUint32Extension,
+			xt:    testpb.E_RepeatedUint32,
 			value: []uint32{0},
 		},
 		{
-			xt:    testpb.E_RepeatedUint64Extension,
+			xt:    testpb.E_RepeatedUint64,
 			value: []uint64{0},
 		},
 		{
-			xt:    testpb.E_RepeatedFloatExtension,
+			xt:    testpb.E_RepeatedFloat,
 			value: []float32{0},
 		},
 		{
-			xt:    testpb.E_RepeatedDoubleExtension,
+			xt:    testpb.E_RepeatedDouble,
 			value: []float64{0},
 		},
 		{
-			xt:    testpb.E_RepeatedBoolExtension,
+			xt:    testpb.E_RepeatedBool,
 			value: []bool{true},
 		},
 		{
-			xt:    testpb.E_RepeatedStringExtension,
+			xt:    testpb.E_RepeatedString,
 			value: []string{""},
 		},
 		{
-			xt:    testpb.E_RepeatedBytesExtension,
+			xt:    testpb.E_RepeatedBytes,
 			value: [][]byte{nil},
 		},
 		{
-			xt:    testpb.E_RepeatedNestedMessageExtension,
+			xt:    testpb.E_RepeatedNestedMessage,
 			value: []*testpb.TestAllExtensions_NestedMessage{{}},
 		},
 		{
-			xt:    testpb.E_RepeatedNestedEnumExtension,
+			xt:    testpb.E_RepeatedNestedEnum,
 			value: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO},
 		},
 	} {
