@@ -5,6 +5,7 @@
 package json_test
 
 import (
+	"math"
 	"strings"
 	"testing"
 	"unicode/utf8"
@@ -256,7 +257,28 @@ func TestDecoder(t *testing.T) {
 		{
 			input: space + `-0` + space,
 			want: []R{
-				{T: json.Number, V: float32(0)},
+				{T: json.Number, V: float32(math.Copysign(0, -1))},
+				{T: json.EOF},
+			},
+		},
+		{
+			input: `-0`,
+			want: []R{
+				{T: json.Number, V: math.Copysign(0, -1)},
+				{T: json.EOF},
+			},
+		},
+		{
+			input: `-0.0`,
+			want: []R{
+				{T: json.Number, V: float32(math.Copysign(0, -1))},
+				{T: json.EOF},
+			},
+		},
+		{
+			input: `-0.0`,
+			want: []R{
+				{T: json.Number, V: math.Copysign(0, -1)},
 				{T: json.EOF},
 			},
 		},

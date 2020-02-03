@@ -35,32 +35,28 @@ func TestEncoder(t *testing.T) {
 			write: func(e *json.Encoder) {
 				e.WriteNull()
 			},
-			wantOut:       `null`,
-			wantOutIndent: `null`,
+			wantOut: `null`,
 		},
 		{
 			desc: "true",
 			write: func(e *json.Encoder) {
 				e.WriteBool(true)
 			},
-			wantOut:       `true`,
-			wantOutIndent: `true`,
+			wantOut: `true`,
 		},
 		{
 			desc: "false",
 			write: func(e *json.Encoder) {
 				e.WriteBool(false)
 			},
-			wantOut:       `false`,
-			wantOutIndent: `false`,
+			wantOut: `false`,
 		},
 		{
 			desc: "string",
 			write: func(e *json.Encoder) {
 				e.WriteString("hello world")
 			},
-			wantOut:       `"hello world"`,
-			wantOutIndent: `"hello world"`,
+			wantOut: `"hello world"`,
 		},
 		{
 			desc: "string contains escaped characters",
@@ -74,88 +70,91 @@ func TestEncoder(t *testing.T) {
 			write: func(e *json.Encoder) {
 				e.WriteFloat(1.0199999809265137, 64)
 			},
-			wantOut:       `1.0199999809265137`,
-			wantOutIndent: `1.0199999809265137`,
+			wantOut: `1.0199999809265137`,
 		},
 		{
 			desc: "float64 max value",
 			write: func(e *json.Encoder) {
 				e.WriteFloat(math.MaxFloat64, 64)
 			},
-			wantOut:       `1.7976931348623157e+308`,
-			wantOutIndent: `1.7976931348623157e+308`,
+			wantOut: `1.7976931348623157e+308`,
 		},
 		{
 			desc: "float64 min value",
 			write: func(e *json.Encoder) {
 				e.WriteFloat(-math.MaxFloat64, 64)
 			},
-			wantOut:       `-1.7976931348623157e+308`,
-			wantOutIndent: `-1.7976931348623157e+308`,
+			wantOut: `-1.7976931348623157e+308`,
 		},
 		{
 			desc: "float64 NaN",
 			write: func(e *json.Encoder) {
 				e.WriteFloat(math.NaN(), 64)
 			},
-			wantOut:       `"NaN"`,
-			wantOutIndent: `"NaN"`,
+			wantOut: `"NaN"`,
 		},
 		{
 			desc: "float64 Infinity",
 			write: func(e *json.Encoder) {
 				e.WriteFloat(math.Inf(+1), 64)
 			},
-			wantOut:       `"Infinity"`,
-			wantOutIndent: `"Infinity"`,
+			wantOut: `"Infinity"`,
 		},
 		{
 			desc: "float64 -Infinity",
 			write: func(e *json.Encoder) {
 				e.WriteFloat(math.Inf(-1), 64)
 			},
-			wantOut:       `"-Infinity"`,
-			wantOutIndent: `"-Infinity"`,
+			wantOut: `"-Infinity"`,
+		},
+		{
+			desc: "float64 negative zero",
+			write: func(e *json.Encoder) {
+				e.WriteFloat(math.Copysign(0, -1), 64)
+			},
+			wantOut: `-0`,
 		},
 		{
 			desc: "float32",
 			write: func(e *json.Encoder) {
 				e.WriteFloat(1.02, 32)
 			},
-			wantOut:       `1.02`,
-			wantOutIndent: `1.02`,
+			wantOut: `1.02`,
 		},
 		{
 			desc: "float32 max value",
 			write: func(e *json.Encoder) {
 				e.WriteFloat(math.MaxFloat32, 32)
 			},
-			wantOut:       `3.4028235e+38`,
-			wantOutIndent: `3.4028235e+38`,
+			wantOut: `3.4028235e+38`,
 		},
 		{
 			desc: "float32 min value",
 			write: func(e *json.Encoder) {
 				e.WriteFloat(-math.MaxFloat32, 32)
 			},
-			wantOut:       `-3.4028235e+38`,
-			wantOutIndent: `-3.4028235e+38`,
+			wantOut: `-3.4028235e+38`,
+		},
+		{
+			desc: "float32 negative zero",
+			write: func(e *json.Encoder) {
+				e.WriteFloat(math.Copysign(0, -1), 32)
+			},
+			wantOut: `-0`,
 		},
 		{
 			desc: "int",
 			write: func(e *json.Encoder) {
 				e.WriteInt(-math.MaxInt64)
 			},
-			wantOut:       `-9223372036854775807`,
-			wantOutIndent: `-9223372036854775807`,
+			wantOut: `-9223372036854775807`,
 		},
 		{
 			desc: "uint",
 			write: func(e *json.Encoder) {
 				e.WriteUint(math.MaxUint64)
 			},
-			wantOut:       `18446744073709551615`,
-			wantOutIndent: `18446744073709551615`,
+			wantOut: `18446744073709551615`,
 		},
 		{
 			desc: "empty object",
@@ -163,8 +162,7 @@ func TestEncoder(t *testing.T) {
 				e.StartObject()
 				e.EndObject()
 			},
-			wantOut:       `{}`,
-			wantOutIndent: `{}`,
+			wantOut: `{}`,
 		},
 		{
 			desc: "empty array",
@@ -172,8 +170,7 @@ func TestEncoder(t *testing.T) {
 				e.StartArray()
 				e.EndArray()
 			},
-			wantOut:       `[]`,
-			wantOutIndent: `[]`,
+			wantOut: `[]`,
 		},
 		{
 			desc: "object with one member",
