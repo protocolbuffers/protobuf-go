@@ -19,6 +19,8 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
+var testFile = new(testpb.TestAllTypes).ProtoReflect().Descriptor().ParentFile()
+
 func TestInit(t *testing.T) {
 	// Compare the FileDescriptorProto for the same test file from two different sources:
 	//
@@ -26,7 +28,7 @@ func TestInit(t *testing.T) {
 	// 2. The protoc-generated wire-encoded message.
 	//
 	// This serves as a test of both filedesc and protodesc.
-	got := protodesc.ToFileDescriptorProto(testpb.File_test_test_proto)
+	got := protodesc.ToFileDescriptorProto(testFile)
 
 	want := &descriptorpb.FileDescriptorProto{}
 	zb, _ := (&testpb.TestAllTypes{}).Descriptor()
@@ -76,7 +78,7 @@ func TestInit(t *testing.T) {
 
 	// Verify that message descriptors for map entries have no Go type info.
 	mapEntryName := protoreflect.FullName("goproto.proto.test.TestAllTypes.MapInt32Int32Entry")
-	d := testpb.File_test_test_proto.Messages().ByName("TestAllTypes").Fields().ByName("map_int32_int32").Message()
+	d := testFile.Messages().ByName("TestAllTypes").Fields().ByName("map_int32_int32").Message()
 	if gotName, wantName := d.FullName(), mapEntryName; gotName != wantName {
 		t.Fatalf("looked up wrong descriptor: got %v, want %v", gotName, wantName)
 	}
@@ -104,10 +106,8 @@ func visitFields(m protoreflect.Message, f func(protoreflect.FieldDescriptor)) {
 }
 
 func TestWeakInit(t *testing.T) {
-	file := testpb.File_test_test_proto
-
 	// We do not expect to get a placeholder since weak1 is imported.
-	fd1 := file.Messages().ByName("TestWeak").Fields().ByName("weak_message1")
+	fd1 := testFile.Messages().ByName("TestWeak").Fields().ByName("weak_message1")
 	if got, want := fd1.IsWeak(), true; got != want {
 		t.Errorf("field %v: IsWeak() = %v, want %v", fd1.FullName(), got, want)
 	}
@@ -119,7 +119,7 @@ func TestWeakInit(t *testing.T) {
 	}
 
 	// We do expect to get a placeholder since weak2 is not imported.
-	fd2 := file.Messages().ByName("TestWeak").Fields().ByName("weak_message2")
+	fd2 := testFile.Messages().ByName("TestWeak").Fields().ByName("weak_message2")
 	if got, want := fd2.IsWeak(), true; got != want {
 		t.Errorf("field %v: IsWeak() = %v, want %v", fd2.FullName(), got, want)
 	}
