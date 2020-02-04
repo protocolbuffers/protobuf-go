@@ -28,7 +28,7 @@ func TestConformance(t *testing.T) {
 }
 
 func TestDynamicExtensions(t *testing.T) {
-	file, err := preg.GlobalFiles.FindFileByPath("test/ext.proto")
+	file, err := preg.GlobalFiles.FindFileByPath("internal/testprotos/test/ext.proto")
 	if err != nil {
 		t.Fatal(err)
 	}

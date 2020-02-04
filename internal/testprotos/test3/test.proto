@@ -6,7 +6,7 @@ syntax = "proto3";
 
 package goproto.proto.test3;
 
-import "test3/test_import.proto";
+import "internal/testprotos/test3/test_import.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/test3";
 

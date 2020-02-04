@@ -10,7 +10,7 @@ syntax = "proto2";
 
 package goproto.proto.irregular;
 
-import "irregular/irregular.proto";
+import "internal/testprotos/irregular/irregular.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/irregular";
 

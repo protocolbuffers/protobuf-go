@@ -8,7 +8,7 @@ package goproto.protoc.import_public;
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_public";
 
-import "import_public/sub/a.proto";
+import "cmd/protoc-gen-go/testdata/import_public/sub/a.proto";
 
 message Local {
   optional goproto.protoc.import_public.sub.M m = 1;

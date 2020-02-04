@@ -6,10 +6,10 @@ syntax = "proto2";
 
 package goproto.proto.test;
 
-import "annotation/annotation.proto";
-import "test/test.proto";
-import weak "test/weak1/test_weak.proto";
-import weak "test/weak2/test_weak.proto";
+import "internal/testprotos/annotation/annotation.proto";
+import "internal/testprotos/test/test.proto";
+import weak "internal/testprotos/test/weak1/test_weak.proto";
+import weak "internal/testprotos/test/weak2/test_weak.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/fieldtrack";
 

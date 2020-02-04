@@ -100,7 +100,7 @@ var fileDesc = func() pref.FileDescriptor {
 	return file
 }()
 
-func file_irregular_irregular_proto_init() { _ = fileDesc }
+func file_internal_testprotos_irregular_irregular_proto_init() { _ = fileDesc }
 
 const descriptorText = `
   name: "internal/testprotos/irregular/irregular.proto"

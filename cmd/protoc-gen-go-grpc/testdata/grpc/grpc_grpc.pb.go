@@ -294,5 +294,5 @@ var _TestService_serviceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "grpc/grpc.proto",
+	Metadata: "cmd/protoc-gen-go-grpc/testdata/grpc/grpc.proto",
 }

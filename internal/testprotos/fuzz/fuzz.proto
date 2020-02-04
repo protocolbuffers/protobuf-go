@@ -6,8 +6,8 @@ syntax = "proto2";
 
 package goproto.proto.fuzz;
 
-import "test/test.proto";
-import "test3/test.proto";
+import "internal/testprotos/test/test.proto";
+import "internal/testprotos/test3/test.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/fuzz";
 

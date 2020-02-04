@@ -62,7 +62,7 @@ func TestAnnotations(t *testing.T) {
 			Path:       want.path,
 			Begin:      proto.Int32(int32(begin)),
 			End:        proto.Int32(int32(end)),
-			SourceFile: proto.String("annotations/annotations.proto"),
+			SourceFile: proto.String("cmd/protoc-gen-go/testdata/annotations/annotations.proto"),
 		})
 	}
 	if !proto.Equal(gotInfo, wantInfo) {

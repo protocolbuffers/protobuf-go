@@ -4,8 +4,8 @@
 
 syntax = "proto2";
 
-import "extensions/base/base.proto";
-import "extensions/extra/extra.proto";
+import "cmd/protoc-gen-go/testdata/extensions/base/base.proto";
+import "cmd/protoc-gen-go/testdata/extensions/extra/extra.proto";
 
 package goproto.protoc.extension.ext;
 

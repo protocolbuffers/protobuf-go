@@ -108,15 +108,19 @@ func generateLocalProtos() {
 		annotateFor map[string]bool
 		exclude     map[string]bool
 	}{
-		{path: "cmd/protoc-gen-go/testdata", annotateFor: map[string]bool{"annotations/annotations.proto": true}},
+		{path: "cmd/protoc-gen-go/testdata", annotateFor: map[string]bool{
+			"cmd/protoc-gen-go/testdata/annotations/annotations.proto": true},
+		},
 		{path: "cmd/protoc-gen-go-grpc/testdata", grpcPlugin: true},
-		{path: "internal/testprotos", exclude: map[string]bool{"irregular/irregular.proto": true}},
+		{path: "internal/testprotos", exclude: map[string]bool{
+			"internal/testprotos/irregular/irregular.proto": true,
+		}},
 	}
 	excludeRx := regexp.MustCompile(`legacy/proto[23]_[0-9]{8}_[0-9a-f]{8}/`)
 	for _, d := range dirs {
 		subDirs := map[string]bool{}
 
-		dstDir := filepath.Join(tmpDir, filepath.FromSlash(d.path))
+		dstDir := tmpDir
 		check(os.MkdirAll(dstDir, 0775))
 
 		srcDir := filepath.Join(repoRoot, filepath.FromSlash(d.path))
@@ -124,9 +128,12 @@ func generateLocalProtos() {
 			if !strings.HasSuffix(srcPath, ".proto") || excludeRx.MatchString(srcPath) {
 				return nil
 			}
-			relPath, err := filepath.Rel(srcDir, srcPath)
+			relPath, err := filepath.Rel(repoRoot, srcPath)
 			check(err)
-			subDirs[filepath.Dir(relPath)] = true
+
+			srcRelPath, err := filepath.Rel(srcDir, srcPath)
+			check(err)
+			subDirs[filepath.Dir(srcRelPath)] = true
 
 			if d.exclude[filepath.ToSlash(relPath)] {
 				return nil
@@ -144,7 +151,7 @@ func generateLocalProtos() {
 				plugins += ",gogrpc"
 			}
 
-			protoc(plugins, "-I"+filepath.Join(protoRoot, "src"), "-I"+srcDir, "--go_out=paths=source_relative"+opts+":"+dstDir, relPath)
+			protoc(plugins, "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out=paths=source_relative"+opts+":"+dstDir, relPath)
 			return nil
 		})
 

@@ -95,5 +95,5 @@ var _DeprecatedService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "grpc/deprecation.proto",
+	Metadata: "cmd/protoc-gen-go-grpc/testdata/grpc/deprecation.proto",
 }

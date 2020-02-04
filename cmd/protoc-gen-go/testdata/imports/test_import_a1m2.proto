@@ -8,7 +8,7 @@ package test;
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports";
 
-import "imports/test_a_1/m2.proto";
+import "cmd/protoc-gen-go/testdata/imports/test_a_1/m2.proto";
 
 message A1M2 {
   test.a.M2 f = 1;
