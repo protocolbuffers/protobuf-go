@@ -55,7 +55,9 @@ func BenchmarkEmptyMessage(b *testing.B) {
 				Resolver: protoregistry.GlobalTypes,
 			}
 			for pb.Next() {
-				if got, want := impl.Validate([]byte{}, mt, opts), impl.ValidationValidInitialized; got != want {
+				_, got := impl.Validate([]byte{}, mt, opts)
+				want := impl.ValidationValid
+				if got != want {
 					b.Fatalf("Validate = %v, want %v", got, want)
 				}
 			}
@@ -106,7 +108,9 @@ func BenchmarkRepeatedInt32(b *testing.B) {
 				Resolver: protoregistry.GlobalTypes,
 			}
 			for pb.Next() {
-				if got, want := impl.Validate(w, mt, opts), impl.ValidationValidInitialized; got != want {
+				_, got := impl.Validate(w, mt, opts)
+				want := impl.ValidationValid
+				if got != want {
 					b.Fatalf("Validate = %v, want %v", got, want)
 				}
 			}
@@ -167,7 +171,9 @@ func BenchmarkRequired(b *testing.B) {
 				Resolver: protoregistry.GlobalTypes,
 			}
 			for pb.Next() {
-				if got, want := impl.Validate(w, mt, opts), impl.ValidationValidInitialized; got != want {
+				_, got := impl.Validate(w, mt, opts)
+				want := impl.ValidationValid
+				if got != want {
 					b.Fatalf("Validate = %v, want %v", got, want)
 				}
 			}

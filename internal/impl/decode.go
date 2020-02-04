@@ -196,11 +196,9 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	}
 	if flags.LazyUnmarshalExtensions {
 		if opts.IsDefault() && x.canLazy(xt) {
-			if n, ok := skipExtension(b, xi, num, wtyp, opts); ok {
-				x.appendLazyBytes(xt, xi, num, wtyp, b[:n])
+			if out, ok := skipExtension(b, xi, num, wtyp, opts); ok && out.initialized {
+				x.appendLazyBytes(xt, xi, num, wtyp, b[:out.n])
 				exts[int32(num)] = x
-				out.n = n
-				out.initialized = true
 				return out, nil
 			}
 		}
@@ -224,35 +222,31 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	return out, nil
 }
 
-func skipExtension(b []byte, xi *extensionFieldInfo, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (n int, ok bool) {
+func skipExtension(b []byte, xi *extensionFieldInfo, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, ok bool) {
 	if xi.validation.mi == nil {
-		return 0, false
+		return out, false
 	}
 	xi.validation.mi.init()
 	var v []byte
 	switch xi.validation.typ {
 	case validationTypeMessage:
 		if wtyp != wire.BytesType {
-			return 0, false
+			return out, false
 		}
-		v, n = wire.ConsumeBytes(b)
+		v, n := wire.ConsumeBytes(b)
 		if n < 0 {
-			return 0, false
+			return out, false
 		}
+		out, st := xi.validation.mi.validate(v, 0, opts)
+		out.n = n
+		return out, st == ValidationValid
 	case validationTypeGroup:
 		if wtyp != wire.StartGroupType {
-			return 0, false
+			return out, false
 		}
-		v, n = wire.ConsumeGroup(num, b)
-		if n < 0 {
-			return 0, false
-		}
+		out, st := xi.validation.mi.validate(v, num, opts)
+		return out, st == ValidationValid
 	default:
-		return 0, false
+		return out, false
 	}
-	if xi.validation.mi.validate(v, 0, opts) != ValidationValidInitialized {
-		return 0, false
-	}
-	return n, true
-
 }

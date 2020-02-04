@@ -19,7 +19,7 @@ import (
 // Fuzz is a fuzzer for proto.Marshal and proto.Unmarshal.
 func Fuzz(data []byte) (score int) {
 	m1 := &fuzzpb.Fuzz{}
-	valid := impl.Validate(data, m1.ProtoReflect().Type(), piface.UnmarshalOptions{
+	vout, valid := impl.Validate(data, m1.ProtoReflect().Type(), piface.UnmarshalOptions{
 		Resolver: protoregistry.GlobalTypes,
 	})
 	if err := (proto.UnmarshalOptions{
@@ -33,21 +33,14 @@ func Fuzz(data []byte) (score int) {
 		}
 		return 0
 	}
-	if proto.IsInitialized(m1) == nil {
-		switch valid {
-		case impl.ValidationUnknown:
-		case impl.ValidationValidInitialized:
-		case impl.ValidationValidMaybeUninitalized:
-		default:
-			panic("unmarshal ok with validation status: " + valid.String())
-		}
-	} else {
-		switch valid {
-		case impl.ValidationUnknown:
-		case impl.ValidationValidMaybeUninitalized:
-		default:
-			panic("partial unmarshal ok with validation status: " + valid.String())
-		}
+	switch valid {
+	case impl.ValidationUnknown:
+	case impl.ValidationValid:
+	default:
+		panic("unmarshal ok with validation status: " + valid.String())
+	}
+	if proto.IsInitialized(m1) != nil && vout.Initialized {
+		panic("validation reports partial message is initialized")
 	}
 	data1, err := proto.MarshalOptions{
 		AllowPartial: true,

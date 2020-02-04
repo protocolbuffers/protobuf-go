@@ -23,16 +23,18 @@ func TestValidateValid(t *testing.T) {
 		for _, m := range test.decodeTo {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, m), func(t *testing.T) {
 				mt := m.ProtoReflect().Type()
-				want := impl.ValidationValidInitialized
+				want := impl.ValidationValid
 				if test.validationStatus != 0 {
 					want = test.validationStatus
-				} else if test.partial {
-					want = impl.ValidationValidMaybeUninitalized
 				}
 				var opts piface.UnmarshalOptions
 				opts.Resolver = protoregistry.GlobalTypes
-				if got, want := impl.Validate(test.wire, mt, opts), want; got != want {
-					t.Errorf("Validate(%x) = %v, want %v", test.wire, got, want)
+				out, status := impl.Validate(test.wire, mt, opts)
+				if status != want {
+					t.Errorf("Validate(%x) = %v, want %v", test.wire, status, want)
+				}
+				if got, want := out.Initialized, !test.partial; got != want && !test.nocheckValidInit && status == impl.ValidationValid {
+					t.Errorf("Validate(%x): initialized = %v, want %v", test.wire, got, want)
 				}
 			})
 		}
@@ -46,7 +48,9 @@ func TestValidateInvalid(t *testing.T) {
 				mt := m.ProtoReflect().Type()
 				var opts piface.UnmarshalOptions
 				opts.Resolver = protoregistry.GlobalTypes
-				if got, want := impl.Validate(test.wire, mt, opts), impl.ValidationInvalid; got != want {
+				_, got := impl.Validate(test.wire, mt, opts)
+				want := impl.ValidationInvalid
+				if got != want {
 					t.Errorf("Validate(%x) = %v, want %v", test.wire, got, want)
 				}
 			})

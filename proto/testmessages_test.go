@@ -28,6 +28,7 @@ type testProto struct {
 	checkFastInit    bool
 	unmarshalOptions proto.UnmarshalOptions
 	validationStatus impl.ValidationStatus
+	nocheckValidInit bool
 }
 
 func makeMessages(in protobuild.Message, messages ...proto.Message) []proto.Message {
@@ -1045,8 +1046,9 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc:          "required field in optional message set (split across multiple tags)",
-		checkFastInit: false, // fast init checks don't handle split messages
+		desc:             "required field in optional message set (split across multiple tags)",
+		checkFastInit:    false, // fast init checks don't handle split messages
+		nocheckValidInit: true,  // validation doesn't either
 		decodeTo: makeMessages(protobuild.Message{
 			"optional_message": protobuild.Message{
 				"required_field": 1,
@@ -1058,7 +1060,6 @@ var testValidMessages = []testProto{
 				pack.Tag{1, pack.VarintType}, pack.Varint(1),
 			}),
 		}.Marshal(),
-		validationStatus: impl.ValidationValidMaybeUninitalized,
 	},
 	{
 		desc:          "required field in repeated message unset",
