@@ -4,6 +4,8 @@
 
 syntax = "proto2";
 
+package goproto.proto.testrequired;
+
 message Int32 {
   required int32 v = 1;
 }
