@@ -38,6 +38,7 @@ func Test(t *testing.T, fuzz func(b []byte) int) {
 			if err != nil {
 				t.Fatal(err)
 			}
+			b = b[:len(b):len(b)] // set cap to len
 			fuzz(b)
 		})
 	}
