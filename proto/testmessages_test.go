@@ -1853,6 +1853,17 @@ var testInvalidMessages = []testProto{
 			pack.Raw("\xff\xff\xff\xff\xff\xff\xff\xff\xff\x02"),
 		}.Marshal(),
 	},
+	{
+		desc: "varint length overrun",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+		},
+		wire: pack.Message{
+			pack.Tag{1, pack.VarintType},
+			pack.Raw("\xff\xff\xff\xff\xff\xff\xff\xff\xff"),
+		}.Marshal(),
+	},
 }
 
 type filterResolver struct {

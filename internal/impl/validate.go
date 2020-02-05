@@ -353,7 +353,7 @@ State:
 
 			switch wtyp {
 			case wire.VarintType:
-				if len(b) >= 9 {
+				if len(b) >= 10 {
 					switch {
 					case b[0] < 0x80:
 						b = b[1:]
