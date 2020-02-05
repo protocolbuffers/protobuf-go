@@ -462,6 +462,30 @@ func TestDecoder(t *testing.T) {
 			want: []R{{E: "invalid type URL/extension field name: [proto.package/"}},
 		},
 		{
+			in: `message_field{[bad@]`,
+			want: []R{
+				{K: text.Name},
+				{K: text.MessageOpen},
+				{E: `invalid type URL/extension field name: [bad@`},
+			},
+		},
+		{
+			in: `message_field{[invalid//type]`,
+			want: []R{
+				{K: text.Name},
+				{K: text.MessageOpen},
+				{E: `invalid type URL/extension field name: [invalid//`},
+			},
+		},
+		{
+			in: `message_field{[proto.package.]`,
+			want: []R{
+				{K: text.Name},
+				{K: text.MessageOpen},
+				{E: `invalid type URL/extension field name: [proto.package.`},
+			},
+		},
+		{
 			in:   "[proto.package",
 			want: []R{{E: eofErr}},
 		},
@@ -1538,7 +1562,8 @@ m: {
 	for _, tc := range tests {
 		t.Run("", func(t *testing.T) {
 			tc := tc
-			dec := text.NewDecoder([]byte(tc.in))
+			in := []byte(tc.in)
+			dec := text.NewDecoder(in[:len(in):len(in)])
 			for i, want := range tc.want {
 				peekTok, peekErr := dec.Peek()
 				tok, err := dec.Read()

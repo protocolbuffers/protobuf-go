@@ -449,7 +449,7 @@ func (d *Decoder) parseTypeName() (Token, error) {
 		case s[0] == '/', s[0] == '.':
 			if len(name) > 0 && (name[len(name)-1] == '/' || name[len(name)-1] == '.') {
 				return Token{}, d.newSyntaxError("invalid type URL/extension field name: %s",
-					d.in[startPos:len(d.orig)-len(s)+1])
+					d.orig[startPos:len(d.orig)-len(s)+1])
 			}
 			name = append(name, s[0])
 			s = s[1:]
@@ -462,7 +462,7 @@ func (d *Decoder) parseTypeName() (Token, error) {
 
 		default:
 			return Token{}, d.newSyntaxError(
-				"invalid type URL/extension field name: %s", d.in[startPos:len(d.orig)-len(s)+1])
+				"invalid type URL/extension field name: %s", d.orig[startPos:len(d.orig)-len(s)+1])
 		}
 	}
 
@@ -474,7 +474,7 @@ func (d *Decoder) parseTypeName() (Token, error) {
 	size := len(name)
 	if size == 0 || name[0] == '.' || name[size-1] == '.' || name[size-1] == '/' {
 		return Token{}, d.newSyntaxError("invalid type URL/extension field name: %s",
-			d.in[startPos:len(d.orig)-len(s)])
+			d.orig[startPos:len(d.orig)-len(s)])
 	}
 
 	d.in = s
