@@ -434,6 +434,9 @@ State:
 					vi.mi.init()
 					fallthrough
 				case validationTypeMap:
+					if vi.mi != nil {
+						vi.mi.init()
+					}
 					states = append(states, validationState{
 						typ:     vi.typ,
 						keyType: vi.keyType,
