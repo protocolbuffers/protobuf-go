@@ -733,6 +733,15 @@ func TestDecoder(t *testing.T) {
 			},
 		},
 		{
+			in: `name: [0`,
+			want: []R{
+				{K: text.Name},
+				{K: text.ListOpen},
+				{K: text.Scalar},
+				{E: eofErr},
+			},
+		},
+		{
 			in: `name: [` + space + `"hello"` + space + `]` + space,
 			want: []R{
 				{K: text.Name},

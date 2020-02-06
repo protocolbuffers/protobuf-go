@@ -166,6 +166,9 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 
 		case ListOpen:
 			// Next token can be ListClose or comma.
+			if isEOF {
+				return Token{}, io.ErrUnexpectedEOF
+			}
 			switch ch := d.in[0]; ch {
 			case ']':
 				d.popOpenStack()
