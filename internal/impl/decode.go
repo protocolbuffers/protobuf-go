@@ -30,9 +30,11 @@ func (o unmarshalOptions) Options() proto.UnmarshalOptions {
 func (o unmarshalOptions) DiscardUnknown() bool { return o.Flags&piface.UnmarshalDiscardUnknown != 0 }
 
 func (o unmarshalOptions) IsDefault() bool {
-	// The UnmarshalDefaultResolver flag indicates that we're using the default resolver.
-	// No other flag bit should be set.
-	return o.Flags == piface.UnmarshalDefaultResolver
+	return o.Flags == 0 && o.Resolver == preg.GlobalTypes
+}
+
+var lazyUnmarshalOptions = unmarshalOptions{
+	Resolver: preg.GlobalTypes,
 }
 
 type unmarshalOutput struct {

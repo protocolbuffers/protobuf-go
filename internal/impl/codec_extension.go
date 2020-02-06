@@ -136,7 +136,7 @@ func (f *ExtensionField) lazyInit() {
 			wtyp := wire.Type(tag & 7)
 			var out unmarshalOutput
 			var err error
-			val, out, err = f.lazy.xi.funcs.unmarshal(b, val, num, wtyp, unmarshalOptions{})
+			val, out, err = f.lazy.xi.funcs.unmarshal(b, val, num, wtyp, lazyUnmarshalOptions)
 			if err != nil {
 				panic(errors.New("decode failure in lazy extension decoding: %v", err))
 			}
@@ -226,4 +226,35 @@ func (f *ExtensionField) SetLazyValue(fn func() interface{}) {
 	f.SetLazy(f.typ, func() pref.Value {
 		return f.typ.ValueOf(fn())
 	})
+}
+
+// IsLazy reports whether a field is lazily encoded.
+// It is exported for testing.
+func IsLazy(m pref.Message, fd pref.FieldDescriptor) bool {
+	var mi *MessageInfo
+	var p pointer
+	switch m := m.(type) {
+	case *messageState:
+		mi = m.messageInfo()
+		p = m.pointer()
+	case *messageReflectWrapper:
+		mi = m.messageInfo()
+		p = m.pointer()
+	default:
+		return false
+	}
+	xd, ok := fd.(pref.ExtensionTypeDescriptor)
+	if !ok {
+		return false
+	}
+	xt := xd.Type()
+	ext := mi.extensionMap(p)
+	if ext == nil {
+		return false
+	}
+	f, ok := (*ext)[int32(fd.Number())]
+	if !ok {
+		return false
+	}
+	return f.typ == xt && f.lazy != nil && atomic.LoadUint32(&f.lazy.atomicOnce) == 0
 }
