@@ -93,7 +93,7 @@ func (e *Encoder) EndMessage() {
 	e.out = append(e.out, e.delims[1])
 }
 
-// Writname writes out the field name and the separator ':'.
+// WriteName writes out the field name and the separator ':'.
 func (e *Encoder) WriteName(s string) {
 	e.prepareNext(name)
 	e.out = append(e.out, s...)

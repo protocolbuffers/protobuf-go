@@ -45,6 +45,9 @@ func NewDecoder(b []byte) *Decoder {
 	return &Decoder{orig: b, in: b}
 }
 
+// ErrUnexpectedEOF means that EOF was encountered in the middle of the input.
+var ErrUnexpectedEOF = errors.New("%v", io.ErrUnexpectedEOF)
+
 // call specifies which Decoder method was invoked.
 type call uint8
 
@@ -70,7 +73,7 @@ func (d *Decoder) Read() (Token, error) {
 		return d.lastToken, d.lastErr
 	}
 
-	tok, err := d.parseNext(d.lastToken.Kind())
+	tok, err := d.parseNext(d.lastToken.kind)
 	if err != nil {
 		return Token{}, err
 	}
@@ -114,7 +117,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 	case Name:
 		// Next token can be MessageOpen, ListOpen or Scalar.
 		if isEOF {
-			return Token{}, io.ErrUnexpectedEOF
+			return Token{}, ErrUnexpectedEOF
 		}
 		switch ch := d.in[0]; ch {
 		case '{', '<':
@@ -148,7 +151,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 		case MessageOpen:
 			// Next token can be MessageClose, comma, semicolon or Name.
 			if isEOF {
-				return Token{}, io.ErrUnexpectedEOF
+				return Token{}, ErrUnexpectedEOF
 			}
 			switch ch := d.in[0]; ch {
 			case closeCh:
@@ -167,7 +170,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 		case ListOpen:
 			// Next token can be ListClose or comma.
 			if isEOF {
-				return Token{}, io.ErrUnexpectedEOF
+				return Token{}, ErrUnexpectedEOF
 			}
 			switch ch := d.in[0]; ch {
 			case ']':
@@ -183,7 +186,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 	case MessageOpen:
 		// Next token can be MessageClose or Name.
 		if isEOF {
-			return Token{}, io.ErrUnexpectedEOF
+			return Token{}, ErrUnexpectedEOF
 		}
 		_, closeCh := d.currentOpenKind()
 		switch ch := d.in[0]; ch {
@@ -217,7 +220,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 		case MessageOpen:
 			// Next token can be MessageClose, comma, semicolon or Name.
 			if isEOF {
-				return Token{}, io.ErrUnexpectedEOF
+				return Token{}, ErrUnexpectedEOF
 			}
 			switch ch := d.in[0]; ch {
 			case closeCh:
@@ -236,7 +239,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 		case ListOpen:
 			// Next token can be ListClose or comma
 			if isEOF {
-				return Token{}, io.ErrUnexpectedEOF
+				return Token{}, ErrUnexpectedEOF
 			}
 			switch ch := d.in[0]; ch {
 			case closeCh:
@@ -252,7 +255,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 	case ListOpen:
 		// Next token can be ListClose, MessageStart or Scalar.
 		if isEOF {
-			return Token{}, io.ErrUnexpectedEOF
+			return Token{}, ErrUnexpectedEOF
 		}
 		switch ch := d.in[0]; ch {
 		case ']':
@@ -286,7 +289,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 		case MessageOpen:
 			// Next token can be MessageClose, comma, semicolon or Name.
 			if isEOF {
-				return Token{}, io.ErrUnexpectedEOF
+				return Token{}, ErrUnexpectedEOF
 			}
 			switch ch := d.in[0]; ch {
 			case closeCh:
@@ -319,7 +322,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 		case MessageOpen:
 			// Next token can be MessageClose or Name.
 			if isEOF {
-				return Token{}, io.ErrUnexpectedEOF
+				return Token{}, ErrUnexpectedEOF
 			}
 			switch ch := d.in[0]; ch {
 			case closeCh:
@@ -340,7 +343,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 			}
 			// Next token can be MessageOpen or Scalar.
 			if isEOF {
-				return Token{}, io.ErrUnexpectedEOF
+				return Token{}, ErrUnexpectedEOF
 			}
 			switch ch := d.in[0]; ch {
 			case '{', '<':
@@ -432,7 +435,7 @@ func (d *Decoder) parseTypeName() (Token, error) {
 	// Caller already checks for [ as first character.
 	s := consume(d.in[1:], 0)
 	if len(s) == 0 {
-		return Token{}, io.ErrUnexpectedEOF
+		return Token{}, ErrUnexpectedEOF
 	}
 
 	var name []byte
@@ -470,7 +473,7 @@ func (d *Decoder) parseTypeName() (Token, error) {
 	}
 
 	if !closed {
-		return Token{}, io.ErrUnexpectedEOF
+		return Token{}, ErrUnexpectedEOF
 	}
 
 	// First character cannot be '.'. Last character cannot be '.' or '/'.

@@ -6,7 +6,6 @@ package text
 
 import (
 	"bytes"
-	"io"
 	"strconv"
 	"strings"
 	"unicode"
@@ -51,7 +50,7 @@ func (d *Decoder) parseStringValue() (Token, error) {
 func (d *Decoder) parseString() (string, error) {
 	in := d.in
 	if len(in) == 0 {
-		return "", io.ErrUnexpectedEOF
+		return "", ErrUnexpectedEOF
 	}
 	quote := in[0]
 	in = in[1:]
@@ -69,7 +68,7 @@ func (d *Decoder) parseString() (string, error) {
 			return string(out), nil
 		case r == '\\':
 			if len(in) < 2 {
-				return "", io.ErrUnexpectedEOF
+				return "", ErrUnexpectedEOF
 			}
 			switch r := in[1]; r {
 			case '"', '\'', '\\', '?':
@@ -117,7 +116,7 @@ func (d *Decoder) parseString() (string, error) {
 					n = 10
 				}
 				if len(in) < n {
-					return "", io.ErrUnexpectedEOF
+					return "", ErrUnexpectedEOF
 				}
 				v, err := strconv.ParseUint(string(in[2:n]), 16, 32)
 				if utf8.MaxRune < v || err != nil {
@@ -128,7 +127,7 @@ func (d *Decoder) parseString() (string, error) {
 				r := rune(v)
 				if utf16.IsSurrogate(r) {
 					if len(in) < 6 {
-						return "", io.ErrUnexpectedEOF
+						return "", ErrUnexpectedEOF
 					}
 					v, err := strconv.ParseUint(string(in[2:6]), 16, 16)
 					r = utf16.DecodeRune(r, rune(v))
@@ -146,7 +145,7 @@ func (d *Decoder) parseString() (string, error) {
 			in, out = in[n+i:], append(out, in[:n+i]...)
 		}
 	}
-	return "", io.ErrUnexpectedEOF
+	return "", ErrUnexpectedEOF
 }
 
 // indexNeedEscapeInString returns the index of the character that needs

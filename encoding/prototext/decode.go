@@ -6,7 +6,6 @@ package prototext
 
 import (
 	"fmt"
-	"io"
 	"strings"
 	"unicode/utf8"
 
@@ -131,7 +130,7 @@ func (d decoder) unmarshalMessage(m pref.Message, checkDelims bool) error {
 			// Continue below.
 		case text.EOF:
 			if checkDelims {
-				return io.ErrUnexpectedEOF
+				return text.ErrUnexpectedEOF
 			}
 			return nil
 		default:

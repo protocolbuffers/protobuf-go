@@ -6,7 +6,6 @@ package text_test
 
 import (
 	"fmt"
-	"io"
 	"math"
 	"strings"
 	"testing"
@@ -17,7 +16,7 @@ import (
 	"google.golang.org/protobuf/internal/flags"
 )
 
-var eofErr = io.ErrUnexpectedEOF.Error()
+var eofErr = text.ErrUnexpectedEOF.Error()
 
 type R struct {
 	// K is expected Kind of the returned Token object from calling Decoder.Read.

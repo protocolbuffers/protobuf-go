@@ -1,6 +1,7 @@
 // Copyright 2018 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+
 package text
 
 import (
@@ -16,6 +17,7 @@ import (
 // Kind represents a token kind expressible in the textproto format.
 type Kind uint8
 
+// Kind values.
 const (
 	Invalid Kind = iota
 	EOF
@@ -65,6 +67,7 @@ func (t Kind) String() string {
 // NameKind represents different types of field names.
 type NameKind uint8
 
+// NameKind values.
 const (
 	IdentName NameKind = iota + 1
 	TypeName
