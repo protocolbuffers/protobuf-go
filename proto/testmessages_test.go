@@ -1007,6 +1007,39 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc:          "required message unset",
+		checkFastInit: true,
+		partial:       true,
+		decodeTo:      makeMessages(protobuild.Message{}, &requiredpb.Message{}),
+	},
+	{
+		desc:          "required message set",
+		checkFastInit: true,
+		decodeTo: makeMessages(protobuild.Message{
+			"v": protobuild.Message{},
+		}, &requiredpb.Message{}),
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
+		}.Marshal(),
+	},
+	{
+		desc:          "required group unset",
+		checkFastInit: true,
+		partial:       true,
+		decodeTo:      makeMessages(protobuild.Message{}, &requiredpb.Group{}),
+	},
+	{
+		desc:          "required group set",
+		checkFastInit: true,
+		decodeTo: makeMessages(protobuild.Message{
+			"group": protobuild.Message{},
+		}, &requiredpb.Group{}),
+		wire: pack.Message{
+			pack.Tag{1, pack.StartGroupType},
+			pack.Tag{1, pack.EndGroupType},
+		}.Marshal(),
+	},
+	{
 		desc:          "required field with incompatible wire type",
 		checkFastInit: true,
 		partial:       true,

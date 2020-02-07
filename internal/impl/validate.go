@@ -343,8 +343,10 @@ State:
 					ok = wtyp == wire.Fixed32Type
 				case validationTypeFixed64:
 					ok = wtyp == wire.Fixed64Type
-				case validationTypeBytes, validationTypeUTF8String, validationTypeMessage, validationTypeGroup:
+				case validationTypeBytes, validationTypeUTF8String, validationTypeMessage:
 					ok = wtyp == wire.BytesType
+				case validationTypeGroup:
+					ok = wtyp == wire.StartGroupType
 				}
 				if ok {
 					st.requiredMask |= vi.requiredBit
