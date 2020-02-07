@@ -99,7 +99,7 @@ func Unmarshal(b []byte, wantLen bool, fn func(typeID wire.Number, value []byte)
 			b = b[n:]
 			continue
 		}
-		typeID, value, n, err := consumeFieldValue(b, wantLen)
+		typeID, value, n, err := ConsumeFieldValue(b, wantLen)
 		if err != nil {
 			return err
 		}
@@ -114,13 +114,13 @@ func Unmarshal(b []byte, wantLen bool, fn func(typeID wire.Number, value []byte)
 	return nil
 }
 
-// consumeFieldValue parses b as a MessageSet item field value until and including
+// ConsumeFieldValue parses b as a MessageSet item field value until and including
 // the trailing end group marker. It assumes the start group tag has already been parsed.
 // It returns the contents of the type_id and message subfields and the total
 // item length.
 //
 // If wantLen is true, the returned message value includes the length prefix.
-func consumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []byte, n int, err error) {
+func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []byte, n int, err error) {
 	ilen := len(b)
 	for {
 		num, wtyp, n := wire.ConsumeTag(b)

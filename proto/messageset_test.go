@@ -8,7 +8,6 @@ import (
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/flags"
-	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
 
 	messagesetpb "google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
@@ -41,7 +40,6 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet type_id after message content",
@@ -62,7 +60,6 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet does not preserve unknown field",
@@ -82,7 +79,6 @@ var messageSetTestProtos = []testProto{
 			// Unknown field
 			pack.Tag{4, pack.VarintType}, pack.Varint(30),
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with unknown type_id",
@@ -102,7 +98,6 @@ var messageSetTestProtos = []testProto{
 			}),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet merges repeated message fields in item",
@@ -124,7 +119,6 @@ var messageSetTestProtos = []testProto{
 			}),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet merges message fields in repeated items",
@@ -161,7 +155,6 @@ var messageSetTestProtos = []testProto{
 			}),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with missing type_id",
@@ -175,7 +168,6 @@ var messageSetTestProtos = []testProto{
 			}),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with missing message",
@@ -188,7 +180,6 @@ var messageSetTestProtos = []testProto{
 			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
 			pack.Tag{1, pack.EndGroupType},
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with type id out of valid field number range",
@@ -205,7 +196,6 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc: "MessageSet with unknown type id out of valid field number range",
@@ -226,7 +216,6 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc:          "MessageSet with required field set",
@@ -248,7 +237,6 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 	{
 		desc:          "MessageSet with required field unset",
@@ -267,6 +255,5 @@ var messageSetTestProtos = []testProto{
 				pack.Tag{1, pack.EndGroupType},
 			}),
 		}.Marshal(),
-		validationStatus: impl.ValidationUnknown,
 	},
 }

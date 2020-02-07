@@ -11,6 +11,7 @@ import (
 	"reflect"
 	"unicode/utf8"
 
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/strs"
@@ -93,6 +94,7 @@ const (
 	validationTypeFixed64
 	validationTypeBytes
 	validationTypeUTF8String
+	validationTypeMessageSetItem
 )
 
 func newFieldValidationInfo(mi *MessageInfo, si structInfo, fd pref.FieldDescriptor, ft reflect.Type) validationInfo {
@@ -237,11 +239,6 @@ func (mi *MessageInfo) validate(b []byte, groupTag wire.Number, opts unmarshalOp
 State:
 	for len(states) > 0 {
 		st := &states[len(states)-1]
-		if st.mi != nil {
-			if flags.ProtoLegacy && st.mi.isMessageSet {
-				return out, ValidationUnknown
-			}
-		}
 		for len(b) > 0 {
 			// Parse the tag (field number and wire type).
 			var tag uint64
@@ -274,8 +271,8 @@ State:
 				return out, ValidationInvalid
 			}
 			var vi validationInfo
-			switch st.typ {
-			case validationTypeMap:
+			switch {
+			case st.typ == validationTypeMap:
 				switch num {
 				case 1:
 					vi.typ = st.keyType
@@ -283,6 +280,11 @@ State:
 					vi.typ = st.valType
 					vi.mi = st.mi
 					vi.requiredBit = 1
+				}
+			case flags.ProtoLegacy && st.mi.isMessageSet:
+				switch num {
+				case messageset.FieldItem:
+					vi.typ = validationTypeMessageSetItem
 				}
 			default:
 				var f *coderFieldInfo
@@ -483,8 +485,8 @@ State:
 				}
 				b = b[8:]
 			case wire.StartGroupType:
-				switch vi.typ {
-				case validationTypeGroup:
+				switch {
+				case vi.typ == validationTypeGroup:
 					if vi.mi == nil {
 						return out, ValidationUnknown
 					}
@@ -495,6 +497,27 @@ State:
 						endGroup: num,
 					})
 					continue State
+				case flags.ProtoLegacy && vi.typ == validationTypeMessageSetItem:
+					typeid, v, n, err := messageset.ConsumeFieldValue(b, false)
+					if err != nil {
+						return out, ValidationInvalid
+					}
+					xt, err := opts.Resolver.FindExtensionByNumber(st.mi.Desc.FullName(), typeid)
+					switch {
+					case err == preg.NotFound:
+						b = b[n:]
+					case err != nil:
+						return out, ValidationUnknown
+					default:
+						xvi := getExtensionFieldInfo(xt).validation
+						states = append(states, validationState{
+							typ:  xvi.typ,
+							mi:   xvi.mi,
+							tail: b[n:],
+						})
+						b = v
+						continue State
+					}
 				default:
 					n := wire.ConsumeFieldValue(num, wtyp, b)
 					if n < 0 {
