@@ -821,6 +821,46 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc: "oneof (group)",
+		decodeTo: makeMessages(protobuild.Message{
+			"oneofgroup": protobuild.Message{
+				"a": 1,
+			},
+		}, &testpb.TestAllTypes{}),
+		wire: pack.Message{
+			pack.Tag{121, pack.StartGroupType},
+			pack.Tag{1, pack.VarintType}, pack.Varint(1),
+			pack.Tag{121, pack.EndGroupType},
+		}.Marshal(),
+	},
+	{
+		desc: "oneof (empty group)",
+		decodeTo: makeMessages(protobuild.Message{
+			"oneofgroup": protobuild.Message{},
+		}, &testpb.TestAllTypes{}),
+		wire: pack.Message{
+			pack.Tag{121, pack.StartGroupType},
+			pack.Tag{121, pack.EndGroupType},
+		}.Marshal(),
+	},
+	{
+		desc: "oneof (merged group)",
+		decodeTo: makeMessages(protobuild.Message{
+			"oneofgroup": protobuild.Message{
+				"a": 1,
+				"b": 2,
+			},
+		}, &testpb.TestAllTypes{}),
+		wire: pack.Message{
+			pack.Tag{121, pack.StartGroupType},
+			pack.Tag{1, pack.VarintType}, pack.Varint(1),
+			pack.Tag{121, pack.EndGroupType},
+			pack.Tag{121, pack.StartGroupType},
+			pack.Tag{2, pack.VarintType}, pack.Varint(2),
+			pack.Tag{121, pack.EndGroupType},
+		}.Marshal(),
+	},
+	{
 		desc: "oneof (string)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_string": "1113",

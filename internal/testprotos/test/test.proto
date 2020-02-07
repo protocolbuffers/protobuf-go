@@ -126,6 +126,10 @@ message TestAllTypes {
     float         oneof_float          = 117;
     double        oneof_double         = 118;
     NestedEnum    oneof_enum           = 119;
+    group OneofGroup = 121 {
+      optional int32 a = 1;
+      optional int32 b = 2;
+    }
   }
 
   // A oneof with exactly one field.
