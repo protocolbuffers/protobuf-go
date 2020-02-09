@@ -35,13 +35,15 @@ type coderMessageInfo struct {
 
 type coderFieldInfo struct {
 	funcs      pointerCoderFuncs // fast-path per-field functions
-	validation validationInfo    // information used by message validation
-	num        pref.FieldNumber  // field number
-	offset     offset            // struct field offset
-	wiretag    uint64            // field tag (number + wire type)
-	tagsize    int               // size of the varint-encoded tag
-	isPointer  bool              // true if IsNil may be called on the struct field
-	isRequired bool              // true if field is required
+	mi         *MessageInfo      // field's message
+	ft         reflect.Type
+	validation validationInfo   // information used by message validation
+	num        pref.FieldNumber // field number
+	offset     offset           // struct field offset
+	wiretag    uint64           // field tag (number + wire type)
+	tagsize    int              // size of the varint-encoded tag
+	isPointer  bool             // true if IsNil may be called on the struct field
+	isRequired bool             // true if field is required
 }
 
 func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
@@ -67,6 +69,7 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		}
 		var fieldOffset offset
 		var funcs pointerCoderFuncs
+		var childMessage *MessageInfo
 		switch {
 		case fd.ContainingOneof() != nil:
 			fieldOffset = offsetOf(fs, mi.Exporter)
@@ -75,14 +78,16 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 			funcs = makeWeakMessageFieldCoder(fd)
 		default:
 			fieldOffset = offsetOf(fs, mi.Exporter)
-			funcs = fieldCoder(fd, ft)
+			childMessage, funcs = fieldCoder(fd, ft)
 		}
 		cf := &coderFieldInfo{
 			num:        fd.Number(),
 			offset:     fieldOffset,
 			wiretag:    wiretag,
+			ft:         ft,
 			tagsize:    wire.SizeVarint(wiretag),
 			funcs:      funcs,
+			mi:         childMessage,
 			validation: newFieldValidationInfo(mi, si, fd, ft),
 			isPointer: (fd.Cardinality() == pref.Repeated ||
 				fd.Kind() == pref.MessageKind ||

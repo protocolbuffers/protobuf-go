@@ -29,31 +29,28 @@ func (errInvalidUTF8) InvalidUTF8() bool { return true }
 //
 // The unmarshal function is set on each field individually as usual.
 func (mi *MessageInfo) initOneofFieldCoders(od pref.OneofDescriptor, si structInfo) {
-	type oneofFieldInfo struct {
-		wiretag uint64 // field tag (number + wire type)
-		tagsize int    // size of the varint-encoded tag
-		funcs   pointerCoderFuncs
-	}
 	fs := si.oneofsByName[od.Name()]
 	ft := fs.Type
-	oneofFields := make(map[reflect.Type]*oneofFieldInfo)
+	oneofFields := make(map[reflect.Type]*coderFieldInfo)
 	needIsInit := false
 	fields := od.Fields()
 	for i, lim := 0, fields.Len(); i < lim; i++ {
 		fd := od.Fields().Get(i)
 		num := fd.Number()
-		cf := mi.coderFields[num]
+		// Make a copy of the original coderFieldInfo for use in unmarshaling.
+		//
+		// oneofFields[oneofType].funcs.marshal is the field-specific marshal function.
+		//
+		// mi.coderFields[num].marshal is set on only the first field in the oneof,
+		// and dispatches to the field-specific marshaler in oneofFields.
+		cf := *mi.coderFields[num]
 		ot := si.oneofWrappersByNumber[num]
-		funcs := fieldCoder(fd, ot.Field(0).Type)
-		oneofFields[ot] = &oneofFieldInfo{
-			wiretag: cf.wiretag,
-			tagsize: cf.tagsize,
-			funcs:   funcs,
-		}
-		if funcs.isInit != nil {
+		cf.mi, cf.funcs = fieldCoder(fd, ot.Field(0).Type)
+		oneofFields[ot] = &cf
+		if cf.funcs.isInit != nil {
 			needIsInit = true
 		}
-		cf.funcs.unmarshal = func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
+		mi.coderFields[num].funcs.unmarshal = func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			var vw reflect.Value         // pointer to wrapper type
 			vi := p.AsValueOf(ft).Elem() // oneof field value of interface kind
 			if !vi.IsNil() && !vi.Elem().IsNil() && vi.Elem().Elem().Type() == ot {
@@ -61,7 +58,7 @@ func (mi *MessageInfo) initOneofFieldCoders(od pref.OneofDescriptor, si structIn
 			} else {
 				vw = reflect.New(ot)
 			}
-			out, err := funcs.unmarshal(b, pointerOfValue(vw).Apply(zeroOffset), wtyp, opts)
+			out, err := cf.funcs.unmarshal(b, pointerOfValue(vw).Apply(zeroOffset), wtyp, &cf, opts)
 			if err != nil {
 				return out, err
 			}
@@ -69,7 +66,7 @@ func (mi *MessageInfo) initOneofFieldCoders(od pref.OneofDescriptor, si structIn
 			return out, nil
 		}
 	}
-	getInfo := func(p pointer) (pointer, *oneofFieldInfo) {
+	getInfo := func(p pointer) (pointer, *coderFieldInfo) {
 		v := p.AsValueOf(ft).Elem()
 		if v.IsNil() {
 			return pointer{}, nil
@@ -81,27 +78,27 @@ func (mi *MessageInfo) initOneofFieldCoders(od pref.OneofDescriptor, si structIn
 		return pointerOfValue(v).Apply(zeroOffset), oneofFields[v.Elem().Type()]
 	}
 	first := mi.coderFields[od.Fields().Get(0).Number()]
-	first.funcs.size = func(p pointer, tagsize int, opts marshalOptions) int {
+	first.funcs.size = func(p pointer, _ *coderFieldInfo, opts marshalOptions) int {
 		p, info := getInfo(p)
 		if info == nil || info.funcs.size == nil {
 			return 0
 		}
-		return info.funcs.size(p, info.tagsize, opts)
+		return info.funcs.size(p, info, opts)
 	}
-	first.funcs.marshal = func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
+	first.funcs.marshal = func(b []byte, p pointer, _ *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 		p, info := getInfo(p)
 		if info == nil || info.funcs.marshal == nil {
 			return b, nil
 		}
-		return info.funcs.marshal(b, p, info.wiretag, opts)
+		return info.funcs.marshal(b, p, info, opts)
 	}
 	if needIsInit {
-		first.funcs.isInit = func(p pointer) error {
+		first.funcs.isInit = func(p pointer, _ *coderFieldInfo) error {
 			p, info := getInfo(p)
 			if info == nil || info.funcs.isInit == nil {
 				return nil
 			}
-			return info.funcs.isInit(p)
+			return info.funcs.isInit(p, info)
 		}
 	}
 }
@@ -118,7 +115,7 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 
 	num := fd.Number()
 	return pointerCoderFuncs{
-		size: func(p pointer, tagsize int, opts marshalOptions) int {
+		size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
 			m, ok := p.WeakFields().get(num)
 			if !ok {
 				return 0
@@ -127,9 +124,9 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 			if messageType == nil {
 				panic(fmt.Sprintf("weak message %v is not linked in", fd.Message().FullName()))
 			}
-			return sizeMessage(m, tagsize, opts)
+			return sizeMessage(m, f.tagsize, opts)
 		},
-		marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
+		marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 			m, ok := p.WeakFields().get(num)
 			if !ok {
 				return b, nil
@@ -138,9 +135,9 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 			if messageType == nil {
 				panic(fmt.Sprintf("weak message %v is not linked in", fd.Message().FullName()))
 			}
-			return appendMessage(b, m, wiretag, opts)
+			return appendMessage(b, m, f.wiretag, opts)
 		},
-		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
+		unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			fs := p.WeakFields()
 			m, ok := fs.get(num)
 			if !ok {
@@ -153,7 +150,7 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 			}
 			return consumeMessage(b, m, wtyp, opts)
 		},
-		isInit: func(p pointer) error {
+		isInit: func(p pointer, f *coderFieldInfo) error {
 			m, ok := p.WeakFields().get(num)
 			if !ok {
 				return nil
@@ -166,40 +163,32 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	if mi := getMessageInfo(ft); mi != nil {
 		funcs := pointerCoderFuncs{
-			size: func(p pointer, tagsize int, opts marshalOptions) int {
-				return sizeMessageInfo(p, mi, tagsize, opts)
-			},
-			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-				return appendMessageInfo(b, p, wiretag, mi, opts)
-			},
-			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
-				return consumeMessageInfo(b, p, mi, wtyp, opts)
-			},
+			size:      sizeMessageInfo,
+			marshal:   appendMessageInfo,
+			unmarshal: consumeMessageInfo,
 		}
 		if needsInitCheck(mi.Desc) {
-			funcs.isInit = func(p pointer) error {
-				return mi.isInitializedPointer(p.Elem())
-			}
+			funcs.isInit = isInitMessageInfo
 		}
 		return funcs
 	} else {
 		return pointerCoderFuncs{
-			size: func(p pointer, tagsize int, opts marshalOptions) int {
+			size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
 				m := asMessage(p.AsValueOf(ft).Elem())
-				return sizeMessage(m, tagsize, opts)
+				return sizeMessage(m, f.tagsize, opts)
 			},
-			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
+			marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 				m := asMessage(p.AsValueOf(ft).Elem())
-				return appendMessage(b, m, wiretag, opts)
+				return appendMessage(b, m, f.wiretag, opts)
 			},
-			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
+			unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 				mp := p.AsValueOf(ft).Elem()
 				if mp.IsNil() {
 					mp.Set(reflect.New(ft.Elem()))
 				}
 				return consumeMessage(b, asMessage(mp), wtyp, opts)
 			},
-			isInit: func(p pointer) error {
+			isInit: func(p pointer, f *coderFieldInfo) error {
 				m := asMessage(p.AsValueOf(ft).Elem())
 				return proto.IsInitialized(m)
 			},
@@ -207,17 +196,17 @@ func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCode
 	}
 }
 
-func sizeMessageInfo(p pointer, mi *MessageInfo, tagsize int, opts marshalOptions) int {
-	return wire.SizeBytes(mi.sizePointer(p.Elem(), opts)) + tagsize
+func sizeMessageInfo(p pointer, f *coderFieldInfo, opts marshalOptions) int {
+	return wire.SizeBytes(f.mi.sizePointer(p.Elem(), opts)) + f.tagsize
 }
 
-func appendMessageInfo(b []byte, p pointer, wiretag uint64, mi *MessageInfo, opts marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(mi.sizePointer(p.Elem(), opts)))
-	return mi.marshalAppendPointer(b, p.Elem(), opts)
+func appendMessageInfo(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
+	b = wire.AppendVarint(b, f.wiretag)
+	b = wire.AppendVarint(b, uint64(f.mi.sizePointer(p.Elem(), opts)))
+	return f.mi.marshalAppendPointer(b, p.Elem(), opts)
 }
 
-func consumeMessageInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeMessageInfo(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != wire.BytesType {
 		return out, errUnknown
 	}
@@ -226,15 +215,19 @@ func consumeMessageInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Type, op
 		return out, wire.ParseError(n)
 	}
 	if p.Elem().IsNil() {
-		p.SetPointer(pointerOfValue(reflect.New(mi.GoReflectType.Elem())))
+		p.SetPointer(pointerOfValue(reflect.New(f.mi.GoReflectType.Elem())))
 	}
-	o, err := mi.unmarshalPointer(v, p.Elem(), 0, opts)
+	o, err := f.mi.unmarshalPointer(v, p.Elem(), 0, opts)
 	if err != nil {
 		return out, err
 	}
 	out.n = n
 	out.initialized = o.initialized
 	return out, nil
+}
+
+func isInitMessageInfo(p pointer, f *coderFieldInfo) error {
+	return f.mi.isInitializedPointer(p.Elem())
 }
 
 func sizeMessage(m proto.Message, tagsize int, _ marshalOptions) int {
@@ -321,40 +314,32 @@ func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderF
 	num := fd.Number()
 	if mi := getMessageInfo(ft); mi != nil {
 		funcs := pointerCoderFuncs{
-			size: func(p pointer, tagsize int, opts marshalOptions) int {
-				return sizeGroupType(p, mi, tagsize, opts)
-			},
-			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-				return appendGroupType(b, p, wiretag, mi, opts)
-			},
-			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
-				return consumeGroupType(b, p, mi, num, wtyp, opts)
-			},
+			size:      sizeGroupType,
+			marshal:   appendGroupType,
+			unmarshal: consumeGroupType,
 		}
 		if needsInitCheck(mi.Desc) {
-			funcs.isInit = func(p pointer) error {
-				return mi.isInitializedPointer(p.Elem())
-			}
+			funcs.isInit = isInitMessageInfo
 		}
 		return funcs
 	} else {
 		return pointerCoderFuncs{
-			size: func(p pointer, tagsize int, opts marshalOptions) int {
+			size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
 				m := asMessage(p.AsValueOf(ft).Elem())
-				return sizeGroup(m, tagsize, opts)
+				return sizeGroup(m, f.tagsize, opts)
 			},
-			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
+			marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 				m := asMessage(p.AsValueOf(ft).Elem())
-				return appendGroup(b, m, wiretag, opts)
+				return appendGroup(b, m, f.wiretag, opts)
 			},
-			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
+			unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 				mp := p.AsValueOf(ft).Elem()
 				if mp.IsNil() {
 					mp.Set(reflect.New(ft.Elem()))
 				}
 				return consumeGroup(b, asMessage(mp), num, wtyp, opts)
 			},
-			isInit: func(p pointer) error {
+			isInit: func(p pointer, f *coderFieldInfo) error {
 				m := asMessage(p.AsValueOf(ft).Elem())
 				return proto.IsInitialized(m)
 			},
@@ -362,25 +347,25 @@ func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderF
 	}
 }
 
-func sizeGroupType(p pointer, mi *MessageInfo, tagsize int, opts marshalOptions) int {
-	return 2*tagsize + mi.sizePointer(p.Elem(), opts)
+func sizeGroupType(p pointer, f *coderFieldInfo, opts marshalOptions) int {
+	return 2*f.tagsize + f.mi.sizePointer(p.Elem(), opts)
 }
 
-func appendGroupType(b []byte, p pointer, wiretag uint64, mi *MessageInfo, opts marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag) // start group
-	b, err := mi.marshalAppendPointer(b, p.Elem(), opts)
-	b = wire.AppendVarint(b, wiretag+1) // end group
+func appendGroupType(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
+	b = wire.AppendVarint(b, f.wiretag) // start group
+	b, err := f.mi.marshalAppendPointer(b, p.Elem(), opts)
+	b = wire.AppendVarint(b, f.wiretag+1) // end group
 	return b, err
 }
 
-func consumeGroupType(b []byte, p pointer, mi *MessageInfo, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeGroupType(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != wire.StartGroupType {
 		return out, errUnknown
 	}
 	if p.Elem().IsNil() {
-		p.SetPointer(pointerOfValue(reflect.New(mi.GoReflectType.Elem())))
+		p.SetPointer(pointerOfValue(reflect.New(f.mi.GoReflectType.Elem())))
 	}
-	return mi.unmarshalPointer(b, p.Elem(), num, opts)
+	return f.mi.unmarshalPointer(b, p.Elem(), f.num, opts)
 }
 
 func sizeGroup(m proto.Message, tagsize int, _ marshalOptions) int {
@@ -416,56 +401,48 @@ func consumeGroup(b []byte, m proto.Message, num wire.Number, wtyp wire.Type, op
 func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
 	if mi := getMessageInfo(ft); mi != nil {
 		funcs := pointerCoderFuncs{
-			size: func(p pointer, tagsize int, opts marshalOptions) int {
-				return sizeMessageSliceInfo(p, mi, tagsize, opts)
-			},
-			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-				return appendMessageSliceInfo(b, p, wiretag, mi, opts)
-			},
-			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
-				return consumeMessageSliceInfo(b, p, mi, wtyp, opts)
-			},
+			size:      sizeMessageSliceInfo,
+			marshal:   appendMessageSliceInfo,
+			unmarshal: consumeMessageSliceInfo,
 		}
 		if needsInitCheck(mi.Desc) {
-			funcs.isInit = func(p pointer) error {
-				return isInitMessageSliceInfo(p, mi)
-			}
+			funcs.isInit = isInitMessageSliceInfo
 		}
 		return funcs
 	}
 	return pointerCoderFuncs{
-		size: func(p pointer, tagsize int, opts marshalOptions) int {
-			return sizeMessageSlice(p, ft, tagsize, opts)
+		size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
+			return sizeMessageSlice(p, ft, f.tagsize, opts)
 		},
-		marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-			return appendMessageSlice(b, p, wiretag, ft, opts)
+		marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
+			return appendMessageSlice(b, p, f.wiretag, ft, opts)
 		},
-		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
+		unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			return consumeMessageSlice(b, p, ft, wtyp, opts)
 		},
-		isInit: func(p pointer) error {
+		isInit: func(p pointer, f *coderFieldInfo) error {
 			return isInitMessageSlice(p, ft)
 		},
 	}
 }
 
-func sizeMessageSliceInfo(p pointer, mi *MessageInfo, tagsize int, opts marshalOptions) int {
+func sizeMessageSliceInfo(p pointer, f *coderFieldInfo, opts marshalOptions) int {
 	s := p.PointerSlice()
 	n := 0
 	for _, v := range s {
-		n += wire.SizeBytes(mi.sizePointer(v, opts)) + tagsize
+		n += wire.SizeBytes(f.mi.sizePointer(v, opts)) + f.tagsize
 	}
 	return n
 }
 
-func appendMessageSliceInfo(b []byte, p pointer, wiretag uint64, mi *MessageInfo, opts marshalOptions) ([]byte, error) {
+func appendMessageSliceInfo(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 	s := p.PointerSlice()
 	var err error
 	for _, v := range s {
-		b = wire.AppendVarint(b, wiretag)
-		siz := mi.sizePointer(v, opts)
+		b = wire.AppendVarint(b, f.wiretag)
+		siz := f.mi.sizePointer(v, opts)
 		b = wire.AppendVarint(b, uint64(siz))
-		b, err = mi.marshalAppendPointer(b, v, opts)
+		b, err = f.mi.marshalAppendPointer(b, v, opts)
 		if err != nil {
 			return b, err
 		}
@@ -473,7 +450,7 @@ func appendMessageSliceInfo(b []byte, p pointer, wiretag uint64, mi *MessageInfo
 	return b, nil
 }
 
-func consumeMessageSliceInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeMessageSliceInfo(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != wire.BytesType {
 		return out, errUnknown
 	}
@@ -481,9 +458,9 @@ func consumeMessageSliceInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Typ
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
-	m := reflect.New(mi.GoReflectType.Elem()).Interface()
+	m := reflect.New(f.mi.GoReflectType.Elem()).Interface()
 	mp := pointerOfIface(m)
-	o, err := mi.unmarshalPointer(v, mp, 0, opts)
+	o, err := f.mi.unmarshalPointer(v, mp, 0, opts)
 	if err != nil {
 		return out, err
 	}
@@ -493,10 +470,10 @@ func consumeMessageSliceInfo(b []byte, p pointer, mi *MessageInfo, wtyp wire.Typ
 	return out, nil
 }
 
-func isInitMessageSliceInfo(p pointer, mi *MessageInfo) error {
+func isInitMessageSliceInfo(p pointer, f *coderFieldInfo) error {
 	s := p.PointerSlice()
 	for _, v := range s {
-		if err := mi.isInitializedPointer(v); err != nil {
+		if err := f.mi.isInitializedPointer(v); err != nil {
 			return err
 		}
 	}
@@ -689,34 +666,26 @@ func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerC
 	num := fd.Number()
 	if mi := getMessageInfo(ft); mi != nil {
 		funcs := pointerCoderFuncs{
-			size: func(p pointer, tagsize int, opts marshalOptions) int {
-				return sizeGroupSliceInfo(p, mi, tagsize, opts)
-			},
-			marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-				return appendGroupSliceInfo(b, p, wiretag, mi, opts)
-			},
-			unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
-				return consumeGroupSliceInfo(b, p, num, wtyp, mi, opts)
-			},
+			size:      sizeGroupSliceInfo,
+			marshal:   appendGroupSliceInfo,
+			unmarshal: consumeGroupSliceInfo,
 		}
 		if needsInitCheck(mi.Desc) {
-			funcs.isInit = func(p pointer) error {
-				return isInitMessageSliceInfo(p, mi)
-			}
+			funcs.isInit = isInitMessageSliceInfo
 		}
 		return funcs
 	}
 	return pointerCoderFuncs{
-		size: func(p pointer, tagsize int, opts marshalOptions) int {
-			return sizeGroupSlice(p, ft, tagsize, opts)
+		size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
+			return sizeGroupSlice(p, ft, f.tagsize, opts)
 		},
-		marshal: func(b []byte, p pointer, wiretag uint64, opts marshalOptions) ([]byte, error) {
-			return appendGroupSlice(b, p, wiretag, ft, opts)
+		marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
+			return appendGroupSlice(b, p, f.wiretag, ft, opts)
 		},
-		unmarshal: func(b []byte, p pointer, wtyp wire.Type, opts unmarshalOptions) (unmarshalOutput, error) {
+		unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			return consumeGroupSlice(b, p, num, wtyp, ft, opts)
 		},
-		isInit: func(p pointer) error {
+		isInit: func(p pointer, f *coderFieldInfo) error {
 			return isInitMessageSlice(p, ft)
 		},
 	}
@@ -768,36 +737,36 @@ func consumeGroupSlice(b []byte, p pointer, num wire.Number, wtyp wire.Type, goT
 	return out, nil
 }
 
-func sizeGroupSliceInfo(p pointer, mi *MessageInfo, tagsize int, opts marshalOptions) int {
+func sizeGroupSliceInfo(p pointer, f *coderFieldInfo, opts marshalOptions) int {
 	s := p.PointerSlice()
 	n := 0
 	for _, v := range s {
-		n += 2*tagsize + mi.sizePointer(v, opts)
+		n += 2*f.tagsize + f.mi.sizePointer(v, opts)
 	}
 	return n
 }
 
-func appendGroupSliceInfo(b []byte, p pointer, wiretag uint64, mi *MessageInfo, opts marshalOptions) ([]byte, error) {
+func appendGroupSliceInfo(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 	s := p.PointerSlice()
 	var err error
 	for _, v := range s {
-		b = wire.AppendVarint(b, wiretag) // start group
-		b, err = mi.marshalAppendPointer(b, v, opts)
+		b = wire.AppendVarint(b, f.wiretag) // start group
+		b, err = f.mi.marshalAppendPointer(b, v, opts)
 		if err != nil {
 			return b, err
 		}
-		b = wire.AppendVarint(b, wiretag+1) // end group
+		b = wire.AppendVarint(b, f.wiretag+1) // end group
 	}
 	return b, nil
 }
 
-func consumeGroupSliceInfo(b []byte, p pointer, num wire.Number, wtyp wire.Type, mi *MessageInfo, opts unmarshalOptions) (unmarshalOutput, error) {
+func consumeGroupSliceInfo(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 	if wtyp != wire.StartGroupType {
 		return unmarshalOutput{}, errUnknown
 	}
-	m := reflect.New(mi.GoReflectType.Elem()).Interface()
+	m := reflect.New(f.mi.GoReflectType.Elem()).Interface()
 	mp := pointerOfIface(m)
-	out, err := mi.unmarshalPointer(b, mp, num, opts)
+	out, err := f.mi.unmarshalPointer(b, mp, f.num, opts)
 	if err != nil {
 		return out, err
 	}

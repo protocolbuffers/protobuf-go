@@ -69,7 +69,7 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 		if f.isPointer && fptr.Elem().IsNil() {
 			continue
 		}
-		size += f.funcs.size(fptr, f.tagsize, opts)
+		size += f.funcs.size(fptr, f, opts)
 	}
 	if mi.unknownOffset.IsValid() {
 		u := *p.Apply(mi.unknownOffset).Bytes()
@@ -119,7 +119,7 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 		if f.isPointer && fptr.Elem().IsNil() {
 			continue
 		}
-		b, err = f.funcs.marshal(b, fptr, f.wiretag, opts)
+		b, err = f.funcs.marshal(b, fptr, f, opts)
 		if err != nil {
 			return b, err
 		}

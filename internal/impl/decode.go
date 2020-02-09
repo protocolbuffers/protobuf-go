@@ -120,7 +120,7 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 				break
 			}
 			var o unmarshalOutput
-			o, err = f.funcs.unmarshal(b, p.Apply(f.offset), wtyp, opts)
+			o, err = f.funcs.unmarshal(b, p.Apply(f.offset), wtyp, f, opts)
 			n = o.n
 			if err != nil {
 				break

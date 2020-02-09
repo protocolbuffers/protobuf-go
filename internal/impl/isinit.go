@@ -54,7 +54,7 @@ func (mi *MessageInfo) isInitializedPointer(p pointer) error {
 		if f.funcs.isInit == nil {
 			continue
 		}
-		if err := f.funcs.isInit(fptr); err != nil {
+		if err := f.funcs.isInit(fptr, f); err != nil {
 			return err
 		}
 	}
