@@ -32,7 +32,7 @@ var ignoreConflict = func(d protoreflect.Descriptor, err error) bool {
 	log.Printf(""+
 		"WARNING: %v\n"+
 		"A future release will panic on registration conflicts.\n"+
-		// TODO: Add a URL pointing to documentation on how to resolve conflicts.
+		// TODO(blocks): Add a URL pointing to documentation on how to resolve conflicts.
 		"\n", err)
 	return true
 }
@@ -396,27 +396,6 @@ var (
 // Types is a registry for looking up or iterating over descriptor types.
 // The Find and Range methods are safe for concurrent use.
 type Types struct {
-	// TODO: The syntax of the URL is ill-defined and the protobuf team recently
-	// changed the documented semantics in a way that breaks prior usages.
-	// I do not believe they can do this and need to sync up with the
-	// protobuf team again to hash out what the proper syntax of the URL is.
-
-	// TODO: Should we separate this out as a registry for each type?
-	//
-	// In Java, the extension and message registry are distinct classes.
-	// Their extension registry has knowledge of distinct Java types,
-	// while their message registry only contains descriptor information.
-	//
-	// In Go, we have always registered messages, enums, and extensions.
-	// Messages and extensions are registered with Go information, while enums
-	// are only registered with descriptor information. We cannot drop Go type
-	// information for messages otherwise we would be unable to implement
-	// portions of the v1 API such as ptypes.DynamicAny.
-	//
-	// There is no enum registry in Java. In v1, we used the enum registry
-	// because enum types provided no reflective methods. The addition of
-	// ProtoReflect removes that need.
-
 	typesByName         typesByName
 	extensionsByMessage extensionsByMessage
 

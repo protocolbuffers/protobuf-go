@@ -37,6 +37,9 @@ type MessageOptions struct {
 	}
 }
 
+// TODO(blocks): TestMessage should not take in MessageOptions,
+// but have a MessageOptions.Test method instead.
+
 // TestMessage runs the provided m through a series of tests
 // exercising the protobuf reflection API.
 func TestMessage(t testing.TB, m proto.Message, opts MessageOptions) {

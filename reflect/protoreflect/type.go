@@ -451,11 +451,6 @@ type ExtensionType interface {
 	// TypeDescriptor returns the extension type descriptor.
 	TypeDescriptor() ExtensionTypeDescriptor
 
-	// TODO: What to do with nil?
-	//	Should ValueOf(nil) return Value{}?
-	//	Should InterfaceOf(Value{}) return nil?
-	//	Similarly, should the Value.{Message,List,Map} also return nil?
-
 	// ValueOf wraps the input and returns it as a Value.
 	// ValueOf panics if the input value is invalid or not the appropriate type.
 	//

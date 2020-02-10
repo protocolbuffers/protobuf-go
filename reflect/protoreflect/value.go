@@ -90,8 +90,6 @@ type Message interface {
 	// of the value; to obtain a mutable reference, use Mutable.
 	Get(FieldDescriptor) Value
 
-	// TODO: Should Set of a empty, read-only value be equivalent to Clear?
-
 	// Set stores the value for a field.
 	//
 	// For a field belonging to a oneof, it implicitly clears any other field
@@ -157,8 +155,6 @@ type Message interface {
 	// "google.golang.org/protobuf/runtime/protoiface".Methods.
 	// Consult the protoiface package documentation for details.
 	ProtoMethods() *methods
-
-	// TODO: Add method to retrieve ExtensionType by FieldNumber?
 }
 
 // RawFields is the raw bytes for an ordered sequence of fields.
@@ -204,9 +200,7 @@ type List interface {
 	// Append is a mutating operation and unsafe for concurrent use.
 	Append(Value)
 
-	// TODO: Should there be a Mutable and MutableAppend method?
-
-	// TODO: Should truncate accept two indexes similar to slicing?
+	// TODO(blocks): Should there be a AppendMutable method?
 
 	// Truncate truncates the list to a smaller length.
 	//
@@ -264,7 +258,7 @@ type Map interface {
 	// Set is a mutating operation and unsafe for concurrent use.
 	Set(MapKey, Value)
 
-	// TODO: Should there be a Mutable method?
+	// TODO(blocks): Should there be a Mutable method?
 
 	// NewValue returns a new value assignable as a map value.
 	// For enums, this returns the first enum value.

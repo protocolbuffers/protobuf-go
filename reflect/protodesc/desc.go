@@ -67,7 +67,7 @@ func allowUnresolvable() option {
 // the path must be unique. The newly created file descriptor is not registered
 // back into the provided file registry.
 func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.FileDescriptor, error) {
-	// TODO: remove setting allowUnresolvable once naughty users are migrated.
+	// TODO(blocks): remove setting allowUnresolvable once naughty users are migrated.
 	return newFile(fd, r, allowUnresolvable())
 }
 func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (protoreflect.FileDescriptor, error) {
