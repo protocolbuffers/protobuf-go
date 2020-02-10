@@ -28,37 +28,40 @@ type Resolver interface {
 	FindDescriptorByName(protoreflect.FullName) (protoreflect.Descriptor, error)
 }
 
-// option is an optional argument that may be provided to NewFile.
-type option struct {
-	pragma.DoNotCompare
-	allowUnresolvable bool
-}
+// FileOptions configures the construction of file descriptors.
+type FileOptions struct {
+	pragma.NoUnkeyedLiterals
 
-// allowUnresolvable configures NewFile to permissively allow unresolvable
-// file, enum, or message dependencies. Unresolved dependencies are replaced by
-// placeholder equivalents.
-//
-// The following dependencies may be left unresolved:
-//	• Resolving an imported file.
-//	• Resolving the type for a message field or extension field.
-//	If the kind of the field is unknown, then a placeholder is used for both
-//	protoreflect.FieldDescriptor.Enum and protoreflect.FieldDescriptor.Message.
-//	• Resolving the enum value set as the default for an optional enum field.
-//	If unresolvable, the protoreflect.FieldDescriptor.Default is set to the
-//	first enum value in the associated enum (or zero if the also enum dependency
-//	is also unresolvable). The protoreflect.FieldDescriptor.DefaultEnumValue
-//	is set as a placeholder.
-//	• Resolving the extended message type for an extension field.
-//	• Resolving the input or output message type for a service method.
-//
-// If the unresolved dependency uses a relative name, then the placeholder will
-// contain an invalid FullName with a "*." prefix, indicating that the starting
-// prefix of the full name is unknown.
-func allowUnresolvable() option {
-	return option{allowUnresolvable: true}
+	// AllowUnresolvable configures New to permissively allow unresolvable
+	// file, enum, or message dependencies. Unresolved dependencies are replaced
+	// by placeholder equivalents.
+	//
+	// The following dependencies may be left unresolved:
+	//	• Resolving an imported file.
+	//	• Resolving the type for a message field or extension field.
+	//	If the kind of the field is unknown, then a placeholder is used for both
+	//	the Enum and Message accessors on the protoreflect.FieldDescriptor.
+	//	• Resolving an enum value set as the default for an optional enum field.
+	//	If unresolvable, the protoreflect.FieldDescriptor.Default is set to the
+	//	first value in the associated enum (or zero if the also enum dependency
+	//	is also unresolvable). The protoreflect.FieldDescriptor.DefaultEnumValue
+	//	is populated with a placeholder.
+	//	• Resolving the extended message type for an extension field.
+	//	• Resolving the input or output message type for a service method.
+	//
+	// If the unresolved dependency uses a relative name,
+	// then the placeholder will contain an invalid FullName with a "*." prefix,
+	// indicating that the starting prefix of the full name is unknown.
+	AllowUnresolvable bool
 }
 
 // NewFile creates a new protoreflect.FileDescriptor from the provided
+// file descriptor message. See FileOptions.New for more information.
+func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.FileDescriptor, error) {
+	return FileOptions{}.New(fd, r)
+}
+
+// New creates a new protoreflect.FileDescriptor from the provided
 // file descriptor message. The file must represent a valid proto file according
 // to protobuf semantics. The returned descriptor is a deep copy of the input.
 //
@@ -66,16 +69,7 @@ func allowUnresolvable() option {
 // resolved using the provided registry. When looking up an import file path,
 // the path must be unique. The newly created file descriptor is not registered
 // back into the provided file registry.
-func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.FileDescriptor, error) {
-	// TODO(blocks): remove setting allowUnresolvable once naughty users are migrated.
-	return newFile(fd, r, allowUnresolvable())
-}
-func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (protoreflect.FileDescriptor, error) {
-	// Process the options.
-	var allowUnresolvable bool
-	for _, o := range opts {
-		allowUnresolvable = allowUnresolvable || o.allowUnresolvable
-	}
+func (o FileOptions) New(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.FileDescriptor, error) {
 	if r == nil {
 		r = (*protoregistry.Files)(nil) // empty resolver
 	}
@@ -120,7 +114,7 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 	for i, path := range fd.GetDependency() {
 		imp := &f.L2.Imports[i]
 		f, err := r.FindFileByPath(path)
-		if err == protoregistry.NotFound && (allowUnresolvable || imp.IsWeak) {
+		if err == protoregistry.NotFound && (o.AllowUnresolvable || imp.IsWeak) {
 			f = filedesc.PlaceholderFile(path)
 		} else if err != nil {
 			return nil, errors.New("could not resolve import %q: %v", path, err)
@@ -188,7 +182,7 @@ func newFile(fd *descriptorpb.FileDescriptorProto, r Resolver, opts ...option) (
 	}
 
 	// Step 2: Resolve every dependency reference not handled by step 1.
-	r2 := &resolver{local: r1, remote: r, imports: imps, allowUnresolvable: allowUnresolvable}
+	r2 := &resolver{local: r1, remote: r, imports: imps, allowUnresolvable: o.AllowUnresolvable}
 	if err := r2.resolveMessageDependencies(f.L1.Messages.List, fd.GetMessageType()); err != nil {
 		return nil, err
 	}

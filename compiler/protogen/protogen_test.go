@@ -66,7 +66,7 @@ func TestNoGoPackage(t *testing.T) {
 				Name:       proto.String("testdata/go_package/no_go_package_import.proto"),
 				Syntax:     proto.String(protoreflect.Proto3.String()),
 				Package:    proto.String("goproto.testdata"),
-				Dependency: []string{"go_package/no_go_package.proto"},
+				Dependency: []string{"testdata/go_package/no_go_package.proto"},
 			},
 		},
 	}, nil)

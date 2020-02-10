@@ -88,7 +88,7 @@ func TestNewFile(t *testing.T) {
 		label    string
 		inDeps   []*descriptorpb.FileDescriptorProto
 		inDesc   *descriptorpb.FileDescriptorProto
-		inOpts   []option
+		inOpts   FileOptions
 		wantDesc *descriptorpb.FileDescriptorProto
 		wantErr  string
 	}{{
@@ -121,7 +121,7 @@ func TestNewFile(t *testing.T) {
 			package:    ""
 			dependency: "dep.proto"
 		`),
-		inOpts: []option{allowUnresolvable()},
+		inOpts: FileOptions{AllowUnresolvable: true},
 	}, {
 		label: "duplicate import",
 		inDesc: mustParseFile(`
@@ -129,7 +129,7 @@ func TestNewFile(t *testing.T) {
 			package:    ""
 			dependency: ["dep.proto", "dep.proto"]
 		`),
-		inOpts:  []option{allowUnresolvable()},
+		inOpts:  FileOptions{AllowUnresolvable: true},
 		wantErr: `already imported "dep.proto"`,
 	}, {
 		label: "invalid weak import",
@@ -139,7 +139,7 @@ func TestNewFile(t *testing.T) {
 			dependency:      "dep.proto"
 			weak_dependency: [-23]
 		`),
-		inOpts:  []option{allowUnresolvable()},
+		inOpts:  FileOptions{AllowUnresolvable: true},
 		wantErr: `invalid or duplicate weak import index: -23`,
 	}, {
 		label: "normal weak and public import",
@@ -150,7 +150,7 @@ func TestNewFile(t *testing.T) {
 			weak_dependency:   [0]
 			public_dependency: [0]
 		`),
-		inOpts: []option{allowUnresolvable()},
+		inOpts: FileOptions{AllowUnresolvable: true},
 	}, {
 		label: "import public indirect dependency duplicate",
 		inDeps: []*descriptorpb.FileDescriptorProto{
@@ -306,7 +306,7 @@ func TestNewFile(t *testing.T) {
 				enum_type: [{name:"E" value:[{name:"V0" number:0}]}]
 			}]
 		`),
-		inOpts: []option{allowUnresolvable()},
+		inOpts: FileOptions{AllowUnresolvable: true},
 	}, {
 		label: "unresolved extendee",
 		inDesc: mustParseFile(`
@@ -342,7 +342,7 @@ func TestNewFile(t *testing.T) {
 				method: [{name:"M" input_type:"foo.bar.input" output_type:".absolute.foo.bar.output"}]
 			}]
 		`),
-		inOpts: []option{allowUnresolvable()},
+		inOpts: FileOptions{AllowUnresolvable: true},
 	}, {
 		label: "resolved but not imported",
 		inDeps: []*descriptorpb.FileDescriptorProto{mustParseFile(`
@@ -856,7 +856,7 @@ func TestNewFile(t *testing.T) {
 				]
 			}]
 		`),
-		inOpts: []option{allowUnresolvable()},
+		inOpts: FileOptions{AllowUnresolvable: true},
 		// TODO: Test field and oneof handling in validateMessageDeclarations
 		// TODO: Test unmarshalDefault
 		// TODO: Test validateExtensionDeclarations
@@ -883,7 +883,7 @@ func TestNewFile(t *testing.T) {
 				}]
 			}]
 		`),
-		inOpts: []option{allowUnresolvable()},
+		inOpts: FileOptions{AllowUnresolvable: true},
 	}, {
 		label: "service with wrong reference type",
 		inDeps: []*descriptorpb.FileDescriptorProto{
@@ -910,7 +910,7 @@ func TestNewFile(t *testing.T) {
 		t.Run(tt.label, func(t *testing.T) {
 			r := new(protoregistry.Files)
 			for i, dep := range tt.inDeps {
-				f, err := newFile(dep, r)
+				f, err := tt.inOpts.New(dep, r)
 				if err != nil {
 					t.Fatalf("dependency %d: unexpected NewFile() error: %v", i, err)
 				}
@@ -922,7 +922,7 @@ func TestNewFile(t *testing.T) {
 			if tt.wantErr == "" && tt.wantDesc == nil {
 				tt.wantDesc = cloneFile(tt.inDesc)
 			}
-			gotFile, err := newFile(tt.inDesc, r, tt.inOpts...)
+			gotFile, err := tt.inOpts.New(tt.inDesc, r)
 			if gotFile != nil {
 				gotDesc = ToFileDescriptorProto(gotFile)
 			}
