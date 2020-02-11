@@ -151,4 +151,7 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 	if mi.methods.IsInitialized == nil {
 		mi.methods.IsInitialized = mi.isInitialized
 	}
+	if mi.methods.Merge == nil {
+		mi.methods.Merge = mi.merge
+	}
 }

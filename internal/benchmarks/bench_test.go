@@ -102,6 +102,16 @@ func BenchmarkJSON(b *testing.B) {
 	})
 }
 
+func Benchmark(b *testing.B) {
+	bench(b, "Clone", func(ds dataset, pb *testing.PB) {
+		for pb.Next() {
+			for _, src := range ds.messages {
+				proto.Clone(src)
+			}
+		}
+	})
+}
+
 func bench(b *testing.B, name string, f func(dataset, *testing.PB)) {
 	b.Helper()
 	b.Run(name, func(b *testing.B) {

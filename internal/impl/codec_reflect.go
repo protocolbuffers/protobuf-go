@@ -37,10 +37,15 @@ func consumeEnum(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmar
 	return out, nil
 }
 
+func mergeEnum(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+	dst.v.Elem().Set(src.v.Elem())
+}
+
 var coderEnum = pointerCoderFuncs{
 	size:      sizeEnum,
 	marshal:   appendEnum,
 	unmarshal: consumeEnum,
+	merge:     mergeEnum,
 }
 
 func sizeEnumNoZero(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
@@ -57,10 +62,17 @@ func appendEnumNoZero(b []byte, p pointer, f *coderFieldInfo, opts marshalOption
 	return appendEnum(b, p, f, opts)
 }
 
+func mergeEnumNoZero(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+	if src.v.Elem().Int() != 0 {
+		dst.v.Elem().Set(src.v.Elem())
+	}
+}
+
 var coderEnumNoZero = pointerCoderFuncs{
 	size:      sizeEnumNoZero,
 	marshal:   appendEnumNoZero,
 	unmarshal: consumeEnum,
+	merge:     mergeEnumNoZero,
 }
 
 func sizeEnumPtr(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
@@ -81,10 +93,19 @@ func consumeEnumPtr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts
 	return consumeEnum(b, pointer{p.v.Elem()}, wtyp, f, opts)
 }
 
+func mergeEnumPtr(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+	if !src.v.Elem().IsNil() {
+		v := reflect.New(dst.v.Type().Elem().Elem())
+		v.Elem().Set(src.v.Elem().Elem())
+		dst.v.Elem().Set(v)
+	}
+}
+
 var coderEnumPtr = pointerCoderFuncs{
 	size:      sizeEnumPtr,
 	marshal:   appendEnumPtr,
 	unmarshal: consumeEnumPtr,
+	merge:     mergeEnumPtr,
 }
 
 func sizeEnumSlice(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
@@ -138,10 +159,15 @@ func consumeEnumSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, op
 	return out, nil
 }
 
+func mergeEnumSlice(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+	dst.v.Elem().Set(reflect.AppendSlice(dst.v.Elem(), src.v.Elem()))
+}
+
 var coderEnumSlice = pointerCoderFuncs{
 	size:      sizeEnumSlice,
 	marshal:   appendEnumSlice,
 	unmarshal: consumeEnumSlice,
+	merge:     mergeEnumSlice,
 }
 
 func sizeEnumPackedSlice(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
@@ -179,4 +205,5 @@ var coderEnumPackedSlice = pointerCoderFuncs{
 	size:      sizeEnumPackedSlice,
 	marshal:   appendEnumPackedSlice,
 	unmarshal: consumeEnumSlice,
+	merge:     mergeEnumSlice,
 }

@@ -94,6 +94,19 @@ func (mi *MessageInfo) initOnce() {
 	atomic.StoreUint32(&mi.initDone, 1)
 }
 
+// getPointer returns the pointer for a message, which should be of
+// the type of the MessageInfo. If the message is of a different type,
+// it returns ok==false.
+func (mi *MessageInfo) getPointer(m pref.Message) (p pointer, ok bool) {
+	switch m := m.(type) {
+	case *messageState:
+		return m.pointer(), m.mi == mi
+	case *messageReflectWrapper:
+		return m.pointer(), m.mi == mi
+	}
+	return pointer{}, false
+}
+
 type (
 	SizeCache       = int32
 	WeakFields      = map[int32]piface.MessageV1

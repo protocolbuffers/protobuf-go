@@ -27,15 +27,18 @@ type Methods = struct {
 
 	// Marshal writes the wire-format encoding of m to the provided buffer.
 	// Size should be provided if a custom MarshalAppend is provided.
-	// It should not return an error for a partial message.
+	// It must not return an error for a partial message.
 	Marshal func(m protoreflect.Message, in MarshalInput, opts MarshalOptions) (MarshalOutput, error)
 
 	// Unmarshal parses the wire-format encoding of a message and merges the result to m.
-	// It should not reset the target message or return an error for a partial message.
+	// It must not reset the target message or return an error for a partial message.
 	Unmarshal func(m protoreflect.Message, in UnmarshalInput, opts UnmarshalOptions) (UnmarshalOutput, error)
 
 	// IsInitialized returns an error if any required fields in m are not set.
 	IsInitialized func(m protoreflect.Message) error
+
+	// Merge merges src into dst.
+	Merge func(dst, src protoreflect.Message, in MergeInput, opts MergeOptions) MergeOutput
 }
 
 type SupportFlags = uint64
@@ -113,3 +116,22 @@ type UnmarshalFlags = uint8
 const (
 	UnmarshalDiscardUnknown UnmarshalFlags = 1 << iota
 )
+
+// MergeInput is input to the merger.
+type MergeInput = struct {
+	pragma.NoUnkeyedLiterals
+}
+
+// MergeOutput is output from the merger.
+type MergeOutput = struct {
+	pragma.NoUnkeyedLiterals
+
+	// Merged is true if the merge was performed, false otherwise.
+	// If false, the merger must have made no changes to the destination.
+	Merged bool
+}
+
+// MergeOptions configure the merger.
+type MergeOptions = struct {
+	pragma.NoUnkeyedLiterals
+}

@@ -56,6 +56,7 @@ var coderBool = pointerCoderFuncs{
 	size:      sizeBool,
 	marshal:   appendBool,
 	unmarshal: consumeBool,
+	merge:     mergeBool,
 }
 
 // sizeBoolNoZero returns the size of wire encoding a bool pointer as a Bool.
@@ -84,6 +85,7 @@ var coderBoolNoZero = pointerCoderFuncs{
 	size:      sizeBoolNoZero,
 	marshal:   appendBoolNoZero,
 	unmarshal: consumeBool,
+	merge:     mergeBoolNoZero,
 }
 
 // sizeBoolPtr returns the size of wire encoding a *bool pointer as a Bool.
@@ -134,6 +136,7 @@ var coderBoolPtr = pointerCoderFuncs{
 	size:      sizeBoolPtr,
 	marshal:   appendBoolPtr,
 	unmarshal: consumeBoolPtr,
+	merge:     mergeBoolPtr,
 }
 
 // sizeBoolSlice returns the size of wire encoding a []bool pointer as a repeated Bool.
@@ -212,6 +215,7 @@ var coderBoolSlice = pointerCoderFuncs{
 	size:      sizeBoolSlice,
 	marshal:   appendBoolSlice,
 	unmarshal: consumeBoolSlice,
+	merge:     mergeBoolSlice,
 }
 
 // sizeBoolPackedSlice returns the size of wire encoding a []bool pointer as a packed repeated Bool.
@@ -249,6 +253,7 @@ var coderBoolPackedSlice = pointerCoderFuncs{
 	size:      sizeBoolPackedSlice,
 	marshal:   appendBoolPackedSlice,
 	unmarshal: consumeBoolSlice,
+	merge:     mergeBoolSlice,
 }
 
 // sizeBoolValue returns the size of wire encoding a bool value as a Bool.
@@ -290,6 +295,7 @@ var coderBoolValue = valueCoderFuncs{
 	size:      sizeBoolValue,
 	marshal:   appendBoolValue,
 	unmarshal: consumeBoolValue,
+	merge:     mergeScalarValue,
 }
 
 // sizeBoolSliceValue returns the size of wire encoding a []bool value as a repeated Bool.
@@ -368,6 +374,7 @@ var coderBoolSliceValue = valueCoderFuncs{
 	size:      sizeBoolSliceValue,
 	marshal:   appendBoolSliceValue,
 	unmarshal: consumeBoolSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeBoolPackedSliceValue returns the size of wire encoding a []bool value as a packed repeated Bool.
@@ -410,6 +417,7 @@ var coderBoolPackedSliceValue = valueCoderFuncs{
 	size:      sizeBoolPackedSliceValue,
 	marshal:   appendBoolPackedSliceValue,
 	unmarshal: consumeBoolSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeEnumValue returns the size of wire encoding a  value as a Enum.
@@ -451,6 +459,7 @@ var coderEnumValue = valueCoderFuncs{
 	size:      sizeEnumValue,
 	marshal:   appendEnumValue,
 	unmarshal: consumeEnumValue,
+	merge:     mergeScalarValue,
 }
 
 // sizeEnumSliceValue returns the size of wire encoding a [] value as a repeated Enum.
@@ -529,6 +538,7 @@ var coderEnumSliceValue = valueCoderFuncs{
 	size:      sizeEnumSliceValue,
 	marshal:   appendEnumSliceValue,
 	unmarshal: consumeEnumSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeEnumPackedSliceValue returns the size of wire encoding a [] value as a packed repeated Enum.
@@ -571,6 +581,7 @@ var coderEnumPackedSliceValue = valueCoderFuncs{
 	size:      sizeEnumPackedSliceValue,
 	marshal:   appendEnumPackedSliceValue,
 	unmarshal: consumeEnumSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeInt32 returns the size of wire encoding a int32 pointer as a Int32.
@@ -615,6 +626,7 @@ var coderInt32 = pointerCoderFuncs{
 	size:      sizeInt32,
 	marshal:   appendInt32,
 	unmarshal: consumeInt32,
+	merge:     mergeInt32,
 }
 
 // sizeInt32NoZero returns the size of wire encoding a int32 pointer as a Int32.
@@ -643,6 +655,7 @@ var coderInt32NoZero = pointerCoderFuncs{
 	size:      sizeInt32NoZero,
 	marshal:   appendInt32NoZero,
 	unmarshal: consumeInt32,
+	merge:     mergeInt32NoZero,
 }
 
 // sizeInt32Ptr returns the size of wire encoding a *int32 pointer as a Int32.
@@ -693,6 +706,7 @@ var coderInt32Ptr = pointerCoderFuncs{
 	size:      sizeInt32Ptr,
 	marshal:   appendInt32Ptr,
 	unmarshal: consumeInt32Ptr,
+	merge:     mergeInt32Ptr,
 }
 
 // sizeInt32Slice returns the size of wire encoding a []int32 pointer as a repeated Int32.
@@ -771,6 +785,7 @@ var coderInt32Slice = pointerCoderFuncs{
 	size:      sizeInt32Slice,
 	marshal:   appendInt32Slice,
 	unmarshal: consumeInt32Slice,
+	merge:     mergeInt32Slice,
 }
 
 // sizeInt32PackedSlice returns the size of wire encoding a []int32 pointer as a packed repeated Int32.
@@ -808,6 +823,7 @@ var coderInt32PackedSlice = pointerCoderFuncs{
 	size:      sizeInt32PackedSlice,
 	marshal:   appendInt32PackedSlice,
 	unmarshal: consumeInt32Slice,
+	merge:     mergeInt32Slice,
 }
 
 // sizeInt32Value returns the size of wire encoding a int32 value as a Int32.
@@ -849,6 +865,7 @@ var coderInt32Value = valueCoderFuncs{
 	size:      sizeInt32Value,
 	marshal:   appendInt32Value,
 	unmarshal: consumeInt32Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeInt32SliceValue returns the size of wire encoding a []int32 value as a repeated Int32.
@@ -927,6 +944,7 @@ var coderInt32SliceValue = valueCoderFuncs{
 	size:      sizeInt32SliceValue,
 	marshal:   appendInt32SliceValue,
 	unmarshal: consumeInt32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeInt32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Int32.
@@ -969,6 +987,7 @@ var coderInt32PackedSliceValue = valueCoderFuncs{
 	size:      sizeInt32PackedSliceValue,
 	marshal:   appendInt32PackedSliceValue,
 	unmarshal: consumeInt32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeSint32 returns the size of wire encoding a int32 pointer as a Sint32.
@@ -1013,6 +1032,7 @@ var coderSint32 = pointerCoderFuncs{
 	size:      sizeSint32,
 	marshal:   appendSint32,
 	unmarshal: consumeSint32,
+	merge:     mergeInt32,
 }
 
 // sizeSint32NoZero returns the size of wire encoding a int32 pointer as a Sint32.
@@ -1041,6 +1061,7 @@ var coderSint32NoZero = pointerCoderFuncs{
 	size:      sizeSint32NoZero,
 	marshal:   appendSint32NoZero,
 	unmarshal: consumeSint32,
+	merge:     mergeInt32NoZero,
 }
 
 // sizeSint32Ptr returns the size of wire encoding a *int32 pointer as a Sint32.
@@ -1091,6 +1112,7 @@ var coderSint32Ptr = pointerCoderFuncs{
 	size:      sizeSint32Ptr,
 	marshal:   appendSint32Ptr,
 	unmarshal: consumeSint32Ptr,
+	merge:     mergeInt32Ptr,
 }
 
 // sizeSint32Slice returns the size of wire encoding a []int32 pointer as a repeated Sint32.
@@ -1169,6 +1191,7 @@ var coderSint32Slice = pointerCoderFuncs{
 	size:      sizeSint32Slice,
 	marshal:   appendSint32Slice,
 	unmarshal: consumeSint32Slice,
+	merge:     mergeInt32Slice,
 }
 
 // sizeSint32PackedSlice returns the size of wire encoding a []int32 pointer as a packed repeated Sint32.
@@ -1206,6 +1229,7 @@ var coderSint32PackedSlice = pointerCoderFuncs{
 	size:      sizeSint32PackedSlice,
 	marshal:   appendSint32PackedSlice,
 	unmarshal: consumeSint32Slice,
+	merge:     mergeInt32Slice,
 }
 
 // sizeSint32Value returns the size of wire encoding a int32 value as a Sint32.
@@ -1247,6 +1271,7 @@ var coderSint32Value = valueCoderFuncs{
 	size:      sizeSint32Value,
 	marshal:   appendSint32Value,
 	unmarshal: consumeSint32Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeSint32SliceValue returns the size of wire encoding a []int32 value as a repeated Sint32.
@@ -1325,6 +1350,7 @@ var coderSint32SliceValue = valueCoderFuncs{
 	size:      sizeSint32SliceValue,
 	marshal:   appendSint32SliceValue,
 	unmarshal: consumeSint32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeSint32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Sint32.
@@ -1367,6 +1393,7 @@ var coderSint32PackedSliceValue = valueCoderFuncs{
 	size:      sizeSint32PackedSliceValue,
 	marshal:   appendSint32PackedSliceValue,
 	unmarshal: consumeSint32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeUint32 returns the size of wire encoding a uint32 pointer as a Uint32.
@@ -1411,6 +1438,7 @@ var coderUint32 = pointerCoderFuncs{
 	size:      sizeUint32,
 	marshal:   appendUint32,
 	unmarshal: consumeUint32,
+	merge:     mergeUint32,
 }
 
 // sizeUint32NoZero returns the size of wire encoding a uint32 pointer as a Uint32.
@@ -1439,6 +1467,7 @@ var coderUint32NoZero = pointerCoderFuncs{
 	size:      sizeUint32NoZero,
 	marshal:   appendUint32NoZero,
 	unmarshal: consumeUint32,
+	merge:     mergeUint32NoZero,
 }
 
 // sizeUint32Ptr returns the size of wire encoding a *uint32 pointer as a Uint32.
@@ -1489,6 +1518,7 @@ var coderUint32Ptr = pointerCoderFuncs{
 	size:      sizeUint32Ptr,
 	marshal:   appendUint32Ptr,
 	unmarshal: consumeUint32Ptr,
+	merge:     mergeUint32Ptr,
 }
 
 // sizeUint32Slice returns the size of wire encoding a []uint32 pointer as a repeated Uint32.
@@ -1567,6 +1597,7 @@ var coderUint32Slice = pointerCoderFuncs{
 	size:      sizeUint32Slice,
 	marshal:   appendUint32Slice,
 	unmarshal: consumeUint32Slice,
+	merge:     mergeUint32Slice,
 }
 
 // sizeUint32PackedSlice returns the size of wire encoding a []uint32 pointer as a packed repeated Uint32.
@@ -1604,6 +1635,7 @@ var coderUint32PackedSlice = pointerCoderFuncs{
 	size:      sizeUint32PackedSlice,
 	marshal:   appendUint32PackedSlice,
 	unmarshal: consumeUint32Slice,
+	merge:     mergeUint32Slice,
 }
 
 // sizeUint32Value returns the size of wire encoding a uint32 value as a Uint32.
@@ -1645,6 +1677,7 @@ var coderUint32Value = valueCoderFuncs{
 	size:      sizeUint32Value,
 	marshal:   appendUint32Value,
 	unmarshal: consumeUint32Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeUint32SliceValue returns the size of wire encoding a []uint32 value as a repeated Uint32.
@@ -1723,6 +1756,7 @@ var coderUint32SliceValue = valueCoderFuncs{
 	size:      sizeUint32SliceValue,
 	marshal:   appendUint32SliceValue,
 	unmarshal: consumeUint32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeUint32PackedSliceValue returns the size of wire encoding a []uint32 value as a packed repeated Uint32.
@@ -1765,6 +1799,7 @@ var coderUint32PackedSliceValue = valueCoderFuncs{
 	size:      sizeUint32PackedSliceValue,
 	marshal:   appendUint32PackedSliceValue,
 	unmarshal: consumeUint32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeInt64 returns the size of wire encoding a int64 pointer as a Int64.
@@ -1809,6 +1844,7 @@ var coderInt64 = pointerCoderFuncs{
 	size:      sizeInt64,
 	marshal:   appendInt64,
 	unmarshal: consumeInt64,
+	merge:     mergeInt64,
 }
 
 // sizeInt64NoZero returns the size of wire encoding a int64 pointer as a Int64.
@@ -1837,6 +1873,7 @@ var coderInt64NoZero = pointerCoderFuncs{
 	size:      sizeInt64NoZero,
 	marshal:   appendInt64NoZero,
 	unmarshal: consumeInt64,
+	merge:     mergeInt64NoZero,
 }
 
 // sizeInt64Ptr returns the size of wire encoding a *int64 pointer as a Int64.
@@ -1887,6 +1924,7 @@ var coderInt64Ptr = pointerCoderFuncs{
 	size:      sizeInt64Ptr,
 	marshal:   appendInt64Ptr,
 	unmarshal: consumeInt64Ptr,
+	merge:     mergeInt64Ptr,
 }
 
 // sizeInt64Slice returns the size of wire encoding a []int64 pointer as a repeated Int64.
@@ -1965,6 +2003,7 @@ var coderInt64Slice = pointerCoderFuncs{
 	size:      sizeInt64Slice,
 	marshal:   appendInt64Slice,
 	unmarshal: consumeInt64Slice,
+	merge:     mergeInt64Slice,
 }
 
 // sizeInt64PackedSlice returns the size of wire encoding a []int64 pointer as a packed repeated Int64.
@@ -2002,6 +2041,7 @@ var coderInt64PackedSlice = pointerCoderFuncs{
 	size:      sizeInt64PackedSlice,
 	marshal:   appendInt64PackedSlice,
 	unmarshal: consumeInt64Slice,
+	merge:     mergeInt64Slice,
 }
 
 // sizeInt64Value returns the size of wire encoding a int64 value as a Int64.
@@ -2043,6 +2083,7 @@ var coderInt64Value = valueCoderFuncs{
 	size:      sizeInt64Value,
 	marshal:   appendInt64Value,
 	unmarshal: consumeInt64Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeInt64SliceValue returns the size of wire encoding a []int64 value as a repeated Int64.
@@ -2121,6 +2162,7 @@ var coderInt64SliceValue = valueCoderFuncs{
 	size:      sizeInt64SliceValue,
 	marshal:   appendInt64SliceValue,
 	unmarshal: consumeInt64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeInt64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Int64.
@@ -2163,6 +2205,7 @@ var coderInt64PackedSliceValue = valueCoderFuncs{
 	size:      sizeInt64PackedSliceValue,
 	marshal:   appendInt64PackedSliceValue,
 	unmarshal: consumeInt64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeSint64 returns the size of wire encoding a int64 pointer as a Sint64.
@@ -2207,6 +2250,7 @@ var coderSint64 = pointerCoderFuncs{
 	size:      sizeSint64,
 	marshal:   appendSint64,
 	unmarshal: consumeSint64,
+	merge:     mergeInt64,
 }
 
 // sizeSint64NoZero returns the size of wire encoding a int64 pointer as a Sint64.
@@ -2235,6 +2279,7 @@ var coderSint64NoZero = pointerCoderFuncs{
 	size:      sizeSint64NoZero,
 	marshal:   appendSint64NoZero,
 	unmarshal: consumeSint64,
+	merge:     mergeInt64NoZero,
 }
 
 // sizeSint64Ptr returns the size of wire encoding a *int64 pointer as a Sint64.
@@ -2285,6 +2330,7 @@ var coderSint64Ptr = pointerCoderFuncs{
 	size:      sizeSint64Ptr,
 	marshal:   appendSint64Ptr,
 	unmarshal: consumeSint64Ptr,
+	merge:     mergeInt64Ptr,
 }
 
 // sizeSint64Slice returns the size of wire encoding a []int64 pointer as a repeated Sint64.
@@ -2363,6 +2409,7 @@ var coderSint64Slice = pointerCoderFuncs{
 	size:      sizeSint64Slice,
 	marshal:   appendSint64Slice,
 	unmarshal: consumeSint64Slice,
+	merge:     mergeInt64Slice,
 }
 
 // sizeSint64PackedSlice returns the size of wire encoding a []int64 pointer as a packed repeated Sint64.
@@ -2400,6 +2447,7 @@ var coderSint64PackedSlice = pointerCoderFuncs{
 	size:      sizeSint64PackedSlice,
 	marshal:   appendSint64PackedSlice,
 	unmarshal: consumeSint64Slice,
+	merge:     mergeInt64Slice,
 }
 
 // sizeSint64Value returns the size of wire encoding a int64 value as a Sint64.
@@ -2441,6 +2489,7 @@ var coderSint64Value = valueCoderFuncs{
 	size:      sizeSint64Value,
 	marshal:   appendSint64Value,
 	unmarshal: consumeSint64Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeSint64SliceValue returns the size of wire encoding a []int64 value as a repeated Sint64.
@@ -2519,6 +2568,7 @@ var coderSint64SliceValue = valueCoderFuncs{
 	size:      sizeSint64SliceValue,
 	marshal:   appendSint64SliceValue,
 	unmarshal: consumeSint64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeSint64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Sint64.
@@ -2561,6 +2611,7 @@ var coderSint64PackedSliceValue = valueCoderFuncs{
 	size:      sizeSint64PackedSliceValue,
 	marshal:   appendSint64PackedSliceValue,
 	unmarshal: consumeSint64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeUint64 returns the size of wire encoding a uint64 pointer as a Uint64.
@@ -2605,6 +2656,7 @@ var coderUint64 = pointerCoderFuncs{
 	size:      sizeUint64,
 	marshal:   appendUint64,
 	unmarshal: consumeUint64,
+	merge:     mergeUint64,
 }
 
 // sizeUint64NoZero returns the size of wire encoding a uint64 pointer as a Uint64.
@@ -2633,6 +2685,7 @@ var coderUint64NoZero = pointerCoderFuncs{
 	size:      sizeUint64NoZero,
 	marshal:   appendUint64NoZero,
 	unmarshal: consumeUint64,
+	merge:     mergeUint64NoZero,
 }
 
 // sizeUint64Ptr returns the size of wire encoding a *uint64 pointer as a Uint64.
@@ -2683,6 +2736,7 @@ var coderUint64Ptr = pointerCoderFuncs{
 	size:      sizeUint64Ptr,
 	marshal:   appendUint64Ptr,
 	unmarshal: consumeUint64Ptr,
+	merge:     mergeUint64Ptr,
 }
 
 // sizeUint64Slice returns the size of wire encoding a []uint64 pointer as a repeated Uint64.
@@ -2761,6 +2815,7 @@ var coderUint64Slice = pointerCoderFuncs{
 	size:      sizeUint64Slice,
 	marshal:   appendUint64Slice,
 	unmarshal: consumeUint64Slice,
+	merge:     mergeUint64Slice,
 }
 
 // sizeUint64PackedSlice returns the size of wire encoding a []uint64 pointer as a packed repeated Uint64.
@@ -2798,6 +2853,7 @@ var coderUint64PackedSlice = pointerCoderFuncs{
 	size:      sizeUint64PackedSlice,
 	marshal:   appendUint64PackedSlice,
 	unmarshal: consumeUint64Slice,
+	merge:     mergeUint64Slice,
 }
 
 // sizeUint64Value returns the size of wire encoding a uint64 value as a Uint64.
@@ -2839,6 +2895,7 @@ var coderUint64Value = valueCoderFuncs{
 	size:      sizeUint64Value,
 	marshal:   appendUint64Value,
 	unmarshal: consumeUint64Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeUint64SliceValue returns the size of wire encoding a []uint64 value as a repeated Uint64.
@@ -2917,6 +2974,7 @@ var coderUint64SliceValue = valueCoderFuncs{
 	size:      sizeUint64SliceValue,
 	marshal:   appendUint64SliceValue,
 	unmarshal: consumeUint64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeUint64PackedSliceValue returns the size of wire encoding a []uint64 value as a packed repeated Uint64.
@@ -2959,6 +3017,7 @@ var coderUint64PackedSliceValue = valueCoderFuncs{
 	size:      sizeUint64PackedSliceValue,
 	marshal:   appendUint64PackedSliceValue,
 	unmarshal: consumeUint64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeSfixed32 returns the size of wire encoding a int32 pointer as a Sfixed32.
@@ -2993,6 +3052,7 @@ var coderSfixed32 = pointerCoderFuncs{
 	size:      sizeSfixed32,
 	marshal:   appendSfixed32,
 	unmarshal: consumeSfixed32,
+	merge:     mergeInt32,
 }
 
 // sizeSfixed32NoZero returns the size of wire encoding a int32 pointer as a Sfixed32.
@@ -3021,6 +3081,7 @@ var coderSfixed32NoZero = pointerCoderFuncs{
 	size:      sizeSfixed32NoZero,
 	marshal:   appendSfixed32NoZero,
 	unmarshal: consumeSfixed32,
+	merge:     mergeInt32NoZero,
 }
 
 // sizeSfixed32Ptr returns the size of wire encoding a *int32 pointer as a Sfixed32.
@@ -3060,6 +3121,7 @@ var coderSfixed32Ptr = pointerCoderFuncs{
 	size:      sizeSfixed32Ptr,
 	marshal:   appendSfixed32Ptr,
 	unmarshal: consumeSfixed32Ptr,
+	merge:     mergeInt32Ptr,
 }
 
 // sizeSfixed32Slice returns the size of wire encoding a []int32 pointer as a repeated Sfixed32.
@@ -3116,6 +3178,7 @@ var coderSfixed32Slice = pointerCoderFuncs{
 	size:      sizeSfixed32Slice,
 	marshal:   appendSfixed32Slice,
 	unmarshal: consumeSfixed32Slice,
+	merge:     mergeInt32Slice,
 }
 
 // sizeSfixed32PackedSlice returns the size of wire encoding a []int32 pointer as a packed repeated Sfixed32.
@@ -3147,6 +3210,7 @@ var coderSfixed32PackedSlice = pointerCoderFuncs{
 	size:      sizeSfixed32PackedSlice,
 	marshal:   appendSfixed32PackedSlice,
 	unmarshal: consumeSfixed32Slice,
+	merge:     mergeInt32Slice,
 }
 
 // sizeSfixed32Value returns the size of wire encoding a int32 value as a Sfixed32.
@@ -3178,6 +3242,7 @@ var coderSfixed32Value = valueCoderFuncs{
 	size:      sizeSfixed32Value,
 	marshal:   appendSfixed32Value,
 	unmarshal: consumeSfixed32Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeSfixed32SliceValue returns the size of wire encoding a []int32 value as a repeated Sfixed32.
@@ -3233,6 +3298,7 @@ var coderSfixed32SliceValue = valueCoderFuncs{
 	size:      sizeSfixed32SliceValue,
 	marshal:   appendSfixed32SliceValue,
 	unmarshal: consumeSfixed32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeSfixed32PackedSliceValue returns the size of wire encoding a []int32 value as a packed repeated Sfixed32.
@@ -3267,6 +3333,7 @@ var coderSfixed32PackedSliceValue = valueCoderFuncs{
 	size:      sizeSfixed32PackedSliceValue,
 	marshal:   appendSfixed32PackedSliceValue,
 	unmarshal: consumeSfixed32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeFixed32 returns the size of wire encoding a uint32 pointer as a Fixed32.
@@ -3301,6 +3368,7 @@ var coderFixed32 = pointerCoderFuncs{
 	size:      sizeFixed32,
 	marshal:   appendFixed32,
 	unmarshal: consumeFixed32,
+	merge:     mergeUint32,
 }
 
 // sizeFixed32NoZero returns the size of wire encoding a uint32 pointer as a Fixed32.
@@ -3329,6 +3397,7 @@ var coderFixed32NoZero = pointerCoderFuncs{
 	size:      sizeFixed32NoZero,
 	marshal:   appendFixed32NoZero,
 	unmarshal: consumeFixed32,
+	merge:     mergeUint32NoZero,
 }
 
 // sizeFixed32Ptr returns the size of wire encoding a *uint32 pointer as a Fixed32.
@@ -3368,6 +3437,7 @@ var coderFixed32Ptr = pointerCoderFuncs{
 	size:      sizeFixed32Ptr,
 	marshal:   appendFixed32Ptr,
 	unmarshal: consumeFixed32Ptr,
+	merge:     mergeUint32Ptr,
 }
 
 // sizeFixed32Slice returns the size of wire encoding a []uint32 pointer as a repeated Fixed32.
@@ -3424,6 +3494,7 @@ var coderFixed32Slice = pointerCoderFuncs{
 	size:      sizeFixed32Slice,
 	marshal:   appendFixed32Slice,
 	unmarshal: consumeFixed32Slice,
+	merge:     mergeUint32Slice,
 }
 
 // sizeFixed32PackedSlice returns the size of wire encoding a []uint32 pointer as a packed repeated Fixed32.
@@ -3455,6 +3526,7 @@ var coderFixed32PackedSlice = pointerCoderFuncs{
 	size:      sizeFixed32PackedSlice,
 	marshal:   appendFixed32PackedSlice,
 	unmarshal: consumeFixed32Slice,
+	merge:     mergeUint32Slice,
 }
 
 // sizeFixed32Value returns the size of wire encoding a uint32 value as a Fixed32.
@@ -3486,6 +3558,7 @@ var coderFixed32Value = valueCoderFuncs{
 	size:      sizeFixed32Value,
 	marshal:   appendFixed32Value,
 	unmarshal: consumeFixed32Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeFixed32SliceValue returns the size of wire encoding a []uint32 value as a repeated Fixed32.
@@ -3541,6 +3614,7 @@ var coderFixed32SliceValue = valueCoderFuncs{
 	size:      sizeFixed32SliceValue,
 	marshal:   appendFixed32SliceValue,
 	unmarshal: consumeFixed32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeFixed32PackedSliceValue returns the size of wire encoding a []uint32 value as a packed repeated Fixed32.
@@ -3575,6 +3649,7 @@ var coderFixed32PackedSliceValue = valueCoderFuncs{
 	size:      sizeFixed32PackedSliceValue,
 	marshal:   appendFixed32PackedSliceValue,
 	unmarshal: consumeFixed32SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeFloat returns the size of wire encoding a float32 pointer as a Float.
@@ -3609,6 +3684,7 @@ var coderFloat = pointerCoderFuncs{
 	size:      sizeFloat,
 	marshal:   appendFloat,
 	unmarshal: consumeFloat,
+	merge:     mergeFloat32,
 }
 
 // sizeFloatNoZero returns the size of wire encoding a float32 pointer as a Float.
@@ -3637,6 +3713,7 @@ var coderFloatNoZero = pointerCoderFuncs{
 	size:      sizeFloatNoZero,
 	marshal:   appendFloatNoZero,
 	unmarshal: consumeFloat,
+	merge:     mergeFloat32NoZero,
 }
 
 // sizeFloatPtr returns the size of wire encoding a *float32 pointer as a Float.
@@ -3676,6 +3753,7 @@ var coderFloatPtr = pointerCoderFuncs{
 	size:      sizeFloatPtr,
 	marshal:   appendFloatPtr,
 	unmarshal: consumeFloatPtr,
+	merge:     mergeFloat32Ptr,
 }
 
 // sizeFloatSlice returns the size of wire encoding a []float32 pointer as a repeated Float.
@@ -3732,6 +3810,7 @@ var coderFloatSlice = pointerCoderFuncs{
 	size:      sizeFloatSlice,
 	marshal:   appendFloatSlice,
 	unmarshal: consumeFloatSlice,
+	merge:     mergeFloat32Slice,
 }
 
 // sizeFloatPackedSlice returns the size of wire encoding a []float32 pointer as a packed repeated Float.
@@ -3763,6 +3842,7 @@ var coderFloatPackedSlice = pointerCoderFuncs{
 	size:      sizeFloatPackedSlice,
 	marshal:   appendFloatPackedSlice,
 	unmarshal: consumeFloatSlice,
+	merge:     mergeFloat32Slice,
 }
 
 // sizeFloatValue returns the size of wire encoding a float32 value as a Float.
@@ -3794,6 +3874,7 @@ var coderFloatValue = valueCoderFuncs{
 	size:      sizeFloatValue,
 	marshal:   appendFloatValue,
 	unmarshal: consumeFloatValue,
+	merge:     mergeScalarValue,
 }
 
 // sizeFloatSliceValue returns the size of wire encoding a []float32 value as a repeated Float.
@@ -3849,6 +3930,7 @@ var coderFloatSliceValue = valueCoderFuncs{
 	size:      sizeFloatSliceValue,
 	marshal:   appendFloatSliceValue,
 	unmarshal: consumeFloatSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeFloatPackedSliceValue returns the size of wire encoding a []float32 value as a packed repeated Float.
@@ -3883,6 +3965,7 @@ var coderFloatPackedSliceValue = valueCoderFuncs{
 	size:      sizeFloatPackedSliceValue,
 	marshal:   appendFloatPackedSliceValue,
 	unmarshal: consumeFloatSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeSfixed64 returns the size of wire encoding a int64 pointer as a Sfixed64.
@@ -3917,6 +4000,7 @@ var coderSfixed64 = pointerCoderFuncs{
 	size:      sizeSfixed64,
 	marshal:   appendSfixed64,
 	unmarshal: consumeSfixed64,
+	merge:     mergeInt64,
 }
 
 // sizeSfixed64NoZero returns the size of wire encoding a int64 pointer as a Sfixed64.
@@ -3945,6 +4029,7 @@ var coderSfixed64NoZero = pointerCoderFuncs{
 	size:      sizeSfixed64NoZero,
 	marshal:   appendSfixed64NoZero,
 	unmarshal: consumeSfixed64,
+	merge:     mergeInt64NoZero,
 }
 
 // sizeSfixed64Ptr returns the size of wire encoding a *int64 pointer as a Sfixed64.
@@ -3984,6 +4069,7 @@ var coderSfixed64Ptr = pointerCoderFuncs{
 	size:      sizeSfixed64Ptr,
 	marshal:   appendSfixed64Ptr,
 	unmarshal: consumeSfixed64Ptr,
+	merge:     mergeInt64Ptr,
 }
 
 // sizeSfixed64Slice returns the size of wire encoding a []int64 pointer as a repeated Sfixed64.
@@ -4040,6 +4126,7 @@ var coderSfixed64Slice = pointerCoderFuncs{
 	size:      sizeSfixed64Slice,
 	marshal:   appendSfixed64Slice,
 	unmarshal: consumeSfixed64Slice,
+	merge:     mergeInt64Slice,
 }
 
 // sizeSfixed64PackedSlice returns the size of wire encoding a []int64 pointer as a packed repeated Sfixed64.
@@ -4071,6 +4158,7 @@ var coderSfixed64PackedSlice = pointerCoderFuncs{
 	size:      sizeSfixed64PackedSlice,
 	marshal:   appendSfixed64PackedSlice,
 	unmarshal: consumeSfixed64Slice,
+	merge:     mergeInt64Slice,
 }
 
 // sizeSfixed64Value returns the size of wire encoding a int64 value as a Sfixed64.
@@ -4102,6 +4190,7 @@ var coderSfixed64Value = valueCoderFuncs{
 	size:      sizeSfixed64Value,
 	marshal:   appendSfixed64Value,
 	unmarshal: consumeSfixed64Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeSfixed64SliceValue returns the size of wire encoding a []int64 value as a repeated Sfixed64.
@@ -4157,6 +4246,7 @@ var coderSfixed64SliceValue = valueCoderFuncs{
 	size:      sizeSfixed64SliceValue,
 	marshal:   appendSfixed64SliceValue,
 	unmarshal: consumeSfixed64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeSfixed64PackedSliceValue returns the size of wire encoding a []int64 value as a packed repeated Sfixed64.
@@ -4191,6 +4281,7 @@ var coderSfixed64PackedSliceValue = valueCoderFuncs{
 	size:      sizeSfixed64PackedSliceValue,
 	marshal:   appendSfixed64PackedSliceValue,
 	unmarshal: consumeSfixed64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeFixed64 returns the size of wire encoding a uint64 pointer as a Fixed64.
@@ -4225,6 +4316,7 @@ var coderFixed64 = pointerCoderFuncs{
 	size:      sizeFixed64,
 	marshal:   appendFixed64,
 	unmarshal: consumeFixed64,
+	merge:     mergeUint64,
 }
 
 // sizeFixed64NoZero returns the size of wire encoding a uint64 pointer as a Fixed64.
@@ -4253,6 +4345,7 @@ var coderFixed64NoZero = pointerCoderFuncs{
 	size:      sizeFixed64NoZero,
 	marshal:   appendFixed64NoZero,
 	unmarshal: consumeFixed64,
+	merge:     mergeUint64NoZero,
 }
 
 // sizeFixed64Ptr returns the size of wire encoding a *uint64 pointer as a Fixed64.
@@ -4292,6 +4385,7 @@ var coderFixed64Ptr = pointerCoderFuncs{
 	size:      sizeFixed64Ptr,
 	marshal:   appendFixed64Ptr,
 	unmarshal: consumeFixed64Ptr,
+	merge:     mergeUint64Ptr,
 }
 
 // sizeFixed64Slice returns the size of wire encoding a []uint64 pointer as a repeated Fixed64.
@@ -4348,6 +4442,7 @@ var coderFixed64Slice = pointerCoderFuncs{
 	size:      sizeFixed64Slice,
 	marshal:   appendFixed64Slice,
 	unmarshal: consumeFixed64Slice,
+	merge:     mergeUint64Slice,
 }
 
 // sizeFixed64PackedSlice returns the size of wire encoding a []uint64 pointer as a packed repeated Fixed64.
@@ -4379,6 +4474,7 @@ var coderFixed64PackedSlice = pointerCoderFuncs{
 	size:      sizeFixed64PackedSlice,
 	marshal:   appendFixed64PackedSlice,
 	unmarshal: consumeFixed64Slice,
+	merge:     mergeUint64Slice,
 }
 
 // sizeFixed64Value returns the size of wire encoding a uint64 value as a Fixed64.
@@ -4410,6 +4506,7 @@ var coderFixed64Value = valueCoderFuncs{
 	size:      sizeFixed64Value,
 	marshal:   appendFixed64Value,
 	unmarshal: consumeFixed64Value,
+	merge:     mergeScalarValue,
 }
 
 // sizeFixed64SliceValue returns the size of wire encoding a []uint64 value as a repeated Fixed64.
@@ -4465,6 +4562,7 @@ var coderFixed64SliceValue = valueCoderFuncs{
 	size:      sizeFixed64SliceValue,
 	marshal:   appendFixed64SliceValue,
 	unmarshal: consumeFixed64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeFixed64PackedSliceValue returns the size of wire encoding a []uint64 value as a packed repeated Fixed64.
@@ -4499,6 +4597,7 @@ var coderFixed64PackedSliceValue = valueCoderFuncs{
 	size:      sizeFixed64PackedSliceValue,
 	marshal:   appendFixed64PackedSliceValue,
 	unmarshal: consumeFixed64SliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeDouble returns the size of wire encoding a float64 pointer as a Double.
@@ -4533,6 +4632,7 @@ var coderDouble = pointerCoderFuncs{
 	size:      sizeDouble,
 	marshal:   appendDouble,
 	unmarshal: consumeDouble,
+	merge:     mergeFloat64,
 }
 
 // sizeDoubleNoZero returns the size of wire encoding a float64 pointer as a Double.
@@ -4561,6 +4661,7 @@ var coderDoubleNoZero = pointerCoderFuncs{
 	size:      sizeDoubleNoZero,
 	marshal:   appendDoubleNoZero,
 	unmarshal: consumeDouble,
+	merge:     mergeFloat64NoZero,
 }
 
 // sizeDoublePtr returns the size of wire encoding a *float64 pointer as a Double.
@@ -4600,6 +4701,7 @@ var coderDoublePtr = pointerCoderFuncs{
 	size:      sizeDoublePtr,
 	marshal:   appendDoublePtr,
 	unmarshal: consumeDoublePtr,
+	merge:     mergeFloat64Ptr,
 }
 
 // sizeDoubleSlice returns the size of wire encoding a []float64 pointer as a repeated Double.
@@ -4656,6 +4758,7 @@ var coderDoubleSlice = pointerCoderFuncs{
 	size:      sizeDoubleSlice,
 	marshal:   appendDoubleSlice,
 	unmarshal: consumeDoubleSlice,
+	merge:     mergeFloat64Slice,
 }
 
 // sizeDoublePackedSlice returns the size of wire encoding a []float64 pointer as a packed repeated Double.
@@ -4687,6 +4790,7 @@ var coderDoublePackedSlice = pointerCoderFuncs{
 	size:      sizeDoublePackedSlice,
 	marshal:   appendDoublePackedSlice,
 	unmarshal: consumeDoubleSlice,
+	merge:     mergeFloat64Slice,
 }
 
 // sizeDoubleValue returns the size of wire encoding a float64 value as a Double.
@@ -4718,6 +4822,7 @@ var coderDoubleValue = valueCoderFuncs{
 	size:      sizeDoubleValue,
 	marshal:   appendDoubleValue,
 	unmarshal: consumeDoubleValue,
+	merge:     mergeScalarValue,
 }
 
 // sizeDoubleSliceValue returns the size of wire encoding a []float64 value as a repeated Double.
@@ -4773,6 +4878,7 @@ var coderDoubleSliceValue = valueCoderFuncs{
 	size:      sizeDoubleSliceValue,
 	marshal:   appendDoubleSliceValue,
 	unmarshal: consumeDoubleSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeDoublePackedSliceValue returns the size of wire encoding a []float64 value as a packed repeated Double.
@@ -4807,6 +4913,7 @@ var coderDoublePackedSliceValue = valueCoderFuncs{
 	size:      sizeDoublePackedSliceValue,
 	marshal:   appendDoublePackedSliceValue,
 	unmarshal: consumeDoubleSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeString returns the size of wire encoding a string pointer as a String.
@@ -4841,6 +4948,7 @@ var coderString = pointerCoderFuncs{
 	size:      sizeString,
 	marshal:   appendString,
 	unmarshal: consumeString,
+	merge:     mergeString,
 }
 
 // appendStringValidateUTF8 wire encodes a string pointer as a String.
@@ -4875,6 +4983,7 @@ var coderStringValidateUTF8 = pointerCoderFuncs{
 	size:      sizeString,
 	marshal:   appendStringValidateUTF8,
 	unmarshal: consumeStringValidateUTF8,
+	merge:     mergeString,
 }
 
 // sizeStringNoZero returns the size of wire encoding a string pointer as a String.
@@ -4903,6 +5012,7 @@ var coderStringNoZero = pointerCoderFuncs{
 	size:      sizeStringNoZero,
 	marshal:   appendStringNoZero,
 	unmarshal: consumeString,
+	merge:     mergeStringNoZero,
 }
 
 // appendStringNoZeroValidateUTF8 wire encodes a string pointer as a String.
@@ -4924,6 +5034,7 @@ var coderStringNoZeroValidateUTF8 = pointerCoderFuncs{
 	size:      sizeStringNoZero,
 	marshal:   appendStringNoZeroValidateUTF8,
 	unmarshal: consumeStringValidateUTF8,
+	merge:     mergeStringNoZero,
 }
 
 // sizeStringPtr returns the size of wire encoding a *string pointer as a String.
@@ -4964,6 +5075,7 @@ var coderStringPtr = pointerCoderFuncs{
 	size:      sizeStringPtr,
 	marshal:   appendStringPtr,
 	unmarshal: consumeStringPtr,
+	merge:     mergeStringPtr,
 }
 
 // sizeStringSlice returns the size of wire encoding a []string pointer as a repeated String.
@@ -5004,6 +5116,7 @@ var coderStringSlice = pointerCoderFuncs{
 	size:      sizeStringSlice,
 	marshal:   appendStringSlice,
 	unmarshal: consumeStringSlice,
+	merge:     mergeStringSlice,
 }
 
 // appendStringSliceValidateUTF8 encodes a []string pointer as a repeated String.
@@ -5041,6 +5154,7 @@ var coderStringSliceValidateUTF8 = pointerCoderFuncs{
 	size:      sizeStringSlice,
 	marshal:   appendStringSliceValidateUTF8,
 	unmarshal: consumeStringSliceValidateUTF8,
+	merge:     mergeStringSlice,
 }
 
 // sizeStringValue returns the size of wire encoding a string value as a String.
@@ -5072,6 +5186,7 @@ var coderStringValue = valueCoderFuncs{
 	size:      sizeStringValue,
 	marshal:   appendStringValue,
 	unmarshal: consumeStringValue,
+	merge:     mergeScalarValue,
 }
 
 // appendStringValueValidateUTF8 encodes a string value as a String.
@@ -5104,6 +5219,7 @@ var coderStringValueValidateUTF8 = valueCoderFuncs{
 	size:      sizeStringValue,
 	marshal:   appendStringValueValidateUTF8,
 	unmarshal: consumeStringValueValidateUTF8,
+	merge:     mergeScalarValue,
 }
 
 // sizeStringSliceValue returns the size of wire encoding a []string value as a repeated String.
@@ -5146,6 +5262,7 @@ var coderStringSliceValue = valueCoderFuncs{
 	size:      sizeStringSliceValue,
 	marshal:   appendStringSliceValue,
 	unmarshal: consumeStringSliceValue,
+	merge:     mergeListValue,
 }
 
 // sizeBytes returns the size of wire encoding a []byte pointer as a Bytes.
@@ -5180,6 +5297,7 @@ var coderBytes = pointerCoderFuncs{
 	size:      sizeBytes,
 	marshal:   appendBytes,
 	unmarshal: consumeBytes,
+	merge:     mergeBytes,
 }
 
 // appendBytesValidateUTF8 wire encodes a []byte pointer as a Bytes.
@@ -5214,6 +5332,7 @@ var coderBytesValidateUTF8 = pointerCoderFuncs{
 	size:      sizeBytes,
 	marshal:   appendBytesValidateUTF8,
 	unmarshal: consumeBytesValidateUTF8,
+	merge:     mergeBytes,
 }
 
 // sizeBytesNoZero returns the size of wire encoding a []byte pointer as a Bytes.
@@ -5257,6 +5376,7 @@ var coderBytesNoZero = pointerCoderFuncs{
 	size:      sizeBytesNoZero,
 	marshal:   appendBytesNoZero,
 	unmarshal: consumeBytesNoZero,
+	merge:     mergeBytesNoZero,
 }
 
 // appendBytesNoZeroValidateUTF8 wire encodes a []byte pointer as a Bytes.
@@ -5295,6 +5415,7 @@ var coderBytesNoZeroValidateUTF8 = pointerCoderFuncs{
 	size:      sizeBytesNoZero,
 	marshal:   appendBytesNoZeroValidateUTF8,
 	unmarshal: consumeBytesNoZeroValidateUTF8,
+	merge:     mergeBytesNoZero,
 }
 
 // sizeBytesSlice returns the size of wire encoding a [][]byte pointer as a repeated Bytes.
@@ -5335,6 +5456,7 @@ var coderBytesSlice = pointerCoderFuncs{
 	size:      sizeBytesSlice,
 	marshal:   appendBytesSlice,
 	unmarshal: consumeBytesSlice,
+	merge:     mergeBytesSlice,
 }
 
 // appendBytesSliceValidateUTF8 encodes a [][]byte pointer as a repeated Bytes.
@@ -5372,6 +5494,7 @@ var coderBytesSliceValidateUTF8 = pointerCoderFuncs{
 	size:      sizeBytesSlice,
 	marshal:   appendBytesSliceValidateUTF8,
 	unmarshal: consumeBytesSliceValidateUTF8,
+	merge:     mergeBytesSlice,
 }
 
 // sizeBytesValue returns the size of wire encoding a []byte value as a Bytes.
@@ -5403,6 +5526,7 @@ var coderBytesValue = valueCoderFuncs{
 	size:      sizeBytesValue,
 	marshal:   appendBytesValue,
 	unmarshal: consumeBytesValue,
+	merge:     mergeBytesValue,
 }
 
 // sizeBytesSliceValue returns the size of wire encoding a [][]byte value as a repeated Bytes.
@@ -5445,6 +5569,7 @@ var coderBytesSliceValue = valueCoderFuncs{
 	size:      sizeBytesSliceValue,
 	marshal:   appendBytesSliceValue,
 	unmarshal: consumeBytesSliceValue,
+	merge:     mergeBytesListValue,
 }
 
 // We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.

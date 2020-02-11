@@ -125,6 +125,7 @@ var coder{{.Name}} = pointerCoderFuncs{
 	size:      size{{.Name}},
 	marshal:   append{{.Name}},
 	unmarshal: consume{{.Name}},
+	merge:     merge{{.GoType.PointerMethod}},
 }
 
 {{if or (eq .Name "Bytes") (eq .Name "String")}}
@@ -160,6 +161,7 @@ var coder{{.Name}}ValidateUTF8 = pointerCoderFuncs{
 	size:      size{{.Name}},
 	marshal:   append{{.Name}}ValidateUTF8,
 	unmarshal: consume{{.Name}}ValidateUTF8,
+	merge:     merge{{.GoType.PointerMethod}},
 }
 {{end}}
 
@@ -206,6 +208,7 @@ var coder{{.Name}}NoZero = pointerCoderFuncs{
 	size:      size{{.Name}}NoZero,
 	marshal:   append{{.Name}}NoZero,
 	unmarshal: consume{{.Name}}{{if .ToGoTypeNoZero}}NoZero{{end}},
+	merge:     merge{{.GoType.PointerMethod}}NoZero,
 }
 
 {{if or (eq .Name "Bytes") (eq .Name "String")}}
@@ -247,6 +250,7 @@ var coder{{.Name}}NoZeroValidateUTF8 = pointerCoderFuncs{
 	size:      size{{.Name}}NoZero,
 	marshal:   append{{.Name}}NoZeroValidateUTF8,
 	unmarshal: consume{{.Name}}{{if .ToGoTypeNoZero}}NoZero{{end}}ValidateUTF8,
+	merge:     merge{{.GoType.PointerMethod}}NoZero,
 }
 {{end}}
 
@@ -291,6 +295,7 @@ var coder{{.Name}}Ptr = pointerCoderFuncs{
 	size:      size{{.Name}}Ptr,
 	marshal:   append{{.Name}}Ptr,
 	unmarshal: consume{{.Name}}Ptr,
+	merge:     merge{{.GoType.PointerMethod}}Ptr,
 }
 {{end}}
 
@@ -356,6 +361,7 @@ var coder{{.Name}}Slice = pointerCoderFuncs{
 	size:      size{{.Name}}Slice,
 	marshal:   append{{.Name}}Slice,
 	unmarshal: consume{{.Name}}Slice,
+	merge:     merge{{.GoType.PointerMethod}}Slice,
 }
 
 {{if or (eq .Name "Bytes") (eq .Name "String")}}
@@ -394,6 +400,7 @@ var coder{{.Name}}SliceValidateUTF8 = pointerCoderFuncs{
 	size:      size{{.Name}}Slice,
 	marshal:   append{{.Name}}SliceValidateUTF8,
 	unmarshal: consume{{.Name}}SliceValidateUTF8,
+	merge:     merge{{.GoType.PointerMethod}}Slice,
 }
 {{end}}
 
@@ -441,6 +448,7 @@ var coder{{.Name}}PackedSlice = pointerCoderFuncs{
 	size:      size{{.Name}}PackedSlice,
 	marshal:   append{{.Name}}PackedSlice,
 	unmarshal: consume{{.Name}}Slice,
+	merge:     merge{{.GoType.PointerMethod}}Slice,
 }
 {{end}}
 
@@ -473,9 +481,14 @@ func consume{{.Name}}Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp w
 }
 
 var coder{{.Name}}Value = valueCoderFuncs{
-	size:    size{{.Name}}Value,
-	marshal: append{{.Name}}Value,
+	size:      size{{.Name}}Value,
+	marshal:   append{{.Name}}Value,
 	unmarshal: consume{{.Name}}Value,
+{{- if (eq .Name "Bytes")}}
+	merge:     mergeBytesValue,
+{{- else}}
+	merge:     mergeScalarValue,
+{{- end}}
 }
 
 {{if (eq .Name "String")}}
@@ -509,6 +522,7 @@ var coder{{.Name}}ValueValidateUTF8 = valueCoderFuncs{
 	size:      size{{.Name}}Value,
 	marshal:   append{{.Name}}ValueValidateUTF8,
 	unmarshal: consume{{.Name}}ValueValidateUTF8,
+	merge:     mergeScalarValue,
 }
 {{end}}
 
@@ -574,6 +588,11 @@ var coder{{.Name}}SliceValue = valueCoderFuncs{
 	size:      size{{.Name}}SliceValue,
 	marshal:   append{{.Name}}SliceValue,
 	unmarshal: consume{{.Name}}SliceValue,
+{{- if (eq .Name "Bytes")}}
+	merge:     mergeBytesListValue,
+{{- else}}
+	merge:     mergeListValue,
+{{- end}}
 }
 
 {{if or (eq .WireType "Varint") (eq .WireType "Fixed32") (eq .WireType "Fixed64")}}
@@ -625,6 +644,7 @@ var coder{{.Name}}PackedSliceValue = valueCoderFuncs{
 	size:      size{{.Name}}PackedSliceValue,
 	marshal:   append{{.Name}}PackedSliceValue,
 	unmarshal: consume{{.Name}}SliceValue,
+	merge:     mergeListValue,
 }
 {{end}}
 
@@ -772,5 +792,41 @@ func (m *{{.}}) IsValid() bool {
 	return !m.pointer().IsNil()
 }
 
+{{end}}
+`))
+
+func generateImplMerge() string {
+	return mustExecute(implMergeTemplate, GoTypes)
+}
+
+var implMergeTemplate = template.Must(template.New("").Parse(`
+{{range .}}
+{{if ne . "[]byte"}}
+func merge{{.PointerMethod}}(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+	*dst.{{.PointerMethod}}() = *src.{{.PointerMethod}}()
+}
+
+func merge{{.PointerMethod}}NoZero(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+	v := *src.{{.PointerMethod}}()
+	if v != {{.Zero}} {
+		*dst.{{.PointerMethod}}() = v
+	}
+}
+
+func merge{{.PointerMethod}}Ptr(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+	p := *src.{{.PointerMethod}}Ptr()
+	if p != nil {
+		v := *p
+		*dst.{{.PointerMethod}}Ptr() = &v
+	}
+}
+
+func merge{{.PointerMethod}}Slice(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+	ds := dst.{{.PointerMethod}}Slice()
+	ss := src.{{.PointerMethod}}Slice()
+	*ds = append(*ds, *ss...)
+}
+
+{{end}}
 {{end}}
 `))

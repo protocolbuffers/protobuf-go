@@ -22,6 +22,7 @@ type (
 		Marshal       func(Message, marshalInput, marshalOptions) (marshalOutput, error)
 		Unmarshal     func(Message, unmarshalInput, unmarshalOptions) (unmarshalOutput, error)
 		IsInitialized func(Message) error
+		Merge         func(Message, Message, mergeInput, mergeOptions) mergeOutput
 	}
 	supportFlags = uint64
 	marshalInput = struct {
@@ -51,5 +52,15 @@ type (
 			FindExtensionByName(field FullName) (ExtensionType, error)
 			FindExtensionByNumber(message FullName, field FieldNumber) (ExtensionType, error)
 		}
+	}
+	mergeInput = struct {
+		pragma.NoUnkeyedLiterals
+	}
+	mergeOutput = struct {
+		pragma.NoUnkeyedLiterals
+		Merged bool
+	}
+	mergeOptions = struct {
+		pragma.NoUnkeyedLiterals
 	}
 )

@@ -40,6 +40,7 @@ func main() {
 	writeSource("internal/filedesc/desc_list_gen.go", generateDescListTypes())
 	writeSource("internal/impl/codec_gen.go", generateImplCodec())
 	writeSource("internal/impl/message_reflect_gen.go", generateImplMessage())
+	writeSource("internal/impl/merge_gen.go", generateImplMerge())
 	writeSource("proto/decode_gen.go", generateProtoDecode())
 	writeSource("proto/encode_gen.go", generateProtoEncode())
 	writeSource("proto/size_gen.go", generateProtoSize())

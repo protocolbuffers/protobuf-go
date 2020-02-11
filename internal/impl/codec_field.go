@@ -45,7 +45,8 @@ func (mi *MessageInfo) initOneofFieldCoders(od pref.OneofDescriptor, si structIn
 		// and dispatches to the field-specific marshaler in oneofFields.
 		cf := *mi.coderFields[num]
 		ot := si.oneofWrappersByNumber[num]
-		cf.mi, cf.funcs = fieldCoder(fd, ot.Field(0).Type)
+		cf.ft = ot.Field(0).Type
+		cf.mi, cf.funcs = fieldCoder(fd, cf.ft)
 		oneofFields[ot] = &cf
 		if cf.funcs.isInit != nil {
 			needIsInit = true
@@ -92,6 +93,18 @@ func (mi *MessageInfo) initOneofFieldCoders(od pref.OneofDescriptor, si structIn
 		}
 		return info.funcs.marshal(b, p, info, opts)
 	}
+	first.funcs.merge = func(dst, src pointer, _ *coderFieldInfo, opts mergeOptions) {
+		srcp, srcinfo := getInfo(src)
+		if srcinfo == nil || srcinfo.funcs.merge == nil {
+			return
+		}
+		dstp, dstinfo := getInfo(dst)
+		if dstinfo != srcinfo {
+			dst.AsValueOf(ft).Elem().Set(reflect.New(src.AsValueOf(ft).Elem().Elem().Elem().Type()))
+			dstp = pointerOfValue(dst.AsValueOf(ft).Elem().Elem()).Apply(zeroOffset)
+		}
+		srcinfo.funcs.merge(dstp, srcp, srcinfo, opts)
+	}
 	if needIsInit {
 		first.funcs.isInit = func(p pointer, _ *coderFieldInfo) error {
 			p, info := getInfo(p)
@@ -113,10 +126,9 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 		})
 	}
 
-	num := fd.Number()
 	return pointerCoderFuncs{
 		size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
-			m, ok := p.WeakFields().get(num)
+			m, ok := p.WeakFields().get(f.num)
 			if !ok {
 				return 0
 			}
@@ -127,7 +139,7 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 			return sizeMessage(m, f.tagsize, opts)
 		},
 		marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
-			m, ok := p.WeakFields().get(num)
+			m, ok := p.WeakFields().get(f.num)
 			if !ok {
 				return b, nil
 			}
@@ -139,23 +151,39 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 		},
 		unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			fs := p.WeakFields()
-			m, ok := fs.get(num)
+			m, ok := fs.get(f.num)
 			if !ok {
 				lazyInit()
 				if messageType == nil {
 					return unmarshalOutput{}, errUnknown
 				}
 				m = messageType.New().Interface()
-				fs.set(num, m)
+				fs.set(f.num, m)
 			}
 			return consumeMessage(b, m, wtyp, opts)
 		},
 		isInit: func(p pointer, f *coderFieldInfo) error {
-			m, ok := p.WeakFields().get(num)
+			m, ok := p.WeakFields().get(f.num)
 			if !ok {
 				return nil
 			}
 			return proto.IsInitialized(m)
+		},
+		merge: func(dst, src pointer, f *coderFieldInfo, opts mergeOptions) {
+			sm, ok := src.WeakFields().get(f.num)
+			if !ok {
+				return
+			}
+			dm, ok := dst.WeakFields().get(f.num)
+			if !ok {
+				lazyInit()
+				if messageType == nil {
+					panic(fmt.Sprintf("weak message %v is not linked in", fd.Message().FullName()))
+				}
+				dm = messageType.New().Interface()
+				dst.WeakFields().set(f.num, dm)
+			}
+			opts.Merge(dm, sm)
 		},
 	}
 }
@@ -166,6 +194,7 @@ func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCode
 			size:      sizeMessageInfo,
 			marshal:   appendMessageInfo,
 			unmarshal: consumeMessageInfo,
+			merge:     mergeMessage,
 		}
 		if needsInitCheck(mi.Desc) {
 			funcs.isInit = isInitMessageInfo
@@ -192,6 +221,7 @@ func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCode
 				m := asMessage(p.AsValueOf(ft).Elem())
 				return proto.IsInitialized(m)
 			},
+			merge: mergeMessage,
 		}
 	}
 }
@@ -285,6 +315,7 @@ var coderMessageValue = valueCoderFuncs{
 	marshal:   appendMessageValue,
 	unmarshal: consumeMessageValue,
 	isInit:    isInitMessageValue,
+	merge:     mergeMessageValue,
 }
 
 func sizeGroupValue(v pref.Value, tagsize int, opts marshalOptions) int {
@@ -308,6 +339,7 @@ var coderGroupValue = valueCoderFuncs{
 	marshal:   appendGroupValue,
 	unmarshal: consumeGroupValue,
 	isInit:    isInitMessageValue,
+	merge:     mergeMessageValue,
 }
 
 func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
@@ -317,6 +349,7 @@ func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderF
 			size:      sizeGroupType,
 			marshal:   appendGroupType,
 			unmarshal: consumeGroupType,
+			merge:     mergeMessage,
 		}
 		if needsInitCheck(mi.Desc) {
 			funcs.isInit = isInitMessageInfo
@@ -343,6 +376,7 @@ func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderF
 				m := asMessage(p.AsValueOf(ft).Elem())
 				return proto.IsInitialized(m)
 			},
+			merge: mergeMessage,
 		}
 	}
 }
@@ -404,6 +438,7 @@ func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointe
 			size:      sizeMessageSliceInfo,
 			marshal:   appendMessageSliceInfo,
 			unmarshal: consumeMessageSliceInfo,
+			merge:     mergeMessageSlice,
 		}
 		if needsInitCheck(mi.Desc) {
 			funcs.isInit = isInitMessageSliceInfo
@@ -423,6 +458,7 @@ func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointe
 		isInit: func(p pointer, f *coderFieldInfo) error {
 			return isInitMessageSlice(p, ft)
 		},
+		merge: mergeMessageSlice,
 	}
 }
 
@@ -605,6 +641,7 @@ var coderMessageSliceValue = valueCoderFuncs{
 	marshal:   appendMessageSliceValue,
 	unmarshal: consumeMessageSliceValue,
 	isInit:    isInitMessageSliceValue,
+	merge:     mergeMessageListValue,
 }
 
 func sizeGroupSliceValue(listv pref.Value, tagsize int, opts marshalOptions) int {
@@ -660,6 +697,7 @@ var coderGroupSliceValue = valueCoderFuncs{
 	marshal:   appendGroupSliceValue,
 	unmarshal: consumeGroupSliceValue,
 	isInit:    isInitMessageSliceValue,
+	merge:     mergeMessageListValue,
 }
 
 func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderFuncs {
@@ -669,6 +707,7 @@ func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerC
 			size:      sizeGroupSliceInfo,
 			marshal:   appendGroupSliceInfo,
 			unmarshal: consumeGroupSliceInfo,
+			merge:     mergeMessageSlice,
 		}
 		if needsInitCheck(mi.Desc) {
 			funcs.isInit = isInitMessageSliceInfo
@@ -688,6 +727,7 @@ func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerC
 		isInit: func(p pointer, f *coderFieldInfo) error {
 			return isInitMessageSlice(p, ft)
 		},
+		merge: mergeMessageSlice,
 	}
 }
 

@@ -36,6 +36,18 @@ func (w WireType) ConstSize() bool {
 
 type GoType string
 
+var GoTypes = []GoType{
+	GoBool,
+	GoInt32,
+	GoUint32,
+	GoInt64,
+	GoUint64,
+	GoFloat32,
+	GoFloat64,
+	GoString,
+	GoBytes,
+}
+
 const (
 	GoBool    = "bool"
 	GoInt32   = "int32"

@@ -63,6 +63,14 @@ func BenchmarkEmptyMessage(b *testing.B) {
 			}
 		})
 	})
+	b.Run("Clone", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			m := &emptypb.Empty{}
+			for pb.Next() {
+				proto.Clone(m)
+			}
+		})
+	})
 }
 
 // BenchmarkRepeatedInt32 tests a message containing 500 non-packed repeated int32s.
@@ -113,6 +121,13 @@ func BenchmarkRepeatedInt32(b *testing.B) {
 				if got != want {
 					b.Fatalf("Validate = %v, want %v", got, want)
 				}
+			}
+		})
+	})
+	b.Run("Clone", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				proto.Clone(m)
 			}
 		})
 	})
@@ -176,6 +191,13 @@ func BenchmarkRequired(b *testing.B) {
 				if got != want {
 					b.Fatalf("Validate = %v, want %v", got, want)
 				}
+			}
+		})
+	})
+	b.Run("Clone", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				proto.Clone(m)
 			}
 		})
 	})

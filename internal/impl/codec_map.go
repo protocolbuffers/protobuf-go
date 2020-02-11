@@ -67,6 +67,14 @@ func encoderFuncsForMap(fd pref.FieldDescriptor, ft reflect.Type) (valueMessage 
 			}
 		},
 	}
+	switch valField.Kind() {
+	case pref.MessageKind:
+		funcs.merge = mergeMapOfMessage
+	case pref.BytesKind:
+		funcs.merge = mergeMapOfBytes
+	default:
+		funcs.merge = mergeMap
+	}
 	if valFuncs.isInit != nil {
 		funcs.isInit = func(p pointer, f *coderFieldInfo) error {
 			return isInitMap(p.AsValueOf(ft).Elem(), mapi, f)
@@ -326,4 +334,55 @@ func isInitMap(mapv reflect.Value, mapi *mapInfo, f *coderFieldInfo) error {
 		}
 	}
 	return nil
+}
+
+func mergeMap(dst, src pointer, f *coderFieldInfo, opts mergeOptions) {
+	dstm := dst.AsValueOf(f.ft).Elem()
+	srcm := src.AsValueOf(f.ft).Elem()
+	if srcm.Len() == 0 {
+		return
+	}
+	if dstm.IsNil() {
+		dstm.Set(reflect.MakeMap(f.ft))
+	}
+	iter := mapRange(srcm)
+	for iter.Next() {
+		dstm.SetMapIndex(iter.Key(), iter.Value())
+	}
+}
+
+func mergeMapOfBytes(dst, src pointer, f *coderFieldInfo, opts mergeOptions) {
+	dstm := dst.AsValueOf(f.ft).Elem()
+	srcm := src.AsValueOf(f.ft).Elem()
+	if srcm.Len() == 0 {
+		return
+	}
+	if dstm.IsNil() {
+		dstm.Set(reflect.MakeMap(f.ft))
+	}
+	iter := mapRange(srcm)
+	for iter.Next() {
+		dstm.SetMapIndex(iter.Key(), reflect.ValueOf(append(emptyBuf[:], iter.Value().Bytes()...)))
+	}
+}
+
+func mergeMapOfMessage(dst, src pointer, f *coderFieldInfo, opts mergeOptions) {
+	dstm := dst.AsValueOf(f.ft).Elem()
+	srcm := src.AsValueOf(f.ft).Elem()
+	if srcm.Len() == 0 {
+		return
+	}
+	if dstm.IsNil() {
+		dstm.Set(reflect.MakeMap(f.ft))
+	}
+	iter := mapRange(srcm)
+	for iter.Next() {
+		val := reflect.New(f.ft.Elem().Elem())
+		if f.mi != nil {
+			f.mi.mergePointer(pointerOfValue(val), pointerOfValue(iter.Value()), opts)
+		} else {
+			opts.Merge(asMessage(val), asMessage(iter.Value()))
+		}
+		dstm.SetMapIndex(iter.Key(), val)
+	}
 }

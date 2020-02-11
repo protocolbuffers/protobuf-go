@@ -20,6 +20,7 @@ type pointerCoderFuncs struct {
 	marshal   func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error)
 	unmarshal func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error)
 	isInit    func(p pointer, f *coderFieldInfo) error
+	merge     func(dst, src pointer, f *coderFieldInfo, opts mergeOptions)
 }
 
 // valueCoderFuncs is a set of protoreflect.Value encoding functions.
@@ -28,6 +29,7 @@ type valueCoderFuncs struct {
 	marshal   func(b []byte, v pref.Value, wiretag uint64, opts marshalOptions) ([]byte, error)
 	unmarshal func(b []byte, v pref.Value, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, unmarshalOutput, error)
 	isInit    func(v pref.Value) error
+	merge     func(dst, src pref.Value, opts mergeOptions) pref.Value
 }
 
 // fieldCoder returns pointer functions for a field, used for operating on
