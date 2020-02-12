@@ -7,8 +7,9 @@ package proto
 import "google.golang.org/protobuf/reflect/protoreflect"
 
 // Reset clears every field in the message.
+// The resulting message shares no observable memory with its previous state
+// other than the memory for the message itself.
 func Reset(m Message) {
-	// TODO(blocks): Document memory aliasing guarantees.
 	if mr, ok := m.(interface{ Reset() }); ok && hasProtoMethods {
 		mr.Reset()
 		return
