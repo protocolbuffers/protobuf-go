@@ -30,6 +30,10 @@
 //
 // Relationships
 //
+// The following diagrams demonstrate the relationships between
+// various types declared in this package.
+//
+//
 //	                       ┌───────────────────────────────────┐
 //	                       V                                   │
 //	   ┌────────────── New(n) ─────────────┐                   │
@@ -73,8 +77,8 @@
 // ProtoMessage, which can convert to/from a Message.
 //
 //
-//	      ┌── TypeDescriptor() ──┐   ┌──── Descriptor() ────┐
-//	      │                      V   │                      V
+//	      ┌── TypeDescriptor() ──┐    ┌───── Descriptor() ─────┐
+//	      │                      V    │                        V
 //	╔═══════════════╗  ╔═════════════════════════╗  ╔═════════════════════╗
 //	║ ExtensionType ║  ║ ExtensionTypeDescriptor ║  ║ ExtensionDescriptor ║
 //	╚═══════════════╝  ╚═════════════════════════╝  ╚═════════════════════╝
