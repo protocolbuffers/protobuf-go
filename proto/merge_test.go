@@ -17,12 +17,6 @@ import (
 )
 
 func TestMerge(t *testing.T) {
-
-	t.Run("Deep", func(t *testing.T) { testMerge(t, false) })
-	t.Run("Shallow", func(t *testing.T) { testMerge(t, true) })
-}
-
-func testMerge(t *testing.T, shallow bool) {
 	tests := []struct {
 		desc string
 		dst  proto.Message
@@ -372,15 +366,13 @@ func testMerge(t *testing.T, shallow bool) {
 				t.Fatalf("Unmarshal(Marshal(dst)+Marshal(src)) mismatch: got %v, want %v", dst, tt.want)
 			}
 
-			proto.MergeOptions{Shallow: shallow}.Merge(tt.dst, tt.src)
+			proto.Merge(tt.dst, tt.src)
 			if !proto.Equal(tt.dst, tt.want) {
 				t.Fatalf("Merge() mismatch:\n got %v\nwant %v", tt.dst, tt.want)
 			}
 			if tt.mutator != nil {
-				wantObservable := tt.mutator(tt.src) && shallow
-				gotObservable := !proto.Equal(tt.dst, tt.want)
-				if gotObservable != wantObservable {
-					t.Fatalf("mutation observed:\n got %v\nwant %v", gotObservable, wantObservable)
+				if !proto.Equal(tt.dst, tt.want) {
+					t.Fatalf("mutation observed in dest after modifying merge source:\n got %v\nwant %v", tt.dst, tt.want)
 				}
 			}
 		})

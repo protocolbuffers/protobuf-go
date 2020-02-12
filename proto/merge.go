@@ -5,70 +5,8 @@
 package proto
 
 import (
-	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
-
-// MergeOptions configures the merger.
-//
-// Example usage:
-//   MergeOptions{Shallow: true}.Merge(dst, src)
-type MergeOptions struct {
-	pragma.NoUnkeyedLiterals
-
-	// Shallow configures Merge to shallow copy messages, lists, and maps
-	// instead of allocating new ones in the destination if it does not already
-	// have one populated. Scalar bytes are copied by reference.
-	// If true, Merge must be given messages of the same concrete type.
-	//
-	// If false, Merge is guaranteed to produce deep copies of all mutable
-	// objects from the source into the destination. Since scalar bytes are
-	// mutable they are deep copied as a result.
-	//
-	// Invariant:
-	//	var dst1, dst2 Message = ...
-	//	Equal(dst1, dst2) // assume equal initially
-	//	MergeOptions{Shallow: true}.Merge(dst1, src)
-	//	MergeOptions{Shallow: false}.Merge(dst2, src)
-	//	Equal(dst1, dst2) // equal regardless of whether Shallow is specified
-	Shallow bool
-}
-
-// Clone returns a deep copy of m.
-// See MergeOptions.Clone for details.
-func Clone(m Message) Message {
-	return MergeOptions{}.Clone(m)
-}
-
-// Merge merges src into dst, which must be messages with the same descriptor.
-// See MergeOptions.Merge for details.
-func Merge(dst, src Message) {
-	MergeOptions{}.Merge(dst, src)
-}
-
-// Clone returns a copy of m.
-// If Shallow is specified it makes a new message and shallow copies m into it.
-// If the top-level message is invalid, it returns an invalid message as well.
-func (o MergeOptions) Clone(m Message) Message {
-	// NOTE: Most usages of Clone assume the following properties:
-	//	t := reflect.TypeOf(m)
-	//	t == reflect.TypeOf(m.ProtoReflect().New().Interface())
-	//	t == reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface())
-	//
-	// Embedding protobuf messages breaks this since the parent type will have
-	// a forwarded ProtoReflect method, but the Interface method will return
-	// the underlying embedded message type.
-	return o.cloneMessage(m.ProtoReflect()).Interface()
-}
-
-func (o MergeOptions) cloneMessage(src protoreflect.Message) (dst protoreflect.Message) {
-	if !src.IsValid() {
-		return src.Type().Zero()
-	}
-	dst = src.New()
-	o.mergeMessage(dst, src)
-	return dst
-}
 
 // Merge merges src into dst, which must be messages with the same descriptor.
 //
@@ -81,41 +19,47 @@ func (o MergeOptions) cloneMessage(src protoreflect.Message) (dst protoreflect.M
 //
 // It is semantically equivalent to unmarshaling the encoded form of src
 // into dst with the UnmarshalOptions.Merge option specified.
-func (o MergeOptions) Merge(dst, src Message) {
+func Merge(dst, src Message) {
 	dstMsg, srcMsg := dst.ProtoReflect(), src.ProtoReflect()
-	if o.Shallow {
-		if dstMsg.Type() != srcMsg.Type() {
-			panic("type mismatch")
-		}
-	} else {
-		if dstMsg.Descriptor() != srcMsg.Descriptor() {
-			panic("descriptor mismatch")
-		}
+	if dstMsg.Descriptor() != srcMsg.Descriptor() {
+		panic("descriptor mismatch")
 	}
-	o.mergeMessage(dstMsg, srcMsg)
+	mergeOptions{}.mergeMessage(dstMsg, srcMsg)
 }
 
-func (o MergeOptions) mergeMessage(dst, src protoreflect.Message) {
+// Clone returns a copy of m.
+// If the top-level message is invalid, it returns an invalid message as well.
+func Clone(m Message) Message {
+	// NOTE: Most usages of Clone assume the following properties:
+	//	t := reflect.TypeOf(m)
+	//	t == reflect.TypeOf(m.ProtoReflect().New().Interface())
+	//	t == reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface())
+	//
+	// Embedding protobuf messages breaks this since the parent type will have
+	// a forwarded ProtoReflect method, but the Interface method will return
+	// the underlying embedded message type.
+	src := m.ProtoReflect()
+	if !src.IsValid() {
+		return src.Type().Zero().Interface()
+	}
+	dst := src.New()
+	mergeOptions{}.mergeMessage(dst, src)
+	return dst.Interface()
+}
+
+// mergeOptions provides a namespace for merge functions, and can be
+// exported in the future if we add user-visible merge options.
+type mergeOptions struct{}
+
+func (o mergeOptions) mergeMessage(dst, src protoreflect.Message) {
 	src.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		switch {
 		case fd.IsList():
-			if o.Shallow && !dst.Has(fd) {
-				dst.Set(fd, v)
-			} else {
-				o.mergeList(dst.Mutable(fd).List(), v.List(), fd)
-			}
+			o.mergeList(dst.Mutable(fd).List(), v.List(), fd)
 		case fd.IsMap():
-			if o.Shallow && !dst.Has(fd) {
-				dst.Set(fd, v)
-			} else {
-				o.mergeMap(dst.Mutable(fd).Map(), v.Map(), fd.MapValue())
-			}
+			o.mergeMap(dst.Mutable(fd).Map(), v.Map(), fd.MapValue())
 		case fd.Message() != nil:
-			if o.Shallow && !dst.Has(fd) {
-				dst.Set(fd, v)
-			} else {
-				o.mergeMessage(dst.Mutable(fd).Message(), v.Message())
-			}
+			o.mergeMessage(dst.Mutable(fd).Message(), v.Message())
 		case fd.Kind() == protoreflect.BytesKind:
 			dst.Set(fd, o.cloneBytes(v))
 		default:
@@ -125,26 +69,18 @@ func (o MergeOptions) mergeMessage(dst, src protoreflect.Message) {
 	})
 
 	if len(src.GetUnknown()) > 0 {
-		if o.Shallow && dst.GetUnknown() == nil {
-			dst.SetUnknown(src.GetUnknown())
-		} else {
-			dst.SetUnknown(append(dst.GetUnknown(), src.GetUnknown()...))
-		}
+		dst.SetUnknown(append(dst.GetUnknown(), src.GetUnknown()...))
 	}
 }
 
-func (o MergeOptions) mergeList(dst, src protoreflect.List, fd protoreflect.FieldDescriptor) {
+func (o mergeOptions) mergeList(dst, src protoreflect.List, fd protoreflect.FieldDescriptor) {
 	// Merge semantics appends to the end of the existing list.
 	for i, n := 0, src.Len(); i < n; i++ {
 		switch v := src.Get(i); {
 		case fd.Message() != nil:
-			if o.Shallow {
-				dst.Append(v)
-			} else {
-				dstv := dst.NewElement()
-				o.mergeMessage(dstv.Message(), v.Message())
-				dst.Append(dstv)
-			}
+			dstv := dst.NewElement()
+			o.mergeMessage(dstv.Message(), v.Message())
+			dst.Append(dstv)
 		case fd.Kind() == protoreflect.BytesKind:
 			dst.Append(o.cloneBytes(v))
 		default:
@@ -153,18 +89,14 @@ func (o MergeOptions) mergeList(dst, src protoreflect.List, fd protoreflect.Fiel
 	}
 }
 
-func (o MergeOptions) mergeMap(dst, src protoreflect.Map, fd protoreflect.FieldDescriptor) {
+func (o mergeOptions) mergeMap(dst, src protoreflect.Map, fd protoreflect.FieldDescriptor) {
 	// Merge semantics replaces, rather than merges into existing entries.
 	src.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 		switch {
 		case fd.Message() != nil:
-			if o.Shallow {
-				dst.Set(k, v)
-			} else {
-				dstv := dst.NewValue()
-				o.mergeMessage(dstv.Message(), v.Message())
-				dst.Set(k, dstv)
-			}
+			dstv := dst.NewValue()
+			o.mergeMessage(dstv.Message(), v.Message())
+			dst.Set(k, dstv)
 		case fd.Kind() == protoreflect.BytesKind:
 			dst.Set(k, o.cloneBytes(v))
 		default:
@@ -174,9 +106,6 @@ func (o MergeOptions) mergeMap(dst, src protoreflect.Map, fd protoreflect.FieldD
 	})
 }
 
-func (o MergeOptions) cloneBytes(v protoreflect.Value) protoreflect.Value {
-	if o.Shallow {
-		return v
-	}
+func (o mergeOptions) cloneBytes(v protoreflect.Value) protoreflect.Value {
 	return protoreflect.ValueOfBytes(append([]byte{}, v.Bytes()...))
 }
