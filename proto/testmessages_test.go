@@ -45,6 +45,22 @@ func makeMessages(in protobuild.Message, messages ...proto.Message) []proto.Mess
 	return messages
 }
 
+func templateMessages(messages ...proto.Message) []protoreflect.MessageType {
+	if len(messages) == 0 {
+		messages = []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*test3pb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+		}
+	}
+	var out []protoreflect.MessageType
+	for _, m := range messages {
+		out = append(out, m.ProtoReflect().Type())
+	}
+	return out
+
+}
+
 var testValidMessages = []testProto{
 	{
 		desc:          "basic scalar types",

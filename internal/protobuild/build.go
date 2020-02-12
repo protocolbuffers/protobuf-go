@@ -144,6 +144,8 @@ func fieldValue(fd pref.FieldDescriptor, v interface{}) pref.Value {
 		case pref.EnumKind:
 			v = fd.Enum().Values().ByName(pref.Name(o)).Number()
 		}
+	case []byte:
+		return pref.ValueOf(append([]byte{}, o...))
 	}
 	return pref.ValueOf(v)
 }

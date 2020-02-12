@@ -9,6 +9,7 @@ import (
 
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/flags"
+	"google.golang.org/protobuf/internal/protobuild"
 	"google.golang.org/protobuf/proto"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
@@ -19,6 +20,7 @@ func init() {
 	if flags.ProtoLegacy {
 		testValidMessages = append(testValidMessages, testWeakValidMessages...)
 		testInvalidMessages = append(testInvalidMessages, testWeakInvalidMessages...)
+		testMerges = append(testMerges, testWeakMerges...)
 	}
 }
 
@@ -62,6 +64,36 @@ var testWeakInvalidMessages = []testProto{
 				pack.Tag{0, pack.VarintType}, pack.Varint(1000),
 			}),
 		}.Marshal(),
+	},
+}
+
+var testWeakMerges = []testMerge{
+	{
+		desc: "clone weak message",
+		src: protobuild.Message{
+			"weak_message1": protobuild.Message{
+				"a": 1,
+			},
+		},
+		types: []proto.Message{&testpb.TestWeak{}},
+	}, {
+		desc: "merge weak message",
+		dst: protobuild.Message{
+			"weak_message1": protobuild.Message{
+				"a": 1,
+			},
+		},
+		src: protobuild.Message{
+			"weak_message1": protobuild.Message{
+				"a": 2,
+			},
+		},
+		want: protobuild.Message{
+			"weak_message1": protobuild.Message{
+				"a": 2,
+			},
+		},
+		types: []proto.Message{&testpb.TestWeak{}},
 	},
 }
 
