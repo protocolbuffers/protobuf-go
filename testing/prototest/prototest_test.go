@@ -38,7 +38,7 @@ func Test(t *testing.T) {
 
 	for _, m := range ms {
 		t.Run(fmt.Sprintf("%T", m), func(t *testing.T) {
-			prototest.TestMessage(t, m, prototest.MessageOptions{})
+			prototest.Message{}.Test(t, m.ProtoReflect().Type())
 		})
 	}
 }

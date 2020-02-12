@@ -23,24 +23,20 @@ func TestConformance(t *testing.T) {
 		(*test3pb.TestAllTypes)(nil),
 		(*testpb.TestAllExtensions)(nil),
 	} {
-		prototest.TestMessage(t, dynamicpb.NewMessage(message.ProtoReflect().Descriptor()), prototest.MessageOptions{})
+		mt := dynamicpb.NewMessageType(message.ProtoReflect().Descriptor())
+		prototest.Message{}.Test(t, mt)
 	}
 }
 
 func TestDynamicExtensions(t *testing.T) {
-	file, err := preg.GlobalFiles.FindFileByPath("internal/testprotos/test/ext.proto")
-	if err != nil {
-		t.Fatal(err)
+	for _, message := range []proto.Message{
+		(*testpb.TestAllExtensions)(nil),
+	} {
+		mt := dynamicpb.NewMessageType(message.ProtoReflect().Descriptor())
+		prototest.Message{
+			Resolver: extResolver{},
+		}.Test(t, mt)
 	}
-
-	md := (&testpb.TestAllExtensions{}).ProtoReflect().Descriptor()
-	opts := prototest.MessageOptions{
-		Resolver: extResolver{},
-	}
-	for i := 0; i < file.Extensions().Len(); i++ {
-		opts.ExtensionTypes = append(opts.ExtensionTypes, dynamicpb.NewExtensionType(file.Extensions().Get(i)))
-	}
-	prototest.TestMessage(t, dynamicpb.NewMessage(md), opts)
 }
 
 type extResolver struct{}
@@ -59,4 +55,10 @@ func (extResolver) FindExtensionByNumber(message pref.FullName, field pref.Field
 		return nil, err
 	}
 	return dynamicpb.NewExtensionType(xt.TypeDescriptor().Descriptor()), nil
+}
+
+func (extResolver) RangeExtensionsByMessage(message pref.FullName, f func(pref.ExtensionType) bool) {
+	preg.GlobalTypes.RangeExtensionsByMessage(message, func(xt pref.ExtensionType) bool {
+		return f(dynamicpb.NewExtensionType(xt.TypeDescriptor().Descriptor()))
+	})
 }
