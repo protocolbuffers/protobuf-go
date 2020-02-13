@@ -93,89 +93,106 @@ func TestPackageNamesAndPaths(t *testing.T) {
 		protoPackageName = "proto.package"
 	)
 	for _, test := range []struct {
-		desc               string
-		parameter          string
-		goPackageOption    string
-		generate           bool
-		wantPackageName    GoPackageName
-		wantImportPath     GoImportPath
-		wantFilenamePrefix string
+		desc            string
+		parameter       string
+		goPackageOption string
+		generate        bool
+		wantPackageName GoPackageName
+		wantImportPath  GoImportPath
+		wantFilename    string
 	}{
 		{
-			desc:               "no parameters, no go_package option",
-			generate:           true,
-			wantPackageName:    "proto_package",
-			wantImportPath:     "dir",
-			wantFilenamePrefix: "dir/filename",
+			desc:            "no parameters, no go_package option",
+			generate:        true,
+			wantPackageName: "proto_package",
+			wantImportPath:  "dir",
+			wantFilename:    "dir/filename",
 		},
 		{
-			desc:               "go_package option sets import path",
-			goPackageOption:    "golang.org/x/foo",
-			generate:           true,
-			wantPackageName:    "foo",
-			wantImportPath:     "golang.org/x/foo",
-			wantFilenamePrefix: "golang.org/x/foo/filename",
+			desc:            "go_package option sets import path",
+			goPackageOption: "golang.org/x/foo",
+			generate:        true,
+			wantPackageName: "foo",
+			wantImportPath:  "golang.org/x/foo",
+			wantFilename:    "golang.org/x/foo/filename",
 		},
 		{
-			desc:               "go_package option sets import path and package",
-			goPackageOption:    "golang.org/x/foo;bar",
-			generate:           true,
-			wantPackageName:    "bar",
-			wantImportPath:     "golang.org/x/foo",
-			wantFilenamePrefix: "golang.org/x/foo/filename",
+			desc:            "go_package option sets import path and package",
+			goPackageOption: "golang.org/x/foo;bar",
+			generate:        true,
+			wantPackageName: "bar",
+			wantImportPath:  "golang.org/x/foo",
+			wantFilename:    "golang.org/x/foo/filename",
 		},
 		{
-			desc:               "go_package option sets package",
-			goPackageOption:    "foo",
-			generate:           true,
-			wantPackageName:    "foo",
-			wantImportPath:     "dir",
-			wantFilenamePrefix: "dir/filename",
+			desc:            "go_package option sets package",
+			goPackageOption: "foo",
+			generate:        true,
+			wantPackageName: "foo",
+			wantImportPath:  "dir",
+			wantFilename:    "dir/filename",
 		},
 		{
-			desc:               "command line sets import path for a file",
-			parameter:          "Mdir/filename.proto=golang.org/x/bar",
-			goPackageOption:    "golang.org/x/foo",
-			generate:           true,
-			wantPackageName:    "foo",
-			wantImportPath:     "golang.org/x/bar",
-			wantFilenamePrefix: "golang.org/x/foo/filename",
+			desc:            "command line sets import path for a file",
+			parameter:       "Mdir/filename.proto=golang.org/x/bar",
+			goPackageOption: "golang.org/x/foo",
+			generate:        true,
+			wantPackageName: "foo",
+			wantImportPath:  "golang.org/x/bar",
+			wantFilename:    "golang.org/x/foo/filename",
 		},
 		{
-			desc:               "command line sets import path for a file with package name specified",
-			parameter:          "Mdir/filename.proto=golang.org/x/bar;bar",
-			goPackageOption:    "golang.org/x/foo",
-			generate:           true,
-			wantPackageName:    "bar",
-			wantImportPath:     "golang.org/x/bar",
-			wantFilenamePrefix: "golang.org/x/foo/filename",
+			desc:            "command line sets import path for a file with package name specified",
+			parameter:       "Mdir/filename.proto=golang.org/x/bar;bar",
+			goPackageOption: "golang.org/x/foo",
+			generate:        true,
+			wantPackageName: "bar",
+			wantImportPath:  "golang.org/x/bar",
+			wantFilename:    "golang.org/x/foo/filename",
 		},
 		{
-			desc:               "import_path parameter sets import path of generated files",
-			parameter:          "import_path=golang.org/x/bar",
-			goPackageOption:    "golang.org/x/foo",
-			generate:           true,
-			wantPackageName:    "foo",
-			wantImportPath:     "golang.org/x/bar",
-			wantFilenamePrefix: "golang.org/x/foo/filename",
+			desc:            "import_path parameter sets import path of generated files",
+			parameter:       "import_path=golang.org/x/bar",
+			goPackageOption: "golang.org/x/foo",
+			generate:        true,
+			wantPackageName: "foo",
+			wantImportPath:  "golang.org/x/bar",
+			wantFilename:    "golang.org/x/foo/filename",
 		},
 		{
-			desc:               "import_path parameter does not set import path of dependencies",
-			parameter:          "import_path=golang.org/x/bar",
-			goPackageOption:    "golang.org/x/foo",
-			generate:           false,
-			wantPackageName:    "foo",
-			wantImportPath:     "golang.org/x/foo",
-			wantFilenamePrefix: "golang.org/x/foo/filename",
+			desc:            "import_path parameter does not set import path of dependencies",
+			parameter:       "import_path=golang.org/x/bar",
+			goPackageOption: "golang.org/x/foo",
+			generate:        false,
+			wantPackageName: "foo",
+			wantImportPath:  "golang.org/x/foo",
+			wantFilename:    "golang.org/x/foo/filename",
 		},
 		{
-			desc:               "paths=import uses import path from command line",
-			parameter:          "paths=import,Mdir/filename.proto=golang.org/x/bar",
-			goPackageOption:    "golang.org/x/foo",
-			generate:           true,
-			wantPackageName:    "foo",
-			wantImportPath:     "golang.org/x/bar",
-			wantFilenamePrefix: "golang.org/x/bar/filename",
+			desc:            "module option set",
+			parameter:       "module=golang.org/x",
+			goPackageOption: "golang.org/x/foo",
+			generate:        false,
+			wantPackageName: "foo",
+			wantImportPath:  "golang.org/x/foo",
+			wantFilename:    "foo/filename",
+		},
+		{
+			desc:            "paths=import uses import path from command line",
+			parameter:       "paths=import,Mdir/filename.proto=golang.org/x/bar",
+			goPackageOption: "golang.org/x/foo",
+			generate:        true,
+			wantPackageName: "foo",
+			wantImportPath:  "golang.org/x/bar",
+			wantFilename:    "golang.org/x/bar/filename",
+		},
+		{
+			desc:            "module option implies paths=import",
+			parameter:       "module=golang.org/x,Mdir/filename.proto=golang.org/x/foo",
+			generate:        false,
+			wantPackageName: "proto_package",
+			wantImportPath:  "golang.org/x/foo",
+			wantFilename:    "foo/filename",
 		},
 	} {
 		context := fmt.Sprintf(`
@@ -218,8 +235,10 @@ TEST: %v
 		if got, want := gotFile.GoImportPath, test.wantImportPath; got != want {
 			t.Errorf("%vGoImportPath=%v, want %v", context, got, want)
 		}
-		if got, want := gotFile.GeneratedFilenamePrefix, test.wantFilenamePrefix; got != want {
-			t.Errorf("%vGeneratedFilenamePrefix=%v, want %v", context, got, want)
+		gen.NewGeneratedFile(gotFile.GeneratedFilenamePrefix, "")
+		resp := gen.Response()
+		if got, want := resp.File[0].GetName(), test.wantFilename; got != want {
+			t.Errorf("%vgenerated filename=%v, want %v", context, got, want)
 		}
 	}
 }

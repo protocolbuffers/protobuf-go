@@ -109,6 +109,7 @@ type Plugin struct {
 	messagesByName map[protoreflect.FullName]*Message
 	annotateCode   bool
 	pathType       pathType
+	module         string
 	genFiles       []*GeneratedFile
 	opts           Options
 	err            error
@@ -172,6 +173,8 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 			// Ignore.
 		case "import_path":
 			packageImportPath = GoImportPath(value)
+		case "module":
+			gen.module = value
 		case "paths":
 			switch value {
 			case "import":
@@ -208,6 +211,18 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 					return nil, err
 				}
 			}
+		}
+	}
+	if gen.module != "" {
+		// When the module= option is provided, we strip the module name
+		// prefix from generated files. This only makes sense if generated
+		// filenames are based on the import path, so default to paths=import
+		// and complain if source_relative was selected manually.
+		switch gen.pathType {
+		case pathTypeLegacy:
+			gen.pathType = pathTypeImport
+		case pathTypeSourceRelative:
+			return nil, fmt.Errorf("cannot use module= with paths=source_relative")
 		}
 	}
 
@@ -396,8 +411,18 @@ func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 				Error: proto.String(err.Error()),
 			}
 		}
+		filename := g.filename
+		if gen.module != "" {
+			trim := gen.module + "/"
+			if !strings.HasPrefix(filename, trim) {
+				return &pluginpb.CodeGeneratorResponse{
+					Error: proto.String(fmt.Sprintf("%v: generated file does not match prefix %q", filename, gen.module)),
+				}
+			}
+			filename = strings.TrimPrefix(filename, trim)
+		}
 		resp.File = append(resp.File, &pluginpb.CodeGeneratorResponse_File{
-			Name:    proto.String(g.filename),
+			Name:    proto.String(filename),
 			Content: proto.String(string(content)),
 		})
 		if gen.annotateCode && strings.HasSuffix(g.filename, ".go") {
@@ -408,7 +433,7 @@ func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 				}
 			}
 			resp.File = append(resp.File, &pluginpb.CodeGeneratorResponse_File{
-				Name:    proto.String(g.filename + ".meta"),
+				Name:    proto.String(filename + ".meta"),
 				Content: proto.String(meta),
 			})
 		}
