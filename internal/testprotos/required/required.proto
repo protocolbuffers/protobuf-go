@@ -6,6 +6,8 @@ syntax = "proto2";
 
 package goproto.proto.testrequired;
 
+option go_package = "google.golang.org/protobuf/internal/testprotos/required";
+
 message Int32 {
   required int32 v = 1;
 }
