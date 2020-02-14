@@ -267,7 +267,7 @@ func (r *Files) NumFiles() int {
 	return len(r.filesByPath)
 }
 
-// RangeFiles iterates over all registered files.
+// RangeFiles iterates over all registered files while f returns true.
 // The iteration order is undefined.
 func (r *Files) RangeFiles(f func(protoreflect.FileDescriptor) bool) {
 	if r == nil {
@@ -300,8 +300,8 @@ func (r *Files) NumFilesByPackage(name protoreflect.FullName) int {
 	return len(p.files)
 }
 
-// RangeFilesByPackage iterates over all registered files in a give proto package.
-// The iteration order is undefined.
+// RangeFilesByPackage iterates over all registered files in a given proto package
+// while f returns true. The iteration order is undefined.
 func (r *Files) RangeFilesByPackage(name protoreflect.FullName, f func(protoreflect.FileDescriptor) bool) {
 	if r == nil {
 		return
@@ -602,7 +602,7 @@ func (r *Types) NumEnums() int {
 	return r.numEnums
 }
 
-// RangeEnums iterates over all registered enums.
+// RangeEnums iterates over all registered enums while f returns true.
 // Iteration order is undefined.
 func (r *Types) RangeEnums(f func(protoreflect.EnumType) bool) {
 	if r == nil {
@@ -633,7 +633,7 @@ func (r *Types) NumMessages() int {
 	return r.numMessages
 }
 
-// RangeMessages iterates over all registered messages.
+// RangeMessages iterates over all registered messages while f returns true.
 // Iteration order is undefined.
 func (r *Types) RangeMessages(f func(protoreflect.MessageType) bool) {
 	if r == nil {
@@ -664,7 +664,7 @@ func (r *Types) NumExtensions() int {
 	return r.numExtensions
 }
 
-// RangeExtensions iterates over all registered extensions.
+// RangeExtensions iterates over all registered extensions while f returns true.
 // Iteration order is undefined.
 func (r *Types) RangeExtensions(f func(protoreflect.ExtensionType) bool) {
 	if r == nil {
@@ -697,7 +697,7 @@ func (r *Types) NumExtensionsByMessage(message protoreflect.FullName) int {
 }
 
 // RangeExtensionsByMessage iterates over all registered extensions filtered
-// by a given message type. Iteration order is undefined.
+// by a given message type while f returns true. Iteration order is undefined.
 func (r *Types) RangeExtensionsByMessage(message protoreflect.FullName, f func(protoreflect.ExtensionType) bool) {
 	if r == nil {
 		return
