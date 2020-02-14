@@ -62,8 +62,8 @@ type MarshalOptions struct {
 	// 2. The message and all its submessages have not changed in any
 	// way since the Size call.
 	//
-	// If either of these invariants is broken, the results are undefined
-	// but may include panics or invalid output.
+	// If either of these invariants is violated,
+	// the results are undefined and may include panics or corrupted output.
 	//
 	// Implementations MAY take this option into account to provide
 	// better performance, but there is no guarantee that they will do so.

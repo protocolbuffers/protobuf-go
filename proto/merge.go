@@ -8,7 +8,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// Merge merges src into dst, which must be messages with the same descriptor.
+// Merge merges src into dst, which must be a message with the same descriptor.
 //
 // Populated scalar fields in src are copied to dst, while populated
 // singular messages in src are merged into dst by recursively calling Merge.
@@ -27,7 +27,7 @@ func Merge(dst, src Message) {
 	mergeOptions{}.mergeMessage(dstMsg, srcMsg)
 }
 
-// Clone returns a copy of m.
+// Clone returns a deep copy of m.
 // If the top-level message is invalid, it returns an invalid message as well.
 func Clone(m Message) Message {
 	// NOTE: Most usages of Clone assume the following properties:
