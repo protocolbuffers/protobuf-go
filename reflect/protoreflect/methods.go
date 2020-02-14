@@ -18,49 +18,61 @@ type (
 	methods = struct {
 		pragma.NoUnkeyedLiterals
 		Flags         supportFlags
-		Size          func(Message, marshalOptions) int
-		Marshal       func(Message, marshalInput, marshalOptions) (marshalOutput, error)
-		Unmarshal     func(Message, unmarshalInput, unmarshalOptions) (unmarshalOutput, error)
-		IsInitialized func(Message) error
-		Merge         func(Message, Message, mergeInput, mergeOptions) mergeOutput
+		Size          func(sizeInput) sizeOutput
+		Marshal       func(marshalInput) (marshalOutput, error)
+		Unmarshal     func(unmarshalInput) (unmarshalOutput, error)
+		IsInitialized func(isInitializedInput) (isInitializedOutput, error)
+		Merge         func(mergeInput) mergeOutput
 	}
 	supportFlags = uint64
+	sizeInput    = struct {
+		pragma.NoUnkeyedLiterals
+		Message Message
+		Flags   uint8
+	}
+	sizeOutput = struct {
+		pragma.NoUnkeyedLiterals
+		Size int
+	}
 	marshalInput = struct {
 		pragma.NoUnkeyedLiterals
-		Buf []byte
+		Message Message
+		Buf     []byte
+		Flags   uint8
 	}
 	marshalOutput = struct {
 		pragma.NoUnkeyedLiterals
 		Buf []byte
 	}
-	marshalOptions = struct {
-		pragma.NoUnkeyedLiterals
-		Flags uint8
-	}
 	unmarshalInput = struct {
 		pragma.NoUnkeyedLiterals
-		Buf []byte
-	}
-	unmarshalOutput = struct {
-		pragma.NoUnkeyedLiterals
-		Initialized bool
-	}
-	unmarshalOptions = struct {
-		pragma.NoUnkeyedLiterals
+		Message  Message
+		Buf      []byte
 		Flags    uint8
 		Resolver interface {
 			FindExtensionByName(field FullName) (ExtensionType, error)
 			FindExtensionByNumber(message FullName, field FieldNumber) (ExtensionType, error)
 		}
 	}
+	unmarshalOutput = struct {
+		pragma.NoUnkeyedLiterals
+		Flags uint8
+	}
+	isInitializedInput = struct {
+		pragma.NoUnkeyedLiterals
+		Message Message
+	}
+	isInitializedOutput = struct {
+		pragma.NoUnkeyedLiterals
+		Flags uint8
+	}
 	mergeInput = struct {
 		pragma.NoUnkeyedLiterals
+		Source      Message
+		Destination Message
 	}
 	mergeOutput = struct {
 		pragma.NoUnkeyedLiterals
-		Merged bool
-	}
-	mergeOptions = struct {
-		pragma.NoUnkeyedLiterals
+		Flags uint8
 	}
 )

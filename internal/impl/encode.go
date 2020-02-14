@@ -10,11 +10,12 @@ import (
 
 	"google.golang.org/protobuf/internal/flags"
 	proto "google.golang.org/protobuf/proto"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-type marshalOptions piface.MarshalOptions
+type marshalOptions struct {
+	flags piface.MarshalInputFlags
+}
 
 func (o marshalOptions) Options() proto.MarshalOptions {
 	return proto.MarshalOptions{
@@ -24,18 +25,21 @@ func (o marshalOptions) Options() proto.MarshalOptions {
 	}
 }
 
-func (o marshalOptions) Deterministic() bool { return o.Flags&piface.MarshalDeterministic != 0 }
-func (o marshalOptions) UseCachedSize() bool { return o.Flags&piface.MarshalUseCachedSize != 0 }
+func (o marshalOptions) Deterministic() bool { return o.flags&piface.MarshalDeterministic != 0 }
+func (o marshalOptions) UseCachedSize() bool { return o.flags&piface.MarshalUseCachedSize != 0 }
 
 // size is protoreflect.Methods.Size.
-func (mi *MessageInfo) size(m pref.Message, opts piface.MarshalOptions) (size int) {
+func (mi *MessageInfo) size(in piface.SizeInput) piface.SizeOutput {
 	var p pointer
-	if ms, ok := m.(*messageState); ok {
+	if ms, ok := in.Message.(*messageState); ok {
 		p = ms.pointer()
 	} else {
-		p = m.(*messageReflectWrapper).pointer()
+		p = in.Message.(*messageReflectWrapper).pointer()
 	}
-	return mi.sizePointer(p, marshalOptions(opts))
+	size := mi.sizePointer(p, marshalOptions{
+		flags: in.Flags,
+	})
+	return piface.SizeOutput{Size: size}
 }
 
 func (mi *MessageInfo) sizePointer(p pointer, opts marshalOptions) (size int) {
@@ -82,14 +86,16 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 }
 
 // marshal is protoreflect.Methods.Marshal.
-func (mi *MessageInfo) marshal(m pref.Message, in piface.MarshalInput, opts piface.MarshalOptions) (piface.MarshalOutput, error) {
+func (mi *MessageInfo) marshal(in piface.MarshalInput) (out piface.MarshalOutput, err error) {
 	var p pointer
-	if ms, ok := m.(*messageState); ok {
+	if ms, ok := in.Message.(*messageState); ok {
 		p = ms.pointer()
 	} else {
-		p = m.(*messageReflectWrapper).pointer()
+		p = in.Message.(*messageReflectWrapper).pointer()
 	}
-	b, err := mi.marshalAppendPointer(in.Buf, p, marshalOptions(opts))
+	b, err := mi.marshalAppendPointer(in.Buf, p, marshalOptions{
+		flags: in.Flags,
+	})
 	return piface.MarshalOutput{Buf: b}, err
 }
 

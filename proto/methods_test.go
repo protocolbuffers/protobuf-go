@@ -148,7 +148,7 @@ func TestDecodeFastIsInitialized(t *testing.T) {
 				if err != nil {
 					t.Fatalf("Unmarshal error: %v", err)
 				}
-				if got, want := out.Initialized, !test.partial; got != want {
+				if got, want := (out.Flags&protoiface.UnmarshalInitialized != 0), !test.partial; got != want {
 					t.Errorf("out.Initialized = %v, want %v", got, want)
 				}
 			})

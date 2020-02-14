@@ -7,6 +7,7 @@ package proto
 import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/runtime/protoiface"
 )
 
 // IsInitialized returns an error if any required fields in m are not set.
@@ -17,7 +18,10 @@ func IsInitialized(m Message) error {
 // IsInitialized returns an error if any required fields in m are not set.
 func isInitialized(m protoreflect.Message) error {
 	if methods := protoMethods(m); methods != nil && methods.IsInitialized != nil {
-		return methods.IsInitialized(m)
+		_, err := methods.IsInitialized(protoiface.IsInitializedInput{
+			Message: m,
+		})
+		return err
 	}
 	return isInitializedSlow(m)
 }

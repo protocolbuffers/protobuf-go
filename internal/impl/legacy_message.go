@@ -383,8 +383,8 @@ var legacyProtoMethods = &piface.Methods{
 	Flags: piface.SupportMarshalDeterministic,
 }
 
-func legacyMarshal(m protoreflect.Message, in piface.MarshalInput, opts piface.MarshalOptions) (piface.MarshalOutput, error) {
-	v := m.(unwrapper).protoUnwrap()
+func legacyMarshal(in piface.MarshalInput) (piface.MarshalOutput, error) {
+	v := in.Message.(unwrapper).protoUnwrap()
 	marshaler, ok := v.(legacyMarshaler)
 	if !ok {
 		return piface.MarshalOutput{}, errors.New("%T does not implement Marshal", v)
@@ -398,8 +398,8 @@ func legacyMarshal(m protoreflect.Message, in piface.MarshalInput, opts piface.M
 	}, err
 }
 
-func legacyUnmarshal(m protoreflect.Message, in piface.UnmarshalInput, opts piface.UnmarshalOptions) (piface.UnmarshalOutput, error) {
-	v := m.(unwrapper).protoUnwrap()
+func legacyUnmarshal(in piface.UnmarshalInput) (piface.UnmarshalOutput, error) {
+	v := in.Message.(unwrapper).protoUnwrap()
 	unmarshaler, ok := v.(legacyUnmarshaler)
 	if !ok {
 		return piface.UnmarshalOutput{}, errors.New("%T does not implement Marshal", v)
@@ -407,14 +407,14 @@ func legacyUnmarshal(m protoreflect.Message, in piface.UnmarshalInput, opts pifa
 	return piface.UnmarshalOutput{}, unmarshaler.Unmarshal(in.Buf)
 }
 
-func legacyMerge(dst, src pref.Message, in piface.MergeInput, opts piface.MergeOptions) piface.MergeOutput {
-	dstv := dst.(unwrapper).protoUnwrap()
+func legacyMerge(in piface.MergeInput) piface.MergeOutput {
+	dstv := in.Destination.(unwrapper).protoUnwrap()
 	merger, ok := dstv.(legacyMerger)
 	if !ok {
 		return piface.MergeOutput{}
 	}
-	merger.Merge(Export{}.ProtoMessageV1Of(src))
-	return piface.MergeOutput{Merged: true}
+	merger.Merge(Export{}.ProtoMessageV1Of(in.Source))
+	return piface.MergeOutput{Flags: piface.MergeComplete}
 }
 
 // aberrantMessageType implements MessageType for all types other than pointer-to-struct.

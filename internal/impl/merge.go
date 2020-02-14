@@ -13,24 +13,24 @@ import (
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-type mergeOptions piface.MergeOptions
+type mergeOptions struct{}
 
 func (o mergeOptions) Merge(dst, src proto.Message) {
 	proto.Merge(dst, src)
 }
 
 // merge is protoreflect.Methods.Merge.
-func (mi *MessageInfo) merge(dst, src pref.Message, in piface.MergeInput, opts piface.MergeOptions) piface.MergeOutput {
-	dp, ok := mi.getPointer(dst)
+func (mi *MessageInfo) merge(in piface.MergeInput) piface.MergeOutput {
+	dp, ok := mi.getPointer(in.Destination)
 	if !ok {
-		return piface.MergeOutput{Merged: false}
+		return piface.MergeOutput{}
 	}
-	sp, ok := mi.getPointer(src)
+	sp, ok := mi.getPointer(in.Source)
 	if !ok {
-		return piface.MergeOutput{Merged: false}
+		return piface.MergeOutput{}
 	}
-	mi.mergePointer(dp, sp, opts)
-	return piface.MergeOutput{Merged: true}
+	mi.mergePointer(dp, sp, mergeOptions{})
+	return piface.MergeOutput{Flags: piface.MergeComplete}
 }
 
 func (mi *MessageInfo) mergePointer(dst, src pointer, opts mergeOptions) {

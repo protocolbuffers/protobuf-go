@@ -55,10 +55,12 @@ type mergeOptions struct{}
 func (o mergeOptions) mergeMessage(dst, src protoreflect.Message) {
 	methods := protoMethods(dst)
 	if methods != nil && methods.Merge != nil {
-		var in protoiface.MergeInput
-		var opts protoiface.MergeOptions
-		out := methods.Merge(dst, src, in, opts)
-		if out.Merged {
+		in := protoiface.MergeInput{
+			Destination: dst,
+			Source:      src,
+		}
+		out := methods.Merge(in)
+		if out.Flags&protoiface.MergeComplete != 0 {
 			return
 		}
 	}

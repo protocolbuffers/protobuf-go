@@ -105,25 +105,28 @@ func (o MarshalOptions) marshal(b []byte, message Message) (out protoiface.Marsh
 	m := message.ProtoReflect()
 	if methods := protoMethods(m); methods != nil && methods.Marshal != nil &&
 		!(o.Deterministic && methods.Flags&protoiface.SupportMarshalDeterministic == 0) {
-		opts := protoiface.MarshalOptions{}
+		in := protoiface.MarshalInput{
+			Message: m,
+			Buf:     b,
+		}
 		if o.Deterministic {
-			opts.Flags |= protoiface.MarshalDeterministic
+			in.Flags |= protoiface.MarshalDeterministic
 		}
 		if o.UseCachedSize {
-			opts.Flags |= protoiface.MarshalUseCachedSize
+			in.Flags |= protoiface.MarshalUseCachedSize
 		}
 		if methods.Size != nil {
-			sz := methods.Size(m, opts)
-			if cap(b) < len(b)+sz {
-				x := make([]byte, len(b), growcap(cap(b), len(b)+sz))
-				copy(x, b)
-				b = x
+			sout := methods.Size(protoiface.SizeInput{
+				Message: m,
+				Flags:   in.Flags,
+			})
+			if cap(b) < len(b)+sout.Size {
+				in.Buf = make([]byte, len(b), growcap(cap(b), len(b)+sout.Size))
+				copy(in.Buf, b)
 			}
-			opts.Flags |= protoiface.MarshalUseCachedSize
+			in.Flags |= protoiface.MarshalUseCachedSize
 		}
-		out, err = methods.Marshal(m, protoiface.MarshalInput{
-			Buf: b,
-		}, opts)
+		out, err = methods.Marshal(in)
 	} else {
 		out.Buf, err = o.marshalMessageSlow(b, m)
 	}

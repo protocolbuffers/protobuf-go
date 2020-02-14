@@ -77,22 +77,22 @@ func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.U
 	methods := protoMethods(m)
 	if methods != nil && methods.Unmarshal != nil &&
 		!(o.DiscardUnknown && methods.Flags&protoiface.SupportUnmarshalDiscardUnknown == 0) {
-		opts := protoiface.UnmarshalOptions{
+		in := protoiface.UnmarshalInput{
+			Message:  m,
+			Buf:      b,
 			Resolver: o.Resolver,
 		}
 		if o.DiscardUnknown {
-			opts.Flags |= protoiface.UnmarshalDiscardUnknown
+			in.Flags |= protoiface.UnmarshalDiscardUnknown
 		}
-		out, err = methods.Unmarshal(m, protoiface.UnmarshalInput{
-			Buf: b,
-		}, opts)
+		out, err = methods.Unmarshal(in)
 	} else {
 		err = o.unmarshalMessageSlow(b, m)
 	}
 	if err != nil {
 		return out, err
 	}
-	if allowPartial || out.Initialized {
+	if allowPartial || (out.Flags&protoiface.UnmarshalInitialized != 0) {
 		return out, nil
 	}
 	return out, isInitialized(m)

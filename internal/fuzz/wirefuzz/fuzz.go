@@ -10,7 +10,6 @@ import (
 
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoregistry"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 
 	fuzzpb "google.golang.org/protobuf/internal/testprotos/fuzz"
@@ -19,9 +18,10 @@ import (
 // Fuzz is a fuzzer for proto.Marshal and proto.Unmarshal.
 func Fuzz(data []byte) (score int) {
 	m1 := &fuzzpb.Fuzz{}
-	vout, valid := impl.Validate(data, m1.ProtoReflect().Type(), piface.UnmarshalOptions{
-		Resolver: protoregistry.GlobalTypes,
+	vout, valid := impl.Validate(m1.ProtoReflect().Type(), piface.UnmarshalInput{
+		Buf: data,
 	})
+	vinit := vout.Flags&piface.UnmarshalInitialized != 0
 	if err := (proto.UnmarshalOptions{
 		AllowPartial: true,
 	}).Unmarshal(data, m1); err != nil {
@@ -39,7 +39,7 @@ func Fuzz(data []byte) (score int) {
 	default:
 		panic("unmarshal ok with validation status: " + valid.String())
 	}
-	if proto.IsInitialized(m1) != nil && vout.Initialized {
+	if proto.IsInitialized(m1) != nil && vinit {
 		panic("validation reports partial message is initialized")
 	}
 	data1, err := proto.MarshalOptions{

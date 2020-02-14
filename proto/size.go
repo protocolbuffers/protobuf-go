@@ -24,12 +24,17 @@ func (o MarshalOptions) Size(m Message) int {
 func sizeMessage(m protoreflect.Message) (size int) {
 	methods := protoMethods(m)
 	if methods != nil && methods.Size != nil {
-		return methods.Size(m, protoiface.MarshalOptions{})
+		out := methods.Size(protoiface.SizeInput{
+			Message: m,
+		})
+		return out.Size
 	}
 	if methods != nil && methods.Marshal != nil {
 		// This is not efficient, but we don't have any choice.
 		// This case is mainly used for legacy types with a Marshal method.
-		out, _ := methods.Marshal(m, protoiface.MarshalInput{}, protoiface.MarshalOptions{})
+		out, _ := methods.Marshal(protoiface.MarshalInput{
+			Message: m,
+		})
 		return len(out.Buf)
 	}
 	return sizeMessageSlow(m)

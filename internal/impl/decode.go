@@ -11,30 +11,37 @@ import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/runtime/protoiface"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-type unmarshalOptions piface.UnmarshalOptions
+type unmarshalOptions struct {
+	flags    protoiface.UnmarshalInputFlags
+	resolver interface {
+		FindExtensionByName(field protoreflect.FullName) (protoreflect.ExtensionType, error)
+		FindExtensionByNumber(message protoreflect.FullName, field protoreflect.FieldNumber) (protoreflect.ExtensionType, error)
+	}
+}
 
 func (o unmarshalOptions) Options() proto.UnmarshalOptions {
 	return proto.UnmarshalOptions{
 		Merge:          true,
 		AllowPartial:   true,
 		DiscardUnknown: o.DiscardUnknown(),
-		Resolver:       o.Resolver,
+		Resolver:       o.resolver,
 	}
 }
 
-func (o unmarshalOptions) DiscardUnknown() bool { return o.Flags&piface.UnmarshalDiscardUnknown != 0 }
+func (o unmarshalOptions) DiscardUnknown() bool { return o.flags&piface.UnmarshalDiscardUnknown != 0 }
 
 func (o unmarshalOptions) IsDefault() bool {
-	return o.Flags == 0 && o.Resolver == preg.GlobalTypes
+	return o.flags == 0 && o.resolver == preg.GlobalTypes
 }
 
 var lazyUnmarshalOptions = unmarshalOptions{
-	Resolver: preg.GlobalTypes,
+	resolver: preg.GlobalTypes,
 }
 
 type unmarshalOutput struct {
@@ -43,16 +50,23 @@ type unmarshalOutput struct {
 }
 
 // unmarshal is protoreflect.Methods.Unmarshal.
-func (mi *MessageInfo) unmarshal(m pref.Message, in piface.UnmarshalInput, opts piface.UnmarshalOptions) (piface.UnmarshalOutput, error) {
+func (mi *MessageInfo) unmarshal(in piface.UnmarshalInput) (piface.UnmarshalOutput, error) {
 	var p pointer
-	if ms, ok := m.(*messageState); ok {
+	if ms, ok := in.Message.(*messageState); ok {
 		p = ms.pointer()
 	} else {
-		p = m.(*messageReflectWrapper).pointer()
+		p = in.Message.(*messageReflectWrapper).pointer()
 	}
-	out, err := mi.unmarshalPointer(in.Buf, p, 0, unmarshalOptions(opts))
+	out, err := mi.unmarshalPointer(in.Buf, p, 0, unmarshalOptions{
+		flags:    in.Flags,
+		resolver: in.Resolver,
+	})
+	var flags piface.UnmarshalOutputFlags
+	if out.initialized {
+		flags |= piface.UnmarshalInitialized
+	}
 	return piface.UnmarshalOutput{
-		Initialized: out.initialized,
+		Flags: flags,
 	}, err
 }
 
@@ -184,7 +198,7 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	xt := x.Type()
 	if xt == nil {
 		var err error
-		xt, err = opts.Resolver.FindExtensionByNumber(mi.Desc.FullName(), num)
+		xt, err = opts.resolver.FindExtensionByNumber(mi.Desc.FullName(), num)
 		if err != nil {
 			if err == preg.NotFound {
 				return out, errUnknown

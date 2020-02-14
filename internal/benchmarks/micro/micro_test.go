@@ -13,7 +13,6 @@ import (
 
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/runtime/protoiface"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -51,11 +50,8 @@ func BenchmarkEmptyMessage(b *testing.B) {
 	b.Run("Wire/Validate", func(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			mt := (&emptypb.Empty{}).ProtoReflect().Type()
-			opts := protoiface.UnmarshalOptions{
-				Resolver: protoregistry.GlobalTypes,
-			}
 			for pb.Next() {
-				_, got := impl.Validate([]byte{}, mt, opts)
+				_, got := impl.Validate(mt, protoiface.UnmarshalInput{})
 				want := impl.ValidationValid
 				if got != want {
 					b.Fatalf("Validate = %v, want %v", got, want)
@@ -112,11 +108,10 @@ func BenchmarkRepeatedInt32(b *testing.B) {
 	b.Run("Wire/Validate", func(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			mt := (&testpb.TestAllTypes{}).ProtoReflect().Type()
-			opts := protoiface.UnmarshalOptions{
-				Resolver: protoregistry.GlobalTypes,
-			}
 			for pb.Next() {
-				_, got := impl.Validate(w, mt, opts)
+				_, got := impl.Validate(mt, protoiface.UnmarshalInput{
+					Buf: w,
+				})
 				want := impl.ValidationValid
 				if got != want {
 					b.Fatalf("Validate = %v, want %v", got, want)
@@ -182,11 +177,10 @@ func BenchmarkRequired(b *testing.B) {
 	b.Run("Wire/Validate", func(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			mt := (&micropb.SixteenRequired{}).ProtoReflect().Type()
-			opts := protoiface.UnmarshalOptions{
-				Resolver: protoregistry.GlobalTypes,
-			}
 			for pb.Next() {
-				_, got := impl.Validate(w, mt, opts)
+				_, got := impl.Validate(mt, protoiface.UnmarshalInput{
+					Buf: w,
+				})
 				want := impl.ValidationValid
 				if got != want {
 					b.Fatalf("Validate = %v, want %v", got, want)

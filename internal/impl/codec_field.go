@@ -285,7 +285,7 @@ func consumeMessage(b []byte, m proto.Message, wtyp wire.Type, opts unmarshalOpt
 		return out, err
 	}
 	out.n = n
-	out.initialized = o.Initialized
+	out.initialized = o.Flags&piface.UnmarshalInitialized != 0
 	return out, nil
 }
 
@@ -428,7 +428,7 @@ func consumeGroup(b []byte, m proto.Message, num wire.Number, wtyp wire.Type, op
 		return out, err
 	}
 	out.n = n
-	out.initialized = o.Initialized
+	out.initialized = o.Flags&piface.UnmarshalInitialized != 0
 	return out, nil
 }
 
@@ -559,7 +559,7 @@ func consumeMessageSlice(b []byte, p pointer, goType reflect.Type, wtyp wire.Typ
 	}
 	p.AppendPointerSlice(pointerOfValue(mp))
 	out.n = n
-	out.initialized = o.Initialized
+	out.initialized = o.Flags&piface.UnmarshalInitialized != 0
 	return out, nil
 }
 
@@ -621,7 +621,7 @@ func consumeMessageSliceValue(b []byte, listv pref.Value, _ wire.Number, wtyp wi
 	}
 	list.Append(m)
 	out.n = n
-	out.initialized = o.Initialized
+	out.initialized = o.Flags&piface.UnmarshalInitialized != 0
 	return listv, out, nil
 }
 
@@ -688,7 +688,7 @@ func consumeGroupSliceValue(b []byte, listv pref.Value, num wire.Number, wtyp wi
 	}
 	list.Append(m)
 	out.n = n
-	out.initialized = o.Initialized
+	out.initialized = o.Flags&piface.UnmarshalInitialized != 0
 	return listv, out, nil
 }
 
@@ -773,7 +773,7 @@ func consumeGroupSlice(b []byte, p pointer, num wire.Number, wtyp wire.Type, goT
 	}
 	p.AppendPointerSlice(pointerOfValue(mp))
 	out.n = n
-	out.initialized = o.Initialized
+	out.initialized = o.Flags&piface.UnmarshalInitialized != 0
 	return out, nil
 }
 

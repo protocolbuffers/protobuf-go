@@ -9,16 +9,17 @@ import (
 
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-func (mi *MessageInfo) isInitialized(m pref.Message) error {
+func (mi *MessageInfo) isInitialized(in piface.IsInitializedInput) (piface.IsInitializedOutput, error) {
 	var p pointer
-	if ms, ok := m.(*messageState); ok {
+	if ms, ok := in.Message.(*messageState); ok {
 		p = ms.pointer()
 	} else {
-		p = m.(*messageReflectWrapper).pointer()
+		p = in.Message.(*messageReflectWrapper).pointer()
 	}
-	return mi.isInitializedPointer(p)
+	return piface.IsInitializedOutput{}, mi.isInitializedPointer(p)
 }
 
 func (mi *MessageInfo) isInitializedPointer(p pointer) error {

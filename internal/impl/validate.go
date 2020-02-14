@@ -55,13 +55,21 @@ func (v ValidationStatus) String() string {
 // of the message type.
 //
 // This function is exposed for testing.
-func Validate(b []byte, mt pref.MessageType, opts piface.UnmarshalOptions) (out piface.UnmarshalOutput, _ ValidationStatus) {
+func Validate(mt pref.MessageType, in piface.UnmarshalInput) (out piface.UnmarshalOutput, _ ValidationStatus) {
 	mi, ok := mt.(*MessageInfo)
 	if !ok {
 		return out, ValidationUnknown
 	}
-	o, st := mi.validate(b, 0, unmarshalOptions(opts))
-	out.Initialized = o.initialized
+	if in.Resolver == nil {
+		in.Resolver = preg.GlobalTypes
+	}
+	o, st := mi.validate(in.Buf, 0, unmarshalOptions{
+		flags:    in.Flags,
+		resolver: in.Resolver,
+	})
+	if o.initialized {
+		out.Flags |= piface.UnmarshalInitialized
+	}
 	return out, st
 }
 
@@ -325,7 +333,7 @@ State:
 				// In this case, a type added to the resolver in the future could cause
 				// unmarshaling to begin failing. Supporting this requires some way to
 				// determine if the resolver is frozen.
-				xt, err := opts.Resolver.FindExtensionByNumber(st.mi.Desc.FullName(), num)
+				xt, err := opts.resolver.FindExtensionByNumber(st.mi.Desc.FullName(), num)
 				if err != nil && err != preg.NotFound {
 					return out, ValidationUnknown
 				}
@@ -502,7 +510,7 @@ State:
 					if err != nil {
 						return out, ValidationInvalid
 					}
-					xt, err := opts.Resolver.FindExtensionByNumber(st.mi.Desc.FullName(), typeid)
+					xt, err := opts.resolver.FindExtensionByNumber(st.mi.Desc.FullName(), typeid)
 					switch {
 					case err == preg.NotFound:
 						b = b[n:]
