@@ -100,7 +100,7 @@ func (m *Message) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
 	}
 }
 
-// Range reports whether a field is populated.
+// Has reports whether a field is populated.
 // See protoreflect.Message for details.
 func (m *Message) Has(fd pref.FieldDescriptor) bool {
 	m.checkField(fd)
