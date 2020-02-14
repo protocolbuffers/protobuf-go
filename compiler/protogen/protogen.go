@@ -4,10 +4,10 @@
 
 // Package protogen provides support for writing protoc plugins.
 //
-// Plugins for protoc, the Protocol Buffers Compiler, are programs which read
-// a CodeGeneratorRequest protocol buffer from standard input and write a
-// CodeGeneratorResponse protocol buffer to standard output. This package
-// provides support for writing plugins which generate Go code.
+// Plugins for protoc, the Protocol Buffer compiler,
+// are programs which read a CodeGeneratorRequest message from standard input
+// and write a CodeGeneratorResponse message to standard output.
+// This package provides support for writing plugins which generate Go code.
 package protogen
 
 import (
