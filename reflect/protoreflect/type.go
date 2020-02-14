@@ -17,7 +17,7 @@ package protoreflect
 // the same information. However, if t1 != t2, then it is still possible that
 // they still represent the same proto type (e.g., t1.FullName == t2.FullName).
 // This can occur if a descriptor type is created dynamically, or multiple
-// versions of the same proto type are linked into the Go binary.
+// versions of the same proto type are accidentally linked into the Go binary.
 type Descriptor interface {
 	// ParentFile returns the parent file descriptor that this descriptor
 	// is declared within. The parent file for the file descriptor is itself.
@@ -68,39 +68,44 @@ type Descriptor interface {
 	// dependency is not resolved, in which case only name information is known.
 	//
 	// Placeholder types may only be returned by the following accessors
-	// as a result of weak imports:
+	// as a result of unresolved dependencies or weak imports:
 	//
-	//	╔═══════════════════════════════════╤═══════════════════╗
-	//	║ Accessor                          │ Descriptor        ║
-	//	╠═══════════════════════════════════╪═══════════════════╣
-	//	║ FileImports.FileDescriptor        │ FileDescriptor    ║
-	//	║ FieldDescriptor.MessageDescriptor │ MessageDescriptor ║
-	//	╚═══════════════════════════════════╧═══════════════════╝
+	//	╔═══════════════════════════════════╤═════════════════════╗
+	//	║ Accessor                          │ Descriptor          ║
+	//	╠═══════════════════════════════════╪═════════════════════╣
+	//	║ FileImports.FileDescriptor        │ FileDescriptor      ║
+	//	║ FieldDescriptor.Enum              │ EnumDescriptor      ║
+	//	║ FieldDescriptor.Message           │ MessageDescriptor   ║
+	//	║ FieldDescriptor.DefaultEnumValue  │ EnumValueDescriptor ║
+	//	║ FieldDescriptor.ContainingMessage │ MessageDescriptor   ║
+	//	║ MethodDescriptor.Input            │ MessageDescriptor   ║
+	//	║ MethodDescriptor.Output           │ MessageDescriptor   ║
+	//	╚═══════════════════════════════════╧═════════════════════╝
 	//
 	// If true, only Name and FullName are valid.
-	// For FileDescriptor, the Path and Package are also valid.
+	// For FileDescriptor, the Path is also valid.
 	IsPlaceholder() bool
 
 	// Options returns the descriptor options. The caller must not modify
 	// the returned value.
 	//
-	// To avoid a dependency cycle, this function returns an interface value.
+	// To avoid a dependency cycle, this function returns a proto.Message value.
 	// The proto message type returned for each descriptor type is as follows:
 	//	╔═════════════════════╤══════════════════════════════════════════╗
 	//	║ Go type             │ Protobuf message type                    ║
 	//	╠═════════════════════╪══════════════════════════════════════════╣
 	//	║ FileDescriptor      │ google.protobuf.FileOptions              ║
+	//	║ EnumDescriptor      │ google.protobuf.EnumOptions              ║
+	//	║ EnumValueDescriptor │ google.protobuf.EnumValueOptions         ║
 	//	║ MessageDescriptor   │ google.protobuf.MessageOptions           ║
 	//	║ FieldDescriptor     │ google.protobuf.FieldOptions             ║
 	//	║ OneofDescriptor     │ google.protobuf.OneofOptions             ║
-	//	║ EnumDescriptor      │ google.protobuf.EnumOptions              ║
-	//	║ EnumValueDescriptor │ google.protobuf.EnumValueOptions         ║
 	//	║ ServiceDescriptor   │ google.protobuf.ServiceOptions           ║
 	//	║ MethodDescriptor    │ google.protobuf.MethodOptions            ║
 	//	╚═════════════════════╧══════════════════════════════════════════╝
 	//
 	// This method returns a typed nil-pointer if no options are present.
-	// The caller must import the descriptor package to use this.
+	// The caller must import the descriptorpb package to use this.
 	Options() ProtoMessage
 
 	doNotImplement
@@ -110,11 +115,11 @@ type Descriptor interface {
 // corresponds with the google.protobuf.FileDescriptorProto message.
 //
 // Top-level declarations:
-// MessageDescriptor, EnumDescriptor, FieldDescriptor, and/or ServiceDescriptor.
+// EnumDescriptor, MessageDescriptor, FieldDescriptor, and/or ServiceDescriptor.
 type FileDescriptor interface {
 	Descriptor // Descriptor.FullName is identical to Package
 
-	// Path returns the file name, relative to root of source tree.
+	// Path returns the file name, relative to the source tree root.
 	Path() string // e.g., "path/to/file.proto"
 	// Package returns the protobuf package namespace.
 	Package() FullName // e.g., "google.protobuf"
@@ -122,10 +127,10 @@ type FileDescriptor interface {
 	// Imports is a list of imported proto files.
 	Imports() FileImports
 
-	// Messages is a list of the top-level message declarations.
-	Messages() MessageDescriptors
 	// Enums is a list of the top-level enum declarations.
 	Enums() EnumDescriptors
+	// Messages is a list of the top-level message declarations.
+	Messages() MessageDescriptors
 	// Extensions is a list of the top-level extension declarations.
 	Extensions() ExtensionDescriptors
 	// Services is a list of the top-level service declarations.
@@ -175,8 +180,8 @@ type FileImport struct {
 // corresponds with the google.protobuf.DescriptorProto message.
 //
 // Nested declarations:
-// FieldDescriptor, OneofDescriptor, FieldDescriptor, MessageDescriptor,
-// and/or EnumDescriptor.
+// FieldDescriptor, OneofDescriptor, FieldDescriptor, EnumDescriptor,
+// and/or MessageDescriptor.
 type MessageDescriptor interface {
 	Descriptor
 
@@ -214,10 +219,10 @@ type MessageDescriptor interface {
 	// This method may return a nil interface value if no options are present.
 	ExtensionRangeOptions(i int) ProtoMessage
 
-	// Messages is a list of nested message declarations.
-	Messages() MessageDescriptors
 	// Enums is a list of nested enum declarations.
 	Enums() EnumDescriptors
+	// Messages is a list of nested message declarations.
+	Messages() MessageDescriptors
 	// Extensions is a list of nested extension declarations.
 	Extensions() ExtensionDescriptors
 
@@ -277,12 +282,12 @@ type FieldDescriptor interface {
 
 	// IsExtension reports whether this is an extension field. If false,
 	// then Parent and ContainingMessage refer to the same message.
-	// Otherwise, ContainingMessage and Parent almost certainly differ.
+	// Otherwise, ContainingMessage and Parent likely differ.
 	IsExtension() bool
 
 	// IsWeak reports whether this is a weak field, which does not impose a
 	// direct dependency on the target type.
-	// If true, then MessageDescriptor returns a placeholder type.
+	// If true, then Message returns a placeholder type.
 	IsWeak() bool
 
 	// IsPacked reports whether repeated primitive numeric kinds should be
@@ -467,10 +472,10 @@ type ExtensionType interface {
 	// as it has more type information available.
 	InterfaceOf(Value) interface{}
 
-	// IsValidValue returns whether the Value is valid to assign to the field.
+	// IsValidValue reports whether the Value is valid to assign to the field.
 	IsValidValue(Value) bool
 
-	// IsValidInterface returns whether the input is valid to assign to the field.
+	// IsValidInterface reports whether the input is valid to assign to the field.
 	IsValidInterface(interface{}) bool
 }
 

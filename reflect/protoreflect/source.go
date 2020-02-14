@@ -41,7 +41,7 @@ type SourceLocation struct {
 	TrailingComments string
 }
 
-// SourcePath identifies a part of a file descriptor for a source location.
+// SourcePath identifies part of a file descriptor for a source location.
 // The SourcePath is a sequence of either field numbers or indexes into
 // a repeated field that form a path starting from the root file descriptor.
 //

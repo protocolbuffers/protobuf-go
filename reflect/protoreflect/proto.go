@@ -5,18 +5,30 @@
 // Package protoreflect provides interfaces to dynamically manipulate messages.
 //
 // This package includes type descriptors which describe the structure of types
-// defined in proto source files, and value interfaces which provide the
+// defined in proto source files and value interfaces which provide the
 // ability to examine and manipulate the contents of messages.
 //
 //
-// Type Descriptors
+// Protocol Buffer Descriptors
 //
-// The type descriptors (e.g., MessageDescriptor or EnumDescriptor)
+// Protobuf descriptors (e.g., MessageDescriptor or EnumDescriptor)
 // are immutable objects that represent protobuf type information.
 // They are wrappers around the messages declared in descriptor.proto.
+// Protobuf descriptors alone lack any information regarding Go types.
 //
 // The Message and Enum interfaces provide a Type method which returns the
 // appropriate descriptor type for a value.
+//
+//
+// Go Type Descriptors
+//
+// A type descriptor (e.g., MessageType or EnumType) is a constructor for
+// a concrete Go type that represents the associated protobuf descriptor.
+// There is commonly a one-to-one relationship between protobuf descriptors and
+// Go type descriptors, but it can potentially be a one-to-many relationship.
+//
+// The "google.golang.org/protobuf/types/dynamicpb" package can be used to
+// create type descriptors when only the protobuf descriptor is known.
 //
 //
 // Value Interfaces
@@ -25,7 +37,10 @@
 // This type provides the ability to manipulate the fields of a message.
 //
 // To convert a proto.Message to a protoreflect.Message, use the
-// former's ProtoReflect method.
+// former's ProtoReflect method. Since the ProtoReflect method is new to the
+// v2 message interface, it may not be present on older message implementations.
+// The "github.com/golang/protobuf/proto".MessageReflect function can be used
+// to obtain a reflective view on older messages.
 //
 //
 // Relationships
@@ -134,7 +149,7 @@ func (s Syntax) IsValid() bool {
 	}
 }
 
-// String returns s as a proto source identifier.
+// String returns s as a proto source identifier (e.g., "proto2").
 func (s Syntax) String() string {
 	switch s {
 	case Proto2:
@@ -146,7 +161,7 @@ func (s Syntax) String() string {
 	}
 }
 
-// GoString returns s as a Go source identifier.
+// GoString returns s as a Go source identifier (e.g., "Proto2").
 func (s Syntax) GoString() string {
 	switch s {
 	case Proto2:
@@ -180,7 +195,7 @@ func (c Cardinality) IsValid() bool {
 	}
 }
 
-// String returns c as a proto source identifier.
+// String returns c as a proto source identifier (e.g., "optional").
 func (c Cardinality) String() string {
 	switch c {
 	case Optional:
@@ -194,7 +209,7 @@ func (c Cardinality) String() string {
 	}
 }
 
-// GoString returns c as a Go source identifier.
+// GoString returns c as a Go source identifier (e.g., "Optional").
 func (c Cardinality) GoString() string {
 	switch c {
 	case Optional:
@@ -250,7 +265,7 @@ func (k Kind) IsValid() bool {
 	}
 }
 
-// String returns k as a proto source identifier.
+// String returns k as a proto source identifier (e.g., "bool").
 func (k Kind) String() string {
 	switch k {
 	case BoolKind:
@@ -294,7 +309,7 @@ func (k Kind) String() string {
 	}
 }
 
-// GoString returns k as a Go source identifier.
+// GoString returns k as a Go source identifier (e.g., "BoolKind").
 func (k Kind) GoString() string {
 	switch k {
 	case BoolKind:
