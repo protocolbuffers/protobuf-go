@@ -40,6 +40,17 @@ func Marshal(m proto.Message) ([]byte, error) {
 type MarshalOptions struct {
 	pragma.NoUnkeyedLiterals
 
+	// Multiline specifies whether the marshaler should format the output in
+	// indented-form with every textual element on a new line.
+	// If Indent is an empty string, then an arbitrary indent is chosen.
+	Multiline bool
+
+	// Indent specifies the set of indentation characters to use in a multiline
+	// formatted output such that every entry is preceded by Indent and
+	// terminated by a newline. If non-empty, then Multiline is treated as true.
+	// Indent can only be composed of space or tab characters.
+	Indent string
+
 	// AllowPartial allows messages that have missing required fields to marshal
 	// without returning an error. If AllowPartial is false (the default),
 	// Marshal will return error if there are any missing required fields.
@@ -67,17 +78,6 @@ type MarshalOptions struct {
 	//  ║ {}    │ map fields                 ║
 	//  ╚═══════╧════════════════════════════╝
 	EmitUnpopulated bool
-
-	// Multiline specifies whether the marshaler should format the output in
-	// indented-form with every textual element on a new line.
-	// If Indent is an empty string, then an arbitrary indent is chosen.
-	Multiline bool
-
-	// Indent specifies the set of indentation characters to use in a multiline
-	// formatted output such that every entry is preceded by Indent and
-	// terminated by a newline. If non-empty, then Multiline is treated as true.
-	// Indent can only be composed of space or tab characters.
-	Indent string
 
 	// Resolver is used for looking up types when expanding google.protobuf.Any
 	// messages. If nil, this defaults to using protoregistry.GlobalTypes.
