@@ -17,6 +17,7 @@ import (
 	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/runtime/protoiface"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
@@ -60,6 +61,9 @@ func legacyLoadMessageInfo(t reflect.Type, name pref.FullName) *MessageInfo {
 	}
 	if _, ok := v.(legacyUnmarshaler); ok {
 		mi.methods.Unmarshal = legacyUnmarshal
+	}
+	if _, ok := v.(legacyMerger); ok {
+		mi.methods.Merge = legacyMerge
 	}
 
 	if mi, ok := legacyMessageTypeCache.LoadOrStore(t, mi); ok {
@@ -362,9 +366,15 @@ type legacyUnmarshaler interface {
 	Unmarshal([]byte) error
 }
 
+// legacyMerger is the proto.Merger interface superseded by protoiface.Methoder.
+type legacyMerger interface {
+	Merge(protoiface.MessageV1)
+}
+
 var legacyProtoMethods = &piface.Methods{
 	Marshal:   legacyMarshal,
 	Unmarshal: legacyUnmarshal,
+	Merge:     legacyMerge,
 
 	// We have no way to tell whether the type's Marshal method
 	// supports deterministic serialization or not, but this
@@ -395,6 +405,16 @@ func legacyUnmarshal(m protoreflect.Message, in piface.UnmarshalInput, opts pifa
 		return piface.UnmarshalOutput{}, errors.New("%T does not implement Marshal", v)
 	}
 	return piface.UnmarshalOutput{}, unmarshaler.Unmarshal(in.Buf)
+}
+
+func legacyMerge(dst, src pref.Message, in piface.MergeInput, opts piface.MergeOptions) piface.MergeOutput {
+	dstv := dst.(unwrapper).protoUnwrap()
+	merger, ok := dstv.(legacyMerger)
+	if !ok {
+		return piface.MergeOutput{}
+	}
+	merger.Merge(Export{}.ProtoMessageV1Of(src))
+	return piface.MergeOutput{Merged: true}
 }
 
 // aberrantMessageType implements MessageType for all types other than pointer-to-struct.

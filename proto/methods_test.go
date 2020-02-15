@@ -155,3 +155,29 @@ func TestDecodeFastIsInitialized(t *testing.T) {
 		}
 	}
 }
+
+type selfMerger struct {
+	src protoiface.MessageV1
+}
+
+func (*selfMerger) Reset()         {}
+func (*selfMerger) ProtoMessage()  {}
+func (*selfMerger) String() string { return "selfMerger{}" }
+func (m *selfMerger) Merge(src protoiface.MessageV1) {
+	m.src = src
+}
+
+func TestLegacyMergeMethod(t *testing.T) {
+	src := &selfMerger{}
+	dst := &selfMerger{}
+	proto.Merge(
+		impl.Export{}.MessageOf(dst).Interface(),
+		impl.Export{}.MessageOf(src).Interface(),
+	)
+	if got, want := dst.src, src; got != want {
+		t.Errorf("Merge(dst, src): want dst.src = src, got %v", got)
+	}
+	if got := src.src; got != nil {
+		t.Errorf("Merge(dst, src): want src.src = nil, got %v", got)
+	}
+}
