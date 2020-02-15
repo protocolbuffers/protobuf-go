@@ -8,13 +8,13 @@ import (
 	"reflect"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
+	"google.golang.org/protobuf/testing/protopack"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -33,8 +33,8 @@ var noEnforceUTF8TestProtos = []testProto{
 		decodeTo: []proto.Message{&TestNoEnforceUTF8{
 			OptionalString: string("abc\xff"),
 		}},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.String("abc\xff"),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.String("abc\xff"),
 		}.Marshal(),
 	},
 	{
@@ -42,8 +42,8 @@ var noEnforceUTF8TestProtos = []testProto{
 		decodeTo: []proto.Message{&TestNoEnforceUTF8{
 			OptionalBytes: []byte("abc\xff"),
 		}},
-		wire: pack.Message{
-			pack.Tag{2, pack.BytesType}, pack.String("abc\xff"),
+		wire: protopack.Message{
+			protopack.Tag{2, protopack.BytesType}, protopack.String("abc\xff"),
 		}.Marshal(),
 	},
 	{
@@ -51,9 +51,9 @@ var noEnforceUTF8TestProtos = []testProto{
 		decodeTo: []proto.Message{&TestNoEnforceUTF8{
 			RepeatedString: []string{string("foo"), string("abc\xff")},
 		}},
-		wire: pack.Message{
-			pack.Tag{3, pack.BytesType}, pack.String("foo"),
-			pack.Tag{3, pack.BytesType}, pack.String("abc\xff"),
+		wire: protopack.Message{
+			protopack.Tag{3, protopack.BytesType}, protopack.String("foo"),
+			protopack.Tag{3, protopack.BytesType}, protopack.String("abc\xff"),
 		}.Marshal(),
 	},
 	{
@@ -61,9 +61,9 @@ var noEnforceUTF8TestProtos = []testProto{
 		decodeTo: []proto.Message{&TestNoEnforceUTF8{
 			RepeatedBytes: [][]byte{[]byte("foo"), []byte("abc\xff")},
 		}},
-		wire: pack.Message{
-			pack.Tag{4, pack.BytesType}, pack.String("foo"),
-			pack.Tag{4, pack.BytesType}, pack.String("abc\xff"),
+		wire: protopack.Message{
+			protopack.Tag{4, protopack.BytesType}, protopack.String("foo"),
+			protopack.Tag{4, protopack.BytesType}, protopack.String("abc\xff"),
 		}.Marshal(),
 	},
 	{
@@ -71,14 +71,14 @@ var noEnforceUTF8TestProtos = []testProto{
 		decodeTo: []proto.Message{
 			&TestNoEnforceUTF8{OneofField: &TestNoEnforceUTF8_OneofString{string("abc\xff")}},
 		},
-		wire: pack.Message{pack.Tag{5, pack.BytesType}, pack.String("abc\xff")}.Marshal(),
+		wire: protopack.Message{protopack.Tag{5, protopack.BytesType}, protopack.String("abc\xff")}.Marshal(),
 	},
 	{
 		desc: "invalid UTF-8 in oneof string field of Go bytes",
 		decodeTo: []proto.Message{
 			&TestNoEnforceUTF8{OneofField: &TestNoEnforceUTF8_OneofBytes{[]byte("abc\xff")}},
 		},
-		wire: pack.Message{pack.Tag{6, pack.BytesType}, pack.String("abc\xff")}.Marshal(),
+		wire: protopack.Message{protopack.Tag{6, protopack.BytesType}, protopack.String("abc\xff")}.Marshal(),
 	},
 }
 

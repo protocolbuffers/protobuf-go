@@ -10,9 +10,9 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/testing/protopack"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 )
@@ -210,51 +210,51 @@ func TestTransform(t *testing.T) {
 	}, {
 		in: func() proto.Message {
 			m := &testpb.TestAllTypes{}
-			m.ProtoReflect().SetUnknown(pack.Message{
-				pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Uvarint(100),
-				pack.Tag{Number: 50001, Type: pack.Fixed32Type}, pack.Uint32(200),
-				pack.Tag{Number: 50002, Type: pack.Fixed64Type}, pack.Uint64(300),
-				pack.Tag{Number: 50003, Type: pack.BytesType}, pack.String("hello"),
-				pack.Message{
-					pack.Tag{Number: 50004, Type: pack.StartGroupType},
-					pack.Tag{Number: 1, Type: pack.VarintType}, pack.Uvarint(100),
-					pack.Tag{Number: 1, Type: pack.Fixed32Type}, pack.Uint32(200),
-					pack.Tag{Number: 1, Type: pack.Fixed64Type}, pack.Uint64(300),
-					pack.Tag{Number: 1, Type: pack.BytesType}, pack.String("hello"),
-					pack.Message{
-						pack.Tag{Number: 1, Type: pack.StartGroupType},
-						pack.Tag{Number: 1, Type: pack.VarintType}, pack.Uvarint(100),
-						pack.Tag{Number: 1, Type: pack.Fixed32Type}, pack.Uint32(200),
-						pack.Tag{Number: 1, Type: pack.Fixed64Type}, pack.Uint64(300),
-						pack.Tag{Number: 1, Type: pack.BytesType}, pack.String("hello"),
-						pack.Tag{Number: 1, Type: pack.EndGroupType},
+			m.ProtoReflect().SetUnknown(protopack.Message{
+				protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Uvarint(100),
+				protopack.Tag{Number: 50001, Type: protopack.Fixed32Type}, protopack.Uint32(200),
+				protopack.Tag{Number: 50002, Type: protopack.Fixed64Type}, protopack.Uint64(300),
+				protopack.Tag{Number: 50003, Type: protopack.BytesType}, protopack.String("hello"),
+				protopack.Message{
+					protopack.Tag{Number: 50004, Type: protopack.StartGroupType},
+					protopack.Tag{Number: 1, Type: protopack.VarintType}, protopack.Uvarint(100),
+					protopack.Tag{Number: 1, Type: protopack.Fixed32Type}, protopack.Uint32(200),
+					protopack.Tag{Number: 1, Type: protopack.Fixed64Type}, protopack.Uint64(300),
+					protopack.Tag{Number: 1, Type: protopack.BytesType}, protopack.String("hello"),
+					protopack.Message{
+						protopack.Tag{Number: 1, Type: protopack.StartGroupType},
+						protopack.Tag{Number: 1, Type: protopack.VarintType}, protopack.Uvarint(100),
+						protopack.Tag{Number: 1, Type: protopack.Fixed32Type}, protopack.Uint32(200),
+						protopack.Tag{Number: 1, Type: protopack.Fixed64Type}, protopack.Uint64(300),
+						protopack.Tag{Number: 1, Type: protopack.BytesType}, protopack.String("hello"),
+						protopack.Tag{Number: 1, Type: protopack.EndGroupType},
 					},
-					pack.Tag{Number: 50004, Type: pack.EndGroupType},
+					protopack.Tag{Number: 50004, Type: protopack.EndGroupType},
 				},
 			}.Marshal())
 			return m
 		}(),
 		want: Message{
 			messageTypeKey: messageTypeOf(&testpb.TestAllTypes{}),
-			"50000":        protoreflect.RawFields(pack.Message{pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Uvarint(100)}.Marshal()),
-			"50001":        protoreflect.RawFields(pack.Message{pack.Tag{Number: 50001, Type: pack.Fixed32Type}, pack.Uint32(200)}.Marshal()),
-			"50002":        protoreflect.RawFields(pack.Message{pack.Tag{Number: 50002, Type: pack.Fixed64Type}, pack.Uint64(300)}.Marshal()),
-			"50003":        protoreflect.RawFields(pack.Message{pack.Tag{Number: 50003, Type: pack.BytesType}, pack.String("hello")}.Marshal()),
-			"50004": protoreflect.RawFields(pack.Message{
-				pack.Tag{Number: 50004, Type: pack.StartGroupType},
-				pack.Tag{Number: 1, Type: pack.VarintType}, pack.Uvarint(100),
-				pack.Tag{Number: 1, Type: pack.Fixed32Type}, pack.Uint32(200),
-				pack.Tag{Number: 1, Type: pack.Fixed64Type}, pack.Uint64(300),
-				pack.Tag{Number: 1, Type: pack.BytesType}, pack.String("hello"),
-				pack.Message{
-					pack.Tag{Number: 1, Type: pack.StartGroupType},
-					pack.Tag{Number: 1, Type: pack.VarintType}, pack.Uvarint(100),
-					pack.Tag{Number: 1, Type: pack.Fixed32Type}, pack.Uint32(200),
-					pack.Tag{Number: 1, Type: pack.Fixed64Type}, pack.Uint64(300),
-					pack.Tag{Number: 1, Type: pack.BytesType}, pack.String("hello"),
-					pack.Tag{Number: 1, Type: pack.EndGroupType},
+			"50000":        protoreflect.RawFields(protopack.Message{protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Uvarint(100)}.Marshal()),
+			"50001":        protoreflect.RawFields(protopack.Message{protopack.Tag{Number: 50001, Type: protopack.Fixed32Type}, protopack.Uint32(200)}.Marshal()),
+			"50002":        protoreflect.RawFields(protopack.Message{protopack.Tag{Number: 50002, Type: protopack.Fixed64Type}, protopack.Uint64(300)}.Marshal()),
+			"50003":        protoreflect.RawFields(protopack.Message{protopack.Tag{Number: 50003, Type: protopack.BytesType}, protopack.String("hello")}.Marshal()),
+			"50004": protoreflect.RawFields(protopack.Message{
+				protopack.Tag{Number: 50004, Type: protopack.StartGroupType},
+				protopack.Tag{Number: 1, Type: protopack.VarintType}, protopack.Uvarint(100),
+				protopack.Tag{Number: 1, Type: protopack.Fixed32Type}, protopack.Uint32(200),
+				protopack.Tag{Number: 1, Type: protopack.Fixed64Type}, protopack.Uint64(300),
+				protopack.Tag{Number: 1, Type: protopack.BytesType}, protopack.String("hello"),
+				protopack.Message{
+					protopack.Tag{Number: 1, Type: protopack.StartGroupType},
+					protopack.Tag{Number: 1, Type: protopack.VarintType}, protopack.Uvarint(100),
+					protopack.Tag{Number: 1, Type: protopack.Fixed32Type}, protopack.Uint32(200),
+					protopack.Tag{Number: 1, Type: protopack.Fixed64Type}, protopack.Uint64(300),
+					protopack.Tag{Number: 1, Type: protopack.BytesType}, protopack.String("hello"),
+					protopack.Tag{Number: 1, Type: protopack.EndGroupType},
 				},
-				pack.Tag{Number: 50004, Type: pack.EndGroupType},
+				protopack.Tag{Number: 50004, Type: protopack.EndGroupType},
 			}.Marshal()),
 		},
 		wantString: `{50000:100, 50001:200, 50002:300, 50003:"hello", 50004:{1:[100, 200, 300, "hello", {1:[100, 200, 300, "hello"]}]}}`,

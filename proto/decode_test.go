@@ -11,9 +11,9 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/testing/protopack"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
@@ -91,8 +91,8 @@ func TestDecodeInvalidMessages(t *testing.T) {
 func TestDecodeZeroLengthBytes(t *testing.T) {
 	// Verify that proto3 bytes fields don't give the mistaken
 	// impression that they preserve presence.
-	wire := pack.Message{
-		pack.Tag{15, pack.BytesType}, pack.Bytes(nil),
+	wire := protopack.Message{
+		protopack.Tag{15, protopack.BytesType}, protopack.Bytes(nil),
 	}.Marshal()
 	m := &test3pb.TestAllTypes{}
 	if err := proto.Unmarshal(wire, m); err != nil {
@@ -104,8 +104,8 @@ func TestDecodeZeroLengthBytes(t *testing.T) {
 }
 
 func TestDecodeOneofNilWrapper(t *testing.T) {
-	wire := pack.Message{
-		pack.Tag{111, pack.VarintType}, pack.Varint(1111),
+	wire := protopack.Message{
+		protopack.Tag{111, protopack.VarintType}, protopack.Varint(1111),
 	}.Marshal()
 	m := &testpb.TestAllTypes{OneofField: (*testpb.TestAllTypes_OneofUint32)(nil)}
 	if err := proto.Unmarshal(wire, m); err != nil {
@@ -121,8 +121,8 @@ func TestDecodeEmptyBytes(t *testing.T) {
 	// but we take care to produce non-nil []bytes for zero-length
 	// byte strings, so test for it.
 	m := &testpb.TestAllTypes{}
-	b := pack.Message{
-		pack.Tag{45, pack.BytesType}, pack.Bytes(nil),
+	b := protopack.Message{
+		protopack.Tag{45, protopack.BytesType}, protopack.Bytes(nil),
 	}.Marshal()
 	if err := proto.Unmarshal(b, m); err != nil {
 		t.Fatal(err)

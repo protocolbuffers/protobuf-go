@@ -13,11 +13,11 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/protobuild"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/testing/protocmp"
+	"google.golang.org/protobuf/testing/protopack"
 	"google.golang.org/protobuf/types/dynamicpb"
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
@@ -511,19 +511,19 @@ var testMerges = []testMerge{{
 }, {
 	desc: "merge unknown fields",
 	dst: protobuild.Message{
-		protobuild.Unknown: pack.Message{
-			pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
+		protobuild.Unknown: protopack.Message{
+			protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Svarint(-5),
 		}.Marshal(),
 	},
 	src: protobuild.Message{
-		protobuild.Unknown: pack.Message{
-			pack.Tag{Number: 500000, Type: pack.VarintType}, pack.Svarint(-50),
+		protobuild.Unknown: protopack.Message{
+			protopack.Tag{Number: 500000, Type: protopack.VarintType}, protopack.Svarint(-50),
 		}.Marshal(),
 	},
 	want: protobuild.Message{
-		protobuild.Unknown: pack.Message{
-			pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
-			pack.Tag{Number: 500000, Type: pack.VarintType}, pack.Svarint(-50),
+		protobuild.Unknown: protopack.Message{
+			protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Svarint(-5),
+			protopack.Tag{Number: 500000, Type: protopack.VarintType}, protopack.Svarint(-50),
 		}.Marshal(),
 	},
 }, {
@@ -786,8 +786,8 @@ func TestMergeRace(t *testing.T) {
 		}},
 		func() *testpb.TestAllTypes {
 			m := new(testpb.TestAllTypes)
-			m.ProtoReflect().SetUnknown(pack.Message{
-				pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
+			m.ProtoReflect().SetUnknown(protopack.Message{
+				protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Svarint(-5),
 			}.Marshal())
 			return m
 		}(),
@@ -816,8 +816,8 @@ func TestMergeSelf(t *testing.T) {
 			A: proto.Int32(5),
 		},
 	}
-	got.ProtoReflect().SetUnknown(pack.Message{
-		pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
+	got.ProtoReflect().SetUnknown(protopack.Message{
+		protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Svarint(-5),
 	}.Marshal())
 	proto.Merge(got, got)
 
@@ -833,9 +833,9 @@ func TestMergeSelf(t *testing.T) {
 			A: proto.Int32(5),
 		},
 	}
-	want.ProtoReflect().SetUnknown(pack.Message{
-		pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
-		pack.Tag{Number: 50000, Type: pack.VarintType}, pack.Svarint(-5),
+	want.ProtoReflect().SetUnknown(protopack.Message{
+		protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Svarint(-5),
+		protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Svarint(-5),
 	}.Marshal())
 
 	if !proto.Equal(got, want) {

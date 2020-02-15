@@ -13,10 +13,10 @@ import (
 
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/testing/protopack"
 
 	fieldmaskpb "google.golang.org/protobuf/internal/testprotos/fieldmaskpb"
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
@@ -860,8 +860,8 @@ func TestMarshal(t *testing.T) {
 			m := &pb2.Scalars{
 				OptString: proto.String("no unknowns"),
 			}
-			m.ProtoReflect().SetUnknown(pack.Message{
-				pack.Tag{101, pack.BytesType}, pack.String("hello world"),
+			m.ProtoReflect().SetUnknown(protopack.Message{
+				protopack.Tag{101, protopack.BytesType}, protopack.String("hello world"),
 			}.Marshal())
 			return m
 		}(),

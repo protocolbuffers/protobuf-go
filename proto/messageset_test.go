@@ -6,9 +6,9 @@ package proto_test
 
 import (
 	"google.golang.org/protobuf/encoding/protowire"
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/testing/protopack"
 
 	messagesetpb "google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
 	msetextpb "google.golang.org/protobuf/internal/testprotos/messageset/msetextpb"
@@ -31,14 +31,14 @@ var messageSetTestProtos = []testProto{
 			})
 			return m
 		}()},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-					pack.Tag{1, pack.VarintType}, pack.Varint(10),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 				}),
-				pack.Tag{1, pack.EndGroupType},
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},
@@ -51,14 +51,14 @@ var messageSetTestProtos = []testProto{
 			})
 			return m
 		}()},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-					pack.Tag{1, pack.VarintType}, pack.Varint(10),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 				}),
-				pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-				pack.Tag{1, pack.EndGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},
@@ -70,34 +70,34 @@ var messageSetTestProtos = []testProto{
 				Ext1Field1: proto.Int32(10),
 			}),
 		)},
-		wire: pack.Message{
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(10),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.StartGroupType},
+			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
+			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 			}),
-			pack.Tag{1, pack.EndGroupType},
+			protopack.Tag{1, protopack.EndGroupType},
 			// Unknown field
-			pack.Tag{4, pack.VarintType}, pack.Varint(30),
+			protopack.Tag{4, protopack.VarintType}, protopack.Varint(30),
 		}.Marshal(),
 	},
 	{
 		desc: "MessageSet with unknown type_id",
 		decodeTo: []proto.Message{build(
 			&messagesetpb.MessageSet{},
-			unknown(pack.Message{
-				pack.Tag{999, pack.BytesType}, pack.LengthPrefix(pack.Message{
-					pack.Tag{1, pack.VarintType}, pack.Varint(10),
+			unknown(protopack.Message{
+				protopack.Tag{999, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 				}),
 			}.Marshal()),
 		)},
-		wire: pack.Message{
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(999),
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(10),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.StartGroupType},
+			protopack.Tag{2, protopack.VarintType}, protopack.Varint(999),
+			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 			}),
-			pack.Tag{1, pack.EndGroupType},
+			protopack.Tag{1, protopack.EndGroupType},
 		}.Marshal(),
 	},
 	{
@@ -109,16 +109,16 @@ var messageSetTestProtos = []testProto{
 				Ext1Field2: proto.Int32(20),
 			}),
 		)},
-		wire: pack.Message{
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(10),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.StartGroupType},
+			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
+			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 			}),
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{2, pack.VarintType}, pack.Varint(20),
+			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(20),
 			}),
-			pack.Tag{1, pack.EndGroupType},
+			protopack.Tag{1, protopack.EndGroupType},
 		}.Marshal(),
 	},
 	{
@@ -133,28 +133,28 @@ var messageSetTestProtos = []testProto{
 				Ext2Field1: proto.Int32(30),
 			}),
 		)},
-		wire: pack.Message{
+		wire: protopack.Message{
 			// Ext1, field1
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(10),
+			protopack.Tag{1, protopack.StartGroupType},
+			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
+			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 			}),
-			pack.Tag{1, pack.EndGroupType},
+			protopack.Tag{1, protopack.EndGroupType},
 			// Ext2, field1
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(1001),
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(30),
+			protopack.Tag{1, protopack.StartGroupType},
+			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1001),
+			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(30),
 			}),
-			pack.Tag{1, pack.EndGroupType},
+			protopack.Tag{1, protopack.EndGroupType},
 			// Ext2, field2
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{2, pack.VarintType}, pack.Varint(20),
+			protopack.Tag{1, protopack.StartGroupType},
+			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
+			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(20),
 			}),
-			pack.Tag{1, pack.EndGroupType},
+			protopack.Tag{1, protopack.EndGroupType},
 		}.Marshal(),
 	},
 	{
@@ -162,12 +162,12 @@ var messageSetTestProtos = []testProto{
 		decodeTo: []proto.Message{build(
 			&messagesetpb.MessageSet{},
 		)},
-		wire: pack.Message{
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(10),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.StartGroupType},
+			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 			}),
-			pack.Tag{1, pack.EndGroupType},
+			protopack.Tag{1, protopack.EndGroupType},
 		}.Marshal(),
 	},
 	{
@@ -176,10 +176,10 @@ var messageSetTestProtos = []testProto{
 			&messagesetpb.MessageSet{},
 			extend(msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{}),
 		)},
-		wire: pack.Message{
-			pack.Tag{1, pack.StartGroupType},
-			pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-			pack.Tag{1, pack.EndGroupType},
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.StartGroupType},
+			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
+			protopack.Tag{1, protopack.EndGroupType},
 		}.Marshal(),
 	},
 	{
@@ -189,12 +189,12 @@ var messageSetTestProtos = []testProto{
 			proto.SetExtension(m.MessageSet, msetextpb.E_ExtLargeNumber_MessageSetExtension, &msetextpb.ExtLargeNumber{})
 			return m
 		}()},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(protowire.MaxValidNumber + 1),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
-				pack.Tag{1, pack.EndGroupType},
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(protowire.MaxValidNumber + 1),
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{}),
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},
@@ -203,18 +203,18 @@ var messageSetTestProtos = []testProto{
 		decodeTo: []proto.Message{func() proto.Message {
 			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
 			m.MessageSet.ProtoReflect().SetUnknown(
-				pack.Message{
-					pack.Tag{protowire.MaxValidNumber + 2, pack.BytesType}, pack.LengthPrefix{},
+				protopack.Message{
+					protopack.Tag{protowire.MaxValidNumber + 2, protopack.BytesType}, protopack.LengthPrefix{},
 				}.Marshal(),
 			)
 			return m
 		}()},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(protowire.MaxValidNumber + 2),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
-				pack.Tag{1, pack.EndGroupType},
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(protowire.MaxValidNumber + 2),
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{}),
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},
@@ -227,15 +227,15 @@ var messageSetTestProtos = []testProto{
 			})
 			return m
 		}()},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(1000),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-					pack.Tag{1, pack.VarintType}, pack.Varint(10),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
 				}),
-				pack.Tag{4, pack.VarintType}, pack.Varint(0),
-				pack.Tag{1, pack.EndGroupType},
+				protopack.Tag{4, protopack.VarintType}, protopack.Varint(0),
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},
@@ -249,14 +249,14 @@ var messageSetTestProtos = []testProto{
 			})
 			return m
 		}()},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(1002),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
-					pack.Tag{1, pack.VarintType}, pack.Varint(1),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1002),
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(1),
 				}),
-				pack.Tag{1, pack.EndGroupType},
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},
@@ -269,12 +269,12 @@ var messageSetTestProtos = []testProto{
 			proto.SetExtension(m.MessageSet, msetextpb.E_ExtRequired_MessageSetExtension, &msetextpb.ExtRequired{})
 			return m
 		}()},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(1002),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
-				pack.Tag{1, pack.EndGroupType},
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1002),
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{}),
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},
@@ -286,12 +286,12 @@ var messageSetInvalidTestProtos = []testProto{
 		decodeTo: []proto.Message{
 			(*messagesetpb.MessageSetContainer)(nil),
 		},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Uvarint(0),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
-				pack.Tag{1, pack.EndGroupType},
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Uvarint(0),
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{}),
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},
@@ -300,12 +300,12 @@ var messageSetInvalidTestProtos = []testProto{
 		decodeTo: []proto.Message{
 			(*messagesetpb.MessageSetContainer)(nil),
 		},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Uvarint(0x80000000),
-				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
-				pack.Tag{1, pack.EndGroupType},
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.StartGroupType},
+				protopack.Tag{2, protopack.VarintType}, protopack.Uvarint(0x80000000),
+				protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{}),
+				protopack.Tag{1, protopack.EndGroupType},
 			}),
 		}.Marshal(),
 	},

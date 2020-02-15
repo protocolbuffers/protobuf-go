@@ -12,10 +12,10 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/testing/protopack"
 
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
 	pb3 "google.golang.org/protobuf/internal/testprotos/textpb3"
@@ -826,11 +826,11 @@ req_nested: {}
 			m := &pb2.Scalars{
 				OptString: proto.String("this message contains unknown fields"),
 			}
-			m.ProtoReflect().SetUnknown(pack.Message{
-				pack.Tag{101, pack.VarintType}, pack.Bool(true),
-				pack.Tag{102, pack.VarintType}, pack.Varint(0xff),
-				pack.Tag{103, pack.Fixed32Type}, pack.Uint32(47),
-				pack.Tag{104, pack.Fixed64Type}, pack.Int64(0xdeadbeef),
+			m.ProtoReflect().SetUnknown(protopack.Message{
+				protopack.Tag{101, protopack.VarintType}, protopack.Bool(true),
+				protopack.Tag{102, protopack.VarintType}, protopack.Varint(0xff),
+				protopack.Tag{103, protopack.Fixed32Type}, protopack.Uint32(47),
+				protopack.Tag{104, protopack.Fixed64Type}, protopack.Int64(0xdeadbeef),
 			}.Marshal())
 			return m
 		}(),
@@ -843,11 +843,11 @@ req_nested: {}
 			m := &pb2.Scalars{
 				OptString: proto.String("this message contains unknown fields"),
 			}
-			m.ProtoReflect().SetUnknown(pack.Message{
-				pack.Tag{101, pack.VarintType}, pack.Bool(true),
-				pack.Tag{102, pack.VarintType}, pack.Varint(0xff),
-				pack.Tag{103, pack.Fixed32Type}, pack.Uint32(0x47),
-				pack.Tag{104, pack.Fixed64Type}, pack.Int64(0xdeadbeef),
+			m.ProtoReflect().SetUnknown(protopack.Message{
+				protopack.Tag{101, protopack.VarintType}, protopack.Bool(true),
+				protopack.Tag{102, protopack.VarintType}, protopack.Varint(0xff),
+				protopack.Tag{103, protopack.Fixed32Type}, protopack.Uint32(0x47),
+				protopack.Tag{104, protopack.Fixed64Type}, protopack.Int64(0xdeadbeef),
 			}.Marshal())
 			return m
 		}(),
@@ -862,10 +862,10 @@ req_nested: {}
 		mo:   prototext.MarshalOptions{EmitUnknown: true},
 		input: func() proto.Message {
 			m := new(pb2.Scalars)
-			m.ProtoReflect().SetUnknown(pack.Message{
-				pack.Tag{101, pack.BytesType}, pack.LengthPrefix{pack.Bool(true), pack.Bool(false)},
-				pack.Tag{102, pack.BytesType}, pack.String("hello world"),
-				pack.Tag{103, pack.BytesType}, pack.Bytes("\xe4\xb8\x96\xe7\x95\x8c"),
+			m.ProtoReflect().SetUnknown(protopack.Message{
+				protopack.Tag{101, protopack.BytesType}, protopack.LengthPrefix{protopack.Bool(true), protopack.Bool(false)},
+				protopack.Tag{102, protopack.BytesType}, protopack.String("hello world"),
+				protopack.Tag{103, protopack.BytesType}, protopack.Bytes("\xe4\xb8\x96\xe7\x95\x8c"),
 			}.Marshal())
 			return m
 		}(),
@@ -878,12 +878,12 @@ req_nested: {}
 		mo:   prototext.MarshalOptions{EmitUnknown: true},
 		input: func() proto.Message {
 			m := new(pb2.Scalars)
-			m.ProtoReflect().SetUnknown(pack.Message{
-				pack.Tag{101, pack.StartGroupType}, pack.Tag{101, pack.EndGroupType},
-				pack.Tag{102, pack.StartGroupType},
-				pack.Tag{101, pack.VarintType}, pack.Bool(false),
-				pack.Tag{102, pack.BytesType}, pack.String("inside a group"),
-				pack.Tag{102, pack.EndGroupType},
+			m.ProtoReflect().SetUnknown(protopack.Message{
+				protopack.Tag{101, protopack.StartGroupType}, protopack.Tag{101, protopack.EndGroupType},
+				protopack.Tag{102, protopack.StartGroupType},
+				protopack.Tag{101, protopack.VarintType}, protopack.Bool(false),
+				protopack.Tag{102, protopack.BytesType}, protopack.String("inside a group"),
+				protopack.Tag{102, protopack.EndGroupType},
 			}.Marshal())
 			return m
 		}(),
@@ -898,11 +898,11 @@ req_nested: {}
 		mo:   prototext.MarshalOptions{EmitUnknown: true},
 		input: func() proto.Message {
 			m := new(pb2.Scalars)
-			m.ProtoReflect().SetUnknown(pack.Message{
-				pack.Tag{101, pack.BytesType}, pack.LengthPrefix{pack.Bool(true), pack.Bool(false), pack.Bool(true)},
-				pack.Tag{102, pack.BytesType}, pack.String("hello"),
-				pack.Tag{101, pack.VarintType}, pack.Bool(true),
-				pack.Tag{102, pack.BytesType}, pack.String("世界"),
+			m.ProtoReflect().SetUnknown(protopack.Message{
+				protopack.Tag{101, protopack.BytesType}, protopack.LengthPrefix{protopack.Bool(true), protopack.Bool(false), protopack.Bool(true)},
+				protopack.Tag{102, protopack.BytesType}, protopack.String("hello"),
+				protopack.Tag{101, protopack.VarintType}, protopack.Bool(true),
+				protopack.Tag{102, protopack.BytesType}, protopack.String("世界"),
 			}.Marshal())
 			return m
 		}(),

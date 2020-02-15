@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package pack
+package protopack
 
 import (
 	"bytes"
@@ -81,11 +81,11 @@ func TestPack(t *testing.T) {
 			Tag{1, VarintType}, Denormalized{5, Uvarint(2)},
 			Tag{1, BytesType}, LengthPrefix{Bool(true), Bool(false), Uvarint(2), Denormalized{5, Uvarint(2)}},
 		},
-		wantOutSource: `pack.Message{
-	pack.Tag{1, pack.VarintType}, pack.Bool(false),
-	pack.Denormalized{+5, pack.Tag{1, pack.VarintType}}, pack.Uvarint(2),
-	pack.Tag{1, pack.VarintType}, pack.Denormalized{+5, pack.Uvarint(2)},
-	pack.Tag{1, pack.BytesType}, pack.LengthPrefix{pack.Bool(true), pack.Bool(false), pack.Uvarint(2), pack.Denormalized{+5, pack.Uvarint(2)}},
+		wantOutSource: `protopack.Message{
+	protopack.Tag{1, protopack.VarintType}, protopack.Bool(false),
+	protopack.Denormalized{+5, protopack.Tag{1, protopack.VarintType}}, protopack.Uvarint(2),
+	protopack.Tag{1, protopack.VarintType}, protopack.Denormalized{+5, protopack.Uvarint(2)},
+	protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix{protopack.Bool(true), protopack.Bool(false), protopack.Uvarint(2), protopack.Denormalized{+5, protopack.Uvarint(2)}},
 }`,
 	}, {
 		raw: dhex("100010828080808000121980808080808080808001ffffffffffffffff7f828080808000"),
@@ -114,10 +114,10 @@ func TestPack(t *testing.T) {
 			Tag{4, VarintType}, Denormalized{5, Uvarint(+1)},
 			Tag{4, BytesType}, LengthPrefix{Uvarint(0), Uvarint(math.MaxUint64), Denormalized{5, Uvarint(+1)}},
 		},
-		wantOutSource: `pack.Message{
-	pack.Tag{4, pack.VarintType}, pack.Uvarint(1),
-	pack.Tag{4, pack.VarintType}, pack.Denormalized{+5, pack.Uvarint(1)},
-	pack.Tag{4, pack.BytesType}, pack.LengthPrefix{pack.Uvarint(0), pack.Uvarint(18446744073709551615), pack.Denormalized{+5, pack.Uvarint(1)}},
+		wantOutSource: `protopack.Message{
+	protopack.Tag{4, protopack.VarintType}, protopack.Uvarint(1),
+	protopack.Tag{4, protopack.VarintType}, protopack.Denormalized{+5, protopack.Uvarint(1)},
+	protopack.Tag{4, protopack.BytesType}, protopack.LengthPrefix{protopack.Uvarint(0), protopack.Uvarint(18446744073709551615), protopack.Denormalized{+5, protopack.Uvarint(1)}},
 }`,
 	}, {
 		raw: dhex("2d010000002a0800000000ffffffff"),
@@ -142,9 +142,9 @@ func TestPack(t *testing.T) {
 			Tag{7, Fixed32Type}, Float32(math.Pi),
 			Tag{7, BytesType}, LengthPrefix{Float32(math.SmallestNonzeroFloat32), Float32(math.MaxFloat32), Float32(math.Inf(+1)), Float32(math.Inf(-1))},
 		},
-		wantOutSource: `pack.Message{
-	pack.Tag{7, pack.Fixed32Type}, pack.Float32(3.1415927),
-	pack.Tag{7, pack.BytesType}, pack.LengthPrefix{pack.Float32(1e-45), pack.Float32(3.4028235e+38), pack.Float32(math.Inf(+1)), pack.Float32(math.Inf(-1))},
+		wantOutSource: `protopack.Message{
+	protopack.Tag{7, protopack.Fixed32Type}, protopack.Float32(3.1415927),
+	protopack.Tag{7, protopack.BytesType}, protopack.LengthPrefix{protopack.Float32(1e-45), protopack.Float32(3.4028235e+38), protopack.Float32(math.Inf(+1)), protopack.Float32(math.Inf(-1))},
 }`,
 	}, {
 		raw: dhex("41010000000000000042100000000000000000ffffffffffffffff"),
@@ -201,14 +201,14 @@ func TestPack(t *testing.T) {
 				Tag{100, StartGroupType}, Tag{100, EndGroupType},
 			}),
 		},
-		wantOutSource: `pack.Message{
-	pack.Tag{13, pack.BytesType}, pack.LengthPrefix(pack.Message{
-		pack.Tag{100, pack.VarintType}, pack.Uvarint(18446744073709551615),
-		pack.Tag{100, pack.Fixed32Type}, pack.Uint32(4294967295),
-		pack.Tag{100, pack.Fixed64Type}, pack.Uint64(18446744073709551615),
-		pack.Tag{100, pack.BytesType}, pack.Bytes("bytes"),
-		pack.Tag{100, pack.StartGroupType},
-		pack.Tag{100, pack.EndGroupType},
+		wantOutSource: `protopack.Message{
+	protopack.Tag{13, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+		protopack.Tag{100, protopack.VarintType}, protopack.Uvarint(18446744073709551615),
+		protopack.Tag{100, protopack.Fixed32Type}, protopack.Uint32(4294967295),
+		protopack.Tag{100, protopack.Fixed64Type}, protopack.Uint64(18446744073709551615),
+		protopack.Tag{100, protopack.BytesType}, protopack.Bytes("bytes"),
+		protopack.Tag{100, protopack.StartGroupType},
+		protopack.Tag{100, protopack.EndGroupType},
 	}),
 }`,
 	}, {
@@ -269,16 +269,16 @@ func TestPack(t *testing.T) {
 				func() uint32 { return 0x7fe5d008 }(),
 			)),
 		},
-		wantOutSource: `pack.Message{
-	pack.Tag{7, pack.Fixed32Type}, pack.Float32(math.Float32frombits(0x7fe5d008)),
+		wantOutSource: `protopack.Message{
+	protopack.Tag{7, protopack.Fixed32Type}, protopack.Float32(math.Float32frombits(0x7fe5d008)),
 }`,
 	}, {
 		raw: dhex("51a8d65110771bf97f"),
 		msg: Message{
 			Tag{10, Fixed64Type}, Float64(math.Float64frombits(0x7ff91b771051d6a8)),
 		},
-		wantOutSource: `pack.Message{
-	pack.Tag{10, pack.Fixed64Type}, pack.Float64(math.Float64frombits(0x7ff91b771051d6a8)),
+		wantOutSource: `protopack.Message{
+	protopack.Tag{10, protopack.Fixed64Type}, protopack.Float64(math.Float64frombits(0x7ff91b771051d6a8)),
 }`,
 	}, {
 		raw: dhex("ab2c14481ab3e9a76d937fb4dd5e6c616ef311f62b7fe888785fca5609ffe81c1064e50dd7a9edb408d317e2891c0d54c719446938d41ab0ccf8e61dc28b0ebb"),

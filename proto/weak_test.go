@@ -7,10 +7,10 @@ package proto_test
 import (
 	"testing"
 
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/protobuild"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/testing/protopack"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
@@ -36,20 +36,20 @@ var testWeakValidMessages = []testProto{
 				m.SetWeakMessage1(&weakpb.WeakImportMessage1{
 					A: proto.Int32(1000),
 				})
-				m.ProtoReflect().SetUnknown(pack.Message{
-					pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
-						pack.Tag{1, pack.VarintType}, pack.Varint(2000),
+				m.ProtoReflect().SetUnknown(protopack.Message{
+					protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+						protopack.Tag{1, protopack.VarintType}, protopack.Varint(2000),
 					}),
 				}.Marshal())
 				return m
 			}(),
 		},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(1000),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(1000),
 			}),
-			pack.Tag{2, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{1, pack.VarintType}, pack.Varint(2000),
+			protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(2000),
 			}),
 		}.Marshal(),
 	},
@@ -59,9 +59,9 @@ var testWeakInvalidMessages = []testProto{
 	{
 		desc:     "invalid field number 0 in weak message",
 		decodeTo: []proto.Message{(*testpb.TestWeak)(nil)},
-		wire: pack.Message{
-			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
-				pack.Tag{0, pack.VarintType}, pack.Varint(1000),
+		wire: protopack.Message{
+			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{0, protopack.VarintType}, protopack.Varint(1000),
 			}),
 		}.Marshal(),
 	},

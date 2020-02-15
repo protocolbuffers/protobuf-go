@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package pack enables manual encoding and decoding of protobuf wire data.
+// Package protopack enables manual encoding and decoding of protobuf wire data.
 //
 // This package is intended for use in debugging and/or creation of test data.
 // Proper usage of this package requires knowledge of the wire format.
 //
 // See https://developers.google.com/protocol-buffers/docs/encoding.
-package pack
+package protopack
 
 import (
 	"fmt"
@@ -25,10 +25,10 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// Number is the field number; aliased from the wire package for convenience.
+// Number is the field number; aliased from the protowire package for convenience.
 type Number = protowire.Number
 
-// Number type constants; copied from the wire package for convenience.
+// Number type constants; copied from the protowire package for convenience.
 const (
 	MinValidNumber      Number = protowire.MinValidNumber
 	FirstReservedNumber Number = protowire.FirstReservedNumber
@@ -36,10 +36,10 @@ const (
 	MaxValidNumber      Number = protowire.MaxValidNumber
 )
 
-// Type is the wire type; aliased from the wire package for convenience.
+// Type is the wire type; aliased from the protowire package for convenience.
 type Type = protowire.Type
 
-// Wire type constants; copied from the wire package for convenience.
+// Wire type constants; copied from the protowire package for convenience.
 const (
 	VarintType     Type = protowire.VarintType
 	Fixed32Type    Type = protowire.Fixed32Type

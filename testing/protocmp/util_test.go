@@ -12,9 +12,9 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/testing/protopack"
 	"google.golang.org/protobuf/types/dynamicpb"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
@@ -208,8 +208,8 @@ func TestEqual(t *testing.T) {
 	}}...)
 
 	// Test IgnoreUnknown.
-	raw := pack.Message{
-		pack.Tag{1, pack.BytesType}, pack.String("Hello, goodbye!"),
+	raw := protopack.Message{
+		protopack.Tag{1, protopack.BytesType}, protopack.String("Hello, goodbye!"),
 	}.Marshal()
 	tests = append(tests, []test{{
 		x:    apply(&testpb.TestAllTypes{OptionalSint64: proto.Int64(5)}, setUnknown{raw}),
