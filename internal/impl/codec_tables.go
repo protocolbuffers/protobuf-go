@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -18,7 +18,7 @@ type pointerCoderFuncs struct {
 	mi        *MessageInfo
 	size      func(p pointer, f *coderFieldInfo, opts marshalOptions) int
 	marshal   func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error)
-	unmarshal func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error)
+	unmarshal func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error)
 	isInit    func(p pointer, f *coderFieldInfo) error
 	merge     func(dst, src pointer, f *coderFieldInfo, opts mergeOptions)
 }
@@ -27,7 +27,7 @@ type pointerCoderFuncs struct {
 type valueCoderFuncs struct {
 	size      func(v pref.Value, tagsize int, opts marshalOptions) int
 	marshal   func(b []byte, v pref.Value, wiretag uint64, opts marshalOptions) ([]byte, error)
-	unmarshal func(b []byte, v pref.Value, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, unmarshalOutput, error)
+	unmarshal func(b []byte, v pref.Value, num protowire.Number, wtyp protowire.Type, opts unmarshalOptions) (pref.Value, unmarshalOutput, error)
 	isInit    func(v pref.Value) error
 	merge     func(dst, src pref.Value, opts mergeOptions) pref.Value
 }

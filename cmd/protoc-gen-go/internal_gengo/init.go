@@ -9,7 +9,7 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/compiler/protogen"
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -146,13 +146,13 @@ func isTrackedMessage(m *messageInfo) (tracked bool) {
 	// annotation proto from protoc-gen-go.
 	b := m.Desc.Options().(*descriptorpb.MessageOptions).ProtoReflect().GetUnknown()
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
-		if num == trackFieldUse_fieldNumber && typ == wire.VarintType {
-			v, _ := wire.ConsumeVarint(b)
-			tracked = wire.DecodeBool(v)
+		if num == trackFieldUse_fieldNumber && typ == protowire.VarintType {
+			v, _ := protowire.ConsumeVarint(b)
+			tracked = protowire.DecodeBool(v)
 		}
-		m := wire.ConsumeFieldValue(num, typ, b)
+		m := protowire.ConsumeFieldValue(num, typ, b)
 		b = b[m:]
 	}
 	return tracked

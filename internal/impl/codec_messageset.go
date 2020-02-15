@@ -7,8 +7,8 @@ package impl
 import (
 	"sort"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 )
@@ -24,9 +24,9 @@ func sizeMessageSet(mi *MessageInfo, p pointer, opts marshalOptions) (size int) 
 		if xi.funcs.size == nil {
 			continue
 		}
-		num, _ := wire.DecodeTag(xi.wiretag)
+		num, _ := protowire.DecodeTag(xi.wiretag)
 		size += messageset.SizeField(num)
-		size += xi.funcs.size(x.Value(), wire.SizeTag(messageset.FieldMessage), opts)
+		size += xi.funcs.size(x.Value(), protowire.SizeTag(messageset.FieldMessage), opts)
 	}
 
 	unknown := *p.Apply(mi.unknownOffset).Bytes()
@@ -80,9 +80,9 @@ func marshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts marshalOptions
 
 func marshalMessageSetField(mi *MessageInfo, b []byte, x ExtensionField, opts marshalOptions) ([]byte, error) {
 	xi := getExtensionFieldInfo(x.Type())
-	num, _ := wire.DecodeTag(xi.wiretag)
+	num, _ := protowire.DecodeTag(xi.wiretag)
 	b = messageset.AppendFieldStart(b, num)
-	b, err := xi.funcs.marshal(b, x.Value(), wire.EncodeTag(messageset.FieldMessage, wire.BytesType), opts)
+	b, err := xi.funcs.marshal(b, x.Value(), protowire.EncodeTag(messageset.FieldMessage, protowire.BytesType), opts)
 	if err != nil {
 		return b, err
 	}
@@ -102,10 +102,10 @@ func unmarshalMessageSet(mi *MessageInfo, b []byte, p pointer, opts unmarshalOpt
 	ext := *ep
 	unknown := p.Apply(mi.unknownOffset).Bytes()
 	initialized := true
-	err = messageset.Unmarshal(b, true, func(num wire.Number, v []byte) error {
-		o, err := mi.unmarshalExtension(v, num, wire.BytesType, ext, opts)
+	err = messageset.Unmarshal(b, true, func(num protowire.Number, v []byte) error {
+		o, err := mi.unmarshalExtension(v, num, protowire.BytesType, ext, opts)
 		if err == errUnknown {
-			*unknown = wire.AppendTag(*unknown, num, wire.BytesType)
+			*unknown = protowire.AppendTag(*unknown, num, protowire.BytesType)
 			*unknown = append(*unknown, v...)
 			return nil
 		}

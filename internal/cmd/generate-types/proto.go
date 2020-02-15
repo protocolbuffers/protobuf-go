@@ -21,9 +21,9 @@ const (
 
 func (w WireType) Expr() Expr {
 	if w == WireGroup {
-		return "wire.StartGroupType"
+		return "protowire.StartGroupType"
 	}
-	return "wire." + Expr(w) + "Type"
+	return "protowire." + Expr(w) + "Type"
 }
 
 func (w WireType) Packable() bool {
@@ -113,11 +113,11 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Bool",
 		WireType:   WireVarint,
-		ToValue:    "protoreflect.ValueOfBool(wire.DecodeBool(v))",
-		FromValue:  "wire.EncodeBool(v.Bool())",
+		ToValue:    "protoreflect.ValueOfBool(protowire.DecodeBool(v))",
+		FromValue:  "protowire.EncodeBool(v.Bool())",
 		GoType:     GoBool,
-		ToGoType:   "wire.DecodeBool(v)",
-		FromGoType: "wire.EncodeBool(v)",
+		ToGoType:   "protowire.DecodeBool(v)",
+		FromGoType: "protowire.EncodeBool(v)",
 	},
 	{
 		Name:      "Enum",
@@ -137,11 +137,11 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Sint32",
 		WireType:   WireVarint,
-		ToValue:    "protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32)))",
-		FromValue:  "wire.EncodeZigZag(int64(int32(v.Int())))",
+		ToValue:    "protoreflect.ValueOfInt32(int32(protowire.DecodeZigZag(v & math.MaxUint32)))",
+		FromValue:  "protowire.EncodeZigZag(int64(int32(v.Int())))",
 		GoType:     GoInt32,
-		ToGoType:   "int32(wire.DecodeZigZag(v & math.MaxUint32))",
-		FromGoType: "wire.EncodeZigZag(int64(v))",
+		ToGoType:   "int32(protowire.DecodeZigZag(v & math.MaxUint32))",
+		FromGoType: "protowire.EncodeZigZag(int64(v))",
 	},
 	{
 		Name:       "Uint32",
@@ -164,11 +164,11 @@ var ProtoKinds = []ProtoKind{
 	{
 		Name:       "Sint64",
 		WireType:   WireVarint,
-		ToValue:    "protoreflect.ValueOfInt64(wire.DecodeZigZag(v))",
-		FromValue:  "wire.EncodeZigZag(v.Int())",
+		ToValue:    "protoreflect.ValueOfInt64(protowire.DecodeZigZag(v))",
+		FromValue:  "protowire.EncodeZigZag(v.Int())",
 		GoType:     GoInt64,
-		ToGoType:   "wire.DecodeZigZag(v)",
-		FromGoType: "wire.EncodeZigZag(v)",
+		ToGoType:   "protowire.DecodeZigZag(v)",
+		FromGoType: "protowire.EncodeZigZag(v)",
 	},
 	{
 		Name:       "Uint64",
@@ -277,7 +277,7 @@ var protoDecodeTemplate = template.Must(template.New("").Parse(`
 // unmarshalScalar decodes a value of the given kind.
 //
 // Message values are decoded into a []byte which aliases the input data.
-func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protoreflect.FieldDescriptor) (val protoreflect.Value, n int, err error) {
+func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp protowire.Type, fd protoreflect.FieldDescriptor) (val protoreflect.Value, n int, err error) {
 	switch fd.Kind() {
 	{{- range .}}
 	case {{.Expr}}:
@@ -285,12 +285,12 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 			return val, 0, errUnknown
 		}
 		{{if (eq .WireType "Group") -}}
-		v, n := wire.ConsumeGroup(fd.Number(), b)
+		v, n := protowire.ConsumeGroup(fd.Number(), b)
 		{{- else -}}
-		v, n := wire.Consume{{.WireType}}(b)
+		v, n := protowire.Consume{{.WireType}}(b)
 		{{- end}}
 		if n < 0 {
-			return val, 0, wire.ParseError(n)
+			return val, 0, protowire.ParseError(n)
 		}
 		{{if (eq .Name "String") -}}
 		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
@@ -304,20 +304,20 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp wire.Type, fd protorefl
 	}
 }
 
-func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protoreflect.List, fd protoreflect.FieldDescriptor) (n int, err error) {
+func (o UnmarshalOptions) unmarshalList(b []byte, wtyp protowire.Type, list protoreflect.List, fd protoreflect.FieldDescriptor) (n int, err error) {
 	switch fd.Kind() {
 	{{- range .}}
 	case {{.Expr}}:
 		{{- if .WireType.Packable}}
-		if wtyp == wire.BytesType {
-			buf, n := wire.ConsumeBytes(b)
+		if wtyp == protowire.BytesType {
+			buf, n := protowire.ConsumeBytes(b)
 			if n < 0 {
-				return 0, wire.ParseError(n)
+				return 0, protowire.ParseError(n)
 			}
 			for len(buf) > 0 {
-				v, n := wire.Consume{{.WireType}}(buf)
+				v, n := protowire.Consume{{.WireType}}(buf)
 				if n < 0 {
-					return 0, wire.ParseError(n)
+					return 0, protowire.ParseError(n)
 				}
 				buf = buf[n:]
 				list.Append({{.ToValue}})
@@ -329,12 +329,12 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp wire.Type, list protorefl
 			return 0, errUnknown
 		}
 		{{if (eq .WireType "Group") -}}
-		v, n := wire.ConsumeGroup(fd.Number(), b)
+		v, n := protowire.ConsumeGroup(fd.Number(), b)
 		{{- else -}}
-		v, n := wire.Consume{{.WireType}}(b)
+		v, n := protowire.Consume{{.WireType}}(b)
 		{{- end}}
 		if n < 0 {
-			return 0, wire.ParseError(n)
+			return 0, protowire.ParseError(n)
 		}
 		{{if (eq .Name "String") -}}
 		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
@@ -366,7 +366,7 @@ func generateProtoEncode() string {
 }
 
 var protoEncodeTemplate = template.Must(template.New("").Parse(`
-var wireTypes = map[protoreflect.Kind]wire.Type{
+var wireTypes = map[protoreflect.Kind]protowire.Type{
 {{- range .}}
 	{{.Expr}}: {{.WireType.Expr}},
 {{- end}}
@@ -380,7 +380,7 @@ func (o MarshalOptions) marshalSingular(b []byte, fd protoreflect.FieldDescripto
 		if strs.EnforceUTF8(fd) && !utf8.ValidString(v.String()) {
 			return b, errors.InvalidUTF8(string(fd.FullName()))
 		}
-		b = wire.AppendString(b, {{.FromValue}})
+		b = protowire.AppendString(b, {{.FromValue}})
 		{{- else if (eq .Name "Message") -}}
 		var pos int
 		var err error
@@ -396,9 +396,9 @@ func (o MarshalOptions) marshalSingular(b []byte, fd protoreflect.FieldDescripto
 		if err != nil {
 			return b, err
 		}
-		b = wire.AppendVarint(b, wire.EncodeTag(fd.Number(), wire.EndGroupType))
+		b = protowire.AppendVarint(b, protowire.EncodeTag(fd.Number(), protowire.EndGroupType))
 		{{- else -}}
-		b = wire.Append{{.WireType}}(b, {{.FromValue}})
+		b = protowire.Append{{.WireType}}(b, {{.FromValue}})
 		{{- end}}
 	{{- end}}
 	default:
@@ -413,20 +413,20 @@ func generateProtoSize() string {
 }
 
 var protoSizeTemplate = template.Must(template.New("").Parse(`
-func sizeSingular(num wire.Number, kind protoreflect.Kind, v protoreflect.Value) int {
+func sizeSingular(num protowire.Number, kind protoreflect.Kind, v protoreflect.Value) int {
 	switch kind {
 	{{- range .}}
 	case {{.Expr}}:
 		{{if (eq .Name "Message") -}}
-		return wire.SizeBytes(sizeMessage(v.Message()))
+		return protowire.SizeBytes(sizeMessage(v.Message()))
 		{{- else if or (eq .WireType "Fixed32") (eq .WireType "Fixed64") -}}
-		return wire.Size{{.WireType}}()
+		return protowire.Size{{.WireType}}()
 		{{- else if (eq .WireType "Bytes") -}}
-		return wire.Size{{.WireType}}(len({{.FromValue}}))
+		return protowire.Size{{.WireType}}(len({{.FromValue}}))
 		{{- else if (eq .WireType "Group") -}}
-		return wire.Size{{.WireType}}(num, sizeMessage(v.Message()))
+		return protowire.Size{{.WireType}}(num, sizeMessage(v.Message()))
 		{{- else -}}
-		return wire.Size{{.WireType}}({{.FromValue}})
+		return protowire.Size{{.WireType}}({{.FromValue}})
 		{{- end}}
 	{{- end}}
 	default:

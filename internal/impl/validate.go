@@ -11,8 +11,8 @@ import (
 	"reflect"
 	"unicode/utf8"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -163,11 +163,11 @@ func newValidationInfo(fd pref.FieldDescriptor, ft reflect.Type) validationInfo 
 			}
 		default:
 			switch wireTypes[fd.Kind()] {
-			case wire.VarintType:
+			case protowire.VarintType:
 				vi.typ = validationTypeRepeatedVarint
-			case wire.Fixed32Type:
+			case protowire.Fixed32Type:
 				vi.typ = validationTypeRepeatedFixed32
-			case wire.Fixed64Type:
+			case protowire.Fixed64Type:
 				vi.typ = validationTypeRepeatedFixed64
 			}
 		}
@@ -207,13 +207,13 @@ func newValidationInfo(fd pref.FieldDescriptor, ft reflect.Type) validationInfo 
 			}
 		default:
 			switch wireTypes[fd.Kind()] {
-			case wire.VarintType:
+			case protowire.VarintType:
 				vi.typ = validationTypeVarint
-			case wire.Fixed32Type:
+			case protowire.Fixed32Type:
 				vi.typ = validationTypeFixed32
-			case wire.Fixed64Type:
+			case protowire.Fixed64Type:
 				vi.typ = validationTypeFixed64
-			case wire.BytesType:
+			case protowire.BytesType:
 				vi.typ = validationTypeBytes
 			}
 		}
@@ -221,12 +221,12 @@ func newValidationInfo(fd pref.FieldDescriptor, ft reflect.Type) validationInfo 
 	return vi
 }
 
-func (mi *MessageInfo) validate(b []byte, groupTag wire.Number, opts unmarshalOptions) (out unmarshalOutput, result ValidationStatus) {
+func (mi *MessageInfo) validate(b []byte, groupTag protowire.Number, opts unmarshalOptions) (out unmarshalOutput, result ValidationStatus) {
 	mi.init()
 	type validationState struct {
 		typ              validationType
 		keyType, valType validationType
-		endGroup         wire.Number
+		endGroup         protowire.Number
 		mi               *MessageInfo
 		tail             []byte
 		requiredMask     uint64
@@ -258,21 +258,21 @@ State:
 				b = b[2:]
 			} else {
 				var n int
-				tag, n = wire.ConsumeVarint(b)
+				tag, n = protowire.ConsumeVarint(b)
 				if n < 0 {
 					return out, ValidationInvalid
 				}
 				b = b[n:]
 			}
-			var num wire.Number
-			if n := tag >> 3; n < uint64(wire.MinValidNumber) || n > uint64(wire.MaxValidNumber) {
+			var num protowire.Number
+			if n := tag >> 3; n < uint64(protowire.MinValidNumber) || n > uint64(protowire.MaxValidNumber) {
 				return out, ValidationInvalid
 			} else {
-				num = wire.Number(n)
+				num = protowire.Number(n)
 			}
-			wtyp := wire.Type(tag & 7)
+			wtyp := protowire.Type(tag & 7)
 
-			if wtyp == wire.EndGroupType {
+			if wtyp == protowire.EndGroupType {
 				if st.endGroup == num {
 					goto PopState
 				}
@@ -348,15 +348,15 @@ State:
 				ok := false
 				switch vi.typ {
 				case validationTypeVarint:
-					ok = wtyp == wire.VarintType
+					ok = wtyp == protowire.VarintType
 				case validationTypeFixed32:
-					ok = wtyp == wire.Fixed32Type
+					ok = wtyp == protowire.Fixed32Type
 				case validationTypeFixed64:
-					ok = wtyp == wire.Fixed64Type
+					ok = wtyp == protowire.Fixed64Type
 				case validationTypeBytes, validationTypeUTF8String, validationTypeMessage:
-					ok = wtyp == wire.BytesType
+					ok = wtyp == protowire.BytesType
 				case validationTypeGroup:
-					ok = wtyp == wire.StartGroupType
+					ok = wtyp == protowire.StartGroupType
 				}
 				if ok {
 					st.requiredMask |= vi.requiredBit
@@ -364,7 +364,7 @@ State:
 			}
 
 			switch wtyp {
-			case wire.VarintType:
+			case protowire.VarintType:
 				if len(b) >= 10 {
 					switch {
 					case b[0] < 0x80:
@@ -417,7 +417,7 @@ State:
 					}
 				}
 				continue State
-			case wire.BytesType:
+			case protowire.BytesType:
 				var size uint64
 				if len(b) >= 1 && b[0] < 0x80 {
 					size = uint64(b[0])
@@ -427,7 +427,7 @@ State:
 					b = b[2:]
 				} else {
 					var n int
-					size, n = wire.ConsumeVarint(b)
+					size, n = protowire.ConsumeVarint(b)
 					if n < 0 {
 						return out, ValidationInvalid
 					}
@@ -461,7 +461,7 @@ State:
 				case validationTypeRepeatedVarint:
 					// Packed field.
 					for len(v) > 0 {
-						_, n := wire.ConsumeVarint(v)
+						_, n := protowire.ConsumeVarint(v)
 						if n < 0 {
 							return out, ValidationInvalid
 						}
@@ -482,17 +482,17 @@ State:
 						return out, ValidationInvalid
 					}
 				}
-			case wire.Fixed32Type:
+			case protowire.Fixed32Type:
 				if len(b) < 4 {
 					return out, ValidationInvalid
 				}
 				b = b[4:]
-			case wire.Fixed64Type:
+			case protowire.Fixed64Type:
 				if len(b) < 8 {
 					return out, ValidationInvalid
 				}
 				b = b[8:]
-			case wire.StartGroupType:
+			case protowire.StartGroupType:
 				switch {
 				case vi.typ == validationTypeGroup:
 					if vi.mi == nil {
@@ -530,7 +530,7 @@ State:
 						continue State
 					}
 				default:
-					n := wire.ConsumeFieldValue(num, wtyp, b)
+					n := protowire.ConsumeFieldValue(num, wtyp, b)
 					if n < 0 {
 						return out, ValidationInvalid
 					}

@@ -6,7 +6,7 @@
 package filedesc
 
 import (
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/fieldnum"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -118,11 +118,11 @@ func (db Builder) Build() (out Out) {
 // or a MessageDescriptorProto depending on whether isFile is set.
 func (db *Builder) unmarshalCounts(b []byte, isFile bool) {
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			if isFile {
 				switch num {
@@ -148,7 +148,7 @@ func (db *Builder) unmarshalCounts(b []byte, isFile bool) {
 				}
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}

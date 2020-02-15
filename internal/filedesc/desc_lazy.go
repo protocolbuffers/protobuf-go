@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"sync"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/descopts"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/fieldnum"
 	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/proto"
@@ -136,11 +136,11 @@ func (fd *File) unmarshalFull(b []byte) {
 	var rawOptions []byte
 	fd.L2 = new(FileL2)
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FileDescriptorProto_PublicDependency:
@@ -148,8 +148,8 @@ func (fd *File) unmarshalFull(b []byte) {
 			case fieldnum.FileDescriptorProto_WeakDependency:
 				fd.L2.Imports[v].IsWeak = true
 			}
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FileDescriptorProto_Dependency:
@@ -175,7 +175,7 @@ func (fd *File) unmarshalFull(b []byte) {
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -189,11 +189,11 @@ func (ed *Enum) unmarshalFull(b []byte, sb *strs.Builder) {
 		ed.L2 = new(EnumL2)
 	}
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.EnumDescriptorProto_Value:
@@ -206,7 +206,7 @@ func (ed *Enum) unmarshalFull(b []byte, sb *strs.Builder) {
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -221,11 +221,11 @@ func (ed *Enum) unmarshalFull(b []byte, sb *strs.Builder) {
 
 func unmarshalEnumReservedRange(b []byte) (r [2]pref.EnumNumber) {
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.EnumDescriptorProto_EnumReservedRange_Start:
@@ -234,7 +234,7 @@ func unmarshalEnumReservedRange(b []byte) (r [2]pref.EnumNumber) {
 				r[1] = pref.EnumNumber(v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -248,18 +248,18 @@ func (vd *EnumValue) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref
 
 	var rawOptions []byte
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.EnumValueDescriptorProto_Number:
 				vd.L1.Number = pref.EnumNumber(v)
 			}
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.EnumValueDescriptorProto_Name:
@@ -269,7 +269,7 @@ func (vd *EnumValue) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -282,11 +282,11 @@ func (md *Message) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawOptions []byte
 	md.L2 = new(MessageL2)
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.DescriptorProto_Field:
@@ -316,7 +316,7 @@ func (md *Message) unmarshalFull(b []byte, sb *strs.Builder) {
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -340,20 +340,20 @@ func (md *Message) unmarshalFull(b []byte, sb *strs.Builder) {
 
 func (md *Message) unmarshalOptions(b []byte) {
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.MessageOptions_MapEntry:
-				md.L1.IsMapEntry = wire.DecodeBool(v)
+				md.L1.IsMapEntry = protowire.DecodeBool(v)
 			case fieldnum.MessageOptions_MessageSetWireFormat:
-				md.L1.IsMessageSet = wire.DecodeBool(v)
+				md.L1.IsMessageSet = protowire.DecodeBool(v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -361,11 +361,11 @@ func (md *Message) unmarshalOptions(b []byte) {
 
 func unmarshalMessageReservedRange(b []byte) (r [2]pref.FieldNumber) {
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.DescriptorProto_ReservedRange_Start:
@@ -374,7 +374,7 @@ func unmarshalMessageReservedRange(b []byte) (r [2]pref.FieldNumber) {
 				r[1] = pref.FieldNumber(v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -383,11 +383,11 @@ func unmarshalMessageReservedRange(b []byte) (r [2]pref.FieldNumber) {
 
 func unmarshalMessageExtensionRange(b []byte) (r [2]pref.FieldNumber, rawOptions []byte) {
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.DescriptorProto_ExtensionRange_Start:
@@ -395,15 +395,15 @@ func unmarshalMessageExtensionRange(b []byte) (r [2]pref.FieldNumber, rawOptions
 			case fieldnum.DescriptorProto_ExtensionRange_End:
 				r[1] = pref.FieldNumber(v)
 			}
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.DescriptorProto_ExtensionRange_Options:
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -418,11 +418,11 @@ func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 	var rawTypeName []byte
 	var rawOptions []byte
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldDescriptorProto_Number:
@@ -442,8 +442,8 @@ func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 				}
 				fd.L1.ContainingOneof = od
 			}
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldDescriptorProto_Name:
@@ -459,7 +459,7 @@ func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -479,24 +479,24 @@ func (fd *Field) unmarshalOptions(b []byte) {
 	const FieldOptions_EnforceUTF8 = 13
 
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldOptions_Packed:
 				fd.L1.HasPacked = true
-				fd.L1.IsPacked = wire.DecodeBool(v)
+				fd.L1.IsPacked = protowire.DecodeBool(v)
 			case fieldnum.FieldOptions_Weak:
-				fd.L1.IsWeak = wire.DecodeBool(v)
+				fd.L1.IsWeak = protowire.DecodeBool(v)
 			case FieldOptions_EnforceUTF8:
 				fd.L1.HasEnforceUTF8 = true
-				fd.L1.EnforceUTF8 = wire.DecodeBool(v)
+				fd.L1.EnforceUTF8 = protowire.DecodeBool(v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -509,11 +509,11 @@ func (od *Oneof) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 
 	var rawOptions []byte
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.OneofDescriptorProto_Name:
@@ -522,7 +522,7 @@ func (od *Oneof) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.Des
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -534,11 +534,11 @@ func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawOptions []byte
 	xd.L2 = new(ExtensionL2)
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldDescriptorProto_JsonName:
@@ -552,7 +552,7 @@ func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -570,18 +570,18 @@ func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 
 func (xd *Extension) unmarshalOptions(b []byte) {
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldOptions_Packed:
-				xd.L2.IsPacked = wire.DecodeBool(v)
+				xd.L2.IsPacked = protowire.DecodeBool(v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -592,11 +592,11 @@ func (sd *Service) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawOptions []byte
 	sd.L2 = new(ServiceL2)
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.ServiceDescriptorProto_Method:
@@ -605,7 +605,7 @@ func (sd *Service) unmarshalFull(b []byte, sb *strs.Builder) {
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -625,20 +625,20 @@ func (md *Method) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.De
 
 	var rawOptions []byte
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.MethodDescriptorProto_ClientStreaming:
-				md.L1.IsStreamingClient = wire.DecodeBool(v)
+				md.L1.IsStreamingClient = protowire.DecodeBool(v)
 			case fieldnum.MethodDescriptorProto_ServerStreaming:
-				md.L1.IsStreamingServer = wire.DecodeBool(v)
+				md.L1.IsStreamingServer = protowire.DecodeBool(v)
 			}
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.MethodDescriptorProto_Name:
@@ -651,7 +651,7 @@ func (md *Method) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd pref.De
 				rawOptions = appendOptions(rawOptions, v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}

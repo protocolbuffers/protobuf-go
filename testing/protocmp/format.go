@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"strings"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -134,8 +134,8 @@ func appendMap(b []byte, v reflect.Value) []byte {
 func transformRawFields(b protoreflect.RawFields) interface{} {
 	var vs []interface{}
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
-		m := wire.ConsumeFieldValue(num, typ, b[n:])
+		num, typ, n := protowire.ConsumeTag(b)
+		m := protowire.ConsumeFieldValue(num, typ, b[n:])
 		vs = append(vs, transformRawField(typ, b[n:][:m]))
 		b = b[n+m:]
 	}
@@ -145,28 +145,28 @@ func transformRawFields(b protoreflect.RawFields) interface{} {
 	return vs
 }
 
-func transformRawField(typ wire.Type, b protoreflect.RawFields) interface{} {
+func transformRawField(typ protowire.Type, b protoreflect.RawFields) interface{} {
 	switch typ {
-	case wire.VarintType:
-		v, _ := wire.ConsumeVarint(b)
+	case protowire.VarintType:
+		v, _ := protowire.ConsumeVarint(b)
 		return v
-	case wire.Fixed32Type:
-		v, _ := wire.ConsumeFixed32(b)
+	case protowire.Fixed32Type:
+		v, _ := protowire.ConsumeFixed32(b)
 		return v
-	case wire.Fixed64Type:
-		v, _ := wire.ConsumeFixed64(b)
+	case protowire.Fixed64Type:
+		v, _ := protowire.ConsumeFixed64(b)
 		return v
-	case wire.BytesType:
-		v, _ := wire.ConsumeBytes(b)
+	case protowire.BytesType:
+		v, _ := protowire.ConsumeBytes(b)
 		return v
-	case wire.StartGroupType:
+	case protowire.StartGroupType:
 		v := Message{}
 		for {
-			num2, typ2, n := wire.ConsumeTag(b)
-			if typ2 == wire.EndGroupType {
+			num2, typ2, n := protowire.ConsumeTag(b)
+			if typ2 == protowire.EndGroupType {
 				return v
 			}
-			m := wire.ConsumeFieldValue(num2, typ2, b[n:])
+			m := protowire.ConsumeFieldValue(num2, typ2, b[n:])
 			s := strconv.Itoa(int(num2))
 			b2, _ := v[s].(protoreflect.RawFields)
 			v[s] = append(b2, b[:n+m]...)

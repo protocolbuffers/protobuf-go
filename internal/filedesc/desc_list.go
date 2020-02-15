@@ -10,8 +10,8 @@ import (
 	"sort"
 	"sync"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/descfmt"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -186,9 +186,9 @@ func (p *FieldRanges) CheckValid(isMessageSet bool) error {
 // reserved number range.
 func isValidFieldNumber(n protoreflect.FieldNumber, isMessageSet bool) bool {
 	if isMessageSet {
-		return wire.MinValidNumber <= n && n <= math.MaxInt32
+		return protowire.MinValidNumber <= n && n <= math.MaxInt32
 	}
-	return wire.MinValidNumber <= n && n <= wire.MaxValidNumber
+	return protowire.MinValidNumber <= n && n <= protowire.MaxValidNumber
 }
 
 // CheckOverlap reports an error if p and q overlap.

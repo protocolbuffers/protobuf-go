@@ -5,8 +5,8 @@
 package proto
 
 import (
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoiface"
 )
@@ -60,29 +60,29 @@ func sizeField(fd protoreflect.FieldDescriptor, value protoreflect.Value) (size 
 	case fd.IsMap():
 		return sizeMap(num, fd, value.Map())
 	default:
-		return wire.SizeTag(num) + sizeSingular(num, fd.Kind(), value)
+		return protowire.SizeTag(num) + sizeSingular(num, fd.Kind(), value)
 	}
 }
 
-func sizeList(num wire.Number, fd protoreflect.FieldDescriptor, list protoreflect.List) (size int) {
+func sizeList(num protowire.Number, fd protoreflect.FieldDescriptor, list protoreflect.List) (size int) {
 	if fd.IsPacked() && list.Len() > 0 {
 		content := 0
 		for i, llen := 0, list.Len(); i < llen; i++ {
 			content += sizeSingular(num, fd.Kind(), list.Get(i))
 		}
-		return wire.SizeTag(num) + wire.SizeBytes(content)
+		return protowire.SizeTag(num) + protowire.SizeBytes(content)
 	}
 
 	for i, llen := 0, list.Len(); i < llen; i++ {
-		size += wire.SizeTag(num) + sizeSingular(num, fd.Kind(), list.Get(i))
+		size += protowire.SizeTag(num) + sizeSingular(num, fd.Kind(), list.Get(i))
 	}
 	return size
 }
 
-func sizeMap(num wire.Number, fd protoreflect.FieldDescriptor, mapv protoreflect.Map) (size int) {
+func sizeMap(num protowire.Number, fd protoreflect.FieldDescriptor, mapv protoreflect.Map) (size int) {
 	mapv.Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
-		size += wire.SizeTag(num)
-		size += wire.SizeBytes(sizeField(fd.MapKey(), key.Value()) + sizeField(fd.MapValue(), value))
+		size += protowire.SizeTag(num)
+		size += protowire.SizeBytes(sizeField(fd.MapKey(), key.Value()) + sizeField(fd.MapValue(), value))
 		return true
 	})
 	return size

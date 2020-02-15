@@ -14,7 +14,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 
@@ -212,9 +212,9 @@ func TestEncodeOrder(t *testing.T) {
 	}
 	var got []pref.FieldNumber
 	for len(b) > 0 {
-		num, _, n := wire.ConsumeField(b)
+		num, _, n := protowire.ConsumeField(b)
 		if n < 0 {
-			t.Fatal(wire.ParseError(n))
+			t.Fatal(protowire.ParseError(n))
 		}
 		b = b[n:]
 		got = append(got, num)

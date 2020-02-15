@@ -9,28 +9,28 @@ package impl
 import (
 	"reflect"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 )
 
 func sizeEnum(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := p.v.Elem().Int()
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 func appendEnum(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 	v := p.v.Elem().Int()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
-func consumeEnum(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeEnum(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	v, n := protowire.ConsumeVarint(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	p.v.Elem().SetInt(int64(v))
 	out.n = n
@@ -83,8 +83,8 @@ func appendEnumPtr(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) 
 	return appendEnum(b, pointer{p.v.Elem()}, f, opts)
 }
 
-func consumeEnumPtr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeEnumPtr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	if p.v.Elem().IsNil() {
@@ -111,7 +111,7 @@ var coderEnumPtr = pointerCoderFuncs{
 func sizeEnumSlice(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
 	s := p.v.Elem()
 	for i, llen := 0, s.Len(); i < llen; i++ {
-		size += wire.SizeVarint(uint64(s.Index(i).Int())) + f.tagsize
+		size += protowire.SizeVarint(uint64(s.Index(i).Int())) + f.tagsize
 	}
 	return size
 }
@@ -119,23 +119,23 @@ func sizeEnumSlice(p pointer, f *coderFieldInfo, opts marshalOptions) (size int)
 func appendEnumSlice(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 	s := p.v.Elem()
 	for i, llen := 0, s.Len(); i < llen; i++ {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendVarint(b, uint64(s.Index(i).Int()))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, uint64(s.Index(i).Int()))
 	}
 	return b, nil
 }
 
-func consumeEnumSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeEnumSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	s := p.v.Elem()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeVarint(b)
+			v, n := protowire.ConsumeVarint(b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			rv := reflect.New(s.Type().Elem()).Elem()
 			rv.SetInt(int64(v))
@@ -145,12 +145,12 @@ func consumeEnumSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, op
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeVarint(b)
+	v, n := protowire.ConsumeVarint(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	rv := reflect.New(s.Type().Elem()).Elem()
 	rv.SetInt(int64(v))
@@ -178,9 +178,9 @@ func sizeEnumPackedSlice(p pointer, f *coderFieldInfo, opts marshalOptions) (siz
 	}
 	n := 0
 	for i := 0; i < llen; i++ {
-		n += wire.SizeVarint(uint64(s.Index(i).Int()))
+		n += protowire.SizeVarint(uint64(s.Index(i).Int()))
 	}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 func appendEnumPackedSlice(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
@@ -189,14 +189,14 @@ func appendEnumPackedSlice(b []byte, p pointer, f *coderFieldInfo, opts marshalO
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
-		n += wire.SizeVarint(uint64(s.Index(i).Int()))
+		n += protowire.SizeVarint(uint64(s.Index(i).Int()))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
-		b = wire.AppendVarint(b, uint64(s.Index(i).Int()))
+		b = protowire.AppendVarint(b, uint64(s.Index(i).Int()))
 	}
 	return b, nil
 }

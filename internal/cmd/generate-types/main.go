@@ -190,7 +190,7 @@ func writeSource(file, src string) {
 		"unicode/utf8",
 		"",
 		"google.golang.org/protobuf/internal/descfmt",
-		"google.golang.org/protobuf/internal/encoding/wire",
+		"google.golang.org/protobuf/encoding/protowire",
 		"google.golang.org/protobuf/internal/errors",
 		"google.golang.org/protobuf/internal/strs",
 		"google.golang.org/protobuf/internal/pragma",

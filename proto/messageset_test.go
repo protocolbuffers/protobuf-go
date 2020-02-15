@@ -5,8 +5,8 @@
 package proto_test
 
 import (
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/pack"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 
@@ -192,7 +192,7 @@ var messageSetTestProtos = []testProto{
 		wire: pack.Message{
 			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(wire.MaxValidNumber + 1),
+				pack.Tag{2, pack.VarintType}, pack.Varint(protowire.MaxValidNumber + 1),
 				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
 				pack.Tag{1, pack.EndGroupType},
 			}),
@@ -204,7 +204,7 @@ var messageSetTestProtos = []testProto{
 			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
 			m.MessageSet.ProtoReflect().SetUnknown(
 				pack.Message{
-					pack.Tag{wire.MaxValidNumber + 2, pack.BytesType}, pack.LengthPrefix{},
+					pack.Tag{protowire.MaxValidNumber + 2, pack.BytesType}, pack.LengthPrefix{},
 				}.Marshal(),
 			)
 			return m
@@ -212,7 +212,7 @@ var messageSetTestProtos = []testProto{
 		wire: pack.Message{
 			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.StartGroupType},
-				pack.Tag{2, pack.VarintType}, pack.Varint(wire.MaxValidNumber + 2),
+				pack.Tag{2, pack.VarintType}, pack.Varint(protowire.MaxValidNumber + 2),
 				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
 				pack.Tag{1, pack.EndGroupType},
 			}),

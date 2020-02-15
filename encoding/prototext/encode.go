@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"unicode/utf8"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/text"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/fieldnum"
 	"google.golang.org/protobuf/internal/flags"
@@ -336,31 +336,31 @@ func (e encoder) marshalUnknown(b []byte) {
 	const dec = 10
 	const hex = 16
 	for len(b) > 0 {
-		num, wtype, n := wire.ConsumeTag(b)
+		num, wtype, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		e.WriteName(strconv.FormatInt(int64(num), dec))
 
 		switch wtype {
-		case wire.VarintType:
+		case protowire.VarintType:
 			var v uint64
-			v, n = wire.ConsumeVarint(b)
+			v, n = protowire.ConsumeVarint(b)
 			e.WriteUint(v)
-		case wire.Fixed32Type:
+		case protowire.Fixed32Type:
 			var v uint32
-			v, n = wire.ConsumeFixed32(b)
+			v, n = protowire.ConsumeFixed32(b)
 			e.WriteLiteral("0x" + strconv.FormatUint(uint64(v), hex))
-		case wire.Fixed64Type:
+		case protowire.Fixed64Type:
 			var v uint64
-			v, n = wire.ConsumeFixed64(b)
+			v, n = protowire.ConsumeFixed64(b)
 			e.WriteLiteral("0x" + strconv.FormatUint(v, hex))
-		case wire.BytesType:
+		case protowire.BytesType:
 			var v []byte
-			v, n = wire.ConsumeBytes(b)
+			v, n = protowire.ConsumeBytes(b)
 			e.WriteString(string(v))
-		case wire.StartGroupType:
+		case protowire.StartGroupType:
 			e.StartMessage()
 			var v []byte
-			v, n = wire.ConsumeGroup(num, b)
+			v, n = protowire.ConsumeGroup(num, b)
 			e.marshalUnknown(v)
 			e.EndMessage()
 		default:

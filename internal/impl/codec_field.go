@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"sync"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
@@ -51,7 +51,7 @@ func (mi *MessageInfo) initOneofFieldCoders(od pref.OneofDescriptor, si structIn
 		if cf.funcs.isInit != nil {
 			needIsInit = true
 		}
-		mi.coderFields[num].funcs.unmarshal = func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
+		mi.coderFields[num].funcs.unmarshal = func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			var vw reflect.Value         // pointer to wrapper type
 			vi := p.AsValueOf(ft).Elem() // oneof field value of interface kind
 			if !vi.IsNil() && !vi.Elem().IsNil() && vi.Elem().Elem().Type() == ot {
@@ -149,7 +149,7 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 			}
 			return appendMessage(b, m, f.wiretag, opts)
 		},
-		unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
+		unmarshal: func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			fs := p.WeakFields()
 			m, ok := fs.get(f.num)
 			if !ok {
@@ -210,7 +210,7 @@ func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCode
 				m := asMessage(p.AsValueOf(ft).Elem())
 				return appendMessage(b, m, f.wiretag, opts)
 			},
-			unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
+			unmarshal: func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 				mp := p.AsValueOf(ft).Elem()
 				if mp.IsNil() {
 					mp.Set(reflect.New(ft.Elem()))
@@ -227,22 +227,22 @@ func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCode
 }
 
 func sizeMessageInfo(p pointer, f *coderFieldInfo, opts marshalOptions) int {
-	return wire.SizeBytes(f.mi.sizePointer(p.Elem(), opts)) + f.tagsize
+	return protowire.SizeBytes(f.mi.sizePointer(p.Elem(), opts)) + f.tagsize
 }
 
 func appendMessageInfo(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(f.mi.sizePointer(p.Elem(), opts)))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(f.mi.sizePointer(p.Elem(), opts)))
 	return f.mi.marshalAppendPointer(b, p.Elem(), opts)
 }
 
-func consumeMessageInfo(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeMessageInfo(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if p.Elem().IsNil() {
 		p.SetPointer(pointerOfValue(reflect.New(f.mi.GoReflectType.Elem())))
@@ -261,22 +261,22 @@ func isInitMessageInfo(p pointer, f *coderFieldInfo) error {
 }
 
 func sizeMessage(m proto.Message, tagsize int, _ marshalOptions) int {
-	return wire.SizeBytes(proto.Size(m)) + tagsize
+	return protowire.SizeBytes(proto.Size(m)) + tagsize
 }
 
 func appendMessage(b []byte, m proto.Message, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(proto.Size(m)))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, uint64(proto.Size(m)))
 	return opts.Options().MarshalAppend(b, m)
 }
 
-func consumeMessage(b []byte, m proto.Message, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeMessage(b []byte, m proto.Message, wtyp protowire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
 		Buf:     v,
@@ -300,7 +300,7 @@ func appendMessageValue(b []byte, v pref.Value, wiretag uint64, opts marshalOpti
 	return appendMessage(b, m, wiretag, opts)
 }
 
-func consumeMessageValue(b []byte, v pref.Value, _ wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, unmarshalOutput, error) {
+func consumeMessageValue(b []byte, v pref.Value, _ protowire.Number, wtyp protowire.Type, opts unmarshalOptions) (pref.Value, unmarshalOutput, error) {
 	m := v.Message().Interface()
 	out, err := consumeMessage(b, m, wtyp, opts)
 	return v, out, err
@@ -329,7 +329,7 @@ func appendGroupValue(b []byte, v pref.Value, wiretag uint64, opts marshalOption
 	return appendGroup(b, m, wiretag, opts)
 }
 
-func consumeGroupValue(b []byte, v pref.Value, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (pref.Value, unmarshalOutput, error) {
+func consumeGroupValue(b []byte, v pref.Value, num protowire.Number, wtyp protowire.Type, opts unmarshalOptions) (pref.Value, unmarshalOutput, error) {
 	m := v.Message().Interface()
 	out, err := consumeGroup(b, m, num, wtyp, opts)
 	return v, out, err
@@ -366,7 +366,7 @@ func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderF
 				m := asMessage(p.AsValueOf(ft).Elem())
 				return appendGroup(b, m, f.wiretag, opts)
 			},
-			unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
+			unmarshal: func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 				mp := p.AsValueOf(ft).Elem()
 				if mp.IsNil() {
 					mp.Set(reflect.New(ft.Elem()))
@@ -387,14 +387,14 @@ func sizeGroupType(p pointer, f *coderFieldInfo, opts marshalOptions) int {
 }
 
 func appendGroupType(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, f.wiretag) // start group
+	b = protowire.AppendVarint(b, f.wiretag) // start group
 	b, err := f.mi.marshalAppendPointer(b, p.Elem(), opts)
-	b = wire.AppendVarint(b, f.wiretag+1) // end group
+	b = protowire.AppendVarint(b, f.wiretag+1) // end group
 	return b, err
 }
 
-func consumeGroupType(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.StartGroupType {
+func consumeGroupType(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.StartGroupType {
 		return out, errUnknown
 	}
 	if p.Elem().IsNil() {
@@ -408,19 +408,19 @@ func sizeGroup(m proto.Message, tagsize int, _ marshalOptions) int {
 }
 
 func appendGroup(b []byte, m proto.Message, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag) // start group
+	b = protowire.AppendVarint(b, wiretag) // start group
 	b, err := opts.Options().MarshalAppend(b, m)
-	b = wire.AppendVarint(b, wiretag+1) // end group
+	b = protowire.AppendVarint(b, wiretag+1) // end group
 	return b, err
 }
 
-func consumeGroup(b []byte, m proto.Message, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.StartGroupType {
+func consumeGroup(b []byte, m proto.Message, num protowire.Number, wtyp protowire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.StartGroupType {
 		return out, errUnknown
 	}
-	b, n := wire.ConsumeGroup(num, b)
+	b, n := protowire.ConsumeGroup(num, b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
 		Buf:     b,
@@ -454,7 +454,7 @@ func makeMessageSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointe
 		marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 			return appendMessageSlice(b, p, f.wiretag, ft, opts)
 		},
-		unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
+		unmarshal: func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			return consumeMessageSlice(b, p, ft, wtyp, opts)
 		},
 		isInit: func(p pointer, f *coderFieldInfo) error {
@@ -468,7 +468,7 @@ func sizeMessageSliceInfo(p pointer, f *coderFieldInfo, opts marshalOptions) int
 	s := p.PointerSlice()
 	n := 0
 	for _, v := range s {
-		n += wire.SizeBytes(f.mi.sizePointer(v, opts)) + f.tagsize
+		n += protowire.SizeBytes(f.mi.sizePointer(v, opts)) + f.tagsize
 	}
 	return n
 }
@@ -477,9 +477,9 @@ func appendMessageSliceInfo(b []byte, p pointer, f *coderFieldInfo, opts marshal
 	s := p.PointerSlice()
 	var err error
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, f.wiretag)
 		siz := f.mi.sizePointer(v, opts)
-		b = wire.AppendVarint(b, uint64(siz))
+		b = protowire.AppendVarint(b, uint64(siz))
 		b, err = f.mi.marshalAppendPointer(b, v, opts)
 		if err != nil {
 			return b, err
@@ -488,13 +488,13 @@ func appendMessageSliceInfo(b []byte, p pointer, f *coderFieldInfo, opts marshal
 	return b, nil
 }
 
-func consumeMessageSliceInfo(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeMessageSliceInfo(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	m := reflect.New(f.mi.GoReflectType.Elem()).Interface()
 	mp := pointerOfIface(m)
@@ -523,7 +523,7 @@ func sizeMessageSlice(p pointer, goType reflect.Type, tagsize int, _ marshalOpti
 	n := 0
 	for _, v := range s {
 		m := asMessage(v.AsValueOf(goType.Elem()))
-		n += wire.SizeBytes(proto.Size(m)) + tagsize
+		n += protowire.SizeBytes(proto.Size(m)) + tagsize
 	}
 	return n
 }
@@ -533,9 +533,9 @@ func appendMessageSlice(b []byte, p pointer, wiretag uint64, goType reflect.Type
 	var err error
 	for _, v := range s {
 		m := asMessage(v.AsValueOf(goType.Elem()))
-		b = wire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, wiretag)
 		siz := proto.Size(m)
-		b = wire.AppendVarint(b, uint64(siz))
+		b = protowire.AppendVarint(b, uint64(siz))
 		b, err = opts.Options().MarshalAppend(b, m)
 		if err != nil {
 			return b, err
@@ -544,13 +544,13 @@ func appendMessageSlice(b []byte, p pointer, wiretag uint64, goType reflect.Type
 	return b, nil
 }
 
-func consumeMessageSlice(b []byte, p pointer, goType reflect.Type, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeMessageSlice(b []byte, p pointer, goType reflect.Type, wtyp protowire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	mp := reflect.New(goType.Elem())
 	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
@@ -584,7 +584,7 @@ func sizeMessageSliceValue(listv pref.Value, tagsize int, opts marshalOptions) i
 	n := 0
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		m := list.Get(i).Message().Interface()
-		n += wire.SizeBytes(proto.Size(m)) + tagsize
+		n += protowire.SizeBytes(proto.Size(m)) + tagsize
 	}
 	return n
 }
@@ -594,9 +594,9 @@ func appendMessageSliceValue(b []byte, listv pref.Value, wiretag uint64, opts ma
 	mopts := opts.Options()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		m := list.Get(i).Message().Interface()
-		b = wire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, wiretag)
 		siz := proto.Size(m)
-		b = wire.AppendVarint(b, uint64(siz))
+		b = protowire.AppendVarint(b, uint64(siz))
 		var err error
 		b, err = mopts.MarshalAppend(b, m)
 		if err != nil {
@@ -606,14 +606,14 @@ func appendMessageSliceValue(b []byte, listv pref.Value, wiretag uint64, opts ma
 	return b, nil
 }
 
-func consumeMessageSliceValue(b []byte, listv pref.Value, _ wire.Number, wtyp wire.Type, opts unmarshalOptions) (_ pref.Value, out unmarshalOutput, err error) {
+func consumeMessageSliceValue(b []byte, listv pref.Value, _ protowire.Number, wtyp protowire.Type, opts unmarshalOptions) (_ pref.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp != wire.BytesType {
+	if wtyp != protowire.BytesType {
 		return pref.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return pref.Value{}, out, wire.ParseError(n)
+		return pref.Value{}, out, protowire.ParseError(n)
 	}
 	m := list.NewElement()
 	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
@@ -663,25 +663,25 @@ func appendGroupSliceValue(b []byte, listv pref.Value, wiretag uint64, opts mars
 	mopts := opts.Options()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		m := list.Get(i).Message().Interface()
-		b = wire.AppendVarint(b, wiretag) // start group
+		b = protowire.AppendVarint(b, wiretag) // start group
 		var err error
 		b, err = mopts.MarshalAppend(b, m)
 		if err != nil {
 			return b, err
 		}
-		b = wire.AppendVarint(b, wiretag+1) // end group
+		b = protowire.AppendVarint(b, wiretag+1) // end group
 	}
 	return b, nil
 }
 
-func consumeGroupSliceValue(b []byte, listv pref.Value, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (_ pref.Value, out unmarshalOutput, err error) {
+func consumeGroupSliceValue(b []byte, listv pref.Value, num protowire.Number, wtyp protowire.Type, opts unmarshalOptions) (_ pref.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp != wire.StartGroupType {
+	if wtyp != protowire.StartGroupType {
 		return pref.Value{}, out, errUnknown
 	}
-	b, n := wire.ConsumeGroup(num, b)
+	b, n := protowire.ConsumeGroup(num, b)
 	if n < 0 {
-		return pref.Value{}, out, wire.ParseError(n)
+		return pref.Value{}, out, protowire.ParseError(n)
 	}
 	m := list.NewElement()
 	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
@@ -726,7 +726,7 @@ func makeGroupSliceFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerC
 		marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
 			return appendGroupSlice(b, p, f.wiretag, ft, opts)
 		},
-		unmarshal: func(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
+		unmarshal: func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
 			return consumeGroupSlice(b, p, num, wtyp, ft, opts)
 		},
 		isInit: func(p pointer, f *coderFieldInfo) error {
@@ -751,23 +751,23 @@ func appendGroupSlice(b []byte, p pointer, wiretag uint64, messageType reflect.T
 	var err error
 	for _, v := range s {
 		m := asMessage(v.AsValueOf(messageType.Elem()))
-		b = wire.AppendVarint(b, wiretag) // start group
+		b = protowire.AppendVarint(b, wiretag) // start group
 		b, err = opts.Options().MarshalAppend(b, m)
 		if err != nil {
 			return b, err
 		}
-		b = wire.AppendVarint(b, wiretag+1) // end group
+		b = protowire.AppendVarint(b, wiretag+1) // end group
 	}
 	return b, nil
 }
 
-func consumeGroupSlice(b []byte, p pointer, num wire.Number, wtyp wire.Type, goType reflect.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.StartGroupType {
+func consumeGroupSlice(b []byte, p pointer, num protowire.Number, wtyp protowire.Type, goType reflect.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.StartGroupType {
 		return out, errUnknown
 	}
-	b, n := wire.ConsumeGroup(num, b)
+	b, n := protowire.ConsumeGroup(num, b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	mp := reflect.New(goType.Elem())
 	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
@@ -796,18 +796,18 @@ func appendGroupSliceInfo(b []byte, p pointer, f *coderFieldInfo, opts marshalOp
 	s := p.PointerSlice()
 	var err error
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag) // start group
+		b = protowire.AppendVarint(b, f.wiretag) // start group
 		b, err = f.mi.marshalAppendPointer(b, v, opts)
 		if err != nil {
 			return b, err
 		}
-		b = wire.AppendVarint(b, f.wiretag+1) // end group
+		b = protowire.AppendVarint(b, f.wiretag+1) // end group
 	}
 	return b, nil
 }
 
-func consumeGroupSliceInfo(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
-	if wtyp != wire.StartGroupType {
+func consumeGroupSliceInfo(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (unmarshalOutput, error) {
+	if wtyp != protowire.StartGroupType {
 		return unmarshalOutput{}, errUnknown
 	}
 	m := reflect.New(f.mi.GoReflectType.Elem()).Interface()

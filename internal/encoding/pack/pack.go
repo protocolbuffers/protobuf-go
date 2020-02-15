@@ -21,32 +21,32 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // Number is the field number; aliased from the wire package for convenience.
-type Number = wire.Number
+type Number = protowire.Number
 
 // Number type constants; copied from the wire package for convenience.
 const (
-	MinValidNumber      Number = wire.MinValidNumber
-	FirstReservedNumber Number = wire.FirstReservedNumber
-	LastReservedNumber  Number = wire.LastReservedNumber
-	MaxValidNumber      Number = wire.MaxValidNumber
+	MinValidNumber      Number = protowire.MinValidNumber
+	FirstReservedNumber Number = protowire.FirstReservedNumber
+	LastReservedNumber  Number = protowire.LastReservedNumber
+	MaxValidNumber      Number = protowire.MaxValidNumber
 )
 
 // Type is the wire type; aliased from the wire package for convenience.
-type Type = wire.Type
+type Type = protowire.Type
 
 // Wire type constants; copied from the wire package for convenience.
 const (
-	VarintType     Type = wire.VarintType
-	Fixed32Type    Type = wire.Fixed32Type
-	Fixed64Type    Type = wire.Fixed64Type
-	BytesType      Type = wire.BytesType
-	StartGroupType Type = wire.StartGroupType
-	EndGroupType   Type = wire.EndGroupType
+	VarintType     Type = protowire.VarintType
+	Fixed32Type    Type = protowire.Fixed32Type
+	Fixed64Type    Type = protowire.Fixed64Type
+	BytesType      Type = protowire.BytesType
+	StartGroupType Type = protowire.StartGroupType
+	EndGroupType   Type = protowire.EndGroupType
 )
 
 type (
@@ -140,25 +140,25 @@ func (m Message) Size() int {
 		case Message:
 			n += v.Size()
 		case Tag:
-			n += wire.SizeTag(v.Number)
+			n += protowire.SizeTag(v.Number)
 		case Bool:
-			n += wire.SizeVarint(wire.EncodeBool(false))
+			n += protowire.SizeVarint(protowire.EncodeBool(false))
 		case Varint:
-			n += wire.SizeVarint(uint64(v))
+			n += protowire.SizeVarint(uint64(v))
 		case Svarint:
-			n += wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+			n += protowire.SizeVarint(protowire.EncodeZigZag(int64(v)))
 		case Uvarint:
-			n += wire.SizeVarint(uint64(v))
+			n += protowire.SizeVarint(uint64(v))
 		case Int32, Uint32, Float32:
-			n += wire.SizeFixed32()
+			n += protowire.SizeFixed32()
 		case Int64, Uint64, Float64:
-			n += wire.SizeFixed64()
+			n += protowire.SizeFixed64()
 		case String:
-			n += wire.SizeBytes(len(v))
+			n += protowire.SizeBytes(len(v))
 		case Bytes:
-			n += wire.SizeBytes(len(v))
+			n += protowire.SizeBytes(len(v))
 		case LengthPrefix:
-			n += wire.SizeBytes(Message(v).Size())
+			n += protowire.SizeBytes(Message(v).Size())
 		case Denormalized:
 			n += int(v.Count) + Message{v.Value}.Size()
 		case Raw:
@@ -199,36 +199,36 @@ func (m Message) Marshal() []byte {
 		case Message:
 			out = append(out, v.Marshal()...)
 		case Tag:
-			out = wire.AppendTag(out, v.Number, v.Type)
+			out = protowire.AppendTag(out, v.Number, v.Type)
 		case Bool:
-			out = wire.AppendVarint(out, wire.EncodeBool(bool(v)))
+			out = protowire.AppendVarint(out, protowire.EncodeBool(bool(v)))
 		case Varint:
-			out = wire.AppendVarint(out, uint64(v))
+			out = protowire.AppendVarint(out, uint64(v))
 		case Svarint:
-			out = wire.AppendVarint(out, wire.EncodeZigZag(int64(v)))
+			out = protowire.AppendVarint(out, protowire.EncodeZigZag(int64(v)))
 		case Uvarint:
-			out = wire.AppendVarint(out, uint64(v))
+			out = protowire.AppendVarint(out, uint64(v))
 		case Int32:
-			out = wire.AppendFixed32(out, uint32(v))
+			out = protowire.AppendFixed32(out, uint32(v))
 		case Uint32:
-			out = wire.AppendFixed32(out, uint32(v))
+			out = protowire.AppendFixed32(out, uint32(v))
 		case Float32:
-			out = wire.AppendFixed32(out, math.Float32bits(float32(v)))
+			out = protowire.AppendFixed32(out, math.Float32bits(float32(v)))
 		case Int64:
-			out = wire.AppendFixed64(out, uint64(v))
+			out = protowire.AppendFixed64(out, uint64(v))
 		case Uint64:
-			out = wire.AppendFixed64(out, uint64(v))
+			out = protowire.AppendFixed64(out, uint64(v))
 		case Float64:
-			out = wire.AppendFixed64(out, math.Float64bits(float64(v)))
+			out = protowire.AppendFixed64(out, math.Float64bits(float64(v)))
 		case String:
-			out = wire.AppendBytes(out, []byte(v))
+			out = protowire.AppendBytes(out, []byte(v))
 		case Bytes:
-			out = wire.AppendBytes(out, []byte(v))
+			out = protowire.AppendBytes(out, []byte(v))
 		case LengthPrefix:
-			out = wire.AppendBytes(out, Message(v).Marshal())
+			out = protowire.AppendBytes(out, Message(v).Marshal())
 		case Denormalized:
 			b := Message{v.Value}.Marshal()
-			_, n := wire.ConsumeVarint(b)
+			_, n := protowire.ConsumeVarint(b)
 			out = append(out, b[:n]...)
 			for i := uint(0); i < v.Count; i++ {
 				out[len(out)-1] |= 0x80 // set continuation bit on previous
@@ -301,8 +301,8 @@ type parser struct {
 
 func (p *parser) parseMessage(msgDesc protoreflect.MessageDescriptor, group bool) {
 	for len(p.in) > 0 {
-		v, n := wire.ConsumeVarint(p.in)
-		num, typ := wire.DecodeTag(v)
+		v, n := protowire.ConsumeVarint(p.in)
+		num, typ := protowire.DecodeTag(v)
 		if n < 0 || num < 0 || v > math.MaxUint32 {
 			p.out, p.in = append(p.out, Raw(p.in)), nil
 			return
@@ -311,7 +311,7 @@ func (p *parser) parseMessage(msgDesc protoreflect.MessageDescriptor, group bool
 			return // if inside a group, then stop
 		}
 		p.out, p.in = append(p.out, Tag{num, typ}), p.in[n:]
-		if m := n - wire.SizeVarint(v); m > 0 {
+		if m := n - protowire.SizeVarint(v); m > 0 {
 			p.out[len(p.out)-1] = Denormalized{uint(m), p.out[len(p.out)-1]}
 		}
 
@@ -353,7 +353,7 @@ func (p *parser) parseMessage(msgDesc protoreflect.MessageDescriptor, group bool
 }
 
 func (p *parser) parseVarint(kind protoreflect.Kind) {
-	v, n := wire.ConsumeVarint(p.in)
+	v, n := protowire.ConsumeVarint(p.in)
 	if n < 0 {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
 		return
@@ -371,17 +371,17 @@ func (p *parser) parseVarint(kind protoreflect.Kind) {
 	case protoreflect.Int32Kind, protoreflect.Int64Kind:
 		p.out, p.in = append(p.out, Varint(v)), p.in[n:]
 	case protoreflect.Sint32Kind, protoreflect.Sint64Kind:
-		p.out, p.in = append(p.out, Svarint(wire.DecodeZigZag(v))), p.in[n:]
+		p.out, p.in = append(p.out, Svarint(protowire.DecodeZigZag(v))), p.in[n:]
 	default:
 		p.out, p.in = append(p.out, Uvarint(v)), p.in[n:]
 	}
-	if m := n - wire.SizeVarint(v); m > 0 {
+	if m := n - protowire.SizeVarint(v); m > 0 {
 		p.out[len(p.out)-1] = Denormalized{uint(m), p.out[len(p.out)-1]}
 	}
 }
 
 func (p *parser) parseFixed32(kind protoreflect.Kind) {
-	v, n := wire.ConsumeFixed32(p.in)
+	v, n := protowire.ConsumeFixed32(p.in)
 	if n < 0 {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
 		return
@@ -397,7 +397,7 @@ func (p *parser) parseFixed32(kind protoreflect.Kind) {
 }
 
 func (p *parser) parseFixed64(kind protoreflect.Kind) {
-	v, n := wire.ConsumeFixed64(p.in)
+	v, n := protowire.ConsumeFixed64(p.in)
 	if n < 0 {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
 		return
@@ -413,13 +413,13 @@ func (p *parser) parseFixed64(kind protoreflect.Kind) {
 }
 
 func (p *parser) parseBytes(isPacked bool, kind protoreflect.Kind, desc protoreflect.MessageDescriptor) {
-	v, n := wire.ConsumeVarint(p.in)
+	v, n := protowire.ConsumeVarint(p.in)
 	if n < 0 {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
 		return
 	}
 	p.out, p.in = append(p.out, Uvarint(v)), p.in[n:]
-	if m := n - wire.SizeVarint(v); m > 0 {
+	if m := n - protowire.SizeVarint(v); m > 0 {
 		p.out[len(p.out)-1] = Denormalized{uint(m), p.out[len(p.out)-1]}
 	}
 	if v > uint64(len(p.in)) {
@@ -442,7 +442,7 @@ func (p *parser) parseBytes(isPacked bool, kind protoreflect.Kind, desc protoref
 			p.out, p.in = append(p.out, Bytes(p.in[:v])), p.in[v:]
 		}
 	}
-	if m := n - wire.SizeVarint(v); m > 0 {
+	if m := n - protowire.SizeVarint(v); m > 0 {
 		p.out[len(p.out)-1] = Denormalized{uint(m), p.out[len(p.out)-1]}
 	}
 }
@@ -475,10 +475,10 @@ func (p *parser) parseGroup(desc protoreflect.MessageDescriptor) {
 	p.in = p2.in
 
 	// Append the trailing end group.
-	v, n := wire.ConsumeVarint(p.in)
-	if num, typ := wire.DecodeTag(v); typ == EndGroupType {
+	v, n := protowire.ConsumeVarint(p.in)
+	if num, typ := protowire.DecodeTag(v); typ == EndGroupType {
 		p.out, p.in = append(p.out, Tag{num, typ}), p.in[n:]
-		if m := n - wire.SizeVarint(v); m > 0 {
+		if m := n - protowire.SizeVarint(v); m > 0 {
 			p.out[len(p.out)-1] = Denormalized{uint(m), p.out[len(p.out)-1]}
 		}
 	}

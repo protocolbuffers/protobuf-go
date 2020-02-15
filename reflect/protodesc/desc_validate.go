@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/flags"
@@ -210,7 +210,7 @@ func validateExtensionDeclarations(xs []filedesc.Extension, xds []*descriptorpb.
 		// may have a field number higher than normal. This check only verifies
 		// that the number is not negative or reserved. We check again later
 		// if we know that the extendee is definitely not a MessageSet.
-		if n := x.Number(); n < 0 || (wire.FirstReservedNumber <= n && n <= wire.LastReservedNumber) {
+		if n := x.Number(); n < 0 || (protowire.FirstReservedNumber <= n && n <= protowire.LastReservedNumber) {
 			return errors.New("extension field %q has an invalid number: %d", x.FullName(), x.Number())
 		}
 		if !x.Cardinality().IsValid() || x.Cardinality() == protoreflect.Required {

@@ -17,8 +17,8 @@ import (
 	"strconv"
 	"strings"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/pack"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
@@ -142,7 +142,7 @@ func main() {
 
 // fields is a tree of fields, keyed by a field number.
 // Fields representing messages or groups have sub-fields.
-type fields map[wire.Number]*field
+type fields map[protowire.Number]*field
 type field struct {
 	kind protoreflect.Kind
 	sub  fields // only for MessageKind or GroupKind
@@ -173,8 +173,8 @@ func (fs fields) set(prefix, s string, k protoreflect.Kind) error {
 	}
 	prefix = strings.TrimPrefix(prefix+"."+s[:i], ".")
 	n, _ := strconv.ParseInt(s[:i], 10, 32)
-	num := wire.Number(n)
-	if num < wire.MinValidNumber || wire.MaxValidNumber < num {
+	num := protowire.Number(n)
+	if num < protowire.MinValidNumber || protowire.MaxValidNumber < num {
 		return errors.New("invalid field: %v", prefix)
 	}
 	s = strings.TrimPrefix(s[i:], ".")
@@ -244,7 +244,7 @@ func (fs fields) messageDescriptor(name protoreflect.FullName) *descriptorpb.Des
 	return m
 }
 
-func (fs fields) sortedNums() (ns []wire.Number) {
+func (fs fields) sortedNums() (ns []protowire.Number) {
 	for n := range fs {
 		ns = append(ns, n)
 	}

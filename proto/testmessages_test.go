@@ -5,8 +5,8 @@
 package proto_test
 
 import (
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/pack"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/internal/protobuild"
 	"google.golang.org/protobuf/proto"
@@ -1674,7 +1674,7 @@ var testInvalidMessages = []testProto{
 			(*testpb.TestAllExtensions)(nil),
 		},
 		wire: pack.Message{
-			pack.Tag{wire.MaxValidNumber + 1, pack.VarintType}, pack.Varint(0),
+			pack.Tag{protowire.MaxValidNumber + 1, pack.VarintType}, pack.Varint(0),
 		}.Marshal(),
 	},
 	{

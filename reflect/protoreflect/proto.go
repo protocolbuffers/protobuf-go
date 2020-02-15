@@ -130,7 +130,7 @@ import (
 	"regexp"
 	"strings"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/pragma"
 )
 
@@ -366,7 +366,7 @@ func (k Kind) GoString() string {
 }
 
 // FieldNumber is the field number in a message.
-type FieldNumber = wire.Number
+type FieldNumber = protowire.Number
 
 // FieldNumbers represent a list of field numbers.
 type FieldNumbers interface {

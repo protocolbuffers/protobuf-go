@@ -14,7 +14,7 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -488,8 +488,8 @@ func testOneof(t testing.TB, m pref.Message, od pref.OneofDescriptor) {
 // testUnknown tests the behavior of unknown fields.
 func testUnknown(t testing.TB, m pref.Message) {
 	var b []byte
-	b = wire.AppendTag(b, 1000, wire.VarintType)
-	b = wire.AppendVarint(b, 1001)
+	b = protowire.AppendTag(b, 1000, protowire.VarintType)
+	b = protowire.AppendVarint(b, 1001)
 	m.SetUnknown(pref.RawFields(b))
 	if got, want := []byte(m.GetUnknown()), b; !bytes.Equal(got, want) {
 		t.Errorf("after setting unknown fields:\nGetUnknown() = %v, want %v", got, want)

@@ -4,7 +4,7 @@
 
 package protoreflect
 
-import "google.golang.org/protobuf/internal/encoding/wire"
+import "google.golang.org/protobuf/encoding/protowire"
 
 // Enum is a reflection interface for a concrete enum value,
 // which provides type information and a getter for the enum number.
@@ -165,7 +165,7 @@ type RawFields []byte
 // IsValid reports whether b is syntactically correct wire format.
 func (b RawFields) IsValid() bool {
 	for len(b) > 0 {
-		_, _, n := wire.ConsumeField(b)
+		_, _, n := protowire.ConsumeField(b)
 		if n < 0 {
 			return false
 		}

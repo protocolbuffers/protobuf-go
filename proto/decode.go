@@ -5,8 +5,8 @@
 package proto
 
 import (
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/pragma"
@@ -110,11 +110,11 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 	fields := md.Fields()
 	for len(b) > 0 {
 		// Parse the tag (field number and wire type).
-		num, wtyp, tagLen := wire.ConsumeTag(b)
+		num, wtyp, tagLen := protowire.ConsumeTag(b)
 		if tagLen < 0 {
-			return wire.ParseError(tagLen)
+			return protowire.ParseError(tagLen)
 		}
-		if num > wire.MaxValidNumber {
+		if num > protowire.MaxValidNumber {
 			return errors.New("invalid field number")
 		}
 
@@ -153,9 +153,9 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 			if err != errUnknown {
 				return err
 			}
-			valLen = wire.ConsumeFieldValue(num, wtyp, b[tagLen:])
+			valLen = protowire.ConsumeFieldValue(num, wtyp, b[tagLen:])
 			if valLen < 0 {
-				return wire.ParseError(valLen)
+				return protowire.ParseError(valLen)
 			}
 			if !o.DiscardUnknown {
 				m.SetUnknown(append(m.GetUnknown(), b[:tagLen+valLen]...))
@@ -166,7 +166,7 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 	return nil
 }
 
-func (o UnmarshalOptions) unmarshalSingular(b []byte, wtyp wire.Type, m protoreflect.Message, fd protoreflect.FieldDescriptor) (n int, err error) {
+func (o UnmarshalOptions) unmarshalSingular(b []byte, wtyp protowire.Type, m protoreflect.Message, fd protoreflect.FieldDescriptor) (n int, err error) {
 	v, n, err := o.unmarshalScalar(b, wtyp, fd)
 	if err != nil {
 		return 0, err
@@ -184,13 +184,13 @@ func (o UnmarshalOptions) unmarshalSingular(b []byte, wtyp wire.Type, m protoref
 	return n, nil
 }
 
-func (o UnmarshalOptions) unmarshalMap(b []byte, wtyp wire.Type, mapv protoreflect.Map, fd protoreflect.FieldDescriptor) (n int, err error) {
-	if wtyp != wire.BytesType {
+func (o UnmarshalOptions) unmarshalMap(b []byte, wtyp protowire.Type, mapv protoreflect.Map, fd protoreflect.FieldDescriptor) (n int, err error) {
+	if wtyp != protowire.BytesType {
 		return 0, errUnknown
 	}
-	b, n = wire.ConsumeBytes(b)
+	b, n = protowire.ConsumeBytes(b)
 	if n < 0 {
-		return 0, wire.ParseError(n)
+		return 0, protowire.ParseError(n)
 	}
 	var (
 		keyField = fd.MapKey()
@@ -207,11 +207,11 @@ func (o UnmarshalOptions) unmarshalMap(b []byte, wtyp wire.Type, mapv protorefle
 	// Map entries are represented as a two-element message with fields
 	// containing the key and value.
 	for len(b) > 0 {
-		num, wtyp, n := wire.ConsumeTag(b)
+		num, wtyp, n := protowire.ConsumeTag(b)
 		if n < 0 {
-			return 0, wire.ParseError(n)
+			return 0, protowire.ParseError(n)
 		}
-		if num > wire.MaxValidNumber {
+		if num > protowire.MaxValidNumber {
 			return 0, errors.New("invalid field number")
 		}
 		b = b[n:]
@@ -240,9 +240,9 @@ func (o UnmarshalOptions) unmarshalMap(b []byte, wtyp wire.Type, mapv protorefle
 			haveVal = true
 		}
 		if err == errUnknown {
-			n = wire.ConsumeFieldValue(num, wtyp, b)
+			n = protowire.ConsumeFieldValue(num, wtyp, b)
 			if n < 0 {
-				return 0, wire.ParseError(n)
+				return 0, protowire.ParseError(n)
 			}
 		} else if err != nil {
 			return 0, err

@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"sort"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/fieldsort"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
@@ -24,7 +24,7 @@ type coderMessageInfo struct {
 
 	orderedCoderFields []*coderFieldInfo
 	denseCoderFields   []*coderFieldInfo
-	coderFields        map[wire.Number]*coderFieldInfo
+	coderFields        map[protowire.Number]*coderFieldInfo
 	sizecacheOffset    offset
 	unknownOffset      offset
 	extensionOffset    offset
@@ -51,7 +51,7 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 	mi.unknownOffset = si.unknownOffset
 	mi.extensionOffset = si.extensionOffset
 
-	mi.coderFields = make(map[wire.Number]*coderFieldInfo)
+	mi.coderFields = make(map[protowire.Number]*coderFieldInfo)
 	fields := mi.Desc.Fields()
 	for i := 0; i < fields.Len(); i++ {
 		fd := fields.Get(i)
@@ -63,9 +63,9 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		ft := fs.Type
 		var wiretag uint64
 		if !fd.IsPacked() {
-			wiretag = wire.EncodeTag(fd.Number(), wireTypes[fd.Kind()])
+			wiretag = protowire.EncodeTag(fd.Number(), wireTypes[fd.Kind()])
 		} else {
-			wiretag = wire.EncodeTag(fd.Number(), wire.BytesType)
+			wiretag = protowire.EncodeTag(fd.Number(), protowire.BytesType)
 		}
 		var fieldOffset offset
 		var funcs pointerCoderFuncs
@@ -85,7 +85,7 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 			offset:     fieldOffset,
 			wiretag:    wiretag,
 			ft:         ft,
-			tagsize:    wire.SizeVarint(wiretag),
+			tagsize:    protowire.SizeVarint(wiretag),
 			funcs:      funcs,
 			mi:         childMessage,
 			validation: newFieldValidationInfo(mi, si, fd, ft),

@@ -31,21 +31,21 @@ v == {{.GoType.Zero}}
 */ -}}
 {{- define "Size" -}}
 {{- if .WireType.ConstSize -}}
-wire.Size{{.WireType}}()
+protowire.Size{{.WireType}}()
 {{- else if eq .WireType "Bytes" -}}
-wire.SizeBytes(len({{.FromGoType}}))
+protowire.SizeBytes(len({{.FromGoType}}))
 {{- else -}}
-wire.Size{{.WireType}}({{.FromGoType}})
+protowire.Size{{.WireType}}({{.FromGoType}})
 {{- end -}}
 {{- end -}}
 
 {{- define "SizeValue" -}}
 {{- if .WireType.ConstSize -}}
-wire.Size{{.WireType}}()
+protowire.Size{{.WireType}}()
 {{- else if eq .WireType "Bytes" -}}
-wire.SizeBytes(len({{.FromValue}}))
+protowire.SizeBytes(len({{.FromValue}}))
 {{- else -}}
-wire.Size{{.WireType}}({{.FromValue}})
+protowire.Size{{.WireType}}({{.FromValue}})
 {{- end -}}
 {{- end -}}
 
@@ -54,23 +54,23 @@ wire.Size{{.WireType}}({{.FromValue}})
 */ -}}
 {{- define "Append" -}}
 {{- if eq .Name "String" -}}
-b = wire.AppendString(b, {{.FromGoType}})
+b = protowire.AppendString(b, {{.FromGoType}})
 {{- else -}}
-b = wire.Append{{.WireType}}(b, {{.FromGoType}})
+b = protowire.Append{{.WireType}}(b, {{.FromGoType}})
 {{- end -}}
 {{- end -}}
 
 {{- define "AppendValue" -}}
 {{- if eq .Name "String" -}}
-b = wire.AppendString(b, {{.FromValue}})
+b = protowire.AppendString(b, {{.FromValue}})
 {{- else -}}
-b = wire.Append{{.WireType}}(b, {{.FromValue}})
+b = protowire.Append{{.WireType}}(b, {{.FromValue}})
 {{- end -}}
 {{- end -}}
 
 {{- define "Consume" -}}
 {{- if eq .Name "String" -}}
-v, n := wire.ConsumeString(b)
+v, n := protowire.ConsumeString(b)
 {{- else if eq .WireType "Varint" -}}
 var v uint64
 var n int
@@ -81,10 +81,10 @@ if len(b) >= 1 && b[0] < 0x80 {
 	v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 	n = 2
 } else {
-	v, n = wire.ConsumeVarint(b)
+	v, n = protowire.ConsumeVarint(b)
 }
 {{- else -}}
-v, n := wire.Consume{{.WireType}}(b)
+v, n := protowire.Consume{{.WireType}}(b)
 {{- end -}}
 {{- end -}}
 
@@ -102,19 +102,19 @@ func size{{.Name}}(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 // append{{.Name}} wire encodes a {{.GoType}} pointer as a {{.Name}}.
 func append{{.Name}}(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.{{.GoType.PointerMethod}}()
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	{{template "Append" .}}
 	return b, nil
 }
 
 // consume{{.Name}} wire decodes a {{.GoType}} pointer as a {{.Name}}.
-func consume{{.Name}}(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consume{{.Name}}(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
 	out.n = n
@@ -132,7 +132,7 @@ var coder{{.Name}} = pointerCoderFuncs{
 // append{{.Name}}ValidateUTF8 wire encodes a {{.GoType}} pointer as a {{.Name}}.
 func append{{.Name}}ValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.{{.GoType.PointerMethod}}()
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	{{template "Append" .}}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return b, errInvalidUTF8{}
@@ -141,13 +141,13 @@ func append{{.Name}}ValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marsh
 }
 
 // consume{{.Name}}ValidateUTF8 wire decodes a {{.GoType}} pointer as a {{.Name}}.
-func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return out, errInvalidUTF8{}
@@ -182,7 +182,7 @@ func append{{.Name}}NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOpti
 	if {{template "IsZero" .}} {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	{{template "Append" .}}
 	return b, nil
 }
@@ -190,13 +190,13 @@ func append{{.Name}}NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOpti
 {{if .ToGoTypeNoZero}}
 // consume{{.Name}}NoZero wire decodes a {{.GoType}} pointer as a {{.Name}}.
 // The zero value is not decoded.
-func consume{{.Name}}NoZero(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consume{{.Name}}NoZero(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
 	out.n = n
@@ -219,7 +219,7 @@ func append{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _
 	if {{template "IsZero" .}} {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	{{template "Append" .}}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return b, errInvalidUTF8{}
@@ -229,13 +229,13 @@ func append{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _
 
 {{if .ToGoTypeNoZero}}
 // consume{{.Name}}NoZeroValidateUTF8 wire decodes a {{.GoType}} pointer as a {{.Name}}.
-func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return out, errInvalidUTF8{}
@@ -268,19 +268,19 @@ func size{{.Name}}Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 // It panics if the pointer is nil.
 func append{{.Name}}Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.{{.GoType.PointerMethod}}Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	{{template "Append" .}}
 	return b, nil
 }
 
 // consume{{.Name}}Ptr wire decodes a *{{.GoType}} pointer as a {{.Name}}.
-func consume{{.Name}}Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consume{{.Name}}Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.{{.GoType.PointerMethod}}Ptr()
 	if *vp == nil {
@@ -316,26 +316,26 @@ func size{{.Name}}Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size in
 func append{{.Name}}Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.{{.GoType.PointerMethod}}Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, f.wiretag)
 		{{template "Append" .}}
 	}
 	return b, nil
 }
 
 // consume{{.Name}}Slice wire decodes a []{{.GoType}} pointer as a repeated {{.Name}}.
-func consume{{.Name}}Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consume{{.Name}}Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.{{.GoType.PointerMethod}}Slice()
 	{{- if .WireType.Packable}}
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			{{template "Consume" .}}
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, {{.ToGoType}})
 			b = b[n:]
@@ -350,7 +350,7 @@ func consume{{.Name}}Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInf
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, {{.ToGoType}})
 	out.n = n
@@ -369,7 +369,7 @@ var coder{{.Name}}Slice = pointerCoderFuncs{
 func append{{.Name}}SliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.{{.GoType.PointerMethod}}Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, f.wiretag)
 		{{template "Append" .}}
 		if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 			return b, errInvalidUTF8{}
@@ -379,14 +379,14 @@ func append{{.Name}}SliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ 
 }
 
 // consume{{.Name}}SliceValidateUTF8 wire decodes a []{{.GoType}} pointer as a repeated {{.Name}}.
-func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.{{.GoType.PointerMethod}}Slice()
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return out, errInvalidUTF8{}
@@ -419,7 +419,7 @@ func size{{.Name}}PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (s
 		n += {{template "Size" .}}
 	}
 	{{- end}}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // append{{.Name}}PackedSlice encodes a []{{.GoType}} pointer as a packed repeated {{.Name}}.
@@ -428,7 +428,7 @@ func append{{.Name}}PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marsha
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	{{if .WireType.ConstSize -}}
 	n := len(s) * {{template "Size" .}}
 	{{- else -}}
@@ -437,7 +437,7 @@ func append{{.Name}}PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marsha
 		n += {{template "Size" .}}
 	}
 	{{- end}}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
 		{{template "Append" .}}
 	}
@@ -462,19 +462,19 @@ func size{{.Name}}Value(v protoreflect.Value, tagsize int, _ marshalOptions) int
 
 // append{{.Name}}Value encodes a {{.GoType}} value as a {{.Name}}.
 func append{{.Name}}Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	{{template "AppendValue" .}}
 	return b, nil
 }
 
 // consume{{.Name}}Value decodes a {{.GoType}} value as a {{.Name}}.
-func consume{{.Name}}Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consume{{.Name}}Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return {{.ToValue}}, out, nil
@@ -494,7 +494,7 @@ var coder{{.Name}}Value = valueCoderFuncs{
 {{if (eq .Name "String")}}
 // append{{.Name}}ValueValidateUTF8 encodes a {{.GoType}} value as a {{.Name}}.
 func append{{.Name}}ValueValidateUTF8(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	{{template "AppendValue" .}}
 	if !utf8.ValidString({{.FromValue}}) {
 		return b, errInvalidUTF8{}
@@ -503,13 +503,13 @@ func append{{.Name}}ValueValidateUTF8(b []byte, v protoreflect.Value, wiretag ui
 }
 
 // consume{{.Name}}ValueValidateUTF8 decodes a {{.GoType}} value as a {{.Name}}.
-func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	if wtyp != {{.WireType.Expr}} {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	if !utf8.ValidString(v) {
 		return protoreflect.Value{}, out, errInvalidUTF8{}
@@ -545,25 +545,25 @@ func append{{.Name}}SliceValue(b []byte, listv protoreflect.Value, wiretag uint6
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, wiretag)
 		{{template "AppendValue" .}}
 	}
 	return b, nil
 }
 
 // consume{{.Name}}SliceValue wire decodes a []{{.GoType}} value as a repeated {{.Name}}.
-func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
 	{{- if .WireType.Packable}}
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			{{template "Consume" .}}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append({{.ToValue}})
 			b = b[n:]
@@ -577,7 +577,7 @@ func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ wire.Numbe
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append({{.ToValue}})
 	out.n = n
@@ -612,7 +612,7 @@ func size{{.Name}}PackedSliceValue(listv protoreflect.Value, tagsize int, _ mars
 		n += {{template "SizeValue" .}}
 	}
 	{{- end}}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // append{{.Name}}PackedSliceValue encodes a []{{.GoType}} value as a packed repeated {{.Name}}.
@@ -622,7 +622,7 @@ func append{{.Name}}PackedSliceValue(b []byte, listv protoreflect.Value, wiretag
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	{{if .WireType.ConstSize -}}
 	n := llen * {{template "SizeValue" .}}
 	{{- else -}}
@@ -632,7 +632,7 @@ func append{{.Name}}PackedSliceValue(b []byte, listv protoreflect.Value, wiretag
 		n += {{template "SizeValue" .}}
 	}
 	{{- end}}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
 		{{template "AppendValue" .}}
@@ -655,7 +655,7 @@ var coder{{.Name}}PackedSliceValue = valueCoderFuncs{
 // We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.
 var emptyBuf [0]byte
 
-var wireTypes = map[protoreflect.Kind]wire.Type{
+var wireTypes = map[protoreflect.Kind]protowire.Type{
 {{range . -}}
 	protoreflect.{{.Name}}Kind: {{.WireType.Expr}},
 {{end}}

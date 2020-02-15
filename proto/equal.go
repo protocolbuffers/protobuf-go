@@ -9,7 +9,7 @@ import (
 	"math"
 	"reflect"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -141,12 +141,12 @@ func equalUnknown(x, y pref.RawFields) bool {
 	mx := make(map[pref.FieldNumber]pref.RawFields)
 	my := make(map[pref.FieldNumber]pref.RawFields)
 	for len(x) > 0 {
-		fnum, _, n := wire.ConsumeField(x)
+		fnum, _, n := protowire.ConsumeField(x)
 		mx[fnum] = append(mx[fnum], x[:n]...)
 		x = x[n:]
 	}
 	for len(y) > 0 {
-		fnum, _, n := wire.ConsumeField(y)
+		fnum, _, n := protowire.ConsumeField(y)
 		my[fnum] = append(my[fnum], y[:n]...)
 		y = y[n:]
 	}

@@ -8,7 +8,7 @@ package messageset
 import (
 	"math"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
@@ -26,9 +26,9 @@ import (
 //		}
 //	}
 const (
-	FieldItem    = wire.Number(1)
-	FieldTypeID  = wire.Number(2)
-	FieldMessage = wire.Number(3)
+	FieldItem    = protowire.Number(1)
+	FieldTypeID  = protowire.Number(2)
+	FieldMessage = protowire.Number(3)
 )
 
 // ExtensionName is the field name for extensions of MessageSet.
@@ -79,8 +79,8 @@ func FindMessageSetExtension(r preg.ExtensionTypeResolver, s pref.FullName) (pre
 
 // SizeField returns the size of a MessageSet item field containing an extension
 // with the given field number, not counting the contents of the message subfield.
-func SizeField(num wire.Number) int {
-	return 2*wire.SizeTag(FieldItem) + wire.SizeTag(FieldTypeID) + wire.SizeVarint(uint64(num))
+func SizeField(num protowire.Number) int {
+	return 2*protowire.SizeTag(FieldItem) + protowire.SizeTag(FieldTypeID) + protowire.SizeVarint(uint64(num))
 }
 
 // Unmarshal parses a MessageSet.
@@ -90,17 +90,17 @@ func SizeField(num wire.Number) int {
 //
 // If wantLen is true, the item values include the varint length prefix.
 // This is ugly, but simplifies the fast-path decoder in internal/impl.
-func Unmarshal(b []byte, wantLen bool, fn func(typeID wire.Number, value []byte) error) error {
+func Unmarshal(b []byte, wantLen bool, fn func(typeID protowire.Number, value []byte) error) error {
 	for len(b) > 0 {
-		num, wtyp, n := wire.ConsumeTag(b)
+		num, wtyp, n := protowire.ConsumeTag(b)
 		if n < 0 {
-			return wire.ParseError(n)
+			return protowire.ParseError(n)
 		}
 		b = b[n:]
-		if num != FieldItem || wtyp != wire.StartGroupType {
-			n := wire.ConsumeFieldValue(num, wtyp, b)
+		if num != FieldItem || wtyp != protowire.StartGroupType {
+			n := protowire.ConsumeFieldValue(num, wtyp, b)
 			if n < 0 {
-				return wire.ParseError(n)
+				return protowire.ParseError(n)
 			}
 			b = b[n:]
 			continue
@@ -126,36 +126,36 @@ func Unmarshal(b []byte, wantLen bool, fn func(typeID wire.Number, value []byte)
 // item length.
 //
 // If wantLen is true, the returned message value includes the length prefix.
-func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []byte, n int, err error) {
+func ConsumeFieldValue(b []byte, wantLen bool) (typeid protowire.Number, message []byte, n int, err error) {
 	ilen := len(b)
 	for {
-		num, wtyp, n := wire.ConsumeTag(b)
+		num, wtyp, n := protowire.ConsumeTag(b)
 		if n < 0 {
-			return 0, nil, 0, wire.ParseError(n)
+			return 0, nil, 0, protowire.ParseError(n)
 		}
 		b = b[n:]
 		switch {
-		case num == FieldItem && wtyp == wire.EndGroupType:
+		case num == FieldItem && wtyp == protowire.EndGroupType:
 			if wantLen && len(message) == 0 {
 				// The message field was missing, which should never happen.
 				// Be prepared for this case anyway.
-				message = wire.AppendVarint(message, 0)
+				message = protowire.AppendVarint(message, 0)
 			}
 			return typeid, message, ilen - len(b), nil
-		case num == FieldTypeID && wtyp == wire.VarintType:
-			v, n := wire.ConsumeVarint(b)
+		case num == FieldTypeID && wtyp == protowire.VarintType:
+			v, n := protowire.ConsumeVarint(b)
 			if n < 0 {
-				return 0, nil, 0, wire.ParseError(n)
+				return 0, nil, 0, protowire.ParseError(n)
 			}
 			b = b[n:]
 			if v < 1 || v > math.MaxInt32 {
 				return 0, nil, 0, errors.New("invalid type_id in message set")
 			}
-			typeid = wire.Number(v)
-		case num == FieldMessage && wtyp == wire.BytesType:
-			m, n := wire.ConsumeBytes(b)
+			typeid = protowire.Number(v)
+		case num == FieldMessage && wtyp == protowire.BytesType:
+			m, n := protowire.ConsumeBytes(b)
 			if n < 0 {
-				return 0, nil, 0, wire.ParseError(n)
+				return 0, nil, 0, protowire.ParseError(n)
 			}
 			if message == nil {
 				if wantLen {
@@ -172,10 +172,10 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []by
 				// quite inefficient since we need to strip the length off
 				// the existing data and reconstruct it with the combined length.
 				if wantLen {
-					_, nn := wire.ConsumeVarint(message)
+					_, nn := protowire.ConsumeVarint(message)
 					m0 := message[nn:]
 					message = nil
-					message = wire.AppendVarint(message, uint64(len(m0)+len(m)))
+					message = protowire.AppendVarint(message, uint64(len(m0)+len(m)))
 					message = append(message, m0...)
 					message = append(message, m...)
 				} else {
@@ -185,9 +185,9 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []by
 			b = b[n:]
 		default:
 			// We have no place to put it, so we just ignore unknown fields.
-			n := wire.ConsumeFieldValue(num, wtyp, b)
+			n := protowire.ConsumeFieldValue(num, wtyp, b)
 			if n < 0 {
-				return 0, nil, 0, wire.ParseError(n)
+				return 0, nil, 0, protowire.ParseError(n)
 			}
 			b = b[n:]
 		}
@@ -197,16 +197,16 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []by
 // AppendFieldStart appends the start of a MessageSet item field containing
 // an extension with the given number. The caller must add the message
 // subfield (including the tag).
-func AppendFieldStart(b []byte, num wire.Number) []byte {
-	b = wire.AppendTag(b, FieldItem, wire.StartGroupType)
-	b = wire.AppendTag(b, FieldTypeID, wire.VarintType)
-	b = wire.AppendVarint(b, uint64(num))
+func AppendFieldStart(b []byte, num protowire.Number) []byte {
+	b = protowire.AppendTag(b, FieldItem, protowire.StartGroupType)
+	b = protowire.AppendTag(b, FieldTypeID, protowire.VarintType)
+	b = protowire.AppendVarint(b, uint64(num))
 	return b
 }
 
 // AppendFieldEnd appends the trailing end group marker for a MessageSet item field.
 func AppendFieldEnd(b []byte) []byte {
-	return wire.AppendTag(b, FieldItem, wire.EndGroupType)
+	return protowire.AppendTag(b, FieldItem, protowire.EndGroupType)
 }
 
 // SizeUnknown returns the size of an unknown fields section in MessageSet format.
@@ -214,17 +214,17 @@ func AppendFieldEnd(b []byte) []byte {
 // See AppendUnknown.
 func SizeUnknown(unknown []byte) (size int) {
 	for len(unknown) > 0 {
-		num, typ, n := wire.ConsumeTag(unknown)
-		if n < 0 || typ != wire.BytesType {
+		num, typ, n := protowire.ConsumeTag(unknown)
+		if n < 0 || typ != protowire.BytesType {
 			return 0
 		}
 		unknown = unknown[n:]
-		_, n = wire.ConsumeBytes(unknown)
+		_, n = protowire.ConsumeBytes(unknown)
 		if n < 0 {
 			return 0
 		}
 		unknown = unknown[n:]
-		size += SizeField(num) + wire.SizeTag(FieldMessage) + n
+		size += SizeField(num) + protowire.SizeTag(FieldMessage) + n
 	}
 	return size
 }
@@ -239,17 +239,17 @@ func SizeUnknown(unknown []byte) (size int) {
 // This function converts the unknown fields back into MessageSet form.
 func AppendUnknown(b, unknown []byte) ([]byte, error) {
 	for len(unknown) > 0 {
-		num, typ, n := wire.ConsumeTag(unknown)
-		if n < 0 || typ != wire.BytesType {
+		num, typ, n := protowire.ConsumeTag(unknown)
+		if n < 0 || typ != protowire.BytesType {
 			return nil, errors.New("invalid data in message set unknown fields")
 		}
 		unknown = unknown[n:]
-		_, n = wire.ConsumeBytes(unknown)
+		_, n = protowire.ConsumeBytes(unknown)
 		if n < 0 {
 			return nil, errors.New("invalid data in message set unknown fields")
 		}
 		b = AppendFieldStart(b, num)
-		b = wire.AppendTag(b, FieldMessage, wire.BytesType)
+		b = protowire.AppendTag(b, FieldMessage, protowire.BytesType)
 		b = append(b, unknown[:n]...)
 		b = AppendFieldEnd(b)
 		unknown = unknown[n:]

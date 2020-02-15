@@ -2,10 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package wire parses and formats the protobuf wire encoding.
-//
+// Package protowire parses and formats the raw wire encoding.
 // See https://developers.google.com/protocol-buffers/docs/encoding.
-package wire
+//
+// For marshaling and unmarshaling entire protobuf messages,
+// use the "google.golang.org/protobuf/proto" package instead.
+package protowire
 
 import (
 	"io"

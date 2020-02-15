@@ -7,7 +7,7 @@ package filedesc
 import (
 	"sync"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/fieldnum"
 	"google.golang.org/protobuf/internal/strs"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -100,11 +100,11 @@ func (fd *File) unmarshalSeed(b []byte) {
 	var posEnums, posMessages, posExtensions, posServices int
 	b0 := b
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FileDescriptorProto_Syntax:
@@ -155,7 +155,7 @@ func (fd *File) unmarshalSeed(b []byte) {
 			}
 			prevField = num
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 			prevField = -1 // ignore known field numbers of unknown wire type
 		}
@@ -184,8 +184,8 @@ func (fd *File) unmarshalSeed(b []byte) {
 	if numEnums > 0 {
 		b := b0[posEnums:]
 		for i := range fd.L1.Enums.List {
-			_, n := wire.ConsumeVarint(b)
-			v, m := wire.ConsumeBytes(b[n:])
+			_, n := protowire.ConsumeVarint(b)
+			v, m := protowire.ConsumeBytes(b[n:])
 			fd.L1.Enums.List[i].unmarshalSeed(v, sb, fd, fd, i)
 			b = b[n+m:]
 		}
@@ -193,8 +193,8 @@ func (fd *File) unmarshalSeed(b []byte) {
 	if numMessages > 0 {
 		b := b0[posMessages:]
 		for i := range fd.L1.Messages.List {
-			_, n := wire.ConsumeVarint(b)
-			v, m := wire.ConsumeBytes(b[n:])
+			_, n := protowire.ConsumeVarint(b)
+			v, m := protowire.ConsumeBytes(b[n:])
 			fd.L1.Messages.List[i].unmarshalSeed(v, sb, fd, fd, i)
 			b = b[n+m:]
 		}
@@ -202,8 +202,8 @@ func (fd *File) unmarshalSeed(b []byte) {
 	if numExtensions > 0 {
 		b := b0[posExtensions:]
 		for i := range fd.L1.Extensions.List {
-			_, n := wire.ConsumeVarint(b)
-			v, m := wire.ConsumeBytes(b[n:])
+			_, n := protowire.ConsumeVarint(b)
+			v, m := protowire.ConsumeBytes(b[n:])
 			fd.L1.Extensions.List[i].unmarshalSeed(v, sb, fd, fd, i)
 			b = b[n+m:]
 		}
@@ -211,8 +211,8 @@ func (fd *File) unmarshalSeed(b []byte) {
 	if numServices > 0 {
 		b := b0[posServices:]
 		for i := range fd.L1.Services.List {
-			_, n := wire.ConsumeVarint(b)
-			v, m := wire.ConsumeBytes(b[n:])
+			_, n := protowire.ConsumeVarint(b)
+			v, m := protowire.ConsumeBytes(b[n:])
 			fd.L1.Services.List[i].unmarshalSeed(v, sb, fd, fd, i)
 			b = b[n+m:]
 		}
@@ -226,11 +226,11 @@ func (ed *Enum) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.Desc
 
 	var numValues int
 	for b := b; len(b) > 0; {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.EnumDescriptorProto_Name:
@@ -239,7 +239,7 @@ func (ed *Enum) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.Desc
 				numValues++
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -253,11 +253,11 @@ func (ed *Enum) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.Desc
 	ed.L2 = new(EnumL2)
 	ed.L2.Values.List = make([]EnumValue, numValues)
 	for i := 0; len(b) > 0; {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.EnumDescriptorProto_Value:
@@ -265,7 +265,7 @@ func (ed *Enum) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.Desc
 				i++
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -281,11 +281,11 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 	var posEnums, posMessages, posExtensions int
 	b0 := b
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.DescriptorProto_Name:
@@ -319,7 +319,7 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 			}
 			prevField = num
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 			prevField = -1 // ignore known field numbers of unknown wire type
 		}
@@ -340,8 +340,8 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 	if numEnums > 0 {
 		b := b0[posEnums:]
 		for i := range md.L1.Enums.List {
-			_, n := wire.ConsumeVarint(b)
-			v, m := wire.ConsumeBytes(b[n:])
+			_, n := protowire.ConsumeVarint(b)
+			v, m := protowire.ConsumeBytes(b[n:])
 			md.L1.Enums.List[i].unmarshalSeed(v, sb, pf, md, i)
 			b = b[n+m:]
 		}
@@ -349,8 +349,8 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 	if numMessages > 0 {
 		b := b0[posMessages:]
 		for i := range md.L1.Messages.List {
-			_, n := wire.ConsumeVarint(b)
-			v, m := wire.ConsumeBytes(b[n:])
+			_, n := protowire.ConsumeVarint(b)
+			v, m := protowire.ConsumeBytes(b[n:])
 			md.L1.Messages.List[i].unmarshalSeed(v, sb, pf, md, i)
 			b = b[n+m:]
 		}
@@ -358,8 +358,8 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 	if numExtensions > 0 {
 		b := b0[posExtensions:]
 		for i := range md.L1.Extensions.List {
-			_, n := wire.ConsumeVarint(b)
-			v, m := wire.ConsumeBytes(b[n:])
+			_, n := protowire.ConsumeVarint(b)
+			v, m := protowire.ConsumeBytes(b[n:])
 			md.L1.Extensions.List[i].unmarshalSeed(v, sb, pf, md, i)
 			b = b[n+m:]
 		}
@@ -368,20 +368,20 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 
 func (md *Message) unmarshalSeedOptions(b []byte) {
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.MessageOptions_MapEntry:
-				md.L1.IsMapEntry = wire.DecodeBool(v)
+				md.L1.IsMapEntry = protowire.DecodeBool(v)
 			case fieldnum.MessageOptions_MessageSetWireFormat:
-				md.L1.IsMessageSet = wire.DecodeBool(v)
+				md.L1.IsMessageSet = protowire.DecodeBool(v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -393,11 +393,11 @@ func (xd *Extension) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref
 	xd.L0.Index = i
 
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.VarintType:
-			v, m := wire.ConsumeVarint(b)
+		case protowire.VarintType:
+			v, m := protowire.ConsumeVarint(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldDescriptorProto_Number:
@@ -407,8 +407,8 @@ func (xd *Extension) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref
 			case fieldnum.FieldDescriptorProto_Type:
 				xd.L1.Kind = pref.Kind(v)
 			}
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.FieldDescriptorProto_Name:
@@ -417,7 +417,7 @@ func (xd *Extension) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref
 				xd.L1.Extendee = PlaceholderMessage(makeFullName(sb, v))
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}
@@ -429,18 +429,18 @@ func (sd *Service) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd pref.D
 	sd.L0.Index = i
 
 	for len(b) > 0 {
-		num, typ, n := wire.ConsumeTag(b)
+		num, typ, n := protowire.ConsumeTag(b)
 		b = b[n:]
 		switch typ {
-		case wire.BytesType:
-			v, m := wire.ConsumeBytes(b)
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
 			case fieldnum.ServiceDescriptorProto_Name:
 				sd.L0.FullName = appendFullName(sb, pd.FullName(), v)
 			}
 		default:
-			m := wire.ConsumeFieldValue(num, typ, b)
+			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
 	}

@@ -5,8 +5,8 @@
 package proto
 
 import (
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -16,8 +16,8 @@ import (
 func sizeMessageSet(m protoreflect.Message) (size int) {
 	m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		size += messageset.SizeField(fd.Number())
-		size += wire.SizeTag(messageset.FieldMessage)
-		size += wire.SizeBytes(sizeMessage(v.Message()))
+		size += protowire.SizeTag(messageset.FieldMessage)
+		size += protowire.SizeBytes(sizeMessage(v.Message()))
 		return true
 	})
 	size += messageset.SizeUnknown(m.GetUnknown())
@@ -41,8 +41,8 @@ func marshalMessageSet(b []byte, m protoreflect.Message, o MarshalOptions) ([]by
 
 func marshalMessageSetField(b []byte, fd protoreflect.FieldDescriptor, value protoreflect.Value, o MarshalOptions) ([]byte, error) {
 	b = messageset.AppendFieldStart(b, fd.Number())
-	b = wire.AppendTag(b, messageset.FieldMessage, wire.BytesType)
-	b = wire.AppendVarint(b, uint64(o.Size(value.Message().Interface())))
+	b = protowire.AppendTag(b, messageset.FieldMessage, protowire.BytesType)
+	b = protowire.AppendVarint(b, uint64(o.Size(value.Message().Interface())))
 	b, err := o.marshalMessage(b, value.Message())
 	if err != nil {
 		return b, err
@@ -55,12 +55,12 @@ func unmarshalMessageSet(b []byte, m protoreflect.Message, o UnmarshalOptions) e
 	if !flags.ProtoLegacy {
 		return errors.New("no support for message_set_wire_format")
 	}
-	return messageset.Unmarshal(b, false, func(num wire.Number, v []byte) error {
+	return messageset.Unmarshal(b, false, func(num protowire.Number, v []byte) error {
 		err := unmarshalMessageSetField(m, num, v, o)
 		if err == errUnknown {
 			unknown := m.GetUnknown()
-			unknown = wire.AppendTag(unknown, num, wire.BytesType)
-			unknown = wire.AppendBytes(unknown, v)
+			unknown = protowire.AppendTag(unknown, num, protowire.BytesType)
+			unknown = protowire.AppendBytes(unknown, v)
 			m.SetUnknown(unknown)
 			return nil
 		}
@@ -68,7 +68,7 @@ func unmarshalMessageSet(b []byte, m protoreflect.Message, o UnmarshalOptions) e
 	})
 }
 
-func unmarshalMessageSetField(m protoreflect.Message, num wire.Number, v []byte, o UnmarshalOptions) error {
+func unmarshalMessageSetField(m protoreflect.Message, num protowire.Number, v []byte, o UnmarshalOptions) error {
 	md := m.Descriptor()
 	if !md.ExtensionRanges().Has(num) {
 		return errUnknown

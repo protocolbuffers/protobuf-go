@@ -8,7 +8,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -46,13 +46,13 @@ func legacyLoadExtensionFieldInfo(xt pref.ExtensionType) *extensionFieldInfo {
 func makeExtensionFieldInfo(xd pref.ExtensionDescriptor) *extensionFieldInfo {
 	var wiretag uint64
 	if !xd.IsPacked() {
-		wiretag = wire.EncodeTag(xd.Number(), wireTypes[xd.Kind()])
+		wiretag = protowire.EncodeTag(xd.Number(), wireTypes[xd.Kind()])
 	} else {
-		wiretag = wire.EncodeTag(xd.Number(), wire.BytesType)
+		wiretag = protowire.EncodeTag(xd.Number(), protowire.BytesType)
 	}
 	e := &extensionFieldInfo{
 		wiretag: wiretag,
-		tagsize: wire.SizeVarint(wiretag),
+		tagsize: protowire.SizeVarint(wiretag),
 		funcs:   encoderFuncsForValue(xd),
 	}
 	// Does the unmarshal function need a value passed to it?
@@ -87,13 +87,13 @@ type ExtensionField struct {
 	lazy  *lazyExtensionValue
 }
 
-func (f *ExtensionField) appendLazyBytes(xt pref.ExtensionType, xi *extensionFieldInfo, num wire.Number, wtyp wire.Type, b []byte) {
+func (f *ExtensionField) appendLazyBytes(xt pref.ExtensionType, xi *extensionFieldInfo, num protowire.Number, wtyp protowire.Type, b []byte) {
 	if f.lazy == nil {
 		f.lazy = &lazyExtensionValue{xi: xi}
 	}
 	f.typ = xt
 	f.lazy.xi = xi
-	f.lazy.b = wire.AppendTag(f.lazy.b, num, wtyp)
+	f.lazy.b = protowire.AppendTag(f.lazy.b, num, wtyp)
 	f.lazy.b = append(f.lazy.b, b...)
 }
 
@@ -126,14 +126,14 @@ func (f *ExtensionField) lazyInit() {
 				b = b[2:]
 			} else {
 				var n int
-				tag, n = wire.ConsumeVarint(b)
+				tag, n = protowire.ConsumeVarint(b)
 				if n < 0 {
 					panic(errors.New("bad tag in lazy extension decoding"))
 				}
 				b = b[n:]
 			}
-			num := wire.Number(tag >> 3)
-			wtyp := wire.Type(tag & 7)
+			num := protowire.Number(tag >> 3)
+			wtyp := protowire.Type(tag & 7)
 			var out unmarshalOutput
 			var err error
 			val, out, err = f.lazy.xi.funcs.unmarshal(b, val, num, wtyp, lazyUnmarshalOptions)

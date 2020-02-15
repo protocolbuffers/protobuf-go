@@ -7,8 +7,8 @@ package proto
 import (
 	"sort"
 
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
-	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/fieldsort"
 	"google.golang.org/protobuf/internal/mapsort"
 	"google.golang.org/protobuf/internal/pragma"
@@ -219,14 +219,14 @@ func (o MarshalOptions) marshalField(b []byte, fd protoreflect.FieldDescriptor, 
 	case fd.IsMap():
 		return o.marshalMap(b, fd, value.Map())
 	default:
-		b = wire.AppendTag(b, fd.Number(), wireTypes[fd.Kind()])
+		b = protowire.AppendTag(b, fd.Number(), wireTypes[fd.Kind()])
 		return o.marshalSingular(b, fd, value)
 	}
 }
 
 func (o MarshalOptions) marshalList(b []byte, fd protoreflect.FieldDescriptor, list protoreflect.List) ([]byte, error) {
 	if fd.IsPacked() && list.Len() > 0 {
-		b = wire.AppendTag(b, fd.Number(), wire.BytesType)
+		b = protowire.AppendTag(b, fd.Number(), protowire.BytesType)
 		b, pos := appendSpeculativeLength(b)
 		for i, llen := 0, list.Len(); i < llen; i++ {
 			var err error
@@ -242,7 +242,7 @@ func (o MarshalOptions) marshalList(b []byte, fd protoreflect.FieldDescriptor, l
 	kind := fd.Kind()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		var err error
-		b = wire.AppendTag(b, fd.Number(), wireTypes[kind])
+		b = protowire.AppendTag(b, fd.Number(), wireTypes[kind])
 		b, err = o.marshalSingular(b, fd, list.Get(i))
 		if err != nil {
 			return b, err
@@ -256,7 +256,7 @@ func (o MarshalOptions) marshalMap(b []byte, fd protoreflect.FieldDescriptor, ma
 	valf := fd.MapValue()
 	var err error
 	o.rangeMap(mapv, keyf.Kind(), func(key protoreflect.MapKey, value protoreflect.Value) bool {
-		b = wire.AppendTag(b, fd.Number(), wire.BytesType)
+		b = protowire.AppendTag(b, fd.Number(), protowire.BytesType)
 		var pos int
 		b, pos = appendSpeculativeLength(b)
 
@@ -295,7 +295,7 @@ func appendSpeculativeLength(b []byte) ([]byte, int) {
 
 func finishSpeculativeLength(b []byte, pos int) []byte {
 	mlen := len(b) - pos - speculativeLength
-	msiz := wire.SizeVarint(uint64(mlen))
+	msiz := protowire.SizeVarint(uint64(mlen))
 	if msiz != speculativeLength {
 		for i := 0; i < msiz-speculativeLength; i++ {
 			b = append(b, 0)
@@ -303,6 +303,6 @@ func finishSpeculativeLength(b []byte, pos int) []byte {
 		copy(b[pos+msiz:], b[pos+speculativeLength:])
 		b = b[:pos+msiz+mlen]
 	}
-	wire.AppendVarint(b[:pos], uint64(mlen))
+	protowire.AppendVarint(b[:pos], uint64(mlen))
 	return b
 }

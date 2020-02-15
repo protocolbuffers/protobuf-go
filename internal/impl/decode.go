@@ -7,7 +7,7 @@ package impl
 import (
 	"math/bits"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
@@ -78,7 +78,7 @@ func (mi *MessageInfo) unmarshal(in piface.UnmarshalInput) (piface.UnmarshalOutp
 // This is a sentinel error which should never be visible to the user.
 var errUnknown = errors.New("unknown")
 
-func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Number, opts unmarshalOptions) (out unmarshalOutput, err error) {
+func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag protowire.Number, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	mi.init()
 	if flags.ProtoLegacy && mi.isMessageSet {
 		return unmarshalMessageSet(mi, b, p, opts)
@@ -98,21 +98,21 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			b = b[2:]
 		} else {
 			var n int
-			tag, n = wire.ConsumeVarint(b)
+			tag, n = protowire.ConsumeVarint(b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			b = b[n:]
 		}
-		var num wire.Number
-		if n := tag >> 3; n < uint64(wire.MinValidNumber) || n > uint64(wire.MaxValidNumber) {
+		var num protowire.Number
+		if n := tag >> 3; n < uint64(protowire.MinValidNumber) || n > uint64(protowire.MaxValidNumber) {
 			return out, errors.New("invalid field number")
 		} else {
-			num = wire.Number(n)
+			num = protowire.Number(n)
 		}
-		wtyp := wire.Type(tag & 7)
+		wtyp := protowire.Type(tag & 7)
 
-		if wtyp == wire.EndGroupType {
+		if wtyp == protowire.EndGroupType {
 			if num != groupTag {
 				return out, errors.New("mismatching end group marker")
 			}
@@ -168,13 +168,13 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 			if err != errUnknown {
 				return out, err
 			}
-			n = wire.ConsumeFieldValue(num, wtyp, b)
+			n = protowire.ConsumeFieldValue(num, wtyp, b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			if !opts.DiscardUnknown() && mi.unknownOffset.IsValid() {
 				u := p.Apply(mi.unknownOffset).Bytes()
-				*u = wire.AppendTag(*u, num, wtyp)
+				*u = protowire.AppendTag(*u, num, wtyp)
 				*u = append(*u, b[:n]...)
 			}
 		}
@@ -193,7 +193,7 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag wire.Numbe
 	return out, nil
 }
 
-func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.Type, exts map[int32]ExtensionField, opts unmarshalOptions) (out unmarshalOutput, err error) {
+func (mi *MessageInfo) unmarshalExtension(b []byte, num protowire.Number, wtyp protowire.Type, exts map[int32]ExtensionField, opts unmarshalOptions) (out unmarshalOutput, err error) {
 	x := exts[int32(num)]
 	xt := x.Type()
 	if xt == nil {
@@ -245,17 +245,17 @@ func (mi *MessageInfo) unmarshalExtension(b []byte, num wire.Number, wtyp wire.T
 	return out, nil
 }
 
-func skipExtension(b []byte, xi *extensionFieldInfo, num wire.Number, wtyp wire.Type, opts unmarshalOptions) (out unmarshalOutput, _ ValidationStatus) {
+func skipExtension(b []byte, xi *extensionFieldInfo, num protowire.Number, wtyp protowire.Type, opts unmarshalOptions) (out unmarshalOutput, _ ValidationStatus) {
 	if xi.validation.mi == nil {
 		return out, ValidationUnknown
 	}
 	xi.validation.mi.init()
 	switch xi.validation.typ {
 	case validationTypeMessage:
-		if wtyp != wire.BytesType {
+		if wtyp != protowire.BytesType {
 			return out, ValidationUnknown
 		}
-		v, n := wire.ConsumeBytes(b)
+		v, n := protowire.ConsumeBytes(b)
 		if n < 0 {
 			return out, ValidationUnknown
 		}
@@ -263,7 +263,7 @@ func skipExtension(b []byte, xi *extensionFieldInfo, num wire.Number, wtyp wire.
 		out.n = n
 		return out, st
 	case validationTypeGroup:
-		if wtyp != wire.StartGroupType {
+		if wtyp != protowire.StartGroupType {
 			return out, ValidationUnknown
 		}
 		out, st := xi.validation.mi.validate(b, num, opts)

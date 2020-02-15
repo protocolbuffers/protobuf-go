@@ -10,27 +10,27 @@ import (
 	"math"
 	"unicode/utf8"
 
-	"google.golang.org/protobuf/internal/encoding/wire"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // sizeBool returns the size of wire encoding a bool pointer as a Bool.
 func sizeBool(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.Bool()
-	return f.tagsize + wire.SizeVarint(wire.EncodeBool(v))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeBool(v))
 }
 
 // appendBool wire encodes a bool pointer as a Bool.
 func appendBool(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Bool()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeBool(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeBool(v))
 	return b, nil
 }
 
 // consumeBool wire decodes a bool pointer as a Bool.
-func consumeBool(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeBool(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -42,12 +42,12 @@ func consumeBool(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmar
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
-	*p.Bool() = wire.DecodeBool(v)
+	*p.Bool() = protowire.DecodeBool(v)
 	out.n = n
 	return out, nil
 }
@@ -66,7 +66,7 @@ func sizeBoolNoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	if v == false {
 		return 0
 	}
-	return f.tagsize + wire.SizeVarint(wire.EncodeBool(v))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeBool(v))
 }
 
 // appendBoolNoZero wire encodes a bool pointer as a Bool.
@@ -76,8 +76,8 @@ func appendBoolNoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) 
 	if v == false {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeBool(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeBool(v))
 	return b, nil
 }
 
@@ -92,21 +92,21 @@ var coderBoolNoZero = pointerCoderFuncs{
 // It panics if the pointer is nil.
 func sizeBoolPtr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := **p.BoolPtr()
-	return f.tagsize + wire.SizeVarint(wire.EncodeBool(v))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeBool(v))
 }
 
 // appendBoolPtr wire encodes a *bool pointer as a Bool.
 // It panics if the pointer is nil.
 func appendBoolPtr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.BoolPtr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeBool(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeBool(v))
 	return b, nil
 }
 
 // consumeBoolPtr wire decodes a *bool pointer as a Bool.
-func consumeBoolPtr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeBoolPtr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -118,16 +118,16 @@ func consumeBoolPtr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ un
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.BoolPtr()
 	if *vp == nil {
 		*vp = new(bool)
 	}
-	**vp = wire.DecodeBool(v)
+	**vp = protowire.DecodeBool(v)
 	out.n = n
 	return out, nil
 }
@@ -143,7 +143,7 @@ var coderBoolPtr = pointerCoderFuncs{
 func sizeBoolSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.BoolSlice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeVarint(wire.EncodeBool(v))
+		size += f.tagsize + protowire.SizeVarint(protowire.EncodeBool(v))
 	}
 	return size
 }
@@ -152,20 +152,20 @@ func sizeBoolSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 func appendBoolSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.BoolSlice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendVarint(b, wire.EncodeBool(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, protowire.EncodeBool(v))
 	}
 	return b, nil
 }
 
 // consumeBoolSlice wire decodes a []bool pointer as a repeated Bool.
-func consumeBoolSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeBoolSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.BoolSlice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -177,19 +177,19 @@ func consumeBoolSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
-			s = append(s, wire.DecodeBool(v))
+			s = append(s, protowire.DecodeBool(v))
 			b = b[n:]
 		}
 		*sp = s
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -201,12 +201,12 @@ func consumeBoolSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
-	*sp = append(*sp, wire.DecodeBool(v))
+	*sp = append(*sp, protowire.DecodeBool(v))
 	out.n = n
 	return out, nil
 }
@@ -226,9 +226,9 @@ func sizeBoolPackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size i
 	}
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeBool(v))
+		n += protowire.SizeVarint(protowire.EncodeBool(v))
 	}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendBoolPackedSlice encodes a []bool pointer as a packed repeated Bool.
@@ -237,14 +237,14 @@ func appendBoolPackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOpti
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeBool(v))
+		n += protowire.SizeVarint(protowire.EncodeBool(v))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendVarint(b, wire.EncodeBool(v))
+		b = protowire.AppendVarint(b, protowire.EncodeBool(v))
 	}
 	return b, nil
 }
@@ -258,19 +258,19 @@ var coderBoolPackedSlice = pointerCoderFuncs{
 
 // sizeBoolValue returns the size of wire encoding a bool value as a Bool.
 func sizeBoolValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeVarint(wire.EncodeBool(v.Bool()))
+	return tagsize + protowire.SizeVarint(protowire.EncodeBool(v.Bool()))
 }
 
 // appendBoolValue encodes a bool value as a Bool.
 func appendBoolValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, wire.EncodeBool(v.Bool()))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeBool(v.Bool()))
 	return b, nil
 }
 
 // consumeBoolValue decodes a bool value as a Bool.
-func consumeBoolValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeBoolValue(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -282,13 +282,13 @@ func consumeBoolValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.T
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
-	return protoreflect.ValueOfBool(wire.DecodeBool(v)), out, nil
+	return protoreflect.ValueOfBool(protowire.DecodeBool(v)), out, nil
 }
 
 var coderBoolValue = valueCoderFuncs{
@@ -303,7 +303,7 @@ func sizeBoolSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions)
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeVarint(wire.EncodeBool(v.Bool()))
+		size += tagsize + protowire.SizeVarint(protowire.EncodeBool(v.Bool()))
 	}
 	return size
 }
@@ -313,19 +313,19 @@ func appendBoolSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ 
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, wire.EncodeBool(v.Bool()))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, protowire.EncodeBool(v.Bool()))
 	}
 	return b, nil
 }
 
 // consumeBoolSliceValue wire decodes a []bool value as a repeated Bool.
-func consumeBoolSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeBoolSliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -337,18 +337,18 @@ func consumeBoolSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
-			list.Append(protoreflect.ValueOfBool(wire.DecodeBool(v)))
+			list.Append(protoreflect.ValueOfBool(protowire.DecodeBool(v)))
 			b = b[n:]
 		}
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -360,12 +360,12 @@ func consumeBoolSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
-	list.Append(protoreflect.ValueOfBool(wire.DecodeBool(v)))
+	list.Append(protoreflect.ValueOfBool(protowire.DecodeBool(v)))
 	out.n = n
 	return listv, out, nil
 }
@@ -387,9 +387,9 @@ func sizeBoolPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOp
 	n := 0
 	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(wire.EncodeBool(v.Bool()))
+		n += protowire.SizeVarint(protowire.EncodeBool(v.Bool()))
 	}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendBoolPackedSliceValue encodes a []bool value as a packed repeated Bool.
@@ -399,16 +399,16 @@ func appendBoolPackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(wire.EncodeBool(v.Bool()))
+		n += protowire.SizeVarint(protowire.EncodeBool(v.Bool()))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wire.EncodeBool(v.Bool()))
+		b = protowire.AppendVarint(b, protowire.EncodeBool(v.Bool()))
 	}
 	return b, nil
 }
@@ -422,19 +422,19 @@ var coderBoolPackedSliceValue = valueCoderFuncs{
 
 // sizeEnumValue returns the size of wire encoding a  value as a Enum.
 func sizeEnumValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeVarint(uint64(v.Enum()))
+	return tagsize + protowire.SizeVarint(uint64(v.Enum()))
 }
 
 // appendEnumValue encodes a  value as a Enum.
 func appendEnumValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(v.Enum()))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, uint64(v.Enum()))
 	return b, nil
 }
 
 // consumeEnumValue decodes a  value as a Enum.
-func consumeEnumValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeEnumValue(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -446,10 +446,10 @@ func consumeEnumValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.T
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)), out, nil
@@ -467,7 +467,7 @@ func sizeEnumSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions)
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeVarint(uint64(v.Enum()))
+		size += tagsize + protowire.SizeVarint(uint64(v.Enum()))
 	}
 	return size
 }
@@ -477,19 +477,19 @@ func appendEnumSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _ 
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, uint64(v.Enum()))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, uint64(v.Enum()))
 	}
 	return b, nil
 }
 
 // consumeEnumSliceValue wire decodes a [] value as a repeated Enum.
-func consumeEnumSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeEnumSliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -501,10 +501,10 @@ func consumeEnumSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)))
 			b = b[n:]
@@ -512,7 +512,7 @@ func consumeEnumSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -524,10 +524,10 @@ func consumeEnumSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wt
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfEnum(protoreflect.EnumNumber(v)))
 	out.n = n
@@ -551,9 +551,9 @@ func sizeEnumPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalOp
 	n := 0
 	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(uint64(v.Enum()))
+		n += protowire.SizeVarint(uint64(v.Enum()))
 	}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendEnumPackedSliceValue encodes a [] value as a packed repeated Enum.
@@ -563,16 +563,16 @@ func appendEnumPackedSliceValue(b []byte, listv protoreflect.Value, wiretag uint
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(uint64(v.Enum()))
+		n += protowire.SizeVarint(uint64(v.Enum()))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, uint64(v.Enum()))
+		b = protowire.AppendVarint(b, uint64(v.Enum()))
 	}
 	return b, nil
 }
@@ -587,20 +587,20 @@ var coderEnumPackedSliceValue = valueCoderFuncs{
 // sizeInt32 returns the size of wire encoding a int32 pointer as a Int32.
 func sizeInt32(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.Int32()
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendInt32 wire encodes a int32 pointer as a Int32.
 func appendInt32(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Int32()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
 // consumeInt32 wire decodes a int32 pointer as a Int32.
-func consumeInt32(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeInt32(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -612,10 +612,10 @@ func consumeInt32(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unma
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Int32() = int32(v)
 	out.n = n
@@ -636,7 +636,7 @@ func sizeInt32NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendInt32NoZero wire encodes a int32 pointer as a Int32.
@@ -646,8 +646,8 @@ func appendInt32NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions)
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
@@ -662,21 +662,21 @@ var coderInt32NoZero = pointerCoderFuncs{
 // It panics if the pointer is nil.
 func sizeInt32Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := **p.Int32Ptr()
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendInt32Ptr wire encodes a *int32 pointer as a Int32.
 // It panics if the pointer is nil.
 func appendInt32Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Int32Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
 // consumeInt32Ptr wire decodes a *int32 pointer as a Int32.
-func consumeInt32Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeInt32Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -688,10 +688,10 @@ func consumeInt32Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ u
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Int32Ptr()
 	if *vp == nil {
@@ -713,7 +713,7 @@ var coderInt32Ptr = pointerCoderFuncs{
 func sizeInt32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Int32Slice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeVarint(uint64(v))
+		size += f.tagsize + protowire.SizeVarint(uint64(v))
 	}
 	return size
 }
@@ -722,20 +722,20 @@ func sizeInt32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 func appendInt32Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Int32Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendVarint(b, uint64(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, uint64(v))
 	}
 	return b, nil
 }
 
 // consumeInt32Slice wire decodes a []int32 pointer as a repeated Int32.
-func consumeInt32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeInt32Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Int32Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -747,10 +747,10 @@ func consumeInt32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, int32(v))
 			b = b[n:]
@@ -759,7 +759,7 @@ func consumeInt32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -771,10 +771,10 @@ func consumeInt32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, int32(v))
 	out.n = n
@@ -796,9 +796,9 @@ func sizeInt32PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size 
 	}
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+		n += protowire.SizeVarint(uint64(v))
 	}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendInt32PackedSlice encodes a []int32 pointer as a packed repeated Int32.
@@ -807,14 +807,14 @@ func appendInt32PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOpt
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+		n += protowire.SizeVarint(uint64(v))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendVarint(b, uint64(v))
+		b = protowire.AppendVarint(b, uint64(v))
 	}
 	return b, nil
 }
@@ -828,19 +828,19 @@ var coderInt32PackedSlice = pointerCoderFuncs{
 
 // sizeInt32Value returns the size of wire encoding a int32 value as a Int32.
 func sizeInt32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeVarint(uint64(int32(v.Int())))
+	return tagsize + protowire.SizeVarint(uint64(int32(v.Int())))
 }
 
 // appendInt32Value encodes a int32 value as a Int32.
 func appendInt32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(int32(v.Int())))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, uint64(int32(v.Int())))
 	return b, nil
 }
 
 // consumeInt32Value decodes a int32 value as a Int32.
-func consumeInt32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeInt32Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -852,10 +852,10 @@ func consumeInt32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfInt32(int32(v)), out, nil
@@ -873,7 +873,7 @@ func sizeInt32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeVarint(uint64(int32(v.Int())))
+		size += tagsize + protowire.SizeVarint(uint64(int32(v.Int())))
 	}
 	return size
 }
@@ -883,19 +883,19 @@ func appendInt32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, uint64(int32(v.Int())))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, uint64(int32(v.Int())))
 	}
 	return b, nil
 }
 
 // consumeInt32SliceValue wire decodes a []int32 value as a repeated Int32.
-func consumeInt32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeInt32SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -907,10 +907,10 @@ func consumeInt32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfInt32(int32(v)))
 			b = b[n:]
@@ -918,7 +918,7 @@ func consumeInt32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -930,10 +930,10 @@ func consumeInt32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfInt32(int32(v)))
 	out.n = n
@@ -957,9 +957,9 @@ func sizeInt32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalO
 	n := 0
 	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(uint64(int32(v.Int())))
+		n += protowire.SizeVarint(uint64(int32(v.Int())))
 	}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendInt32PackedSliceValue encodes a []int32 value as a packed repeated Int32.
@@ -969,16 +969,16 @@ func appendInt32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uin
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(uint64(int32(v.Int())))
+		n += protowire.SizeVarint(uint64(int32(v.Int())))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, uint64(int32(v.Int())))
+		b = protowire.AppendVarint(b, uint64(int32(v.Int())))
 	}
 	return b, nil
 }
@@ -993,20 +993,20 @@ var coderInt32PackedSliceValue = valueCoderFuncs{
 // sizeSint32 returns the size of wire encoding a int32 pointer as a Sint32.
 func sizeSint32(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.Int32()
-	return f.tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeZigZag(int64(v)))
 }
 
 // appendSint32 wire encodes a int32 pointer as a Sint32.
 func appendSint32(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Int32()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeZigZag(int64(v)))
 	return b, nil
 }
 
 // consumeSint32 wire decodes a int32 pointer as a Sint32.
-func consumeSint32(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeSint32(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1018,12 +1018,12 @@ func consumeSint32(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unm
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
-	*p.Int32() = int32(wire.DecodeZigZag(v & math.MaxUint32))
+	*p.Int32() = int32(protowire.DecodeZigZag(v & math.MaxUint32))
 	out.n = n
 	return out, nil
 }
@@ -1042,7 +1042,7 @@ func sizeSint32NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeZigZag(int64(v)))
 }
 
 // appendSint32NoZero wire encodes a int32 pointer as a Sint32.
@@ -1052,8 +1052,8 @@ func appendSint32NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeZigZag(int64(v)))
 	return b, nil
 }
 
@@ -1068,21 +1068,21 @@ var coderSint32NoZero = pointerCoderFuncs{
 // It panics if the pointer is nil.
 func sizeSint32Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := **p.Int32Ptr()
-	return f.tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeZigZag(int64(v)))
 }
 
 // appendSint32Ptr wire encodes a *int32 pointer as a Sint32.
 // It panics if the pointer is nil.
 func appendSint32Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Int32Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeZigZag(int64(v)))
 	return b, nil
 }
 
 // consumeSint32Ptr wire decodes a *int32 pointer as a Sint32.
-func consumeSint32Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeSint32Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1094,16 +1094,16 @@ func consumeSint32Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Int32Ptr()
 	if *vp == nil {
 		*vp = new(int32)
 	}
-	**vp = int32(wire.DecodeZigZag(v & math.MaxUint32))
+	**vp = int32(protowire.DecodeZigZag(v & math.MaxUint32))
 	out.n = n
 	return out, nil
 }
@@ -1119,7 +1119,7 @@ var coderSint32Ptr = pointerCoderFuncs{
 func sizeSint32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Int32Slice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+		size += f.tagsize + protowire.SizeVarint(protowire.EncodeZigZag(int64(v)))
 	}
 	return size
 }
@@ -1128,20 +1128,20 @@ func sizeSint32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 func appendSint32Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Int32Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, protowire.EncodeZigZag(int64(v)))
 	}
 	return b, nil
 }
 
 // consumeSint32Slice wire decodes a []int32 pointer as a repeated Sint32.
-func consumeSint32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeSint32Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Int32Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -1153,19 +1153,19 @@ func consumeSint32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
-			s = append(s, int32(wire.DecodeZigZag(v&math.MaxUint32)))
+			s = append(s, int32(protowire.DecodeZigZag(v&math.MaxUint32)))
 			b = b[n:]
 		}
 		*sp = s
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1177,12 +1177,12 @@ func consumeSint32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
-	*sp = append(*sp, int32(wire.DecodeZigZag(v&math.MaxUint32)))
+	*sp = append(*sp, int32(protowire.DecodeZigZag(v&math.MaxUint32)))
 	out.n = n
 	return out, nil
 }
@@ -1202,9 +1202,9 @@ func sizeSint32PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size
 	}
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+		n += protowire.SizeVarint(protowire.EncodeZigZag(int64(v)))
 	}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendSint32PackedSlice encodes a []int32 pointer as a packed repeated Sint32.
@@ -1213,14 +1213,14 @@ func appendSint32PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOp
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeZigZag(int64(v)))
+		n += protowire.SizeVarint(protowire.EncodeZigZag(int64(v)))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(v)))
+		b = protowire.AppendVarint(b, protowire.EncodeZigZag(int64(v)))
 	}
 	return b, nil
 }
@@ -1234,19 +1234,19 @@ var coderSint32PackedSlice = pointerCoderFuncs{
 
 // sizeSint32Value returns the size of wire encoding a int32 value as a Sint32.
 func sizeSint32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
+	return tagsize + protowire.SizeVarint(protowire.EncodeZigZag(int64(int32(v.Int()))))
 }
 
 // appendSint32Value encodes a int32 value as a Sint32.
 func appendSint32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(int64(int32(v.Int()))))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeZigZag(int64(int32(v.Int()))))
 	return b, nil
 }
 
 // consumeSint32Value decodes a int32 value as a Sint32.
-func consumeSint32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeSint32Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -1258,13 +1258,13 @@ func consumeSint32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
-	return protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))), out, nil
+	return protoreflect.ValueOfInt32(int32(protowire.DecodeZigZag(v & math.MaxUint32))), out, nil
 }
 
 var coderSint32Value = valueCoderFuncs{
@@ -1279,7 +1279,7 @@ func sizeSint32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOption
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
+		size += tagsize + protowire.SizeVarint(protowire.EncodeZigZag(int64(int32(v.Int()))))
 	}
 	return size
 }
@@ -1289,19 +1289,19 @@ func appendSint32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, 
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(int32(v.Int()))))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, protowire.EncodeZigZag(int64(int32(v.Int()))))
 	}
 	return b, nil
 }
 
 // consumeSint32SliceValue wire decodes a []int32 value as a repeated Sint32.
-func consumeSint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeSint32SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -1313,18 +1313,18 @@ func consumeSint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
-			list.Append(protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))))
+			list.Append(protoreflect.ValueOfInt32(int32(protowire.DecodeZigZag(v & math.MaxUint32))))
 			b = b[n:]
 		}
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -1336,12 +1336,12 @@ func consumeSint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
-	list.Append(protoreflect.ValueOfInt32(int32(wire.DecodeZigZag(v & math.MaxUint32))))
+	list.Append(protoreflect.ValueOfInt32(int32(protowire.DecodeZigZag(v & math.MaxUint32))))
 	out.n = n
 	return listv, out, nil
 }
@@ -1363,9 +1363,9 @@ func sizeSint32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshal
 	n := 0
 	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
+		n += protowire.SizeVarint(protowire.EncodeZigZag(int64(int32(v.Int()))))
 	}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendSint32PackedSliceValue encodes a []int32 value as a packed repeated Sint32.
@@ -1375,16 +1375,16 @@ func appendSint32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag ui
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(wire.EncodeZigZag(int64(int32(v.Int()))))
+		n += protowire.SizeVarint(protowire.EncodeZigZag(int64(int32(v.Int()))))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wire.EncodeZigZag(int64(int32(v.Int()))))
+		b = protowire.AppendVarint(b, protowire.EncodeZigZag(int64(int32(v.Int()))))
 	}
 	return b, nil
 }
@@ -1399,20 +1399,20 @@ var coderSint32PackedSliceValue = valueCoderFuncs{
 // sizeUint32 returns the size of wire encoding a uint32 pointer as a Uint32.
 func sizeUint32(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.Uint32()
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendUint32 wire encodes a uint32 pointer as a Uint32.
 func appendUint32(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Uint32()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
 // consumeUint32 wire decodes a uint32 pointer as a Uint32.
-func consumeUint32(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeUint32(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1424,10 +1424,10 @@ func consumeUint32(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unm
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Uint32() = uint32(v)
 	out.n = n
@@ -1448,7 +1448,7 @@ func sizeUint32NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendUint32NoZero wire encodes a uint32 pointer as a Uint32.
@@ -1458,8 +1458,8 @@ func appendUint32NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
@@ -1474,21 +1474,21 @@ var coderUint32NoZero = pointerCoderFuncs{
 // It panics if the pointer is nil.
 func sizeUint32Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := **p.Uint32Ptr()
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendUint32Ptr wire encodes a *uint32 pointer as a Uint32.
 // It panics if the pointer is nil.
 func appendUint32Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Uint32Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
 // consumeUint32Ptr wire decodes a *uint32 pointer as a Uint32.
-func consumeUint32Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeUint32Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1500,10 +1500,10 @@ func consumeUint32Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Uint32Ptr()
 	if *vp == nil {
@@ -1525,7 +1525,7 @@ var coderUint32Ptr = pointerCoderFuncs{
 func sizeUint32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Uint32Slice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeVarint(uint64(v))
+		size += f.tagsize + protowire.SizeVarint(uint64(v))
 	}
 	return size
 }
@@ -1534,20 +1534,20 @@ func sizeUint32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 func appendUint32Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Uint32Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendVarint(b, uint64(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, uint64(v))
 	}
 	return b, nil
 }
 
 // consumeUint32Slice wire decodes a []uint32 pointer as a repeated Uint32.
-func consumeUint32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeUint32Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Uint32Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -1559,10 +1559,10 @@ func consumeUint32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, uint32(v))
 			b = b[n:]
@@ -1571,7 +1571,7 @@ func consumeUint32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1583,10 +1583,10 @@ func consumeUint32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, uint32(v))
 	out.n = n
@@ -1608,9 +1608,9 @@ func sizeUint32PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size
 	}
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+		n += protowire.SizeVarint(uint64(v))
 	}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendUint32PackedSlice encodes a []uint32 pointer as a packed repeated Uint32.
@@ -1619,14 +1619,14 @@ func appendUint32PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOp
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+		n += protowire.SizeVarint(uint64(v))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendVarint(b, uint64(v))
+		b = protowire.AppendVarint(b, uint64(v))
 	}
 	return b, nil
 }
@@ -1640,19 +1640,19 @@ var coderUint32PackedSlice = pointerCoderFuncs{
 
 // sizeUint32Value returns the size of wire encoding a uint32 value as a Uint32.
 func sizeUint32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeVarint(uint64(uint32(v.Uint())))
+	return tagsize + protowire.SizeVarint(uint64(uint32(v.Uint())))
 }
 
 // appendUint32Value encodes a uint32 value as a Uint32.
 func appendUint32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(uint32(v.Uint())))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, uint64(uint32(v.Uint())))
 	return b, nil
 }
 
 // consumeUint32Value decodes a uint32 value as a Uint32.
-func consumeUint32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeUint32Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -1664,10 +1664,10 @@ func consumeUint32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfUint32(uint32(v)), out, nil
@@ -1685,7 +1685,7 @@ func sizeUint32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOption
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeVarint(uint64(uint32(v.Uint())))
+		size += tagsize + protowire.SizeVarint(uint64(uint32(v.Uint())))
 	}
 	return size
 }
@@ -1695,19 +1695,19 @@ func appendUint32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, 
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, uint64(uint32(v.Uint())))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, uint64(uint32(v.Uint())))
 	}
 	return b, nil
 }
 
 // consumeUint32SliceValue wire decodes a []uint32 value as a repeated Uint32.
-func consumeUint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeUint32SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -1719,10 +1719,10 @@ func consumeUint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfUint32(uint32(v)))
 			b = b[n:]
@@ -1730,7 +1730,7 @@ func consumeUint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -1742,10 +1742,10 @@ func consumeUint32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfUint32(uint32(v)))
 	out.n = n
@@ -1769,9 +1769,9 @@ func sizeUint32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshal
 	n := 0
 	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(uint64(uint32(v.Uint())))
+		n += protowire.SizeVarint(uint64(uint32(v.Uint())))
 	}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendUint32PackedSliceValue encodes a []uint32 value as a packed repeated Uint32.
@@ -1781,16 +1781,16 @@ func appendUint32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag ui
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(uint64(uint32(v.Uint())))
+		n += protowire.SizeVarint(uint64(uint32(v.Uint())))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, uint64(uint32(v.Uint())))
+		b = protowire.AppendVarint(b, uint64(uint32(v.Uint())))
 	}
 	return b, nil
 }
@@ -1805,20 +1805,20 @@ var coderUint32PackedSliceValue = valueCoderFuncs{
 // sizeInt64 returns the size of wire encoding a int64 pointer as a Int64.
 func sizeInt64(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.Int64()
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendInt64 wire encodes a int64 pointer as a Int64.
 func appendInt64(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Int64()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
 // consumeInt64 wire decodes a int64 pointer as a Int64.
-func consumeInt64(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeInt64(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1830,10 +1830,10 @@ func consumeInt64(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unma
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Int64() = int64(v)
 	out.n = n
@@ -1854,7 +1854,7 @@ func sizeInt64NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendInt64NoZero wire encodes a int64 pointer as a Int64.
@@ -1864,8 +1864,8 @@ func appendInt64NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions)
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
@@ -1880,21 +1880,21 @@ var coderInt64NoZero = pointerCoderFuncs{
 // It panics if the pointer is nil.
 func sizeInt64Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := **p.Int64Ptr()
-	return f.tagsize + wire.SizeVarint(uint64(v))
+	return f.tagsize + protowire.SizeVarint(uint64(v))
 }
 
 // appendInt64Ptr wire encodes a *int64 pointer as a Int64.
 // It panics if the pointer is nil.
 func appendInt64Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Int64Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, uint64(v))
 	return b, nil
 }
 
 // consumeInt64Ptr wire decodes a *int64 pointer as a Int64.
-func consumeInt64Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeInt64Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1906,10 +1906,10 @@ func consumeInt64Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ u
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Int64Ptr()
 	if *vp == nil {
@@ -1931,7 +1931,7 @@ var coderInt64Ptr = pointerCoderFuncs{
 func sizeInt64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Int64Slice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeVarint(uint64(v))
+		size += f.tagsize + protowire.SizeVarint(uint64(v))
 	}
 	return size
 }
@@ -1940,20 +1940,20 @@ func sizeInt64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 func appendInt64Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Int64Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendVarint(b, uint64(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, uint64(v))
 	}
 	return b, nil
 }
 
 // consumeInt64Slice wire decodes a []int64 pointer as a repeated Int64.
-func consumeInt64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeInt64Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Int64Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -1965,10 +1965,10 @@ func consumeInt64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, int64(v))
 			b = b[n:]
@@ -1977,7 +1977,7 @@ func consumeInt64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -1989,10 +1989,10 @@ func consumeInt64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, int64(v))
 	out.n = n
@@ -2014,9 +2014,9 @@ func sizeInt64PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size 
 	}
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+		n += protowire.SizeVarint(uint64(v))
 	}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendInt64PackedSlice encodes a []int64 pointer as a packed repeated Int64.
@@ -2025,14 +2025,14 @@ func appendInt64PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOpt
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(uint64(v))
+		n += protowire.SizeVarint(uint64(v))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendVarint(b, uint64(v))
+		b = protowire.AppendVarint(b, uint64(v))
 	}
 	return b, nil
 }
@@ -2046,19 +2046,19 @@ var coderInt64PackedSlice = pointerCoderFuncs{
 
 // sizeInt64Value returns the size of wire encoding a int64 value as a Int64.
 func sizeInt64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeVarint(uint64(v.Int()))
+	return tagsize + protowire.SizeVarint(uint64(v.Int()))
 }
 
 // appendInt64Value encodes a int64 value as a Int64.
 func appendInt64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, uint64(v.Int()))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, uint64(v.Int()))
 	return b, nil
 }
 
 // consumeInt64Value decodes a int64 value as a Int64.
-func consumeInt64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeInt64Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -2070,10 +2070,10 @@ func consumeInt64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfInt64(int64(v)), out, nil
@@ -2091,7 +2091,7 @@ func sizeInt64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeVarint(uint64(v.Int()))
+		size += tagsize + protowire.SizeVarint(uint64(v.Int()))
 	}
 	return size
 }
@@ -2101,19 +2101,19 @@ func appendInt64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, uint64(v.Int()))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, uint64(v.Int()))
 	}
 	return b, nil
 }
 
 // consumeInt64SliceValue wire decodes a []int64 value as a repeated Int64.
-func consumeInt64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeInt64SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -2125,10 +2125,10 @@ func consumeInt64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfInt64(int64(v)))
 			b = b[n:]
@@ -2136,7 +2136,7 @@ func consumeInt64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -2148,10 +2148,10 @@ func consumeInt64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfInt64(int64(v)))
 	out.n = n
@@ -2175,9 +2175,9 @@ func sizeInt64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalO
 	n := 0
 	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(uint64(v.Int()))
+		n += protowire.SizeVarint(uint64(v.Int()))
 	}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendInt64PackedSliceValue encodes a []int64 value as a packed repeated Int64.
@@ -2187,16 +2187,16 @@ func appendInt64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag uin
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(uint64(v.Int()))
+		n += protowire.SizeVarint(uint64(v.Int()))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, uint64(v.Int()))
+		b = protowire.AppendVarint(b, uint64(v.Int()))
 	}
 	return b, nil
 }
@@ -2211,20 +2211,20 @@ var coderInt64PackedSliceValue = valueCoderFuncs{
 // sizeSint64 returns the size of wire encoding a int64 pointer as a Sint64.
 func sizeSint64(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.Int64()
-	return f.tagsize + wire.SizeVarint(wire.EncodeZigZag(v))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeZigZag(v))
 }
 
 // appendSint64 wire encodes a int64 pointer as a Sint64.
 func appendSint64(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Int64()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeZigZag(v))
 	return b, nil
 }
 
 // consumeSint64 wire decodes a int64 pointer as a Sint64.
-func consumeSint64(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeSint64(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -2236,12 +2236,12 @@ func consumeSint64(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unm
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
-	*p.Int64() = wire.DecodeZigZag(v)
+	*p.Int64() = protowire.DecodeZigZag(v)
 	out.n = n
 	return out, nil
 }
@@ -2260,7 +2260,7 @@ func sizeSint64NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeVarint(wire.EncodeZigZag(v))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeZigZag(v))
 }
 
 // appendSint64NoZero wire encodes a int64 pointer as a Sint64.
@@ -2270,8 +2270,8 @@ func appendSint64NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeZigZag(v))
 	return b, nil
 }
 
@@ -2286,21 +2286,21 @@ var coderSint64NoZero = pointerCoderFuncs{
 // It panics if the pointer is nil.
 func sizeSint64Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := **p.Int64Ptr()
-	return f.tagsize + wire.SizeVarint(wire.EncodeZigZag(v))
+	return f.tagsize + protowire.SizeVarint(protowire.EncodeZigZag(v))
 }
 
 // appendSint64Ptr wire encodes a *int64 pointer as a Sint64.
 // It panics if the pointer is nil.
 func appendSint64Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Int64Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeZigZag(v))
 	return b, nil
 }
 
 // consumeSint64Ptr wire decodes a *int64 pointer as a Sint64.
-func consumeSint64Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeSint64Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -2312,16 +2312,16 @@ func consumeSint64Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Int64Ptr()
 	if *vp == nil {
 		*vp = new(int64)
 	}
-	**vp = wire.DecodeZigZag(v)
+	**vp = protowire.DecodeZigZag(v)
 	out.n = n
 	return out, nil
 }
@@ -2337,7 +2337,7 @@ var coderSint64Ptr = pointerCoderFuncs{
 func sizeSint64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Int64Slice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeVarint(wire.EncodeZigZag(v))
+		size += f.tagsize + protowire.SizeVarint(protowire.EncodeZigZag(v))
 	}
 	return size
 }
@@ -2346,20 +2346,20 @@ func sizeSint64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 func appendSint64Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Int64Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, protowire.EncodeZigZag(v))
 	}
 	return b, nil
 }
 
 // consumeSint64Slice wire decodes a []int64 pointer as a repeated Sint64.
-func consumeSint64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeSint64Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Int64Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -2371,19 +2371,19 @@ func consumeSint64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
-			s = append(s, wire.DecodeZigZag(v))
+			s = append(s, protowire.DecodeZigZag(v))
 			b = b[n:]
 		}
 		*sp = s
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -2395,12 +2395,12 @@ func consumeSint64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
-	*sp = append(*sp, wire.DecodeZigZag(v))
+	*sp = append(*sp, protowire.DecodeZigZag(v))
 	out.n = n
 	return out, nil
 }
@@ -2420,9 +2420,9 @@ func sizeSint64PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size
 	}
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeZigZag(v))
+		n += protowire.SizeVarint(protowire.EncodeZigZag(v))
 	}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendSint64PackedSlice encodes a []int64 pointer as a packed repeated Sint64.
@@ -2431,14 +2431,14 @@ func appendSint64PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOp
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(wire.EncodeZigZag(v))
+		n += protowire.SizeVarint(protowire.EncodeZigZag(v))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendVarint(b, wire.EncodeZigZag(v))
+		b = protowire.AppendVarint(b, protowire.EncodeZigZag(v))
 	}
 	return b, nil
 }
@@ -2452,19 +2452,19 @@ var coderSint64PackedSlice = pointerCoderFuncs{
 
 // sizeSint64Value returns the size of wire encoding a int64 value as a Sint64.
 func sizeSint64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeVarint(wire.EncodeZigZag(v.Int()))
+	return tagsize + protowire.SizeVarint(protowire.EncodeZigZag(v.Int()))
 }
 
 // appendSint64Value encodes a int64 value as a Sint64.
 func appendSint64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, wire.EncodeZigZag(v.Int()))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, protowire.EncodeZigZag(v.Int()))
 	return b, nil
 }
 
 // consumeSint64Value decodes a int64 value as a Sint64.
-func consumeSint64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeSint64Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -2476,13 +2476,13 @@ func consumeSint64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
-	return protoreflect.ValueOfInt64(wire.DecodeZigZag(v)), out, nil
+	return protoreflect.ValueOfInt64(protowire.DecodeZigZag(v)), out, nil
 }
 
 var coderSint64Value = valueCoderFuncs{
@@ -2497,7 +2497,7 @@ func sizeSint64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOption
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeVarint(wire.EncodeZigZag(v.Int()))
+		size += tagsize + protowire.SizeVarint(protowire.EncodeZigZag(v.Int()))
 	}
 	return size
 }
@@ -2507,19 +2507,19 @@ func appendSint64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, 
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, wire.EncodeZigZag(v.Int()))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, protowire.EncodeZigZag(v.Int()))
 	}
 	return b, nil
 }
 
 // consumeSint64SliceValue wire decodes a []int64 value as a repeated Sint64.
-func consumeSint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeSint64SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -2531,18 +2531,18 @@ func consumeSint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
-			list.Append(protoreflect.ValueOfInt64(wire.DecodeZigZag(v)))
+			list.Append(protoreflect.ValueOfInt64(protowire.DecodeZigZag(v)))
 			b = b[n:]
 		}
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -2554,12 +2554,12 @@ func consumeSint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
-	list.Append(protoreflect.ValueOfInt64(wire.DecodeZigZag(v)))
+	list.Append(protoreflect.ValueOfInt64(protowire.DecodeZigZag(v)))
 	out.n = n
 	return listv, out, nil
 }
@@ -2581,9 +2581,9 @@ func sizeSint64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshal
 	n := 0
 	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(wire.EncodeZigZag(v.Int()))
+		n += protowire.SizeVarint(protowire.EncodeZigZag(v.Int()))
 	}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendSint64PackedSliceValue encodes a []int64 value as a packed repeated Sint64.
@@ -2593,16 +2593,16 @@ func appendSint64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag ui
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(wire.EncodeZigZag(v.Int()))
+		n += protowire.SizeVarint(protowire.EncodeZigZag(v.Int()))
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wire.EncodeZigZag(v.Int()))
+		b = protowire.AppendVarint(b, protowire.EncodeZigZag(v.Int()))
 	}
 	return b, nil
 }
@@ -2617,20 +2617,20 @@ var coderSint64PackedSliceValue = valueCoderFuncs{
 // sizeUint64 returns the size of wire encoding a uint64 pointer as a Uint64.
 func sizeUint64(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.Uint64()
-	return f.tagsize + wire.SizeVarint(v)
+	return f.tagsize + protowire.SizeVarint(v)
 }
 
 // appendUint64 wire encodes a uint64 pointer as a Uint64.
 func appendUint64(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Uint64()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, v)
 	return b, nil
 }
 
 // consumeUint64 wire decodes a uint64 pointer as a Uint64.
-func consumeUint64(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeUint64(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -2642,10 +2642,10 @@ func consumeUint64(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unm
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Uint64() = v
 	out.n = n
@@ -2666,7 +2666,7 @@ func sizeUint64NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeVarint(v)
+	return f.tagsize + protowire.SizeVarint(v)
 }
 
 // appendUint64NoZero wire encodes a uint64 pointer as a Uint64.
@@ -2676,8 +2676,8 @@ func appendUint64NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, v)
 	return b, nil
 }
 
@@ -2692,21 +2692,21 @@ var coderUint64NoZero = pointerCoderFuncs{
 // It panics if the pointer is nil.
 func sizeUint64Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := **p.Uint64Ptr()
-	return f.tagsize + wire.SizeVarint(v)
+	return f.tagsize + protowire.SizeVarint(v)
 }
 
 // appendUint64Ptr wire encodes a *uint64 pointer as a Uint64.
 // It panics if the pointer is nil.
 func appendUint64Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Uint64Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendVarint(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, v)
 	return b, nil
 }
 
 // consumeUint64Ptr wire decodes a *uint64 pointer as a Uint64.
-func consumeUint64Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeUint64Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -2718,10 +2718,10 @@ func consumeUint64Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Uint64Ptr()
 	if *vp == nil {
@@ -2743,7 +2743,7 @@ var coderUint64Ptr = pointerCoderFuncs{
 func sizeUint64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Uint64Slice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeVarint(v)
+		size += f.tagsize + protowire.SizeVarint(v)
 	}
 	return size
 }
@@ -2752,20 +2752,20 @@ func sizeUint64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 func appendUint64Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Uint64Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendVarint(b, v)
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendVarint(b, v)
 	}
 	return b, nil
 }
 
 // consumeUint64Slice wire decodes a []uint64 pointer as a repeated Uint64.
-func consumeUint64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeUint64Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Uint64Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -2777,10 +2777,10 @@ func consumeUint64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, v)
 			b = b[n:]
@@ -2789,7 +2789,7 @@ func consumeUint64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return out, errUnknown
 	}
 	var v uint64
@@ -2801,10 +2801,10 @@ func consumeUint64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, v)
 	out.n = n
@@ -2826,9 +2826,9 @@ func sizeUint64PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size
 	}
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(v)
+		n += protowire.SizeVarint(v)
 	}
-	return f.tagsize + wire.SizeBytes(n)
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendUint64PackedSlice encodes a []uint64 pointer as a packed repeated Uint64.
@@ -2837,14 +2837,14 @@ func appendUint64PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOp
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendVarint(b, f.wiretag)
 	n := 0
 	for _, v := range s {
-		n += wire.SizeVarint(v)
+		n += protowire.SizeVarint(v)
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendVarint(b, v)
+		b = protowire.AppendVarint(b, v)
 	}
 	return b, nil
 }
@@ -2858,19 +2858,19 @@ var coderUint64PackedSlice = pointerCoderFuncs{
 
 // sizeUint64Value returns the size of wire encoding a uint64 value as a Uint64.
 func sizeUint64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeVarint(v.Uint())
+	return tagsize + protowire.SizeVarint(v.Uint())
 }
 
 // appendUint64Value encodes a uint64 value as a Uint64.
 func appendUint64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendVarint(b, v.Uint())
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, v.Uint())
 	return b, nil
 }
 
 // consumeUint64Value decodes a uint64 value as a Uint64.
-func consumeUint64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.VarintType {
+func consumeUint64Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -2882,10 +2882,10 @@ func consumeUint64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfUint64(v), out, nil
@@ -2903,7 +2903,7 @@ func sizeUint64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOption
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeVarint(v.Uint())
+		size += tagsize + protowire.SizeVarint(v.Uint())
 	}
 	return size
 }
@@ -2913,19 +2913,19 @@ func appendUint64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64, 
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendVarint(b, v.Uint())
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendVarint(b, v.Uint())
 	}
 	return b, nil
 }
 
 // consumeUint64SliceValue wire decodes a []uint64 value as a repeated Uint64.
-func consumeUint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeUint64SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
 			var v uint64
@@ -2937,10 +2937,10 @@ func consumeUint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 				v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 				n = 2
 			} else {
-				v, n = wire.ConsumeVarint(b)
+				v, n = protowire.ConsumeVarint(b)
 			}
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfUint64(v))
 			b = b[n:]
@@ -2948,7 +2948,7 @@ func consumeUint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.VarintType {
+	if wtyp != protowire.VarintType {
 		return protoreflect.Value{}, out, errUnknown
 	}
 	var v uint64
@@ -2960,10 +2960,10 @@ func consumeUint64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 		v = uint64(b[0]&0x7f) + uint64(b[1])<<7
 		n = 2
 	} else {
-		v, n = wire.ConsumeVarint(b)
+		v, n = protowire.ConsumeVarint(b)
 	}
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfUint64(v))
 	out.n = n
@@ -2987,9 +2987,9 @@ func sizeUint64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marshal
 	n := 0
 	for i, llen := 0, llen; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(v.Uint())
+		n += protowire.SizeVarint(v.Uint())
 	}
-	return tagsize + wire.SizeBytes(n)
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendUint64PackedSliceValue encodes a []uint64 value as a packed repeated Uint64.
@@ -2999,16 +2999,16 @@ func appendUint64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag ui
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
+	b = protowire.AppendVarint(b, wiretag)
 	n := 0
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		n += wire.SizeVarint(v.Uint())
+		n += protowire.SizeVarint(v.Uint())
 	}
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, v.Uint())
+		b = protowire.AppendVarint(b, v.Uint())
 	}
 	return b, nil
 }
@@ -3023,25 +3023,25 @@ var coderUint64PackedSliceValue = valueCoderFuncs{
 // sizeSfixed32 returns the size of wire encoding a int32 pointer as a Sfixed32.
 func sizeSfixed32(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendSfixed32 wire encodes a int32 pointer as a Sfixed32.
 func appendSfixed32(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Int32()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, uint32(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, uint32(v))
 	return b, nil
 }
 
 // consumeSfixed32 wire decodes a int32 pointer as a Sfixed32.
-func consumeSfixed32(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeSfixed32(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Int32() = int32(v)
 	out.n = n
@@ -3062,7 +3062,7 @@ func sizeSfixed32NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size in
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendSfixed32NoZero wire encodes a int32 pointer as a Sfixed32.
@@ -3072,8 +3072,8 @@ func appendSfixed32NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptio
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, uint32(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, uint32(v))
 	return b, nil
 }
 
@@ -3087,26 +3087,26 @@ var coderSfixed32NoZero = pointerCoderFuncs{
 // sizeSfixed32Ptr returns the size of wire encoding a *int32 pointer as a Sfixed32.
 // It panics if the pointer is nil.
 func sizeSfixed32Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendSfixed32Ptr wire encodes a *int32 pointer as a Sfixed32.
 // It panics if the pointer is nil.
 func appendSfixed32Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Int32Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, uint32(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, uint32(v))
 	return b, nil
 }
 
 // consumeSfixed32Ptr wire decodes a *int32 pointer as a Sfixed32.
-func consumeSfixed32Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeSfixed32Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Int32Ptr()
 	if *vp == nil {
@@ -3127,7 +3127,7 @@ var coderSfixed32Ptr = pointerCoderFuncs{
 // sizeSfixed32Slice returns the size of wire encoding a []int32 pointer as a repeated Sfixed32.
 func sizeSfixed32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Int32Slice()
-	size = len(s) * (f.tagsize + wire.SizeFixed32())
+	size = len(s) * (f.tagsize + protowire.SizeFixed32())
 	return size
 }
 
@@ -3135,25 +3135,25 @@ func sizeSfixed32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int
 func appendSfixed32Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Int32Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendFixed32(b, uint32(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendFixed32(b, uint32(v))
 	}
 	return b, nil
 }
 
 // consumeSfixed32Slice wire decodes a []int32 pointer as a repeated Sfixed32.
-func consumeSfixed32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeSfixed32Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Int32Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed32(b)
+			v, n := protowire.ConsumeFixed32(b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, int32(v))
 			b = b[n:]
@@ -3162,12 +3162,12 @@ func consumeSfixed32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.Fixed32Type {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, int32(v))
 	out.n = n
@@ -3187,8 +3187,8 @@ func sizeSfixed32PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (si
 	if len(s) == 0 {
 		return 0
 	}
-	n := len(s) * wire.SizeFixed32()
-	return f.tagsize + wire.SizeBytes(n)
+	n := len(s) * protowire.SizeFixed32()
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendSfixed32PackedSlice encodes a []int32 pointer as a packed repeated Sfixed32.
@@ -3197,11 +3197,11 @@ func appendSfixed32PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshal
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	n := len(s) * wire.SizeFixed32()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, f.wiretag)
+	n := len(s) * protowire.SizeFixed32()
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendFixed32(b, uint32(v))
+		b = protowire.AppendFixed32(b, uint32(v))
 	}
 	return b, nil
 }
@@ -3215,24 +3215,24 @@ var coderSfixed32PackedSlice = pointerCoderFuncs{
 
 // sizeSfixed32Value returns the size of wire encoding a int32 value as a Sfixed32.
 func sizeSfixed32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeFixed32()
+	return tagsize + protowire.SizeFixed32()
 }
 
 // appendSfixed32Value encodes a int32 value as a Sfixed32.
 func appendSfixed32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed32(b, uint32(v.Int()))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendFixed32(b, uint32(v.Int()))
 	return b, nil
 }
 
 // consumeSfixed32Value decodes a int32 value as a Sfixed32.
-func consumeSfixed32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeSfixed32Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfInt32(int32(v)), out, nil
@@ -3248,7 +3248,7 @@ var coderSfixed32Value = valueCoderFuncs{
 // sizeSfixed32SliceValue returns the size of wire encoding a []int32 value as a repeated Sfixed32.
 func sizeSfixed32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	size = list.Len() * (tagsize + wire.SizeFixed32())
+	size = list.Len() * (tagsize + protowire.SizeFixed32())
 	return size
 }
 
@@ -3257,24 +3257,24 @@ func appendSfixed32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed32(b, uint32(v.Int()))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendFixed32(b, uint32(v.Int()))
 	}
 	return b, nil
 }
 
 // consumeSfixed32SliceValue wire decodes a []int32 value as a repeated Sfixed32.
-func consumeSfixed32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeSfixed32SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed32(b)
+			v, n := protowire.ConsumeFixed32(b)
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfInt32(int32(v)))
 			b = b[n:]
@@ -3282,12 +3282,12 @@ func consumeSfixed32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.Fixed32Type {
+	if wtyp != protowire.Fixed32Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfInt32(int32(v)))
 	out.n = n
@@ -3308,8 +3308,8 @@ func sizeSfixed32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marsh
 	if llen == 0 {
 		return 0
 	}
-	n := llen * wire.SizeFixed32()
-	return tagsize + wire.SizeBytes(n)
+	n := llen * protowire.SizeFixed32()
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendSfixed32PackedSliceValue encodes a []int32 value as a packed repeated Sfixed32.
@@ -3319,12 +3319,12 @@ func appendSfixed32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag 
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
-	n := llen * wire.SizeFixed32()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, wiretag)
+	n := llen * protowire.SizeFixed32()
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendFixed32(b, uint32(v.Int()))
+		b = protowire.AppendFixed32(b, uint32(v.Int()))
 	}
 	return b, nil
 }
@@ -3339,25 +3339,25 @@ var coderSfixed32PackedSliceValue = valueCoderFuncs{
 // sizeFixed32 returns the size of wire encoding a uint32 pointer as a Fixed32.
 func sizeFixed32(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendFixed32 wire encodes a uint32 pointer as a Fixed32.
 func appendFixed32(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Uint32()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, v)
 	return b, nil
 }
 
 // consumeFixed32 wire decodes a uint32 pointer as a Fixed32.
-func consumeFixed32(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeFixed32(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Uint32() = v
 	out.n = n
@@ -3378,7 +3378,7 @@ func sizeFixed32NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendFixed32NoZero wire encodes a uint32 pointer as a Fixed32.
@@ -3388,8 +3388,8 @@ func appendFixed32NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOption
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, v)
 	return b, nil
 }
 
@@ -3403,26 +3403,26 @@ var coderFixed32NoZero = pointerCoderFuncs{
 // sizeFixed32Ptr returns the size of wire encoding a *uint32 pointer as a Fixed32.
 // It panics if the pointer is nil.
 func sizeFixed32Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendFixed32Ptr wire encodes a *uint32 pointer as a Fixed32.
 // It panics if the pointer is nil.
 func appendFixed32Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Uint32Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, v)
 	return b, nil
 }
 
 // consumeFixed32Ptr wire decodes a *uint32 pointer as a Fixed32.
-func consumeFixed32Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeFixed32Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Uint32Ptr()
 	if *vp == nil {
@@ -3443,7 +3443,7 @@ var coderFixed32Ptr = pointerCoderFuncs{
 // sizeFixed32Slice returns the size of wire encoding a []uint32 pointer as a repeated Fixed32.
 func sizeFixed32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Uint32Slice()
-	size = len(s) * (f.tagsize + wire.SizeFixed32())
+	size = len(s) * (f.tagsize + protowire.SizeFixed32())
 	return size
 }
 
@@ -3451,25 +3451,25 @@ func sizeFixed32Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 func appendFixed32Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Uint32Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendFixed32(b, v)
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendFixed32(b, v)
 	}
 	return b, nil
 }
 
 // consumeFixed32Slice wire decodes a []uint32 pointer as a repeated Fixed32.
-func consumeFixed32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeFixed32Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Uint32Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed32(b)
+			v, n := protowire.ConsumeFixed32(b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, v)
 			b = b[n:]
@@ -3478,12 +3478,12 @@ func consumeFixed32Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo,
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.Fixed32Type {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, v)
 	out.n = n
@@ -3503,8 +3503,8 @@ func sizeFixed32PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (siz
 	if len(s) == 0 {
 		return 0
 	}
-	n := len(s) * wire.SizeFixed32()
-	return f.tagsize + wire.SizeBytes(n)
+	n := len(s) * protowire.SizeFixed32()
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendFixed32PackedSlice encodes a []uint32 pointer as a packed repeated Fixed32.
@@ -3513,11 +3513,11 @@ func appendFixed32PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalO
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	n := len(s) * wire.SizeFixed32()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, f.wiretag)
+	n := len(s) * protowire.SizeFixed32()
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendFixed32(b, v)
+		b = protowire.AppendFixed32(b, v)
 	}
 	return b, nil
 }
@@ -3531,24 +3531,24 @@ var coderFixed32PackedSlice = pointerCoderFuncs{
 
 // sizeFixed32Value returns the size of wire encoding a uint32 value as a Fixed32.
 func sizeFixed32Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeFixed32()
+	return tagsize + protowire.SizeFixed32()
 }
 
 // appendFixed32Value encodes a uint32 value as a Fixed32.
 func appendFixed32Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed32(b, uint32(v.Uint()))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendFixed32(b, uint32(v.Uint()))
 	return b, nil
 }
 
 // consumeFixed32Value decodes a uint32 value as a Fixed32.
-func consumeFixed32Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeFixed32Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfUint32(uint32(v)), out, nil
@@ -3564,7 +3564,7 @@ var coderFixed32Value = valueCoderFuncs{
 // sizeFixed32SliceValue returns the size of wire encoding a []uint32 value as a repeated Fixed32.
 func sizeFixed32SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	size = list.Len() * (tagsize + wire.SizeFixed32())
+	size = list.Len() * (tagsize + protowire.SizeFixed32())
 	return size
 }
 
@@ -3573,24 +3573,24 @@ func appendFixed32SliceValue(b []byte, listv protoreflect.Value, wiretag uint64,
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed32(b, uint32(v.Uint()))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendFixed32(b, uint32(v.Uint()))
 	}
 	return b, nil
 }
 
 // consumeFixed32SliceValue wire decodes a []uint32 value as a repeated Fixed32.
-func consumeFixed32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeFixed32SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed32(b)
+			v, n := protowire.ConsumeFixed32(b)
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfUint32(uint32(v)))
 			b = b[n:]
@@ -3598,12 +3598,12 @@ func consumeFixed32SliceValue(b []byte, listv protoreflect.Value, _ wire.Number,
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.Fixed32Type {
+	if wtyp != protowire.Fixed32Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfUint32(uint32(v)))
 	out.n = n
@@ -3624,8 +3624,8 @@ func sizeFixed32PackedSliceValue(listv protoreflect.Value, tagsize int, _ marsha
 	if llen == 0 {
 		return 0
 	}
-	n := llen * wire.SizeFixed32()
-	return tagsize + wire.SizeBytes(n)
+	n := llen * protowire.SizeFixed32()
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendFixed32PackedSliceValue encodes a []uint32 value as a packed repeated Fixed32.
@@ -3635,12 +3635,12 @@ func appendFixed32PackedSliceValue(b []byte, listv protoreflect.Value, wiretag u
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
-	n := llen * wire.SizeFixed32()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, wiretag)
+	n := llen * protowire.SizeFixed32()
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendFixed32(b, uint32(v.Uint()))
+		b = protowire.AppendFixed32(b, uint32(v.Uint()))
 	}
 	return b, nil
 }
@@ -3655,25 +3655,25 @@ var coderFixed32PackedSliceValue = valueCoderFuncs{
 // sizeFloat returns the size of wire encoding a float32 pointer as a Float.
 func sizeFloat(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendFloat wire encodes a float32 pointer as a Float.
 func appendFloat(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Float32()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, math.Float32bits(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, math.Float32bits(v))
 	return b, nil
 }
 
 // consumeFloat wire decodes a float32 pointer as a Float.
-func consumeFloat(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeFloat(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Float32() = math.Float32frombits(v)
 	out.n = n
@@ -3694,7 +3694,7 @@ func sizeFloatNoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 	if v == 0 && !math.Signbit(float64(v)) {
 		return 0
 	}
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendFloatNoZero wire encodes a float32 pointer as a Float.
@@ -3704,8 +3704,8 @@ func appendFloatNoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions)
 	if v == 0 && !math.Signbit(float64(v)) {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, math.Float32bits(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, math.Float32bits(v))
 	return b, nil
 }
 
@@ -3719,26 +3719,26 @@ var coderFloatNoZero = pointerCoderFuncs{
 // sizeFloatPtr returns the size of wire encoding a *float32 pointer as a Float.
 // It panics if the pointer is nil.
 func sizeFloatPtr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
-	return f.tagsize + wire.SizeFixed32()
+	return f.tagsize + protowire.SizeFixed32()
 }
 
 // appendFloatPtr wire encodes a *float32 pointer as a Float.
 // It panics if the pointer is nil.
 func appendFloatPtr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Float32Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed32(b, math.Float32bits(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed32(b, math.Float32bits(v))
 	return b, nil
 }
 
 // consumeFloatPtr wire decodes a *float32 pointer as a Float.
-func consumeFloatPtr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeFloatPtr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Float32Ptr()
 	if *vp == nil {
@@ -3759,7 +3759,7 @@ var coderFloatPtr = pointerCoderFuncs{
 // sizeFloatSlice returns the size of wire encoding a []float32 pointer as a repeated Float.
 func sizeFloatSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Float32Slice()
-	size = len(s) * (f.tagsize + wire.SizeFixed32())
+	size = len(s) * (f.tagsize + protowire.SizeFixed32())
 	return size
 }
 
@@ -3767,25 +3767,25 @@ func sizeFloatSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 func appendFloatSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Float32Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendFixed32(b, math.Float32bits(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendFixed32(b, math.Float32bits(v))
 	}
 	return b, nil
 }
 
 // consumeFloatSlice wire decodes a []float32 pointer as a repeated Float.
-func consumeFloatSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeFloatSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Float32Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed32(b)
+			v, n := protowire.ConsumeFixed32(b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, math.Float32frombits(v))
 			b = b[n:]
@@ -3794,12 +3794,12 @@ func consumeFloatSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.Fixed32Type {
+	if wtyp != protowire.Fixed32Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, math.Float32frombits(v))
 	out.n = n
@@ -3819,8 +3819,8 @@ func sizeFloatPackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size 
 	if len(s) == 0 {
 		return 0
 	}
-	n := len(s) * wire.SizeFixed32()
-	return f.tagsize + wire.SizeBytes(n)
+	n := len(s) * protowire.SizeFixed32()
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendFloatPackedSlice encodes a []float32 pointer as a packed repeated Float.
@@ -3829,11 +3829,11 @@ func appendFloatPackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOpt
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	n := len(s) * wire.SizeFixed32()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, f.wiretag)
+	n := len(s) * protowire.SizeFixed32()
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendFixed32(b, math.Float32bits(v))
+		b = protowire.AppendFixed32(b, math.Float32bits(v))
 	}
 	return b, nil
 }
@@ -3847,24 +3847,24 @@ var coderFloatPackedSlice = pointerCoderFuncs{
 
 // sizeFloatValue returns the size of wire encoding a float32 value as a Float.
 func sizeFloatValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeFixed32()
+	return tagsize + protowire.SizeFixed32()
 }
 
 // appendFloatValue encodes a float32 value as a Float.
 func appendFloatValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
 	return b, nil
 }
 
 // consumeFloatValue decodes a float32 value as a Float.
-func consumeFloatValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed32Type {
+func consumeFloatValue(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed32Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))), out, nil
@@ -3880,7 +3880,7 @@ var coderFloatValue = valueCoderFuncs{
 // sizeFloatSliceValue returns the size of wire encoding a []float32 value as a repeated Float.
 func sizeFloatSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	size = list.Len() * (tagsize + wire.SizeFixed32())
+	size = list.Len() * (tagsize + protowire.SizeFixed32())
 	return size
 }
 
@@ -3889,24 +3889,24 @@ func appendFloatSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
 	}
 	return b, nil
 }
 
 // consumeFloatSliceValue wire decodes a []float32 value as a repeated Float.
-func consumeFloatSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeFloatSliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed32(b)
+			v, n := protowire.ConsumeFixed32(b)
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))))
 			b = b[n:]
@@ -3914,12 +3914,12 @@ func consumeFloatSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, w
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.Fixed32Type {
+	if wtyp != protowire.Fixed32Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed32(b)
+	v, n := protowire.ConsumeFixed32(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfFloat32(math.Float32frombits(uint32(v))))
 	out.n = n
@@ -3940,8 +3940,8 @@ func sizeFloatPackedSliceValue(listv protoreflect.Value, tagsize int, _ marshalO
 	if llen == 0 {
 		return 0
 	}
-	n := llen * wire.SizeFixed32()
-	return tagsize + wire.SizeBytes(n)
+	n := llen * protowire.SizeFixed32()
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendFloatPackedSliceValue encodes a []float32 value as a packed repeated Float.
@@ -3951,12 +3951,12 @@ func appendFloatPackedSliceValue(b []byte, listv protoreflect.Value, wiretag uin
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
-	n := llen * wire.SizeFixed32()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, wiretag)
+	n := llen * protowire.SizeFixed32()
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
+		b = protowire.AppendFixed32(b, math.Float32bits(float32(v.Float())))
 	}
 	return b, nil
 }
@@ -3971,25 +3971,25 @@ var coderFloatPackedSliceValue = valueCoderFuncs{
 // sizeSfixed64 returns the size of wire encoding a int64 pointer as a Sfixed64.
 func sizeSfixed64(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendSfixed64 wire encodes a int64 pointer as a Sfixed64.
 func appendSfixed64(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Int64()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, uint64(v))
 	return b, nil
 }
 
 // consumeSfixed64 wire decodes a int64 pointer as a Sfixed64.
-func consumeSfixed64(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeSfixed64(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Int64() = int64(v)
 	out.n = n
@@ -4010,7 +4010,7 @@ func sizeSfixed64NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size in
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendSfixed64NoZero wire encodes a int64 pointer as a Sfixed64.
@@ -4020,8 +4020,8 @@ func appendSfixed64NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptio
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, uint64(v))
 	return b, nil
 }
 
@@ -4035,26 +4035,26 @@ var coderSfixed64NoZero = pointerCoderFuncs{
 // sizeSfixed64Ptr returns the size of wire encoding a *int64 pointer as a Sfixed64.
 // It panics if the pointer is nil.
 func sizeSfixed64Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendSfixed64Ptr wire encodes a *int64 pointer as a Sfixed64.
 // It panics if the pointer is nil.
 func appendSfixed64Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Int64Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, uint64(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, uint64(v))
 	return b, nil
 }
 
 // consumeSfixed64Ptr wire decodes a *int64 pointer as a Sfixed64.
-func consumeSfixed64Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeSfixed64Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Int64Ptr()
 	if *vp == nil {
@@ -4075,7 +4075,7 @@ var coderSfixed64Ptr = pointerCoderFuncs{
 // sizeSfixed64Slice returns the size of wire encoding a []int64 pointer as a repeated Sfixed64.
 func sizeSfixed64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Int64Slice()
-	size = len(s) * (f.tagsize + wire.SizeFixed64())
+	size = len(s) * (f.tagsize + protowire.SizeFixed64())
 	return size
 }
 
@@ -4083,25 +4083,25 @@ func sizeSfixed64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int
 func appendSfixed64Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Int64Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendFixed64(b, uint64(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendFixed64(b, uint64(v))
 	}
 	return b, nil
 }
 
 // consumeSfixed64Slice wire decodes a []int64 pointer as a repeated Sfixed64.
-func consumeSfixed64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeSfixed64Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Int64Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed64(b)
+			v, n := protowire.ConsumeFixed64(b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, int64(v))
 			b = b[n:]
@@ -4110,12 +4110,12 @@ func consumeSfixed64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.Fixed64Type {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, int64(v))
 	out.n = n
@@ -4135,8 +4135,8 @@ func sizeSfixed64PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (si
 	if len(s) == 0 {
 		return 0
 	}
-	n := len(s) * wire.SizeFixed64()
-	return f.tagsize + wire.SizeBytes(n)
+	n := len(s) * protowire.SizeFixed64()
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendSfixed64PackedSlice encodes a []int64 pointer as a packed repeated Sfixed64.
@@ -4145,11 +4145,11 @@ func appendSfixed64PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshal
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	n := len(s) * wire.SizeFixed64()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, f.wiretag)
+	n := len(s) * protowire.SizeFixed64()
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendFixed64(b, uint64(v))
+		b = protowire.AppendFixed64(b, uint64(v))
 	}
 	return b, nil
 }
@@ -4163,24 +4163,24 @@ var coderSfixed64PackedSlice = pointerCoderFuncs{
 
 // sizeSfixed64Value returns the size of wire encoding a int64 value as a Sfixed64.
 func sizeSfixed64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeFixed64()
+	return tagsize + protowire.SizeFixed64()
 }
 
 // appendSfixed64Value encodes a int64 value as a Sfixed64.
 func appendSfixed64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed64(b, uint64(v.Int()))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendFixed64(b, uint64(v.Int()))
 	return b, nil
 }
 
 // consumeSfixed64Value decodes a int64 value as a Sfixed64.
-func consumeSfixed64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeSfixed64Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfInt64(int64(v)), out, nil
@@ -4196,7 +4196,7 @@ var coderSfixed64Value = valueCoderFuncs{
 // sizeSfixed64SliceValue returns the size of wire encoding a []int64 value as a repeated Sfixed64.
 func sizeSfixed64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	size = list.Len() * (tagsize + wire.SizeFixed64())
+	size = list.Len() * (tagsize + protowire.SizeFixed64())
 	return size
 }
 
@@ -4205,24 +4205,24 @@ func appendSfixed64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed64(b, uint64(v.Int()))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendFixed64(b, uint64(v.Int()))
 	}
 	return b, nil
 }
 
 // consumeSfixed64SliceValue wire decodes a []int64 value as a repeated Sfixed64.
-func consumeSfixed64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeSfixed64SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed64(b)
+			v, n := protowire.ConsumeFixed64(b)
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfInt64(int64(v)))
 			b = b[n:]
@@ -4230,12 +4230,12 @@ func consumeSfixed64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.Fixed64Type {
+	if wtyp != protowire.Fixed64Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfInt64(int64(v)))
 	out.n = n
@@ -4256,8 +4256,8 @@ func sizeSfixed64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marsh
 	if llen == 0 {
 		return 0
 	}
-	n := llen * wire.SizeFixed64()
-	return tagsize + wire.SizeBytes(n)
+	n := llen * protowire.SizeFixed64()
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendSfixed64PackedSliceValue encodes a []int64 value as a packed repeated Sfixed64.
@@ -4267,12 +4267,12 @@ func appendSfixed64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag 
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
-	n := llen * wire.SizeFixed64()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, wiretag)
+	n := llen * protowire.SizeFixed64()
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendFixed64(b, uint64(v.Int()))
+		b = protowire.AppendFixed64(b, uint64(v.Int()))
 	}
 	return b, nil
 }
@@ -4287,25 +4287,25 @@ var coderSfixed64PackedSliceValue = valueCoderFuncs{
 // sizeFixed64 returns the size of wire encoding a uint64 pointer as a Fixed64.
 func sizeFixed64(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendFixed64 wire encodes a uint64 pointer as a Fixed64.
 func appendFixed64(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Uint64()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, v)
 	return b, nil
 }
 
 // consumeFixed64 wire decodes a uint64 pointer as a Fixed64.
-func consumeFixed64(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeFixed64(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Uint64() = v
 	out.n = n
@@ -4326,7 +4326,7 @@ func sizeFixed64NoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int
 	if v == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendFixed64NoZero wire encodes a uint64 pointer as a Fixed64.
@@ -4336,8 +4336,8 @@ func appendFixed64NoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOption
 	if v == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, v)
 	return b, nil
 }
 
@@ -4351,26 +4351,26 @@ var coderFixed64NoZero = pointerCoderFuncs{
 // sizeFixed64Ptr returns the size of wire encoding a *uint64 pointer as a Fixed64.
 // It panics if the pointer is nil.
 func sizeFixed64Ptr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendFixed64Ptr wire encodes a *uint64 pointer as a Fixed64.
 // It panics if the pointer is nil.
 func appendFixed64Ptr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Uint64Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, v)
 	return b, nil
 }
 
 // consumeFixed64Ptr wire decodes a *uint64 pointer as a Fixed64.
-func consumeFixed64Ptr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeFixed64Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Uint64Ptr()
 	if *vp == nil {
@@ -4391,7 +4391,7 @@ var coderFixed64Ptr = pointerCoderFuncs{
 // sizeFixed64Slice returns the size of wire encoding a []uint64 pointer as a repeated Fixed64.
 func sizeFixed64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Uint64Slice()
-	size = len(s) * (f.tagsize + wire.SizeFixed64())
+	size = len(s) * (f.tagsize + protowire.SizeFixed64())
 	return size
 }
 
@@ -4399,25 +4399,25 @@ func sizeFixed64Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 func appendFixed64Slice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Uint64Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendFixed64(b, v)
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendFixed64(b, v)
 	}
 	return b, nil
 }
 
 // consumeFixed64Slice wire decodes a []uint64 pointer as a repeated Fixed64.
-func consumeFixed64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeFixed64Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Uint64Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed64(b)
+			v, n := protowire.ConsumeFixed64(b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, v)
 			b = b[n:]
@@ -4426,12 +4426,12 @@ func consumeFixed64Slice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo,
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.Fixed64Type {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, v)
 	out.n = n
@@ -4451,8 +4451,8 @@ func sizeFixed64PackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (siz
 	if len(s) == 0 {
 		return 0
 	}
-	n := len(s) * wire.SizeFixed64()
-	return f.tagsize + wire.SizeBytes(n)
+	n := len(s) * protowire.SizeFixed64()
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendFixed64PackedSlice encodes a []uint64 pointer as a packed repeated Fixed64.
@@ -4461,11 +4461,11 @@ func appendFixed64PackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalO
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	n := len(s) * wire.SizeFixed64()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, f.wiretag)
+	n := len(s) * protowire.SizeFixed64()
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendFixed64(b, v)
+		b = protowire.AppendFixed64(b, v)
 	}
 	return b, nil
 }
@@ -4479,24 +4479,24 @@ var coderFixed64PackedSlice = pointerCoderFuncs{
 
 // sizeFixed64Value returns the size of wire encoding a uint64 value as a Fixed64.
 func sizeFixed64Value(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeFixed64()
+	return tagsize + protowire.SizeFixed64()
 }
 
 // appendFixed64Value encodes a uint64 value as a Fixed64.
 func appendFixed64Value(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed64(b, v.Uint())
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendFixed64(b, v.Uint())
 	return b, nil
 }
 
 // consumeFixed64Value decodes a uint64 value as a Fixed64.
-func consumeFixed64Value(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeFixed64Value(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfUint64(v), out, nil
@@ -4512,7 +4512,7 @@ var coderFixed64Value = valueCoderFuncs{
 // sizeFixed64SliceValue returns the size of wire encoding a []uint64 value as a repeated Fixed64.
 func sizeFixed64SliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	size = list.Len() * (tagsize + wire.SizeFixed64())
+	size = list.Len() * (tagsize + protowire.SizeFixed64())
 	return size
 }
 
@@ -4521,24 +4521,24 @@ func appendFixed64SliceValue(b []byte, listv protoreflect.Value, wiretag uint64,
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed64(b, v.Uint())
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendFixed64(b, v.Uint())
 	}
 	return b, nil
 }
 
 // consumeFixed64SliceValue wire decodes a []uint64 value as a repeated Fixed64.
-func consumeFixed64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeFixed64SliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed64(b)
+			v, n := protowire.ConsumeFixed64(b)
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfUint64(v))
 			b = b[n:]
@@ -4546,12 +4546,12 @@ func consumeFixed64SliceValue(b []byte, listv protoreflect.Value, _ wire.Number,
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.Fixed64Type {
+	if wtyp != protowire.Fixed64Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfUint64(v))
 	out.n = n
@@ -4572,8 +4572,8 @@ func sizeFixed64PackedSliceValue(listv protoreflect.Value, tagsize int, _ marsha
 	if llen == 0 {
 		return 0
 	}
-	n := llen * wire.SizeFixed64()
-	return tagsize + wire.SizeBytes(n)
+	n := llen * protowire.SizeFixed64()
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendFixed64PackedSliceValue encodes a []uint64 value as a packed repeated Fixed64.
@@ -4583,12 +4583,12 @@ func appendFixed64PackedSliceValue(b []byte, listv protoreflect.Value, wiretag u
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
-	n := llen * wire.SizeFixed64()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, wiretag)
+	n := llen * protowire.SizeFixed64()
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendFixed64(b, v.Uint())
+		b = protowire.AppendFixed64(b, v.Uint())
 	}
 	return b, nil
 }
@@ -4603,25 +4603,25 @@ var coderFixed64PackedSliceValue = valueCoderFuncs{
 // sizeDouble returns the size of wire encoding a float64 pointer as a Double.
 func sizeDouble(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendDouble wire encodes a float64 pointer as a Double.
 func appendDouble(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Float64()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, math.Float64bits(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, math.Float64bits(v))
 	return b, nil
 }
 
 // consumeDouble wire decodes a float64 pointer as a Double.
-func consumeDouble(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeDouble(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Float64() = math.Float64frombits(v)
 	out.n = n
@@ -4642,7 +4642,7 @@ func sizeDoubleNoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 	if v == 0 && !math.Signbit(float64(v)) {
 		return 0
 	}
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendDoubleNoZero wire encodes a float64 pointer as a Double.
@@ -4652,8 +4652,8 @@ func appendDoubleNoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions
 	if v == 0 && !math.Signbit(float64(v)) {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, math.Float64bits(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, math.Float64bits(v))
 	return b, nil
 }
 
@@ -4667,26 +4667,26 @@ var coderDoubleNoZero = pointerCoderFuncs{
 // sizeDoublePtr returns the size of wire encoding a *float64 pointer as a Double.
 // It panics if the pointer is nil.
 func sizeDoublePtr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
-	return f.tagsize + wire.SizeFixed64()
+	return f.tagsize + protowire.SizeFixed64()
 }
 
 // appendDoublePtr wire encodes a *float64 pointer as a Double.
 // It panics if the pointer is nil.
 func appendDoublePtr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.Float64Ptr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendFixed64(b, math.Float64bits(v))
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendFixed64(b, math.Float64bits(v))
 	return b, nil
 }
 
 // consumeDoublePtr wire decodes a *float64 pointer as a Double.
-func consumeDoublePtr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeDoublePtr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.Float64Ptr()
 	if *vp == nil {
@@ -4707,7 +4707,7 @@ var coderDoublePtr = pointerCoderFuncs{
 // sizeDoubleSlice returns the size of wire encoding a []float64 pointer as a repeated Double.
 func sizeDoubleSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.Float64Slice()
-	size = len(s) * (f.tagsize + wire.SizeFixed64())
+	size = len(s) * (f.tagsize + protowire.SizeFixed64())
 	return size
 }
 
@@ -4715,25 +4715,25 @@ func sizeDoubleSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 func appendDoubleSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.Float64Slice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendFixed64(b, math.Float64bits(v))
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendFixed64(b, math.Float64bits(v))
 	}
 	return b, nil
 }
 
 // consumeDoubleSlice wire decodes a []float64 pointer as a repeated Double.
-func consumeDoubleSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeDoubleSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.Float64Slice()
-	if wtyp == wire.BytesType {
+	if wtyp == protowire.BytesType {
 		s := *sp
-		b, n := wire.ConsumeBytes(b)
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, wire.ParseError(n)
+			return out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed64(b)
+			v, n := protowire.ConsumeFixed64(b)
 			if n < 0 {
-				return out, wire.ParseError(n)
+				return out, protowire.ParseError(n)
 			}
 			s = append(s, math.Float64frombits(v))
 			b = b[n:]
@@ -4742,12 +4742,12 @@ func consumeDoubleSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 		out.n = n
 		return out, nil
 	}
-	if wtyp != wire.Fixed64Type {
+	if wtyp != protowire.Fixed64Type {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, math.Float64frombits(v))
 	out.n = n
@@ -4767,8 +4767,8 @@ func sizeDoublePackedSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size
 	if len(s) == 0 {
 		return 0
 	}
-	n := len(s) * wire.SizeFixed64()
-	return f.tagsize + wire.SizeBytes(n)
+	n := len(s) * protowire.SizeFixed64()
+	return f.tagsize + protowire.SizeBytes(n)
 }
 
 // appendDoublePackedSlice encodes a []float64 pointer as a packed repeated Double.
@@ -4777,11 +4777,11 @@ func appendDoublePackedSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOp
 	if len(s) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	n := len(s) * wire.SizeFixed64()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, f.wiretag)
+	n := len(s) * protowire.SizeFixed64()
+	b = protowire.AppendVarint(b, uint64(n))
 	for _, v := range s {
-		b = wire.AppendFixed64(b, math.Float64bits(v))
+		b = protowire.AppendFixed64(b, math.Float64bits(v))
 	}
 	return b, nil
 }
@@ -4795,24 +4795,24 @@ var coderDoublePackedSlice = pointerCoderFuncs{
 
 // sizeDoubleValue returns the size of wire encoding a float64 value as a Double.
 func sizeDoubleValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeFixed64()
+	return tagsize + protowire.SizeFixed64()
 }
 
 // appendDoubleValue encodes a float64 value as a Double.
 func appendDoubleValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendFixed64(b, math.Float64bits(v.Float()))
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendFixed64(b, math.Float64bits(v.Float()))
 	return b, nil
 }
 
 // consumeDoubleValue decodes a float64 value as a Double.
-func consumeDoubleValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.Fixed64Type {
+func consumeDoubleValue(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.Fixed64Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfFloat64(math.Float64frombits(v)), out, nil
@@ -4828,7 +4828,7 @@ var coderDoubleValue = valueCoderFuncs{
 // sizeDoubleSliceValue returns the size of wire encoding a []float64 value as a repeated Double.
 func sizeDoubleSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions) (size int) {
 	list := listv.List()
-	size = list.Len() * (tagsize + wire.SizeFixed64())
+	size = list.Len() * (tagsize + protowire.SizeFixed64())
 	return size
 }
 
@@ -4837,24 +4837,24 @@ func appendDoubleSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, 
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendFixed64(b, math.Float64bits(v.Float()))
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendFixed64(b, math.Float64bits(v.Float()))
 	}
 	return b, nil
 }
 
 // consumeDoubleSliceValue wire decodes a []float64 value as a repeated Double.
-func consumeDoubleSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeDoubleSliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp == wire.BytesType {
-		b, n := wire.ConsumeBytes(b)
+	if wtyp == protowire.BytesType {
+		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, wire.ParseError(n)
+			return protoreflect.Value{}, out, protowire.ParseError(n)
 		}
 		for len(b) > 0 {
-			v, n := wire.ConsumeFixed64(b)
+			v, n := protowire.ConsumeFixed64(b)
 			if n < 0 {
-				return protoreflect.Value{}, out, wire.ParseError(n)
+				return protoreflect.Value{}, out, protowire.ParseError(n)
 			}
 			list.Append(protoreflect.ValueOfFloat64(math.Float64frombits(v)))
 			b = b[n:]
@@ -4862,12 +4862,12 @@ func consumeDoubleSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, 
 		out.n = n
 		return listv, out, nil
 	}
-	if wtyp != wire.Fixed64Type {
+	if wtyp != protowire.Fixed64Type {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeFixed64(b)
+	v, n := protowire.ConsumeFixed64(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfFloat64(math.Float64frombits(v)))
 	out.n = n
@@ -4888,8 +4888,8 @@ func sizeDoublePackedSliceValue(listv protoreflect.Value, tagsize int, _ marshal
 	if llen == 0 {
 		return 0
 	}
-	n := llen * wire.SizeFixed64()
-	return tagsize + wire.SizeBytes(n)
+	n := llen * protowire.SizeFixed64()
+	return tagsize + protowire.SizeBytes(n)
 }
 
 // appendDoublePackedSliceValue encodes a []float64 value as a packed repeated Double.
@@ -4899,12 +4899,12 @@ func appendDoublePackedSliceValue(b []byte, listv protoreflect.Value, wiretag ui
 	if llen == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, wiretag)
-	n := llen * wire.SizeFixed64()
-	b = wire.AppendVarint(b, uint64(n))
+	b = protowire.AppendVarint(b, wiretag)
+	n := llen * protowire.SizeFixed64()
+	b = protowire.AppendVarint(b, uint64(n))
 	for i := 0; i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendFixed64(b, math.Float64bits(v.Float()))
+		b = protowire.AppendFixed64(b, math.Float64bits(v.Float()))
 	}
 	return b, nil
 }
@@ -4919,25 +4919,25 @@ var coderDoublePackedSliceValue = valueCoderFuncs{
 // sizeString returns the size of wire encoding a string pointer as a String.
 func sizeString(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.String()
-	return f.tagsize + wire.SizeBytes(len(v))
+	return f.tagsize + protowire.SizeBytes(len(v))
 }
 
 // appendString wire encodes a string pointer as a String.
 func appendString(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.String()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendString(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendString(b, v)
 	return b, nil
 }
 
 // consumeString wire decodes a string pointer as a String.
-func consumeString(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeString(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeString(b)
+	v, n := protowire.ConsumeString(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.String() = v
 	out.n = n
@@ -4954,8 +4954,8 @@ var coderString = pointerCoderFuncs{
 // appendStringValidateUTF8 wire encodes a string pointer as a String.
 func appendStringValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.String()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendString(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendString(b, v)
 	if !utf8.ValidString(v) {
 		return b, errInvalidUTF8{}
 	}
@@ -4963,13 +4963,13 @@ func appendStringValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalO
 }
 
 // consumeStringValidateUTF8 wire decodes a string pointer as a String.
-func consumeStringValidateUTF8(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeStringValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeString(b)
+	v, n := protowire.ConsumeString(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if !utf8.ValidString(v) {
 		return out, errInvalidUTF8{}
@@ -4993,7 +4993,7 @@ func sizeStringNoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int)
 	if len(v) == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeBytes(len(v))
+	return f.tagsize + protowire.SizeBytes(len(v))
 }
 
 // appendStringNoZero wire encodes a string pointer as a String.
@@ -5003,8 +5003,8 @@ func appendStringNoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions
 	if len(v) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendString(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendString(b, v)
 	return b, nil
 }
 
@@ -5022,8 +5022,8 @@ func appendStringNoZeroValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ ma
 	if len(v) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendString(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendString(b, v)
 	if !utf8.ValidString(v) {
 		return b, errInvalidUTF8{}
 	}
@@ -5041,26 +5041,26 @@ var coderStringNoZeroValidateUTF8 = pointerCoderFuncs{
 // It panics if the pointer is nil.
 func sizeStringPtr(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := **p.StringPtr()
-	return f.tagsize + wire.SizeBytes(len(v))
+	return f.tagsize + protowire.SizeBytes(len(v))
 }
 
 // appendStringPtr wire encodes a *string pointer as a String.
 // It panics if the pointer is nil.
 func appendStringPtr(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := **p.StringPtr()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendString(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendString(b, v)
 	return b, nil
 }
 
 // consumeStringPtr wire decodes a *string pointer as a String.
-func consumeStringPtr(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeStringPtr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeString(b)
+	v, n := protowire.ConsumeString(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	vp := p.StringPtr()
 	if *vp == nil {
@@ -5082,7 +5082,7 @@ var coderStringPtr = pointerCoderFuncs{
 func sizeStringSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.StringSlice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeBytes(len(v))
+		size += f.tagsize + protowire.SizeBytes(len(v))
 	}
 	return size
 }
@@ -5091,21 +5091,21 @@ func sizeStringSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 func appendStringSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.StringSlice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendString(b, v)
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendString(b, v)
 	}
 	return b, nil
 }
 
 // consumeStringSlice wire decodes a []string pointer as a repeated String.
-func consumeStringSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeStringSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.StringSlice()
-	if wtyp != wire.BytesType {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeString(b)
+	v, n := protowire.ConsumeString(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, v)
 	out.n = n
@@ -5123,8 +5123,8 @@ var coderStringSlice = pointerCoderFuncs{
 func appendStringSliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.StringSlice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendString(b, v)
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendString(b, v)
 		if !utf8.ValidString(v) {
 			return b, errInvalidUTF8{}
 		}
@@ -5133,14 +5133,14 @@ func appendStringSliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ mar
 }
 
 // consumeStringSliceValidateUTF8 wire decodes a []string pointer as a repeated String.
-func consumeStringSliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeStringSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.StringSlice()
-	if wtyp != wire.BytesType {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeString(b)
+	v, n := protowire.ConsumeString(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if !utf8.ValidString(v) {
 		return out, errInvalidUTF8{}
@@ -5159,24 +5159,24 @@ var coderStringSliceValidateUTF8 = pointerCoderFuncs{
 
 // sizeStringValue returns the size of wire encoding a string value as a String.
 func sizeStringValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeBytes(len(v.String()))
+	return tagsize + protowire.SizeBytes(len(v.String()))
 }
 
 // appendStringValue encodes a string value as a String.
 func appendStringValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendString(b, v.String())
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendString(b, v.String())
 	return b, nil
 }
 
 // consumeStringValue decodes a string value as a String.
-func consumeStringValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeStringValue(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeString(b)
+	v, n := protowire.ConsumeString(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfString(string(v)), out, nil
@@ -5191,8 +5191,8 @@ var coderStringValue = valueCoderFuncs{
 
 // appendStringValueValidateUTF8 encodes a string value as a String.
 func appendStringValueValidateUTF8(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendString(b, v.String())
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendString(b, v.String())
 	if !utf8.ValidString(v.String()) {
 		return b, errInvalidUTF8{}
 	}
@@ -5200,13 +5200,13 @@ func appendStringValueValidateUTF8(b []byte, v protoreflect.Value, wiretag uint6
 }
 
 // consumeStringValueValidateUTF8 decodes a string value as a String.
-func consumeStringValueValidateUTF8(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeStringValueValidateUTF8(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeString(b)
+	v, n := protowire.ConsumeString(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	if !utf8.ValidString(v) {
 		return protoreflect.Value{}, out, errInvalidUTF8{}
@@ -5227,7 +5227,7 @@ func sizeStringSliceValue(listv protoreflect.Value, tagsize int, _ marshalOption
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeBytes(len(v.String()))
+		size += tagsize + protowire.SizeBytes(len(v.String()))
 	}
 	return size
 }
@@ -5237,21 +5237,21 @@ func appendStringSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, 
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendString(b, v.String())
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendString(b, v.String())
 	}
 	return b, nil
 }
 
 // consumeStringSliceValue wire decodes a []string value as a repeated String.
-func consumeStringSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeStringSliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp != wire.BytesType {
+	if wtyp != protowire.BytesType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeString(b)
+	v, n := protowire.ConsumeString(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfString(string(v)))
 	out.n = n
@@ -5268,25 +5268,25 @@ var coderStringSliceValue = valueCoderFuncs{
 // sizeBytes returns the size of wire encoding a []byte pointer as a Bytes.
 func sizeBytes(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	v := *p.Bytes()
-	return f.tagsize + wire.SizeBytes(len(v))
+	return f.tagsize + protowire.SizeBytes(len(v))
 }
 
 // appendBytes wire encodes a []byte pointer as a Bytes.
 func appendBytes(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Bytes()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendBytes(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendBytes(b, v)
 	return b, nil
 }
 
 // consumeBytes wire decodes a []byte pointer as a Bytes.
-func consumeBytes(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeBytes(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Bytes() = append(emptyBuf[:], v...)
 	out.n = n
@@ -5303,8 +5303,8 @@ var coderBytes = pointerCoderFuncs{
 // appendBytesValidateUTF8 wire encodes a []byte pointer as a Bytes.
 func appendBytesValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	v := *p.Bytes()
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendBytes(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendBytes(b, v)
 	if !utf8.Valid(v) {
 		return b, errInvalidUTF8{}
 	}
@@ -5312,13 +5312,13 @@ func appendBytesValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalOp
 }
 
 // consumeBytesValidateUTF8 wire decodes a []byte pointer as a Bytes.
-func consumeBytesValidateUTF8(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeBytesValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
@@ -5342,7 +5342,7 @@ func sizeBytesNoZero(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) 
 	if len(v) == 0 {
 		return 0
 	}
-	return f.tagsize + wire.SizeBytes(len(v))
+	return f.tagsize + protowire.SizeBytes(len(v))
 }
 
 // appendBytesNoZero wire encodes a []byte pointer as a Bytes.
@@ -5352,20 +5352,20 @@ func appendBytesNoZero(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions)
 	if len(v) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendBytes(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendBytes(b, v)
 	return b, nil
 }
 
 // consumeBytesNoZero wire decodes a []byte pointer as a Bytes.
 // The zero value is not decoded.
-func consumeBytesNoZero(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeBytesNoZero(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*p.Bytes() = append(([]byte)(nil), v...)
 	out.n = n
@@ -5386,8 +5386,8 @@ func appendBytesNoZeroValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ mar
 	if len(v) == 0 {
 		return b, nil
 	}
-	b = wire.AppendVarint(b, f.wiretag)
-	b = wire.AppendBytes(b, v)
+	b = protowire.AppendVarint(b, f.wiretag)
+	b = protowire.AppendBytes(b, v)
 	if !utf8.Valid(v) {
 		return b, errInvalidUTF8{}
 	}
@@ -5395,13 +5395,13 @@ func appendBytesNoZeroValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ mar
 }
 
 // consumeBytesNoZeroValidateUTF8 wire decodes a []byte pointer as a Bytes.
-func consumeBytesNoZeroValidateUTF8(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeBytesNoZeroValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
@@ -5422,7 +5422,7 @@ var coderBytesNoZeroValidateUTF8 = pointerCoderFuncs{
 func sizeBytesSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.BytesSlice()
 	for _, v := range s {
-		size += f.tagsize + wire.SizeBytes(len(v))
+		size += f.tagsize + protowire.SizeBytes(len(v))
 	}
 	return size
 }
@@ -5431,21 +5431,21 @@ func sizeBytesSlice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 func appendBytesSlice(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.BytesSlice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendBytes(b, v)
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendBytes(b, v)
 	}
 	return b, nil
 }
 
 // consumeBytesSlice wire decodes a [][]byte pointer as a repeated Bytes.
-func consumeBytesSlice(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeBytesSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.BytesSlice()
-	if wtyp != wire.BytesType {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	*sp = append(*sp, append(emptyBuf[:], v...))
 	out.n = n
@@ -5463,8 +5463,8 @@ var coderBytesSlice = pointerCoderFuncs{
 func appendBytesSliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
 	s := *p.BytesSlice()
 	for _, v := range s {
-		b = wire.AppendVarint(b, f.wiretag)
-		b = wire.AppendBytes(b, v)
+		b = protowire.AppendVarint(b, f.wiretag)
+		b = protowire.AppendBytes(b, v)
 		if !utf8.Valid(v) {
 			return b, errInvalidUTF8{}
 		}
@@ -5473,14 +5473,14 @@ func appendBytesSliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ mars
 }
 
 // consumeBytesSliceValidateUTF8 wire decodes a [][]byte pointer as a repeated Bytes.
-func consumeBytesSliceValidateUTF8(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+func consumeBytesSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
 	sp := p.BytesSlice()
-	if wtyp != wire.BytesType {
+	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return out, wire.ParseError(n)
+		return out, protowire.ParseError(n)
 	}
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
@@ -5499,24 +5499,24 @@ var coderBytesSliceValidateUTF8 = pointerCoderFuncs{
 
 // sizeBytesValue returns the size of wire encoding a []byte value as a Bytes.
 func sizeBytesValue(v protoreflect.Value, tagsize int, _ marshalOptions) int {
-	return tagsize + wire.SizeBytes(len(v.Bytes()))
+	return tagsize + protowire.SizeBytes(len(v.Bytes()))
 }
 
 // appendBytesValue encodes a []byte value as a Bytes.
 func appendBytesValue(b []byte, v protoreflect.Value, wiretag uint64, _ marshalOptions) ([]byte, error) {
-	b = wire.AppendVarint(b, wiretag)
-	b = wire.AppendBytes(b, v.Bytes())
+	b = protowire.AppendVarint(b, wiretag)
+	b = protowire.AppendBytes(b, v.Bytes())
 	return b, nil
 }
 
 // consumeBytesValue decodes a []byte value as a Bytes.
-func consumeBytesValue(b []byte, _ protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
-	if wtyp != wire.BytesType {
+func consumeBytesValue(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+	if wtyp != protowire.BytesType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	out.n = n
 	return protoreflect.ValueOfBytes(append(emptyBuf[:], v...)), out, nil
@@ -5534,7 +5534,7 @@ func sizeBytesSliceValue(listv protoreflect.Value, tagsize int, _ marshalOptions
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		size += tagsize + wire.SizeBytes(len(v.Bytes()))
+		size += tagsize + protowire.SizeBytes(len(v.Bytes()))
 	}
 	return size
 }
@@ -5544,21 +5544,21 @@ func appendBytesSliceValue(b []byte, listv protoreflect.Value, wiretag uint64, _
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		v := list.Get(i)
-		b = wire.AppendVarint(b, wiretag)
-		b = wire.AppendBytes(b, v.Bytes())
+		b = protowire.AppendVarint(b, wiretag)
+		b = protowire.AppendBytes(b, v.Bytes())
 	}
 	return b, nil
 }
 
 // consumeBytesSliceValue wire decodes a [][]byte value as a repeated Bytes.
-func consumeBytesSliceValue(b []byte, listv protoreflect.Value, _ wire.Number, wtyp wire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
+func consumeBytesSliceValue(b []byte, listv protoreflect.Value, _ protowire.Number, wtyp protowire.Type, _ unmarshalOptions) (_ protoreflect.Value, out unmarshalOutput, err error) {
 	list := listv.List()
-	if wtyp != wire.BytesType {
+	if wtyp != protowire.BytesType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := wire.ConsumeBytes(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
-		return protoreflect.Value{}, out, wire.ParseError(n)
+		return protoreflect.Value{}, out, protowire.ParseError(n)
 	}
 	list.Append(protoreflect.ValueOfBytes(append(emptyBuf[:], v...)))
 	out.n = n
@@ -5575,23 +5575,23 @@ var coderBytesSliceValue = valueCoderFuncs{
 // We append to an empty array rather than a nil []byte to get non-nil zero-length byte slices.
 var emptyBuf [0]byte
 
-var wireTypes = map[protoreflect.Kind]wire.Type{
-	protoreflect.BoolKind:     wire.VarintType,
-	protoreflect.EnumKind:     wire.VarintType,
-	protoreflect.Int32Kind:    wire.VarintType,
-	protoreflect.Sint32Kind:   wire.VarintType,
-	protoreflect.Uint32Kind:   wire.VarintType,
-	protoreflect.Int64Kind:    wire.VarintType,
-	protoreflect.Sint64Kind:   wire.VarintType,
-	protoreflect.Uint64Kind:   wire.VarintType,
-	protoreflect.Sfixed32Kind: wire.Fixed32Type,
-	protoreflect.Fixed32Kind:  wire.Fixed32Type,
-	protoreflect.FloatKind:    wire.Fixed32Type,
-	protoreflect.Sfixed64Kind: wire.Fixed64Type,
-	protoreflect.Fixed64Kind:  wire.Fixed64Type,
-	protoreflect.DoubleKind:   wire.Fixed64Type,
-	protoreflect.StringKind:   wire.BytesType,
-	protoreflect.BytesKind:    wire.BytesType,
-	protoreflect.MessageKind:  wire.BytesType,
-	protoreflect.GroupKind:    wire.StartGroupType,
+var wireTypes = map[protoreflect.Kind]protowire.Type{
+	protoreflect.BoolKind:     protowire.VarintType,
+	protoreflect.EnumKind:     protowire.VarintType,
+	protoreflect.Int32Kind:    protowire.VarintType,
+	protoreflect.Sint32Kind:   protowire.VarintType,
+	protoreflect.Uint32Kind:   protowire.VarintType,
+	protoreflect.Int64Kind:    protowire.VarintType,
+	protoreflect.Sint64Kind:   protowire.VarintType,
+	protoreflect.Uint64Kind:   protowire.VarintType,
+	protoreflect.Sfixed32Kind: protowire.Fixed32Type,
+	protoreflect.Fixed32Kind:  protowire.Fixed32Type,
+	protoreflect.FloatKind:    protowire.Fixed32Type,
+	protoreflect.Sfixed64Kind: protowire.Fixed64Type,
+	protoreflect.Fixed64Kind:  protowire.Fixed64Type,
+	protoreflect.DoubleKind:   protowire.Fixed64Type,
+	protoreflect.StringKind:   protowire.BytesType,
+	protoreflect.BytesKind:    protowire.BytesType,
+	protoreflect.MessageKind:  protowire.BytesType,
+	protoreflect.GroupKind:    protowire.StartGroupType,
 }
