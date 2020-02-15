@@ -159,6 +159,15 @@ func TestPackageNamesAndPaths(t *testing.T) {
 			wantImportPath:     "golang.org/x/foo",
 			wantFilenamePrefix: "golang.org/x/foo/filename",
 		},
+		{
+			desc:               "paths=import uses import path from command line",
+			parameter:          "paths=import,Mdir/filename.proto=golang.org/x/bar",
+			goPackageOption:    "golang.org/x/foo",
+			generate:           true,
+			wantPackageName:    "foo",
+			wantImportPath:     "golang.org/x/bar",
+			wantFilenamePrefix: "golang.org/x/bar/filename",
+		},
 	} {
 		context := fmt.Sprintf(`
 TEST: %v

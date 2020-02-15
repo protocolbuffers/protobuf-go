@@ -232,7 +232,7 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 		packageName, importPath := goPackageOption(fdesc)
 		switch {
 		case importPaths[filename] != "":
-			// Command line: M=foo.proto=quux/bar
+			// Command line: Mfoo.proto=quux/bar
 			//
 			// Explicit mapping of source file to import path.
 		case generatedFileNames[filename] && packageImportPath != "":
@@ -453,16 +453,19 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 	if ext := path.Ext(prefix); ext == ".proto" || ext == ".protodevel" {
 		prefix = prefix[:len(prefix)-len(ext)]
 	}
-	if gen.pathType == pathTypeImport {
-		// If paths=import (the default) and the file contains a go_package option
-		// with a full import path, the output filename is derived from the Go import
-		// path.
-		//
-		// Pass the paths=source_relative flag to always derive the output filename
-		// from the input filename instead.
+	switch gen.pathType {
+	case pathTypeLegacy:
+		// The default is to derive the output filename from the Go import path
+		// if the file contains a go_package option,or from the input filename instead.
 		if _, importPath := goPackageOption(p); importPath != "" {
 			prefix = path.Join(string(importPath), path.Base(prefix))
 		}
+	case pathTypeImport:
+		// If paths=import, the output filename is derived from the Go import path.
+		prefix = path.Join(string(f.GoImportPath), path.Base(prefix))
+	case pathTypeSourceRelative:
+		// If paths=source_relative, the output filename is derived from
+		// the input filename.
 	}
 	f.GoDescriptorIdent = GoIdent{
 		GoName:       "File_" + strs.GoSanitized(p.GetName()),
@@ -1282,7 +1285,8 @@ func baseName(name string) string {
 type pathType int
 
 const (
-	pathTypeImport pathType = iota
+	pathTypeLegacy pathType = iota
+	pathTypeImport
 	pathTypeSourceRelative
 )
 
