@@ -17,9 +17,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"path"
 	"path/filepath"
-	"regexp"
 	"runtime"
 	"strings"
 	"sync"
@@ -224,7 +222,6 @@ func mustInitDeps(t *testing.T) {
 			downloadFile(check, dst, src)
 		}
 	}
-	patchProtos(check, protobufPath)
 	check(os.Setenv("PROTOBUF_ROOT", protobufPath)) // for generate-protos
 	registerBinary("conform-test-runner", filepath.Join(protobufPath, "conformance", "conformance-test-runner"))
 	registerBinary("protoc", filepath.Join(protobufPath, "src", "protoc"))
@@ -314,65 +311,6 @@ func downloadArchive(check func(error), dstPath, srcURL, skipPrefix string) {
 		case tar.TypeDir:
 			check(os.Mkdir(path, mode))
 		}
-	}
-}
-
-// patchProtos patches proto files with v2 locations of Go packages.
-// TODO: Commit these changes upstream.
-func patchProtos(check func(error), repoRoot string) {
-	javaPackageRx := regexp.MustCompile(`^option\s+java_package\s*=\s*".*"\s*;\s*$`)
-	goPackageRx := regexp.MustCompile(`^option\s+go_package\s*=\s*".*"\s*;\s*$`)
-	files := map[string]string{
-		"src/google/protobuf/any.proto":                  "google.golang.org/protobuf/types/known/anypb",
-		"src/google/protobuf/api.proto":                  "google.golang.org/protobuf/types/known/apipb",
-		"src/google/protobuf/duration.proto":             "google.golang.org/protobuf/types/known/durationpb",
-		"src/google/protobuf/empty.proto":                "google.golang.org/protobuf/types/known/emptypb",
-		"src/google/protobuf/field_mask.proto":           "google.golang.org/protobuf/types/known/fieldmaskpb",
-		"src/google/protobuf/source_context.proto":       "google.golang.org/protobuf/types/known/sourcecontextpb",
-		"src/google/protobuf/struct.proto":               "google.golang.org/protobuf/types/known/structpb",
-		"src/google/protobuf/timestamp.proto":            "google.golang.org/protobuf/types/known/timestamppb",
-		"src/google/protobuf/type.proto":                 "google.golang.org/protobuf/types/known/typepb",
-		"src/google/protobuf/wrappers.proto":             "google.golang.org/protobuf/types/known/wrapperspb",
-		"src/google/protobuf/descriptor.proto":           "google.golang.org/protobuf/types/descriptorpb",
-		"src/google/protobuf/compiler/plugin.proto":      "google.golang.org/protobuf/types/pluginpb",
-		"conformance/conformance.proto":                  "google.golang.org/protobuf/internal/testprotos/conformance",
-		"src/google/protobuf/test_messages_proto2.proto": "google.golang.org/protobuf/internal/testprotos/conformance",
-		"src/google/protobuf/test_messages_proto3.proto": "google.golang.org/protobuf/internal/testprotos/conformance",
-	}
-	for _, p := range benchmarkProtos {
-		files[p] = path.Dir("google.golang.org/protobuf/internal/testprotos/" + p)
-	}
-	for pbpath, gopath := range files {
-		b, err := ioutil.ReadFile(filepath.Join(repoRoot, pbpath))
-		check(err)
-		ss := strings.Split(string(b), "\n")
-
-		// Locate java_package and (possible) go_package options.
-		javaPackageIdx, goPackageIdx := -1, -1
-		for i, s := range ss {
-			if javaPackageIdx < 0 && javaPackageRx.MatchString(s) {
-				javaPackageIdx = i
-			}
-			if goPackageIdx < 0 && goPackageRx.MatchString(s) {
-				goPackageIdx = i
-			}
-		}
-
-		// Ensure the proto file has the correct go_package option.
-		opt := `option go_package = "` + gopath + `";`
-		if goPackageIdx >= 0 {
-			if ss[goPackageIdx] == opt {
-				continue // no changes needed
-			}
-			ss[goPackageIdx] = opt
-		} else {
-			// Insert go_package option before java_package option.
-			ss = append(ss[:javaPackageIdx], append([]string{opt}, ss[javaPackageIdx:]...)...)
-		}
-
-		fmt.Println("patch " + pbpath)
-		b = []byte(strings.Join(ss, "\n"))
-		check(ioutil.WriteFile(filepath.Join(repoRoot, pbpath), b, 0664))
 	}
 }
 

@@ -26,6 +26,30 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
+// Override the location of the Go package for various source files.
+// TOOD: Commit these changes upstream.
+var protoPackages = map[string]string{
+	// Locally override field_mask.proto to an internal copy.
+	// We need this package as a dependency of several tests,
+	// but it currently lives in google.golang.org/genproto, which
+	// we do not want a dependency on.
+	//
+	// TODO: Move the canonical package into this module.
+	"google/protobuf/field_mask.proto": "google.golang.org/protobuf/internal/testprotos/fieldmaskpb",
+
+	"google/protobuf/any.proto":                  "google.golang.org/protobuf/types/known/anypb",
+	"google/protobuf/duration.proto":             "google.golang.org/protobuf/types/known/durationpb",
+	"google/protobuf/empty.proto":                "google.golang.org/protobuf/types/known/emptypb",
+	"google/protobuf/struct.proto":               "google.golang.org/protobuf/types/known/structpb",
+	"google/protobuf/timestamp.proto":            "google.golang.org/protobuf/types/known/timestamppb",
+	"google/protobuf/wrappers.proto":             "google.golang.org/protobuf/types/known/wrapperspb",
+	"google/protobuf/descriptor.proto":           "google.golang.org/protobuf/types/descriptorpb",
+	"google/protobuf/compiler/plugin.proto":      "google.golang.org/protobuf/types/pluginpb",
+	"conformance/conformance.proto":              "google.golang.org/protobuf/internal/testprotos/conformance",
+	"google/protobuf/test_messages_proto2.proto": "google.golang.org/protobuf/internal/testprotos/conformance",
+	"google/protobuf/test_messages_proto3.proto": "google.golang.org/protobuf/internal/testprotos/conformance",
+}
+
 func init() {
 	// Determine repository root path.
 	out, err := exec.Command("git", "rev-parse", "--show-toplevel").CombinedOutput()
@@ -139,10 +163,11 @@ func generateLocalProtos() {
 				return nil
 			}
 
+			opts := "paths=source_relative," + protoMapOpt()
+
 			// Emit a .meta file for certain files.
-			var opts string
 			if d.annotateFor[filepath.ToSlash(relPath)] {
-				opts = ",annotate_code"
+				opts += ",annotate_code"
 			}
 
 			// Determine which set of plugins to use.
@@ -151,7 +176,7 @@ func generateLocalProtos() {
 				plugins += ",gogrpc"
 			}
 
-			protoc(plugins, "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out=paths=source_relative"+opts+":"+dstDir, relPath)
+			protoc(plugins, "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+dstDir, relPath)
 			return nil
 		})
 
@@ -205,24 +230,33 @@ func generateRemoteProtos() {
 		{"benchmarks", "datasets/google_message4/benchmark_message4_1.proto"},
 		{"benchmarks", "datasets/google_message4/benchmark_message4_2.proto"},
 		{"benchmarks", "datasets/google_message4/benchmark_message4_3.proto"},
+		// TODO: The commented-out entires below are currently part of
+		// google.golang.org/genproto. Move them into this module.
 		{"src", "google/protobuf/any.proto"},
-		{"src", "google/protobuf/api.proto"},
+		//{"src", "google/protobuf/api.proto"},
 		{"src", "google/protobuf/compiler/plugin.proto"},
 		{"src", "google/protobuf/descriptor.proto"},
 		{"src", "google/protobuf/duration.proto"},
 		{"src", "google/protobuf/empty.proto"},
 		{"src", "google/protobuf/field_mask.proto"},
-		{"src", "google/protobuf/source_context.proto"},
+		//{"src", "google/protobuf/source_context.proto"},
 		{"src", "google/protobuf/struct.proto"},
 		{"src", "google/protobuf/test_messages_proto2.proto"},
 		{"src", "google/protobuf/test_messages_proto3.proto"},
 		{"src", "google/protobuf/timestamp.proto"},
-		{"src", "google/protobuf/type.proto"},
+		//{"src", "google/protobuf/type.proto"},
 		{"src", "google/protobuf/wrappers.proto"},
 	}
 	for _, f := range files {
-		protoc("go", "-I"+filepath.Join(protoRoot, f.prefix), "--go_out="+tmpDir, f.path)
+		protoc("go", "-I"+filepath.Join(protoRoot, f.prefix), "--go_out="+protoMapOpt()+":"+tmpDir, f.path)
 	}
+
+	// Special-case: Generate field_mask.proto into a local test-only capy.
+	//protoc("go", "-I"+filepath.Join(protoRoot, "src/google/protobuf"), "--go_out=paths=source_relative:"+filepath.Join(tmpDir, modulePath, "internal/testprotos/fieldmaskpb"), "field_mask.proto")
+	copyFile(
+		filepath.Join(tmpDir, "google.golang.org/protobuf/internal/testprotos/fieldmaskpb/field_mask.pb.go"),
+		filepath.Join(tmpDir, "google.golang.org/genproto/protobuf/field_mask/field_mask.pb.go"),
+	)
 
 	syncOutput(repoRoot, filepath.Join(tmpDir, modulePath))
 }
@@ -288,10 +322,7 @@ func syncOutput(dstDir, srcDir string) {
 
 		if run {
 			fmt.Println("#", relPath)
-			b, err := ioutil.ReadFile(srcPath)
-			check(err)
-			check(os.MkdirAll(filepath.Dir(dstPath), 0775))
-			check(ioutil.WriteFile(dstPath, b, 0664))
+			copyFile(dstPath, srcPath)
 		} else {
 			cmd := exec.Command("diff", dstPath, srcPath, "-N", "-u")
 			cmd.Stdout = os.Stdout
@@ -299,6 +330,21 @@ func syncOutput(dstDir, srcDir string) {
 		}
 		return nil
 	})
+}
+
+func copyFile(dstPath, srcPath string) {
+	b, err := ioutil.ReadFile(srcPath)
+	check(err)
+	check(os.MkdirAll(filepath.Dir(dstPath), 0775))
+	check(ioutil.WriteFile(dstPath, b, 0664))
+}
+
+func protoMapOpt() string {
+	var opts []string
+	for k, v := range protoPackages {
+		opts = append(opts, fmt.Sprintf("M%v=%v", k, v))
+	}
+	return strings.Join(opts, ",")
 }
 
 func check(err error) {
