@@ -89,6 +89,17 @@ func (ms *mapReflect) Clear(k pref.MapKey) {
 	rk := ms.keyConv.GoValueOf(k.Value())
 	ms.v.SetMapIndex(rk, reflect.Value{})
 }
+func (ms *mapReflect) Mutable(k pref.MapKey) pref.Value {
+	if _, ok := ms.valConv.(*messageConverter); !ok {
+		panic("invalid Mutable on map with non-message value type")
+	}
+	v := ms.Get(k)
+	if !v.IsValid() {
+		v = ms.NewValue()
+		ms.Set(k, v)
+	}
+	return v
+}
 func (ms *mapReflect) Range(f func(pref.MapKey, pref.Value) bool) {
 	iter := mapRange(ms.v)
 	for iter.Next() {

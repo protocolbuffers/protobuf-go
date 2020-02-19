@@ -119,6 +119,14 @@ func (ls *listReflect) Set(i int, v pref.Value) {
 func (ls *listReflect) Append(v pref.Value) {
 	ls.v.Elem().Set(reflect.Append(ls.v.Elem(), ls.conv.GoValueOf(v)))
 }
+func (ls *listReflect) AppendMutable() pref.Value {
+	if _, ok := ls.conv.(*messageConverter); !ok {
+		panic("invalid AppendMutable on list with non-message type")
+	}
+	v := ls.NewElement()
+	ls.Append(v)
+	return v
+}
 func (ls *listReflect) Truncate(i int) {
 	ls.v.Elem().Set(ls.v.Elem().Slice(0, i))
 }

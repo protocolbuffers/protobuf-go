@@ -296,16 +296,37 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		t.Errorf("non-existent map key in %q: Map.Get(%v).IsValid() = %v, want %v", name, formatValue(missingKey.Value()), got, want)
 	}
 	mapv.Clear(missingKey) // noop
+
+	// Mutable.
+	if fd.MapValue().Message() == nil {
+		if !panics(func() {
+			mapv.Mutable(newMapKey(fd, 1))
+		}) {
+			t.Errorf("Mutable on %q succeeds, want panic", name)
+		}
+	} else {
+		k := newMapKey(fd, 1)
+		v := mapv.Mutable(k)
+		if got, want := mapv.Len(), 1; got != want {
+			t.Errorf("after Mutable on %q, Map.Len() = %v, want %v", name, got, want)
+		}
+		populateMessage(v.Message(), 1, nil)
+		if !valueEqual(mapv.Get(k), v) {
+			t.Errorf("after Mutable on %q, changing new mutable value does not change map entry", name)
+		}
+		mapv.Clear(k)
+	}
 }
 
 type testMap map[interface{}]pref.Value
 
-func (m testMap) Get(k pref.MapKey) pref.Value    { return m[k.Interface()] }
-func (m testMap) Set(k pref.MapKey, v pref.Value) { m[k.Interface()] = v }
-func (m testMap) Has(k pref.MapKey) bool          { return m.Get(k).IsValid() }
-func (m testMap) Clear(k pref.MapKey)             { delete(m, k.Interface()) }
-func (m testMap) Len() int                        { return len(m) }
-func (m testMap) NewValue() pref.Value            { panic("unimplemented") }
+func (m testMap) Get(k pref.MapKey) pref.Value     { return m[k.Interface()] }
+func (m testMap) Set(k pref.MapKey, v pref.Value)  { m[k.Interface()] = v }
+func (m testMap) Has(k pref.MapKey) bool           { return m.Get(k).IsValid() }
+func (m testMap) Clear(k pref.MapKey)              { delete(m, k.Interface()) }
+func (m testMap) Mutable(k pref.MapKey) pref.Value { panic("unimplemented") }
+func (m testMap) Len() int                         { return len(m) }
+func (m testMap) NewValue() pref.Value             { panic("unimplemented") }
 func (m testMap) Range(f func(pref.MapKey, pref.Value) bool) {
 	for k, v := range m {
 		if !f(pref.ValueOf(k).MapKey(), v) {
@@ -383,19 +404,39 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 			t.Errorf("after truncating %q to %d:\nMessage.Get(%v) = %v, want %v", name, n, num, formatValue(got), formatValue(want))
 		}
 	}
+
+	// AppendMutable.
+	if fd.Message() == nil {
+		if !panics(func() {
+			list.AppendMutable()
+		}) {
+			t.Errorf("AppendMutable on %q succeeds, want panic", name)
+		}
+	} else {
+		v := list.AppendMutable()
+		if got, want := list.Len(), 1; got != want {
+			t.Errorf("after AppendMutable on %q, list.Len() = %v, want %v", name, got, want)
+		}
+		populateMessage(v.Message(), 1, nil)
+		if !valueEqual(list.Get(0), v) {
+			t.Errorf("after AppendMutable on %q, changing new mutable value does not change list item 0", name)
+		}
+		want.Truncate(0)
+	}
 }
 
 type testList struct {
 	a []pref.Value
 }
 
-func (l *testList) Append(v pref.Value)     { l.a = append(l.a, v) }
-func (l *testList) Get(n int) pref.Value    { return l.a[n] }
-func (l *testList) Len() int                { return len(l.a) }
-func (l *testList) Set(n int, v pref.Value) { l.a[n] = v }
-func (l *testList) Truncate(n int)          { l.a = l.a[:n] }
-func (l *testList) NewElement() pref.Value  { panic("unimplemented") }
-func (l *testList) IsValid() bool           { return true }
+func (l *testList) Append(v pref.Value)       { l.a = append(l.a, v) }
+func (l *testList) AppendMutable() pref.Value { panic("unimplemented") }
+func (l *testList) Get(n int) pref.Value      { return l.a[n] }
+func (l *testList) Len() int                  { return len(l.a) }
+func (l *testList) Set(n int, v pref.Value)   { l.a[n] = v }
+func (l *testList) Truncate(n int)            { l.a = l.a[:n] }
+func (l *testList) NewElement() pref.Value    { panic("unimplemented") }
+func (l *testList) IsValid() bool             { return true }
 
 // testFieldFloat exercises some interesting floating-point scalar field values.
 func testFieldFloat(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
@@ -605,9 +646,6 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 		mapv.Set(newMapKey(fd, n), newMapValue(fd, mapv, newSeed(n, 0), stack))
 		return pref.ValueOfMap(mapv)
 	case fd.Message() != nil:
-		//if n == 0 {
-		//	return m.New().Get(fd)
-		//}
 		return populateMessage(m.NewField(fd).Message(), n, stack)
 	default:
 		return newScalarValue(fd, n)

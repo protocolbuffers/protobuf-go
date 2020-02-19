@@ -200,7 +200,10 @@ type List interface {
 	// Append is a mutating operation and unsafe for concurrent use.
 	Append(Value)
 
-	// TODO(blocks): Should there be a AppendMutable method?
+	// AppendMutable appends a new, empty, mutable message value to the end
+	// of the list and returns it.
+	// It panics if the list does not contain a message type.
+	AppendMutable() Value
 
 	// Truncate truncates the list to a smaller length.
 	//
@@ -258,7 +261,11 @@ type Map interface {
 	// Set is a mutating operation and unsafe for concurrent use.
 	Set(MapKey, Value)
 
-	// TODO(blocks): Should there be a Mutable method?
+	// Mutable retrieves a mutable reference to the entry for the given key.
+	// If no entry exists for the key, it creates a new, empty, mutable value
+	// and stores it as the entry for the key.
+	// It panics if the map value is not a message.
+	Mutable(MapKey) Value
 
 	// NewValue returns a new value assignable as a map value.
 	// For enums, this returns the first enum value.

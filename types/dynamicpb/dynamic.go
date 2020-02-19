@@ -314,13 +314,14 @@ type emptyList struct {
 	desc pref.FieldDescriptor
 }
 
-func (x emptyList) Len() int                { return 0 }
-func (x emptyList) Get(n int) pref.Value    { panic(errors.New("out of range")) }
-func (x emptyList) Set(n int, v pref.Value) { panic(errors.New("modification of immutable list")) }
-func (x emptyList) Append(v pref.Value)     { panic(errors.New("modification of immutable list")) }
-func (x emptyList) Truncate(n int)          { panic(errors.New("modification of immutable list")) }
-func (x emptyList) NewElement() pref.Value  { return newListEntry(x.desc) }
-func (x emptyList) IsValid() bool           { return false }
+func (x emptyList) Len() int                  { return 0 }
+func (x emptyList) Get(n int) pref.Value      { panic(errors.New("out of range")) }
+func (x emptyList) Set(n int, v pref.Value)   { panic(errors.New("modification of immutable list")) }
+func (x emptyList) Append(v pref.Value)       { panic(errors.New("modification of immutable list")) }
+func (x emptyList) AppendMutable() pref.Value { panic(errors.New("modification of immutable list")) }
+func (x emptyList) Truncate(n int)            { panic(errors.New("modification of immutable list")) }
+func (x emptyList) NewElement() pref.Value    { return newListEntry(x.desc) }
+func (x emptyList) IsValid() bool             { return false }
 
 type dynamicList struct {
 	desc pref.FieldDescriptor
@@ -343,6 +344,15 @@ func (x *dynamicList) Set(n int, v pref.Value) {
 func (x *dynamicList) Append(v pref.Value) {
 	typecheckSingular(x.desc, v)
 	x.list = append(x.list, v)
+}
+
+func (x *dynamicList) AppendMutable() pref.Value {
+	if x.desc.Message() == nil {
+		panic(errors.New("%v: invalid AppendMutable on list with non-message type", x.desc.FullName()))
+	}
+	v := x.NewElement()
+	x.Append(v)
+	return v
 }
 
 func (x *dynamicList) Truncate(n int) {
@@ -374,7 +384,18 @@ func (x *dynamicMap) Set(k pref.MapKey, v pref.Value) {
 }
 func (x *dynamicMap) Has(k pref.MapKey) bool { return x.Get(k).IsValid() }
 func (x *dynamicMap) Clear(k pref.MapKey)    { delete(x.mapv, k.Interface()) }
-func (x *dynamicMap) Len() int               { return len(x.mapv) }
+func (x *dynamicMap) Mutable(k pref.MapKey) pref.Value {
+	if x.desc.MapValue().Message() == nil {
+		panic(errors.New("%v: invalid Mutable on map with non-message value type", x.desc.FullName()))
+	}
+	v := x.Get(k)
+	if !v.IsValid() {
+		v = x.NewValue()
+		x.Set(k, v)
+	}
+	return v
+}
+func (x *dynamicMap) Len() int { return len(x.mapv) }
 func (x *dynamicMap) NewValue() pref.Value {
 	if md := x.desc.MapValue().Message(); md != nil {
 		return pref.ValueOfMessage(NewMessage(md).ProtoReflect())
