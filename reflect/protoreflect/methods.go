@@ -21,8 +21,8 @@ type (
 		Size          func(sizeInput) sizeOutput
 		Marshal       func(marshalInput) (marshalOutput, error)
 		Unmarshal     func(unmarshalInput) (unmarshalOutput, error)
-		IsInitialized func(isInitializedInput) (isInitializedOutput, error)
 		Merge         func(mergeInput) mergeOutput
+		IsInitialized func(isInitializedInput) (isInitializedOutput, error)
 	}
 	supportFlags = uint64
 	sizeInput    = struct {
@@ -58,14 +58,6 @@ type (
 		pragma.NoUnkeyedLiterals
 		Flags uint8
 	}
-	isInitializedInput = struct {
-		pragma.NoUnkeyedLiterals
-		Message Message
-	}
-	isInitializedOutput = struct {
-		pragma.NoUnkeyedLiterals
-		Flags uint8
-	}
 	mergeInput = struct {
 		pragma.NoUnkeyedLiterals
 		Source      Message
@@ -74,5 +66,12 @@ type (
 	mergeOutput = struct {
 		pragma.NoUnkeyedLiterals
 		Flags uint8
+	}
+	isInitializedInput = struct {
+		pragma.NoUnkeyedLiterals
+		Message Message
+	}
+	isInitializedOutput = struct {
+		pragma.NoUnkeyedLiterals
 	}
 )

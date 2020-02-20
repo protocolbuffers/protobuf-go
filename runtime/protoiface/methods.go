@@ -21,24 +21,24 @@ type Methods = struct {
 	// Flags indicate support for optional features.
 	Flags SupportFlags
 
-	// Size returns the size in bytes of the wire-format encoding of m.
+	// Size returns the size in bytes of the wire-format encoding of a message.
 	// Marshal must be provided if a custom Size is provided.
-	Size func(SizeInput) SizeOutput
+	Size func(in SizeInput) SizeOutput
 
-	// Marshal writes the wire-format encoding of m to the provided buffer.
+	// Marshal formats a message in the wire-format encoding to the provided buffer.
 	// Size should be provided if a custom Marshal is provided.
 	// It must not return an error for a partial message.
 	Marshal func(MarshalInput) (MarshalOutput, error)
 
-	// Unmarshal parses the wire-format encoding of a message and merges the result to m.
+	// Unmarshal parses the wire-format encoding and merges the result into a message.
 	// It must not reset the target message or return an error for a partial message.
 	Unmarshal func(UnmarshalInput) (UnmarshalOutput, error)
 
-	// IsInitialized returns an error if any required fields in m are not set.
-	IsInitialized func(IsInitializedInput) (IsInitializedOutput, error)
-
-	// Merge merges src into dst.
+	// Merge merges the contents of a source message into a destination message.
 	Merge func(MergeInput) MergeOutput
+
+	// IsInitialized returns an error if any required fields in the message are not set.
+	IsInitialized func(IsInitializedInput) (IsInitializedOutput, error)
 }
 
 // SupportFlags indicate support for optional features.
@@ -125,31 +125,9 @@ type UnmarshalOutputFlags = uint8
 
 const (
 	// UnmarshalInitialized may be set on return if all required fields are known to be set.
-	// A value of false does not indicate that the message is uninitialized, only
-	// that its status could not be confirmed.
+	// If unset, then it does not necessarily indicate that the message is uninitialized,
+	// only that its status could not be confirmed.
 	UnmarshalInitialized UnmarshalOutputFlags = 1 << iota
-)
-
-// IsInitializedInput is input to the IsInitialized method.
-type IsInitializedInput = struct {
-	pragma.NoUnkeyedLiterals
-
-	Message protoreflect.Message
-}
-
-// IsInitializedOutput is output from the IsInitialized method.
-type IsInitializedOutput = struct {
-	pragma.NoUnkeyedLiterals
-
-	Flags IsInitializedOutputFlags
-}
-
-// IsInitializedOutputFlags are output from the IsInitialized method.
-type IsInitializedOutputFlags = uint8
-
-const (
-	// IsInitialized reports whether the message is initialized.
-	IsInitialized IsInitializedOutputFlags = 1 << iota
 )
 
 // MergeInput is input to the Merge method.
@@ -175,3 +153,15 @@ const (
 	// If unset, the merger must have made no changes to the destination.
 	MergeComplete MergeOutputFlags = 1 << iota
 )
+
+// IsInitializedInput is input to the IsInitialized method.
+type IsInitializedInput = struct {
+	pragma.NoUnkeyedLiterals
+
+	Message protoreflect.Message
+}
+
+// IsInitializedOutput is output from the IsInitialized method.
+type IsInitializedOutput = struct {
+	pragma.NoUnkeyedLiterals
+}
