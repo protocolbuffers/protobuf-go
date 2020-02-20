@@ -39,6 +39,9 @@ func Clone(m Message) Message {
 	// Embedding protobuf messages breaks this since the parent type will have
 	// a forwarded ProtoReflect method, but the Interface method will return
 	// the underlying embedded message type.
+	if m == nil {
+		return nil
+	}
 	src := m.ProtoReflect()
 	if !src.IsValid() {
 		return src.Type().Zero().Interface()
