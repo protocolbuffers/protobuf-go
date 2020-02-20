@@ -17,7 +17,7 @@ import (
 	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
 )
 
-func TestIsInitializedErrors(t *testing.T) {
+func TestCheckInitializedErrors(t *testing.T) {
 	type test struct {
 		m    proto.Message
 		want string
@@ -76,13 +76,13 @@ func TestIsInitializedErrors(t *testing.T) {
 				t.SkipNow()
 			}
 
-			err := proto.IsInitialized(tt.m)
+			err := proto.CheckInitialized(tt.m)
 			got := "<nil>"
 			if err != nil {
 				got = fmt.Sprintf("%q", err)
 			}
 			if !strings.Contains(got, tt.want) {
-				t.Errorf("IsInitialized(m):\n got: %v\nwant contains: %v\nMessage:\n%v", got, tt.want, prototext.Format(tt.m))
+				t.Errorf("CheckInitialized(m):\n got: %v\nwant contains: %v\nMessage:\n%v", got, tt.want, prototext.Format(tt.m))
 			}
 		})
 	}

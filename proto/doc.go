@@ -43,7 +43,7 @@
 //
 // • Reset clears the content of a message.
 //
-// • IsInitialized reports whether all required fields in a message are set.
+// • CheckInitialized reports whether all required fields in a message are set.
 //
 //
 // Optional scalar constructors

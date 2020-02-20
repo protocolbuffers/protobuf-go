@@ -123,7 +123,7 @@ func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
 	if o.AllowPartial {
 		return enc.Bytes(), nil
 	}
-	return enc.Bytes(), proto.IsInitialized(m)
+	return enc.Bytes(), proto.CheckInitialized(m)
 }
 
 type encoder struct {

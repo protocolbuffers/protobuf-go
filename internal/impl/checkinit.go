@@ -12,17 +12,17 @@ import (
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-func (mi *MessageInfo) isInitialized(in piface.IsInitializedInput) (piface.IsInitializedOutput, error) {
+func (mi *MessageInfo) checkInitialized(in piface.CheckInitializedInput) (piface.CheckInitializedOutput, error) {
 	var p pointer
 	if ms, ok := in.Message.(*messageState); ok {
 		p = ms.pointer()
 	} else {
 		p = in.Message.(*messageReflectWrapper).pointer()
 	}
-	return piface.IsInitializedOutput{}, mi.isInitializedPointer(p)
+	return piface.CheckInitializedOutput{}, mi.checkInitializedPointer(p)
 }
 
-func (mi *MessageInfo) isInitializedPointer(p pointer) error {
+func (mi *MessageInfo) checkInitializedPointer(p pointer) error {
 	mi.init()
 	if !mi.needsInitCheck {
 		return nil

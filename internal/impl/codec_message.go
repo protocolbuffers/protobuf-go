@@ -148,8 +148,8 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		mi.methods.Flags |= piface.SupportUnmarshalDiscardUnknown
 		mi.methods.Unmarshal = mi.unmarshal
 	}
-	if mi.methods.IsInitialized == nil {
-		mi.methods.IsInitialized = mi.isInitialized
+	if mi.methods.CheckInitialized == nil {
+		mi.methods.CheckInitialized = mi.checkInitialized
 	}
 	if mi.methods.Merge == nil {
 		mi.methods.Merge = mi.merge

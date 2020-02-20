@@ -39,7 +39,7 @@ func Fuzz(data []byte) (score int) {
 	default:
 		panic("unmarshal ok with validation status: " + valid.String())
 	}
-	if proto.IsInitialized(m1) != nil && vinit {
+	if proto.CheckInitialized(m1) != nil && vinit {
 		panic("validation reports partial message is initialized")
 	}
 	data1, err := proto.MarshalOptions{

@@ -10,23 +10,28 @@ import (
 	"google.golang.org/protobuf/runtime/protoiface"
 )
 
-// IsInitialized returns an error if any required fields in m are not set.
+// Deprecated: Use CheckInitialized instead.
 func IsInitialized(m Message) error {
-	return isInitialized(m.ProtoReflect())
+	return CheckInitialized(m)
 }
 
-// IsInitialized returns an error if any required fields in m are not set.
-func isInitialized(m protoreflect.Message) error {
-	if methods := protoMethods(m); methods != nil && methods.IsInitialized != nil {
-		_, err := methods.IsInitialized(protoiface.IsInitializedInput{
+// CheckInitialized returns an error if any required fields in m are not set.
+func CheckInitialized(m Message) error {
+	return checkInitialized(m.ProtoReflect())
+}
+
+// CheckInitialized returns an error if any required fields in m are not set.
+func checkInitialized(m protoreflect.Message) error {
+	if methods := protoMethods(m); methods != nil && methods.CheckInitialized != nil {
+		_, err := methods.CheckInitialized(protoiface.CheckInitializedInput{
 			Message: m,
 		})
 		return err
 	}
-	return isInitializedSlow(m)
+	return checkInitializedSlow(m)
 }
 
-func isInitializedSlow(m protoreflect.Message) error {
+func checkInitializedSlow(m protoreflect.Message) error {
 	md := m.Descriptor()
 	fds := md.Fields()
 	for i, nums := 0, md.RequiredNumbers(); i < nums.Len(); i++ {
@@ -43,21 +48,21 @@ func isInitializedSlow(m protoreflect.Message) error {
 				return true
 			}
 			for i, list := 0, v.List(); i < list.Len() && err == nil; i++ {
-				err = isInitialized(list.Get(i).Message())
+				err = checkInitialized(list.Get(i).Message())
 			}
 		case fd.IsMap():
 			if fd.MapValue().Message() == nil {
 				return true
 			}
 			v.Map().Range(func(key protoreflect.MapKey, v protoreflect.Value) bool {
-				err = isInitialized(v.Message())
+				err = checkInitialized(v.Message())
 				return err == nil
 			})
 		default:
 			if fd.Message() == nil {
 				return true
 			}
-			err = isInitialized(v.Message())
+			err = checkInitialized(v.Message())
 		}
 		return err == nil
 	})

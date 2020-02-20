@@ -320,7 +320,7 @@ func isInitMap(mapv reflect.Value, mapi *mapInfo, f *coderFieldInfo) error {
 		iter := mapRange(mapv)
 		for iter.Next() {
 			val := pointerOfValue(iter.Value())
-			if err := mi.isInitializedPointer(val); err != nil {
+			if err := mi.checkInitializedPointer(val); err != nil {
 				return err
 			}
 		}

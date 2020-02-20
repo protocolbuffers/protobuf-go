@@ -75,7 +75,7 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {
 	if o.AllowPartial {
 		return nil
 	}
-	return proto.IsInitialized(m)
+	return proto.CheckInitialized(m)
 }
 
 type decoder struct {

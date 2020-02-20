@@ -136,7 +136,7 @@ func (o MarshalOptions) marshal(b []byte, message Message) (out protoiface.Marsh
 	if allowPartial {
 		return out, nil
 	}
-	return out, isInitialized(m)
+	return out, checkInitialized(m)
 }
 
 func (o MarshalOptions) marshalMessage(b []byte, m protoreflect.Message) ([]byte, error) {

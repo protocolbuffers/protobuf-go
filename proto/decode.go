@@ -95,7 +95,7 @@ func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.U
 	if allowPartial || (out.Flags&protoiface.UnmarshalInitialized != 0) {
 		return out, nil
 	}
-	return out, isInitialized(m)
+	return out, checkInitialized(m)
 }
 
 func (o UnmarshalOptions) unmarshalMessage(b []byte, m protoreflect.Message) error {

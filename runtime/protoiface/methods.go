@@ -37,8 +37,8 @@ type Methods = struct {
 	// Merge merges the contents of a source message into a destination message.
 	Merge func(MergeInput) MergeOutput
 
-	// IsInitialized returns an error if any required fields in the message are not set.
-	IsInitialized func(IsInitializedInput) (IsInitializedOutput, error)
+	// CheckInitialized returns an error if any required fields in the message are not set.
+	CheckInitialized func(CheckInitializedInput) (CheckInitializedOutput, error)
 }
 
 // SupportFlags indicate support for optional features.
@@ -154,14 +154,14 @@ const (
 	MergeComplete MergeOutputFlags = 1 << iota
 )
 
-// IsInitializedInput is input to the IsInitialized method.
-type IsInitializedInput = struct {
+// CheckInitializedInput is input to the CheckInitialized method.
+type CheckInitializedInput = struct {
 	pragma.NoUnkeyedLiterals
 
 	Message protoreflect.Message
 }
 
-// IsInitializedOutput is output from the IsInitialized method.
-type IsInitializedOutput = struct {
+// CheckInitializedOutput is output from the CheckInitialized method.
+type CheckInitializedOutput = struct {
 	pragma.NoUnkeyedLiterals
 }

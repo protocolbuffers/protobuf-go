@@ -17,12 +17,12 @@ import (
 type (
 	methods = struct {
 		pragma.NoUnkeyedLiterals
-		Flags         supportFlags
-		Size          func(sizeInput) sizeOutput
-		Marshal       func(marshalInput) (marshalOutput, error)
-		Unmarshal     func(unmarshalInput) (unmarshalOutput, error)
-		Merge         func(mergeInput) mergeOutput
-		IsInitialized func(isInitializedInput) (isInitializedOutput, error)
+		Flags            supportFlags
+		Size             func(sizeInput) sizeOutput
+		Marshal          func(marshalInput) (marshalOutput, error)
+		Unmarshal        func(unmarshalInput) (unmarshalOutput, error)
+		Merge            func(mergeInput) mergeOutput
+		CheckInitialized func(checkInitializedInput) (checkInitializedOutput, error)
 	}
 	supportFlags = uint64
 	sizeInput    = struct {
@@ -67,11 +67,11 @@ type (
 		pragma.NoUnkeyedLiterals
 		Flags uint8
 	}
-	isInitializedInput = struct {
+	checkInitializedInput = struct {
 		pragma.NoUnkeyedLiterals
 		Message Message
 	}
-	isInitializedOutput = struct {
+	checkInitializedOutput = struct {
 		pragma.NoUnkeyedLiterals
 	}
 )

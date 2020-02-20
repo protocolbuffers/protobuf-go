@@ -167,7 +167,7 @@ func makeWeakMessageFieldCoder(fd pref.FieldDescriptor) pointerCoderFuncs {
 			if !ok {
 				return nil
 			}
-			return proto.IsInitialized(m)
+			return proto.CheckInitialized(m)
 		},
 		merge: func(dst, src pointer, f *coderFieldInfo, opts mergeOptions) {
 			sm, ok := src.WeakFields().get(f.num)
@@ -219,7 +219,7 @@ func makeMessageFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCode
 			},
 			isInit: func(p pointer, f *coderFieldInfo) error {
 				m := asMessage(p.AsValueOf(ft).Elem())
-				return proto.IsInitialized(m)
+				return proto.CheckInitialized(m)
 			},
 			merge: mergeMessage,
 		}
@@ -257,7 +257,7 @@ func consumeMessageInfo(b []byte, p pointer, wtyp wire.Type, f *coderFieldInfo, 
 }
 
 func isInitMessageInfo(p pointer, f *coderFieldInfo) error {
-	return f.mi.isInitializedPointer(p.Elem())
+	return f.mi.checkInitializedPointer(p.Elem())
 }
 
 func sizeMessage(m proto.Message, tagsize int, _ marshalOptions) int {
@@ -307,7 +307,7 @@ func consumeMessageValue(b []byte, v pref.Value, _ wire.Number, wtyp wire.Type, 
 
 func isInitMessageValue(v pref.Value) error {
 	m := v.Message().Interface()
-	return proto.IsInitialized(m)
+	return proto.CheckInitialized(m)
 }
 
 var coderMessageValue = valueCoderFuncs{
@@ -374,7 +374,7 @@ func makeGroupFieldCoder(fd pref.FieldDescriptor, ft reflect.Type) pointerCoderF
 			},
 			isInit: func(p pointer, f *coderFieldInfo) error {
 				m := asMessage(p.AsValueOf(ft).Elem())
-				return proto.IsInitialized(m)
+				return proto.CheckInitialized(m)
 			},
 			merge: mergeMessage,
 		}
@@ -509,7 +509,7 @@ func consumeMessageSliceInfo(b []byte, p pointer, wtyp wire.Type, f *coderFieldI
 func isInitMessageSliceInfo(p pointer, f *coderFieldInfo) error {
 	s := p.PointerSlice()
 	for _, v := range s {
-		if err := f.mi.isInitializedPointer(v); err != nil {
+		if err := f.mi.checkInitializedPointer(v); err != nil {
 			return err
 		}
 	}
@@ -567,7 +567,7 @@ func isInitMessageSlice(p pointer, goType reflect.Type) error {
 	s := p.PointerSlice()
 	for _, v := range s {
 		m := asMessage(v.AsValueOf(goType.Elem()))
-		if err := proto.IsInitialized(m); err != nil {
+		if err := proto.CheckInitialized(m); err != nil {
 			return err
 		}
 	}
@@ -629,7 +629,7 @@ func isInitMessageSliceValue(listv pref.Value) error {
 	list := listv.List()
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		m := list.Get(i).Message().Interface()
-		if err := proto.IsInitialized(m); err != nil {
+		if err := proto.CheckInitialized(m); err != nil {
 			return err
 		}
 	}

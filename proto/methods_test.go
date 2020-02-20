@@ -131,7 +131,7 @@ func TestSelfMarshalerWithDescriptor(t *testing.T) {
 	}
 }
 
-func TestDecodeFastIsInitialized(t *testing.T) {
+func TestDecodeFastCheckInitialized(t *testing.T) {
 	for _, test := range testValidMessages {
 		if !test.checkFastInit {
 			continue
