@@ -10,11 +10,6 @@ import (
 	"google.golang.org/protobuf/runtime/protoiface"
 )
 
-// Deprecated: Use CheckInitialized instead.
-func IsInitialized(m Message) error {
-	return CheckInitialized(m)
-}
-
 // CheckInitialized returns an error if any required fields in m are not set.
 func CheckInitialized(m Message) error {
 	return checkInitialized(m.ProtoReflect())
