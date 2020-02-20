@@ -2,8 +2,14 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package protodesc provides for converting descriptorpb.FileDescriptorProto
-// to/from the reflective protoreflect.FileDescriptor.
+// Package protodesc provides functionality for converting
+// FileDescriptorProto messages to/from protoreflect.FileDescriptor values.
+//
+// The google.protobuf.FileDescriptorProto is a protobuf message that describes
+// the type information for a .proto file in a form that is easily serializable.
+// The protoreflect.FileDescriptor is a more structured representation of
+// the FileDescriptorProto message where references and remote dependencies
+// can be directly followed.
 package protodesc
 
 import (
