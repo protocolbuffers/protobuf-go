@@ -330,7 +330,7 @@ func (mi *MessageInfo) checkField(fd pref.FieldDescriptor) (*fieldInfo, pref.Ext
 
 	if fd.IsExtension() {
 		if fd.ContainingMessage().FullName() != mi.Desc.FullName() {
-			// TODO(blocks): Should this be exact containing message descriptor match?
+			// TODO: Should this be exact containing message descriptor match?
 			panic("mismatching containing message")
 		}
 		if !mi.Desc.ExtensionRanges().Has(fd.Number()) {
