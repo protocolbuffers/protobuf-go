@@ -19,7 +19,6 @@ import (
 	"sort"
 	"strings"
 
-	gengogrpc "google.golang.org/protobuf/cmd/protoc-gen-go-grpc/internal_gengogrpc"
 	gengo "google.golang.org/protobuf/cmd/protoc-gen-go/internal_gengo"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/internal/detrand"
@@ -66,24 +65,17 @@ func init() {
 	// When the environment variable RUN_AS_PROTOC_PLUGIN is set,
 	// we skip running main and instead act as a protoc plugin.
 	// This allows the binary to pass itself to protoc.
-	if plugins := os.Getenv("RUN_AS_PROTOC_PLUGIN"); plugins != "" {
+	if plugin := os.Getenv("RUN_AS_PROTOC_PLUGIN"); plugin != "" {
 		// Disable deliberate output instability for generated files.
 		// This is reasonable since we fully control the output.
 		detrand.Disable()
 
 		protogen.Run(nil, func(gen *protogen.Plugin) error {
-			for _, plugin := range strings.Split(plugins, ",") {
-				for _, file := range gen.Files {
-					if file.Generate {
-						switch plugin {
-						case "go":
-							gengo.GenerateVersionMarkers = false
-							gengo.GenerateFile(gen, file)
-							generateFieldNumbers(gen, file)
-						case "gogrpc":
-							gengogrpc.GenerateFile(gen, file)
-						}
-					}
+			for _, file := range gen.Files {
+				if file.Generate {
+					gengo.GenerateVersionMarkers = false
+					gengo.GenerateFile(gen, file)
+					generateFieldNumbers(gen, file)
 				}
 			}
 			return nil
@@ -128,14 +120,12 @@ func generateLocalProtos() {
 	// Generate all local proto files (except version-locked files).
 	dirs := []struct {
 		path        string
-		grpcPlugin  bool
 		annotateFor map[string]bool
 		exclude     map[string]bool
 	}{
 		{path: "cmd/protoc-gen-go/testdata", annotateFor: map[string]bool{
 			"cmd/protoc-gen-go/testdata/annotations/annotations.proto": true},
 		},
-		{path: "cmd/protoc-gen-go-grpc/testdata", grpcPlugin: true},
 		{path: "internal/testprotos", exclude: map[string]bool{
 			"internal/testprotos/irregular/irregular.proto": true,
 		}},
@@ -170,13 +160,7 @@ func generateLocalProtos() {
 				opts += ",annotate_code"
 			}
 
-			// Determine which set of plugins to use.
-			plugins := "go"
-			if d.grpcPlugin {
-				plugins += ",gogrpc"
-			}
-
-			protoc(plugins, "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+dstDir, relPath)
+			protoc("-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+dstDir, relPath)
 			return nil
 		})
 
@@ -248,11 +232,10 @@ func generateRemoteProtos() {
 		{"src", "google/protobuf/wrappers.proto"},
 	}
 	for _, f := range files {
-		protoc("go", "-I"+filepath.Join(protoRoot, f.prefix), "--go_out="+protoMapOpt()+":"+tmpDir, f.path)
+		protoc("-I"+filepath.Join(protoRoot, f.prefix), "--go_out="+protoMapOpt()+":"+tmpDir, f.path)
 	}
 
 	// Special-case: Generate field_mask.proto into a local test-only capy.
-	//protoc("go", "-I"+filepath.Join(protoRoot, "src/google/protobuf"), "--go_out=paths=source_relative:"+filepath.Join(tmpDir, modulePath, "internal/testprotos/fieldmaskpb"), "field_mask.proto")
 	copyFile(
 		filepath.Join(tmpDir, "google.golang.org/protobuf/internal/testprotos/fieldmaskpb/field_mask.pb.go"),
 		filepath.Join(tmpDir, "google.golang.org/genproto/protobuf/field_mask/field_mask.pb.go"),
@@ -261,10 +244,10 @@ func generateRemoteProtos() {
 	syncOutput(repoRoot, filepath.Join(tmpDir, modulePath))
 }
 
-func protoc(plugins string, args ...string) {
+func protoc(args ...string) {
 	cmd := exec.Command("protoc", "--plugin=protoc-gen-go="+os.Args[0])
 	cmd.Args = append(cmd.Args, args...)
-	cmd.Env = append(os.Environ(), "RUN_AS_PROTOC_PLUGIN="+plugins)
+	cmd.Env = append(os.Environ(), "RUN_AS_PROTOC_PLUGIN=1")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Printf("executing: %v\n%s\n", strings.Join(cmd.Args, " "), out)

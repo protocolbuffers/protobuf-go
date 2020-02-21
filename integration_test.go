@@ -73,7 +73,6 @@ func Test(t *testing.T) {
 		if goVersion == golangLatest {
 			runGo("ProtoLegacy", workDir, "go", "test", "-race", "-tags", "protolegacy", "./...")
 			runGo("ProtocGenGo", "cmd/protoc-gen-go/testdata", "go", "test")
-			runGo("ProtocGenGoGRPC", "cmd/protoc-gen-go-grpc/testdata", "go", "test")
 			runGo("Conformance", "internal/conformance", "go", "test", "-execute")
 		}
 	}
