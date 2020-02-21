@@ -226,8 +226,11 @@ func writeSource(file, src string) {
 
 	absFile := filepath.Join(repoRoot, file)
 	if run {
-		fmt.Println("#", file)
-		check(ioutil.WriteFile(absFile, b, 0664))
+		prev, _ := ioutil.ReadFile(absFile)
+		if !bytes.Equal(b, prev) {
+			fmt.Println("#", file)
+			check(ioutil.WriteFile(absFile, b, 0664))
+		}
 	} else {
 		check(ioutil.WriteFile(absFile+".tmp", b, 0664))
 		defer os.Remove(absFile + ".tmp")

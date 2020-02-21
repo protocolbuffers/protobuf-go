@@ -7,6 +7,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"go/format"
@@ -304,8 +305,9 @@ func syncOutput(dstDir, srcDir string) {
 		dstPath := filepath.Join(dstDir, relPath)
 
 		if run {
-			fmt.Println("#", relPath)
-			copyFile(dstPath, srcPath)
+			if copyFile(dstPath, srcPath) {
+				fmt.Println("#", relPath)
+			}
 		} else {
 			cmd := exec.Command("diff", dstPath, srcPath, "-N", "-u")
 			cmd.Stdout = os.Stdout
@@ -315,11 +317,16 @@ func syncOutput(dstDir, srcDir string) {
 	})
 }
 
-func copyFile(dstPath, srcPath string) {
-	b, err := ioutil.ReadFile(srcPath)
+func copyFile(dstPath, srcPath string) (changed bool) {
+	src, err := ioutil.ReadFile(srcPath)
 	check(err)
 	check(os.MkdirAll(filepath.Dir(dstPath), 0775))
-	check(ioutil.WriteFile(dstPath, b, 0664))
+	dst, _ := ioutil.ReadFile(dstPath)
+	if bytes.Equal(src, dst) {
+		return false
+	}
+	check(ioutil.WriteFile(dstPath, src, 0664))
+	return true
 }
 
 func protoMapOpt() string {
