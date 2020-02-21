@@ -49,6 +49,42 @@ func Test(t *testing.T) {
 	mustInitDeps(t)
 	mustHandleFlags(t)
 
+	// Report dirt in the working tree quickly, rather than after
+	// going through all the presubmits.
+	//
+	// Fail the test late, so we can test uncommitted changes with -failfast.
+	diff := mustRunCommand(t, "git", "diff", "--compact-summary", "HEAD")
+	if strings.TrimSpace(diff) != "" {
+		fmt.Printf("WARNING: working tree contains uncommitted changes:\n%v\n", diff)
+	}
+	untracked := mustRunCommand(t, "git", "ls-files", "--others", "--exclude-standard")
+	if strings.TrimSpace(untracked) != "" {
+		fmt.Printf("WARNING: working tree contains untracked files:\n%v", untracked)
+	}
+
+	// Do the relatively fast checks up-front.
+	t.Run("GeneratedGoFiles", func(t *testing.T) {
+		diff := mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-types")
+		if strings.TrimSpace(diff) != "" {
+			t.Fatalf("stale generated files:\n%v", diff)
+		}
+		diff = mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-protos")
+		if strings.TrimSpace(diff) != "" {
+			t.Fatalf("stale generated files:\n%v", diff)
+		}
+	})
+	t.Run("FormattedGoFiles", func(t *testing.T) {
+		files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go")), "\n")
+		diff := mustRunCommand(t, append([]string{"gofmt", "-d"}, files...)...)
+		if strings.TrimSpace(diff) != "" {
+			t.Fatalf("unformatted source files:\n%v", diff)
+		}
+	})
+	t.Run("CopyrightHeaders", func(t *testing.T) {
+		files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go", "*.proto")), "\n")
+		mustHaveCopyrightHeader(t, files)
+	})
+
 	var wg sync.WaitGroup
 	sema := make(chan bool, (runtime.NumCPU()+1)/2)
 	for i := range golangVersions {
@@ -79,37 +115,14 @@ func Test(t *testing.T) {
 	}
 	wg.Wait()
 
-	t.Run("GeneratedGoFiles", func(t *testing.T) {
-		diff := mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-types")
-		if strings.TrimSpace(diff) != "" {
-			t.Fatalf("stale generated files:\n%v", diff)
-		}
-		diff = mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-protos")
-		if strings.TrimSpace(diff) != "" {
-			t.Fatalf("stale generated files:\n%v", diff)
-		}
-	})
-	t.Run("FormattedGoFiles", func(t *testing.T) {
-		files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go")), "\n")
-		diff := mustRunCommand(t, append([]string{"gofmt", "-d"}, files...)...)
-		if strings.TrimSpace(diff) != "" {
-			t.Fatalf("unformatted source files:\n%v", diff)
-		}
-	})
-	t.Run("CopyrightHeaders", func(t *testing.T) {
-		files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go", "*.proto")), "\n")
-		mustHaveCopyrightHeader(t, files)
-	})
 	t.Run("CommittedGitChanges", func(t *testing.T) {
-		diff := mustRunCommand(t, "git", "diff", "--no-prefix", "HEAD")
 		if strings.TrimSpace(diff) != "" {
-			t.Fatalf("uncommitted changes:\n%v", diff)
+			t.Fatalf("uncommitted changes")
 		}
 	})
 	t.Run("TrackedGitFiles", func(t *testing.T) {
-		diff := mustRunCommand(t, "git", "ls-files", "--others", "--exclude-standard")
-		if strings.TrimSpace(diff) != "" {
-			t.Fatalf("untracked files:\n%v", diff)
+		if strings.TrimSpace(untracked) != "" {
+			t.Fatalf("untracked files")
 		}
 	})
 }
