@@ -53,7 +53,7 @@ func Test(t *testing.T) {
 	// going through all the presubmits.
 	//
 	// Fail the test late, so we can test uncommitted changes with -failfast.
-	diff := mustRunCommand(t, "git", "diff", "--compact-summary", "HEAD")
+	diff := mustRunCommand(t, "git", "diff", "HEAD")
 	if strings.TrimSpace(diff) != "" {
 		fmt.Printf("WARNING: working tree contains uncommitted changes:\n%v\n", diff)
 	}
