@@ -18,6 +18,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 	"sync"
@@ -94,6 +95,10 @@ func Test(t *testing.T) {
 		if strings.TrimSpace(diff) != "" {
 			t.Fatalf("unformatted source files:\n%v", diff)
 		}
+	})
+	t.Run("CopyrightHeaders", func(t *testing.T) {
+		files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go", "*.proto")), "\n")
+		mustHaveCopyrightHeader(t, files)
 	})
 	t.Run("CommittedGitChanges", func(t *testing.T) {
 		diff := mustRunCommand(t, "git", "diff", "--no-prefix", "HEAD")
@@ -359,6 +364,47 @@ func mustHandleFlags(t *testing.T) {
 	}
 	if *regenerate || *buildRelease {
 		t.SkipNow()
+	}
+}
+
+var copyrightRegex = []*regexp.Regexp{
+	regexp.MustCompile(`^// Copyright \d\d\d\d The Go Authors\. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file\.
+`),
+	// Generated .pb.go files from main protobuf repo.
+	regexp.MustCompile(`^// Protocol Buffers - Google's data interchange format
+// Copyright \d\d\d\d Google Inc\.  All rights reserved\.
+`),
+}
+
+var noCopyrightHeader = []string{
+	// Missing copyright header upstream.
+	"internal/testprotos/benchmarks/datasets/",
+}
+
+func mustHaveCopyrightHeader(t *testing.T, files []string) {
+	var bad []string
+File:
+	for _, file := range files {
+		for _, prefix := range noCopyrightHeader {
+			if strings.HasPrefix(file, prefix) {
+				continue File
+			}
+		}
+		b, err := ioutil.ReadFile(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, re := range copyrightRegex {
+			if loc := re.FindIndex(b); loc != nil && loc[0] == 0 {
+				continue File
+			}
+		}
+		bad = append(bad, file)
+	}
+	if len(bad) > 0 {
+		t.Fatalf("files with missing/bad copyright headers:\n  %v", strings.Join(bad, "\n  "))
 	}
 }
 
