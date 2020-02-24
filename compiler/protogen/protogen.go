@@ -41,6 +41,8 @@ import (
 	"google.golang.org/protobuf/types/pluginpb"
 )
 
+const goPackageDocURL = "https://developers.google.com/protocol-buffers/docs/reference/go-generated#package"
+
 // Run executes a function as a protoc plugin.
 //
 // It reads a CodeGeneratorRequest message from os.Stdin, invokes the plugin
@@ -304,6 +306,7 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 			log.Printf("WARNING: Deprecated use of the 'import_path' command-line argument. In %q, please specify:\n"+
 				"\toption go_package = %q;\n"+
 				"A future release of protoc-gen-go will no longer support the 'import_path' argument.\n"+
+				"See "+goPackageDocURL+" for more information.\n"+
 				"\n", fdesc.GetName(), goPkgOpt)
 		case mfiles[filename]:
 			// Command line: M=foo.proto=quux/bar
@@ -312,12 +315,14 @@ func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
 			log.Printf("WARNING: Deprecated use of 'go_package' option without a full import path in %q, please specify:\n"+
 				"\toption go_package = %q;\n"+
 				"A future release of protoc-gen-go will require the import path be specified.\n"+
+				"See "+goPackageDocURL+" for more information.\n"+
 				"\n", fdesc.GetName(), goPkgOpt)
 		case packageName == "" && importPath == "":
 			// No Go package information provided.
 			log.Printf("WARNING: Missing 'go_package' option in %q, please specify:\n"+
 				"\toption go_package = %q;\n"+
 				"A future release of protoc-gen-go will require this be specified.\n"+
+				"See "+goPackageDocURL+" for more information.\n"+
 				"\n", fdesc.GetName(), goPkgOpt)
 		}
 	}
@@ -540,6 +545,7 @@ func goPackageOption(d *descriptorpb.FileDescriptorProto) (pkg GoPackageName, im
 		log.Printf("WARNING: Malformed 'go_package' option in %q, please specify:\n"+
 			"\toption go_package = %q;\n"+
 			"A future release of protoc-gen-go will reject this.\n"+
+			"See "+goPackageDocURL+" for more information.\n"+
 			"\n", d.GetName(), string(impPath)+";"+string(pkg))
 	}
 	return pkg, impPath
