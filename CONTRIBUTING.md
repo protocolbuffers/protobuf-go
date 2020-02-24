@@ -5,13 +5,14 @@ The source of truth for this repository is at
 [go.googlesource.com/protobuf](https://go.googlesource.com/protobuf).
 The code review tool used is
 [Gerrit Code Review](https://www.gerritcodereview.com/).
+At this time, we are unfortunately unable to accept GitHub pull requests.
 
 
 ## Becoming a contributor
 
 The first step is to configure your environment.
 Please follow the steps outlined in
-[Becoming a contributor](https://golang.org/doc/contribute.html#contributor)
+["Becoming a contributor" (golang.org)](https://golang.org/doc/contribute.html#contributor)
 as the setup for contributing to the `protobuf` project is identical
 to that for contributing to the `go` project.
 
@@ -19,17 +20,15 @@ to that for contributing to the `go` project.
 ## Before contributing code
 
 The project welcomes submissions, but to make sure things are well coordinated
-we ask that everyone discuss any significant changes before starting work.
+we ask that contributors discuss any significant changes before starting work.
 Best practice is to connect your work to the
 [issue tracker](https://github.com/golang/protobuf/issues),
 either by filing a new issue or by claiming an existing issue.
-Issues related to the new API should have a "APIv2:" prefix in the title.
 
 
 ## Sending a change via Gerrit
 
 The `protobuf` project performs development in Gerrit.
-Unfortunately, we are not currently able to accept GitHub pull requests.
 Below are the steps to send a change using Gerrit.
 
 
