@@ -7,6 +7,7 @@ package proto_test
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"reflect"
 	"testing"
 
@@ -219,5 +220,29 @@ func TestEncodeOrder(t *testing.T) {
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("unexpected field marshal order:\ngot:  %v\nwant: %v\nmessage:\n%v", got, want, m)
+	}
+}
+
+func TestEncodeLarge(t *testing.T) {
+	// Encode/decode a message large enough to overflow a 32-bit size cache.
+	t.Skip("too slow and memory-hungry to run all the time")
+	size := math.MaxUint32 + 1
+	m := &testpb.TestAllTypes_NestedMessage{
+		Corecursive: &testpb.TestAllTypes{
+			OptionalBytes: make([]byte, size),
+		},
+	}
+	b, err := proto.Marshal(m)
+	if err != nil {
+		t.Fatalf("Marshal: %v", err)
+	}
+	if got, want := len(b), proto.Size(m); got != want {
+		t.Fatalf("Size(m) = %v, but len(Marshal(m)) = %v", got, want)
+	}
+	if err := proto.Unmarshal(b, m); err != nil {
+		t.Fatalf("Unmarshal: %v", err)
+	}
+	if got, want := len(m.Corecursive.OptionalBytes), size; got != want {
+		t.Errorf("after round-trip marshal, got len(m.OptionalBytes) = %v, want %v", got, want)
 	}
 }

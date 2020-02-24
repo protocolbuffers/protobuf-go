@@ -5,6 +5,7 @@
 package impl
 
 import (
+	"math"
 	"sort"
 	"sync/atomic"
 
@@ -48,7 +49,9 @@ func (mi *MessageInfo) sizePointer(p pointer, opts marshalOptions) (size int) {
 		return 0
 	}
 	if opts.UseCachedSize() && mi.sizecacheOffset.IsValid() {
-		return int(atomic.LoadInt32(p.Apply(mi.sizecacheOffset).Int32()))
+		if size := atomic.LoadInt32(p.Apply(mi.sizecacheOffset).Int32()); size >= 0 {
+			return int(size)
+		}
 	}
 	return mi.sizePointerSlow(p, opts)
 }
@@ -80,7 +83,14 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 		size += len(u)
 	}
 	if mi.sizecacheOffset.IsValid() {
-		atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), int32(size))
+		if size > math.MaxInt32 {
+			// The size is too large for the int32 sizecache field.
+			// We will need to recompute the size when encoding;
+			// unfortunately expensive, but better than invalid output.
+			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), -1)
+		} else {
+			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), int32(size))
+		}
 	}
 	return size
 }
