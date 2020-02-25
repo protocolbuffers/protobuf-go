@@ -23,7 +23,7 @@ type Methods = struct {
 
 	// Size returns the size in bytes of the wire-format encoding of a message.
 	// Marshal must be provided if a custom Size is provided.
-	Size func(in SizeInput) SizeOutput
+	Size func(SizeInput) SizeOutput
 
 	// Marshal formats a message in the wire-format encoding to the provided buffer.
 	// Size should be provided if a custom Marshal is provided.
