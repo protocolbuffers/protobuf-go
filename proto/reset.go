@@ -18,6 +18,10 @@ func Reset(m Message) {
 }
 
 func resetMessage(m protoreflect.Message) {
+	if !m.IsValid() {
+		panic("cannot reset invalid message")
+	}
+
 	// Clear all known fields.
 	fds := m.Descriptor().Fields()
 	for i := 0; i < fds.Len(); i++ {

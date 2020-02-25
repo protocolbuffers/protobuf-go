@@ -68,6 +68,10 @@ func (o mergeOptions) mergeMessage(dst, src protoreflect.Message) {
 		}
 	}
 
+	if !dst.IsValid() {
+		panic("cannot merge into invalid destination message")
+	}
+
 	src.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		switch {
 		case fd.IsList():
