@@ -5,7 +5,6 @@
 package encoding_test
 
 import (
-	"flag"
 	"fmt"
 	"testing"
 
@@ -19,8 +18,6 @@ import (
 // The results of these microbenchmarks are unlikely to correspond well
 // to real world peformance. They are mainly useful as a quick check to
 // detect unexpected regressions and for profiling specific cases.
-
-var benchV1 = flag.Bool("v1", false, "benchmark the v1 implementation")
 
 const maxRecurseLevel = 3
 
