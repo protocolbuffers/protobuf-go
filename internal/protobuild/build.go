@@ -98,7 +98,6 @@ func (template Message) Build(m pref.Message) {
 				v.(Message).Build(m.Mutable(fd).Message())
 			}
 		}
-
 	}
 }
 

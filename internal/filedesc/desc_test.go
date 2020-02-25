@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+
 	detrand "google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/proto"

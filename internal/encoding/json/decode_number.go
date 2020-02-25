@@ -221,7 +221,6 @@ func normalizeToIntString(n numberParts) (string, bool) {
 		for i := 0; i < exp-fracSize; i++ {
 			num = append(num, '0')
 		}
-
 	} else {
 		// For negative E, shift digits in integer part out.
 

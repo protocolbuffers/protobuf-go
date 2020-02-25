@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/proto"

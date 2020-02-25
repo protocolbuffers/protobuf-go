@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
@@ -64,7 +65,6 @@ func TestExtensionFuncs(t *testing.T) {
 		if proto.HasExtension(test.message, test.ext) {
 			t.Errorf("%v:\nafter clearing extension HasExtension(...) = true, want false", desc)
 		}
-
 	}
 }
 

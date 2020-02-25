@@ -11,6 +11,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/google/go-cmp/cmp"
+
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/encoding/text"
 )

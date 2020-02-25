@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+
 	"google.golang.org/protobuf/encoding/prototext"
 	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/internal/pragma"

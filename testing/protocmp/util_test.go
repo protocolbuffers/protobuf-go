@@ -10,10 +10,11 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"google.golang.org/protobuf/internal/encoding/pack"
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/dynamicpb"
+
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
 )
 
 func TestEqual(t *testing.T) {

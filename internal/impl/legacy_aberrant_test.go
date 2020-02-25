@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/reflect/protodesc"

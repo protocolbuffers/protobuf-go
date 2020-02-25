@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/encoding/pack"
 	"google.golang.org/protobuf/internal/protobuild"
@@ -645,7 +646,6 @@ func TestMerge(t *testing.T) {
 				if !proto.Equal(dst, want) {
 					t.Fatalf("mutation observed after modifying source:\n got %v\nwant %v\ndiff (-want,+got):\n%v", dst, want, cmp.Diff(want, dst, protocmp.Transform()))
 				}
-
 			})
 		}
 	}
