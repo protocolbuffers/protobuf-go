@@ -1,8 +1,7 @@
-/.cache
-/.gocache
-/bin
-/vendor
-/internal/fuzz/wire/fuzz-fuzz.zip
+/.cache/
+/.gocache/
+/bin/
+/vendor/
 
 # This file includes artifacts of the system test that should not be checked in.
 # For files created by specific development environment (e.g. editor),
