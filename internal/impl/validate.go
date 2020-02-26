@@ -518,6 +518,9 @@ State:
 						return out, ValidationUnknown
 					default:
 						xvi := getExtensionFieldInfo(xt).validation
+						if xvi.mi != nil {
+							xvi.mi.init()
+						}
 						states = append(states, validationState{
 							typ:  xvi.typ,
 							mi:   xvi.mi,
