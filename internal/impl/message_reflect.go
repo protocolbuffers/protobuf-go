@@ -256,7 +256,7 @@ type MessageState struct {
 	pragma.DoNotCompare
 	pragma.DoNotCopy
 
-	mi *MessageInfo
+	atomicMessageInfo *MessageInfo
 }
 
 type messageState MessageState

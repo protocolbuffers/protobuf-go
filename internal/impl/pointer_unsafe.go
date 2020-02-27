@@ -151,10 +151,10 @@ func (ms *messageState) messageInfo() *MessageInfo {
 	return ms.LoadMessageInfo()
 }
 func (ms *messageState) LoadMessageInfo() *MessageInfo {
-	return (*MessageInfo)(atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&ms.mi))))
+	return (*MessageInfo)(atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&ms.atomicMessageInfo))))
 }
 func (ms *messageState) StoreMessageInfo(mi *MessageInfo) {
-	atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&ms.mi)), unsafe.Pointer(mi))
+	atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&ms.atomicMessageInfo)), unsafe.Pointer(mi))
 }
 
 type atomicNilMessage struct{ p unsafe.Pointer } // p is a *messageReflectWrapper

@@ -100,9 +100,9 @@ func (mi *MessageInfo) initOnce() {
 func (mi *MessageInfo) getPointer(m pref.Message) (p pointer, ok bool) {
 	switch m := m.(type) {
 	case *messageState:
-		return m.pointer(), m.mi == mi
+		return m.pointer(), m.messageInfo() == mi
 	case *messageReflectWrapper:
-		return m.pointer(), m.mi == mi
+		return m.pointer(), m.messageInfo() == mi
 	}
 	return pointer{}, false
 }
