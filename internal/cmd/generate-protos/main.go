@@ -71,7 +71,7 @@ func init() {
 		// This is reasonable since we fully control the output.
 		detrand.Disable()
 
-		protogen.Run(nil, func(gen *protogen.Plugin) error {
+		protogen.Options{}.Run(func(gen *protogen.Plugin) error {
 			for _, file := range gen.Files {
 				if file.Generate {
 					gengo.GenerateVersionMarkers = false

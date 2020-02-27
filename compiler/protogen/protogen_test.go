@@ -21,13 +21,12 @@ import (
 func TestPluginParameters(t *testing.T) {
 	var flags flag.FlagSet
 	value := flags.Int("integer", 0, "")
-	opts := &Options{
-		ParamFunc: flags.Set,
-	}
 	const params = "integer=2"
-	_, err := New(&pluginpb.CodeGeneratorRequest{
+	_, err := Options{
+		ParamFunc: flags.Set,
+	}.New(&pluginpb.CodeGeneratorRequest{
 		Parameter: proto.String(params),
-	}, opts)
+	})
 	if err != nil {
 		t.Errorf("New(generator parameters %q): %v", params, err)
 	}
@@ -43,12 +42,11 @@ func TestPluginParameterErrors(t *testing.T) {
 	} {
 		var flags flag.FlagSet
 		flags.Bool("boolean", false, "")
-		opts := &Options{
+		_, err := Options{
 			ParamFunc: flags.Set,
-		}
-		_, err := New(&pluginpb.CodeGeneratorRequest{
+		}.New(&pluginpb.CodeGeneratorRequest{
 			Parameter: proto.String(parameter),
-		}, opts)
+		})
 		if err == nil {
 			t.Errorf("New(generator parameters %q): want error, got nil", parameter)
 		}
@@ -56,7 +54,7 @@ func TestPluginParameterErrors(t *testing.T) {
 }
 
 func TestNoGoPackage(t *testing.T) {
-	gen, err := New(&pluginpb.CodeGeneratorRequest{
+	gen, err := Options{}.New(&pluginpb.CodeGeneratorRequest{
 		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
 				Name:    proto.String("testdata/go_package/no_go_package.proto"),
@@ -70,7 +68,7 @@ func TestNoGoPackage(t *testing.T) {
 				Dependency: []string{"testdata/go_package/no_go_package.proto"},
 			},
 		},
-	}, nil)
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -182,7 +180,7 @@ TEST: %v
 		if test.generate {
 			req.FileToGenerate = []string{filename}
 		}
-		gen, err := New(req, nil)
+		gen, err := Options{}.New(req)
 		if err != nil {
 			t.Errorf("%vNew(req) = %v", context, err)
 			continue
@@ -205,7 +203,7 @@ TEST: %v
 }
 
 func TestPackageNameInference(t *testing.T) {
-	gen, err := New(&pluginpb.CodeGeneratorRequest{
+	gen, err := Options{}.New(&pluginpb.CodeGeneratorRequest{
 		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
 				Name:    proto.String("dir/file1.proto"),
@@ -220,7 +218,7 @@ func TestPackageNameInference(t *testing.T) {
 			},
 		},
 		FileToGenerate: []string{"dir/file1.proto", "dir/file2.proto"},
-	}, nil)
+	})
 	if err != nil {
 		t.Fatalf("New(req) = %v", err)
 	}
@@ -232,7 +230,7 @@ func TestPackageNameInference(t *testing.T) {
 }
 
 func TestInconsistentPackageNames(t *testing.T) {
-	_, err := New(&pluginpb.CodeGeneratorRequest{
+	_, err := Options{}.New(&pluginpb.CodeGeneratorRequest{
 		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
 				Name:    proto.String("dir/file1.proto"),
@@ -250,14 +248,14 @@ func TestInconsistentPackageNames(t *testing.T) {
 			},
 		},
 		FileToGenerate: []string{"dir/file1.proto", "dir/file2.proto"},
-	}, nil)
+	})
 	if err == nil {
 		t.Fatalf("inconsistent package names for the same import path: New(req) = nil, want error")
 	}
 }
 
 func TestImports(t *testing.T) {
-	gen, err := New(&pluginpb.CodeGeneratorRequest{}, nil)
+	gen, err := Options{}.New(&pluginpb.CodeGeneratorRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -303,11 +301,11 @@ var _ = string1.X // "golang.org/z/string"
 }
 
 func TestImportRewrites(t *testing.T) {
-	gen, err := New(&pluginpb.CodeGeneratorRequest{}, &Options{
+	gen, err := Options{
 		ImportRewriteFunc: func(i GoImportPath) GoImportPath {
 			return "prefix/" + i
 		},
-	})
+	}.New(&pluginpb.CodeGeneratorRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}

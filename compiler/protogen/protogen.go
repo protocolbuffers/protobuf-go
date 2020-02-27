@@ -50,16 +50,14 @@ const goPackageDocURL = "https://developers.google.com/protocol-buffers/docs/ref
 //
 // If a failure occurs while reading or writing, Run prints an error to
 // os.Stderr and calls os.Exit(1).
-//
-// Passing a nil options is equivalent to passing a zero-valued one.
-func Run(opts *Options, f func(*Plugin) error) {
+func (opts Options) Run(f func(*Plugin) error) {
 	if err := run(opts, f); err != nil {
 		fmt.Fprintf(os.Stderr, "%s: %v\n", filepath.Base(os.Args[0]), err)
 		os.Exit(1)
 	}
 }
 
-func run(opts *Options, f func(*Plugin) error) error {
+func run(opts Options, f func(*Plugin) error) error {
 	if len(os.Args) > 1 {
 		return fmt.Errorf("unknown argument %q (this program should be run by protoc, not directly)", os.Args[1])
 	}
@@ -71,7 +69,7 @@ func run(opts *Options, f func(*Plugin) error) error {
 	if err := proto.Unmarshal(in, req); err != nil {
 		return err
 	}
-	gen, err := New(req, opts)
+	gen, err := opts.New(req)
 	if err != nil {
 		return err
 	}
@@ -112,11 +110,10 @@ type Plugin struct {
 	annotateCode   bool
 	pathType       pathType
 	genFiles       []*GeneratedFile
-	opts           *Options
+	opts           Options
 	err            error
 }
 
-// Options are optional parameters to New.
 type Options struct {
 	// If ParamFunc is non-nil, it will be called with each unknown
 	// generator parameter.
@@ -150,12 +147,7 @@ type Options struct {
 }
 
 // New returns a new Plugin.
-//
-// Passing a nil Options is equivalent to passing a zero-valued one.
-func New(req *pluginpb.CodeGeneratorRequest, opts *Options) (*Plugin, error) {
-	if opts == nil {
-		opts = &Options{}
-	}
+func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 	gen := &Plugin{
 		Request:        req,
 		FilesByPath:    make(map[string]*File),
