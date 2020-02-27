@@ -145,6 +145,65 @@ func TestEqual(t *testing.T) {
 		want: true,
 	}}...)
 
+	// Test message values.
+	tests = append(tests, []test{{
+		x:    testpb.TestAllTypes{OptionalSint64: proto.Int64(1)},
+		y:    testpb.TestAllTypes{OptionalSint64: proto.Int64(1)},
+		opts: cmp.Options{Transform()},
+		want: true,
+	}, {
+		x:    testpb.TestAllTypes{OptionalSint64: proto.Int64(1)},
+		y:    testpb.TestAllTypes{OptionalSint64: proto.Int64(2)},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x:    struct{ M testpb.TestAllTypes }{M: testpb.TestAllTypes{OptionalSint64: proto.Int64(1)}},
+		y:    struct{ M testpb.TestAllTypes }{M: testpb.TestAllTypes{OptionalSint64: proto.Int64(1)}},
+		opts: cmp.Options{Transform()},
+		want: true,
+	}, {
+		x:    struct{ M testpb.TestAllTypes }{M: testpb.TestAllTypes{OptionalSint64: proto.Int64(1)}},
+		y:    struct{ M testpb.TestAllTypes }{M: testpb.TestAllTypes{OptionalSint64: proto.Int64(2)}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x:    struct{ M []testpb.TestAllTypes }{M: []testpb.TestAllTypes{{OptionalSint64: proto.Int64(1)}}},
+		y:    struct{ M []testpb.TestAllTypes }{M: []testpb.TestAllTypes{{OptionalSint64: proto.Int64(1)}}},
+		opts: cmp.Options{Transform()},
+		want: true,
+	}, {
+		x:    struct{ M []testpb.TestAllTypes }{M: []testpb.TestAllTypes{{OptionalSint64: proto.Int64(1)}}},
+		y:    struct{ M []testpb.TestAllTypes }{M: []testpb.TestAllTypes{{OptionalSint64: proto.Int64(2)}}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: struct {
+			M map[string]testpb.TestAllTypes
+		}{
+			M: map[string]testpb.TestAllTypes{"k": {OptionalSint64: proto.Int64(1)}},
+		},
+		y: struct {
+			M map[string]testpb.TestAllTypes
+		}{
+			M: map[string]testpb.TestAllTypes{"k": {OptionalSint64: proto.Int64(1)}},
+		},
+		opts: cmp.Options{Transform()},
+		want: true,
+	}, {
+		x: struct {
+			M map[string]testpb.TestAllTypes
+		}{
+			M: map[string]testpb.TestAllTypes{"k": {OptionalSint64: proto.Int64(1)}},
+		},
+		y: struct {
+			M map[string]testpb.TestAllTypes
+		}{
+			M: map[string]testpb.TestAllTypes{"k": {OptionalSint64: proto.Int64(2)}},
+		},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}}...)
+
 	// Test IgnoreUnknown.
 	raw := pack.Message{
 		pack.Tag{1, pack.BytesType}, pack.String("Hello, goodbye!"),
