@@ -89,6 +89,36 @@ func TestReflect(t *testing.T) {
 		&testpb.TestAllTypes{
 			OneofField: &testpb.TestAllTypes_OneofEnum{testpb.TestAllTypes_NEG},
 		},
+		func() proto.Message {
+			m := new(testpb.TestAllExtensions)
+			proto.SetExtension(m, testpb.E_OptionalInt32, int32(-32))
+			proto.SetExtension(m, testpb.E_OptionalInt64, int64(-64))
+			proto.SetExtension(m, testpb.E_OptionalUint32, uint32(32))
+			proto.SetExtension(m, testpb.E_OptionalUint64, uint64(64))
+			proto.SetExtension(m, testpb.E_OptionalFloat, float32(32.32))
+			proto.SetExtension(m, testpb.E_OptionalDouble, float64(64.64))
+			proto.SetExtension(m, testpb.E_OptionalBool, bool(true))
+			proto.SetExtension(m, testpb.E_OptionalString, string("string"))
+			proto.SetExtension(m, testpb.E_OptionalBytes, []byte("bytes"))
+			proto.SetExtension(m, testpb.E_OptionalNestedMessage, &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(-32)})
+			proto.SetExtension(m, testpb.E_OptionalNestedEnum, testpb.TestAllTypes_NEG)
+			return m
+		}(),
+		func() proto.Message {
+			m := new(testpb.TestAllExtensions)
+			proto.SetExtension(m, testpb.E_RepeatedInt32, []int32{-32, +32})
+			proto.SetExtension(m, testpb.E_RepeatedInt64, []int64{-64, +64})
+			proto.SetExtension(m, testpb.E_RepeatedUint32, []uint32{0, 32})
+			proto.SetExtension(m, testpb.E_RepeatedUint64, []uint64{0, 64})
+			proto.SetExtension(m, testpb.E_RepeatedFloat, []float32{-32.32, +32.32})
+			proto.SetExtension(m, testpb.E_RepeatedDouble, []float64{-64.64, +64.64})
+			proto.SetExtension(m, testpb.E_RepeatedBool, []bool{false, true})
+			proto.SetExtension(m, testpb.E_RepeatedString, []string{"hello", "goodbye"})
+			proto.SetExtension(m, testpb.E_RepeatedBytes, [][]byte{[]byte("hello"), []byte("goodbye")})
+			proto.SetExtension(m, testpb.E_RepeatedNestedMessage, []*testpb.TestAllExtensions_NestedMessage{{A: proto.Int32(-32)}, {A: proto.Int32(+32)}})
+			proto.SetExtension(m, testpb.E_RepeatedNestedEnum, []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_NEG})
+			return m
+		}(),
 		&textpb.KnownTypes{
 			OptBool:   &wrapperspb.BoolValue{Value: true},
 			OptInt32:  &wrapperspb.Int32Value{Value: -32},

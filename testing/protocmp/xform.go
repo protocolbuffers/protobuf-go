@@ -127,10 +127,6 @@ func (m Message) Reset() {
 	panic("invalid mutation of a read-only message")
 }
 
-// TODO: There is currently no public API for retrieving the FieldDescriptors
-// for extension fields. Rather than adding a specialized API to support that,
-// perhaps Message should just implement protoreflect.ProtoMessage instead.
-
 // String returns a formatted string for the message.
 // It is intended for human debugging and has no guarantees about its
 // exact format or the stability of its output.

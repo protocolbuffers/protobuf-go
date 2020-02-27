@@ -38,7 +38,7 @@ func reflectValueOf(v interface{}) protoreflect.Value {
 type reflectMessage Message
 
 func (m reflectMessage) stringKey(fd protoreflect.FieldDescriptor) string {
-	if m.Descriptor() != fd.Parent() {
+	if m.Descriptor() != fd.ContainingMessage() {
 		panic("mismatching containing message")
 	}
 	if fd.IsExtension() {
