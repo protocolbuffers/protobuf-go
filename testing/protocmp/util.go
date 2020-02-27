@@ -472,7 +472,12 @@ func isEmptyMessage(v reflect.Value) bool {
 		return false // implies unexported struct field
 	}
 	if m, ok := v.Interface().(Message); ok {
-		return len(m) == 0 || (len(m) == 1 && m[messageTypeKey] != nil)
+		for k := range m {
+			if k != messageTypeKey && k != messageInvalidKey {
+				return false
+			}
+		}
+		return true
 	}
 	return false
 }

@@ -35,6 +35,11 @@ func TestEqual(t *testing.T) {
 		want: true,
 	}, {
 		x:    (*testpb.TestAllTypes)(nil),
+		y:    (*testpb.TestAllExtensions)(nil),
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x:    (*testpb.TestAllTypes)(nil),
 		y:    new(testpb.TestAllTypes),
 		opts: cmp.Options{Transform()},
 		want: false,

@@ -63,7 +63,10 @@ func (e Enum) String() string {
 	return strconv.Itoa(int(e.num))
 }
 
-const messageTypeKey = "@type"
+const (
+	messageTypeKey    = "@type"
+	messageInvalidKey = "@invalid"
+)
 
 type messageType struct {
 	md  protoreflect.MessageDescriptor
@@ -109,6 +112,21 @@ func (m Message) Descriptor() protoreflect.MessageDescriptor {
 	return mt.md
 }
 
+// ProtoReflect returns a reflective view of m.
+// It only implements the read-only operations of protoreflect.Message.
+// Calling any mutating operations on m panics.
+func (m Message) ProtoReflect() protoreflect.Message {
+	return (reflectMessage)(m)
+}
+
+// ProtoMessage is a marker method from the legacy message interface.
+func (m Message) ProtoMessage() {}
+
+// Reset is the required Reset method from the legacy message interface.
+func (m Message) Reset() {
+	panic("invalid mutation of a read-only message")
+}
+
 // TODO: There is currently no public API for retrieving the FieldDescriptors
 // for extension fields. Rather than adding a specialized API to support that,
 // perhaps Message should just implement protoreflect.ProtoMessage instead.
@@ -117,10 +135,14 @@ func (m Message) Descriptor() protoreflect.MessageDescriptor {
 // It is intended for human debugging and has no guarantees about its
 // exact format or the stability of its output.
 func (m Message) String() string {
-	if m == nil {
+	switch {
+	case m == nil:
 		return "<nil>"
+	case !m.ProtoReflect().IsValid():
+		return "<invalid>"
+	default:
+		return string(appendMessage(nil, m))
 	}
-	return string(appendMessage(nil, m))
 }
 
 type option struct{}
@@ -131,6 +153,10 @@ type option struct{}
 // The google.protobuf.Any message is automatically unmarshaled such that the
 // "value" field is a Message representing the underlying message value
 // assuming it could be resolved and properly unmarshaled.
+//
+// This does not directly transform higher-order composite Go types.
+// For example, []*foopb.Message is not transformed into []Message,
+// but rather the individual message elements of the slice are transformed.
 func Transform(...option) cmp.Option {
 	// NOTE: There are currently no custom options for Transform,
 	// but the use of an unexported type keeps the future open.
@@ -155,14 +181,22 @@ func Transform(...option) cmp.Option {
 		return false
 	}, cmp.Transformer("protocmp.Transform", func(v interface{}) Message {
 		m := protoimpl.X.MessageOf(v)
-		if m == nil || !m.IsValid() {
+		switch {
+		case m == nil:
 			return nil
+		case !m.IsValid():
+			return Message{messageTypeKey: messageType{md: m.Descriptor()}, messageInvalidKey: true}
+		default:
+			return transformMessage(m)
 		}
-		return transformMessage(m)
 	}))
 }
 
 func isMessageType(t reflect.Type) bool {
+	// Avoid tranforming the Message itself.
+	if t == reflect.TypeOf(Message(nil)) || t == reflect.TypeOf((*Message)(nil)) {
+		return false
+	}
 	return t.Implements(messageV1Type) || t.Implements(messageV2Type)
 }
 
