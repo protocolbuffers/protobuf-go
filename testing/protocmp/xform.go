@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package protocmp provides protobuf specific options for the cmp package.
+// Package protocmp provides protobuf specific options for the
+// "github.com/google/go-cmp/cmp" package.
 //
 // The primary feature is the Transform option, which transform proto.Message
 // types into a Message map that is suitable for cmp to introspect upon.
@@ -24,6 +25,7 @@ import (
 )
 
 var (
+	enumV2Type    = reflect.TypeOf((*protoreflect.Enum)(nil)).Elem()
 	messageV1Type = reflect.TypeOf((*protoiface.MessageV1)(nil)).Elem()
 	messageV2Type = reflect.TypeOf((*proto.Message)(nil)).Elem()
 )

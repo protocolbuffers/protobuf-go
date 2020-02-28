@@ -5,6 +5,9 @@
 package protocmp
 
 import (
+	"math"
+	"math/rand"
+	"sort"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -1023,6 +1026,263 @@ func TestEqual(t *testing.T) {
 		want: true,
 	}}...)
 
+	// Test SortRepeated.
+	type higherOrderType struct {
+		M    *testpb.TestAllTypes
+		I32s []int32
+		Es   []testpb.TestAllTypes_NestedEnum
+		Ms   []*testpb.ForeignMessage
+	}
+	tests = append(tests, []test{{
+		x:    &testpb.TestAllTypes{RepeatedInt32: []int32{3, 2, 1, 2, 3, 3}},
+		y:    &testpb.TestAllTypes{RepeatedInt32: []int32{2, 3, 3, 2, 1, 3}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedInt32: []int32{3, 2, 1, 2, 3, 3}},
+		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2, 3, 3, 2, 1, 3}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y int32) bool { return x < y }),
+		},
+		want: true,
+	}, {
+		x: higherOrderType{
+			M:    &testpb.TestAllTypes{RepeatedInt32: []int32{3, 2, 1, 2, 3, 3}},
+			I32s: []int32{3, 2, 1, 2, 3, 3},
+		},
+		y: higherOrderType{
+			M:    &testpb.TestAllTypes{RepeatedInt32: []int32{2, 3, 3, 2, 1, 3}},
+			I32s: []int32{2, 3, 3, 2, 1, 3},
+		},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y int32) bool { return x < y }),
+		},
+		want: false, // sort does not apply to []int32 outside of a message
+	}, {
+		x: &testpb.TestAllTypes{RepeatedInt32: []int32{3, 2, 1, 2, 3, 3}},
+		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2, 3, 3, 2, 1, 3}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y int64) bool { return x < y }),
+		},
+		want: false, // wrong sort type: int32 != int64
+	}, {
+		x:    &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAR, testpb.TestAllTypes_BAZ}},
+		y:    &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR, testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAZ}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAR, testpb.TestAllTypes_BAZ}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR, testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAZ}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y testpb.TestAllTypes_NestedEnum) bool { return x < y }),
+		},
+		want: true,
+	}, {
+		x: higherOrderType{
+			M:  &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAR, testpb.TestAllTypes_BAZ}},
+			Es: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAR, testpb.TestAllTypes_BAZ},
+		},
+		y: higherOrderType{
+			M:  &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR, testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAZ}},
+			Es: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR, testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAZ},
+		},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y testpb.TestAllTypes_NestedEnum) bool { return x < y }),
+		},
+		want: false, // sort does not apply to []testpb.TestAllTypes_NestedEnum outside of a message
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAR, testpb.TestAllTypes_BAZ}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR, testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAZ}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y testpb.ForeignEnum) bool { return x < y }),
+		},
+		want: false, // wrong sort type: testpb.TestAllTypes_NestedEnum != testpb.ForeignEnum
+	}, {
+		x:    &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{{}, {C: proto.Int32(3)}, nil, {C: proto.Int32(3)}, {C: proto.Int32(5)}, {C: proto.Int32(4)}}},
+		y:    &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{nil, {C: proto.Int32(3)}, {}, {C: proto.Int32(4)}, {C: proto.Int32(3)}, {C: proto.Int32(5)}}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{{}, {C: proto.Int32(3)}, nil, {C: proto.Int32(3)}, {C: proto.Int32(5)}, {C: proto.Int32(4)}}},
+		y: &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{nil, {C: proto.Int32(3)}, {}, {C: proto.Int32(4)}, {C: proto.Int32(3)}, {C: proto.Int32(5)}}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y *testpb.ForeignMessage) bool { return x.GetC() < y.GetC() }),
+		},
+		want: true,
+	}, {
+		x: higherOrderType{
+			M:  &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{{}, {C: proto.Int32(3)}, nil, {C: proto.Int32(3)}, {C: proto.Int32(5)}, {C: proto.Int32(4)}}},
+			Ms: []*testpb.ForeignMessage{{}, {C: proto.Int32(3)}, nil, {C: proto.Int32(3)}, {C: proto.Int32(5)}, {C: proto.Int32(4)}},
+		},
+		y: higherOrderType{
+			M:  &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{nil, {C: proto.Int32(3)}, {}, {C: proto.Int32(4)}, {C: proto.Int32(3)}, {C: proto.Int32(5)}}},
+			Ms: []*testpb.ForeignMessage{nil, {C: proto.Int32(3)}, {}, {C: proto.Int32(4)}, {C: proto.Int32(3)}, {C: proto.Int32(5)}},
+		},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y *testpb.ForeignMessage) bool { return x.GetC() < y.GetC() }),
+		},
+		want: false, // sort does not apply to []*testpb.ForeignMessage outside of a message
+	}, {
+		x: &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{{}, {C: proto.Int32(3)}, nil, {C: proto.Int32(3)}, {C: proto.Int32(5)}, {C: proto.Int32(4)}}},
+		y: &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{nil, {C: proto.Int32(3)}, {}, {C: proto.Int32(4)}, {C: proto.Int32(3)}, {C: proto.Int32(5)}}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y *testpb.TestAllTypes_NestedMessage) bool { return x.GetA() < y.GetA() }),
+		},
+		want: false, // wrong sort type: *testpb.ForeignMessage != *testpb.TestAllTypes_NestedMessage
+	}, {
+		x: &testpb.TestAllTypes{
+			RepeatedInt32:    []int32{-32, +32},
+			RepeatedSint32:   []int32{-32, +32},
+			RepeatedSfixed32: []int32{-32, +32},
+			RepeatedInt64:    []int64{-64, +64},
+			RepeatedSint64:   []int64{-64, +64},
+			RepeatedSfixed64: []int64{-64, +64},
+			RepeatedUint32:   []uint32{0, 32},
+			RepeatedFixed32:  []uint32{0, 32},
+			RepeatedUint64:   []uint64{0, 64},
+			RepeatedFixed64:  []uint64{0, 64},
+		},
+		y: &testpb.TestAllTypes{
+			RepeatedInt32:    []int32{+32, -32},
+			RepeatedSint32:   []int32{+32, -32},
+			RepeatedSfixed32: []int32{+32, -32},
+			RepeatedInt64:    []int64{+64, -64},
+			RepeatedSint64:   []int64{+64, -64},
+			RepeatedSfixed64: []int64{+64, -64},
+			RepeatedUint32:   []uint32{32, 0},
+			RepeatedFixed32:  []uint32{32, 0},
+			RepeatedUint64:   []uint64{64, 0},
+			RepeatedFixed64:  []uint64{64, 0},
+		},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeated(func(x, y int32) bool { return x < y }),
+			SortRepeated(func(x, y int64) bool { return x < y }),
+			SortRepeated(func(x, y uint32) bool { return x < y }),
+			SortRepeated(func(x, y uint64) bool { return x < y }),
+		},
+		want: true,
+	}}...)
+
+	// Test SortRepeatedFields.
+	tests = append(tests, []test{{
+		x:    &testpb.TestAllTypes{RepeatedInt32: []int32{3, 2, 1, 2, 3, 3}},
+		y:    &testpb.TestAllTypes{RepeatedInt32: []int32{2, 3, 3, 2, 1, 3}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedInt32: []int32{3, 2, 1, 2, 3, 3}},
+		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2, 3, 3, 2, 1, 3}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeatedFields(new(testpb.TestAllTypes), "repeated_int32"),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedInt32: []int32{3, 2, 1, 2, 3, 3}},
+		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2, 3, 3, 2, 1, 3}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeatedFields(new(testpb.TestAllTypes), "repeated_int64"),
+		},
+		want: false, // wrong field: repeated_int32 != repeated_int64
+	}, {
+		x:    &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAR, testpb.TestAllTypes_BAZ}},
+		y:    &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR, testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAZ}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAR, testpb.TestAllTypes_BAZ}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR, testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAZ}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeatedFields(new(testpb.TestAllTypes), "repeated_nested_enum"),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAR, testpb.TestAllTypes_BAZ}},
+		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR, testpb.TestAllTypes_FOO, testpb.TestAllTypes_BAZ}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeatedFields(new(testpb.TestAllTypes), "repeated_foreign_enum"),
+		},
+		want: false, // wrong field: repeated_nested_enum != repeated_foreign_enum
+	}, {
+		x:    &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{{}, {C: proto.Int32(3)}, nil, {C: proto.Int32(3)}, {C: proto.Int32(5)}, {C: proto.Int32(4)}}},
+		y:    &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{nil, {C: proto.Int32(3)}, {}, {C: proto.Int32(4)}, {C: proto.Int32(3)}, {C: proto.Int32(5)}}},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{{}, {C: proto.Int32(3)}, nil, {C: proto.Int32(3)}, {C: proto.Int32(5)}, {C: proto.Int32(4)}}},
+		y: &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{nil, {C: proto.Int32(3)}, {}, {C: proto.Int32(4)}, {C: proto.Int32(3)}, {C: proto.Int32(5)}}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeatedFields(new(testpb.TestAllTypes), "repeated_foreign_message"),
+		},
+		want: true,
+	}, {
+		x: &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{{}, {C: proto.Int32(3)}, nil, {C: proto.Int32(3)}, {C: proto.Int32(5)}, {C: proto.Int32(4)}}},
+		y: &testpb.TestAllTypes{RepeatedForeignMessage: []*testpb.ForeignMessage{nil, {C: proto.Int32(3)}, {}, {C: proto.Int32(4)}, {C: proto.Int32(3)}, {C: proto.Int32(5)}}},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeatedFields(new(testpb.TestAllTypes), "repeated_nested_message"),
+		},
+		want: false, // wrong field: repeated_foreign_message != repeated_nested_message
+	}, {
+		x: &testpb.TestAllTypes{
+			RepeatedBool:           []bool{false, true},
+			RepeatedInt32:          []int32{-32, +32},
+			RepeatedInt64:          []int64{-64, +64},
+			RepeatedUint32:         []uint32{0, 32},
+			RepeatedUint64:         []uint64{0, 64},
+			RepeatedFloat:          []float32{-32.32, +32.32},
+			RepeatedDouble:         []float64{-64.64, +64.64},
+			RepeatedString:         []string{"hello", "world"},
+			RepeatedBytes:          [][]byte{[]byte("hello"), []byte("world")},
+			RepeatedForeignEnum:    []testpb.ForeignEnum{testpb.ForeignEnum_FOREIGN_FOO, testpb.ForeignEnum_FOREIGN_BAR},
+			RepeatedForeignMessage: []*testpb.ForeignMessage{{C: proto.Int32(-1)}, {C: proto.Int32(+1)}},
+		},
+		y: &testpb.TestAllTypes{
+			RepeatedBool:           []bool{true, false},
+			RepeatedInt32:          []int32{+32, -32},
+			RepeatedInt64:          []int64{+64, -64},
+			RepeatedUint32:         []uint32{32, 0},
+			RepeatedUint64:         []uint64{64, 0},
+			RepeatedFloat:          []float32{+32.32, -32.32},
+			RepeatedDouble:         []float64{+64.64, -64.64},
+			RepeatedString:         []string{"world", "hello"},
+			RepeatedBytes:          [][]byte{[]byte("world"), []byte("hello")},
+			RepeatedForeignEnum:    []testpb.ForeignEnum{testpb.ForeignEnum_FOREIGN_BAR, testpb.ForeignEnum_FOREIGN_FOO},
+			RepeatedForeignMessage: []*testpb.ForeignMessage{{C: proto.Int32(+1)}, {C: proto.Int32(-1)}},
+		},
+		opts: cmp.Options{
+			Transform(),
+			SortRepeatedFields(new(testpb.TestAllTypes),
+				"repeated_bool",
+				"repeated_int32",
+				"repeated_int64",
+				"repeated_uint32",
+				"repeated_uint64",
+				"repeated_float",
+				"repeated_double",
+				"repeated_string",
+				"repeated_bytes",
+				"repeated_foreign_enum",
+				"repeated_foreign_message",
+			),
+		},
+		want: true,
+	}}...)
+
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			got := cmp.Equal(tt.x, tt.y, tt.opts)
@@ -1065,4 +1325,75 @@ func apply(m proto.Message, ops ...interface{}) proto.Message {
 		}
 	}
 	return m
+}
+
+func TestSort(t *testing.T) {
+	t.Run("F32", func(t *testing.T) {
+		want := []float32{
+			float32(math.Float32frombits(0xffc00000)), // -NaN
+			float32(math.Inf(-1)),
+			float32(-math.MaxFloat32),
+			float32(-123.456),
+			float32(-math.SmallestNonzeroFloat32),
+			float32(math.Copysign(0, -1)),
+			float32(math.Copysign(0, +1)),
+			float32(+math.SmallestNonzeroFloat32),
+			float32(+123.456),
+			float32(+math.MaxFloat32),
+			float32(math.Inf(+1)),
+			float32(math.Float32frombits(0x7fc00000)), // +NaN
+		}
+		for i := 0; i < 10; i++ {
+			t.Run("", func(t *testing.T) {
+				got := append([]float32(nil), want...)
+				rn := rand.New(rand.NewSource(int64(i)))
+				for i, j := range rn.Perm(len(got)) {
+					got[i], got[j] = got[j], got[i]
+				}
+				sort.Slice(got, func(i, j int) bool {
+					return lessF32(got[i], got[j])
+				})
+				cmpF32s := cmp.Comparer(func(x, y float32) bool {
+					return math.Float32bits(x) == math.Float32bits(y)
+				})
+				if diff := cmp.Diff(want, got, cmpF32s); diff != "" {
+					t.Errorf("Sort mismatch (-want +got):\n%s", diff)
+				}
+			})
+		}
+	})
+	t.Run("F64", func(t *testing.T) {
+		want := []float64{
+			float64(math.Float64frombits(0xfff8000000000001)), // -NaN
+			float64(math.Inf(-1)),
+			float64(-math.MaxFloat64),
+			float64(-123.456),
+			float64(-math.SmallestNonzeroFloat64),
+			float64(math.Copysign(0, -1)),
+			float64(math.Copysign(0, +1)),
+			float64(+math.SmallestNonzeroFloat64),
+			float64(+123.456),
+			float64(+math.MaxFloat64),
+			float64(math.Inf(+1)),
+			float64(math.Float64frombits(0x7ff8000000000001)), // +NaN
+		}
+		for i := 0; i < 10; i++ {
+			t.Run("", func(t *testing.T) {
+				got := append([]float64(nil), want...)
+				rn := rand.New(rand.NewSource(int64(i)))
+				for i, j := range rn.Perm(len(got)) {
+					got[i], got[j] = got[j], got[i]
+				}
+				sort.Slice(got, func(i, j int) bool {
+					return lessF64(got[i], got[j])
+				})
+				cmpF64s := cmp.Comparer(func(x, y float64) bool {
+					return math.Float64bits(x) == math.Float64bits(y)
+				})
+				if diff := cmp.Diff(want, got, cmpF64s); diff != "" {
+					t.Errorf("Sort mismatch (-want +got):\n%s", diff)
+				}
+			})
+		}
+	})
 }

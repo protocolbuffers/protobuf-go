@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -500,4 +501,179 @@ func IgnoreUnknown() cmp.Option {
 		// Filter for unknown fields (which always have a numeric map key).
 		return strings.Trim(mi.Key().String(), "0123456789") == ""
 	}, cmp.Ignore())
+}
+
+// SortRepeated sorts repeated fields of the specified element type.
+// The less function must be of the form "func(T, T) bool" where T is the
+// Go element type for the repeated field kind.
+//
+// The element type T can be one of the following:
+//	• Go type for a protobuf scalar kind except for an enum
+//	  (i.e., bool, int32, int64, uint32, uint64, float32, float64, string, and []byte)
+//	• E where E is a concrete enum type that implements protoreflect.Enum
+//	• M where M is a concrete message type that implement proto.Message
+//
+// This option only applies to repeated fields within a protobuf message.
+// It does not operate on higher-order Go types that seem like a repeated field.
+// For example, a []T outside the context of a protobuf message will not be
+// handled by this option. To sort Go slices that are not repeated fields,
+// consider using "github.com/google/go-cmp/cmp/cmpopts".SortSlices instead.
+//
+// This must be used in conjunction with Transform.
+func SortRepeated(lessFunc interface{}) cmp.Option {
+	t, ok := checkTTBFunc(lessFunc)
+	if !ok {
+		panic(fmt.Sprintf("invalid less function: %T", lessFunc))
+	}
+
+	var opt cmp.Option
+	var sliceType reflect.Type
+	switch vf := reflect.ValueOf(lessFunc); {
+	case t.Implements(enumV2Type):
+		et := reflect.Zero(t).Interface().(protoreflect.Enum).Type()
+		lessFunc = func(x, y Enum) bool {
+			vx := reflect.ValueOf(et.New(x.Number()))
+			vy := reflect.ValueOf(et.New(y.Number()))
+			return vf.Call([]reflect.Value{vx, vy})[0].Bool()
+		}
+		opt = FilterDescriptor(et.Descriptor(), cmpopts.SortSlices(lessFunc))
+		sliceType = reflect.SliceOf(enumReflectType)
+	case t.Implements(messageV2Type):
+		mt := reflect.Zero(t).Interface().(protoreflect.ProtoMessage).ProtoReflect().Type()
+		lessFunc = func(x, y Message) bool {
+			mx := mt.New().Interface()
+			my := mt.New().Interface()
+			proto.Merge(mx, x)
+			proto.Merge(my, y)
+			vx := reflect.ValueOf(mx)
+			vy := reflect.ValueOf(my)
+			return vf.Call([]reflect.Value{vx, vy})[0].Bool()
+		}
+		opt = FilterDescriptor(mt.Descriptor(), cmpopts.SortSlices(lessFunc))
+		sliceType = reflect.SliceOf(messageReflectType)
+	default:
+		switch t {
+		case reflect.TypeOf(bool(false)):
+		case reflect.TypeOf(int32(0)):
+		case reflect.TypeOf(int64(0)):
+		case reflect.TypeOf(uint32(0)):
+		case reflect.TypeOf(uint64(0)):
+		case reflect.TypeOf(float32(0)):
+		case reflect.TypeOf(float64(0)):
+		case reflect.TypeOf(string("")):
+		case reflect.TypeOf([]byte(nil)):
+		default:
+			panic(fmt.Sprintf("invalid element type: %v", t))
+		}
+		opt = cmpopts.SortSlices(lessFunc)
+		sliceType = reflect.SliceOf(t)
+	}
+
+	return cmp.FilterPath(func(p cmp.Path) bool {
+		// Filter to only apply to repeated fields within a message.
+		if t := p.Index(-1).Type(); t == nil || t != sliceType {
+			return false
+		}
+		if t := p.Index(-2).Type(); t == nil || t.Kind() != reflect.Interface {
+			return false
+		}
+		if t := p.Index(-3).Type(); t == nil || t != messageReflectType {
+			return false
+		}
+		return true
+	}, opt)
+}
+
+func checkTTBFunc(lessFunc interface{}) (reflect.Type, bool) {
+	switch t := reflect.TypeOf(lessFunc); {
+	case t == nil:
+		return nil, false
+	case t.NumIn() != 2 || t.In(0) != t.In(1) || t.IsVariadic():
+		return nil, false
+	case t.NumOut() != 1 || t.Out(0) != reflect.TypeOf(false):
+		return nil, false
+	default:
+		return t.In(0), true
+	}
+}
+
+// SortRepeatedFields sorts the specified repeated fields.
+// Sorting a repeated field is useful for treating the list as a multiset
+// (i.e., a set where each value can appear multiple times).
+// It panics if the field does not exist or is not a repeated field.
+//
+// The sort ordering is as follows:
+//	• Booleans are sorted where false is sorted before true.
+//	• Integers are sorted in ascending order.
+//	• Floating-point numbers are sorted in ascending order according to
+//	  the total ordering defined by IEEE-754 (section 5.10).
+//	• Strings and bytes are sorted lexicographically in ascending order.
+//	• Enums are sorted in ascending order based on its numeric value.
+//	• Messages are sorted according to some arbitrary ordering
+//	  which is undefined and may change in future implementations.
+//
+// The ordering chosen for repeated messages is unlikely to be aesthetically
+// preferred by humans. Consider using a custom sort function:
+//
+//	FilterField(m, "foo_field", SortRepeated(func(x, y *foopb.MyMessage) bool {
+//	    ... // user-provided definition for less
+//	}))
+//
+// This must be used in conjunction with Transform.
+func SortRepeatedFields(message proto.Message, names ...protoreflect.Name) cmp.Option {
+	var opts cmp.Options
+	md := message.ProtoReflect().Descriptor()
+	for _, name := range names {
+		fd := mustFindFieldDescriptor(md, name)
+		if !fd.IsList() {
+			panic(fmt.Sprintf("message field %q is not repeated", fd.FullName()))
+		}
+
+		var lessFunc interface{}
+		switch fd.Kind() {
+		case protoreflect.BoolKind:
+			lessFunc = func(x, y bool) bool { return !x && y }
+		case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
+			lessFunc = func(x, y int32) bool { return x < y }
+		case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
+			lessFunc = func(x, y int64) bool { return x < y }
+		case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
+			lessFunc = func(x, y uint32) bool { return x < y }
+		case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
+			lessFunc = func(x, y uint64) bool { return x < y }
+		case protoreflect.FloatKind:
+			lessFunc = lessF32
+		case protoreflect.DoubleKind:
+			lessFunc = lessF64
+		case protoreflect.StringKind:
+			lessFunc = func(x, y string) bool { return x < y }
+		case protoreflect.BytesKind:
+			lessFunc = func(x, y []byte) bool { return bytes.Compare(x, y) < 0 }
+		case protoreflect.EnumKind:
+			lessFunc = func(x, y Enum) bool { return x.Number() < y.Number() }
+		case protoreflect.MessageKind, protoreflect.GroupKind:
+			lessFunc = func(x, y Message) bool { return x.String() < y.String() }
+		default:
+			panic(fmt.Sprintf("invalid kind: %v", fd.Kind()))
+		}
+		opts = append(opts, FilterDescriptor(fd, cmpopts.SortSlices(lessFunc)))
+	}
+	return opts
+}
+
+func lessF32(x, y float32) bool {
+	// Bit-wise implementation of IEEE-754, section 5.10.
+	xi := int32(math.Float32bits(x))
+	yi := int32(math.Float32bits(y))
+	xi ^= int32(uint32(xi>>31) >> 1)
+	yi ^= int32(uint32(yi>>31) >> 1)
+	return xi < yi
+}
+func lessF64(x, y float64) bool {
+	// Bit-wise implementation of IEEE-754, section 5.10.
+	xi := int64(math.Float64bits(x))
+	yi := int64(math.Float64bits(y))
+	xi ^= int64(uint64(xi>>63) >> 1)
+	yi ^= int64(uint64(yi>>63) >> 1)
+	return xi < yi
 }
