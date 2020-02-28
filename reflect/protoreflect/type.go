@@ -212,11 +212,12 @@ type MessageDescriptor interface {
 	// ExtensionRanges is the field ranges used for extension fields.
 	// In Proto3, it is always an empty ranges.
 	ExtensionRanges() FieldRanges
-	// ExtensionRangeOptions returns the ith extension range options,
-	// which is a google.protobuf.ExtensionRangeOptions protobuf message.
-	// The caller must not modify the returned message.
+	// ExtensionRangeOptions returns the ith extension range options.
 	//
-	// This method may return a nil interface value if no options are present.
+	// To avoid a dependency cycle, this method returns a proto.Message value,
+	// which always contains a google.protobuf.ExtensionRangeOptions message.
+	// This method returns a typed nil-pointer if no options are present.
+	// The caller must import the descriptorpb package to use this.
 	ExtensionRangeOptions(i int) ProtoMessage
 
 	// Enums is a list of nested enum declarations.
