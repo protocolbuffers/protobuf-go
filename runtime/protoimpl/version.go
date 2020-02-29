@@ -51,9 +51,9 @@ import (
 //	10. Send out the CL for review and submit it.
 const (
 	versionMajor      = 1
-	versionMinor      = 19
+	versionMinor      = 20
 	versionPatch      = 0
-	versionPreRelease = "devel"
+	versionPreRelease = "rc.1"
 )
 
 // VersionString formats the version string for this module in semver format.
@@ -85,7 +85,7 @@ const (
 	// GenVersion is the runtime version required by generated .pb.go files.
 	// This is incremented when generated code relies on new functionality
 	// in the runtime.
-	GenVersion = 19
+	GenVersion = 20
 
 	// MinVersion is the minimum supported version for generated .pb.go files.
 	// This is incremented when the runtime drops support for old code.
