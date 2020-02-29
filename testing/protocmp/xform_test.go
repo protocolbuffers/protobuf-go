@@ -23,9 +23,8 @@ func init() {
 
 func TestTransform(t *testing.T) {
 	tests := []struct {
-		in         proto.Message
-		want       Message
-		wantString string
+		in   proto.Message
+		want Message
 	}{{
 		in: &testpb.TestAllTypes{
 			OptionalBool:          proto.Bool(false),
@@ -54,7 +53,6 @@ func TestTransform(t *testing.T) {
 			"optional_nested_enum":    enumOf(testpb.TestAllTypes_NEG),
 			"optional_nested_message": Message{messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
 		},
-		wantString: `{optional_int32:-32, optional_int64:-64, optional_uint32:32, optional_uint64:64, optional_float:32.32, optional_double:64.64, optional_bool:false, optional_string:"string", optional_bytes:"bytes", optional_nested_message:{a:5}, optional_nested_enum:NEG}`,
 	}, {
 		in: &testpb.TestAllTypes{
 			RepeatedBool:   []bool{false, true},
@@ -95,7 +93,6 @@ func TestTransform(t *testing.T) {
 				{messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(-5)},
 			},
 		},
-		wantString: `{repeated_int32:[32, -32], repeated_int64:[64, -64], repeated_uint32:[0, 32], repeated_uint64:[0, 64], repeated_float:[0, 32.32], repeated_double:[0, 64.64], repeated_bool:[false, true], repeated_string:["s1", "s2"], repeated_bytes:["\x01", "\x02"], repeated_nested_message:[{a:5}, {a:-5}], repeated_nested_enum:[FOO, BAR]}`,
 	}, {
 		in: &testpb.TestAllTypes{
 			MapBoolBool:     map[bool]bool{true: false},
@@ -132,7 +129,6 @@ func TestTransform(t *testing.T) {
 				"k": {messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
 			},
 		},
-		wantString: `{map_int32_int32:{-32:32}, map_int64_int64:{-64:64}, map_uint32_uint32:{0:32}, map_uint64_uint64:{0:64}, map_int32_float:{32:32.32}, map_int32_double:{64:64.64}, map_bool_bool:{true:false}, map_string_string:{"k":"v"}, map_string_bytes:{"k":"v"}, map_string_nested_message:{"k":{a:5}}, map_string_nested_enum:{"k":FOO}}`,
 	}, {
 		in: func() proto.Message {
 			m := &testpb.TestAllExtensions{}
@@ -163,7 +159,6 @@ func TestTransform(t *testing.T) {
 			"[goproto.proto.test.optional_nested_enum]":    enumOf(testpb.TestAllTypes_NEG),
 			"[goproto.proto.test.optional_nested_message]": Message{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
 		},
-		wantString: `{[goproto.proto.test.optional_bool]:false, [goproto.proto.test.optional_bytes]:"bytes", [goproto.proto.test.optional_double]:64.64, [goproto.proto.test.optional_float]:32.32, [goproto.proto.test.optional_int32]:-32, [goproto.proto.test.optional_int64]:-64, [goproto.proto.test.optional_nested_enum]:NEG, [goproto.proto.test.optional_nested_message]:{a:5}, [goproto.proto.test.optional_string]:"string", [goproto.proto.test.optional_uint32]:32, [goproto.proto.test.optional_uint64]:64}`,
 	}, {
 		in: func() proto.Message {
 			m := &testpb.TestAllExtensions{}
@@ -206,7 +201,6 @@ func TestTransform(t *testing.T) {
 				{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(-5)},
 			},
 		},
-		wantString: `{[goproto.proto.test.repeated_bool]:[false, true], [goproto.proto.test.repeated_bytes]:["\x01", "\x02"], [goproto.proto.test.repeated_double]:[0, 64.64], [goproto.proto.test.repeated_float]:[0, 32.32], [goproto.proto.test.repeated_int32]:[32, -32], [goproto.proto.test.repeated_int64]:[64, -64], [goproto.proto.test.repeated_nested_enum]:[FOO, BAR], [goproto.proto.test.repeated_nested_message]:[{a:5}, {a:-5}], [goproto.proto.test.repeated_string]:["s1", "s2"], [goproto.proto.test.repeated_uint32]:[0, 32], [goproto.proto.test.repeated_uint64]:[0, 64]}`,
 	}, {
 		in: func() proto.Message {
 			m := &testpb.TestAllTypes{}
@@ -257,16 +251,12 @@ func TestTransform(t *testing.T) {
 				protopack.Tag{Number: 50004, Type: protopack.EndGroupType},
 			}.Marshal()),
 		},
-		wantString: `{50000:100, 50001:200, 50002:300, 50003:"hello", 50004:{1:[100, 200, 300, "hello", {1:[100, 200, 300, "hello"]}]}}`,
 	}}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			got := transformMessage(tt.in.ProtoReflect())
 			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("Transform() mismatch (-want +got):\n%v", diff)
-			}
-			if diff := cmp.Diff(tt.wantString, got.String()); diff != "" {
-				t.Errorf("Transform().String() mismatch (-want +got):\n%v", diff)
 			}
 		})
 	}

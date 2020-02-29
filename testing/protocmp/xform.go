@@ -17,6 +17,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"google.golang.org/protobuf/encoding/protowire"
+	"google.golang.org/protobuf/internal/msgfmt"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -139,7 +140,7 @@ func (m Message) String() string {
 	case !m.ProtoReflect().IsValid():
 		return "<invalid>"
 	default:
-		return string(appendMessage(nil, m))
+		return msgfmt.Format(m)
 	}
 }
 
