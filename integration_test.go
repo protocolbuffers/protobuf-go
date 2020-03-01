@@ -32,7 +32,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "3.9.1"
+	protobufVersion = "3.11.4"
 	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.17", "1.13.8", "1.14"}
 	golangLatest    = golangVersions[len(golangVersions)-1]
 
@@ -217,27 +217,6 @@ func mustInitDeps(t *testing.T) {
 		command{Dir: protobufPath}.mustRun(t, "./configure")
 		command{Dir: protobufPath}.mustRun(t, "make")
 		command{Dir: filepath.Join(protobufPath, "conformance")}.mustRun(t, "make")
-	}
-	// The benchmark directory isn't present in the release download,
-	// so fetch needed files directly.
-	for _, path := range benchmarkProtos {
-		src := fmt.Sprintf("https://raw.githubusercontent.com/protocolbuffers/protobuf/v%v/%v", protobufVersion, path)
-		dst := filepath.Join(protobufPath, path)
-		if _, err := os.Stat(dst); err != nil {
-			downloadFile(check, dst, src)
-		}
-	}
-	benchdataPath := filepath.Join(testDir, "benchdata")
-	for _, path := range []string{
-		"benchmarks/datasets/google_message1/proto2/dataset.google_message1_proto2.pb",
-		"benchmarks/datasets/google_message1/proto3/dataset.google_message1_proto3.pb",
-		"benchmarks/datasets/google_message2/dataset.google_message2.pb",
-	} {
-		src := fmt.Sprintf("https://raw.githubusercontent.com/protocolbuffers/protobuf/v%v/%v", protobufVersion, path)
-		dst := filepath.Join(benchdataPath, filepath.Base(path))
-		if _, err := os.Stat(dst); err != nil {
-			downloadFile(check, dst, src)
-		}
 	}
 	check(os.Setenv("PROTOBUF_ROOT", protobufPath)) // for generate-protos
 	registerBinary("conform-test-runner", filepath.Join(protobufPath, "conformance", "conformance-test-runner"))
@@ -451,24 +430,4 @@ func (c command) mustRun(t *testing.T, args ...string) string {
 func mustRunCommand(t *testing.T, args ...string) string {
 	t.Helper()
 	return command{}.mustRun(t, args...)
-}
-
-var benchmarkProtos = []string{
-	"benchmarks/benchmarks.proto",
-	"benchmarks/datasets/google_message1/proto2/benchmark_message1_proto2.proto",
-	"benchmarks/datasets/google_message1/proto3/benchmark_message1_proto3.proto",
-	"benchmarks/datasets/google_message2/benchmark_message2.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3_1.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3_2.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3_3.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3_4.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3_5.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3_6.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3_7.proto",
-	"benchmarks/datasets/google_message3/benchmark_message3_8.proto",
-	"benchmarks/datasets/google_message4/benchmark_message4.proto",
-	"benchmarks/datasets/google_message4/benchmark_message4_1.proto",
-	"benchmarks/datasets/google_message4/benchmark_message4_2.proto",
-	"benchmarks/datasets/google_message4/benchmark_message4_3.proto",
 }
