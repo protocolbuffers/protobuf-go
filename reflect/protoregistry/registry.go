@@ -31,8 +31,8 @@ import (
 var ignoreConflict = func(d protoreflect.Descriptor, err error) bool {
 	log.Printf(""+
 		"WARNING: %v\n"+
-		"A future release will panic on registration conflicts.\n"+
-		// TODO(blocks): Add a URL pointing to documentation on how to resolve conflicts.
+		"A future release will panic on registration conflicts. See:\n"+
+		"https://developers.google.com/protocol-buffers/docs/reference/go/faq#namespace-conflict\n"+
 		"\n", err)
 	return true
 }
