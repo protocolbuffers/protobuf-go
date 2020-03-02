@@ -53,7 +53,7 @@ const (
 	versionMajor      = 1
 	versionMinor      = 20
 	versionPatch      = 0
-	versionPreRelease = ""
+	versionPreRelease = "devel"
 )
 
 // VersionString formats the version string for this module in semver format.
