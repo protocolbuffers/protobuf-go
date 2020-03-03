@@ -362,7 +362,9 @@ func ConsumeVarint(b []byte) (v uint64, n int) {
 // SizeVarint returns the encoded size of a varint.
 // The size is guaranteed to be within 1 and 10, inclusive.
 func SizeVarint(v uint64) int {
-	return 1 + (bits.Len64(v)-1)/7
+	// This computes 1 + (bits.Len64(v)-1)/7.
+	// 9/64 is a good enough approximation of 1/7
+	return int(9*uint32(bits.Len64(v))+64) / 64
 }
 
 // AppendFixed32 appends v to b as a little-endian uint32.
