@@ -17,6 +17,7 @@ import (
 func init() {
 	if flags.ProtoLegacy {
 		testValidMessages = append(testValidMessages, messageSetTestProtos...)
+		testInvalidMessages = append(testInvalidMessages, messageSetInvalidTestProtos...)
 	}
 }
 
@@ -218,6 +219,27 @@ var messageSetTestProtos = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc: "MessageSet with unknown field",
+		decodeTo: []proto.Message{func() proto.Message {
+			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
+			proto.SetExtension(m.MessageSet, msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
+				Ext1Field1: proto.Int32(10),
+			})
+			return m
+		}()},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{2, pack.VarintType}, pack.Varint(1000),
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{
+					pack.Tag{1, pack.VarintType}, pack.Varint(10),
+				}),
+				pack.Tag{4, pack.VarintType}, pack.Varint(0),
+				pack.Tag{1, pack.EndGroupType},
+			}),
+		}.Marshal(),
+	},
+	{
 		desc:          "MessageSet with required field set",
 		checkFastInit: true,
 		decodeTo: []proto.Message{func() proto.Message {
@@ -251,6 +273,37 @@ var messageSetTestProtos = []testProto{
 			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
 				pack.Tag{1, pack.StartGroupType},
 				pack.Tag{2, pack.VarintType}, pack.Varint(1002),
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
+				pack.Tag{1, pack.EndGroupType},
+			}),
+		}.Marshal(),
+	},
+}
+
+var messageSetInvalidTestProtos = []testProto{
+	{
+		desc: "MessageSet with type id 0",
+		decodeTo: []proto.Message{
+			(*messagesetpb.MessageSetContainer)(nil),
+		},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{2, pack.VarintType}, pack.Uvarint(0),
+				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
+				pack.Tag{1, pack.EndGroupType},
+			}),
+		}.Marshal(),
+	},
+	{
+		desc: "MessageSet with type id overflowing int32",
+		decodeTo: []proto.Message{
+			(*messagesetpb.MessageSetContainer)(nil),
+		},
+		wire: pack.Message{
+			pack.Tag{1, pack.BytesType}, pack.LengthPrefix(pack.Message{
+				pack.Tag{1, pack.StartGroupType},
+				pack.Tag{2, pack.VarintType}, pack.Uvarint(0x80000000),
 				pack.Tag{3, pack.BytesType}, pack.LengthPrefix(pack.Message{}),
 				pack.Tag{1, pack.EndGroupType},
 			}),

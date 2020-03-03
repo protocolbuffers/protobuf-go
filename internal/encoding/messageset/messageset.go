@@ -6,6 +6,8 @@
 package messageset
 
 import (
+	"math"
+
 	"google.golang.org/protobuf/internal/encoding/wire"
 	"google.golang.org/protobuf/internal/errors"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -146,6 +148,9 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []by
 				return 0, nil, 0, wire.ParseError(n)
 			}
 			b = b[n:]
+			if v < 1 || v > math.MaxInt32 {
+				return 0, nil, 0, errors.New("invalid type_id in message set")
+			}
 			typeid = wire.Number(v)
 		case num == FieldMessage && wtyp == wire.BytesType:
 			m, n := wire.ConsumeBytes(b)
@@ -176,6 +181,13 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []by
 				} else {
 					message = append(message, m...)
 				}
+			}
+			b = b[n:]
+		default:
+			// We have no place to put it, so we just ignore unknown fields.
+			n := wire.ConsumeFieldValue(num, wtyp, b)
+			if n < 0 {
+				return 0, nil, 0, wire.ParseError(n)
 			}
 			b = b[n:]
 		}
