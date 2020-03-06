@@ -18,6 +18,10 @@ import (
 	"google.golang.org/protobuf/types/pluginpb"
 )
 
+func init() {
+	warnings = false // avoid spam in tests
+}
+
 func TestPluginParameters(t *testing.T) {
 	var flags flag.FlagSet
 	value := flags.Int("integer", 0, "")
