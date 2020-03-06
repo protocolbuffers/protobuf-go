@@ -66,6 +66,8 @@ var protoPackages = map[string]string{
 	"datasets/google_message4/benchmark_message4_1.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4",
 	"datasets/google_message4/benchmark_message4_2.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4",
 	"datasets/google_message4/benchmark_message4_3.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4",
+
+	"cmd/protoc-gen-go/testdata/nopackage/nopackage.proto": "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/nopackage",
 }
 
 func init() {
@@ -172,7 +174,8 @@ func generateLocalProtos() {
 				return nil
 			}
 
-			opts := "paths=source_relative," + protoMapOpt()
+			opts := "module=" + modulePath
+			opts += "," + protoMapOpt()
 
 			// Emit a .meta file for certain files.
 			if d.annotateFor[filepath.ToSlash(relPath)] {
