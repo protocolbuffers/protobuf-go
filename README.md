@@ -173,8 +173,9 @@ sufficiently far apart.
 
 ## Historical legacy
 
-This project is the second major revision (released in 2020) of the Go protocol
-buffer API implemented by the
+This project is the second major revision
+([released in 2020](https://blog.golang.org/a-new-go-api-for-protocol-buffers))
+of the Go protocol buffer API implemented by the
 [`google.golang.org/protobuf`](https://pkg.go.dev/mod/google.golang.org/protobuf)
 module. The first major version
 ([released publicly in 2010](https://blog.golang.org/third-party-libraries-goprotobuf-and))
