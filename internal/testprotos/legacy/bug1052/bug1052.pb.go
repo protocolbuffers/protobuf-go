@@ -11,8 +11,8 @@ import (
 	fmt "fmt"
 	math "math"
 
-	proto "github.com/golang/protobuf/proto"
-	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
+	proto "google.golang.org/protobuf/internal/protolegacy"
+	descriptor "google.golang.org/protobuf/types/descriptorpb"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
