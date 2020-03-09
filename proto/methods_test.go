@@ -142,8 +142,9 @@ func TestDecodeFastCheckInitialized(t *testing.T) {
 				opts := proto.UnmarshalOptions{
 					AllowPartial: true,
 				}
-				out, err := opts.UnmarshalState(m.Interface(), protoiface.UnmarshalInput{
-					Buf: test.wire,
+				out, err := opts.UnmarshalState(protoiface.UnmarshalInput{
+					Buf:     test.wire,
+					Message: m,
 				})
 				if err != nil {
 					t.Fatalf("Unmarshal error: %v", err)

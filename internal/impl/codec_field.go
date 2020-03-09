@@ -278,8 +278,9 @@ func consumeMessage(b []byte, m proto.Message, wtyp wire.Type, opts unmarshalOpt
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
-	o, err := opts.Options().UnmarshalState(m, piface.UnmarshalInput{
-		Buf: v,
+	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
+		Buf:     v,
+		Message: m.ProtoReflect(),
 	})
 	if err != nil {
 		return out, err
@@ -421,8 +422,9 @@ func consumeGroup(b []byte, m proto.Message, num wire.Number, wtyp wire.Type, op
 	if n < 0 {
 		return out, wire.ParseError(n)
 	}
-	o, err := opts.Options().UnmarshalState(m, piface.UnmarshalInput{
-		Buf: b,
+	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
+		Buf:     b,
+		Message: m.ProtoReflect(),
 	})
 	if err != nil {
 		return out, err
@@ -551,8 +553,9 @@ func consumeMessageSlice(b []byte, p pointer, goType reflect.Type, wtyp wire.Typ
 		return out, wire.ParseError(n)
 	}
 	mp := reflect.New(goType.Elem())
-	o, err := opts.Options().UnmarshalState(asMessage(mp), piface.UnmarshalInput{
-		Buf: v,
+	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
+		Buf:     v,
+		Message: asMessage(mp).ProtoReflect(),
 	})
 	if err != nil {
 		return out, err
@@ -613,8 +616,9 @@ func consumeMessageSliceValue(b []byte, listv pref.Value, _ wire.Number, wtyp wi
 		return pref.Value{}, out, wire.ParseError(n)
 	}
 	m := list.NewElement()
-	o, err := opts.Options().UnmarshalState(m.Message().Interface(), piface.UnmarshalInput{
-		Buf: v,
+	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
+		Buf:     v,
+		Message: m.Message(),
 	})
 	if err != nil {
 		return pref.Value{}, out, err
@@ -680,8 +684,9 @@ func consumeGroupSliceValue(b []byte, listv pref.Value, num wire.Number, wtyp wi
 		return pref.Value{}, out, wire.ParseError(n)
 	}
 	m := list.NewElement()
-	o, err := opts.Options().UnmarshalState(m.Message().Interface(), piface.UnmarshalInput{
-		Buf: b,
+	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
+		Buf:     b,
+		Message: m.Message(),
 	})
 	if err != nil {
 		return pref.Value{}, out, err
@@ -765,8 +770,9 @@ func consumeGroupSlice(b []byte, p pointer, num wire.Number, wtyp wire.Type, goT
 		return out, wire.ParseError(n)
 	}
 	mp := reflect.New(goType.Elem())
-	o, err := opts.Options().UnmarshalState(asMessage(mp), piface.UnmarshalInput{
-		Buf: b,
+	o, err := opts.Options().UnmarshalState(piface.UnmarshalInput{
+		Buf:     b,
+		Message: asMessage(mp).ProtoReflect(),
 	})
 	if err != nil {
 		return out, err

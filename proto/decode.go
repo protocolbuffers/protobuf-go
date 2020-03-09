@@ -45,13 +45,13 @@ type UnmarshalOptions struct {
 
 // Unmarshal parses the wire-format message in b and places the result in m.
 func Unmarshal(b []byte, m Message) error {
-	_, err := UnmarshalOptions{}.unmarshal(b, m)
+	_, err := UnmarshalOptions{}.unmarshal(b, m.ProtoReflect())
 	return err
 }
 
 // Unmarshal parses the wire-format message in b and places the result in m.
 func (o UnmarshalOptions) Unmarshal(b []byte, m Message) error {
-	_, err := o.unmarshal(b, m)
+	_, err := o.unmarshal(b, m.ProtoReflect())
 	return err
 }
 
@@ -59,21 +59,20 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m Message) error {
 //
 // This method permits fine-grained control over the unmarshaler.
 // Most users should use Unmarshal instead.
-func (o UnmarshalOptions) UnmarshalState(m Message, in protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-	return o.unmarshal(in.Buf, m)
+func (o UnmarshalOptions) UnmarshalState(in protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+	return o.unmarshal(in.Buf, in.Message)
 }
 
-func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.UnmarshalOutput, err error) {
+func (o UnmarshalOptions) unmarshal(b []byte, m protoreflect.Message) (out protoiface.UnmarshalOutput, err error) {
 	if o.Resolver == nil {
 		o.Resolver = protoregistry.GlobalTypes
 	}
 	if !o.Merge {
-		Reset(message)
+		Reset(m.Interface()) // TODO
 	}
 	allowPartial := o.AllowPartial
 	o.Merge = true
 	o.AllowPartial = true
-	m := message.ProtoReflect()
 	methods := protoMethods(m)
 	if methods != nil && methods.Unmarshal != nil &&
 		!(o.DiscardUnknown && methods.Flags&protoiface.SupportUnmarshalDiscardUnknown == 0) {
@@ -99,7 +98,7 @@ func (o UnmarshalOptions) unmarshal(b []byte, message Message) (out protoiface.U
 }
 
 func (o UnmarshalOptions) unmarshalMessage(b []byte, m protoreflect.Message) error {
-	_, err := o.unmarshal(b, m.Interface())
+	_, err := o.unmarshal(b, m)
 	return err
 }
 
