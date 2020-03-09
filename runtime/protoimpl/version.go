@@ -52,8 +52,8 @@ import (
 const (
 	versionMajor      = 1
 	versionMinor      = 20
-	versionPatch      = 0
-	versionPreRelease = "devel"
+	versionPatch      = 1
+	versionPreRelease = ""
 )
 
 // VersionString formats the version string for this module in semver format.
