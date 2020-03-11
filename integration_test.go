@@ -25,7 +25,7 @@ import (
 	"testing"
 	"time"
 
-	"google.golang.org/protobuf/runtime/protoimpl"
+	"google.golang.org/protobuf/internal/version"
 )
 
 var (
@@ -321,7 +321,7 @@ func mustHandleFlags(t *testing.T) {
 	}
 	if *buildRelease {
 		t.Run("BuildRelease", func(t *testing.T) {
-			v := protoimpl.VersionString()
+			v := version.String()
 			for _, goos := range []string{"linux", "darwin", "windows"} {
 				for _, goarch := range []string{"386", "amd64"} {
 					binPath := filepath.Join("bin", fmt.Sprintf("protoc-gen-go.%v.%v.%v", v, goos, goarch))

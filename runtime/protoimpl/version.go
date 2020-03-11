@@ -5,82 +5,13 @@
 package protoimpl
 
 import (
-	"fmt"
-	"strings"
+	"google.golang.org/protobuf/internal/version"
 )
-
-// These constants determine the current version of this module.
-//
-//
-// For our release process, we enforce the following rules:
-//	* Tagged releases use a tag that is identical to VersionString.
-//	* Tagged releases never reference a commit where the VersionString
-//	contains "devel".
-//	* The set of all commits in this repository where VersionString
-//	does not contain "devel" must have a unique VersionString.
-//
-//
-// Steps for tagging a new release:
-//	1. Create a new CL.
-//
-//	2. Update versionMinor, versionPatch, and/or versionPreRelease as necessary.
-//	versionPreRelease must not contain the string "devel".
-//
-//	3. Since the last released minor version, have there been any changes to
-//	generator that relies on new functionality in the runtime?
-//	If yes, then increment GenVersion.
-//
-//	4. Since the last released minor version, have there been any changes to
-//	the runtime that removes support for old .pb.go source code?
-//	If yes, then increment MinVersion.
-//
-//	5. Send out the CL for review and submit it.
-//	Note that the next CL in step 8 must be submitted after this CL
-//	without any other CLs in-between.
-//
-//	6. Tag a new version, where the tag is is the current VersionString.
-//
-//	7. Write release notes for all notable changes
-//	between this release and the last release.
-//
-//	8. Create a new CL.
-//
-//	9. Update versionPreRelease to include the string "devel".
-//	For example: "" -> "devel" or "rc.1" -> "rc.1.devel"
-//
-//	10. Send out the CL for review and submit it.
-const (
-	versionMajor      = 1
-	versionMinor      = 20
-	versionPatch      = 1
-	versionPreRelease = "devel"
-)
-
-// VersionString formats the version string for this module in semver format.
-//
-// Examples:
-//	v1.20.1
-//	v1.21.0-rc.1
-func VersionString() string {
-	v := fmt.Sprintf("v%d.%d.%d", versionMajor, versionMinor, versionPatch)
-	if versionPreRelease != "" {
-		v += "-" + versionPreRelease
-
-		// TODO: Add metadata about the commit or build hash.
-		// See https://golang.org/issue/29814
-		// See https://golang.org/issue/33533
-		var versionMetadata string
-		if strings.Contains(versionPreRelease, "devel") && versionMetadata != "" {
-			v += "+" + versionMetadata
-		}
-	}
-	return v
-}
 
 const (
 	// MaxVersion is the maximum supported version for generated .pb.go files.
 	// It is always the current version of the module.
-	MaxVersion = versionMinor
+	MaxVersion = version.Minor
 
 	// GenVersion is the runtime version required by generated .pb.go files.
 	// This is incremented when generated code relies on new functionality

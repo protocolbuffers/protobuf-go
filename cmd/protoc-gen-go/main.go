@@ -18,12 +18,12 @@ import (
 
 	gengo "google.golang.org/protobuf/cmd/protoc-gen-go/internal_gengo"
 	"google.golang.org/protobuf/compiler/protogen"
-	"google.golang.org/protobuf/runtime/protoimpl"
+	"google.golang.org/protobuf/internal/version"
 )
 
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "--version" {
-		fmt.Fprintf(os.Stderr, "%v %v\n", filepath.Base(os.Args[0]), protoimpl.VersionString())
+		fmt.Fprintf(os.Stderr, "%v %v\n", filepath.Base(os.Args[0]), version.String())
 		os.Exit(1)
 	}
 

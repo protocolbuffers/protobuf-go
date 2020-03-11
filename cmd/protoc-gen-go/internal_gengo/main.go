@@ -21,6 +21,7 @@ import (
 	"google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/fieldnum"
 	"google.golang.org/protobuf/internal/genname"
+	"google.golang.org/protobuf/internal/version"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
 
@@ -121,7 +122,7 @@ func genGeneratedHeader(gen *protogen.Plugin, g *protogen.GeneratedFile, f *file
 
 	if GenerateVersionMarkers {
 		g.P("// versions:")
-		protocGenGoVersion := protoimpl.VersionString()
+		protocGenGoVersion := version.String()
 		protocVersion := "(unknown)"
 		if v := gen.Request.GetCompilerVersion(); v != nil {
 			protocVersion = fmt.Sprintf("v%v.%v.%v", v.GetMajor(), v.GetMinor(), v.GetPatch())
