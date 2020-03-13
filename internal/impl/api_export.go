@@ -168,12 +168,3 @@ func (Export) MessageTypeOf(m message) pref.MessageType {
 func (Export) MessageStringOf(m pref.ProtoMessage) string {
 	return prototext.MarshalOptions{Multiline: false}.Format(m)
 }
-
-// ExtensionDescFromType returns the legacy protoV1.ExtensionDesc for t.
-func (Export) ExtensionDescFromType(t pref.ExtensionType) *ExtensionInfo {
-	// TODO: Delete this function when v1 directly does this assertion.
-	if xt, ok := t.(*ExtensionInfo); ok {
-		return xt
-	}
-	return nil
-}
