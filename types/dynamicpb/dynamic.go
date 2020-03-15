@@ -306,8 +306,13 @@ func NewMessageType(desc pref.MessageDescriptor) pref.MessageType {
 	return messageType{desc}
 }
 
-func (mt messageType) New() pref.Message                  { return NewMessage(mt.desc) }
-func (mt messageType) Zero() pref.Message                 { return NewMessage(mt.desc) }
+func (mt messageType) New() pref.Message { return NewMessage(mt.desc) }
+func (mt messageType) Zero() pref.Message {
+	return &Message{
+		typ: messageType{mt.desc},
+		ext: make(map[pref.FieldNumber]pref.FieldDescriptor),
+	}
+}
 func (mt messageType) Descriptor() pref.MessageDescriptor { return mt.desc }
 
 type emptyList struct {
