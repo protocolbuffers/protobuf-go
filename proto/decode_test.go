@@ -5,6 +5,7 @@
 package proto_test
 
 import (
+	"bytes"
 	"fmt"
 	"reflect"
 	"testing"
@@ -34,8 +35,12 @@ func TestDecode(t *testing.T) {
 					return
 				}
 
-				// Aliasing check: Modifying the original wire bytes shouldn't
-				// affect the unmarshaled message.
+				// Aliasing check: Unmarshal shouldn't modify the original wire
+				// bytes, and modifying the original wire bytes shouldn't affect
+				// the unmarshaled message.
+				if !bytes.Equal(test.wire, wire) {
+					t.Errorf("Unmarshal unexpectedly modified its input")
+				}
 				for i := range wire {
 					wire[i] = 0
 				}

@@ -159,9 +159,9 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []by
 			}
 			if message == nil {
 				if wantLen {
-					message = b[:n]
+					message = b[:n:n]
 				} else {
-					message = m
+					message = m[:len(m):len(m)]
 				}
 			} else {
 				// This case should never happen in practice, but handle it for
@@ -174,7 +174,7 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid wire.Number, message []by
 				if wantLen {
 					_, nn := wire.ConsumeVarint(message)
 					m0 := message[nn:]
-					message = message[:0]
+					message = nil
 					message = wire.AppendVarint(message, uint64(len(m0)+len(m)))
 					message = append(message, m0...)
 					message = append(message, m...)
