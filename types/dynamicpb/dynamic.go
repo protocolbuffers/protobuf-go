@@ -323,7 +323,7 @@ func NewMessageType(desc pref.MessageDescriptor) pref.MessageType {
 }
 
 func (mt messageType) New() pref.Message                  { return NewMessage(mt.desc) }
-func (mt messageType) Zero() pref.Message                 { return NewMessage(mt.desc) }
+func (mt messageType) Zero() pref.Message                 { return &Message{typ: messageType{mt.desc}} }
 func (mt messageType) Descriptor() pref.MessageDescriptor { return mt.desc }
 
 type emptyList struct {
