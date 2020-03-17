@@ -36,6 +36,12 @@ type Message struct {
 	unknown pref.RawFields
 }
 
+var (
+	_ pref.Message         = (*Message)(nil)
+	_ pref.ProtoMessage    = (*Message)(nil)
+	_ protoiface.MessageV1 = (*Message)(nil)
+)
+
 // NewMessage creates a new message with the provided descriptor.
 func NewMessage(desc pref.MessageDescriptor) *Message {
 	return &Message{
@@ -45,6 +51,9 @@ func NewMessage(desc pref.MessageDescriptor) *Message {
 	}
 }
 
+// ProtoMessage implements the legacy message interface.
+func (m *Message) ProtoMessage() {}
+
 // ProtoReflect implements the protoreflect.ProtoMessage interface.
 func (m *Message) ProtoReflect() pref.Message {
 	return m
@@ -53,6 +62,13 @@ func (m *Message) ProtoReflect() pref.Message {
 // String returns a string representation of a message.
 func (m *Message) String() string {
 	return protoimpl.X.MessageStringOf(m)
+}
+
+// Reset clears the message to be empty, but preserves the dynamic message type.
+func (m *Message) Reset() {
+	m.known = make(map[pref.FieldNumber]pref.Value)
+	m.ext = make(map[pref.FieldNumber]pref.FieldDescriptor)
+	m.unknown = nil
 }
 
 // Descriptor returns the message descriptor.
