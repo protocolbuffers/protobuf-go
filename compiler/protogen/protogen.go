@@ -191,6 +191,14 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 			}
 		default:
 			if param[0] == 'M' {
+				if i := strings.Index(value, ";"); i >= 0 {
+					pkgName := GoPackageName(value[i+1:])
+					if otherName, ok := packageNames[param[1:]]; ok && pkgName != otherName {
+						return nil, fmt.Errorf("inconsistent package names for %q: %q != %q", value[:i], pkgName, otherName)
+					}
+					packageNames[param[1:]] = pkgName
+					value = value[:i]
+				}
 				importPaths[param[1:]] = GoImportPath(value)
 				mfiles[param[1:]] = true
 				continue
@@ -261,6 +269,8 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 		packageName, importPath := goPackageOption(fdesc)
 		defaultPackageName := packageNameForImportPath[importPaths[filename]]
 		switch {
+		case packageNames[filename] != "":
+			// A package name specified by the "M" command-line argument.
 		case packageName != "":
 			// TODO: For the "M" command-line argument, this means that the
 			// package name can be derived from the go_package option.

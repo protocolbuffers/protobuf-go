@@ -142,6 +142,15 @@ func TestPackageNamesAndPaths(t *testing.T) {
 			wantFilenamePrefix: "golang.org/x/foo/filename",
 		},
 		{
+			desc:               "command line sets import path for a file with package name specified",
+			parameter:          "Mdir/filename.proto=golang.org/x/bar;bar",
+			goPackageOption:    "golang.org/x/foo",
+			generate:           true,
+			wantPackageName:    "bar",
+			wantImportPath:     "golang.org/x/bar",
+			wantFilenamePrefix: "golang.org/x/foo/filename",
+		},
+		{
 			desc:               "import_path parameter sets import path of generated files",
 			parameter:          "import_path=golang.org/x/bar",
 			goPackageOption:    "golang.org/x/foo",
