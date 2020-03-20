@@ -55,6 +55,9 @@ Summary of the packages provided by this module:
     Package `protojson` serializes protobuf messages as JSON.
 *   [`encoding/prototext`](https://pkg.go.dev/google.golang.org/protobuf/encoding/prototext):
     Package `prototext` serializes protobuf messages as the text format.
+*   [`encoding/protowire`](https://pkg.go.dev/google.golang.org/protobuf/encoding/protowire):
+    Package `protowire` parses and formats the low-level raw wire encoding. Most
+    users should use package `proto` to serialize messages in the wire format.
 *   [`reflect/protoreflect`](https://pkg.go.dev/google.golang.org/protobuf/reflect/protoreflect):
     Package `protoreflect` provides interfaces to dynamically manipulate
     protobuf messages.
@@ -67,6 +70,8 @@ Summary of the packages provided by this module:
     `protoreflect.FileDescriptor`.
 *   [`testing/protocmp`](https://pkg.go.dev/google.golang.org/protobuf/testing/protocmp):
     Package `protocmp` provides protobuf specific options for the `cmp` package.
+*   [`testing/protopack`](https://pkg.go.dev/google.golang.org/protobuf/testing/protopack):
+    Package `protopack` aids manual encoding and decoding of the wire format.
 *   [`testing/prototest`](https://pkg.go.dev/google.golang.org/protobuf/testing/prototest):
     Package `prototest` exercises the protobuf reflection implementation for
     concrete message types.
