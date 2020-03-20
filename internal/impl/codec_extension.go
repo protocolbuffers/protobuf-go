@@ -191,43 +191,6 @@ func (f ExtensionField) IsSet() bool {
 	return f.typ != nil
 }
 
-// Deprecated: Do not use.
-func (f ExtensionField) HasType() bool {
-	return f.typ != nil
-}
-
-// Deprecated: Do not use.
-func (f ExtensionField) GetType() pref.ExtensionType {
-	return f.typ
-}
-
-// Deprecated: Do not use.
-func (f *ExtensionField) SetType(t pref.ExtensionType) {
-	f.typ = t
-}
-
-// Deprecated: Do not use.
-func (f ExtensionField) HasValue() bool {
-	return f.value.IsValid() || f.lazy != nil
-}
-
-// Deprecated: Do not use.
-func (f ExtensionField) GetValue() interface{} {
-	return f.typ.InterfaceOf(f.Value())
-}
-
-// Deprecated: Do not use.
-func (f *ExtensionField) SetEagerValue(ival interface{}) {
-	f.value = f.typ.ValueOf(ival)
-}
-
-// Deprecated: Do not use.
-func (f *ExtensionField) SetLazyValue(fn func() interface{}) {
-	f.SetLazy(f.typ, func() pref.Value {
-		return f.typ.ValueOf(fn())
-	})
-}
-
 // IsLazy reports whether a field is lazily encoded.
 // It is exported for testing.
 func IsLazy(m pref.Message, fd pref.FieldDescriptor) bool {
