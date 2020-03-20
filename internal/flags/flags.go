@@ -16,7 +16,7 @@ package flags
 // As such, functionality may suddenly be removed or changed at our discretion.
 const ProtoLegacy = protoLegacy
 
-// LazyUnmarshalExtension specifies whether to lazily unmarshal extensions.
+// LazyUnmarshalExtensions specifies whether to lazily unmarshal extensions.
 //
 // Lazy extension unmarshaling validates the contents of message-valued
 // extension fields at unmarshal time, but defers creating the message

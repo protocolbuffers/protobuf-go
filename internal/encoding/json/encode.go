@@ -85,7 +85,7 @@ func (e *Encoder) WriteString(s string) error {
 }
 
 // Sentinel error used for indicating invalid UTF-8.
-var invalidUTF8Err = errors.New("invalid UTF-8")
+var errInvalidUTF8 = errors.New("invalid UTF-8")
 
 func appendString(out []byte, in string) ([]byte, error) {
 	out = append(out, '"')
@@ -94,7 +94,7 @@ func appendString(out []byte, in string) ([]byte, error) {
 	for len(in) > 0 {
 		switch r, n := utf8.DecodeRuneInString(in); {
 		case r == utf8.RuneError && n == 1:
-			return out, invalidUTF8Err
+			return out, errInvalidUTF8
 		case r < ' ' || r == '"' || r == '\\':
 			out = append(out, '\\')
 			switch r {

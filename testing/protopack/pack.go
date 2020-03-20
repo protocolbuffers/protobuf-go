@@ -170,7 +170,7 @@ func (m Message) Size() int {
 	return n
 }
 
-// Message encodes a syntax tree into the protobuf wire format.
+// Marshal encodes a syntax tree into the protobuf wire format.
 //
 // Example message definition:
 //	message MyMessage {
