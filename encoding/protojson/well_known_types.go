@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"google.golang.org/protobuf/internal/detectknown"
 	"google.golang.org/protobuf/internal/encoding/json"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/fieldnum"
@@ -23,27 +24,18 @@ import (
 // The list of custom types here has to match the ones in marshalCustomType and
 // unmarshalCustomType.
 func isCustomType(name pref.FullName) bool {
-	switch name {
-	case "google.protobuf.Any",
-		"google.protobuf.BoolValue",
-		"google.protobuf.DoubleValue",
-		"google.protobuf.FloatValue",
-		"google.protobuf.Int32Value",
-		"google.protobuf.Int64Value",
-		"google.protobuf.UInt32Value",
-		"google.protobuf.UInt64Value",
-		"google.protobuf.StringValue",
-		"google.protobuf.BytesValue",
-		"google.protobuf.Empty",
-		"google.protobuf.Struct",
-		"google.protobuf.ListValue",
-		"google.protobuf.Value",
-		"google.protobuf.Duration",
-		"google.protobuf.Timestamp",
-		"google.protobuf.FieldMask":
-		return true
+	switch detectknown.Which(name) {
+	case detectknown.AnyProto:
+	case detectknown.TimestampProto:
+	case detectknown.DurationProto:
+	case detectknown.WrappersProto:
+	case detectknown.StructProto:
+	case detectknown.FieldMaskProto:
+	case detectknown.EmptyProto:
+	default:
+		return false
 	}
-	return false
+	return true
 }
 
 // marshalCustomType marshals given well-known type message that have special
@@ -51,44 +43,24 @@ func isCustomType(name pref.FullName) bool {
 // returns true, else it will panic.
 func (e encoder) marshalCustomType(m pref.Message) error {
 	name := m.Descriptor().FullName()
-	switch name {
-	case "google.protobuf.Any":
+	switch detectknown.Which(name) {
+	case detectknown.AnyProto:
 		return e.marshalAny(m)
-
-	case "google.protobuf.BoolValue",
-		"google.protobuf.DoubleValue",
-		"google.protobuf.FloatValue",
-		"google.protobuf.Int32Value",
-		"google.protobuf.Int64Value",
-		"google.protobuf.UInt32Value",
-		"google.protobuf.UInt64Value",
-		"google.protobuf.StringValue",
-		"google.protobuf.BytesValue":
-		return e.marshalWrapperType(m)
-
-	case "google.protobuf.Empty":
-		return e.marshalEmpty(m)
-
-	case "google.protobuf.Struct":
-		return e.marshalStruct(m)
-
-	case "google.protobuf.ListValue":
-		return e.marshalListValue(m)
-
-	case "google.protobuf.Value":
-		return e.marshalKnownValue(m)
-
-	case "google.protobuf.Duration":
-		return e.marshalDuration(m)
-
-	case "google.protobuf.Timestamp":
+	case detectknown.TimestampProto:
 		return e.marshalTimestamp(m)
-
-	case "google.protobuf.FieldMask":
+	case detectknown.DurationProto:
+		return e.marshalDuration(m)
+	case detectknown.WrappersProto:
+		return e.marshalWrapperType(m)
+	case detectknown.StructProto:
+		return e.marshalStructType(m)
+	case detectknown.FieldMaskProto:
 		return e.marshalFieldMask(m)
+	case detectknown.EmptyProto:
+		return e.marshalEmpty(m)
+	default:
+		panic(fmt.Sprintf("%s does not have a custom marshaler", name))
 	}
-
-	panic(fmt.Sprintf("%s does not have a custom marshaler", name))
 }
 
 // unmarshalCustomType unmarshals given well-known type message that have
@@ -96,44 +68,24 @@ func (e encoder) marshalCustomType(m pref.Message) error {
 // isCustomType returns true, else it will panic.
 func (d decoder) unmarshalCustomType(m pref.Message) error {
 	name := m.Descriptor().FullName()
-	switch name {
-	case "google.protobuf.Any":
+	switch detectknown.Which(name) {
+	case detectknown.AnyProto:
 		return d.unmarshalAny(m)
-
-	case "google.protobuf.BoolValue",
-		"google.protobuf.DoubleValue",
-		"google.protobuf.FloatValue",
-		"google.protobuf.Int32Value",
-		"google.protobuf.Int64Value",
-		"google.protobuf.UInt32Value",
-		"google.protobuf.UInt64Value",
-		"google.protobuf.StringValue",
-		"google.protobuf.BytesValue":
-		return d.unmarshalWrapperType(m)
-
-	case "google.protobuf.Empty":
-		return d.unmarshalEmpty(m)
-
-	case "google.protobuf.Struct":
-		return d.unmarshalStruct(m)
-
-	case "google.protobuf.ListValue":
-		return d.unmarshalListValue(m)
-
-	case "google.protobuf.Value":
-		return d.unmarshalKnownValue(m)
-
-	case "google.protobuf.Duration":
-		return d.unmarshalDuration(m)
-
-	case "google.protobuf.Timestamp":
+	case detectknown.TimestampProto:
 		return d.unmarshalTimestamp(m)
-
-	case "google.protobuf.FieldMask":
+	case detectknown.DurationProto:
+		return d.unmarshalDuration(m)
+	case detectknown.WrappersProto:
+		return d.unmarshalWrapperType(m)
+	case detectknown.StructProto:
+		return d.unmarshalStructType(m)
+	case detectknown.FieldMaskProto:
 		return d.unmarshalFieldMask(m)
+	case detectknown.EmptyProto:
+		return d.unmarshalEmpty(m)
+	default:
+		panic(fmt.Sprintf("%s does not have a custom unmarshaler", name))
 	}
-
-	panic(fmt.Sprintf("%s does not have a custom unmarshaler", name))
 }
 
 // The JSON representation of an Any message uses the regular representation of
@@ -498,6 +450,32 @@ func (d decoder) unmarshalEmpty(pref.Message) error {
 		default:
 			return d.unexpectedTokenError(tok)
 		}
+	}
+}
+
+func (e encoder) marshalStructType(m pref.Message) error {
+	switch m.Descriptor().Name() {
+	case "Struct":
+		return e.marshalStruct(m)
+	case "ListValue":
+		return e.marshalListValue(m)
+	case "Value":
+		return e.marshalKnownValue(m)
+	default:
+		panic(fmt.Sprintf("invalid struct type: %v", m.Descriptor().FullName()))
+	}
+}
+
+func (d decoder) unmarshalStructType(m pref.Message) error {
+	switch m.Descriptor().Name() {
+	case "Struct":
+		return d.unmarshalStruct(m)
+	case "ListValue":
+		return d.unmarshalListValue(m)
+	case "Value":
+		return d.unmarshalKnownValue(m)
+	default:
+		panic(fmt.Sprintf("invalid struct type: %v", m.Descriptor().FullName()))
 	}
 }
 

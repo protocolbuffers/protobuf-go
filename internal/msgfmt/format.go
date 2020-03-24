@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"google.golang.org/protobuf/encoding/protowire"
+	"google.golang.org/protobuf/internal/detectknown"
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/mapsort"
 	"google.golang.org/protobuf/proto"
@@ -102,13 +103,9 @@ var protocmpMessageType = reflect.TypeOf(map[string]interface{}(nil))
 
 func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 	md := m.Descriptor()
-	if md.FullName().Parent() != "google.protobuf" {
-		return nil
-	}
-
 	fds := md.Fields()
-	switch md.Name() {
-	case "Any":
+	switch detectknown.Which(md.FullName()) {
+	case detectknown.AnyProto:
 		var msgVal protoreflect.Message
 		url := m.Get(fds.ByName("type_url")).String()
 		if v := reflect.ValueOf(m); v.Type().ConvertibleTo(protocmpMessageType) {
@@ -140,7 +137,7 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 		b = append(b, '}')
 		return b
 
-	case "Timestamp":
+	case detectknown.TimestampProto:
 		secs := m.Get(fds.ByName("seconds")).Int()
 		nanos := m.Get(fds.ByName("nanos")).Int()
 		if nanos < 0 || nanos >= 1e9 {
@@ -153,7 +150,7 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 		x = strings.TrimSuffix(x, ".000")
 		return append(b, x+"Z"...)
 
-	case "Duration":
+	case detectknown.DurationProto:
 		secs := m.Get(fds.ByName("seconds")).Int()
 		nanos := m.Get(fds.ByName("nanos")).Int()
 		if nanos <= -1e9 || nanos >= 1e9 || (secs > 0 && nanos < 0) || (secs < 0 && nanos > 0) {
@@ -165,7 +162,7 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 		x = strings.TrimSuffix(x, ".000")
 		return append(b, x+"s"...)
 
-	case "BoolValue", "Int32Value", "Int64Value", "UInt32Value", "UInt64Value", "FloatValue", "DoubleValue", "StringValue", "BytesValue":
+	case detectknown.WrappersProto:
 		fd := fds.ByName("value")
 		return appendValue(b, m.Get(fd), fd)
 	}
