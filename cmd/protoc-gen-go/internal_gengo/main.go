@@ -36,9 +36,14 @@ var GenerateVersionMarkers = true
 
 // Standard library dependencies.
 const (
+	base64Package  = protogen.GoImportPath("encoding/base64")
 	mathPackage    = protogen.GoImportPath("math")
 	reflectPackage = protogen.GoImportPath("reflect")
+	sortPackage    = protogen.GoImportPath("sort")
+	stringsPackage = protogen.GoImportPath("strings")
 	syncPackage    = protogen.GoImportPath("sync")
+	timePackage    = protogen.GoImportPath("time")
+	utf8Package    = protogen.GoImportPath("unicode/utf8")
 )
 
 // Protobuf library dependencies.
@@ -47,11 +52,13 @@ const (
 // patched to support unique build environments that impose restrictions
 // on the dependencies of generated source code.
 var (
-	protoPackage        goImportPath = protogen.GoImportPath("google.golang.org/protobuf/proto")
-	protoifacePackage   goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoiface")
-	protoimplPackage    goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoimpl")
-	protoreflectPackage goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
-	protoV1Package      goImportPath = protogen.GoImportPath("github.com/golang/protobuf/proto")
+	protoPackage         goImportPath = protogen.GoImportPath("google.golang.org/protobuf/proto")
+	protoifacePackage    goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoiface")
+	protoimplPackage     goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoimpl")
+	protojsonPackage     goImportPath = protogen.GoImportPath("google.golang.org/protobuf/encoding/protojson")
+	protoreflectPackage  goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
+	protoregistryPackage goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoregistry")
+	protoV1Package       goImportPath = protogen.GoImportPath("github.com/golang/protobuf/proto")
 )
 
 type goImportPath interface {
@@ -328,6 +335,7 @@ func genMessage(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	g.P("}")
 	g.P()
 
+	genMessageKnownFunctions(g, f, m)
 	genMessageDefaultDecls(g, f, m)
 	genMessageMethods(g, f, m)
 	genMessageOneofWrapperTypes(g, f, m)
