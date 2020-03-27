@@ -12,6 +12,7 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -933,5 +934,63 @@ func TestNewFile(t *testing.T) {
 				t.Errorf("NewFile() error:\ngot:  %v\nwant: %v", err, tt.wantErr)
 			}
 		})
+	}
+}
+
+func TestNewFiles(t *testing.T) {
+	fdset := &descriptorpb.FileDescriptorSet{
+		File: []*descriptorpb.FileDescriptorProto{
+			mustParseFile(`
+				name: "test.proto"
+				package: "fizz"
+				dependency: "dep.proto"
+				message_type: [{
+					name: "M2"
+					field: [{name:"F" number:1 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:"M1"}]
+				}]
+			`),
+			// Inputs deliberately out of order.
+			mustParseFile(`
+				name: "dep.proto"
+				package: "fizz"
+				message_type: [{name:"M1"}]
+			`),
+		},
+	}
+	f, err := NewFiles(fdset)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m1, err := f.FindDescriptorByName("fizz.M1")
+	if err != nil {
+		t.Fatalf(`f.FindDescriptorByName("fizz.M1") = %v`, err)
+	}
+	m2, err := f.FindDescriptorByName("fizz.M2")
+	if err != nil {
+		t.Fatalf(`f.FindDescriptorByName("fizz.M2") = %v`, err)
+	}
+	if m2.(protoreflect.MessageDescriptor).Fields().ByName("F").Message() != m1 {
+		t.Fatalf(`m1.Fields().ByName("F").Message() != m2`)
+	}
+}
+
+func TestNewFilesImportCycle(t *testing.T) {
+	fdset := &descriptorpb.FileDescriptorSet{
+		File: []*descriptorpb.FileDescriptorProto{
+			mustParseFile(`
+				name: "test.proto"
+				package: "fizz"
+				dependency: "dep.proto"
+			`),
+			mustParseFile(`
+				name: "dep.proto"
+				package: "fizz"
+				dependency: "test.proto"
+			`),
+		},
+	}
+	_, err := NewFiles(fdset)
+	if err == nil {
+		t.Fatal("NewFiles with import cycle: success, want error")
 	}
 }

@@ -67,6 +67,12 @@ func NewFile(fd *descriptorpb.FileDescriptorProto, r Resolver) (protoreflect.Fil
 	return FileOptions{}.New(fd, r)
 }
 
+// NewFiles creates a new protoregistry.Files from the provided
+// FileDescriptorSet message. See FileOptions.NewFiles for more information.
+func NewFiles(fd *descriptorpb.FileDescriptorSet) (*protoregistry.Files, error) {
+	return FileOptions{}.NewFiles(fd)
+}
+
 // New creates a new protoreflect.FileDescriptor from the provided
 // file descriptor message. The file must represent a valid proto file according
 // to protobuf semantics. The returned descriptor is a deep copy of the input.
@@ -222,4 +228,48 @@ func (is importSet) importPublic(imps protoreflect.FileImports) {
 			is.importPublic(imp.Imports())
 		}
 	}
+}
+
+// NewFiles creates a new protoregistry.Files from the provided
+// FileDescriptorSet message. The descriptor set must include only
+// valid files according to protobuf semantics. The returned descriptors
+// are a deep copy of the input.
+func (o FileOptions) NewFiles(fds *descriptorpb.FileDescriptorSet) (*protoregistry.Files, error) {
+	files := make(map[string]*descriptorpb.FileDescriptorProto)
+	for _, fd := range fds.File {
+		if _, ok := files[fd.GetName()]; ok {
+			return nil, errors.New("file appears multiple times: %q", fd.GetName())
+		}
+		files[fd.GetName()] = fd
+	}
+	r := &protoregistry.Files{}
+	for _, fd := range files {
+		if err := o.addFileDeps(r, fd, files); err != nil {
+			return nil, err
+		}
+	}
+	return r, nil
+}
+func (o FileOptions) addFileDeps(r *protoregistry.Files, fd *descriptorpb.FileDescriptorProto, files map[string]*descriptorpb.FileDescriptorProto) error {
+	// Set the entry to nil while descending into a file's dependencies to detect cycles.
+	files[fd.GetName()] = nil
+	for _, dep := range fd.Dependency {
+		depfd, ok := files[dep]
+		if depfd == nil {
+			if ok {
+				return errors.New("import cycle in file: %q", dep)
+			}
+			continue
+		}
+		if err := o.addFileDeps(r, depfd, files); err != nil {
+			return err
+		}
+	}
+	// Delete the entry once dependencies are processed.
+	delete(files, fd.GetName())
+	f, err := o.New(fd, r)
+	if err != nil {
+		return err
+	}
+	return r.RegisterFile(f)
 }
