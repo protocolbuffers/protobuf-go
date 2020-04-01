@@ -824,5 +824,5 @@ func asMessage(v reflect.Value) pref.ProtoMessage {
 	if m, ok := v.Interface().(pref.ProtoMessage); ok {
 		return m
 	}
-	return legacyWrapMessage(v)
+	return legacyWrapMessage(v).Interface()
 }

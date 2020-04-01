@@ -426,7 +426,7 @@ func (c *messageConverter) PBValueOf(v reflect.Value) pref.Value {
 	if m, ok := v.Interface().(pref.ProtoMessage); ok {
 		return pref.ValueOfMessage(m.ProtoReflect())
 	}
-	return pref.ValueOfMessage(legacyWrapMessage(v).ProtoReflect())
+	return pref.ValueOfMessage(legacyWrapMessage(v))
 }
 
 func (c *messageConverter) GoValueOf(v pref.Value) reflect.Value {

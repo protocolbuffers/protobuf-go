@@ -21,15 +21,15 @@ import (
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-// legacyWrapMessage wraps v as a protoreflect.ProtoMessage,
+// legacyWrapMessage wraps v as a protoreflect.Message,
 // where v must be a *struct kind and not implement the v2 API already.
-func legacyWrapMessage(v reflect.Value) pref.ProtoMessage {
+func legacyWrapMessage(v reflect.Value) pref.Message {
 	typ := v.Type()
 	if typ.Kind() != reflect.Ptr || typ.Elem().Kind() != reflect.Struct {
 		return aberrantMessage{v: v}
 	}
 	mt := legacyLoadMessageInfo(typ, "")
-	return mt.MessageOf(v.Interface()).Interface()
+	return mt.MessageOf(v.Interface())
 }
 
 var legacyMessageTypeCache sync.Map // map[reflect.Type]*MessageInfo

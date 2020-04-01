@@ -124,7 +124,7 @@ func (Export) ProtoMessageV2Of(m message) pref.ProtoMessage {
 	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv
 	}
-	return legacyWrapMessage(reflect.ValueOf(m))
+	return legacyWrapMessage(reflect.ValueOf(m)).Interface()
 }
 
 // MessageOf returns the protoreflect.Message interface over m.
@@ -136,7 +136,7 @@ func (Export) MessageOf(m message) pref.Message {
 	if mv := (Export{}).protoMessageV2Of(m); mv != nil {
 		return mv.ProtoReflect()
 	}
-	return legacyWrapMessage(reflect.ValueOf(m)).ProtoReflect()
+	return legacyWrapMessage(reflect.ValueOf(m))
 }
 
 // MessageDescriptorOf returns the protoreflect.MessageDescriptor for m.
