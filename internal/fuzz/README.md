@@ -5,9 +5,10 @@ Fuzzing support using [go-fuzz](https://github.com/dvyukov/go-fuzz).
 Basic operation:
 
 ```sh
-$ go install github.com/dvyukov/go-fuzz/go-fuzz github.com/dvyukov/go-fuzz/go-fuzz-build
+$ go install github.com/dvyukov/go-fuzz/go-fuzz
+$ go install github.com/mdempsky/go114-fuzz-build
 $ cd internal/fuzz/{fuzzer}
-$ GOFUZZ111MODULE=on go-fuzz-build .
+$ go114-fuzz-build google.golang.org/protobuf/internal/fuzz/{fuzzer}
 $ go-fuzz
 ```
 

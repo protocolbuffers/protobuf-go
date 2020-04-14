@@ -10,7 +10,7 @@ function compile_fuzzer {
   fuzzer=$3
 
    # Instrument all Go files relevant to this fuzzer
-  go-fuzz-build -tags=protolegacy -libfuzzer -func $function -o $fuzzer.a $path
+  go-fuzz -tags=protolegacy -func $function -o $fuzzer.a $path
 
    # Instrumented, compiled Go ($fuzzer.a) + fuzzing engine = fuzzer binary
   $CXX $CXXFLAGS $LIB_FUZZING_ENGINE $fuzzer.a -lpthread -o $OUT/$fuzzer
@@ -19,7 +19,7 @@ function compile_fuzzer {
 for x in internal/fuzz/*; do
   if [ -d $x/corpus ]; then
     name=$(basename $x)
-    compile_fuzzer ./$x Fuzz $name
+    compile_fuzzer google.golang.org/protobuf/$x Fuzz $name
     zip -jr $OUT/${name}_seed_corpus.zip $x/corpus
   fi
 done
