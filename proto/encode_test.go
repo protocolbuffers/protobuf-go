@@ -247,3 +247,28 @@ func TestEncodeLarge(t *testing.T) {
 		t.Errorf("after round-trip marshal, got len(m.OptionalBytes) = %v, want %v", got, want)
 	}
 }
+
+// TestEncodeEmpty tests for boundary conditions when producing an empty output.
+// These tests are not necessarily a statement of proper behavior,
+// but exist to detect accidental changes in behavior.
+func TestEncodeEmpty(t *testing.T) {
+	for _, m := range []proto.Message{nil, (*testpb.TestAllTypes)(nil), &testpb.TestAllTypes{}} {
+		isValid := m != nil && m.ProtoReflect().IsValid()
+
+		b, err := proto.Marshal(m)
+		if err != nil {
+			t.Errorf("proto.Marshal() = %v", err)
+		}
+		if isNil := b == nil; isNil == isValid {
+			t.Errorf("proto.Marshal() == nil: %v, want %v", isNil, !isValid)
+		}
+
+		b, err = proto.MarshalOptions{}.Marshal(m)
+		if err != nil {
+			t.Errorf("proto.MarshalOptions{}.Marshal() = %v", err)
+		}
+		if isNil := b == nil; isNil == isValid {
+			t.Errorf("proto.MarshalOptions{}.Marshal() = %v, want %v", isNil, !isValid)
+		}
+	}
+}

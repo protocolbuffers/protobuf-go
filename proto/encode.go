@@ -80,6 +80,9 @@ func Marshal(m Message) ([]byte, error) {
 	}
 
 	out, err := MarshalOptions{}.marshal(nil, m.ProtoReflect())
+	if len(out.Buf) == 0 && err == nil {
+		out.Buf = emptyBytesForMessage(m)
+	}
 	return out.Buf, err
 }
 
@@ -91,7 +94,24 @@ func (o MarshalOptions) Marshal(m Message) ([]byte, error) {
 	}
 
 	out, err := o.marshal(nil, m.ProtoReflect())
+	if len(out.Buf) == 0 && err == nil {
+		out.Buf = emptyBytesForMessage(m)
+	}
 	return out.Buf, err
+}
+
+// emptyBytesForMessage returns a nil buffer if and only if m is invalid,
+// otherwise it returns a non-nil empty buffer.
+//
+// This is to assist the edge-case where user-code does the following:
+//	m1.OptionalBytes, _ = proto.Marshal(m2)
+// where they expect the proto2 "optional_bytes" field to be populated
+// if any only if m2 is a valid message.
+func emptyBytesForMessage(m Message) []byte {
+	if m == nil || !m.ProtoReflect().IsValid() {
+		return nil
+	}
+	return emptyBuf[:]
 }
 
 // MarshalAppend appends the wire-format encoding of m to b,
