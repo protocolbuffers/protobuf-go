@@ -116,6 +116,12 @@ func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {
 		return nil, err
 	}
 
+	// Treat nil message interface as an empty message,
+	// in which case the output in an empty JSON object.
+	if m == nil {
+		return []byte("{}"), nil
+	}
+
 	enc := encoder{internalEnc, o}
 	if err := enc.marshalMessage(m.ProtoReflect()); err != nil {
 		return nil, err

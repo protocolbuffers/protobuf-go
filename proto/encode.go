@@ -74,12 +74,22 @@ type MarshalOptions struct {
 
 // Marshal returns the wire-format encoding of m.
 func Marshal(m Message) ([]byte, error) {
+	// Treat nil message interface as an empty message; nothing to output.
+	if m == nil {
+		return nil, nil
+	}
+
 	out, err := MarshalOptions{}.marshal(nil, m.ProtoReflect())
 	return out.Buf, err
 }
 
 // Marshal returns the wire-format encoding of m.
 func (o MarshalOptions) Marshal(m Message) ([]byte, error) {
+	// Treat nil message interface as an empty message; nothing to output.
+	if m == nil {
+		return nil, nil
+	}
+
 	out, err := o.marshal(nil, m.ProtoReflect())
 	return out.Buf, err
 }
@@ -87,6 +97,11 @@ func (o MarshalOptions) Marshal(m Message) ([]byte, error) {
 // MarshalAppend appends the wire-format encoding of m to b,
 // returning the result.
 func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
+	// Treat nil message interface as an empty message; nothing to append.
+	if m == nil {
+		return b, nil
+	}
+
 	out, err := o.marshal(b, m.ProtoReflect())
 	return out.Buf, err
 }

@@ -27,14 +27,12 @@ func TestNil(t *testing.T) {
 	}{{
 		label: "Size",
 		test:  func() { proto.Size(nil) },
-		panic: true,
 	}, {
 		label: "Size",
 		test:  func() { proto.Size(nilMsg) },
 	}, {
 		label: "Marshal",
 		test:  func() { proto.Marshal(nil) },
-		panic: true,
 	}, {
 		label: "Marshal",
 		test:  func() { proto.Marshal(nilMsg) },
