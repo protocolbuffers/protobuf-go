@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
+	"google.golang.org/protobuf/testing/protocmp"
 
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
@@ -65,6 +66,33 @@ func TestExtensionFuncs(t *testing.T) {
 		if proto.HasExtension(test.message, test.ext) {
 			t.Errorf("%v:\nafter clearing extension HasExtension(...) = true, want false", desc)
 		}
+	}
+}
+
+func TestExtensionRanger(t *testing.T) {
+	want := map[pref.ExtensionType]interface{}{
+		testpb.E_OptionalInt32:         int32(5),
+		testpb.E_OptionalString:        string("hello"),
+		testpb.E_OptionalNestedMessage: &testpb.TestAllExtensions_NestedMessage{},
+		testpb.E_OptionalNestedEnum:    testpb.TestAllTypes_BAZ,
+		testpb.E_RepeatedFloat:         []float32{+32.32, -32.32},
+		testpb.E_RepeatedNestedMessage: []*testpb.TestAllExtensions_NestedMessage{{}},
+		testpb.E_RepeatedNestedEnum:    []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAZ},
+	}
+
+	m := &testpb.TestAllExtensions{}
+	for xt, v := range want {
+		proto.SetExtension(m, xt, v)
+	}
+
+	got := make(map[pref.ExtensionType]interface{})
+	proto.RangeExtensions(m, func(xt pref.ExtensionType, v interface{}) bool {
+		got[xt] = v
+		return true
+	})
+
+	if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
+		t.Errorf("proto.RangeExtensions mismatch (-want +got):\n%s", diff)
 	}
 }
 
