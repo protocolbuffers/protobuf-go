@@ -136,7 +136,7 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 	}
 	mi.denseCoderFields = make([]*coderFieldInfo, maxDense+1)
 	for _, cf := range mi.orderedCoderFields {
-		if int(cf.num) > len(mi.denseCoderFields) {
+		if int(cf.num) >= len(mi.denseCoderFields) {
 			break
 		}
 		mi.denseCoderFields[cf.num] = cf
