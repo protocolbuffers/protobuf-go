@@ -45,6 +45,86 @@ type UnmarshalOptions struct {
 		protoregistry.MessageTypeResolver
 		protoregistry.ExtensionTypeResolver
 	}
+
+	// Unmarshallers are used to apply a custom decoding scheme for a specific message type by its full name
+	Unmarshallers map[pref.FullName]MessageUnmarshaller
+}
+
+type MessageUnmarshaller = func(d Decoder, m pref.Message) error
+
+// Decoder represents an active JSON decoder stream used to decode a JSON stream into a protobuf Message
+type Decoder interface {
+	// Read returns the next JSON token.
+	// It will return an error if there is no valid token.
+	Read() (Token, error)
+	// Peek looks ahead and returns the next token without advancing a read.
+	Peek() (Token, error)
+	// Position returns line and column number of given index of the original input.
+	// It will panic if index is out of range.
+	Position(idx int) (line int, column int)
+	// Clone returns a copy of the Decoder for use in reading ahead the next JSON
+	// object, array or other values without affecting current Decoder.
+	Clone() Decoder
+}
+
+// Kind represents a token kind expressible in the JSON format.
+type Kind = json.Kind
+
+const (
+	Invalid     = json.Invalid
+	EOF         = json.EOF
+	Null        = json.Null
+	Bool        = json.Bool
+	Number      = json.Number
+	String      = json.String
+	Name        = json.Name
+	ObjectOpen  = json.ObjectOpen
+	ObjectClose = json.ObjectClose
+	ArrayOpen   = json.ArrayOpen
+	ArrayClose  = json.ArrayClose
+)
+
+// Token provides a parsed token kind and value.
+//
+// Values are provided by the difference accessor methods. The accessor methods
+// Name, Bool, and ParsedString will panic if called on the wrong kind. There
+// are different accessor methods for the Number kind for converting to the
+// appropriate Go numeric type and those methods have the ok return value.
+type Token interface {
+	// Kind returns the token kind.
+	Kind() Kind
+	// RawString returns the read value's bytes as a string.
+	RawString() string
+	// Pos returns the token position from the input.
+	Pos() int
+	// Name returns the object name if token is Name, else it will return an error.
+	Name() string
+	// Bool returns the bool value if token kind is Bool, else it panics.
+	Bool() bool
+	// ParsedString returns the string value for a JSON string token or the read
+	// value in string if token is not a string.
+	ParsedString() string
+	// Float returns the floating-point number if token kind is Number.
+	//
+	// The floating-point precision is specified by the bitSize parameter: 32 for
+	// float32 or 64 for float64. If bitSize=32, the result still has type float64,
+	// but it will be convertible to float32 without changing its value. It will
+	// return false if the number exceeds the floating point limits for given
+	// bitSize.
+	Float(bitSize int) (float64, bool)
+	// Int returns the signed integer number if token is Number.
+	//
+	// The given bitSize specifies the integer type that the result must fit into.
+	// It returns false if the number is not an integer value or if the result
+	// exceeds the limits for given bitSize.
+	Int(bitSize int) (int64, bool)
+	// Uint returns the signed integer number if token is Number, else it will
+	// return an error.
+	//
+	// The given bitSize specifies the unsigned integer type that the result must
+	// fit into. It returns false if the number is not an unsigned integer value
+	// or if the result exceeds the limits for given bitSize.
+	Uint(bitSize int) (uint64, bool)
 }
 
 // Unmarshal reads the given []byte and populates the given proto.Message using
@@ -58,7 +138,7 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {
 		o.Resolver = protoregistry.GlobalTypes
 	}
 
-	dec := decoder{json.NewDecoder(b), o}
+	dec := decoder{&jsonDecoder{json.NewDecoder(b)}, o}
 	if err := dec.unmarshalMessage(m.ProtoReflect(), false); err != nil {
 		return err
 	}
@@ -78,8 +158,28 @@ func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {
 	return proto.CheckInitialized(m)
 }
 
-type decoder struct {
+type jsonDecoder struct {
 	*json.Decoder
+}
+
+func (j *jsonDecoder) Read() (Token, error) {
+	return j.Decoder.Read()
+}
+
+func (j *jsonDecoder) Peek() (Token, error) {
+	return j.Decoder.Peek()
+}
+
+func (j *jsonDecoder) Position(idx int) (line int, column int) {
+	return j.Decoder.Position(idx)
+}
+
+func (j *jsonDecoder) Clone() Decoder {
+	return &jsonDecoder{j.Decoder.Clone()}
+}
+
+type decoder struct {
+	Decoder
 	opts UnmarshalOptions
 }
 
@@ -91,7 +191,7 @@ func (d decoder) newError(pos int, f string, x ...interface{}) error {
 }
 
 // unexpectedTokenError returns a syntax error for the given unexpected token.
-func (d decoder) unexpectedTokenError(tok json.Token) error {
+func (d decoder) unexpectedTokenError(tok Token) error {
 	return d.syntaxError(tok.Pos(), "unexpected token %s", tok.RawString())
 }
 
@@ -104,6 +204,9 @@ func (d decoder) syntaxError(pos int, f string, x ...interface{}) error {
 
 // unmarshalMessage unmarshals a message into the given protoreflect.Message.
 func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
+	if unmarshaller, ok := d.opts.Unmarshallers[m.Descriptor().FullName()]; ok {
+		return unmarshaller(d.Decoder, m)
+	}
 	if isCustomType(m.Descriptor().FullName()) {
 		return d.unmarshalCustomType(m)
 	}
@@ -358,7 +461,7 @@ func (d decoder) unmarshalScalar(fd pref.FieldDescriptor) (pref.Value, error) {
 	return pref.Value{}, d.newError(tok.Pos(), "invalid value for %v type: %v", kind, tok.RawString())
 }
 
-func unmarshalInt(tok json.Token, bitSize int) (pref.Value, bool) {
+func unmarshalInt(tok Token, bitSize int) (pref.Value, bool) {
 	switch tok.Kind() {
 	case json.Number:
 		return getInt(tok, bitSize)
@@ -379,7 +482,7 @@ func unmarshalInt(tok json.Token, bitSize int) (pref.Value, bool) {
 	return pref.Value{}, false
 }
 
-func getInt(tok json.Token, bitSize int) (pref.Value, bool) {
+func getInt(tok Token, bitSize int) (pref.Value, bool) {
 	n, ok := tok.Int(bitSize)
 	if !ok {
 		return pref.Value{}, false
@@ -390,7 +493,7 @@ func getInt(tok json.Token, bitSize int) (pref.Value, bool) {
 	return pref.ValueOfInt64(n), true
 }
 
-func unmarshalUint(tok json.Token, bitSize int) (pref.Value, bool) {
+func unmarshalUint(tok Token, bitSize int) (pref.Value, bool) {
 	switch tok.Kind() {
 	case json.Number:
 		return getUint(tok, bitSize)
@@ -411,7 +514,7 @@ func unmarshalUint(tok json.Token, bitSize int) (pref.Value, bool) {
 	return pref.Value{}, false
 }
 
-func getUint(tok json.Token, bitSize int) (pref.Value, bool) {
+func getUint(tok Token, bitSize int) (pref.Value, bool) {
 	n, ok := tok.Uint(bitSize)
 	if !ok {
 		return pref.Value{}, false
@@ -422,7 +525,7 @@ func getUint(tok json.Token, bitSize int) (pref.Value, bool) {
 	return pref.ValueOfUint64(n), true
 }
 
-func unmarshalFloat(tok json.Token, bitSize int) (pref.Value, bool) {
+func unmarshalFloat(tok Token, bitSize int) (pref.Value, bool) {
 	switch tok.Kind() {
 	case json.Number:
 		return getFloat(tok, bitSize)
@@ -461,7 +564,7 @@ func unmarshalFloat(tok json.Token, bitSize int) (pref.Value, bool) {
 	return pref.Value{}, false
 }
 
-func getFloat(tok json.Token, bitSize int) (pref.Value, bool) {
+func getFloat(tok Token, bitSize int) (pref.Value, bool) {
 	n, ok := tok.Float(bitSize)
 	if !ok {
 		return pref.Value{}, false
@@ -472,7 +575,7 @@ func getFloat(tok json.Token, bitSize int) (pref.Value, bool) {
 	return pref.ValueOfFloat64(n), true
 }
 
-func unmarshalBytes(tok json.Token) (pref.Value, bool) {
+func unmarshalBytes(tok Token) (pref.Value, bool) {
 	if tok.Kind() != json.String {
 		return pref.Value{}, false
 	}
@@ -492,7 +595,7 @@ func unmarshalBytes(tok json.Token) (pref.Value, bool) {
 	return pref.ValueOfBytes(b), true
 }
 
-func unmarshalEnum(tok json.Token, fd pref.FieldDescriptor) (pref.Value, bool) {
+func unmarshalEnum(tok Token, fd pref.FieldDescriptor) (pref.Value, bool) {
 	switch tok.Kind() {
 	case json.String:
 		// Lookup EnumNumber based on name.
@@ -636,7 +739,7 @@ Loop:
 
 // unmarshalMapKey converts given token of Name kind into a protoreflect.MapKey.
 // A map key type is any integral or string type.
-func (d decoder) unmarshalMapKey(tok json.Token, fd pref.FieldDescriptor) (pref.MapKey, error) {
+func (d decoder) unmarshalMapKey(tok Token, fd pref.FieldDescriptor) (pref.MapKey, error) {
 	const b32 = 32
 	const b64 = 64
 	const base10 = 10

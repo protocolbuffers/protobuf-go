@@ -237,9 +237,9 @@ var errMissingType = fmt.Errorf(`missing "@type" field`)
 // It returns errEmptyObject if the JSON object is empty or errMissingType if
 // @type field does not exist. It returns other error if the @type field is not
 // valid or other decoding issues.
-func findTypeURL(d decoder) (json.Token, error) {
+func findTypeURL(d decoder) (Token, error) {
 	var typeURL string
-	var typeTok json.Token
+	var typeTok Token
 	numFields := 0
 	// Skip start object.
 	d.Read()

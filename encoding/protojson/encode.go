@@ -40,7 +40,7 @@ func Marshal(m proto.Message) ([]byte, error) {
 type MarshalOptions struct {
 	pragma.NoUnkeyedLiterals
 
-	// Multiline specifies whether the marshaler should format the output in
+	// Multiline specifies whether the marshaller should format the output in
 	// indented-form with every textual element on a new line.
 	// If Indent is an empty string, then an arbitrary indent is chosen.
 	Multiline bool
@@ -85,6 +85,38 @@ type MarshalOptions struct {
 		protoregistry.ExtensionTypeResolver
 		protoregistry.MessageTypeResolver
 	}
+
+	// Marshallers are used to apply a custom encoding scheme for a specific message type by its full name
+	Marshallers map[pref.FullName]MessageMarshaller
+}
+
+type MessageMarshaller = func(e Encoder, m pref.Message) error
+
+type Encoder interface {
+	// WriteNull writes out the null value.
+	WriteNull()
+	// WriteBool writes out the given boolean value.
+	WriteBool(b bool)
+	// WriteString writes out the given string in JSON string value. Returns error
+	// if input string contains invalid UTF-8.
+	WriteString(value string) error
+	// WriteFloat writes out the given float and bitSize in JSON number value.
+	WriteFloat(n float64, bitSize int)
+	// WriteInt writes out the given signed integer in JSON number value.
+	WriteInt(n int64)
+	// WriteUint writes out the given unsigned integer in JSON number value.
+	WriteUint(n uint64)
+	// StartObject writes out the '{' symbol.
+	StartObject()
+	// EndObject writes out the '}' symbol.
+	EndObject()
+	// WriteName writes out the given string in JSON string value and the name
+	// separator ':'. Returns error if input string contains invalid UTF-8.
+	WriteName(s string) error
+	// StartArray writes out the '[' symbol.
+	StartArray()
+	// EndArray writes out the ']' symbol.
+	EndArray()
 }
 
 // Format formats the message as a string.
@@ -133,6 +165,9 @@ type encoder struct {
 
 // marshalMessage marshals the given protoreflect.Message.
 func (e encoder) marshalMessage(m pref.Message) error {
+	if marshaller, ok := e.opts.Marshallers[m.Descriptor().FullName()]; ok {
+		return marshaller(e.Encoder, m)
+	}
 	if isCustomType(m.Descriptor().FullName()) {
 		return e.marshalCustomType(m)
 	}

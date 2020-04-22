@@ -13,6 +13,7 @@ import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 
 	fieldmaskpb "google.golang.org/protobuf/internal/testprotos/fieldmaskpb"
@@ -2403,6 +2404,24 @@ func TestUnmarshal(t *testing.T) {
 		inputText:    `{"weak_message1":{"a":1}, "weak_message2":{"a":1}}`,
 		wantErr:      `unknown field "weak_message2"`, // weak_message2 is unknown since the package containing it is not imported
 		skip:         !flags.ProtoLegacy,
+	}, {
+		desc: "Unmarshallers",
+		umo: protojson.UnmarshalOptions{
+			Unmarshallers: map[pref.FullName]protojson.MessageUnmarshaller{
+				(&pb3.JSONNames{}).ProtoReflect().Descriptor().FullName(): func(e protojson.Decoder, m pref.Message) error {
+					f := (&pb3.JSONNames{}).ProtoReflect().Descriptor().Fields().Get(0)
+					if token, err := e.Read(); err == nil {
+						m.Set(f, pref.ValueOfString(token.ParsedString()))
+					}
+					return nil
+				},
+			},
+		},
+		inputMessage: &pb3.JSONNames{},
+		inputText:    `"string value"`,
+		wantMessage: &pb3.JSONNames{
+			SString: "string value",
+		},
 	}}
 
 	for _, tt := range tests {

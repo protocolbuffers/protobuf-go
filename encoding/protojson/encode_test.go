@@ -15,6 +15,7 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/testing/protopack"
 
@@ -2164,6 +2165,20 @@ func TestMarshal(t *testing.T) {
     }
   ]
 }`,
+	}, {
+		desc: "Marshallers",
+		mo: protojson.MarshalOptions{
+			Marshallers: map[pref.FullName]protojson.MessageMarshaller{
+				(&pb3.JSONNames{}).ProtoReflect().Descriptor().FullName(): func(e protojson.Encoder, m pref.Message) error {
+					value := m.Get((&pb3.JSONNames{}).ProtoReflect().Descriptor().Fields().Get(0))
+					return e.WriteString(value.String())
+				},
+			},
+		},
+		input: &pb3.JSONNames{
+			SString: "string value",
+		},
+		want: `"string value"`,
 	}}
 
 	for _, tt := range tests {
