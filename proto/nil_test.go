@@ -97,7 +97,6 @@ func TestNil(t *testing.T) {
 	}, {
 		label: "HasExtension",
 		test:  func() { proto.HasExtension(nilMsg, nil) },
-		panic: true,
 	}, {
 		label: "HasExtension",
 		test:  func() { proto.HasExtension(nilMsg, extType) },

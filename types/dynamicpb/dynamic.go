@@ -215,7 +215,18 @@ func (m *Message) Set(fd pref.FieldDescriptor, v pref.Value) {
 		panic(errors.New("%v: modification of read-only message", fd.FullName()))
 	}
 	if fd.IsExtension() {
-		if !fd.(pref.ExtensionTypeDescriptor).Type().IsValidValue(v) {
+		isValid := true
+		switch {
+		case !fd.(pref.ExtensionTypeDescriptor).Type().IsValidValue(v):
+			isValid = false
+		case fd.IsList():
+			isValid = v.List().IsValid()
+		case fd.IsMap():
+			isValid = v.Map().IsValid()
+		case fd.Message() != nil:
+			isValid = v.Message().IsValid()
+		}
+		if !isValid {
 			panic(errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface()))
 		}
 		m.ext[fd.Number()] = fd
@@ -467,6 +478,8 @@ func typecheck(fd pref.FieldDescriptor, v pref.Value) {
 
 func typeIsValid(fd pref.FieldDescriptor, v pref.Value) error {
 	switch {
+	case !v.IsValid():
+		return errors.New("%v: assigning invalid value", fd.FullName())
 	case fd.IsMap():
 		if mapv, ok := v.Interface().(*dynamicMap); !ok || mapv.desc != fd || !mapv.IsValid() {
 			return errors.New("%v: assigning invalid type %T", fd.FullName(), v.Interface())

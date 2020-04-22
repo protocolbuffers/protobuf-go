@@ -170,6 +170,8 @@ func (m *extensionMap) Has(xt pref.ExtensionType) (ok bool) {
 		return x.Value().List().Len() > 0
 	case xd.IsMap():
 		return x.Value().Map().Len() > 0
+	case xd.Message() != nil:
+		return x.Value().Message().IsValid()
 	}
 	return true
 }
@@ -186,15 +188,28 @@ func (m *extensionMap) Get(xt pref.ExtensionType) pref.Value {
 	return xt.Zero()
 }
 func (m *extensionMap) Set(xt pref.ExtensionType, v pref.Value) {
-	if !xt.IsValidValue(v) {
+	xd := xt.TypeDescriptor()
+	isValid := true
+	switch {
+	case !xt.IsValidValue(v):
+		isValid = false
+	case xd.IsList():
+		isValid = v.List().IsValid()
+	case xd.IsMap():
+		isValid = v.Map().IsValid()
+	case xd.Message() != nil:
+		isValid = v.Message().IsValid()
+	}
+	if !isValid {
 		panic(fmt.Sprintf("%v: assigning invalid value", xt.TypeDescriptor().FullName()))
 	}
+
 	if *m == nil {
 		*m = make(map[int32]ExtensionField)
 	}
 	var x ExtensionField
 	x.Set(xt, v)
-	(*m)[int32(xt.TypeDescriptor().Number())] = x
+	(*m)[int32(xd.Number())] = x
 }
 func (m *extensionMap) Mutable(xt pref.ExtensionType) pref.Value {
 	xd := xt.TypeDescriptor()
