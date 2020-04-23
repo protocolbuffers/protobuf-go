@@ -8,6 +8,7 @@
 package test
 
 import (
+	proto "google.golang.org/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -1725,50 +1726,36 @@ func (*TestWeak) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *TestWeak) GetWeakMessage1() protoiface.MessageV1 {
+func (x *TestWeak) GetWeakMessage1() proto.Message {
+	var w protoimpl.WeakFields
 	if x != nil {
-		v := x.weakFields[1]
-		_ = x.XXX_weak_WeakMessage1
-		if v != nil {
-			return v
-		}
+		w = x.weakFields
 	}
-	return protoimpl.X.WeakNil("goproto.proto.test.weak.WeakImportMessage1")
+	return protoimpl.X.GetWeak(w, 1, "goproto.proto.test.weak.WeakImportMessage1")
 }
 
-func (x *TestWeak) GetWeakMessage2() protoiface.MessageV1 {
+func (x *TestWeak) GetWeakMessage2() proto.Message {
+	var w protoimpl.WeakFields
 	if x != nil {
-		v := x.weakFields[2]
-		_ = x.XXX_weak_WeakMessage2
-		if v != nil {
-			return v
-		}
+		w = x.weakFields
 	}
-	return protoimpl.X.WeakNil("goproto.proto.test.weak.WeakImportMessage2")
+	return protoimpl.X.GetWeak(w, 2, "goproto.proto.test.weak.WeakImportMessage2")
 }
 
-func (x *TestWeak) SetWeakMessage1(v protoiface.MessageV1) {
-	if x.weakFields == nil {
-		x.weakFields = make(protoimpl.WeakFields)
+func (x *TestWeak) SetWeakMessage1(v proto.Message) {
+	var w *protoimpl.WeakFields
+	if x != nil {
+		w = &x.weakFields
 	}
-	if v == nil {
-		delete(x.weakFields, 1)
-	} else {
-		x.weakFields[1] = v
-		x.XXX_weak_WeakMessage1 = struct{}{}
-	}
+	protoimpl.X.SetWeak(w, 1, "goproto.proto.test.weak.WeakImportMessage1", v)
 }
 
-func (x *TestWeak) SetWeakMessage2(v protoiface.MessageV1) {
-	if x.weakFields == nil {
-		x.weakFields = make(protoimpl.WeakFields)
+func (x *TestWeak) SetWeakMessage2(v proto.Message) {
+	var w *protoimpl.WeakFields
+	if x != nil {
+		w = &x.weakFields
 	}
-	if v == nil {
-		delete(x.weakFields, 2)
-	} else {
-		x.weakFields[2] = v
-		x.XXX_weak_WeakMessage2 = struct{}{}
-	}
+	protoimpl.X.SetWeak(w, 2, "goproto.proto.test.weak.WeakImportMessage2", v)
 }
 
 type TestPackedTypes struct {

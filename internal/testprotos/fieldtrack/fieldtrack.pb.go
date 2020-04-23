@@ -10,8 +10,8 @@ package fieldtrack
 import (
 	_ "google.golang.org/protobuf/internal/testprotos/annotation"
 	test "google.golang.org/protobuf/internal/testprotos/test"
+	proto "google.golang.org/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -571,56 +571,46 @@ func (x *TestFieldTrack) GetMapStringMessage() map[string]*test.TestAllTypes_Nes
 
 //go:nointerface
 
-func (x *TestFieldTrack) GetWeakMessage1() protoiface.MessageV1 {
+func (x *TestFieldTrack) GetWeakMessage1() proto.Message {
+	var w protoimpl.WeakFields
 	if x != nil {
-		v := x.weakFields[100]
+		w = x.weakFields
 		_ = x.XXX_weak_WeakMessage1
-		if v != nil {
-			return v
-		}
 	}
-	return protoimpl.X.WeakNil("goproto.proto.test.weak.WeakImportMessage1")
+	return protoimpl.X.GetWeak(w, 100, "goproto.proto.test.weak.WeakImportMessage1")
 }
 
 //go:nointerface
 
-func (x *TestFieldTrack) GetWeakMessage2() protoiface.MessageV1 {
+func (x *TestFieldTrack) GetWeakMessage2() proto.Message {
+	var w protoimpl.WeakFields
 	if x != nil {
-		v := x.weakFields[101]
+		w = x.weakFields
 		_ = x.XXX_weak_WeakMessage2
-		if v != nil {
-			return v
-		}
 	}
-	return protoimpl.X.WeakNil("goproto.proto.test.weak.WeakImportMessage2")
+	return protoimpl.X.GetWeak(w, 101, "goproto.proto.test.weak.WeakImportMessage2")
 }
 
 //go:nointerface
 
-func (x *TestFieldTrack) SetWeakMessage1(v protoiface.MessageV1) {
-	if x.weakFields == nil {
-		x.weakFields = make(protoimpl.WeakFields)
+func (x *TestFieldTrack) SetWeakMessage1(v proto.Message) {
+	var w *protoimpl.WeakFields
+	if x != nil {
+		w = &x.weakFields
+		_ = x.XXX_weak_WeakMessage1
 	}
-	if v == nil {
-		delete(x.weakFields, 100)
-	} else {
-		x.weakFields[100] = v
-		x.XXX_weak_WeakMessage1 = struct{}{}
-	}
+	protoimpl.X.SetWeak(w, 100, "goproto.proto.test.weak.WeakImportMessage1", v)
 }
 
 //go:nointerface
 
-func (x *TestFieldTrack) SetWeakMessage2(v protoiface.MessageV1) {
-	if x.weakFields == nil {
-		x.weakFields = make(protoimpl.WeakFields)
+func (x *TestFieldTrack) SetWeakMessage2(v proto.Message) {
+	var w *protoimpl.WeakFields
+	if x != nil {
+		w = &x.weakFields
+		_ = x.XXX_weak_WeakMessage2
 	}
-	if v == nil {
-		delete(x.weakFields, 101)
-	} else {
-		x.weakFields[101] = v
-		x.XXX_weak_WeakMessage2 = struct{}{}
-	}
+	protoimpl.X.SetWeak(w, 101, "goproto.proto.test.weak.WeakImportMessage2", v)
 }
 
 var File_internal_testprotos_fieldtrack_fieldtrack_proto protoreflect.FileDescriptor
