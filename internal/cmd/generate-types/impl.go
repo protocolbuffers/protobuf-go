@@ -820,7 +820,7 @@ func (m *{{.}}) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.FieldDe
 	if oi := m.messageInfo().oneofs[od.Name()]; oi != nil && oi.oneofDesc == od {
 		return od.Fields().ByNumber(oi.which(m.pointer()))
 	}
-	panic("invalid oneof descriptor")
+	panic("invalid oneof descriptor " + string(od.FullName()) + " for message " + string(m.Descriptor().FullName()))
 }
 func (m *{{.}}) GetUnknown() protoreflect.RawFields {
 	m.messageInfo().init()
