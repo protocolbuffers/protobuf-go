@@ -614,6 +614,7 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 			Cardinality: optional
 			Kind:        string
 			JSONName:    "fieldOne"
+			HasPresence: true
 			HasDefault:  true
 			Default:     "hello, \"world!\"\n"
 			Oneof:       O1
@@ -624,6 +625,7 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 			Kind:        enum
 			HasJSONName: true
 			JSONName:    "Field2"
+			HasPresence: true
 			HasDefault:  true
 			Default:     1
 			Oneof:       O2
@@ -634,6 +636,7 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 			Cardinality: optional
 			Kind:        message
 			JSONName:    "fieldThree"
+			HasPresence: true
 			Oneof:       O2
 			Message:     test.C
 		}, {
@@ -660,6 +663,7 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 			Cardinality: required
 			Kind:        bytes
 			JSONName:    "fieldSix"
+			HasPresence: true
 		}]
 		Oneofs: [{
 			Name:   O1
@@ -681,12 +685,14 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 				Cardinality: optional
 				Kind:        string
 				JSONName:    "key"
+				HasPresence: true
 			}, {
 				Name:        value
 				Number:      2
 				Cardinality: optional
 				Kind:        message
 				JSONName:    "value"
+				HasPresence: true
 				Message:     test.B
 			}]
 		}]
@@ -700,6 +706,7 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 				Cardinality: required
 				Kind:        bytes
 				JSONName:    "F"
+				HasPresence: true
 				HasDefault:  true
 				Default:     "dead\xbe\xef"
 			}]
@@ -739,8 +746,8 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 		Cardinality: repeated
 		Kind:        enum
 		JSONName:    "X"
-		IsPacked:    true
 		IsExtension: true
+		IsPacked:    true
 		IsList:      true
 		Extendee:    test.B
 		Enum:        test.E1

@@ -99,6 +99,7 @@ func init() {
 					generateFieldNumbers(gen, file)
 				}
 			}
+			gen.SupportedFeatures = gengo.SupportedFeatures
 			return nil
 		})
 		os.Exit(0)
@@ -270,7 +271,8 @@ func generateRemoteProtos() {
 }
 
 func protoc(args ...string) {
-	cmd := exec.Command("protoc", "--plugin=protoc-gen-go="+os.Args[0])
+	// TODO: Remove --experimental_allow_proto3_optional flag.
+	cmd := exec.Command("protoc", "--plugin=protoc-gen-go="+os.Args[0], "--experimental_allow_proto3_optional")
 	cmd.Args = append(cmd.Args, args...)
 	cmd.Env = append(os.Environ(), "RUN_AS_PROTOC_PLUGIN=1")
 	out, err := cmd.CombinedOutput()

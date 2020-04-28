@@ -33,6 +33,20 @@ message Scalars {
   string s_string = 13;
 }
 
+message Proto3Optional {
+  optional bool opt_bool = 1;
+  optional int32 opt_int32 = 2;
+  optional int64 opt_int64 = 3;
+  optional uint32 opt_uint32 = 4;
+  optional uint64 opt_uint64 = 5;
+  optional float opt_float = 6;
+  optional double opt_double = 7;
+  optional string opt_string = 8;
+  optional bytes opt_bytes = 9;
+  optional Enum opt_enum = 10;
+  optional Nested opt_message = 11;
+}
+
 enum Enum {
   ZERO = 0;
   ONE = 1;

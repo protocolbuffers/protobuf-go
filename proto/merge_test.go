@@ -677,10 +677,10 @@ func TestMergeAberrant(t *testing.T) {
 		},
 	}, {
 		label: "Proto3EmptyBytes",
-		dst:   &test3pb.TestAllTypes{OptionalBytes: nil},
-		src:   &test3pb.TestAllTypes{OptionalBytes: []byte{}},
+		dst:   &test3pb.TestAllTypes{SingularBytes: nil},
+		src:   &test3pb.TestAllTypes{SingularBytes: []byte{}},
 		check: func(m proto.Message) bool {
-			return m.(*test3pb.TestAllTypes).OptionalBytes == nil
+			return m.(*test3pb.TestAllTypes).SingularBytes == nil
 		},
 	}, {
 		label: "EmptyList",

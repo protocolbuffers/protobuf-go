@@ -140,6 +140,43 @@ var testValidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc: "proto3 zero values",
+		decodeTo: makeMessages(protobuild.Message{
+			"singular_int32":    0,
+			"singular_int64":    0,
+			"singular_uint32":   0,
+			"singular_uint64":   0,
+			"singular_sint32":   0,
+			"singular_sint64":   0,
+			"singular_fixed32":  0,
+			"singular_fixed64":  0,
+			"singular_sfixed32": 0,
+			"singular_sfixed64": 0,
+			"singular_float":    0,
+			"singular_double":   0,
+			"singular_bool":     false,
+			"singular_string":   "",
+			"singular_bytes":    []byte{},
+		}, &test3pb.TestAllTypes{}),
+		wire: protopack.Message{
+			protopack.Tag{81, protopack.VarintType}, protopack.Varint(0),
+			protopack.Tag{82, protopack.VarintType}, protopack.Varint(0),
+			protopack.Tag{83, protopack.VarintType}, protopack.Uvarint(0),
+			protopack.Tag{84, protopack.VarintType}, protopack.Uvarint(0),
+			protopack.Tag{85, protopack.VarintType}, protopack.Svarint(0),
+			protopack.Tag{86, protopack.VarintType}, protopack.Svarint(0),
+			protopack.Tag{87, protopack.Fixed32Type}, protopack.Uint32(0),
+			protopack.Tag{88, protopack.Fixed64Type}, protopack.Uint64(0),
+			protopack.Tag{89, protopack.Fixed32Type}, protopack.Int32(0),
+			protopack.Tag{90, protopack.Fixed64Type}, protopack.Int64(0),
+			protopack.Tag{91, protopack.Fixed32Type}, protopack.Float32(0),
+			protopack.Tag{92, protopack.Fixed64Type}, protopack.Float64(0),
+			protopack.Tag{93, protopack.VarintType}, protopack.Bool(false),
+			protopack.Tag{94, protopack.BytesType}, protopack.String(""),
+			protopack.Tag{95, protopack.BytesType}, protopack.Bytes(nil),
+		}.Marshal(),
+	},
+	{
 		desc: "groups",
 		decodeTo: makeMessages(protobuild.Message{
 			"optionalgroup": protobuild.Message{
@@ -1522,10 +1559,10 @@ var testInvalidMessages = []testProto{
 	{
 		desc: "invalid UTF-8 in optional string field",
 		decodeTo: makeMessages(protobuild.Message{
-			"optional_string": "abc\xff",
+			"singular_string": "abc\xff",
 		}, &test3pb.TestAllTypes{}),
 		wire: protopack.Message{
-			protopack.Tag{14, protopack.BytesType}, protopack.String("abc\xff"),
+			protopack.Tag{94, protopack.BytesType}, protopack.String("abc\xff"),
 		}.Marshal(),
 	},
 	{
@@ -1543,14 +1580,14 @@ var testInvalidMessages = []testProto{
 		decodeTo: makeMessages(protobuild.Message{
 			"optional_nested_message": protobuild.Message{
 				"corecursive": protobuild.Message{
-					"optional_string": "abc\xff",
+					"singular_string": "abc\xff",
 				},
 			},
 		}, &test3pb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{18, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
-					protopack.Tag{14, protopack.BytesType}, protopack.String("abc\xff"),
+					protopack.Tag{94, protopack.BytesType}, protopack.String("abc\xff"),
 				}),
 			}),
 		}.Marshal(),

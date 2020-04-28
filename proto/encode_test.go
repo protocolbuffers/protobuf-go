@@ -112,7 +112,7 @@ func TestEncodeAppend(t *testing.T) {
 	want := []byte("prefix")
 	got := append([]byte(nil), want...)
 	got, err := proto.MarshalOptions{}.MarshalAppend(got, &test3pb.TestAllTypes{
-		OptionalString: "value",
+		SingularString: "value",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -153,7 +153,7 @@ func TestEncodeOneofNilWrapper(t *testing.T) {
 }
 
 func TestMarshalAppendAllocations(t *testing.T) {
-	m := &test3pb.TestAllTypes{OptionalInt32: 1}
+	m := &test3pb.TestAllTypes{SingularInt32: 1}
 	size := proto.Size(m)
 	const count = 1000
 	b := make([]byte, size)

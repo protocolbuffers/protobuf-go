@@ -54,6 +54,9 @@ func TestInit(t *testing.T) {
 		descPkg.Append("FileDescriptorProto.source_code_info"): true,
 		descPkg.Append("FileDescriptorProto.syntax"):           true,
 
+		// Impossible to test proto3 optional in a proto2 file.
+		descPkg.Append("FieldDescriptorProto.proto3_optional"): true,
+
 		// TODO: Test oneof and extension options. Testing these requires extending the
 		// options messages (because they contain no user-settable fields), but importing
 		// decriptor.proto from test.proto currently causes an import cycle. Add test

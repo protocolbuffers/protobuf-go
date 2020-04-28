@@ -22,6 +22,9 @@ func TestDescriptorAccessors(t *testing.T) {
 		"ProtoInternal": true,
 		"ProtoType":     true,
 
+		"HasOptionalKeyword": true, // captured by HasPresence
+		"IsSynthetic":        true, // captured by HasPresence
+
 		"SourceLocations":       true, // specific to FileDescriptor
 		"ExtensionRangeOptions": true, // specific to MessageDescriptor
 		"DefaultEnumValue":      true, // specific to FieldDescriptor

@@ -32,7 +32,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "3.11.4"
+	protobufVersion = "4b4e6674" // pre-release of 3.12.x
 	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.17", "1.13.8", "1.14"}
 	golangLatest    = golangVersions[len(golangVersions)-1]
 
@@ -209,8 +209,13 @@ func mustInitDeps(t *testing.T) {
 	protobufPath = workingDir
 	if _, err := os.Stat(protobufPath); err != nil {
 		fmt.Printf("download %v\n", filepath.Base(protobufPath))
-		url := fmt.Sprintf("https://github.com/google/protobuf/releases/download/v%v/protobuf-all-%v.tar.gz", protobufVersion, protobufVersion)
-		downloadArchive(check, protobufPath, url, "protobuf-"+protobufVersion)
+		if isCommit := strings.Trim(protobufVersion, "0123456789abcdef") == ""; isCommit {
+			command{Dir: testDir}.mustRun(t, "git", "clone", "https://github.com/protocolbuffers/protobuf", "protobuf-"+protobufVersion)
+			command{Dir: protobufPath}.mustRun(t, "git", "checkout", protobufVersion)
+		} else {
+			url := fmt.Sprintf("https://github.com/google/protobuf/releases/download/v%v/protobuf-all-%v.tar.gz", protobufVersion, protobufVersion)
+			downloadArchive(check, protobufPath, url, "protobuf-"+protobufVersion)
+		}
 
 		fmt.Printf("build %v\n", filepath.Base(protobufPath))
 		command{Dir: protobufPath}.mustRun(t, "./autogen.sh")
@@ -370,20 +375,10 @@ var copyrightRegex = []*regexp.Regexp{
 `),
 }
 
-var noCopyrightHeader = []string{
-	// Missing copyright header upstream.
-	"internal/testprotos/benchmarks/datasets/",
-}
-
 func mustHaveCopyrightHeader(t *testing.T, files []string) {
 	var bad []string
 File:
 	for _, file := range files {
-		for _, prefix := range noCopyrightHeader {
-			if strings.HasPrefix(file, prefix) {
-				continue File
-			}
-		}
 		b, err := ioutil.ReadFile(file)
 		if err != nil {
 			t.Fatal(err)

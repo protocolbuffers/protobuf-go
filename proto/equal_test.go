@@ -166,6 +166,57 @@ func TestEqual(t *testing.T) {
 			y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
 		},
 
+		// Proto3 presence.
+		{
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalInt32: proto.Int32(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalInt64: proto.Int64(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalUint32: proto.Uint32(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalUint64: proto.Uint64(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalSint32: proto.Int32(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalSint64: proto.Int64(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalFixed32: proto.Uint32(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalFixed64: proto.Uint64(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalSfixed32: proto.Int32(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalSfixed64: proto.Int64(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalFloat: proto.Float32(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalDouble: proto.Float64(0)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalBool: proto.Bool(false)},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalString: proto.String("")},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalBytes: []byte{}},
+		}, {
+			x: &test3pb.TestAllTypes{},
+			y: &test3pb.TestAllTypes{OptionalNestedEnum: test3pb.TestAllTypes_FOO.Enum()},
+		},
+
 		// Proto2 default values are not considered by Equal, so the following are still unequal.
 		{
 			x: &testpb.TestAllTypes{DefaultInt32: proto.Int32(81)},

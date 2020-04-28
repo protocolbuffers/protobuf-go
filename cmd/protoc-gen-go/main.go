@@ -46,6 +46,7 @@ func main() {
 				gengo.GenerateFile(gen, f)
 			}
 		}
+		gen.SupportedFeatures = gengo.SupportedFeatures
 		return nil
 	})
 }

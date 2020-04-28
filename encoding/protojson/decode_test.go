@@ -106,6 +106,35 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantMessage: &pb3.Scalars{},
 	}, {
+		desc:         "proto3 optional set to zero values",
+		inputMessage: &pb3.Proto3Optional{},
+		inputText: `{
+  "optBool": false,
+  "optInt32": 0,
+  "optInt64": 0,
+  "optUint32": 0,
+  "optUint64": 0,
+  "optFloat": 0,
+  "optDouble": 0,
+  "optString": "",
+  "optBytes": "",
+  "optEnum": "ZERO",
+  "optMessage": {}
+}`,
+		wantMessage: &pb3.Proto3Optional{
+			OptBool:    proto.Bool(false),
+			OptInt32:   proto.Int32(0),
+			OptInt64:   proto.Int64(0),
+			OptUint32:  proto.Uint32(0),
+			OptUint64:  proto.Uint64(0),
+			OptFloat:   proto.Float32(0),
+			OptDouble:  proto.Float64(0),
+			OptString:  proto.String(""),
+			OptBytes:   []byte{},
+			OptEnum:    pb3.Enum_ZERO.Enum(),
+			OptMessage: &pb3.Nested{},
+		},
+	}, {
 		desc:         "proto2 optional scalars set to null",
 		inputMessage: &pb2.Scalars{},
 		inputText: `{

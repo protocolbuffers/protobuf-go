@@ -26,7 +26,11 @@ import (
 	"google.golang.org/protobuf/runtime/protoimpl"
 
 	"google.golang.org/protobuf/types/descriptorpb"
+	"google.golang.org/protobuf/types/pluginpb"
 )
+
+// SupportedFeatures reports the set of supported protobuf language features.
+var SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 
 // GenerateVersionMarkers specifies whether to generate version markers.
 var GenerateVersionMarkers = true
@@ -358,7 +362,7 @@ func genMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *message
 }
 
 func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, field *protogen.Field, sf *structFields) {
-	if oneof := field.Oneof; oneof != nil {
+	if oneof := field.Oneof; oneof != nil && !oneof.Desc.IsSynthetic() {
 		// It would be a bit simpler to iterate over the oneofs below,
 		// but generating the field here keeps the contents of the Go
 		// struct in the same order as the contents of the source
@@ -550,7 +554,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 		genNoInterfacePragma(g, m.isTracked)
 
 		// Getter for parent oneof.
-		if oneof := field.Oneof; oneof != nil && oneof.Fields[0] == field {
+		if oneof := field.Oneof; oneof != nil && oneof.Fields[0] == field && !oneof.Desc.IsSynthetic() {
 			g.Annotate(m.GoIdent.GoName+".Get"+oneof.GoName, oneof.Location)
 			g.P("func (m *", m.GoIdent.GoName, ") Get", oneof.GoName, "() ", oneofInterfaceName(oneof), " {")
 			g.P("if m != nil {")
@@ -579,7 +583,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 			g.P("}")
 			g.P("return ", protoimplPackage.Ident("X"), ".WeakNil(", strconv.Quote(string(field.Message.Desc.FullName())), ")")
 			g.P("}")
-		case field.Oneof != nil:
+		case field.Oneof != nil && !field.Oneof.Desc.IsSynthetic():
 			g.P(leadingComments, "func (x *", m.GoIdent, ") Get", field.GoName, "() ", goType, " {")
 			g.P("if x, ok := x.Get", field.Oneof.GoName, "().(*", field.GoIdent, "); ok {")
 			g.P("return x.", field.GoName)
@@ -588,7 +592,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 			g.P("}")
 		default:
 			g.P(leadingComments, "func (x *", m.GoIdent, ") Get", field.GoName, "() ", goType, " {")
-			if field.Desc.Syntax() == protoreflect.Proto3 || defaultValue == "nil" {
+			if !field.Desc.HasPresence() || defaultValue == "nil" {
 				g.P("if x != nil {")
 			} else {
 				g.P("if x != nil && x.", field.GoName, " != nil {")
@@ -640,7 +644,7 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		return "struct{}", false
 	}
 
-	pointer = true
+	pointer = field.Desc.HasPresence()
 	switch field.Desc.Kind() {
 	case protoreflect.BoolKind:
 		goType = "bool"
@@ -662,24 +666,18 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		goType = "string"
 	case protoreflect.BytesKind:
 		goType = "[]byte"
-		pointer = false
+		pointer = false // rely on nullability of slices for presence
 	case protoreflect.MessageKind, protoreflect.GroupKind:
 		goType = "*" + g.QualifiedGoIdent(field.Message.GoIdent)
-		pointer = false
+		pointer = false // pointer captured as part of the type
 	}
 	switch {
 	case field.Desc.IsList():
-		goType = "[]" + goType
-		pointer = false
+		return "[]" + goType, false
 	case field.Desc.IsMap():
 		keyType, _ := fieldGoType(g, f, field.Message.Fields[0])
 		valType, _ := fieldGoType(g, f, field.Message.Fields[1])
 		return fmt.Sprintf("map[%v]%v", keyType, valType), false
-	}
-
-	// Extension fields always have pointer type, even when defined in a proto3 file.
-	if field.Desc.Syntax() == protoreflect.Proto3 && !field.Desc.IsExtension() {
-		pointer = false
 	}
 	return goType, pointer
 }
@@ -797,6 +795,9 @@ func genExtensions(g *protogen.GeneratedFile, f *fileInfo) {
 // associates the types with the parent message type.
 func genMessageOneofWrapperTypes(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, oneof := range m.Oneofs {
+		if oneof.Desc.IsSynthetic() {
+			continue
+		}
 		ifName := oneofInterfaceName(oneof)
 		g.P("type ", ifName, " interface {")
 		g.P(ifName, "()")

@@ -53,7 +53,7 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 		fs := si.fieldsByNumber[fd.Number()]
 		var fi fieldInfo
 		switch {
-		case fd.ContainingOneof() != nil:
+		case fd.ContainingOneof() != nil && !fd.ContainingOneof().IsSynthetic():
 			fi = fieldInfoForOneof(fd, si.oneofsByName[fd.ContainingOneof().Name()], mi.Exporter, si.oneofWrappersByNumber[fd.Number()])
 		case fd.IsMap():
 			fi = fieldInfoForMap(fd, fs, mi.Exporter)
@@ -72,7 +72,7 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 	mi.oneofs = map[pref.Name]*oneofInfo{}
 	for i := 0; i < md.Oneofs().Len(); i++ {
 		od := md.Oneofs().Get(i)
-		mi.oneofs[od.Name()] = makeOneofInfo(od, si.oneofsByName[od.Name()], mi.Exporter, si.oneofWrappersByType)
+		mi.oneofs[od.Name()] = makeOneofInfo(od, si, mi.Exporter)
 	}
 
 	mi.denseFields = make([]*fieldInfo, fds.Len()*2)
@@ -84,7 +84,7 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 
 	for i := 0; i < fds.Len(); {
 		fd := fds.Get(i)
-		if od := fd.ContainingOneof(); od != nil {
+		if od := fd.ContainingOneof(); od != nil && !od.IsSynthetic() {
 			mi.rangeInfos = append(mi.rangeInfos, mi.oneofs[od.Name()])
 			i += od.Fields().Len()
 		} else {

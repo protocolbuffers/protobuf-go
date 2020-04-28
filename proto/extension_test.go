@@ -20,6 +20,8 @@ import (
 
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	descpb "google.golang.org/protobuf/types/descriptorpb"
 )
 
 func TestExtensionFuncs(t *testing.T) {
@@ -205,29 +207,49 @@ func TestIsValid(t *testing.T) {
 }
 
 func TestExtensionRanger(t *testing.T) {
-	want := map[pref.ExtensionType]interface{}{
-		testpb.E_OptionalInt32:         int32(5),
-		testpb.E_OptionalString:        string("hello"),
-		testpb.E_OptionalNestedMessage: &testpb.TestAllExtensions_NestedMessage{},
-		testpb.E_OptionalNestedEnum:    testpb.TestAllTypes_BAZ,
-		testpb.E_RepeatedFloat:         []float32{+32.32, -32.32},
-		testpb.E_RepeatedNestedMessage: []*testpb.TestAllExtensions_NestedMessage{{}},
-		testpb.E_RepeatedNestedEnum:    []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAZ},
-	}
+	tests := []struct {
+		msg  proto.Message
+		want map[pref.ExtensionType]interface{}
+	}{{
+		msg: &testpb.TestAllExtensions{},
+		want: map[pref.ExtensionType]interface{}{
+			testpb.E_OptionalInt32:         int32(5),
+			testpb.E_OptionalString:        string("hello"),
+			testpb.E_OptionalNestedMessage: &testpb.TestAllExtensions_NestedMessage{},
+			testpb.E_OptionalNestedEnum:    testpb.TestAllTypes_BAZ,
+			testpb.E_RepeatedFloat:         []float32{+32.32, -32.32},
+			testpb.E_RepeatedNestedMessage: []*testpb.TestAllExtensions_NestedMessage{{}},
+			testpb.E_RepeatedNestedEnum:    []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAZ},
+		},
+	}, {
+		msg: &descpb.MessageOptions{},
+		want: map[pref.ExtensionType]interface{}{
+			test3pb.E_OptionalInt32:          int32(5),
+			test3pb.E_OptionalString:         string("hello"),
+			test3pb.E_OptionalForeignMessage: &test3pb.ForeignMessage{},
+			test3pb.E_OptionalForeignEnum:    test3pb.ForeignEnum_FOREIGN_BAR,
 
-	m := &testpb.TestAllExtensions{}
-	for xt, v := range want {
-		proto.SetExtension(m, xt, v)
-	}
+			test3pb.E_OptionalOptionalInt32:          int32(5),
+			test3pb.E_OptionalOptionalString:         string("hello"),
+			test3pb.E_OptionalOptionalForeignMessage: &test3pb.ForeignMessage{},
+			test3pb.E_OptionalOptionalForeignEnum:    test3pb.ForeignEnum_FOREIGN_BAR,
+		},
+	}}
 
-	got := make(map[pref.ExtensionType]interface{})
-	proto.RangeExtensions(m, func(xt pref.ExtensionType, v interface{}) bool {
-		got[xt] = v
-		return true
-	})
+	for _, tt := range tests {
+		for xt, v := range tt.want {
+			proto.SetExtension(tt.msg, xt, v)
+		}
 
-	if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
-		t.Errorf("proto.RangeExtensions mismatch (-want +got):\n%s", diff)
+		got := make(map[pref.ExtensionType]interface{})
+		proto.RangeExtensions(tt.msg, func(xt pref.ExtensionType, v interface{}) bool {
+			got[xt] = v
+			return true
+		})
+
+		if diff := cmp.Diff(tt.want, got, protocmp.Transform()); diff != "" {
+			t.Errorf("proto.RangeExtensions mismatch (-want +got):\n%s", diff)
+		}
 	}
 }
 

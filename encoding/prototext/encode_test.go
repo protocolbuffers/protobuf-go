@@ -44,6 +44,10 @@ func TestMarshal(t *testing.T) {
 		input: &pb3.Scalars{},
 		want:  "",
 	}, {
+		desc:  "proto3 optional not set",
+		input: &pb3.Proto3Optional{},
+		want:  "",
+	}, {
 		desc: "proto2 optional scalars set to zero values",
 		input: &pb2.Scalars{
 			OptBool:     proto.Bool(false),
@@ -77,6 +81,33 @@ opt_float: 0
 opt_double: 0
 opt_bytes: ""
 opt_string: ""
+`,
+	}, {
+		desc: "proto3 optional set to zero values",
+		input: &pb3.Proto3Optional{
+			OptBool:    proto.Bool(false),
+			OptInt32:   proto.Int32(0),
+			OptInt64:   proto.Int64(0),
+			OptUint32:  proto.Uint32(0),
+			OptUint64:  proto.Uint64(0),
+			OptFloat:   proto.Float32(0),
+			OptDouble:  proto.Float64(0),
+			OptString:  proto.String(""),
+			OptBytes:   []byte{},
+			OptEnum:    pb3.Enum_ZERO.Enum(),
+			OptMessage: &pb3.Nested{},
+		},
+		want: `opt_bool: false
+opt_int32: 0
+opt_int64: 0
+opt_uint32: 0
+opt_uint64: 0
+opt_float: 0
+opt_double: 0
+opt_string: ""
+opt_bytes: ""
+opt_enum: ZERO
+opt_message: {}
 `,
 	}, {
 		desc: "proto3 scalars set to zero values",

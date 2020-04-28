@@ -92,7 +92,7 @@ func TestDecodeZeroLengthBytes(t *testing.T) {
 	// Verify that proto3 bytes fields don't give the mistaken
 	// impression that they preserve presence.
 	wire := protopack.Message{
-		protopack.Tag{15, protopack.BytesType}, protopack.Bytes(nil),
+		protopack.Tag{94, protopack.BytesType}, protopack.Bytes(nil),
 	}.Marshal()
 	m := &test3pb.TestAllTypes{}
 	if err := proto.Unmarshal(wire, m); err != nil {
