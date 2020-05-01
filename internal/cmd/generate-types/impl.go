@@ -299,6 +299,48 @@ var coder{{.Name}}Ptr = pointerCoderFuncs{
 }
 {{end}}
 
+{{if (eq .Name "String")}}
+// append{{.Name}}PtrValidateUTF8 wire encodes a *{{.GoType}} pointer as a {{.Name}}.
+// It panics if the pointer is nil.
+func append{{.Name}}PtrValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ marshalOptions) ([]byte, error) {
+	v := **p.{{.GoType.PointerMethod}}Ptr()
+	b = protowire.AppendVarint(b, f.wiretag)
+	{{template "Append" .}}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return b, errInvalidUTF8{}
+	}
+	return b, nil
+}
+
+// consume{{.Name}}PtrValidateUTF8 wire decodes a *{{.GoType}} pointer as a {{.Name}}.
+func consume{{.Name}}PtrValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
+	if wtyp != {{.WireType.Expr}} {
+		return out, errUnknown
+	}
+	{{template "Consume" .}}
+	if n < 0 {
+		return out, protowire.ParseError(n)
+	}
+	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+		return out, errInvalidUTF8{}
+	}
+	vp := p.{{.GoType.PointerMethod}}Ptr()
+	if *vp == nil {
+		*vp = new({{.GoType}})
+	}
+	**vp = {{.ToGoType}}
+	out.n = n
+	return out, nil
+}
+
+var coder{{.Name}}PtrValidateUTF8 = pointerCoderFuncs{
+	size:      size{{.Name}}Ptr,
+	marshal:   append{{.Name}}PtrValidateUTF8,
+	unmarshal: consume{{.Name}}PtrValidateUTF8,
+	merge:     merge{{.GoType.PointerMethod}}Ptr,
+}
+{{end}}
+
 // size{{.Name}}Slice returns the size of wire encoding a []{{.GoType}} pointer as a repeated {{.Name}}.
 func size{{.Name}}Slice(p pointer, f *coderFieldInfo, _ marshalOptions) (size int) {
 	s := *p.{{.GoType.PointerMethod}}Slice()

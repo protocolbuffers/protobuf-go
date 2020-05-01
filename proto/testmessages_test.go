@@ -1559,6 +1559,15 @@ var testInvalidMessages = []testProto{
 	{
 		desc: "invalid UTF-8 in optional string field",
 		decodeTo: makeMessages(protobuild.Message{
+			"optional_string": "abc\xff",
+		}, &test3pb.TestAllTypes{}),
+		wire: protopack.Message{
+			protopack.Tag{14, protopack.BytesType}, protopack.String("abc\xff"),
+		}.Marshal(),
+	},
+	{
+		desc: "invalid UTF-8 in singular string field",
+		decodeTo: makeMessages(protobuild.Message{
 			"singular_string": "abc\xff",
 		}, &test3pb.TestAllTypes{}),
 		wire: protopack.Message{
