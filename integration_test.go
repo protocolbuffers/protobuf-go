@@ -32,7 +32,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "4b4e6674" // pre-release of 3.12.x
+	protobufVersion = "ef7cc811" // v3.12.0-rc1
 	golangVersions  = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.17", "1.13.8", "1.14"}
 	golangLatest    = golangVersions[len(golangVersions)-1]
 
