@@ -291,7 +291,7 @@ type FieldDescriptor interface {
 	IsExtension() bool
 
 	// HasOptionalKeyword reports whether the "optional" keyword was explicitly
-	// specific in the source .proto file.
+	// specified in the source .proto file.
 	HasOptionalKeyword() bool
 
 	// IsWeak reports whether this is a weak field, which does not impose a
