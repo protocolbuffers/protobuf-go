@@ -341,11 +341,21 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 				"\n", fdesc.GetName(), goPkgOpt)
 		case packageName == "" && importPath == "":
 			// No Go package information provided.
-			warn("Missing 'go_package' option in %q, please specify:\n"+
-				"\toption go_package = %q;\n"+
-				"A future release of protoc-gen-go will require this be specified.\n"+
-				"See "+goPackageDocURL+" for more information.\n"+
-				"\n", fdesc.GetName(), goPkgOpt)
+			dotIdx := strings.Index(goPkgOpt, ".")   // heuristic for top-level domain
+			slashIdx := strings.Index(goPkgOpt, "/") // heuristic for multi-segment path
+			if isFull := 0 <= dotIdx && dotIdx <= slashIdx; isFull {
+				warn("Missing 'go_package' option in %q, please specify:\n"+
+					"\toption go_package = %q;\n"+
+					"A future release of protoc-gen-go will require this be specified.\n"+
+					"See "+goPackageDocURL+" for more information.\n"+
+					"\n", fdesc.GetName(), goPkgOpt)
+			} else {
+				warn("Missing 'go_package' option in %q,\n"+
+					"please specify it with the full Go package path as\n"+
+					"a future release of protoc-gen-go will require this be specified.\n"+
+					"See "+goPackageDocURL+" for more information.\n"+
+					"\n", fdesc.GetName())
+			}
 		}
 	}
 
