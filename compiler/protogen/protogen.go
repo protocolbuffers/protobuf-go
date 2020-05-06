@@ -1109,6 +1109,12 @@ func (g *GeneratedFile) Skip() {
 	g.skip = true
 }
 
+// Unskip reverts a previous call to Skip, re-including the generated file in
+// the plugin output.
+func (g *GeneratedFile) Unskip() {
+	g.skip = false
+}
+
 // Annotate associates a symbol in a generated Go file with a location in a
 // source .proto file.
 //
