@@ -33,6 +33,19 @@ message Scalars {
   string s_string = 13;
 }
 
+// Message contains repeated fields.
+message Repeats {
+  repeated bool rpt_bool = 1;
+  repeated int32 rpt_int32 = 2;
+  repeated int64 rpt_int64 = 3;
+  repeated uint32 rpt_uint32 = 4;
+  repeated uint64 rpt_uint64 = 5;
+  repeated float rpt_float = 6;
+  repeated double rpt_double = 7;
+  repeated string rpt_string = 8;
+  repeated bytes rpt_bytes = 9;
+}
+
 message Proto3Optional {
   optional bool opt_bool = 1;
   optional int32 opt_int32 = 2;

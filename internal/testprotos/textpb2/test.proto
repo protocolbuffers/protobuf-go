@@ -74,6 +74,12 @@ message Repeats {
   repeated bytes rpt_bytes = 9;
 }
 
+// Message contains map fields.
+message Maps {
+  map<int32, string> int32_to_str = 1;
+  map<string, Nested> str_to_nested = 4;
+}
+
 // Message type used as submessage.
 message Nested {
   optional string opt_string = 1;
