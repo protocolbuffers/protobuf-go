@@ -30,8 +30,15 @@ func Format(m proto.Message) string {
 	return string(appendMessage(nil, m.ProtoReflect()))
 }
 
+// FormatValue returns a formatted string for an arbitrary value.
+func FormatValue(v protoreflect.Value, fd protoreflect.FieldDescriptor) string {
+	return string(appendValue(nil, v, fd))
+}
+
 func appendValue(b []byte, v protoreflect.Value, fd protoreflect.FieldDescriptor) []byte {
 	switch v := v.Interface().(type) {
+	case nil:
+		return append(b, "<invalid>"...)
 	case bool, int32, int64, uint32, uint64, float32, float64:
 		return append(b, fmt.Sprint(v)...)
 	case string:
@@ -39,7 +46,7 @@ func appendValue(b []byte, v protoreflect.Value, fd protoreflect.FieldDescriptor
 	case []byte:
 		return append(b, strconv.Quote(string(v))...)
 	case protoreflect.EnumNumber:
-		return appendEnum(b, v, fd.Enum())
+		return appendEnum(b, v, fd)
 	case protoreflect.Message:
 		return appendMessage(b, v)
 	case protoreflect.List:
@@ -51,9 +58,11 @@ func appendValue(b []byte, v protoreflect.Value, fd protoreflect.FieldDescriptor
 	}
 }
 
-func appendEnum(b []byte, v protoreflect.EnumNumber, ed protoreflect.EnumDescriptor) []byte {
-	if ev := ed.Values().ByNumber(v); ev != nil {
-		return append(b, ev.Name()...)
+func appendEnum(b []byte, v protoreflect.EnumNumber, fd protoreflect.FieldDescriptor) []byte {
+	if fd != nil {
+		if ev := fd.Enum().Values().ByNumber(v); ev != nil {
+			return append(b, ev.Name()...)
+		}
 	}
 	return strconv.AppendInt(b, int64(v), 10)
 }
