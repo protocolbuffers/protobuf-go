@@ -413,18 +413,18 @@ func generateProtoSize() string {
 }
 
 var protoSizeTemplate = template.Must(template.New("").Parse(`
-func sizeSingular(num protowire.Number, kind protoreflect.Kind, v protoreflect.Value) int {
+func (o MarshalOptions) sizeSingular(num protowire.Number, kind protoreflect.Kind, v protoreflect.Value) int {
 	switch kind {
 	{{- range .}}
 	case {{.Expr}}:
 		{{if (eq .Name "Message") -}}
-		return protowire.SizeBytes(sizeMessage(v.Message()))
+		return protowire.SizeBytes(o.size(v.Message()))
 		{{- else if or (eq .WireType "Fixed32") (eq .WireType "Fixed64") -}}
 		return protowire.Size{{.WireType}}()
 		{{- else if (eq .WireType "Bytes") -}}
 		return protowire.Size{{.WireType}}(len({{.FromValue}}))
 		{{- else if (eq .WireType "Group") -}}
-		return protowire.Size{{.WireType}}(num, sizeMessage(v.Message()))
+		return protowire.Size{{.WireType}}(num, o.size(v.Message()))
 		{{- else -}}
 		return protowire.Size{{.WireType}}({{.FromValue}})
 		{{- end}}
