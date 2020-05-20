@@ -586,7 +586,7 @@ func formatToken(t Token, source, multi bool) (s string) {
 				case math.Float64bits(float64(math.NaN())) == math.Float64bits(float64(f)):
 					s = fmt.Sprintf("%T(math.NaN())", v)
 				default:
-					s = fmt.Sprintf("%T(math.Float64frombits(0x%08x))", v, math.Float64bits(float64(f)))
+					s = fmt.Sprintf("%T(math.Float64frombits(0x%016x))", v, math.Float64bits(float64(f)))
 				}
 				break
 			}
