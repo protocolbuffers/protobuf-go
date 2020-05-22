@@ -29,19 +29,15 @@ import (
 // Override the location of the Go package for various source files.
 // TOOD: Commit these changes upstream.
 var protoPackages = map[string]string{
-	// Locally override field_mask.proto to an internal copy.
-	// We need this package as a dependency of several tests,
-	// but it currently lives in google.golang.org/genproto, which
-	// we do not want a dependency on.
-	//
-	// TODO: Move the canonical package into this module.
-	"google/protobuf/field_mask.proto": "google.golang.org/protobuf/internal/testprotos/fieldmaskpb",
-
 	"google/protobuf/any.proto":                  "google.golang.org/protobuf/types/known/anypb;anypb",
+	"google/protobuf/api.proto":                  "google.golang.org/protobuf/types/known/apipb;apipb",
 	"google/protobuf/duration.proto":             "google.golang.org/protobuf/types/known/durationpb;durationpb",
 	"google/protobuf/empty.proto":                "google.golang.org/protobuf/types/known/emptypb;emptypb",
+	"google/protobuf/field_mask.proto":           "google.golang.org/protobuf/types/known/fieldmaskpb;fieldmaskpb",
+	"google/protobuf/source_context.proto":       "google.golang.org/protobuf/types/known/sourcecontextpb;sourcecontextpb",
 	"google/protobuf/struct.proto":               "google.golang.org/protobuf/types/known/structpb;structpb",
 	"google/protobuf/timestamp.proto":            "google.golang.org/protobuf/types/known/timestamppb;timestamppb",
+	"google/protobuf/type.proto":                 "google.golang.org/protobuf/types/known/typepb;typepb",
 	"google/protobuf/wrappers.proto":             "google.golang.org/protobuf/types/known/wrapperspb;wrapperspb",
 	"google/protobuf/descriptor.proto":           "google.golang.org/protobuf/types/descriptorpb;descriptorpb",
 	"google/protobuf/compiler/plugin.proto":      "google.golang.org/protobuf/types/pluginpb;pluginpb",
@@ -237,21 +233,19 @@ func generateRemoteProtos() {
 		{"benchmarks", "datasets/google_message4/benchmark_message4_1.proto"},
 		{"benchmarks", "datasets/google_message4/benchmark_message4_2.proto"},
 		{"benchmarks", "datasets/google_message4/benchmark_message4_3.proto"},
-		// TODO: The commented-out entires below are currently part of
-		// google.golang.org/genproto. Move them into this module.
 		{"src", "google/protobuf/any.proto"},
-		//{"src", "google/protobuf/api.proto"},
+		{"src", "google/protobuf/api.proto"},
 		{"src", "google/protobuf/compiler/plugin.proto"},
 		{"src", "google/protobuf/descriptor.proto"},
 		{"src", "google/protobuf/duration.proto"},
 		{"src", "google/protobuf/empty.proto"},
 		{"src", "google/protobuf/field_mask.proto"},
-		//{"src", "google/protobuf/source_context.proto"},
+		{"src", "google/protobuf/source_context.proto"},
 		{"src", "google/protobuf/struct.proto"},
 		{"src", "google/protobuf/test_messages_proto2.proto"},
 		{"src", "google/protobuf/test_messages_proto3.proto"},
 		{"src", "google/protobuf/timestamp.proto"},
-		//{"src", "google/protobuf/type.proto"},
+		{"src", "google/protobuf/type.proto"},
 		{"src", "google/protobuf/wrappers.proto"},
 	}
 	for _, f := range files {

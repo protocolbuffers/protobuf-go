@@ -10,13 +10,16 @@ import (
 	"google.golang.org/protobuf/internal/detectknown"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
-	fieldmaskpb "google.golang.org/protobuf/internal/testprotos/fieldmaskpb"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/apipb"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
+	"google.golang.org/protobuf/types/known/sourcecontextpb"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"google.golang.org/protobuf/types/known/typepb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"google.golang.org/protobuf/types/pluginpb"
 )
@@ -35,24 +38,35 @@ func TestWhich(t *testing.T) {
 		{structpb.File_google_protobuf_struct_proto, detectknown.StructProto},
 		{fieldmaskpb.File_google_protobuf_field_mask_proto, detectknown.FieldMaskProto},
 		{emptypb.File_google_protobuf_empty_proto, detectknown.EmptyProto},
+		{apipb.File_google_protobuf_api_proto, detectknown.ApiProto},
+		{typepb.File_google_protobuf_type_proto, detectknown.TypeProto},
+		{sourcecontextpb.File_google_protobuf_source_context_proto, detectknown.SourceContextProto},
 	}
 
 	for _, tt := range tests {
-		rangeMessages(tt.in.Messages(), func(md protoreflect.MessageDescriptor) {
-			got := detectknown.Which(md.FullName())
+		rangeDescriptors(tt.in, func(d protoreflect.Descriptor) {
+			got := detectknown.Which(d.FullName())
 			if got != tt.want {
-				t.Errorf("Which(%s) = %v, want %v", md.FullName(), got, tt.want)
+				t.Errorf("Which(%s) = %v, want %v", d.FullName(), got, tt.want)
 			}
 		})
 	}
 }
 
-func rangeMessages(mds protoreflect.MessageDescriptors, f func(protoreflect.MessageDescriptor)) {
-	for i := 0; i < mds.Len(); i++ {
-		md := mds.Get(i)
-		if !md.IsMapEntry() {
-			f(md)
+func rangeDescriptors(d interface {
+	Enums() protoreflect.EnumDescriptors
+	Messages() protoreflect.MessageDescriptors
+}, f func(protoreflect.Descriptor)) {
+	for i := 0; i < d.Enums().Len(); i++ {
+		ed := d.Enums().Get(i)
+		f(ed)
+	}
+	for i := 0; i < d.Messages().Len(); i++ {
+		md := d.Messages().Get(i)
+		if md.IsMapEntry() {
+			continue
 		}
-		rangeMessages(md.Messages(), f)
+		f(md)
+		rangeDescriptors(md, f)
 	}
 }

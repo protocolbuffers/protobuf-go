@@ -80,9 +80,6 @@ Summary of the packages provided by this module:
     descriptors.
 *   [`types/known/anypb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/anypb):
     Package `anypb` is the generated package for `google/protobuf/any.proto`.
-*   [`types/known/emptypb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/emptypb):
-    Package `emptypb` is the generated package for
-    `google/protobuf/empty.proto`.
 *   [`types/known/timestamppb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/timestamppb):
     Package `timestamppb` is the generated package for
     `google/protobuf/timestamp.proto`.
@@ -95,6 +92,21 @@ Summary of the packages provided by this module:
 *   [`types/known/structpb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/structpb):
     Package `structpb` is the generated package for
     `google/protobuf/struct.proto`.
+*   [`types/known/fieldmaskpb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/fieldmaskpb):
+    Package `fieldmaskpb` is the generated package for
+    `google/protobuf/field_mask.proto`.
+*   [`types/known/apipb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/apipb):
+    Package `apipb` is the generated package for
+    `google/protobuf/api.proto`.
+*   [`types/known/typepb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/typepb):
+    Package `typepb` is the generated package for
+    `google/protobuf/type.proto`.
+*   [`types/known/sourcecontextpb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/sourcecontextpb):
+    Package `sourcecontextpb` is the generated package for
+    `google/protobuf/source_context.proto`.
+*   [`types/known/emptypb`](https://pkg.go.dev/google.golang.org/protobuf/types/known/emptypb):
+    Package `emptypb` is the generated package for
+    `google/protobuf/empty.proto`.
 *   [`types/descriptorpb`](https://pkg.go.dev/google.golang.org/protobuf/types/descriptorpb):
     Package `descriptorpb` is the generated package for
     `google/protobuf/descriptor.proto`.

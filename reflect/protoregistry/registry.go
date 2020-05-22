@@ -96,6 +96,38 @@ func (r *Files) RegisterFile(file protoreflect.FileDescriptor) error {
 	}
 	path := file.Path()
 	if prev := r.filesByPath[path]; prev != nil {
+		// TODO: Remove this after some soak-in period after moving these types.
+		var prevPath string
+		const prevModule = "google.golang.org/genproto"
+		const prevVersion = "TODOTODO (Month DD, YYYY)"
+		switch path {
+		case "google/protobuf/field_mask.proto":
+			prevPath = prevModule + "/protobuf/field_mask"
+		case "google/protobuf/api.proto":
+			prevPath = prevModule + "/protobuf/api"
+		case "google/protobuf/type.proto":
+			prevPath = prevModule + "/protobuf/ptype"
+		case "google/protobuf/source_context.proto":
+			prevPath = prevModule + "/protobuf/source_context"
+		}
+		if r == GlobalFiles && prevPath != "" {
+			pkgName := strings.TrimSuffix(strings.TrimPrefix(path, "google/protobuf/"), ".proto")
+			pkgName = strings.Replace(pkgName, "_", "", -1)
+			currPath := "google.golang.org/protobuf/types/known/" + pkgName + "pb"
+			panic(fmt.Sprintf(""+
+				"duplicate registration of %q\n"+
+				"\n"+
+				"The generated definition for this file has moved:\n"+
+				"\tfrom: %q\n"+
+				"\tto:   %q\n"+
+				"A dependency on the %q module must\n"+
+				"be at version %v or higher.\n"+
+				"\n"+
+				"Upgrade the dependency by running:\n"+
+				"\tgo get -u %v\n",
+				path, prevPath, currPath, prevModule, prevVersion, prevPath))
+		}
+
 		err := errors.New("file %q is already registered", file.Path())
 		err = amendErrorWithCaller(err, prev, file)
 		if r == GlobalFiles && ignoreConflict(file, err) {
