@@ -17,7 +17,7 @@ package protoregistry
 
 import (
 	"fmt"
-	"log"
+	"os"
 	"strings"
 	"sync"
 
@@ -31,12 +31,19 @@ import (
 // given the descriptor being registered and the error.
 // It is a variable so that the behavior is easily overridden in another file.
 var ignoreConflict = func(d protoreflect.Descriptor, err error) bool {
-	log.Printf(""+
-		"WARNING: %v\n"+
-		"A future release will panic on registration conflicts. See:\n"+
-		"https://developers.google.com/protocol-buffers/docs/reference/go/faq#namespace-conflict\n"+
-		"\n", err)
-	return true
+	const env = "GOLANG_PROTOBUF_REGISTRATION_CONFLICT"
+	const faq = "https://developers.google.com/protocol-buffers/docs/reference/go/faq#namespace-conflict"
+	switch os.Getenv(env) {
+	case "panic", "":
+		panic(fmt.Sprintf("%v\nSee %v\n", err, faq))
+	case "warn":
+		fmt.Fprintf(os.Stderr, "WARNING: %v\nSee %v\n\n", err, faq)
+		return true
+	case "ignore":
+		return true
+	default:
+		panic("invalid " + env + " value: " + os.Getenv(env))
+	}
 }
 
 var globalMutex sync.RWMutex
