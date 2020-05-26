@@ -99,7 +99,7 @@ func (r *Files) RegisterFile(file protoreflect.FileDescriptor) error {
 		// TODO: Remove this after some soak-in period after moving these types.
 		var prevPath string
 		const prevModule = "google.golang.org/genproto"
-		const prevVersion = "TODOTODO (Month DD, YYYY)"
+		const prevVersion = "cb27e3aa (May 26th, 2020)"
 		switch path {
 		case "google/protobuf/field_mask.proto":
 			prevPath = prevModule + "/protobuf/field_mask"
@@ -112,8 +112,8 @@ func (r *Files) RegisterFile(file protoreflect.FileDescriptor) error {
 		}
 		if r == GlobalFiles && prevPath != "" {
 			pkgName := strings.TrimSuffix(strings.TrimPrefix(path, "google/protobuf/"), ".proto")
-			pkgName = strings.Replace(pkgName, "_", "", -1)
-			currPath := "google.golang.org/protobuf/types/known/" + pkgName + "pb"
+			pkgName = strings.Replace(pkgName, "_", "", -1) + "pb"
+			currPath := "google.golang.org/protobuf/types/known/" + pkgName
 			panic(fmt.Sprintf(""+
 				"duplicate registration of %q\n"+
 				"\n"+
