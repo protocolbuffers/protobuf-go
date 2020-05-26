@@ -102,7 +102,7 @@ const (
 	TestCategory_BINARY_TEST      TestCategory = 1 // Test binary wire format.
 	TestCategory_JSON_TEST        TestCategory = 2 // Test json wire format.
 	// Similar to JSON_TEST. However, during parsing json, testee should ignore
-	// unknown fields. This feature is optional. Each implementation can descide
+	// unknown fields. This feature is optional. Each implementation can decide
 	// whether to support it.  See
 	// https://developers.google.com/protocol-buffers/docs/proto3#json_options
 	// for more detail.
@@ -242,7 +242,7 @@ type ConformanceRequest struct {
 	// protobuf_test_messages.proto2.TestAllTypesProto2.
 	MessageType string `protobuf:"bytes,4,opt,name=message_type,json=messageType,proto3" json:"message_type,omitempty"`
 	// Each test is given a specific test category. Some category may need
-	// spedific support in testee programs. Refer to the definition of TestCategory
+	// specific support in testee programs. Refer to the definition of TestCategory
 	// for more information.
 	TestCategory TestCategory `protobuf:"varint,5,opt,name=test_category,json=testCategory,proto3,enum=conformance.TestCategory" json:"test_category,omitempty"`
 	// Specify details for how to encode jspb.

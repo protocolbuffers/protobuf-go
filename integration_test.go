@@ -33,8 +33,8 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "ef7cc811" // v3.12.0-rc1
-	protobufSHA256  = ""         // ignored if protobufVersion is a git hash
+	protobufVersion = "3.15.3"
+	protobufSHA256  = "" // ignored if protobufVersion is a git hash
 
 	golangVersions = []string{"1.9.7", "1.10.8", "1.11.13", "1.12.17", "1.13.15", "1.14.7", "1.15"}
 	golangLatest   = golangVersions[len(golangVersions)-1]

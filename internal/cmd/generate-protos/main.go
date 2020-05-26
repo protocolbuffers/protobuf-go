@@ -26,46 +26,6 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 )
 
-// Override the location of the Go package for various source files.
-// TOOD: Commit these changes upstream.
-var protoPackages = map[string]string{
-	"google/protobuf/any.proto":                  "google.golang.org/protobuf/types/known/anypb;anypb",
-	"google/protobuf/api.proto":                  "google.golang.org/protobuf/types/known/apipb;apipb",
-	"google/protobuf/duration.proto":             "google.golang.org/protobuf/types/known/durationpb;durationpb",
-	"google/protobuf/empty.proto":                "google.golang.org/protobuf/types/known/emptypb;emptypb",
-	"google/protobuf/field_mask.proto":           "google.golang.org/protobuf/types/known/fieldmaskpb;fieldmaskpb",
-	"google/protobuf/source_context.proto":       "google.golang.org/protobuf/types/known/sourcecontextpb;sourcecontextpb",
-	"google/protobuf/struct.proto":               "google.golang.org/protobuf/types/known/structpb;structpb",
-	"google/protobuf/timestamp.proto":            "google.golang.org/protobuf/types/known/timestamppb;timestamppb",
-	"google/protobuf/type.proto":                 "google.golang.org/protobuf/types/known/typepb;typepb",
-	"google/protobuf/wrappers.proto":             "google.golang.org/protobuf/types/known/wrapperspb;wrapperspb",
-	"google/protobuf/descriptor.proto":           "google.golang.org/protobuf/types/descriptorpb;descriptorpb",
-	"google/protobuf/compiler/plugin.proto":      "google.golang.org/protobuf/types/pluginpb;pluginpb",
-	"conformance/conformance.proto":              "google.golang.org/protobuf/internal/testprotos/conformance;conformance",
-	"google/protobuf/test_messages_proto2.proto": "google.golang.org/protobuf/internal/testprotos/conformance;conformance",
-	"google/protobuf/test_messages_proto3.proto": "google.golang.org/protobuf/internal/testprotos/conformance;conformance",
-
-	"benchmarks.proto": "google.golang.org/protobuf/internal/testprotos/benchmarks;benchmarks",
-	"datasets/google_message1/proto2/benchmark_message1_proto2.proto": "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message1/proto2;proto2",
-	"datasets/google_message1/proto3/benchmark_message1_proto3.proto": "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message1/proto3;proto3",
-	"datasets/google_message2/benchmark_message2.proto":               "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message2;google_message2",
-	"datasets/google_message3/benchmark_message3.proto":               "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message3/benchmark_message3_1.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message3/benchmark_message3_2.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message3/benchmark_message3_3.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message3/benchmark_message3_4.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message3/benchmark_message3_5.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message3/benchmark_message3_6.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message3/benchmark_message3_7.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message3/benchmark_message3_8.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3",
-	"datasets/google_message4/benchmark_message4.proto":               "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4",
-	"datasets/google_message4/benchmark_message4_1.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4",
-	"datasets/google_message4/benchmark_message4_2.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4",
-	"datasets/google_message4/benchmark_message4_3.proto":             "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4",
-
-	"cmd/protoc-gen-go/testdata/nopackage/nopackage.proto": "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/nopackage",
-}
-
 func init() {
 	// Determine repository root path.
 	out, err := exec.Command("git", "rev-parse", "--show-toplevel").CombinedOutput()
@@ -138,23 +98,21 @@ func generateLocalProtos() {
 
 	// Generate all local proto files (except version-locked files).
 	dirs := []struct {
-		path        string
-		annotateFor map[string]bool
-		exclude     map[string]bool
-	}{
-		{path: "cmd/protoc-gen-go/testdata", annotateFor: map[string]bool{
-			"cmd/protoc-gen-go/testdata/annotations/annotations.proto": true},
-		},
-		{path: "internal/testprotos", exclude: map[string]bool{
-			"internal/testprotos/irregular/irregular.proto": true,
-		}},
-	}
+		path     string
+		pkgPaths map[string]string // mapping of .proto path to Go package path
+		annotate map[string]bool   // .proto files to annotate
+		exclude  map[string]bool   // .proto files to exclude from generation
+	}{{
+		path:     "cmd/protoc-gen-go/testdata",
+		pkgPaths: map[string]string{"cmd/protoc-gen-go/testdata/nopackage/nopackage.proto": "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/nopackage"},
+		annotate: map[string]bool{"cmd/protoc-gen-go/testdata/annotations/annotations.proto": true},
+	}, {
+		path:    "internal/testprotos",
+		exclude: map[string]bool{"internal/testprotos/irregular/irregular.proto": true},
+	}}
 	excludeRx := regexp.MustCompile(`legacy/.*/`)
 	for _, d := range dirs {
 		subDirs := map[string]bool{}
-
-		dstDir := tmpDir
-		check(os.MkdirAll(dstDir, 0775))
 
 		srcDir := filepath.Join(repoRoot, filepath.FromSlash(d.path))
 		filepath.Walk(srcDir, func(srcPath string, _ os.FileInfo, _ error) error {
@@ -173,14 +131,13 @@ func generateLocalProtos() {
 			}
 
 			opts := "module=" + modulePath
-			opts += "," + protoMapOpt()
-
-			// Emit a .meta file for certain files.
-			if d.annotateFor[filepath.ToSlash(relPath)] {
+			for protoPath, goPkgPath := range d.pkgPaths {
+				opts += fmt.Sprintf(",M%v=%v", protoPath, goPkgPath)
+			}
+			if d.annotate[filepath.ToSlash(relPath)] {
 				opts += ",annotate_code"
 			}
-
-			protoc("-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+dstDir, relPath)
+			protoc("-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+tmpDir, relPath)
 			return nil
 		})
 
@@ -215,54 +172,59 @@ func generateRemoteProtos() {
 	defer os.RemoveAll(tmpDir)
 
 	// Generate all remote proto files.
-	files := []struct{ prefix, path string }{
-		{"", "conformance/conformance.proto"},
-		{"benchmarks", "benchmarks.proto"},
-		{"benchmarks", "datasets/google_message1/proto2/benchmark_message1_proto2.proto"},
-		{"benchmarks", "datasets/google_message1/proto3/benchmark_message1_proto3.proto"},
-		{"benchmarks", "datasets/google_message2/benchmark_message2.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_1.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_2.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_3.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_4.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_5.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_6.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_7.proto"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_8.proto"},
-		{"benchmarks", "datasets/google_message4/benchmark_message4.proto"},
-		{"benchmarks", "datasets/google_message4/benchmark_message4_1.proto"},
-		{"benchmarks", "datasets/google_message4/benchmark_message4_2.proto"},
-		{"benchmarks", "datasets/google_message4/benchmark_message4_3.proto"},
-		{"src", "google/protobuf/any.proto"},
-		{"src", "google/protobuf/api.proto"},
-		{"src", "google/protobuf/compiler/plugin.proto"},
-		{"src", "google/protobuf/descriptor.proto"},
-		{"src", "google/protobuf/duration.proto"},
-		{"src", "google/protobuf/empty.proto"},
-		{"src", "google/protobuf/field_mask.proto"},
-		{"src", "google/protobuf/source_context.proto"},
-		{"src", "google/protobuf/struct.proto"},
-		{"src", "google/protobuf/test_messages_proto2.proto"},
-		{"src", "google/protobuf/test_messages_proto3.proto"},
-		{"src", "google/protobuf/timestamp.proto"},
-		{"src", "google/protobuf/type.proto"},
-		{"src", "google/protobuf/wrappers.proto"},
+	files := []struct{ prefix, path, goPkgPath string }{
+		// Well-known protos.
+		{"src", "google/protobuf/any.proto", ""},
+		{"src", "google/protobuf/api.proto", ""},
+		{"src", "google/protobuf/duration.proto", ""},
+		{"src", "google/protobuf/empty.proto", ""},
+		{"src", "google/protobuf/field_mask.proto", ""},
+		{"src", "google/protobuf/source_context.proto", ""},
+		{"src", "google/protobuf/struct.proto", ""},
+		{"src", "google/protobuf/timestamp.proto", ""},
+		{"src", "google/protobuf/type.proto", ""},
+		{"src", "google/protobuf/wrappers.proto", ""},
+
+		// Compiler protos.
+		{"src", "google/protobuf/compiler/plugin.proto", ""},
+		{"src", "google/protobuf/descriptor.proto", ""},
+
+		// Conformance protos.
+		{"", "conformance/conformance.proto", "google.golang.org/protobuf/internal/testprotos/conformance;conformance"},
+		{"src", "google/protobuf/test_messages_proto2.proto", "google.golang.org/protobuf/internal/testprotos/conformance;conformance"},
+		{"src", "google/protobuf/test_messages_proto3.proto", "google.golang.org/protobuf/internal/testprotos/conformance;conformance"},
+
+		// Benchmark protos.
+		{"benchmarks", "benchmarks.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks;benchmarks"},
+		{"benchmarks", "datasets/google_message1/proto2/benchmark_message1_proto2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message1/proto2;proto2"},
+		{"benchmarks", "datasets/google_message1/proto3/benchmark_message1_proto3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message1/proto3;proto3"},
+		{"benchmarks", "datasets/google_message2/benchmark_message2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message2;google_message2"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3_1.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3_2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3_3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3_4.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3_5.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3_6.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3_7.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message3/benchmark_message3_8.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		{"benchmarks", "datasets/google_message4/benchmark_message4.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
+		{"benchmarks", "datasets/google_message4/benchmark_message4_1.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
+		{"benchmarks", "datasets/google_message4/benchmark_message4_2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
+		{"benchmarks", "datasets/google_message4/benchmark_message4_3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
+	}
+
+	opts := "module=" + modulePath
+	for _, file := range files {
+		if file.goPkgPath != "" {
+			opts += fmt.Sprintf(",M%v=%v", file.path, file.goPkgPath)
+		}
 	}
 	for _, f := range files {
-		protoc("-I"+filepath.Join(protoRoot, f.prefix), "--go_out=paths=import,"+protoMapOpt()+":"+tmpDir, f.path)
+		protoc("-I"+filepath.Join(protoRoot, f.prefix), "--go_out="+opts+":"+tmpDir, f.path)
 	}
 
-	syncOutput(repoRoot, filepath.Join(tmpDir, modulePath))
-
-	// Sanity check for unsynchronized files.
-	os.RemoveAll(filepath.Join(tmpDir, modulePath))
-	check(filepath.Walk(tmpDir, func(path string, fi os.FileInfo, err error) error {
-		if !fi.IsDir() {
-			return fmt.Errorf("unsynchronized generated file: %v", strings.TrimPrefix(path, tmpDir))
-		}
-		return err
-	}))
+	syncOutput(repoRoot, tmpDir)
 }
 
 func protoc(args ...string) {
@@ -454,14 +416,6 @@ func copyFile(dstPath, srcPath string) (changed bool) {
 	}
 	check(ioutil.WriteFile(dstPath, src, 0664))
 	return true
-}
-
-func protoMapOpt() string {
-	var opts []string
-	for k, v := range protoPackages {
-		opts = append(opts, fmt.Sprintf("M%v=%v", k, v))
-	}
-	return strings.Join(opts, ",")
 }
 
 func check(err error) {
