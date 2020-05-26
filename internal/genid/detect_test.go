@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package detectknown_test
+package genid_test
 
 import (
 	"testing"
 
-	"google.golang.org/protobuf/internal/detectknown"
+	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -27,25 +27,25 @@ import (
 func TestWhich(t *testing.T) {
 	tests := []struct {
 		in   protoreflect.FileDescriptor
-		want detectknown.ProtoFile
+		want genid.ProtoFile
 	}{
-		{descriptorpb.File_google_protobuf_descriptor_proto, detectknown.Unknown},
-		{pluginpb.File_google_protobuf_compiler_plugin_proto, detectknown.Unknown},
-		{anypb.File_google_protobuf_any_proto, detectknown.AnyProto},
-		{timestamppb.File_google_protobuf_timestamp_proto, detectknown.TimestampProto},
-		{durationpb.File_google_protobuf_duration_proto, detectknown.DurationProto},
-		{wrapperspb.File_google_protobuf_wrappers_proto, detectknown.WrappersProto},
-		{structpb.File_google_protobuf_struct_proto, detectknown.StructProto},
-		{fieldmaskpb.File_google_protobuf_field_mask_proto, detectknown.FieldMaskProto},
-		{emptypb.File_google_protobuf_empty_proto, detectknown.EmptyProto},
-		{apipb.File_google_protobuf_api_proto, detectknown.ApiProto},
-		{typepb.File_google_protobuf_type_proto, detectknown.TypeProto},
-		{sourcecontextpb.File_google_protobuf_source_context_proto, detectknown.SourceContextProto},
+		{descriptorpb.File_google_protobuf_descriptor_proto, genid.Unknown_file},
+		{pluginpb.File_google_protobuf_compiler_plugin_proto, genid.Unknown_file},
+		{anypb.File_google_protobuf_any_proto, genid.Any_file},
+		{timestamppb.File_google_protobuf_timestamp_proto, genid.Timestamp_file},
+		{durationpb.File_google_protobuf_duration_proto, genid.Duration_file},
+		{wrapperspb.File_google_protobuf_wrappers_proto, genid.Wrappers_file},
+		{structpb.File_google_protobuf_struct_proto, genid.Struct_file},
+		{fieldmaskpb.File_google_protobuf_field_mask_proto, genid.FieldMask_file},
+		{apipb.File_google_protobuf_api_proto, genid.Api_file},
+		{typepb.File_google_protobuf_type_proto, genid.Type_file},
+		{sourcecontextpb.File_google_protobuf_source_context_proto, genid.SourceContext_file},
+		{emptypb.File_google_protobuf_empty_proto, genid.Empty_file},
 	}
 
 	for _, tt := range tests {
 		rangeDescriptors(tt.in, func(d protoreflect.Descriptor) {
-			got := detectknown.Which(d.FullName())
+			got := genid.WhichFile(d.FullName())
 			if got != tt.want {
 				t.Errorf("Which(%s) = %v, want %v", d.FullName(), got, tt.want)
 			}

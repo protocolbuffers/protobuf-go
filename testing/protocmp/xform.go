@@ -17,6 +17,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"google.golang.org/protobuf/encoding/protowire"
+	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/internal/msgfmt"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -247,16 +248,16 @@ func transformMessage(m protoreflect.Message) Message {
 	}
 
 	// Expand Any messages.
-	if mt.md.FullName() == "google.protobuf.Any" {
+	if mt.md.FullName() == genid.Any_message_fullname {
 		// TODO: Expose Transform option to specify a custom resolver?
-		s, _ := mx["type_url"].(string)
-		b, _ := mx["value"].([]byte)
+		s, _ := mx[string(genid.Any_TypeUrl_field_name)].(string)
+		b, _ := mx[string(genid.Any_Value_field_name)].([]byte)
 		mt, err := protoregistry.GlobalTypes.FindMessageByURL(s)
 		if mt != nil && err == nil {
 			m2 := mt.New()
 			err := proto.UnmarshalOptions{AllowPartial: true}.Unmarshal(b, m2.Interface())
 			if err == nil {
-				mx["value"] = transformMessage(m2)
+				mx[string(genid.Any_Value_field_name)] = transformMessage(m2)
 			}
 		}
 	}

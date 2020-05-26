@@ -18,12 +18,12 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	gengo "google.golang.org/protobuf/cmd/protoc-gen-go/internal_gengo"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // Override the location of the Go package for various source files.
@@ -92,7 +92,7 @@ func init() {
 				if file.Generate {
 					gengo.GenerateVersionMarkers = false
 					gengo.GenerateFile(gen, file)
-					generateFieldNumbers(gen, file)
+					generateIdentifiers(gen, file)
 				}
 			}
 			gen.SupportedFeatures = gengo.SupportedFeatures
@@ -276,14 +276,14 @@ func protoc(args ...string) {
 	check(err)
 }
 
-// generateFieldNumbers generates an internal package for descriptor.proto
+// generateIdentifiers generates an internal package for descriptor.proto
 // and well-known types.
-func generateFieldNumbers(gen *protogen.Plugin, file *protogen.File) {
+func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 	if file.Desc.Package() != "google.protobuf" {
 		return
 	}
 
-	importPath := modulePath + "/internal/fieldnum"
+	importPath := modulePath + "/internal/genid"
 	base := strings.TrimSuffix(path.Base(file.Desc.Path()), ".proto")
 	g := gen.NewGeneratedFile(importPath+"/"+base+"_gen.go", protogen.GoImportPath(importPath))
 	for _, s := range generatedPreamble {
@@ -292,26 +292,69 @@ func generateFieldNumbers(gen *protogen.Plugin, file *protogen.File) {
 	g.P("package ", path.Base(importPath))
 	g.P("")
 
+	var processEnums func([]*protogen.Enum)
 	var processMessages func([]*protogen.Message)
+	const protoreflectPackage = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
+	processEnums = func(enums []*protogen.Enum) {
+		for _, enum := range enums {
+			g.P("// Full and short names for ", enum.Desc.FullName(), ".")
+			g.P("const (")
+			g.P(enum.GoIdent.GoName, "_enum_fullname = ", strconv.Quote(string(enum.Desc.FullName())))
+			g.P(enum.GoIdent.GoName, "_enum_name = ", strconv.Quote(string(enum.Desc.Name())))
+			g.P(")")
+			g.P()
+		}
+	}
 	processMessages = func(messages []*protogen.Message) {
 		for _, message := range messages {
-			g.P("// Field numbers for ", message.Desc.FullName(), ".")
+			g.P("// Names for ", message.Desc.FullName(), ".")
 			g.P("const (")
-			for _, field := range message.Fields {
-				fd := field.Desc
-				typeName := fd.Kind().String()
-				switch fd.Kind() {
-				case protoreflect.EnumKind:
-					typeName = string(fd.Enum().FullName())
-				case protoreflect.MessageKind, protoreflect.GroupKind:
-					typeName = string(fd.Message().FullName())
-				}
-				g.P(message.GoIdent.GoName, "_", field.GoName, "=", fd.Number(), "// ", fd.Cardinality(), " ", typeName)
-			}
+			g.P(message.GoIdent.GoName, "_message_name ", protoreflectPackage.Ident("Name"), " = ", strconv.Quote(string(message.Desc.Name())))
+			g.P(message.GoIdent.GoName, "_message_fullname ", protoreflectPackage.Ident("FullName"), " = ", strconv.Quote(string(message.Desc.FullName())))
 			g.P(")")
+			g.P()
+
+			if len(message.Fields) > 0 {
+				g.P("// Field names for ", message.Desc.FullName(), ".")
+				g.P("const (")
+				for _, field := range message.Fields {
+					g.P(message.GoIdent.GoName, "_", field.GoName, "_field_name ", protoreflectPackage.Ident("Name"), " = ", strconv.Quote(string(field.Desc.Name())))
+				}
+				g.P()
+				for _, field := range message.Fields {
+					g.P(message.GoIdent.GoName, "_", field.GoName, "_field_fullname ", protoreflectPackage.Ident("FullName"), " = ", strconv.Quote(string(field.Desc.FullName())))
+				}
+				g.P(")")
+				g.P()
+
+				g.P("// Field numbers for ", message.Desc.FullName(), ".")
+				g.P("const (")
+				for _, field := range message.Fields {
+					g.P(message.GoIdent.GoName, "_", field.GoName, "_field_number ", protoreflectPackage.Ident("FieldNumber"), " = ", field.Desc.Number())
+				}
+				g.P(")")
+				g.P()
+			}
+
+			if len(message.Oneofs) > 0 {
+				g.P("// Oneof names for ", message.Desc.FullName(), ".")
+				g.P("const (")
+				for _, oneof := range message.Oneofs {
+					g.P(message.GoIdent.GoName, "_", oneof.GoName, "_oneof_name ", protoreflectPackage.Ident("Name"), " = ", strconv.Quote(string(oneof.Desc.Name())))
+				}
+				g.P()
+				for _, oneof := range message.Oneofs {
+					g.P(message.GoIdent.GoName, "_", oneof.GoName, "_oneof_fullname ", protoreflectPackage.Ident("FullName"), " = ", strconv.Quote(string(oneof.Desc.FullName())))
+				}
+				g.P(")")
+				g.P()
+			}
+
+			processEnums(message.Enums)
 			processMessages(message.Messages)
 		}
 	}
+	processEnums(file.Enums)
 	processMessages(file.Messages)
 }
 

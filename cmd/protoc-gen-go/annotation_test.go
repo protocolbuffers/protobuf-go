@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/fieldnum"
+	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/proto"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -36,19 +36,19 @@ func TestAnnotations(t *testing.T) {
 		path                 []int32
 	}{{
 		"type ", "AnnotationsTestEnum", " int32",
-		[]int32{fieldnum.FileDescriptorProto_EnumType, 0},
+		[]int32{int32(genid.FileDescriptorProto_EnumType_field_number), 0},
 	}, {
 		"\t", "AnnotationsTestEnum_ANNOTATIONS_TEST_ENUM_VALUE", " AnnotationsTestEnum = 0",
-		[]int32{fieldnum.FileDescriptorProto_EnumType, 0, fieldnum.EnumDescriptorProto_Value, 0},
+		[]int32{int32(genid.FileDescriptorProto_EnumType_field_number), 0, int32(genid.EnumDescriptorProto_Value_field_number), 0},
 	}, {
 		"type ", "AnnotationsTestMessage", " struct {",
-		[]int32{fieldnum.FileDescriptorProto_MessageType, 0},
+		[]int32{int32(genid.FileDescriptorProto_MessageType_field_number), 0},
 	}, {
 		"\t", "AnnotationsTestField", " ",
-		[]int32{fieldnum.FileDescriptorProto_MessageType, 0, fieldnum.DescriptorProto_Field, 0},
+		[]int32{int32(genid.FileDescriptorProto_MessageType_field_number), 0, int32(genid.DescriptorProto_Field_field_number), 0},
 	}, {
 		"func (x *AnnotationsTestMessage) ", "GetAnnotationsTestField", "() string {",
-		[]int32{fieldnum.FileDescriptorProto_MessageType, 0, fieldnum.DescriptorProto_Field, 0},
+		[]int32{int32(genid.FileDescriptorProto_MessageType_field_number), 0, int32(genid.DescriptorProto_Field_field_number), 0},
 	}} {
 		s := want.prefix + want.text + want.suffix
 		pos := bytes.Index(sourceFile, []byte(s))

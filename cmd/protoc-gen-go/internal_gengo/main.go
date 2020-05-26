@@ -19,8 +19,7 @@ import (
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/encoding/tag"
-	"google.golang.org/protobuf/internal/fieldnum"
-	"google.golang.org/protobuf/internal/genname"
+	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/internal/version"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
@@ -66,9 +65,9 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 	g := gen.NewGeneratedFile(filename, file.GoImportPath)
 	f := newFileInfo(file)
 
-	genStandaloneComments(g, f, fieldnum.FileDescriptorProto_Syntax)
+	genStandaloneComments(g, f, int32(genid.FileDescriptorProto_Syntax_field_number))
 	genGeneratedHeader(gen, g, f)
-	genStandaloneComments(g, f, fieldnum.FileDescriptorProto_Package)
+	genStandaloneComments(g, f, int32(genid.FileDescriptorProto_Package_field_number))
 	g.P("package ", f.GoPackageName)
 	g.P()
 
@@ -343,19 +342,19 @@ func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 }
 
 func genMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, sf *structFields) {
-	g.P(genname.State, " ", protoimplPackage.Ident("MessageState"))
-	sf.append(genname.State)
-	g.P(genname.SizeCache, " ", protoimplPackage.Ident("SizeCache"))
-	sf.append(genname.SizeCache)
+	g.P(genid.State_goname, " ", protoimplPackage.Ident("MessageState"))
+	sf.append(genid.State_goname)
+	g.P(genid.SizeCache_goname, " ", protoimplPackage.Ident("SizeCache"))
+	sf.append(genid.SizeCache_goname)
 	if m.hasWeak {
-		g.P(genname.WeakFields, " ", protoimplPackage.Ident("WeakFields"))
-		sf.append(genname.WeakFields)
+		g.P(genid.WeakFields_goname, " ", protoimplPackage.Ident("WeakFields"))
+		sf.append(genid.WeakFields_goname)
 	}
-	g.P(genname.UnknownFields, " ", protoimplPackage.Ident("UnknownFields"))
-	sf.append(genname.UnknownFields)
+	g.P(genid.UnknownFields_goname, " ", protoimplPackage.Ident("UnknownFields"))
+	sf.append(genid.UnknownFields_goname)
 	if m.Desc.ExtensionRanges().Len() > 0 {
-		g.P(genname.ExtensionFields, " ", protoimplPackage.Ident("ExtensionFields"))
-		sf.append(genname.ExtensionFields)
+		g.P(genid.ExtensionFields_goname, " ", protoimplPackage.Ident("ExtensionFields"))
+		sf.append(genid.ExtensionFields_goname)
 	}
 	if sf.count > 0 {
 		g.P()
@@ -416,7 +415,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 
 	name := field.GoName
 	if field.Desc.IsWeak() {
-		name = genname.WeakFieldPrefix + name
+		name = genid.WeakFieldPrefix_goname + name
 	}
 	g.Annotate(m.GoIdent.GoName+"."+name, field.Location)
 	leadingComments := appendDeprecationSuffix(field.Comments.Leading,
@@ -577,9 +576,9 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 			g.P(leadingComments, "func (x *", m.GoIdent, ") Get", field.GoName, "() ", protoPackage.Ident("Message"), "{")
 			g.P("var w ", protoimplPackage.Ident("WeakFields"))
 			g.P("if x != nil {")
-			g.P("w = x.", genname.WeakFields)
+			g.P("w = x.", genid.WeakFields_goname)
 			if m.isTracked {
-				g.P("_ = x.", genname.WeakFieldPrefix+field.GoName)
+				g.P("_ = x.", genid.WeakFieldPrefix_goname+field.GoName)
 			}
 			g.P("}")
 			g.P("return ", protoimplPackage.Ident("X"), ".GetWeak(w, ", field.Desc.Number(), ", ", strconv.Quote(string(field.Message.Desc.FullName())), ")")
@@ -625,9 +624,9 @@ func genMessageSetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 		g.P(leadingComments, "func (x *", m.GoIdent, ") Set", field.GoName, "(v ", protoPackage.Ident("Message"), ") {")
 		g.P("var w *", protoimplPackage.Ident("WeakFields"))
 		g.P("if x != nil {")
-		g.P("w = &x.", genname.WeakFields)
+		g.P("w = &x.", genid.WeakFields_goname)
 		if m.isTracked {
-			g.P("_ = x.", genname.WeakFieldPrefix+field.GoName)
+			g.P("_ = x.", genid.WeakFieldPrefix_goname+field.GoName)
 		}
 		g.P("}")
 		g.P(protoimplPackage.Ident("X"), ".SetWeak(w, ", field.Desc.Number(), ", ", strconv.Quote(string(field.Message.Desc.FullName())), ", v)")

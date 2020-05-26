@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoiface"
@@ -102,7 +103,7 @@ func (m reflectMessage) Get(fd protoreflect.FieldDescriptor) protoreflect.Value 
 
 	// The transformation may leave Any messages in structured form.
 	// If so, convert them back to a raw-encoded form.
-	if fd.FullName() == "google.protobuf.Any.value" {
+	if fd.FullName() == genid.Any_Value_field_fullname {
 		if m, ok := v.(Message); ok {
 			b, err := proto.MarshalOptions{Deterministic: true}.Marshal(m)
 			if err != nil {
