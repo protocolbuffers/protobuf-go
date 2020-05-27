@@ -597,13 +597,9 @@ Loop:
 func (d decoder) unmarshalAny(m pref.Message, checkDelims bool) error {
 	var typeURL string
 	var bValue []byte
-
-	// hasFields tracks which valid fields have been seen in the loop below in
-	// order to flag an error if there are duplicates or conflicts. It may
-	// contain the strings "type_url", "value" and "expanded".  The literal
-	// "expanded" is used to indicate that the expanded form has been
-	// encountered already.
-	hasFields := map[string]bool{}
+	var seenTypeUrl bool
+	var seenValue bool
+	var isExpanded bool
 
 	if checkDelims {
 		tok, err := d.Read()
@@ -644,10 +640,10 @@ Loop:
 
 			switch tok.IdentName() {
 			case "type_url":
-				if hasFields["type_url"] {
+				if seenTypeUrl {
 					return d.newError(tok.Pos(), "duplicate Any type_url field")
 				}
-				if hasFields["expanded"] {
+				if isExpanded {
 					return d.newError(tok.Pos(), "conflict with [%s] field", typeURL)
 				}
 				tok, err := d.Read()
@@ -659,13 +655,13 @@ Loop:
 				if !ok {
 					return d.newError(tok.Pos(), "invalid Any type_url: %v", tok.RawString())
 				}
-				hasFields["type_url"] = true
+				seenTypeUrl = true
 
 			case "value":
-				if hasFields["value"] {
+				if seenValue {
 					return d.newError(tok.Pos(), "duplicate Any value field")
 				}
-				if hasFields["expanded"] {
+				if isExpanded {
 					return d.newError(tok.Pos(), "conflict with [%s] field", typeURL)
 				}
 				tok, err := d.Read()
@@ -677,7 +673,7 @@ Loop:
 					return d.newError(tok.Pos(), "invalid Any value: %v", tok.RawString())
 				}
 				bValue = []byte(s)
-				hasFields["value"] = true
+				seenValue = true
 
 			default:
 				if !d.opts.DiscardUnknown {
@@ -686,10 +682,10 @@ Loop:
 			}
 
 		case text.TypeName:
-			if hasFields["expanded"] {
+			if isExpanded {
 				return d.newError(tok.Pos(), "cannot have more than one type")
 			}
-			if hasFields["type_url"] {
+			if seenTypeUrl {
 				return d.newError(tok.Pos(), "conflict with type_url field")
 			}
 			typeURL = tok.TypeName()
@@ -698,7 +694,7 @@ Loop:
 			if err != nil {
 				return err
 			}
-			hasFields["expanded"] = true
+			isExpanded = true
 
 		default:
 			if !d.opts.DiscardUnknown {
