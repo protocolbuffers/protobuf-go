@@ -104,10 +104,10 @@ var protocmpMessageType = reflect.TypeOf(map[string]interface{}(nil))
 func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 	md := m.Descriptor()
 	fds := md.Fields()
-	switch genid.WhichFile(md.FullName()) {
-	case genid.Any_file:
+	switch md.FullName() {
+	case genid.Any_message_fullname:
 		var msgVal protoreflect.Message
-		url := m.Get(fds.ByName(genid.Any_TypeUrl_field_name)).String()
+		url := m.Get(fds.ByNumber(genid.Any_TypeUrl_field_number)).String()
 		if v := reflect.ValueOf(m); v.Type().ConvertibleTo(protocmpMessageType) {
 			// For protocmp.Message, directly obtain the sub-message value
 			// which is stored in structured form, rather than as raw bytes.
@@ -118,7 +118,7 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 			}
 			msgVal = v.ProtoReflect()
 		} else {
-			val := m.Get(fds.ByName(genid.Any_Value_field_name)).Bytes()
+			val := m.Get(fds.ByNumber(genid.Any_Value_field_number)).Bytes()
 			mt, err := protoregistry.GlobalTypes.FindMessageByURL(url)
 			if err != nil {
 				return nil
@@ -137,9 +137,9 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 		b = append(b, '}')
 		return b
 
-	case genid.Timestamp_file:
-		secs := m.Get(fds.ByName(genid.Timestamp_Seconds_field_name)).Int()
-		nanos := m.Get(fds.ByName(genid.Timestamp_Nanos_field_name)).Int()
+	case genid.Timestamp_message_fullname:
+		secs := m.Get(fds.ByNumber(genid.Timestamp_Seconds_field_number)).Int()
+		nanos := m.Get(fds.ByNumber(genid.Timestamp_Nanos_field_number)).Int()
 		if nanos < 0 || nanos >= 1e9 {
 			return nil
 		}
@@ -150,9 +150,9 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 		x = strings.TrimSuffix(x, ".000")
 		return append(b, x+"Z"...)
 
-	case genid.Duration_file:
-		secs := m.Get(fds.ByName(genid.Duration_Seconds_field_name)).Int()
-		nanos := m.Get(fds.ByName(genid.Duration_Nanos_field_name)).Int()
+	case genid.Duration_message_fullname:
+		secs := m.Get(fds.ByNumber(genid.Duration_Seconds_field_number)).Int()
+		nanos := m.Get(fds.ByNumber(genid.Duration_Nanos_field_number)).Int()
 		if nanos <= -1e9 || nanos >= 1e9 || (secs > 0 && nanos < 0) || (secs < 0 && nanos > 0) {
 			return nil
 		}
@@ -161,9 +161,10 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 		x = strings.TrimSuffix(x, "000")
 		x = strings.TrimSuffix(x, ".000")
 		return append(b, x+"s"...)
+	}
 
-	case genid.Wrappers_file:
-		fd := fds.ByName(genid.WrapperValue_Value_field_name)
+	if genid.WhichFile(md.FullName()) == genid.Wrappers_file {
+		fd := fds.ByNumber(genid.WrapperValue_Value_field_number)
 		return appendValue(b, m.Get(fd), fd)
 	}
 
