@@ -112,8 +112,8 @@ func (d decoder) syntaxError(pos int, f string, x ...interface{}) error {
 
 // unmarshalMessage unmarshals a message into the given protoreflect.Message.
 func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
-	if isCustomType(m.Descriptor().FullName()) {
-		return d.unmarshalCustomType(m)
+	if unmarshal := wellKnownTypeUnmarshaler(m.Descriptor().FullName()); unmarshal != nil {
+		return unmarshal(d, m)
 	}
 
 	tok, err := d.Read()

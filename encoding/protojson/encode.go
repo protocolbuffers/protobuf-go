@@ -147,8 +147,8 @@ type encoder struct {
 
 // marshalMessage marshals the given protoreflect.Message.
 func (e encoder) marshalMessage(m pref.Message) error {
-	if isCustomType(m.Descriptor().FullName()) {
-		return e.marshalCustomType(m)
+	if marshal := wellKnownTypeMarshaler(m.Descriptor().FullName()); marshal != nil {
+		return marshal(e, m)
 	}
 
 	e.StartObject()

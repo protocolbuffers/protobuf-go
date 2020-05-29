@@ -161,9 +161,16 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 		x = strings.TrimSuffix(x, "000")
 		x = strings.TrimSuffix(x, ".000")
 		return append(b, x+"s"...)
-	}
 
-	if genid.WhichFile(md.FullName()) == genid.Wrappers_file {
+	case genid.BoolValue_message_fullname,
+		genid.Int32Value_message_fullname,
+		genid.Int64Value_message_fullname,
+		genid.UInt32Value_message_fullname,
+		genid.UInt64Value_message_fullname,
+		genid.FloatValue_message_fullname,
+		genid.DoubleValue_message_fullname,
+		genid.StringValue_message_fullname,
+		genid.BytesValue_message_fullname:
 		fd := fds.ByNumber(genid.WrapperValue_Value_field_number)
 		return appendValue(b, m.Get(fd), fd)
 	}

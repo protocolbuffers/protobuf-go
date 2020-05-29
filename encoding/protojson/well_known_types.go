@@ -16,75 +16,84 @@ import (
 	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// isCustomType returns true if type name has special JSON conversion rules.
-// The list of custom types here has to match the ones in marshalCustomType and
-// unmarshalCustomType.
-func isCustomType(name pref.FullName) bool {
-	switch genid.WhichFile(name) {
-	case genid.Any_file:
-	case genid.Timestamp_file:
-	case genid.Duration_file:
-	case genid.Wrappers_file:
-	case genid.Struct_file:
-	case genid.FieldMask_file:
-	case genid.Empty_file:
-	default:
-		return false
+type marshalFunc func(encoder, pref.Message) error
+
+// wellKnownTypeMarshaler returns a marshal function if the message type
+// has specialized serialization behavior. It returns nil otherwise.
+func wellKnownTypeMarshaler(name protoreflect.FullName) marshalFunc {
+	if name.Parent() == genid.GoogleProtobuf_package {
+		switch name.Name() {
+		case genid.Any_message_name:
+			return encoder.marshalAny
+		case genid.Timestamp_message_name:
+			return encoder.marshalTimestamp
+		case genid.Duration_message_name:
+			return encoder.marshalDuration
+		case genid.BoolValue_message_name,
+			genid.Int32Value_message_name,
+			genid.Int64Value_message_name,
+			genid.UInt32Value_message_name,
+			genid.UInt64Value_message_name,
+			genid.FloatValue_message_name,
+			genid.DoubleValue_message_name,
+			genid.StringValue_message_name,
+			genid.BytesValue_message_name:
+			return encoder.marshalWrapperType
+		case genid.Struct_message_name:
+			return encoder.marshalStruct
+		case genid.ListValue_message_name:
+			return encoder.marshalListValue
+		case genid.Value_message_name:
+			return encoder.marshalKnownValue
+		case genid.FieldMask_message_name:
+			return encoder.marshalFieldMask
+		case genid.Empty_message_name:
+			return encoder.marshalEmpty
+		}
 	}
-	return true
+	return nil
 }
 
-// marshalCustomType marshals given well-known type message that have special
-// JSON conversion rules. It needs to be a message type where isCustomType
-// returns true, else it will panic.
-func (e encoder) marshalCustomType(m pref.Message) error {
-	name := m.Descriptor().FullName()
-	switch genid.WhichFile(name) {
-	case genid.Any_file:
-		return e.marshalAny(m)
-	case genid.Timestamp_file:
-		return e.marshalTimestamp(m)
-	case genid.Duration_file:
-		return e.marshalDuration(m)
-	case genid.Wrappers_file:
-		return e.marshalWrapperType(m)
-	case genid.Struct_file:
-		return e.marshalStructType(m)
-	case genid.FieldMask_file:
-		return e.marshalFieldMask(m)
-	case genid.Empty_file:
-		return e.marshalEmpty(m)
-	default:
-		panic(fmt.Sprintf("%s does not have a custom marshaler", name))
-	}
-}
+type unmarshalFunc func(decoder, pref.Message) error
 
-// unmarshalCustomType unmarshals given well-known type message that have
-// special JSON conversion rules. It needs to be a message type where
-// isCustomType returns true, else it will panic.
-func (d decoder) unmarshalCustomType(m pref.Message) error {
-	name := m.Descriptor().FullName()
-	switch genid.WhichFile(name) {
-	case genid.Any_file:
-		return d.unmarshalAny(m)
-	case genid.Timestamp_file:
-		return d.unmarshalTimestamp(m)
-	case genid.Duration_file:
-		return d.unmarshalDuration(m)
-	case genid.Wrappers_file:
-		return d.unmarshalWrapperType(m)
-	case genid.Struct_file:
-		return d.unmarshalStructType(m)
-	case genid.FieldMask_file:
-		return d.unmarshalFieldMask(m)
-	case genid.Empty_file:
-		return d.unmarshalEmpty(m)
-	default:
-		panic(fmt.Sprintf("%s does not have a custom unmarshaler", name))
+// wellKnownTypeUnmarshaler returns a unmarshal function if the message type
+// has specialized serialization behavior. It returns nil otherwise.
+func wellKnownTypeUnmarshaler(name protoreflect.FullName) unmarshalFunc {
+	if name.Parent() == genid.GoogleProtobuf_package {
+		switch name.Name() {
+		case genid.Any_message_name:
+			return decoder.unmarshalAny
+		case genid.Timestamp_message_name:
+			return decoder.unmarshalTimestamp
+		case genid.Duration_message_name:
+			return decoder.unmarshalDuration
+		case genid.BoolValue_message_name,
+			genid.Int32Value_message_name,
+			genid.Int64Value_message_name,
+			genid.UInt32Value_message_name,
+			genid.UInt64Value_message_name,
+			genid.FloatValue_message_name,
+			genid.DoubleValue_message_name,
+			genid.StringValue_message_name,
+			genid.BytesValue_message_name:
+			return decoder.unmarshalWrapperType
+		case genid.Struct_message_name:
+			return decoder.unmarshalStruct
+		case genid.ListValue_message_name:
+			return decoder.unmarshalListValue
+		case genid.Value_message_name:
+			return decoder.unmarshalKnownValue
+		case genid.FieldMask_message_name:
+			return decoder.unmarshalFieldMask
+		case genid.Empty_message_name:
+			return decoder.unmarshalEmpty
+		}
 	}
+	return nil
 }
 
 // The JSON representation of an Any message uses the regular representation of
@@ -140,9 +149,9 @@ func (e encoder) marshalAny(m pref.Message) error {
 	// If type of value has custom JSON encoding, marshal out a field "value"
 	// with corresponding custom JSON encoding of the embedded message as a
 	// field.
-	if isCustomType(emt.Descriptor().FullName()) {
+	if marshal := wellKnownTypeMarshaler(emt.Descriptor().FullName()); marshal != nil {
 		e.WriteName("value")
-		return e.marshalCustomType(em)
+		return marshal(e, em)
 	}
 
 	// Else, marshal out the embedded message's fields in this Any object.
@@ -197,10 +206,10 @@ func (d decoder) unmarshalAny(m pref.Message) error {
 
 	// Create new message for the embedded message type and unmarshal into it.
 	em := emt.New()
-	if isCustomType(emt.Descriptor().FullName()) {
+	if unmarshal := wellKnownTypeUnmarshaler(emt.Descriptor().FullName()); unmarshal != nil {
 		// If embedded message is a custom type,
 		// unmarshal the JSON "value" field into it.
-		if err := d.unmarshalAnyValue(em); err != nil {
+		if err := d.unmarshalAnyValue(unmarshal, em); err != nil {
 			return err
 		}
 	} else {
@@ -344,7 +353,7 @@ func (d decoder) skipJSONValue() error {
 
 // unmarshalAnyValue unmarshals the given custom-type message from the JSON
 // object's "value" field.
-func (d decoder) unmarshalAnyValue(m pref.Message) error {
+func (d decoder) unmarshalAnyValue(unmarshal unmarshalFunc, m pref.Message) error {
 	// Skip ObjectOpen, and start reading the fields.
 	d.Read()
 
@@ -372,7 +381,7 @@ func (d decoder) unmarshalAnyValue(m pref.Message) error {
 					return d.newError(tok.Pos(), `duplicate "value" field`)
 				}
 				// Unmarshal the field value into the given message.
-				if err := d.unmarshalCustomType(m); err != nil {
+				if err := unmarshal(d, m); err != nil {
 					return err
 				}
 				found = true
@@ -446,32 +455,6 @@ func (d decoder) unmarshalEmpty(pref.Message) error {
 		default:
 			return d.unexpectedTokenError(tok)
 		}
-	}
-}
-
-func (e encoder) marshalStructType(m pref.Message) error {
-	switch m.Descriptor().Name() {
-	case genid.Struct_message_name:
-		return e.marshalStruct(m)
-	case genid.ListValue_message_name:
-		return e.marshalListValue(m)
-	case genid.Value_message_name:
-		return e.marshalKnownValue(m)
-	default:
-		panic(fmt.Sprintf("invalid struct type: %v", m.Descriptor().FullName()))
-	}
-}
-
-func (d decoder) unmarshalStructType(m pref.Message) error {
-	switch m.Descriptor().Name() {
-	case genid.Struct_message_name:
-		return d.unmarshalStruct(m)
-	case genid.ListValue_message_name:
-		return d.unmarshalListValue(m)
-	case genid.Value_message_name:
-		return d.unmarshalKnownValue(m)
-	default:
-		panic(fmt.Sprintf("invalid struct type: %v", m.Descriptor().FullName()))
 	}
 }
 

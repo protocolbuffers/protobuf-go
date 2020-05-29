@@ -5,3 +5,7 @@
 // Package genid contains constants for declarations in descriptor.proto
 // and the well-known types.
 package genid
+
+import protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+
+const GoogleProtobuf_package protoreflect.FullName = "google.protobuf"
