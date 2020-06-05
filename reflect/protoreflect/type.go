@@ -232,17 +232,41 @@ type MessageDescriptor interface {
 type isMessageDescriptor interface{ ProtoType(MessageDescriptor) }
 
 // MessageType encapsulates a MessageDescriptor with a concrete Go implementation.
+// It is recommended that implementations of this interface also implement the
+// MessageFieldTypes interface.
 type MessageType interface {
 	// New returns a newly allocated empty message.
+	// It may return nil for synthetic messages representing a map entry.
 	New() Message
 
 	// Zero returns an empty, read-only message.
+	// It may return nil for synthetic messages representing a map entry.
 	Zero() Message
 
 	// Descriptor returns the message descriptor.
 	//
 	// Invariant: t.Descriptor() == t.New().Descriptor()
 	Descriptor() MessageDescriptor
+}
+
+// MessageFieldTypes extends a MessageType by providing type information
+// regarding enums and messages referenced by the message fields.
+type MessageFieldTypes interface {
+	MessageType
+
+	// Enum returns the EnumType for the ith field in Descriptor.Fields.
+	// It returns nil if the ith field is not an enum kind.
+	// It panics if out of bounds.
+	//
+	// Invariant: mt.Enum(i).Descriptor() == mt.Descriptor().Fields(i).Enum()
+	Enum(i int) EnumType
+
+	// Message returns the MessageType for the ith field in Descriptor.Fields.
+	// It returns nil if the ith field is not a message or group kind.
+	// It panics if out of bounds.
+	//
+	// Invariant: mt.Message(i).Descriptor() == mt.Descriptor().Fields(i).Message()
+	Message(i int) MessageType
 }
 
 // MessageDescriptors is a list of message declarations.

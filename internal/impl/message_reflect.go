@@ -17,6 +17,11 @@ type reflectMessageInfo struct {
 	fields map[pref.FieldNumber]*fieldInfo
 	oneofs map[pref.Name]*oneofInfo
 
+	// fieldTypes contains the zero value of an enum or message field.
+	// For lists, it contains the element type.
+	// For maps, it contains the entry value type.
+	fieldTypes map[pref.FieldNumber]interface{}
+
 	// denseFields is a subset of fields where:
 	//	0 < fieldDesc.Number() < len(denseFields)
 	// It provides faster access to the fieldInfo, but may be incomplete.
@@ -37,6 +42,7 @@ func (mi *MessageInfo) makeReflectFuncs(t reflect.Type, si structInfo) {
 	mi.makeKnownFieldsFunc(si)
 	mi.makeUnknownFieldsFunc(t, si)
 	mi.makeExtensionFieldsFunc(t, si)
+	mi.makeFieldTypes(si)
 }
 
 // makeKnownFieldsFunc generates functions for operations that can be performed
@@ -62,7 +68,7 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 			fi = fieldInfoForList(fd, fs, mi.Exporter)
 		case fd.IsWeak():
 			fi = fieldInfoForWeakMessage(fd, si.weakOffset)
-		case fd.Kind() == pref.MessageKind || fd.Kind() == pref.GroupKind:
+		case fd.Message() != nil:
 			fi = fieldInfoForMessage(fd, fs, mi.Exporter)
 		default:
 			fi = fieldInfoForScalar(fd, fs, mi.Exporter)
@@ -143,6 +149,45 @@ func (mi *MessageInfo) makeExtensionFieldsFunc(t reflect.Type, si structInfo) {
 	} else {
 		mi.extensionMap = func(pointer) *extensionMap {
 			return (*extensionMap)(nil)
+		}
+	}
+}
+func (mi *MessageInfo) makeFieldTypes(si structInfo) {
+	md := mi.Desc
+	fds := md.Fields()
+	for i := 0; i < fds.Len(); i++ {
+		var ft reflect.Type
+		fd := fds.Get(i)
+		fs := si.fieldsByNumber[fd.Number()]
+		switch {
+		case fd.ContainingOneof() != nil && !fd.ContainingOneof().IsSynthetic():
+			if fd.Enum() != nil || fd.Message() != nil {
+				ft = si.oneofWrappersByNumber[fd.Number()].Field(0).Type
+			}
+		case fd.IsMap():
+			if fd.MapValue().Enum() != nil || fd.MapValue().Message() != nil {
+				ft = fs.Type.Elem()
+			}
+		case fd.IsList():
+			if fd.Enum() != nil || fd.Message() != nil {
+				ft = fs.Type.Elem()
+			}
+		case fd.Enum() != nil:
+			ft = fs.Type
+			if fd.HasPresence() {
+				ft = ft.Elem()
+			}
+		case fd.Message() != nil:
+			ft = fs.Type
+			if fd.IsWeak() {
+				ft = nil
+			}
+		}
+		if ft != nil {
+			if mi.fieldTypes == nil {
+				mi.fieldTypes = make(map[pref.FieldNumber]interface{})
+			}
+			mi.fieldTypes[fd.Number()] = reflect.Zero(ft).Interface()
 		}
 	}
 }
@@ -313,7 +358,6 @@ var (
 // pointer to a named Go struct. If the provided type has a ProtoReflect method,
 // it must be implemented by calling this method.
 func (mi *MessageInfo) MessageOf(m interface{}) pref.Message {
-	// TODO: Switch the input to be an opaque Pointer.
 	if reflect.TypeOf(m) != mi.GoReflectType {
 		panic(fmt.Sprintf("type mismatch: got %T, want %v", m, mi.GoReflectType))
 	}

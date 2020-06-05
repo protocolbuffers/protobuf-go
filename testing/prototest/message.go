@@ -11,11 +11,13 @@ import (
 	"math"
 	"reflect"
 	"sort"
+	"strings"
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
@@ -95,6 +97,112 @@ func testType(t testing.TB, mt pref.MessageType) {
 	}
 	if got := reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface()); got != want {
 		t.Errorf("type mismatch: reflect.TypeOf(m) != reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface()): %v != %v", got, want)
+	}
+	if mt, ok := mt.(pref.MessageFieldTypes); ok {
+		testFieldTypes(t, mt)
+	}
+}
+
+func testFieldTypes(t testing.TB, mt pref.MessageFieldTypes) {
+	descName := func(d pref.Descriptor) pref.FullName {
+		if d == nil {
+			return "<nil>"
+		}
+		return d.FullName()
+	}
+	typeName := func(mt pref.MessageType) pref.FullName {
+		if mt == nil {
+			return "<nil>"
+		}
+		return mt.Descriptor().FullName()
+	}
+	adjustExpr := func(idx int, expr string) string {
+		expr = strings.Replace(expr, "fd.", "md.Fields().Get(i).", -1)
+		expr = strings.Replace(expr, "(fd)", "(md.Fields().Get(i))", -1)
+		expr = strings.Replace(expr, "mti.", "mt.Message(i).", -1)
+		expr = strings.Replace(expr, "(i)", fmt.Sprintf("(%d)", idx), -1)
+		return expr
+	}
+	checkEnumDesc := func(idx int, gotExpr, wantExpr string, got, want protoreflect.EnumDescriptor) {
+		if got != want {
+			t.Errorf("descriptor mismatch: %v != %v: %v != %v", adjustExpr(idx, gotExpr), adjustExpr(idx, wantExpr), descName(got), descName(want))
+		}
+	}
+	checkMessageDesc := func(idx int, gotExpr, wantExpr string, got, want protoreflect.MessageDescriptor) {
+		if got != want {
+			t.Errorf("descriptor mismatch: %v != %v: %v != %v", adjustExpr(idx, gotExpr), adjustExpr(idx, wantExpr), descName(got), descName(want))
+		}
+	}
+	checkMessageType := func(idx int, gotExpr, wantExpr string, got, want protoreflect.MessageType) {
+		if got != want {
+			t.Errorf("type mismatch: %v != %v: %v != %v", adjustExpr(idx, gotExpr), adjustExpr(idx, wantExpr), typeName(got), typeName(want))
+		}
+	}
+
+	fds := mt.Descriptor().Fields()
+	m := mt.New()
+	for i := 0; i < fds.Len(); i++ {
+		fd := fds.Get(i)
+		switch {
+		case fd.IsList():
+			if fd.Enum() != nil {
+				checkEnumDesc(i,
+					"mt.Enum(i).Descriptor()", "fd.Enum()",
+					mt.Enum(i).Descriptor(), fd.Enum())
+			}
+			if fd.Message() != nil {
+				checkMessageDesc(i,
+					"mt.Message(i).Descriptor()", "fd.Message()",
+					mt.Message(i).Descriptor(), fd.Message())
+				checkMessageType(i,
+					"mt.Message(i)", "m.NewField(fd).List().NewElement().Message().Type()",
+					mt.Message(i), m.NewField(fd).List().NewElement().Message().Type())
+			}
+		case fd.IsMap():
+			mti := mt.Message(i)
+			if m := mti.New(); m != nil {
+				checkMessageDesc(i,
+					"m.Descriptor()", "fd.Message()",
+					m.Descriptor(), fd.Message())
+			}
+			if m := mti.Zero(); m != nil {
+				checkMessageDesc(i,
+					"m.Descriptor()", "fd.Message()",
+					m.Descriptor(), fd.Message())
+			}
+			checkMessageDesc(i,
+				"mti.Descriptor()", "fd.Message()",
+				mti.Descriptor(), fd.Message())
+			if mti := mti.(pref.MessageFieldTypes); mti != nil {
+				if fd.MapValue().Enum() != nil {
+					checkEnumDesc(i,
+						"mti.Enum(fd.MapValue().Index()).Descriptor()", "fd.MapValue().Enum()",
+						mti.Enum(fd.MapValue().Index()).Descriptor(), fd.MapValue().Enum())
+				}
+				if fd.MapValue().Message() != nil {
+					checkMessageDesc(i,
+						"mti.Message(fd.MapValue().Index()).Descriptor()", "fd.MapValue().Message()",
+						mti.Message(fd.MapValue().Index()).Descriptor(), fd.MapValue().Message())
+					checkMessageType(i,
+						"mti.Message(fd.MapValue().Index())", "m.NewField(fd).Map().NewValue().Message().Type()",
+						mti.Message(fd.MapValue().Index()), m.NewField(fd).Map().NewValue().Message().Type())
+				}
+			}
+		default:
+			if fd.Enum() != nil {
+				checkEnumDesc(i,
+					"mt.Enum(i).Descriptor()", "fd.Enum()",
+					mt.Enum(i).Descriptor(), fd.Enum())
+			}
+			if fd.Message() != nil {
+				checkMessageDesc(i,
+					"mt.Message(i).Descriptor()", "fd.Message()",
+					mt.Message(i).Descriptor(), fd.Message())
+				checkMessageType(i,
+					"mt.Message(i)", "m.NewField(fd).Message().Type()",
+					mt.Message(i), m.NewField(fd).Message().Type())
+			}
+		}
 	}
 }
 

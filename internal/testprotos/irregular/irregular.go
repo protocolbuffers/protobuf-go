@@ -22,10 +22,15 @@ func (m *IrregularMessage) ProtoReflect() pref.Message { return (*message)(m) }
 
 type message IrregularMessage
 
-func (m *message) Descriptor() pref.MessageDescriptor { return fileDesc.Messages().Get(0) }
-func (m *message) Type() pref.MessageType             { return m }
+type messageType struct{}
+
+func (messageType) New() pref.Message                  { return &message{} }
+func (messageType) Zero() pref.Message                 { return (*message)(nil) }
+func (messageType) Descriptor() pref.MessageDescriptor { return fileDesc.Messages().Get(0) }
+
 func (m *message) New() pref.Message                  { return &message{} }
-func (m *message) Zero() pref.Message                 { return (*message)(nil) }
+func (m *message) Descriptor() pref.MessageDescriptor { return fileDesc.Messages().Get(0) }
+func (m *message) Type() pref.MessageType             { return messageType{} }
 func (m *message) Interface() pref.ProtoMessage       { return (*IrregularMessage)(m) }
 func (m *message) ProtoMethods() *protoiface.Methods  { return nil }
 

@@ -32,6 +32,16 @@ func legacyWrapMessage(v reflect.Value) pref.Message {
 	return mt.MessageOf(v.Interface())
 }
 
+// legacyLoadMessageType dynamically loads a protoreflect.Type for t,
+// where t must be not implement the v2 API already.
+// The provided name is used if it cannot be determined from the message.
+func legacyLoadMessageType(t reflect.Type, name pref.FullName) protoreflect.MessageType {
+	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Struct {
+		return aberrantMessageType{t}
+	}
+	return legacyLoadMessageInfo(t, name)
+}
+
 var legacyMessageTypeCache sync.Map // map[reflect.Type]*MessageInfo
 
 // legacyLoadMessageInfo dynamically loads a *MessageInfo for t,
