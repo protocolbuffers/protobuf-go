@@ -39,6 +39,16 @@ func TestDynamicExtensions(t *testing.T) {
 	}
 }
 
+func TestDynamicEnums(t *testing.T) {
+	for _, enum := range []pref.Enum{
+		testpb.TestAllTypes_FOO,
+		test3pb.TestAllTypes_FOO,
+	} {
+		et := dynamicpb.NewEnumType(enum.Descriptor())
+		prototest.Enum{}.Test(t, et)
+	}
+}
+
 type extResolver struct{}
 
 func (extResolver) FindExtensionByName(field pref.FullName) (pref.ExtensionType, error) {
