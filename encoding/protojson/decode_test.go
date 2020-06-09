@@ -1903,7 +1903,7 @@ func TestUnmarshal(t *testing.T) {
 	}, {
 		desc:         "FieldMask",
 		inputMessage: &fieldmaskpb.FieldMask{},
-		inputText:    `"foo,fooBar , foo.barQux ,Foo"`,
+		inputText:    `"foo,fooBar,foo.barQux,Foo"`,
 		wantMessage: &fieldmaskpb.FieldMask{
 			Paths: []string{
 				"foo",
@@ -1913,10 +1913,30 @@ func TestUnmarshal(t *testing.T) {
 			},
 		},
 	}, {
+		desc:         "FieldMask empty path 1",
+		inputMessage: &fieldmaskpb.FieldMask{},
+		inputText:    `"foo,"`,
+		wantErr:      `google.protobuf.FieldMask.paths contains invalid path: ""`,
+	}, {
+		desc:         "FieldMask empty path 2",
+		inputMessage: &fieldmaskpb.FieldMask{},
+		inputText:    `"foo,  ,bar"`,
+		wantErr:      `google.protobuf.FieldMask.paths contains invalid path: "  "`,
+	}, {
+		desc:         "FieldMask invalid char 1",
+		inputMessage: &fieldmaskpb.FieldMask{},
+		inputText:    `"foo_bar"`,
+		wantErr:      `google.protobuf.FieldMask.paths contains invalid path: "foo_bar"`,
+	}, {
+		desc:         "FieldMask invalid char 2",
+		inputMessage: &fieldmaskpb.FieldMask{},
+		inputText:    `"foo@bar"`,
+		wantErr:      `google.protobuf.FieldMask.paths contains invalid path: "foo@bar"`,
+	}, {
 		desc:         "FieldMask field",
 		inputMessage: &pb2.KnownTypes{},
 		inputText: `{
-  "optFieldmask": "foo, qux.fooBar"
+  "optFieldmask": "foo,qux.fooBar"
 }`,
 		wantMessage: &pb2.KnownTypes{
 			OptFieldmask: &fieldmaskpb.FieldMask{

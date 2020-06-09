@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -24,7 +23,7 @@ type marshalFunc func(encoder, pref.Message) error
 
 // wellKnownTypeMarshaler returns a marshal function if the message type
 // has specialized serialization behavior. It returns nil otherwise.
-func wellKnownTypeMarshaler(name protoreflect.FullName) marshalFunc {
+func wellKnownTypeMarshaler(name pref.FullName) marshalFunc {
 	if name.Parent() == genid.GoogleProtobuf_package {
 		switch name.Name() {
 		case genid.Any_message_name:
@@ -62,7 +61,7 @@ type unmarshalFunc func(decoder, pref.Message) error
 
 // wellKnownTypeUnmarshaler returns a unmarshal function if the message type
 // has specialized serialization behavior. It returns nil otherwise.
-func wellKnownTypeUnmarshaler(name protoreflect.FullName) unmarshalFunc {
+func wellKnownTypeUnmarshaler(name pref.FullName) unmarshalFunc {
 	if name.Parent() == genid.GoogleProtobuf_package {
 		switch name.Name() {
 		case genid.Any_message_name:
@@ -843,6 +842,9 @@ func (e encoder) marshalFieldMask(m pref.Message) error {
 
 	for i := 0; i < list.Len(); i++ {
 		s := list.Get(i).String()
+		if !pref.FullName(s).IsValid() {
+			return errors.New("%s contains invalid path: %q", genid.FieldMask_Paths_field_fullname, s)
+		}
 		// Return error if conversion to camelCase is not reversible.
 		cc := strs.JSONCamelCase(s)
 		if s != strs.JSONSnakeCase(cc) {
@@ -872,11 +874,12 @@ func (d decoder) unmarshalFieldMask(m pref.Message) error {
 	fd := m.Descriptor().Fields().ByNumber(genid.FieldMask_Paths_field_number)
 	list := m.Mutable(fd).List()
 
-	for _, s := range paths {
-		s = strings.TrimSpace(s)
-		// Convert to snake_case. Unlike encoding, no validation is done because
-		// it is not possible to know the original path names.
-		list.Append(pref.ValueOfString(strs.JSONSnakeCase(s)))
+	for _, s0 := range paths {
+		s := strs.JSONSnakeCase(s0)
+		if strings.Contains(s0, "_") || !pref.FullName(s).IsValid() {
+			return d.newError(tok.Pos(), "%v contains invalid path: %q", genid.FieldMask_Paths_field_fullname, s0)
+		}
+		list.Append(pref.ValueOfString(s))
 	}
 	return nil
 }

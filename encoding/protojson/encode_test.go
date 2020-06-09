@@ -1507,15 +1507,33 @@ func TestMarshal(t *testing.T) {
 		},
 		want: `"foo,fooBar,foo.barQux,Foo"`,
 	}, {
-		desc: "FieldMask error 1",
+		desc: "FieldMask empty string path",
+		input: &fieldmaskpb.FieldMask{
+			Paths: []string{""},
+		},
+		wantErr: true,
+	}, {
+		desc: "FieldMask path contains spaces only",
+		input: &fieldmaskpb.FieldMask{
+			Paths: []string{"  "},
+		},
+		wantErr: true,
+	}, {
+		desc: "FieldMask irreversible error 1",
 		input: &fieldmaskpb.FieldMask{
 			Paths: []string{"foo_"},
 		},
 		wantErr: true,
 	}, {
-		desc: "FieldMask error 2",
+		desc: "FieldMask irreversible error 2",
 		input: &fieldmaskpb.FieldMask{
 			Paths: []string{"foo__bar"},
+		},
+		wantErr: true,
+	}, {
+		desc: "FieldMask invalid char",
+		input: &fieldmaskpb.FieldMask{
+			Paths: []string{"foo@bar"},
 		},
 		wantErr: true,
 	}, {
