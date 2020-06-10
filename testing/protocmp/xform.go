@@ -157,10 +157,10 @@ type option struct{}
 // This does not directly transform higher-order composite Go types.
 // For example, []*foopb.Message is not transformed into []Message,
 // but rather the individual message elements of the slice are transformed.
+//
+// Note that there are currently no custom options for Transform,
+// but the use of an unexported type keeps the future open.
 func Transform(...option) cmp.Option {
-	// NOTE: There are currently no custom options for Transform,
-	// but the use of an unexported type keeps the future open.
-
 	// addrType returns a pointer to t if t isn't a pointer or interface.
 	addrType := func(t reflect.Type) reflect.Type {
 		if k := t.Kind(); k == reflect.Interface || k == reflect.Ptr {
