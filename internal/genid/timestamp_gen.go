@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_timestamp_proto = "google/protobuf/timestamp.proto"
+
 // Names for google.protobuf.Timestamp.
 const (
 	Timestamp_message_name     protoreflect.Name     = "Timestamp"

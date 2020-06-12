@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_wrappers_proto = "google/protobuf/wrappers.proto"
+
 // Names for google.protobuf.DoubleValue.
 const (
 	DoubleValue_message_name     protoreflect.Name     = "DoubleValue"

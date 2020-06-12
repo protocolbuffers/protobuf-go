@@ -75,7 +75,9 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 	genStandaloneComments(g, f, int32(genid.FileDescriptorProto_Syntax_field_number))
 	genGeneratedHeader(gen, g, f)
 	genStandaloneComments(g, f, int32(genid.FileDescriptorProto_Package_field_number))
-	g.P("package ", f.GoPackageName)
+
+	packageDoc := genPackageKnownComment(f)
+	g.P(packageDoc, "package ", f.GoPackageName)
 	g.P()
 
 	// Emit a static check that enforces a minimum version of the proto package.

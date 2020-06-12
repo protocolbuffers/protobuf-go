@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_duration_proto = "google/protobuf/duration.proto"
+
 // Names for google.protobuf.Duration.
 const (
 	Duration_message_name     protoreflect.Name     = "Duration"

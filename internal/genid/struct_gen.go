@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_struct_proto = "google/protobuf/struct.proto"
+
 // Full and short names for google.protobuf.NullValue.
 const (
 	NullValue_enum_fullname = "google.protobuf.NullValue"

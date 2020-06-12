@@ -290,7 +290,10 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 		g.P(s)
 	}
 	g.P("package ", path.Base(importPath))
-	g.P("")
+	g.P()
+
+	g.P("const ", file.GoDescriptorIdent.GoName, " = ", strconv.Quote(file.Desc.Path()))
+	g.P()
 
 	var processEnums func([]*protogen.Enum)
 	var processMessages func([]*protogen.Message)

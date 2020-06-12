@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_any_proto = "google/protobuf/any.proto"
+
 // Names for google.protobuf.Any.
 const (
 	Any_message_name     protoreflect.Name     = "Any"

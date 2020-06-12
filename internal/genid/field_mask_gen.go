@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_field_mask_proto = "google/protobuf/field_mask.proto"
+
 // Names for google.protobuf.FieldMask.
 const (
 	FieldMask_message_name     protoreflect.Name     = "FieldMask"

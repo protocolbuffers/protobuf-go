@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_descriptor_proto = "google/protobuf/descriptor.proto"
+
 // Names for google.protobuf.FileDescriptorSet.
 const (
 	FileDescriptorSet_message_name     protoreflect.Name     = "FileDescriptorSet"

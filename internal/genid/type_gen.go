@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_type_proto = "google/protobuf/type.proto"
+
 // Full and short names for google.protobuf.Syntax.
 const (
 	Syntax_enum_fullname = "google.protobuf.Syntax"

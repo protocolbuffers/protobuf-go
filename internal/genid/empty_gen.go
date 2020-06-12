@@ -10,6 +10,8 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 )
 
+const File_google_protobuf_empty_proto = "google/protobuf/empty.proto"
+
 // Names for google.protobuf.Empty.
 const (
 	Empty_message_name     protoreflect.Name     = "Empty"
