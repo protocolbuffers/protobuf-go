@@ -167,6 +167,9 @@ type Any struct {
 // If no options are specified, call dst.MarshalFrom instead.
 func MarshalFrom(dst *Any, src proto.Message, opts proto.MarshalOptions) error {
 	const urlPrefix = "type.googleapis.com/"
+	if src == nil {
+		return protoimpl.X.NewError("invalid nil source message")
+	}
 	b, err := opts.Marshal(src)
 	if err != nil {
 		return err
@@ -182,6 +185,9 @@ func MarshalFrom(dst *Any, src proto.Message, opts proto.MarshalOptions) error {
 //
 // If no options are specified, call src.UnmarshalTo instead.
 func UnmarshalTo(src *Any, dst proto.Message, opts proto.UnmarshalOptions) error {
+	if src.GetTypeUrl() == "" {
+		return protoimpl.X.NewError("invalid empty type URL")
+	}
 	if !src.MessageIs(dst) {
 		got := dst.ProtoReflect().Descriptor().FullName()
 		want := src.MessageName()
