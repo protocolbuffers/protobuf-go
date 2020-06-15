@@ -161,6 +161,15 @@ type Any struct {
 	Value []byte `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
 }
 
+// New marshals src into a new Any instance.
+func New(src proto.Message) (*Any, error) {
+	dst := new(Any)
+	if err := dst.MarshalFrom(src); err != nil {
+		return nil, err
+	}
+	return dst, nil
+}
+
 // MarshalFrom marshals src into dst as the underlying message
 // using the provided marshal options.
 //

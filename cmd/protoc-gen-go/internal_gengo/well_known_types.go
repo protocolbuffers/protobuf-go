@@ -19,6 +19,16 @@ import (
 func genMessageKnownFunctions(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	switch m.Desc.FullName() {
 	case genid.Any_message_fullname:
+		g.P("// New marshals src into a new Any instance.")
+		g.P("func New(src ", protoPackage.Ident("Message"), ") (*Any, error) {")
+		g.P("	dst := new(Any)")
+		g.P("	if err := dst.MarshalFrom(src); err != nil {")
+		g.P("		return nil, err")
+		g.P("	}")
+		g.P("	return dst, nil")
+		g.P("}")
+		g.P()
+
 		g.P("// MarshalFrom marshals src into dst as the underlying message")
 		g.P("// using the provided marshal options.")
 		g.P("//")
