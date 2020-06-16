@@ -304,6 +304,7 @@ func Intersect(mx *FieldMask, my *FieldMask, ms ...*FieldMask) *FieldMask {
 
 // IsValid reports whether all the paths are syntactically valid and
 // refer to known fields in the specified message type.
+// It reports false for a nil FieldMask.
 func (x *FieldMask) IsValid(m proto.Message) bool {
 	paths := x.GetPaths()
 	return numValidPaths(m, paths) == len(paths)

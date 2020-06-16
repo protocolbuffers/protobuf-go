@@ -59,7 +59,7 @@ func TestFromTimestamp(t *testing.T) {
 		wantTime time.Time
 		wantErr  error
 	}{
-		{in: nil, wantTime: time.Unix(0, 0)},
+		{in: nil, wantTime: time.Unix(0, 0), wantErr: textError("invalid nil Timestamp")},
 		{in: new(tspb.Timestamp), wantTime: time.Unix(0, 0)},
 		{in: &tspb.Timestamp{Seconds: -62135596800, Nanos: 0}, wantTime: time.Time{}},
 		{in: &tspb.Timestamp{Seconds: -1, Nanos: -1}, wantTime: time.Unix(-1, -1), wantErr: textError("timestamp (seconds:-1 nanos:-1) has out-of-range nanos")},

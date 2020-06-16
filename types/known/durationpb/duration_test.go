@@ -56,7 +56,7 @@ func TestFromDuration(t *testing.T) {
 		wantDur time.Duration
 		wantErr error
 	}{
-		{in: nil, wantDur: time.Duration(0)},
+		{in: nil, wantDur: time.Duration(0), wantErr: textError("invalid nil Duration")},
 		{in: new(durpb.Duration), wantDur: time.Duration(0)},
 		{in: &durpb.Duration{Seconds: -1, Nanos: 0}, wantDur: -time.Second},
 		{in: &durpb.Duration{Seconds: +1, Nanos: 0}, wantDur: +time.Second},

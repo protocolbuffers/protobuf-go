@@ -158,8 +158,11 @@ func (x *Duration) IsValid() bool {
 // CheckValid returns an error if the duration is invalid.
 // In particular, it checks whether the value is within the range of
 // -10000 years to +10000 years inclusive.
+// An error is reported for a nil Duration.
 func (x *Duration) CheckValid() error {
 	switch x.check() {
+	case invalidNil:
+		return protoimpl.X.NewError("invalid nil Duration")
 	case invalidUnderflow:
 		return protoimpl.X.NewError("duration (%v) exceeds -10000 years", x)
 	case invalidOverflow:
@@ -173,16 +176,22 @@ func (x *Duration) CheckValid() error {
 	}
 }
 
-const invalidUnderflow = 1
-const invalidOverflow = 2
-const invalidNanosRange = 3
-const invalidNanosSign = 4
+const (
+	_ = iota
+	invalidNil
+	invalidUnderflow
+	invalidOverflow
+	invalidNanosRange
+	invalidNanosSign
+)
 
 func (x *Duration) check() uint {
 	const absDuration = 315576000000 // 10000yr * 365.25day/yr * 24hr/day * 60min/hr * 60sec/min
 	secs := x.GetSeconds()
 	nanos := x.GetNanos()
 	switch {
+	case x == nil:
+		return invalidNil
 	case secs < -absDuration:
 		return invalidUnderflow
 	case secs > +absDuration:
