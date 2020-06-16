@@ -93,6 +93,7 @@ func init() {
 					gengo.GenerateVersionMarkers = false
 					gengo.GenerateFile(gen, file)
 					generateIdentifiers(gen, file)
+					generateSouceContextStringer(gen, file)
 				}
 			}
 			gen.SupportedFeatures = gengo.SupportedFeatures
@@ -359,6 +360,66 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 	}
 	processEnums(file.Enums)
 	processMessages(file.Messages)
+}
+
+// generateSouceContextStringer generates the implementation for the
+// protoreflect.SourcePath.String method by using information present
+// in the descriptor.proto.
+func generateSouceContextStringer(gen *protogen.Plugin, file *protogen.File) {
+	if file.Desc.Path() != "google/protobuf/descriptor.proto" {
+		return
+	}
+
+	importPath := modulePath + "/reflect/protoreflect"
+	g := gen.NewGeneratedFile(importPath+"/source_gen.go", protogen.GoImportPath(importPath))
+	for _, s := range generatedPreamble {
+		g.P(s)
+	}
+	g.P("package ", path.Base(importPath))
+	g.P()
+
+	var messages []*protogen.Message
+	for _, message := range file.Messages {
+		if message.Desc.Name() == "FileDescriptorProto" {
+			messages = append(messages, message)
+		}
+	}
+	seen := make(map[*protogen.Message]bool)
+
+	for len(messages) > 0 {
+		m := messages[0]
+		messages = messages[1:]
+		if seen[m] {
+			continue
+		}
+		seen[m] = true
+
+		g.P("func (p *SourcePath) append", m.GoIdent.GoName, "(b []byte) []byte {")
+		g.P("if len(*p) == 0 { return b }")
+		g.P("switch (*p)[0] {")
+		for _, f := range m.Fields {
+			g.P("case ", f.Desc.Number(), ":")
+			var cardinality string
+			switch {
+			case f.Desc.IsMap():
+				panic("maps are not supported")
+			case f.Desc.IsList():
+				cardinality = "Repeated"
+			default:
+				cardinality = "Singular"
+			}
+			nextAppender := "nil"
+			if f.Message != nil {
+				nextAppender = "(*SourcePath).append" + f.Message.GoIdent.GoName
+				messages = append(messages, f.Message)
+			}
+			g.P("b = p.append", cardinality, "Field(b, ", strconv.Quote(string(f.Desc.Name())), ", ", nextAppender, ")")
+		}
+		g.P("}")
+		g.P("return b")
+		g.P("}")
+		g.P()
+	}
 }
 
 func syncOutput(dstDir, srcDir string) {

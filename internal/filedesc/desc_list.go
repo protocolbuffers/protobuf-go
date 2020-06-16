@@ -6,8 +6,11 @@ package filedesc
 
 import (
 	"fmt"
+	"math"
 	"sort"
 	"sync"
+
+	"google.golang.org/protobuf/internal/genid"
 
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/descfmt"
@@ -278,9 +281,170 @@ func (p *OneofFields) lazyInit() *OneofFields {
 }
 
 type SourceLocations struct {
+	// List is a list of SourceLocations.
+	// The SourceLocation.Next field does not need to be populated
+	// as it will be lazily populated upon first need.
 	List []pref.SourceLocation
+
+	// File is the parent file descriptor that these locations are relative to.
+	// If non-nil, ByDescriptor verifies that the provided descriptor
+	// is a child of this file descriptor.
+	File pref.FileDescriptor
+
+	once   sync.Once
+	byPath map[pathKey]int
 }
 
-func (p *SourceLocations) Len() int                            { return len(p.List) }
-func (p *SourceLocations) Get(i int) pref.SourceLocation       { return p.List[i] }
+func (p *SourceLocations) Len() int                      { return len(p.List) }
+func (p *SourceLocations) Get(i int) pref.SourceLocation { return p.lazyInit().List[i] }
+func (p *SourceLocations) byKey(k pathKey) pref.SourceLocation {
+	if i, ok := p.lazyInit().byPath[k]; ok {
+		return p.List[i]
+	}
+	return pref.SourceLocation{}
+}
+func (p *SourceLocations) ByPath(path pref.SourcePath) pref.SourceLocation {
+	return p.byKey(newPathKey(path))
+}
+func (p *SourceLocations) ByDescriptor(desc pref.Descriptor) pref.SourceLocation {
+	if p.File != nil && desc != nil && p.File != desc.ParentFile() {
+		return pref.SourceLocation{} // mismatching parent files
+	}
+	var pathArr [16]int32
+	path := pathArr[:0]
+	for {
+		switch desc.(type) {
+		case pref.FileDescriptor:
+			// Reverse the path since it was constructed in reverse.
+			for i, j := 0, len(path)-1; i < j; i, j = i+1, j-1 {
+				path[i], path[j] = path[j], path[i]
+			}
+			return p.byKey(newPathKey(path))
+		case pref.MessageDescriptor:
+			path = append(path, int32(desc.Index()))
+			desc = desc.Parent()
+			switch desc.(type) {
+			case pref.FileDescriptor:
+				path = append(path, int32(genid.FileDescriptorProto_MessageType_field_number))
+			case pref.MessageDescriptor:
+				path = append(path, int32(genid.DescriptorProto_NestedType_field_number))
+			default:
+				return pref.SourceLocation{}
+			}
+		case pref.FieldDescriptor:
+			isExtension := desc.(pref.FieldDescriptor).IsExtension()
+			path = append(path, int32(desc.Index()))
+			desc = desc.Parent()
+			if isExtension {
+				switch desc.(type) {
+				case pref.FileDescriptor:
+					path = append(path, int32(genid.FileDescriptorProto_Extension_field_number))
+				case pref.MessageDescriptor:
+					path = append(path, int32(genid.DescriptorProto_Extension_field_number))
+				default:
+					return pref.SourceLocation{}
+				}
+			} else {
+				switch desc.(type) {
+				case pref.MessageDescriptor:
+					path = append(path, int32(genid.DescriptorProto_Field_field_number))
+				default:
+					return pref.SourceLocation{}
+				}
+			}
+		case pref.OneofDescriptor:
+			path = append(path, int32(desc.Index()))
+			desc = desc.Parent()
+			switch desc.(type) {
+			case pref.MessageDescriptor:
+				path = append(path, int32(genid.DescriptorProto_OneofDecl_field_number))
+			default:
+				return pref.SourceLocation{}
+			}
+		case pref.EnumDescriptor:
+			path = append(path, int32(desc.Index()))
+			desc = desc.Parent()
+			switch desc.(type) {
+			case pref.FileDescriptor:
+				path = append(path, int32(genid.FileDescriptorProto_EnumType_field_number))
+			case pref.MessageDescriptor:
+				path = append(path, int32(genid.DescriptorProto_EnumType_field_number))
+			default:
+				return pref.SourceLocation{}
+			}
+		case pref.EnumValueDescriptor:
+			path = append(path, int32(desc.Index()))
+			desc = desc.Parent()
+			switch desc.(type) {
+			case pref.EnumDescriptor:
+				path = append(path, int32(genid.EnumDescriptorProto_Value_field_number))
+			default:
+				return pref.SourceLocation{}
+			}
+		case pref.ServiceDescriptor:
+			path = append(path, int32(desc.Index()))
+			desc = desc.Parent()
+			switch desc.(type) {
+			case pref.FileDescriptor:
+				path = append(path, int32(genid.FileDescriptorProto_Service_field_number))
+			default:
+				return pref.SourceLocation{}
+			}
+		case pref.MethodDescriptor:
+			path = append(path, int32(desc.Index()))
+			desc = desc.Parent()
+			switch desc.(type) {
+			case pref.ServiceDescriptor:
+				path = append(path, int32(genid.ServiceDescriptorProto_Method_field_number))
+			default:
+				return pref.SourceLocation{}
+			}
+		default:
+			return pref.SourceLocation{}
+		}
+	}
+}
+func (p *SourceLocations) lazyInit() *SourceLocations {
+	p.once.Do(func() {
+		if len(p.List) > 0 {
+			// Collect all the indexes for a given path.
+			pathIdxs := make(map[pathKey][]int, len(p.List))
+			for i, l := range p.List {
+				k := newPathKey(l.Path)
+				pathIdxs[k] = append(pathIdxs[k], i)
+			}
+
+			// Update the next index for all locations.
+			p.byPath = make(map[pathKey]int, len(p.List))
+			for k, idxs := range pathIdxs {
+				for i := 0; i < len(idxs)-1; i++ {
+					p.List[idxs[i]].Next = idxs[i+1]
+				}
+				p.List[idxs[len(idxs)-1]].Next = 0
+				p.byPath[k] = idxs[0] // record the first location for this path
+			}
+		}
+	})
+	return p
+}
 func (p *SourceLocations) ProtoInternal(pragma.DoNotImplement) {}
+
+// pathKey is a comparable representation of protoreflect.SourcePath.
+type pathKey struct {
+	arr [16]uint8 // first n-1 path segments; last element is the length
+	str string    // used if the path does not fit in arr
+}
+
+func newPathKey(p pref.SourcePath) (k pathKey) {
+	if len(p) < len(k.arr) {
+		for i, ps := range p {
+			if ps < 0 || math.MaxUint8 <= ps {
+				return pathKey{str: p.String()}
+			}
+			k.arr[i] = uint8(ps)
+		}
+		k.arr[len(k.arr)-1] = uint8(len(p))
+		return k
+	}
+	return pathKey{str: p.String()}
+}

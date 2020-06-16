@@ -115,17 +115,14 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 // genStandaloneComments prints all leading comments for a FileDescriptorProto
 // location identified by the field number n.
 func genStandaloneComments(g *protogen.GeneratedFile, f *fileInfo, n int32) {
-	for _, loc := range f.Proto.GetSourceCodeInfo().GetLocation() {
-		if len(loc.Path) == 1 && loc.Path[0] == n {
-			for _, s := range loc.GetLeadingDetachedComments() {
-				g.P(protogen.Comments(s))
-				g.P()
-			}
-			if s := loc.GetLeadingComments(); s != "" {
-				g.P(protogen.Comments(s))
-				g.P()
-			}
-		}
+	loc := f.Desc.SourceLocations().ByPath(protoreflect.SourcePath{n})
+	for _, s := range loc.LeadingDetachedComments {
+		g.P(protogen.Comments(s))
+		g.P()
+	}
+	if s := loc.LeadingComments; s != "" {
+		g.P(protogen.Comments(s))
+		g.P()
 	}
 }
 
