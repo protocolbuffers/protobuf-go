@@ -72,3 +72,11 @@ func TestNameAppend(t *testing.T) {
 		}
 	}
 }
+
+var sink bool
+
+func BenchmarkFullNameIsValid(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		sink = FullName("google.protobuf.Any").IsValid()
+	}
+}
