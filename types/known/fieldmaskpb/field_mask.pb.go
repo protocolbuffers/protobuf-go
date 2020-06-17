@@ -307,7 +307,7 @@ func Intersect(mx *FieldMask, my *FieldMask, ms ...*FieldMask) *FieldMask {
 // It reports false for a nil FieldMask.
 func (x *FieldMask) IsValid(m proto.Message) bool {
 	paths := x.GetPaths()
-	return numValidPaths(m, paths) == len(paths)
+	return x != nil && numValidPaths(m, paths) == len(paths)
 }
 
 // Append appends a list of paths to the mask and verifies that each one
