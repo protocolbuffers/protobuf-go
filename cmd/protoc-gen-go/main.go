@@ -24,7 +24,7 @@ import (
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "--version" {
 		fmt.Fprintf(os.Stderr, "%v %v\n", filepath.Base(os.Args[0]), version.String())
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	var (
