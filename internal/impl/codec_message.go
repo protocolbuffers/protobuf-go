@@ -11,7 +11,7 @@ import (
 
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
-	"google.golang.org/protobuf/internal/fieldsort"
+	"google.golang.org/protobuf/internal/order"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
@@ -136,7 +136,7 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		sort.Slice(mi.orderedCoderFields, func(i, j int) bool {
 			fi := fields.ByNumber(mi.orderedCoderFields[i].num)
 			fj := fields.ByNumber(mi.orderedCoderFields[j].num)
-			return fieldsort.Less(fi, fj)
+			return order.LegacyFieldOrder(fi, fj)
 		})
 	}
 

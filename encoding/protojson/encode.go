@@ -7,13 +7,13 @@ package protojson
 import (
 	"encoding/base64"
 	"fmt"
-	"sort"
 
 	"google.golang.org/protobuf/internal/encoding/json"
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/genid"
+	"google.golang.org/protobuf/internal/order"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
@@ -160,61 +160,71 @@ func (e encoder) marshalMessage(m pref.Message) error {
 	return nil
 }
 
+// unpopulatedFieldRanger wraps a protoreflect.Message and modifies its Range
+// method to additionally iterate over unpopulated fields.
+type unpopulatedFieldRanger struct{ pref.Message }
+
+func (m unpopulatedFieldRanger) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
+	fds := m.Descriptor().Fields()
+	for i := 0; i < fds.Len(); i++ {
+		fd := fds.Get(i)
+		if m.Has(fd) || fd.ContainingOneof() != nil {
+			continue // ignore populated fields and fields within a oneofs
+		}
+
+		v := m.Get(fd)
+		isProto2Scalar := fd.Syntax() == pref.Proto2 && fd.Default().IsValid()
+		isSingularMessage := fd.Cardinality() != pref.Repeated && fd.Message() != nil
+		if isProto2Scalar || isSingularMessage {
+			v = pref.Value{} // use invalid value to emit null
+		}
+		if !f(fd, v) {
+			return
+		}
+	}
+	m.Message.Range(f)
+}
+
 // marshalFields marshals the fields in the given protoreflect.Message.
 func (e encoder) marshalFields(m pref.Message) error {
-	messageDesc := m.Descriptor()
-	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
+	if !flags.ProtoLegacy && messageset.IsMessageSet(m.Descriptor()) {
 		return errors.New("no support for proto1 MessageSets")
 	}
 
-	// Marshal out known fields.
-	fieldDescs := messageDesc.Fields()
-	for i := 0; i < fieldDescs.Len(); {
-		fd := fieldDescs.Get(i)
-		if od := fd.ContainingOneof(); od != nil {
-			fd = m.WhichOneof(od)
-			i += od.Fields().Len()
-			if fd == nil {
-				continue // unpopulated oneofs are not affected by EmitUnpopulated
-			}
-		} else {
-			i++
-		}
+	var fields order.FieldRanger = m
+	if e.opts.EmitUnpopulated {
+		fields = unpopulatedFieldRanger{m}
+	}
 
-		val := m.Get(fd)
-		if !m.Has(fd) {
-			if !e.opts.EmitUnpopulated {
-				continue
+	var err error
+	order.RangeFields(fields, order.IndexNameFieldOrder, func(fd pref.FieldDescriptor, v pref.Value) bool {
+		var name string
+		switch {
+		case fd.IsExtension():
+			if messageset.IsMessageSetExtension(fd) {
+				name = "[" + string(fd.FullName().Parent()) + "]"
+			} else {
+				name = "[" + string(fd.FullName()) + "]"
 			}
-			isProto2Scalar := fd.Syntax() == pref.Proto2 && fd.Default().IsValid()
-			isSingularMessage := fd.Cardinality() != pref.Repeated && fd.Message() != nil
-			if isProto2Scalar || isSingularMessage {
-				// Use invalid value to emit null.
-				val = pref.Value{}
-			}
-		}
-
-		name := fd.JSONName()
-		if e.opts.UseProtoNames {
-			name = string(fd.Name())
-			// Use type name for group field name.
+		case e.opts.UseProtoNames:
 			if fd.Kind() == pref.GroupKind {
 				name = string(fd.Message().Name())
+			} else {
+				name = string(fd.Name())
 			}
+		default:
+			name = fd.JSONName()
 		}
-		if err := e.WriteName(name); err != nil {
-			return err
-		}
-		if err := e.marshalValue(val, fd); err != nil {
-			return err
-		}
-	}
 
-	// Marshal out extensions.
-	if err := e.marshalExtensions(m); err != nil {
-		return err
-	}
-	return nil
+		if err = e.WriteName(name); err != nil {
+			return false
+		}
+		if err = e.marshalValue(v, fd); err != nil {
+			return false
+		}
+		return true
+	})
+	return err
 }
 
 // marshalValue marshals the given protoreflect.Value.
@@ -305,98 +315,20 @@ func (e encoder) marshalList(list pref.List, fd pref.FieldDescriptor) error {
 	return nil
 }
 
-type mapEntry struct {
-	key   pref.MapKey
-	value pref.Value
-}
-
 // marshalMap marshals given protoreflect.Map.
 func (e encoder) marshalMap(mmap pref.Map, fd pref.FieldDescriptor) error {
 	e.StartObject()
 	defer e.EndObject()
 
-	// Get a sorted list based on keyType first.
-	entries := make([]mapEntry, 0, mmap.Len())
-	mmap.Range(func(key pref.MapKey, val pref.Value) bool {
-		entries = append(entries, mapEntry{key: key, value: val})
+	var err error
+	order.RangeEntries(mmap, order.GenericKeyOrder, func(k pref.MapKey, v pref.Value) bool {
+		if err = e.WriteName(k.String()); err != nil {
+			return false
+		}
+		if err = e.marshalSingular(v, fd.MapValue()); err != nil {
+			return false
+		}
 		return true
 	})
-	sortMap(fd.MapKey().Kind(), entries)
-
-	// Write out sorted list.
-	for _, entry := range entries {
-		if err := e.WriteName(entry.key.String()); err != nil {
-			return err
-		}
-		if err := e.marshalSingular(entry.value, fd.MapValue()); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// sortMap orders list based on value of key field for deterministic ordering.
-func sortMap(keyKind pref.Kind, values []mapEntry) {
-	sort.Slice(values, func(i, j int) bool {
-		switch keyKind {
-		case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind,
-			pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
-			return values[i].key.Int() < values[j].key.Int()
-
-		case pref.Uint32Kind, pref.Fixed32Kind,
-			pref.Uint64Kind, pref.Fixed64Kind:
-			return values[i].key.Uint() < values[j].key.Uint()
-		}
-		return values[i].key.String() < values[j].key.String()
-	})
-}
-
-// marshalExtensions marshals extension fields.
-func (e encoder) marshalExtensions(m pref.Message) error {
-	type entry struct {
-		key   string
-		value pref.Value
-		desc  pref.FieldDescriptor
-	}
-
-	// Get a sorted list based on field key first.
-	var entries []entry
-	m.Range(func(fd pref.FieldDescriptor, v pref.Value) bool {
-		if !fd.IsExtension() {
-			return true
-		}
-
-		// For MessageSet extensions, the name used is the parent message.
-		name := fd.FullName()
-		if messageset.IsMessageSetExtension(fd) {
-			name = name.Parent()
-		}
-
-		// Use [name] format for JSON field name.
-		entries = append(entries, entry{
-			key:   string(name),
-			value: v,
-			desc:  fd,
-		})
-		return true
-	})
-
-	// Sort extensions lexicographically.
-	sort.Slice(entries, func(i, j int) bool {
-		return entries[i].key < entries[j].key
-	})
-
-	// Write out sorted list.
-	for _, entry := range entries {
-		// JSON field name is the proto field name enclosed in [], similar to
-		// textproto. This is consistent with Go v1 lib. C++ lib v3.7.0 does not
-		// marshal out extension fields.
-		if err := e.WriteName("[" + entry.key + "]"); err != nil {
-			return err
-		}
-		if err := e.marshalValue(entry.value, entry.desc); err != nil {
-			return err
-		}
-	}
-	return nil
+	return err
 }

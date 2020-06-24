@@ -20,7 +20,7 @@ import (
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/genid"
-	"google.golang.org/protobuf/internal/mapsort"
+	"google.golang.org/protobuf/internal/order"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -64,25 +64,8 @@ func appendMessage(b []byte, m protoreflect.Message) []byte {
 		return b2
 	}
 
-	var fds []protoreflect.FieldDescriptor
-	m.Range(func(fd protoreflect.FieldDescriptor, _ protoreflect.Value) bool {
-		fds = append(fds, fd)
-		return true
-	})
-	sort.Slice(fds, func(i, j int) bool {
-		fdi, fdj := fds[i], fds[j]
-		switch {
-		case !fdi.IsExtension() && !fdj.IsExtension():
-			return fdi.Index() < fdj.Index()
-		case fdi.IsExtension() && fdj.IsExtension():
-			return fdi.FullName() < fdj.FullName()
-		default:
-			return !fdi.IsExtension() && fdj.IsExtension()
-		}
-	})
-
 	b = append(b, '{')
-	for _, fd := range fds {
+	order.RangeFields(m, order.IndexNameFieldOrder, func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 		k := string(fd.Name())
 		if fd.IsExtension() {
 			k = string("[" + fd.FullName() + "]")
@@ -90,9 +73,10 @@ func appendMessage(b []byte, m protoreflect.Message) []byte {
 
 		b = append(b, k...)
 		b = append(b, ':')
-		b = appendValue(b, m.Get(fd), fd)
+		b = appendValue(b, v, fd)
 		b = append(b, delim()...)
-	}
+		return true
+	})
 	b = appendUnknown(b, m.GetUnknown())
 	b = bytes.TrimRight(b, delim())
 	b = append(b, '}')
@@ -247,19 +231,14 @@ func appendList(b []byte, v protoreflect.List, fd protoreflect.FieldDescriptor) 
 }
 
 func appendMap(b []byte, v protoreflect.Map, fd protoreflect.FieldDescriptor) []byte {
-	var ks []protoreflect.MapKey
-	mapsort.Range(v, fd.MapKey().Kind(), func(k protoreflect.MapKey, _ protoreflect.Value) bool {
-		ks = append(ks, k)
-		return true
-	})
-
 	b = append(b, '{')
-	for _, k := range ks {
+	order.RangeEntries(v, order.GenericKeyOrder, func(k protoreflect.MapKey, v protoreflect.Value) bool {
 		b = appendValue(b, k.Value(), fd.MapKey())
 		b = append(b, ':')
-		b = appendValue(b, v.Get(k), fd.MapValue())
+		b = appendValue(b, v, fd.MapValue())
 		b = append(b, delim()...)
-	}
+		return true
+	})
 	b = bytes.TrimRight(b, delim())
 	b = append(b, '}')
 	return b

@@ -1158,11 +1158,11 @@ opt_int32: 42
 			})
 			return m
 		}(),
-		want: `[pb2.MessageSetExtension]: {
-  opt_string: "a messageset extension"
-}
-[pb2.MessageSetExtension.ext_nested]: {
+		want: `[pb2.MessageSetExtension.ext_nested]: {
   opt_string: "just a regular extension"
+}
+[pb2.MessageSetExtension]: {
+  opt_string: "a messageset extension"
 }
 [pb2.MessageSetExtension.not_message_set_extension]: {
   opt_string: "not a messageset extension"
