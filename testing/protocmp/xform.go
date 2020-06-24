@@ -74,7 +74,7 @@ const (
 
 type messageType struct {
 	md  protoreflect.MessageDescriptor
-	xds map[protoreflect.FullName]protoreflect.ExtensionDescriptor
+	xds map[string]protoreflect.ExtensionDescriptor
 }
 
 func (t messageType) String() string {
@@ -218,14 +218,13 @@ func isMessageType(t reflect.Type) bool {
 
 func transformMessage(m protoreflect.Message) Message {
 	mx := Message{}
-	mt := messageType{md: m.Descriptor(), xds: make(map[protoreflect.FullName]protoreflect.FieldDescriptor)}
+	mt := messageType{md: m.Descriptor(), xds: make(map[string]protoreflect.FieldDescriptor)}
 
 	// Handle known and extension fields.
 	m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
-		s := string(fd.Name())
+		s := fd.TextName()
 		if fd.IsExtension() {
-			s = "[" + string(fd.FullName()) + "]"
-			mt.xds[fd.FullName()] = fd
+			mt.xds[s] = fd
 		}
 		switch {
 		case fd.IsList():

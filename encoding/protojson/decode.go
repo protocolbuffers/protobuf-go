@@ -184,17 +184,7 @@ func (d decoder) unmarshalFields(m pref.Message, skipTypeURL bool) error {
 			// The name can either be the JSON name or the proto field name.
 			fd = fieldDescs.ByJSONName(name)
 			if fd == nil {
-				fd = fieldDescs.ByName(pref.Name(name))
-				if fd == nil {
-					// The proto name of a group field is in all lowercase,
-					// while the textual field name is the group message name.
-					gd := fieldDescs.ByName(pref.Name(strings.ToLower(name)))
-					if gd != nil && gd.Kind() == pref.GroupKind && gd.Message().Name() == pref.Name(name) {
-						fd = gd
-					}
-				} else if fd.Kind() == pref.GroupKind && fd.Message().Name() != pref.Name(name) {
-					fd = nil // reset since field name is actually the message name
-				}
+				fd = fieldDescs.ByTextName(name)
 			}
 		}
 		if flags.ProtoLegacy {

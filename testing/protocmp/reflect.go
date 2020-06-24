@@ -42,10 +42,7 @@ func (m reflectMessage) stringKey(fd protoreflect.FieldDescriptor) string {
 	if m.Descriptor() != fd.ContainingMessage() {
 		panic("mismatching containing message")
 	}
-	if fd.IsExtension() {
-		return string("[" + fd.FullName() + "]")
-	}
-	return string(fd.Name())
+	return fd.TextName()
 }
 
 func (m reflectMessage) Descriptor() protoreflect.MessageDescriptor {

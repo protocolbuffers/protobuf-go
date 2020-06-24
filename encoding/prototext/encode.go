@@ -172,22 +172,7 @@ func (e encoder) marshalMessage(m pref.Message, inclDelims bool) error {
 	// Marshal fields.
 	var err error
 	order.RangeFields(m, order.IndexNameFieldOrder, func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
-		var name string
-		if fd.IsExtension() {
-			if messageset.IsMessageSetExtension(fd) {
-				name = "[" + string(fd.FullName().Parent()) + "]"
-			} else {
-				name = "[" + string(fd.FullName()) + "]"
-			}
-		} else {
-			if fd.Kind() == pref.GroupKind {
-				name = string(fd.Message().Name())
-			} else {
-				name = string(fd.Name())
-			}
-		}
-
-		if err = e.marshalField(string(name), v, fd); err != nil {
+		if err = e.marshalField(fd.TextName(), v, fd); err != nil {
 			return false
 		}
 		return true

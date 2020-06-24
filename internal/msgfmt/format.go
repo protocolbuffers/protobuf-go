@@ -66,12 +66,7 @@ func appendMessage(b []byte, m protoreflect.Message) []byte {
 
 	b = append(b, '{')
 	order.RangeFields(m, order.IndexNameFieldOrder, func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
-		k := string(fd.Name())
-		if fd.IsExtension() {
-			k = string("[" + fd.FullName() + "]")
-		}
-
-		b = append(b, k...)
+		b = append(b, fd.TextName()...)
 		b = append(b, ':')
 		b = appendValue(b, v, fd)
 		b = append(b, delim()...)

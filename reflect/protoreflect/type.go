@@ -279,7 +279,14 @@ type FieldDescriptor interface {
 
 	// JSONName reports the name used for JSON serialization.
 	// It is usually the camel-cased form of the field name.
+	// Extension fields are represented by the full name surrounded by brackets.
 	JSONName() string
+
+	// TextName reports the name used for text serialization.
+	// It is usually the name of the field, except that groups use the name
+	// of the inlined message, and extension fields are represented by the
+	// full name surrounded by brackets.
+	TextName() string
 
 	// HasPresence reports whether the field distinguishes between unpopulated
 	// and default values.
@@ -371,6 +378,9 @@ type FieldDescriptors interface {
 	// ByJSONName returns the FieldDescriptor for a field with s as the JSON name.
 	// It returns nil if not found.
 	ByJSONName(s string) FieldDescriptor
+	// ByTextName returns the FieldDescriptor for a field with s as the text name.
+	// It returns nil if not found.
+	ByTextName(s string) FieldDescriptor
 	// ByNumber returns the FieldDescriptor for a field numbered n.
 	// It returns nil if not found.
 	ByNumber(n FieldNumber) FieldDescriptor

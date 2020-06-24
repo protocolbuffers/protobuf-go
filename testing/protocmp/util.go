@@ -167,7 +167,7 @@ func IgnoreDescriptors(descs ...protoreflect.Descriptor) cmp.Option {
 
 func mustFindFieldDescriptor(md protoreflect.MessageDescriptor, s protoreflect.Name) protoreflect.FieldDescriptor {
 	d := findDescriptor(md, s)
-	if fd, ok := d.(protoreflect.FieldDescriptor); ok && fd.Name() == s {
+	if fd, ok := d.(protoreflect.FieldDescriptor); ok && fd.TextName() == string(s) {
 		return fd
 	}
 
@@ -199,10 +199,10 @@ func mustFindOneofDescriptor(md protoreflect.MessageDescriptor, s protoreflect.N
 
 func findDescriptor(md protoreflect.MessageDescriptor, s protoreflect.Name) protoreflect.Descriptor {
 	// Exact match.
-	if fd := md.Fields().ByName(s); fd != nil {
+	if fd := md.Fields().ByTextName(string(s)); fd != nil {
 		return fd
 	}
-	if od := md.Oneofs().ByName(s); od != nil {
+	if od := md.Oneofs().ByName(s); od != nil && !od.IsSynthetic() {
 		return od
 	}
 
@@ -293,13 +293,18 @@ func (f *nameFilters) filterFields(p cmp.Path) bool {
 }
 
 func (f *nameFilters) filterFieldName(m Message, k string) bool {
-	if md := m.Descriptor(); md != nil {
-		switch {
-		case protoreflect.Name(k).IsValid():
-			return f.names[md.Fields().ByName(protoreflect.Name(k)).FullName()]
-		case strings.HasPrefix(k, "[") && strings.HasSuffix(k, "]"):
-			return f.names[protoreflect.FullName(k[1:len(k)-1])]
-		}
+	if _, ok := m[k]; !ok {
+		return true // treat missing fields as already filtered
+	}
+	var fd protoreflect.FieldDescriptor
+	switch mt := m[messageTypeKey].(messageType); {
+	case protoreflect.Name(k).IsValid():
+		fd = mt.md.Fields().ByTextName(k)
+	default:
+		fd = mt.xds[k]
+	}
+	if fd != nil {
+		return f.names[fd.FullName()]
 	}
 	return false
 }
@@ -373,9 +378,9 @@ func isDefaultScalar(m Message, k string) bool {
 	var fd protoreflect.FieldDescriptor
 	switch mt := m[messageTypeKey].(messageType); {
 	case protoreflect.Name(k).IsValid():
-		fd = mt.md.Fields().ByName(protoreflect.Name(k))
-	case strings.HasPrefix(k, "[") && strings.HasSuffix(k, "]"):
-		fd = mt.xds[protoreflect.FullName(k[1:len(k)-1])]
+		fd = mt.md.Fields().ByTextName(k)
+	default:
+		fd = mt.xds[k]
 	}
 	if fd == nil || !fd.Default().IsValid() {
 		return false

@@ -245,6 +245,7 @@ type OneofFields struct {
 	once   sync.Once
 	byName map[pref.Name]pref.FieldDescriptor        // protected by once
 	byJSON map[string]pref.FieldDescriptor           // protected by once
+	byText map[string]pref.FieldDescriptor           // protected by once
 	byNum  map[pref.FieldNumber]pref.FieldDescriptor // protected by once
 }
 
@@ -252,6 +253,7 @@ func (p *OneofFields) Len() int                                         { return
 func (p *OneofFields) Get(i int) pref.FieldDescriptor                   { return p.List[i] }
 func (p *OneofFields) ByName(s pref.Name) pref.FieldDescriptor          { return p.lazyInit().byName[s] }
 func (p *OneofFields) ByJSONName(s string) pref.FieldDescriptor         { return p.lazyInit().byJSON[s] }
+func (p *OneofFields) ByTextName(s string) pref.FieldDescriptor         { return p.lazyInit().byText[s] }
 func (p *OneofFields) ByNumber(n pref.FieldNumber) pref.FieldDescriptor { return p.lazyInit().byNum[n] }
 func (p *OneofFields) Format(s fmt.State, r rune)                       { descfmt.FormatList(s, r, p) }
 func (p *OneofFields) ProtoInternal(pragma.DoNotImplement)              {}
@@ -261,11 +263,13 @@ func (p *OneofFields) lazyInit() *OneofFields {
 		if len(p.List) > 0 {
 			p.byName = make(map[pref.Name]pref.FieldDescriptor, len(p.List))
 			p.byJSON = make(map[string]pref.FieldDescriptor, len(p.List))
+			p.byText = make(map[string]pref.FieldDescriptor, len(p.List))
 			p.byNum = make(map[pref.FieldNumber]pref.FieldDescriptor, len(p.List))
 			for _, f := range p.List {
 				// Field names and numbers are guaranteed to be unique.
 				p.byName[f.Name()] = f
 				p.byJSON[f.JSONName()] = f
+				p.byText[f.TextName()] = f
 				p.byNum[f.Number()] = f
 			}
 		}

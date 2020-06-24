@@ -22,6 +22,7 @@ func TestDescriptorAccessors(t *testing.T) {
 		"ProtoInternal": true,
 		"ProtoType":     true,
 
+		"TextName":           true, // derived from other fields
 		"HasOptionalKeyword": true, // captured by HasPresence
 		"IsSynthetic":        true, // captured by HasPresence
 

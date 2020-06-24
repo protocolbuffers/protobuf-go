@@ -6,7 +6,6 @@ package prototext
 
 import (
 	"fmt"
-	"strings"
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/internal/encoding/messageset"
@@ -158,17 +157,7 @@ func (d decoder) unmarshalMessage(m pref.Message, checkDelims bool) error {
 		switch tok.NameKind() {
 		case text.IdentName:
 			name = pref.Name(tok.IdentName())
-			fd = fieldDescs.ByName(name)
-			if fd == nil {
-				// The proto name of a group field is in all lowercase,
-				// while the textproto field name is the group message name.
-				gd := fieldDescs.ByName(pref.Name(strings.ToLower(string(name))))
-				if gd != nil && gd.Kind() == pref.GroupKind && gd.Message().Name() == name {
-					fd = gd
-				}
-			} else if fd.Kind() == pref.GroupKind && fd.Message().Name() != name {
-				fd = nil // reset since field name is actually the message name
-			}
+			fd = fieldDescs.ByTextName(string(name))
 
 		case text.TypeName:
 			// Handle extensions only. This code path is not for Any.

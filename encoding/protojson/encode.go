@@ -198,22 +198,9 @@ func (e encoder) marshalFields(m pref.Message) error {
 
 	var err error
 	order.RangeFields(fields, order.IndexNameFieldOrder, func(fd pref.FieldDescriptor, v pref.Value) bool {
-		var name string
-		switch {
-		case fd.IsExtension():
-			if messageset.IsMessageSetExtension(fd) {
-				name = "[" + string(fd.FullName().Parent()) + "]"
-			} else {
-				name = "[" + string(fd.FullName()) + "]"
-			}
-		case e.opts.UseProtoNames:
-			if fd.Kind() == pref.GroupKind {
-				name = string(fd.Message().Name())
-			} else {
-				name = string(fd.Name())
-			}
-		default:
-			name = fd.JSONName()
+		name := fd.JSONName()
+		if e.opts.UseProtoNames {
+			name = fd.TextName()
 		}
 
 		if err = e.WriteName(name); err != nil {

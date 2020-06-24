@@ -100,6 +100,7 @@ var descListTypesTemplate = template.Must(template.New("").Parse(`
 		byName map[protoreflect.Name]*{{$nameDesc}} // protected by once
 		{{- if (eq . "Field")}}
 		byJSON map[string]*{{$nameDesc}}            // protected by once
+		byText map[string]*{{$nameDesc}}            // protected by once
 		{{- end}}
 		{{- if .NumberExpr}}
 		byNum  map[{{.NumberExpr}}]*{{$nameDesc}}   // protected by once
@@ -125,6 +126,12 @@ var descListTypesTemplate = template.Must(template.New("").Parse(`
 		}
 		return nil
 	}
+	func (p *{{$nameList}}) ByTextName(s string) {{.Expr}} {
+		if d := p.lazyInit().byText[s]; d != nil {
+			return d
+		}
+		return nil
+	}
 	{{- end}}
 	{{- if .NumberExpr}}
 	func (p *{{$nameList}}) ByNumber(n {{.NumberExpr}}) {{.Expr}} {
@@ -144,6 +151,7 @@ var descListTypesTemplate = template.Must(template.New("").Parse(`
 				p.byName = make(map[protoreflect.Name]*{{$nameDesc}}, len(p.List))
 				{{- if (eq . "Field")}}
 				p.byJSON = make(map[string]*{{$nameDesc}}, len(p.List))
+				p.byText = make(map[string]*{{$nameDesc}}, len(p.List))
 				{{- end}}
 				{{- if .NumberExpr}}
 				p.byNum = make(map[{{.NumberExpr}}]*{{$nameDesc}}, len(p.List))
@@ -156,6 +164,9 @@ var descListTypesTemplate = template.Must(template.New("").Parse(`
 					{{- if (eq . "Field")}}
 					if _, ok := p.byJSON[d.JSONName()]; !ok {
 						p.byJSON[d.JSONName()] = d
+					}
+					if _, ok := p.byText[d.TextName()]; !ok {
+						p.byText[d.TextName()] = d
 					}
 					{{- end}}
 					{{- if .NumberExpr}}

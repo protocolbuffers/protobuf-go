@@ -724,7 +724,7 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 			Number:      1000
 			Cardinality: repeated
 			Kind:        message
-			JSONName:    "X"
+			JSONName:    "[test.C.X]"
 			IsExtension: true
 			IsList:      true
 			Extendee:    test.B
@@ -745,7 +745,7 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 		Number:      1000
 		Cardinality: repeated
 		Kind:        enum
-		JSONName:    "X"
+		JSONName:    "[test.X]"
 		IsExtension: true
 		IsPacked:    true
 		IsList:      true
