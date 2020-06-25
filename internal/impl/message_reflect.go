@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/pragma"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -91,6 +92,12 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 			mi.rangeInfos = append(mi.rangeInfos, mi.fields[fd.Number()])
 			i++
 		}
+	}
+
+	// Introduce instability to iteration order, but keep it deterministic.
+	if len(mi.rangeInfos) > 1 && detrand.Bool() {
+		i := detrand.Intn(len(mi.rangeInfos) - 1)
+		mi.rangeInfos[i], mi.rangeInfos[i+1] = mi.rangeInfos[i+1], mi.rangeInfos[i]
 	}
 }
 
