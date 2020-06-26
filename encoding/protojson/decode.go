@@ -170,7 +170,7 @@ func (d decoder) unmarshalFields(m pref.Message, skipTypeURL bool) error {
 		if strings.HasPrefix(name, "[") && strings.HasSuffix(name, "]") {
 			// Only extension names are in [name] format.
 			extName := pref.FullName(name[1 : len(name)-1])
-			extType, err := d.findExtension(extName)
+			extType, err := d.opts.Resolver.FindExtensionByName(extName)
 			if err != nil && err != protoregistry.NotFound {
 				return d.newError(tok.Pos(), "unable to resolve %s: %v", tok.RawString(), err)
 			}
@@ -255,15 +255,6 @@ func (d decoder) unmarshalFields(m pref.Message, skipTypeURL bool) error {
 			}
 		}
 	}
-}
-
-// findExtension returns protoreflect.ExtensionType from the resolver if found.
-func (d decoder) findExtension(xtName pref.FullName) (pref.ExtensionType, error) {
-	xt, err := d.opts.Resolver.FindExtensionByName(xtName)
-	if err == nil {
-		return xt, nil
-	}
-	return messageset.FindMessageSetExtension(d.opts.Resolver, xtName)
 }
 
 func isKnownValue(fd pref.FieldDescriptor) bool {

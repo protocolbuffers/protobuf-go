@@ -172,7 +172,7 @@ func (d decoder) unmarshalMessage(m pref.Message, checkDelims bool) error {
 
 		case text.TypeName:
 			// Handle extensions only. This code path is not for Any.
-			xt, xtErr = d.findExtension(pref.FullName(tok.TypeName()))
+			xt, xtErr = d.opts.Resolver.FindExtensionByName(pref.FullName(tok.TypeName()))
 
 		case text.FieldNumber:
 			isFieldNumberName = true
@@ -267,15 +267,6 @@ func (d decoder) unmarshalMessage(m pref.Message, checkDelims bool) error {
 	}
 
 	return nil
-}
-
-// findExtension returns protoreflect.ExtensionType from the Resolver if found.
-func (d decoder) findExtension(xtName pref.FullName) (pref.ExtensionType, error) {
-	xt, err := d.opts.Resolver.FindExtensionByName(xtName)
-	if err == nil {
-		return xt, nil
-	}
-	return messageset.FindMessageSetExtension(d.opts.Resolver, xtName)
 }
 
 // unmarshalSingular unmarshals a non-repeated field value specified by the

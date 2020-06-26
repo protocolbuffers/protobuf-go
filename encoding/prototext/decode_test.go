@@ -1508,7 +1508,7 @@ opt_int32: 42
   opt_string: "not a messageset extension"
 }
 `,
-		wantErr: "unknown field: [pb2.FakeMessageSetExtension]",
+		wantErr: `unable to resolve [[pb2.FakeMessageSetExtension]]: found wrong type`,
 		skip:    !flags.ProtoLegacy,
 	}, {
 		desc:         "not real MessageSet 3",

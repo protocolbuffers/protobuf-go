@@ -21,7 +21,9 @@ import (
 	"strings"
 	"sync"
 
+	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -613,6 +615,26 @@ func (r *Types) FindExtensionByName(field protoreflect.FullName) (protoreflect.E
 		if xt, _ := v.(protoreflect.ExtensionType); xt != nil {
 			return xt, nil
 		}
+
+		// MessageSet extensions are special in that the name of the extension
+		// is the name of the message type used to extend the MessageSet.
+		// This naming scheme is used by text and JSON serialization.
+		//
+		// This feature is protected by the ProtoLegacy flag since MessageSets
+		// are a proto1 feature that is long deprecated.
+		if flags.ProtoLegacy {
+			if _, ok := v.(protoreflect.MessageType); ok {
+				field := field.Append(messageset.ExtensionName)
+				if v := r.typesByName[field]; v != nil {
+					if xt, _ := v.(protoreflect.ExtensionType); xt != nil {
+						if messageset.IsMessageSetExtension(xt.TypeDescriptor()) {
+							return xt, nil
+						}
+					}
+				}
+			}
+		}
+
 		return nil, errors.New("found wrong type: got %v, want extension", typeName(v))
 	}
 	return nil, NotFound
