@@ -219,15 +219,9 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 		}
 	}
 	if gen.module != "" {
-		// When the module= option is provided, we strip the module name
-		// prefix from generated files. This only makes sense if generated
-		// filenames are based on the import path, so default to paths=import
-		// and complain if source_relative was selected manually.
 		switch gen.pathType {
 		case pathTypeLegacy:
 			gen.pathType = pathTypeImport
-		case pathTypeSourceRelative:
-			return nil, fmt.Errorf("cannot use module= with paths=source_relative")
 		}
 	}
 
@@ -242,6 +236,11 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 	// associated with this file.
 	//
 	//     option go_package = "google.golang.org/protobuf/types/known/anypb";
+	//
+	// Alternatively, the `module` option may be specified alongside 'paths=
+	// source_relative'. When this is the case the import paths for generated
+	// pb.go files become <module>/relative/pkg/file.proto and the package
+	// becomes the last directory (in this example, `pkg`) if not specified.
 	//
 	// Build systems which want to exert full control over import paths may
 	// specify M<filename>=<import_path> flags.
@@ -269,6 +268,13 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 			// The import_path flag sets the import path for every file that
 			// we generate code for.
 			importPaths[filename] = packageImportPath
+		case gen.module != "" && gen.pathType == pathTypeSourceRelative:
+			// Override the go_package option (effectively setting it if not specified)
+			// when the go_opt module is specified in source_relative paths mode.
+			//
+			// The last directory becomes the package name.
+			p := path.Join(gen.module, path.Dir(filename))
+			packageName, importPath = goPackageOptionStr(p, fdesc.GetName())
 		case importPath != "":
 			// Source file: option go_package = "quux/bar";
 			//
@@ -332,6 +338,8 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 				"\n", fdesc.GetName(), goPkgOpt)
 		case mfiles[filename]:
 			// Command line: M=foo.proto=quux/bar
+		case gen.module != "" && gen.pathType == pathTypeSourceRelative:
+			// Command Line: module=example.com/types,paths=source_relative
 		case packageName != "" && importPath == "":
 			// Source file: option go_package = "quux";
 			warn("Deprecated use of 'go_package' option without a full import path in %q, please specify:\n"+
@@ -427,7 +435,7 @@ func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 			}
 		}
 		filename := g.filename
-		if gen.module != "" {
+		if gen.module != "" && gen.pathType == pathTypeImport {
 			trim := gen.module + "/"
 			if !strings.HasPrefix(filename, trim) {
 				return &pluginpb.CodeGeneratorResponse{
@@ -587,14 +595,18 @@ func goPackageOption(d *descriptorpb.FileDescriptorProto) (pkg GoPackageName, im
 	if opt == "" {
 		return "", ""
 	}
+	return goPackageOptionStr(opt, d.GetName())
+}
+func goPackageOptionStr(opt, dname string) (pkg GoPackageName, impPath GoImportPath) {
 	rawPkg, impPath := goPackageOptionRaw(opt)
 	pkg = cleanPackageName(rawPkg)
 	if string(pkg) != rawPkg && impPath != "" {
-		warn("Malformed 'go_package' option in %q, please specify:\n"+
+		warn("Malformed 'go_package' option for %q, please specify:\n"+
 			"\toption go_package = %q;\n"+
+			"or use a suitable directory name: %q\n"+
 			"A future release of protoc-gen-go will reject this.\n"+
 			"See "+goPackageDocURL+" for more information.\n"+
-			"\n", d.GetName(), string(impPath)+";"+string(pkg))
+			"\n", dname, string(impPath)+";"+string(pkg), string(pkg))
 	}
 	return pkg, impPath
 }
