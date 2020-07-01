@@ -562,13 +562,25 @@ func (r *Types) FindEnumByName(enum protoreflect.FullName) (protoreflect.EnumTyp
 	return nil, NotFound
 }
 
-// FindMessageByName looks up a message by its full name.
-// E.g., "google.protobuf.Any"
+// FindMessageByName looks up a message by its full name,
+// e.g. "google.protobuf.Any".
 //
-// This return (nil, NotFound) if not found.
+// This returns (nil, NotFound) if not found.
 func (r *Types) FindMessageByName(message protoreflect.FullName) (protoreflect.MessageType, error) {
-	// The full name by itself is a valid URL.
-	return r.FindMessageByURL(string(message))
+	if r == nil {
+		return nil, NotFound
+	}
+	if r == GlobalTypes {
+		globalMutex.RLock()
+		defer globalMutex.RUnlock()
+	}
+	if v := r.typesByName[message]; v != nil {
+		if mt, _ := v.(protoreflect.MessageType); mt != nil {
+			return mt, nil
+		}
+		return nil, errors.New("found wrong type: got %v, want message", typeName(v))
+	}
+	return nil, NotFound
 }
 
 // FindMessageByURL looks up a message by a URL identifier.
@@ -576,6 +588,8 @@ func (r *Types) FindMessageByName(message protoreflect.FullName) (protoreflect.M
 //
 // This returns (nil, NotFound) if not found.
 func (r *Types) FindMessageByURL(url string) (protoreflect.MessageType, error) {
+	// This function is similar to FindMessageByName but
+	// truncates anything before and including '/' in the URL.
 	if r == nil {
 		return nil, NotFound
 	}
