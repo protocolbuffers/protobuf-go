@@ -1021,10 +1021,10 @@ func TestDecoder(t *testing.T) {
 			in: `nums: [` +
 				fmt.Sprintf("%d", uint64(math.MaxUint64)) + `,` +
 				fmt.Sprintf("%d", uint32(math.MaxUint32)) + `,` +
-				fmt.Sprintf("%d", math.MaxInt64) + `,` +
-				fmt.Sprintf("%d", math.MinInt64) + `,` +
-				fmt.Sprintf("%d", math.MaxInt32) + `,` +
-				fmt.Sprintf("%d", math.MinInt32) +
+				fmt.Sprintf("%d", int64(math.MaxInt64)) + `,` +
+				fmt.Sprintf("%d", int64(math.MinInt64)) + `,` +
+				fmt.Sprintf("%d", int32(math.MaxInt32)) + `,` +
+				fmt.Sprintf("%d", int32(math.MinInt32)) +
 				`]`,
 			want: []R{
 				{K: text.Name},

@@ -106,20 +106,20 @@ func fieldValue(fd pref.FieldDescriptor, v interface{}) pref.Value {
 	case int:
 		switch fd.Kind() {
 		case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
-			if min, max := math.MinInt32, math.MaxInt32; o < min || o > max {
-				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, min, max))
+			if o < math.MinInt32 || math.MaxInt32 < o {
+				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, int32(math.MinInt32), int32(math.MaxInt32)))
 			}
 			v = int32(o)
 		case pref.Uint32Kind, pref.Fixed32Kind:
-			if min, max := 0, math.MaxUint32; o < min || o > max {
-				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, min, max))
+			if o < 0 || math.MaxUint32 < 0 {
+				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, uint32(0), uint32(math.MaxUint32)))
 			}
 			v = uint32(o)
 		case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
 			v = int64(o)
 		case pref.Uint64Kind, pref.Fixed64Kind:
 			if o < 0 {
-				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, 0, uint64(math.MaxUint64)))
+				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, uint64(0), uint64(math.MaxUint64)))
 			}
 			v = uint64(o)
 		case pref.FloatKind:

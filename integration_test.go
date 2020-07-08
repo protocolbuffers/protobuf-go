@@ -101,7 +101,7 @@ func Test(t *testing.T) {
 	for i := range golangVersions {
 		goVersion := golangVersions[i]
 		goLabel := "Go" + goVersion
-		runGo := func(label, workDir string, args ...string) {
+		runGo := func(label string, cmd command, args ...string) {
 			wg.Add(1)
 			sema <- true
 			go func() {
@@ -109,19 +109,25 @@ func Test(t *testing.T) {
 				defer func() { <-sema }()
 				t.Run(goLabel+"/"+label, func(t *testing.T) {
 					args[0] += goVersion
-					command{Dir: workDir}.mustRun(t, args...)
+					cmd.mustRun(t, args...)
 				})
 			}()
 		}
 
 		workDir := filepath.Join(goPath, "src", modulePath)
-		runGo("Normal", workDir, "go", "test", "-race", "./...")
-		runGo("PureGo", workDir, "go", "test", "-race", "-tags", "purego", "./...")
-		runGo("Reflect", workDir, "go", "test", "-race", "-tags", "protoreflect", "./...")
+		runGo("Normal", command{Dir: workDir}, "go", "test", "-race", "./...")
+		runGo("PureGo", command{Dir: workDir}, "go", "test", "-race", "-tags", "purego", "./...")
+		runGo("Reflect", command{Dir: workDir}, "go", "test", "-race", "-tags", "protoreflect", "./...")
 		if goVersion == golangLatest {
-			runGo("ProtoLegacy", workDir, "go", "test", "-race", "-tags", "protolegacy", "./...")
-			runGo("ProtocGenGo", "cmd/protoc-gen-go/testdata", "go", "test")
-			runGo("Conformance", "internal/conformance", "go", "test", "-execute")
+			runGo("ProtoLegacy", command{Dir: workDir}, "go", "test", "-race", "-tags", "protolegacy", "./...")
+			runGo("ProtocGenGo", command{Dir: "cmd/protoc-gen-go/testdata"}, "go", "test")
+			runGo("Conformance", command{Dir: "internal/conformance"}, "go", "test", "-execute")
+
+			// Only run the 32-bit compatability tests for Linux;
+			// avoid Darwin since 10.15 dropped support i386 code execution.
+			if runtime.GOOS == "linux" {
+				runGo("Arch32Bit", command{Dir: workDir, Env: append(os.Environ(), "GOARCH=386")}, "go", "test", "./...")
+			}
 		}
 	}
 	wg.Wait()

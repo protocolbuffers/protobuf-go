@@ -227,7 +227,7 @@ func TestEncodeOrder(t *testing.T) {
 func TestEncodeLarge(t *testing.T) {
 	// Encode/decode a message large enough to overflow a 32-bit size cache.
 	t.Skip("too slow and memory-hungry to run all the time")
-	size := math.MaxUint32 + 1
+	size := int64(math.MaxUint32 + 1)
 	m := &testpb.TestAllTypes_NestedMessage{
 		Corecursive: &testpb.TestAllTypes{
 			OptionalBytes: make([]byte, size),
@@ -243,7 +243,7 @@ func TestEncodeLarge(t *testing.T) {
 	if err := proto.Unmarshal(b, m); err != nil {
 		t.Fatalf("Unmarshal: %v", err)
 	}
-	if got, want := len(m.Corecursive.OptionalBytes), size; got != want {
+	if got, want := int64(len(m.Corecursive.OptionalBytes)), size; got != want {
 		t.Errorf("after round-trip marshal, got len(m.OptionalBytes) = %v, want %v", got, want)
 	}
 }
