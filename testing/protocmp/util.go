@@ -172,9 +172,9 @@ func mustFindFieldDescriptor(md protoreflect.MessageDescriptor, s protoreflect.N
 	}
 
 	var suggestion string
-	switch d.(type) {
+	switch d := d.(type) {
 	case protoreflect.FieldDescriptor:
-		suggestion = fmt.Sprintf("; consider specifying field %q instead", d.Name())
+		suggestion = fmt.Sprintf("; consider specifying field %q instead", d.TextName())
 	case protoreflect.OneofDescriptor:
 		suggestion = fmt.Sprintf("; consider specifying oneof %q with IgnoreOneofs instead", d.Name())
 	}
@@ -188,11 +188,11 @@ func mustFindOneofDescriptor(md protoreflect.MessageDescriptor, s protoreflect.N
 	}
 
 	var suggestion string
-	switch d.(type) {
+	switch d := d.(type) {
 	case protoreflect.OneofDescriptor:
 		suggestion = fmt.Sprintf("; consider specifying oneof %q instead", d.Name())
 	case protoreflect.FieldDescriptor:
-		suggestion = fmt.Sprintf("; consider specifying field %q with IgnoreFields instead", d.Name())
+		suggestion = fmt.Sprintf("; consider specifying field %q with IgnoreFields instead", d.TextName())
 	}
 	panic(fmt.Sprintf("message %q has no oneof %q%s", md.FullName(), s, suggestion))
 }
@@ -208,7 +208,7 @@ func findDescriptor(md protoreflect.MessageDescriptor, s protoreflect.Name) prot
 
 	// Best-effort match.
 	//
-	// It's a common user mistake to use the CameCased field name as it appears
+	// It's a common user mistake to use the CamelCased field name as it appears
 	// in the generated Go struct. Instead of complaining that it doesn't exist,
 	// suggest the real protobuf name that the user may have desired.
 	normalize := func(s protoreflect.Name) string {
