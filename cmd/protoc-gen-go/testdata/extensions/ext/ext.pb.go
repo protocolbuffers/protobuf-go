@@ -763,7 +763,7 @@ var file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_extTypes = []protoi
 		ExtendedType:  (*base.MessageSetWireFormatMessage)(nil),
 		ExtensionType: (*MessageSetWireFormatExtension)(nil),
 		Field:         100,
-		Name:          "goproto.protoc.extension.ext.MessageSetWireFormatExtension",
+		Name:          "goproto.protoc.extension.ext.MessageSetWireFormatExtension.message_set_extension",
 		Tag:           "bytes,100,opt,name=message_set_extension",
 		Filename:      "cmd/protoc-gen-go/testdata/extensions/ext/ext.proto",
 	},

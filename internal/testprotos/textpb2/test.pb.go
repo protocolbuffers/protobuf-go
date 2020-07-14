@@ -1734,7 +1734,7 @@ var file_internal_testprotos_textpb2_test_proto_extTypes = []protoimpl.Extension
 		ExtendedType:  (*MessageSet)(nil),
 		ExtensionType: (*MessageSetExtension)(nil),
 		Field:         10,
-		Name:          "pb2.MessageSetExtension",
+		Name:          "pb2.MessageSetExtension.message_set_extension",
 		Tag:           "bytes,10,opt,name=message_set_extension",
 		Filename:      "internal/testprotos/textpb2/test.proto",
 	},
