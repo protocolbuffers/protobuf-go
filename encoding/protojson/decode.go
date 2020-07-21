@@ -124,15 +124,6 @@ func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
 		return d.unexpectedTokenError(tok)
 	}
 
-	if err := d.unmarshalFields(m, skipTypeURL); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// unmarshalFields unmarshals the fields into the given protoreflect.Message.
-func (d decoder) unmarshalFields(m pref.Message, skipTypeURL bool) error {
 	messageDesc := m.Descriptor()
 	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
 		return errors.New("no support for proto1 MessageSets")

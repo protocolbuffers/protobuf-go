@@ -11,11 +11,13 @@ import (
 	"google.golang.org/protobuf/internal/encoding/json"
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/errors"
+	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/internal/order"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
@@ -131,7 +133,7 @@ func (o MarshalOptions) marshal(m proto.Message) ([]byte, error) {
 	}
 
 	enc := encoder{internalEnc, o}
-	if err := enc.marshalMessage(m.ProtoReflect()); err != nil {
+	if err := enc.marshalMessage(m.ProtoReflect(), ""); err != nil {
 		return nil, err
 	}
 	if o.AllowPartial {
@@ -145,19 +147,28 @@ type encoder struct {
 	opts MarshalOptions
 }
 
-// marshalMessage marshals the given protoreflect.Message.
-func (e encoder) marshalMessage(m pref.Message) error {
-	if marshal := wellKnownTypeMarshaler(m.Descriptor().FullName()); marshal != nil {
-		return marshal(e, m)
-	}
+// typeFieldDesc is a synthetic field descriptor used for the "@type" field.
+var typeFieldDesc = func() protoreflect.FieldDescriptor {
+	var fd filedesc.Field
+	fd.L0.FullName = "@type"
+	fd.L0.Index = -1
+	fd.L1.Cardinality = protoreflect.Optional
+	fd.L1.Kind = protoreflect.StringKind
+	return &fd
+}()
 
-	e.StartObject()
-	defer e.EndObject()
-	if err := e.marshalFields(m); err != nil {
-		return err
-	}
+// typeURLFieldRanger wraps a protoreflect.Message and modifies its Range method
+// to additionally iterate over a synthetic field for the type URL.
+type typeURLFieldRanger struct {
+	order.FieldRanger
+	typeURL string
+}
 
-	return nil
+func (m typeURLFieldRanger) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
+	if !f(typeFieldDesc, pref.ValueOfString(m.typeURL)) {
+		return
+	}
+	m.FieldRanger.Range(f)
 }
 
 // unpopulatedFieldRanger wraps a protoreflect.Message and modifies its Range
@@ -185,15 +196,27 @@ func (m unpopulatedFieldRanger) Range(f func(pref.FieldDescriptor, pref.Value) b
 	m.Message.Range(f)
 }
 
-// marshalFields marshals the fields in the given protoreflect.Message.
-func (e encoder) marshalFields(m pref.Message) error {
+// marshalMessage marshals the fields in the given protoreflect.Message.
+// If the typeURL is non-empty, then a synthetic "@type" field is injected
+// containing the URL as the value.
+func (e encoder) marshalMessage(m pref.Message, typeURL string) error {
 	if !flags.ProtoLegacy && messageset.IsMessageSet(m.Descriptor()) {
 		return errors.New("no support for proto1 MessageSets")
 	}
 
+	if marshal := wellKnownTypeMarshaler(m.Descriptor().FullName()); marshal != nil {
+		return marshal(e, m)
+	}
+
+	e.StartObject()
+	defer e.EndObject()
+
 	var fields order.FieldRanger = m
 	if e.opts.EmitUnpopulated {
 		fields = unpopulatedFieldRanger{m}
+	}
+	if typeURL != "" {
+		fields = typeURLFieldRanger{fields, typeURL}
 	}
 
 	var err error
@@ -278,7 +301,7 @@ func (e encoder) marshalSingular(val pref.Value, fd pref.FieldDescriptor) error 
 		}
 
 	case pref.MessageKind, pref.GroupKind:
-		if err := e.marshalMessage(val.Message()); err != nil {
+		if err := e.marshalMessage(val.Message(), ""); err != nil {
 			return err
 		}
 

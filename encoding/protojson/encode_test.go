@@ -1624,6 +1624,34 @@ func TestMarshal(t *testing.T) {
   "optString": "embedded inside Any"
 }`,
 	}, {
+		desc: "Any with EmitUnpopulated",
+		mo: protojson.MarshalOptions{
+			EmitUnpopulated: true,
+		},
+		input: func() proto.Message {
+			return &anypb.Any{
+				TypeUrl: string(new(pb3.Scalars).ProtoReflect().Descriptor().FullName()),
+			}
+		}(),
+		want: `{
+  "@type": "pb3.Scalars",
+  "sBool": false,
+  "sInt32": 0,
+  "sInt64": "0",
+  "sUint32": 0,
+  "sUint64": "0",
+  "sSint32": 0,
+  "sSint64": "0",
+  "sFixed32": 0,
+  "sFixed64": "0",
+  "sSfixed32": 0,
+  "sSfixed64": "0",
+  "sFloat": 0,
+  "sDouble": 0,
+  "sBytes": "",
+  "sString": ""
+}`,
+	}, {
 		desc: "Any with invalid UTF8",
 		input: func() proto.Message {
 			m := &pb2.Nested{
