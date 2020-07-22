@@ -818,7 +818,7 @@ var testValidMessages = []testProto{
 				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1156),
 			}),
 			protopack.Tag{71, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
-				protopack.Tag{1, protopack.BytesType}, protopack.String(0),
+				protopack.Tag{1, protopack.BytesType}, protopack.String(""),
 				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{}),
 				protopack.Tag{1, protopack.BytesType}, protopack.String("71.1.key"),
 				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{

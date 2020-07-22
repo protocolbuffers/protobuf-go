@@ -290,7 +290,7 @@ func (o UnmarshalOptions) unmarshalScalar(b []byte, wtyp protowire.Type, fd prot
 		v, n := protowire.Consume{{.WireType}}(b)
 		{{- end}}
 		if n < 0 {
-			return val, 0, protowire.ParseError(n)
+			return val, 0, errDecode
 		}
 		{{if (eq .Name "String") -}}
 		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {
@@ -312,12 +312,12 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp protowire.Type, list prot
 		if wtyp == protowire.BytesType {
 			buf, n := protowire.ConsumeBytes(b)
 			if n < 0 {
-				return 0, protowire.ParseError(n)
+				return 0, errDecode
 			}
 			for len(buf) > 0 {
 				v, n := protowire.Consume{{.WireType}}(buf)
 				if n < 0 {
-					return 0, protowire.ParseError(n)
+					return 0, errDecode
 				}
 				buf = buf[n:]
 				list.Append({{.ToValue}})
@@ -334,7 +334,7 @@ func (o UnmarshalOptions) unmarshalList(b []byte, wtyp protowire.Type, list prot
 		v, n := protowire.Consume{{.WireType}}(b)
 		{{- end}}
 		if n < 0 {
-			return 0, protowire.ParseError(n)
+			return 0, errDecode
 		}
 		{{if (eq .Name "String") -}}
 		if strs.EnforceUTF8(fd) && !utf8.Valid(v) {

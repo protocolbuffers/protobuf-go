@@ -114,7 +114,7 @@ func consume{{.Name}}(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInf
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, protowire.ParseError(n)
+		return out, errDecode
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
 	out.n = n
@@ -147,7 +147,7 @@ func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *c
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, protowire.ParseError(n)
+		return out, errDecode
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return out, errInvalidUTF8{}
@@ -196,7 +196,7 @@ func consume{{.Name}}NoZero(b []byte, p pointer, wtyp protowire.Type, f *coderFi
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, protowire.ParseError(n)
+		return out, errDecode
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
 	out.n = n
@@ -235,7 +235,7 @@ func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp protowire.Type
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, protowire.ParseError(n)
+		return out, errDecode
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return out, errInvalidUTF8{}
@@ -280,7 +280,7 @@ func consume{{.Name}}Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderField
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, protowire.ParseError(n)
+		return out, errDecode
 	}
 	vp := p.{{.GoType.PointerMethod}}Ptr()
 	if *vp == nil {
@@ -319,7 +319,7 @@ func consume{{.Name}}PtrValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, protowire.ParseError(n)
+		return out, errDecode
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return out, errInvalidUTF8{}
@@ -372,12 +372,12 @@ func consume{{.Name}}Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFie
 		s := *sp
 		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return out, protowire.ParseError(n)
+			return out, errDecode
 		}
 		for len(b) > 0 {
 			{{template "Consume" .}}
 			if n < 0 {
-				return out, protowire.ParseError(n)
+				return out, errDecode
 			}
 			s = append(s, {{.ToGoType}})
 			b = b[n:]
@@ -392,7 +392,7 @@ func consume{{.Name}}Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFie
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, protowire.ParseError(n)
+		return out, errDecode
 	}
 	*sp = append(*sp, {{.ToGoType}})
 	out.n = n
@@ -428,7 +428,7 @@ func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type,
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return out, protowire.ParseError(n)
+		return out, errDecode
 	}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return out, errInvalidUTF8{}
@@ -516,7 +516,7 @@ func consume{{.Name}}Value(b []byte, _ protoreflect.Value, _ protowire.Number, w
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, out, protowire.ParseError(n)
+		return protoreflect.Value{}, out, errDecode
 	}
 	out.n = n
 	return {{.ToValue}}, out, nil
@@ -551,7 +551,7 @@ func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ protowi
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, out, protowire.ParseError(n)
+		return protoreflect.Value{}, out, errDecode
 	}
 	if !utf8.ValidString(v) {
 		return protoreflect.Value{}, out, errInvalidUTF8{}
@@ -600,12 +600,12 @@ func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ protowire.
 	if wtyp == protowire.BytesType {
 		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
-			return protoreflect.Value{}, out, protowire.ParseError(n)
+			return protoreflect.Value{}, out, errDecode
 		}
 		for len(b) > 0 {
 			{{template "Consume" .}}
 			if n < 0 {
-				return protoreflect.Value{}, out, protowire.ParseError(n)
+				return protoreflect.Value{}, out, errDecode
 			}
 			list.Append({{.ToValue}})
 			b = b[n:]
@@ -619,7 +619,7 @@ func consume{{.Name}}SliceValue(b []byte, listv protoreflect.Value, _ protowire.
 	}
 	{{template "Consume" .}}
 	if n < 0 {
-		return protoreflect.Value{}, out, protowire.ParseError(n)
+		return protoreflect.Value{}, out, errDecode
 	}
 	list.Append({{.ToValue}})
 	out.n = n
