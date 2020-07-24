@@ -18,6 +18,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 
+	"google.golang.org/protobuf/internal/errors"
 	orderpb "google.golang.org/protobuf/internal/testprotos/order"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
@@ -135,6 +136,9 @@ func TestEncodeInvalidMessages(t *testing.T) {
 				got, err := opts.Marshal(m)
 				if err == nil {
 					t.Fatalf("Marshal unexpectedly succeeded\noutput bytes: [%x]\nMessage:\n%v", got, prototext.Format(m))
+				}
+				if !errors.Is(err, proto.Error) {
+					t.Fatalf("Marshal error is not a proto.Error: %v", err)
 				}
 			})
 		}

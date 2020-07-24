@@ -15,6 +15,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/testing/protopack"
 
+	"google.golang.org/protobuf/internal/errors"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 )
@@ -82,6 +83,8 @@ func TestDecodeInvalidMessages(t *testing.T) {
 				got := want.ProtoReflect().New().Interface()
 				if err := opts.Unmarshal(test.wire, got); err == nil {
 					t.Errorf("Unmarshal unexpectedly succeeded\ninput bytes: [%x]\nMessage:\n%v", test.wire, prototext.Format(got))
+				} else if !errors.Is(err, proto.Error) {
+					t.Errorf("Unmarshal error is not a proto.Error: %v", err)
 				}
 			})
 		}

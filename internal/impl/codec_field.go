@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"google.golang.org/protobuf/encoding/protowire"
+	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	preg "google.golang.org/protobuf/reflect/protoregistry"
@@ -20,6 +21,7 @@ type errInvalidUTF8 struct{}
 
 func (errInvalidUTF8) Error() string     { return "string field contains invalid UTF-8" }
 func (errInvalidUTF8) InvalidUTF8() bool { return true }
+func (errInvalidUTF8) Unwrap() error     { return errors.Error }
 
 // initOneofFieldCoders initializes the fast-path functions for the fields in a oneof.
 //
