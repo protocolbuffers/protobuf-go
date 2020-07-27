@@ -175,7 +175,7 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag protowire.
 				return out, errDecode
 			}
 			if !opts.DiscardUnknown() && mi.unknownOffset.IsValid() {
-				u := p.Apply(mi.unknownOffset).Bytes()
+				u := mi.mutableUnknownBytes(p)
 				*u = protowire.AppendTag(*u, num, wtyp)
 				*u = append(*u, b[:n]...)
 			}

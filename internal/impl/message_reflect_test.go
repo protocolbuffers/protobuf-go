@@ -22,6 +22,7 @@ import (
 	pdesc "google.golang.org/protobuf/reflect/protodesc"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/testing/protopack"
 
 	proto2_20180125 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20180125_92554152"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
@@ -1423,6 +1424,43 @@ func (p path) String() string {
 		ss = append(ss, fmt.Sprint(i))
 	}
 	return strings.Join(ss, ".")
+}
+
+type UnknownFieldsA struct {
+	XXX_unrecognized []byte
+}
+
+var unknownFieldsAType = pimpl.MessageInfo{
+	GoReflectType: reflect.TypeOf(new(UnknownFieldsA)),
+	Desc:          mustMakeMessageDesc("unknown.proto", pref.Proto2, "", `name: "UnknownFieldsA"`, nil),
+}
+
+func (m *UnknownFieldsA) ProtoReflect() pref.Message { return unknownFieldsAType.MessageOf(m) }
+
+type UnknownFieldsB struct {
+	XXX_unrecognized *[]byte
+}
+
+var unknownFieldsBType = pimpl.MessageInfo{
+	GoReflectType: reflect.TypeOf(new(UnknownFieldsB)),
+	Desc:          mustMakeMessageDesc("unknown.proto", pref.Proto2, "", `name: "UnknownFieldsB"`, nil),
+}
+
+func (m *UnknownFieldsB) ProtoReflect() pref.Message { return unknownFieldsBType.MessageOf(m) }
+
+func TestUnknownFields(t *testing.T) {
+	for _, m := range []proto.Message{new(UnknownFieldsA), new(UnknownFieldsB)} {
+		t.Run(reflect.TypeOf(m).Elem().Name(), func(t *testing.T) {
+			want := protopack.Message{
+				protopack.Tag{1, protopack.BytesType}, protopack.String("Hello, world!"),
+			}.Marshal()
+			m.ProtoReflect().SetUnknown(want)
+			got := []byte(m.ProtoReflect().GetUnknown())
+			if diff := cmp.Diff(want, got); diff != "" {
+				t.Errorf("UnknownFields mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
 }
 
 func TestReset(t *testing.T) {

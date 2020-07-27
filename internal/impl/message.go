@@ -110,22 +110,29 @@ func (mi *MessageInfo) getPointer(m pref.Message) (p pointer, ok bool) {
 type (
 	SizeCache       = int32
 	WeakFields      = map[int32]protoreflect.ProtoMessage
-	UnknownFields   = []byte
+	UnknownFields   = unknownFieldsA // TODO: switch to unknownFieldsB
+	unknownFieldsA  = []byte
+	unknownFieldsB  = *[]byte
 	ExtensionFields = map[int32]ExtensionField
 )
 
 var (
 	sizecacheType       = reflect.TypeOf(SizeCache(0))
 	weakFieldsType      = reflect.TypeOf(WeakFields(nil))
-	unknownFieldsType   = reflect.TypeOf(UnknownFields(nil))
+	unknownFieldsAType  = reflect.TypeOf(unknownFieldsA(nil))
+	unknownFieldsBType  = reflect.TypeOf(unknownFieldsB(nil))
 	extensionFieldsType = reflect.TypeOf(ExtensionFields(nil))
 )
 
 type structInfo struct {
 	sizecacheOffset offset
+	sizecacheType   reflect.Type
 	weakOffset      offset
+	weakType        reflect.Type
 	unknownOffset   offset
+	unknownType     reflect.Type
 	extensionOffset offset
+	extensionType   reflect.Type
 
 	fieldsByNumber        map[pref.FieldNumber]reflect.StructField
 	oneofsByName          map[pref.Name]reflect.StructField
@@ -152,18 +159,22 @@ fieldLoop:
 		case genid.SizeCache_goname, genid.SizeCacheA_goname:
 			if f.Type == sizecacheType {
 				si.sizecacheOffset = offsetOf(f, mi.Exporter)
+				si.sizecacheType = f.Type
 			}
 		case genid.WeakFields_goname, genid.WeakFieldsA_goname:
 			if f.Type == weakFieldsType {
 				si.weakOffset = offsetOf(f, mi.Exporter)
+				si.weakType = f.Type
 			}
 		case genid.UnknownFields_goname, genid.UnknownFieldsA_goname:
-			if f.Type == unknownFieldsType {
+			if f.Type == unknownFieldsAType || f.Type == unknownFieldsBType {
 				si.unknownOffset = offsetOf(f, mi.Exporter)
+				si.unknownType = f.Type
 			}
 		case genid.ExtensionFields_goname, genid.ExtensionFieldsA_goname, genid.ExtensionFieldsB_goname:
 			if f.Type == extensionFieldsType {
 				si.extensionOffset = offsetOf(f, mi.Exporter)
+				si.extensionType = f.Type
 			}
 		default:
 			for _, s := range strings.Split(f.Tag.Get("protobuf"), ",") {

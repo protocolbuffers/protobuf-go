@@ -108,24 +108,44 @@ func (mi *MessageInfo) makeKnownFieldsFunc(si structInfo) {
 }
 
 func (mi *MessageInfo) makeUnknownFieldsFunc(t reflect.Type, si structInfo) {
-	mi.getUnknown = func(pointer) pref.RawFields { return nil }
-	mi.setUnknown = func(pointer, pref.RawFields) { return }
-	if si.unknownOffset.IsValid() {
+	switch {
+	case si.unknownOffset.IsValid() && si.unknownType == unknownFieldsAType:
+		// Handle as []byte.
 		mi.getUnknown = func(p pointer) pref.RawFields {
 			if p.IsNil() {
 				return nil
 			}
-			rv := p.Apply(si.unknownOffset).AsValueOf(unknownFieldsType)
-			return pref.RawFields(*rv.Interface().(*[]byte))
+			return *p.Apply(mi.unknownOffset).Bytes()
 		}
 		mi.setUnknown = func(p pointer, b pref.RawFields) {
 			if p.IsNil() {
 				panic("invalid SetUnknown on nil Message")
 			}
-			rv := p.Apply(si.unknownOffset).AsValueOf(unknownFieldsType)
-			*rv.Interface().(*[]byte) = []byte(b)
+			*p.Apply(mi.unknownOffset).Bytes() = b
 		}
-	} else {
+	case si.unknownOffset.IsValid() && si.unknownType == unknownFieldsBType:
+		// Handle as *[]byte.
+		mi.getUnknown = func(p pointer) pref.RawFields {
+			if p.IsNil() {
+				return nil
+			}
+			bp := p.Apply(mi.unknownOffset).BytesPtr()
+			if *bp == nil {
+				return nil
+			}
+			return **bp
+		}
+		mi.setUnknown = func(p pointer, b pref.RawFields) {
+			if p.IsNil() {
+				panic("invalid SetUnknown on nil Message")
+			}
+			bp := p.Apply(mi.unknownOffset).BytesPtr()
+			if *bp == nil {
+				*bp = new([]byte)
+			}
+			**bp = b
+		}
+	default:
 		mi.getUnknown = func(pointer) pref.RawFields {
 			return nil
 		}
