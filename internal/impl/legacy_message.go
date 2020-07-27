@@ -380,7 +380,7 @@ type legacyMerger interface {
 	Merge(protoiface.MessageV1)
 }
 
-var legacyProtoMethods = &piface.Methods{
+var aberrantProtoMethods = &piface.Methods{
 	Marshal:   legacyMarshal,
 	Unmarshal: legacyUnmarshal,
 	Merge:     legacyMerge,
@@ -505,7 +505,7 @@ func (m aberrantMessage) IsValid() bool {
 	return true
 }
 func (m aberrantMessage) ProtoMethods() *piface.Methods {
-	return legacyProtoMethods
+	return aberrantProtoMethods
 }
 func (m aberrantMessage) protoUnwrap() interface{} {
 	return m.v.Interface()
