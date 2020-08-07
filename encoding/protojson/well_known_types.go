@@ -605,14 +605,11 @@ func (e encoder) marshalDuration(m pref.Message) error {
 	}
 	// Generated output always contains 0, 3, 6, or 9 fractional digits,
 	// depending on required precision, followed by the suffix "s".
-	f := "%d.%09d"
-	if nanos < 0 {
-		nanos = -nanos
-		if secs == 0 {
-			f = "-%d.%09d"
-		}
+	var sign string
+	if secs < 0 || nanos < 0 {
+		sign, secs, nanos = "-", -1*secs, -1*nanos
 	}
-	x := fmt.Sprintf(f, secs, nanos)
+	x := fmt.Sprintf("%s%d.%09d", sign, secs, nanos)
 	x = strings.TrimSuffix(x, "000")
 	x = strings.TrimSuffix(x, "000")
 	x = strings.TrimSuffix(x, ".000")
