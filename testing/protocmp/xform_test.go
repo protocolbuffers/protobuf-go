@@ -102,8 +102,8 @@ func TestTransform(t *testing.T) {
 			MapUint64Uint64: map[uint64]uint64{0: 64},
 			MapInt32Float:   map[int32]float32{32: 32.32},
 			MapInt32Double:  map[int32]float64{64: 64.64},
-			MapStringString: map[string]string{"k": "v"},
-			MapStringBytes:  map[string][]byte{"k": []byte("v")},
+			MapStringString: map[string]string{"k": "v", "empty": ""},
+			MapStringBytes:  map[string][]byte{"k": []byte("v"), "empty": nil},
 			MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{
 				"k": testpb.TestAllTypes_FOO,
 			},
@@ -120,8 +120,8 @@ func TestTransform(t *testing.T) {
 			"map_uint64_uint64": map[uint64]uint64{0: 64},
 			"map_int32_float":   map[int32]float32{32: 32.32},
 			"map_int32_double":  map[int32]float64{64: 64.64},
-			"map_string_string": map[string]string{"k": "v"},
-			"map_string_bytes":  map[string][]byte{"k": []byte("v")},
+			"map_string_string": map[string]string{"k": "v", "empty": ""},
+			"map_string_bytes":  map[string][]byte{"k": []byte("v"), "empty": []byte{}},
 			"map_string_nested_enum": map[string]Enum{
 				"k": enumOf(testpb.TestAllTypes_FOO),
 			},

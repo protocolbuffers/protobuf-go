@@ -296,6 +296,14 @@ func transformSingular(fd protoreflect.FieldDescriptor, v protoreflect.Value) in
 		return Enum{num: v.Enum(), ed: fd.Enum()}
 	case protoreflect.MessageKind, protoreflect.GroupKind:
 		return transformMessage(v.Message())
+	case protoreflect.BytesKind:
+		// The protoreflect API does not specify whether an empty bytes is
+		// guaranteed to be nil or not. Always return non-nil bytes to avoid
+		// leaking information about the concrete proto.Message implementation.
+		if len(v.Bytes()) == 0 {
+			return []byte{}
+		}
+		return v.Bytes()
 	default:
 		return v.Interface()
 	}
