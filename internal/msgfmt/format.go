@@ -10,7 +10,6 @@ package msgfmt
 import (
 	"bytes"
 	"fmt"
-	"math"
 	"reflect"
 	"sort"
 	"strconv"
@@ -130,12 +129,16 @@ func appendKnownMessage(b []byte, m protoreflect.Message) []byte {
 		return append(b, x+"Z"...)
 
 	case genid.Duration_message_fullname:
+		sign := ""
 		secs := m.Get(fds.ByNumber(genid.Duration_Seconds_field_number)).Int()
 		nanos := m.Get(fds.ByNumber(genid.Duration_Nanos_field_number)).Int()
 		if nanos <= -1e9 || nanos >= 1e9 || (secs > 0 && nanos < 0) || (secs < 0 && nanos > 0) {
 			return nil
 		}
-		x := fmt.Sprintf("%d.%09d", secs, int64(math.Abs(float64(nanos))))
+		if secs < 0 || nanos < 0 {
+			sign, secs, nanos = "-", -1*secs, -1*nanos
+		}
+		x := fmt.Sprintf("%s%d.%09d", sign, secs, nanos)
 		x = strings.TrimSuffix(x, "000")
 		x = strings.TrimSuffix(x, "000")
 		x = strings.TrimSuffix(x, ".000")

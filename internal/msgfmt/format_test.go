@@ -201,6 +201,11 @@ func TestFormat(t *testing.T) {
 		want: `{opt_duration:-1257894123.000456789s}`,
 	}, {
 		in: &textpb.KnownTypes{
+			OptDuration: &durpb.Duration{Seconds: 0, Nanos: -1},
+		},
+		want: `{opt_duration:-0.000000001s}`,
+	}, {
+		in: &textpb.KnownTypes{
 			OptBool:   &wpb.BoolValue{},
 			OptInt32:  &wpb.Int32Value{},
 			OptInt64:  &wpb.Int64Value{},
