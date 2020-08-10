@@ -1256,6 +1256,18 @@ func TestMarshal(t *testing.T) {
   []
 ]`,
 	}, {
+		desc:    "Value with NaN",
+		input:   structpb.NewNumberValue(math.NaN()),
+		wantErr: true,
+	}, {
+		desc:    "Value with -Inf",
+		input:   structpb.NewNumberValue(math.Inf(-1)),
+		wantErr: true,
+	}, {
+		desc:    "Value with +Inf",
+		input:   structpb.NewNumberValue(math.Inf(+1)),
+		wantErr: true,
+	}, {
 		desc:  "Struct with nil map",
 		input: &structpb.Struct{},
 		want:  `{}`,

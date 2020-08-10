@@ -7,6 +7,7 @@ package protojson
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -494,6 +495,11 @@ func (e encoder) marshalKnownValue(m pref.Message) error {
 	fd := m.WhichOneof(od)
 	if fd == nil {
 		return errors.New("%s: none of the oneof fields is set", genid.Value_message_fullname)
+	}
+	if fd.Number() == genid.Value_NumberValue_field_number {
+		if v := m.Get(fd).Float(); math.IsNaN(v) || math.IsInf(v, 0) {
+			return errors.New("%s: invalid %v value", genid.Value_NumberValue_field_fullname, v)
+		}
 	}
 	return e.marshalSingular(m.Get(fd), fd)
 }
