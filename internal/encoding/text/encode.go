@@ -32,7 +32,6 @@ type Encoder struct {
 	encoderState
 
 	indent      string
-	newline     string // set to "\n" if len(indent) > 0
 	delims      [2]byte
 	outputASCII bool
 }
@@ -61,7 +60,6 @@ func NewEncoder(indent string, delims [2]byte, outputASCII bool) (*Encoder, erro
 			return nil, errors.New("indent may only be composed of space and tab characters")
 		}
 		e.indent = indent
-		e.newline = "\n"
 	}
 	switch delims {
 	case [2]byte{0, 0}:
