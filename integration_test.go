@@ -202,50 +202,54 @@ func mustInitDeps(t *testing.T) {
 	// Delete the current directory if non-empty,
 	// which only occurs if a dependency failed to initialize properly.
 	var workingDir string
+	finishedDirs := map[string]bool{}
 	defer func() {
 		if workingDir != "" {
 			os.RemoveAll(workingDir) // best-effort
 		}
 	}()
+	startWork := func(name string) string {
+		workingDir = filepath.Join(testDir, name)
+		return workingDir
+	}
+	finishWork := func() {
+		finishedDirs[workingDir] = true
+		workingDir = ""
+	}
 
 	// Delete other sub-directories that are no longer relevant.
 	defer func() {
-		subDirs := map[string]bool{"bin": true, "gopath": true}
-		subDirs["protobuf-"+protobufVersion] = true
-		for _, v := range golangVersions {
-			subDirs["go"+v] = true
-		}
-
 		now := time.Now()
 		fis, _ := ioutil.ReadDir(testDir)
 		for _, fi := range fis {
-			if subDirs[fi.Name()] {
-				os.Chtimes(filepath.Join(testDir, fi.Name()), now, now) // best-effort
+			dir := filepath.Join(testDir, fi.Name())
+			if finishedDirs[dir] {
+				os.Chtimes(dir, now, now) // best-effort
 				continue
 			}
 			if now.Sub(fi.ModTime()) < purgeTimeout {
 				continue
 			}
 			fmt.Printf("delete %v\n", fi.Name())
-			os.RemoveAll(filepath.Join(testDir, fi.Name())) // best-effort
+			os.RemoveAll(dir) // best-effort
 		}
 	}()
 
 	// The bin directory contains symlinks to each tool by version.
 	// It is safe to delete this directory and run the test script from scratch.
-	binPath := filepath.Join(testDir, "bin")
+	binPath := startWork("bin")
 	check(os.RemoveAll(binPath))
 	check(os.Mkdir(binPath, 0775))
 	check(os.Setenv("PATH", binPath+":"+os.Getenv("PATH")))
 	registerBinary := func(name, path string) {
 		check(os.Symlink(path, filepath.Join(binPath, name)))
 	}
+	finishWork()
 
 	// Download and build the protobuf toolchain.
 	// We avoid downloading the pre-compiled binaries since they do not contain
 	// the conformance test runner.
-	workingDir = filepath.Join(testDir, "protobuf-"+protobufVersion)
-	protobufPath = workingDir
+	protobufPath = startWork("protobuf-" + protobufVersion)
 	if _, err := os.Stat(protobufPath); err != nil {
 		fmt.Printf("download %v\n", filepath.Base(protobufPath))
 		if isCommit := strings.Trim(protobufVersion, "0123456789abcdef") == ""; isCommit {
@@ -265,31 +269,31 @@ func mustInitDeps(t *testing.T) {
 	check(os.Setenv("PROTOBUF_ROOT", protobufPath)) // for generate-protos
 	registerBinary("conform-test-runner", filepath.Join(protobufPath, "conformance", "conformance-test-runner"))
 	registerBinary("protoc", filepath.Join(protobufPath, "src", "protoc"))
-	workingDir = ""
+	finishWork()
 
 	// Download each Go toolchain version.
 	for _, v := range golangVersions {
-		workingDir = filepath.Join(testDir, "go"+v)
-		if _, err := os.Stat(workingDir); err != nil {
-			fmt.Printf("download %v\n", filepath.Base(workingDir))
+		goDir := startWork("go" + v)
+		if _, err := os.Stat(goDir); err != nil {
+			fmt.Printf("download %v\n", filepath.Base(goDir))
 			url := fmt.Sprintf("https://dl.google.com/go/go%v.%v-%v.tar.gz", v, runtime.GOOS, runtime.GOARCH)
-			downloadArchive(check, workingDir, url, "go", "") // skip SHA256 check as we fetch over https from a trusted domain
+			downloadArchive(check, goDir, url, "go", "") // skip SHA256 check as we fetch over https from a trusted domain
 		}
-		registerBinary("go"+v, filepath.Join(workingDir, "bin", "go"))
+		registerBinary("go"+v, filepath.Join(goDir, "bin", "go"))
+		finishWork()
 	}
 	registerBinary("go", filepath.Join(testDir, "go"+golangLatest, "bin", "go"))
 	registerBinary("gofmt", filepath.Join(testDir, "go"+golangLatest, "bin", "gofmt"))
-	workingDir = ""
 
 	// Download the staticcheck tool.
-	workingDir = filepath.Join(testDir, "staticcheck-"+staticcheckVersion)
-	if _, err := os.Stat(workingDir); err != nil {
-		fmt.Printf("download %v\n", filepath.Base(workingDir))
+	checkDir := startWork("staticcheck-" + staticcheckVersion)
+	if _, err := os.Stat(checkDir); err != nil {
+		fmt.Printf("download %v\n", filepath.Base(checkDir))
 		url := fmt.Sprintf("https://github.com/dominikh/go-tools/releases/download/%v/staticcheck_%v_%v.tar.gz", staticcheckVersion, runtime.GOOS, runtime.GOARCH)
-		downloadArchive(check, workingDir, url, "staticcheck", staticcheckSHA256s[runtime.GOOS+"/"+runtime.GOARCH])
+		downloadArchive(check, checkDir, url, "staticcheck", staticcheckSHA256s[runtime.GOOS+"/"+runtime.GOARCH])
 	}
-	registerBinary("staticcheck", filepath.Join(workingDir, "staticcheck"))
-	workingDir = ""
+	registerBinary("staticcheck", filepath.Join(checkDir, "staticcheck"))
+	finishWork()
 
 	// Travis-CI sets GOROOT, which confuses invocations of the Go toolchain.
 	// Explicitly clear GOROOT, so each toolchain uses their default GOROOT.
@@ -299,7 +303,7 @@ func mustInitDeps(t *testing.T) {
 	check(os.Setenv("GOCACHE", filepath.Join(repoRoot, ".gocache")))
 
 	// Setup GOPATH for pre-module support (i.e., go1.10 and earlier).
-	goPath = filepath.Join(testDir, "gopath")
+	goPath = startWork("gopath")
 	modulePath = strings.TrimSpace(command{Dir: testDir}.mustRun(t, "go", "list", "-m", "-f", "{{.Path}}"))
 	check(os.RemoveAll(filepath.Join(goPath, "src")))
 	check(os.MkdirAll(filepath.Join(goPath, "src", filepath.Dir(modulePath)), 0775))
@@ -307,6 +311,7 @@ func mustInitDeps(t *testing.T) {
 	command{Dir: repoRoot}.mustRun(t, "go", "mod", "tidy")
 	command{Dir: repoRoot}.mustRun(t, "go", "mod", "vendor")
 	check(os.Setenv("GOPATH", goPath))
+	finishWork()
 }
 
 func downloadFile(check func(error), dstPath, srcURL string) {
