@@ -41,18 +41,15 @@ func TestEqual(t *testing.T) {
 			x:  new(testpb.TestAllTypes),
 			y:  new(testpb.TestAllTypes),
 			eq: true,
-		},
-		{
+		}, {
 			x:  (*testpb.TestAllTypes)(nil),
 			y:  (*testpb.TestAllExtensions)(nil),
 			eq: false,
-		},
-		{
+		}, {
 			x:  (*testpb.TestAllTypes)(nil),
 			y:  new(testpb.TestAllExtensions),
 			eq: false,
-		},
-		{
+		}, {
 			x:  new(testpb.TestAllTypes),
 			y:  new(testpb.TestAllExtensions),
 			eq: false,
@@ -113,6 +110,78 @@ func TestEqual(t *testing.T) {
 		}, {
 			x: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
 			y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
+		}, {
+			x:  &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+			y:  &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalInt64: proto.Int64(2)},
+			y:  &testpb.TestAllTypes{OptionalInt64: proto.Int64(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalUint32: proto.Uint32(2)},
+			y:  &testpb.TestAllTypes{OptionalUint32: proto.Uint32(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalUint64: proto.Uint64(2)},
+			y:  &testpb.TestAllTypes{OptionalUint64: proto.Uint64(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalSint32: proto.Int32(2)},
+			y:  &testpb.TestAllTypes{OptionalSint32: proto.Int32(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalSint64: proto.Int64(2)},
+			y:  &testpb.TestAllTypes{OptionalSint64: proto.Int64(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalFixed32: proto.Uint32(2)},
+			y:  &testpb.TestAllTypes{OptionalFixed32: proto.Uint32(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalFixed64: proto.Uint64(2)},
+			y:  &testpb.TestAllTypes{OptionalFixed64: proto.Uint64(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalSfixed32: proto.Int32(2)},
+			y:  &testpb.TestAllTypes{OptionalSfixed32: proto.Int32(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalSfixed64: proto.Int64(2)},
+			y:  &testpb.TestAllTypes{OptionalSfixed64: proto.Int64(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalFloat: proto.Float32(2)},
+			y:  &testpb.TestAllTypes{OptionalFloat: proto.Float32(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalDouble: proto.Float64(2)},
+			y:  &testpb.TestAllTypes{OptionalDouble: proto.Float64(2)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalFloat: proto.Float32(float32(math.NaN()))},
+			y:  &testpb.TestAllTypes{OptionalFloat: proto.Float32(float32(math.NaN()))},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalDouble: proto.Float64(float64(math.NaN()))},
+			y:  &testpb.TestAllTypes{OptionalDouble: proto.Float64(float64(math.NaN()))},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalBool: proto.Bool(true)},
+			y:  &testpb.TestAllTypes{OptionalBool: proto.Bool(true)},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalString: proto.String("abc")},
+			y:  &testpb.TestAllTypes{OptionalString: proto.String("abc")},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalBytes: []byte("abc")},
+			y:  &testpb.TestAllTypes{OptionalBytes: []byte("abc")},
+			eq: true,
+		}, {
+			x:  &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+			y:  &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+			eq: true,
 		},
 
 		// Proto2 presence.
