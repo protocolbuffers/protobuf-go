@@ -41,7 +41,6 @@ var (
 
 	staticcheckVersion = "2020.1.4"
 	staticcheckSHA256s = map[string]string{
-		"darwin/386":   "05ccb332a0c5ba812af165b0e69ffe317cb3e8bb10b0f4b4c4eaaf956ba9a50b",
 		"darwin/amd64": "5706d101426c025e8f165309e0cb2932e54809eb035ff23ebe19df0f810699d8",
 		"linux/386":    "e4dbf94e940678ae7108f0d22c7c2992339bc10a8fb384e7e734b1531a429a1c",
 		"linux/amd64":  "09d2c2002236296de2c757df111fe3ae858b89f9e183f645ad01f8135c83c519",
@@ -390,6 +389,11 @@ func mustHandleFlags(t *testing.T) {
 			v := version.String()
 			for _, goos := range []string{"linux", "darwin", "windows"} {
 				for _, goarch := range []string{"386", "amd64"} {
+					// Avoid Darwin since 10.15 dropped support for i386.
+					if goos == "darwin" && goarch == "386" {
+						continue
+					}
+
 					binPath := filepath.Join("bin", fmt.Sprintf("protoc-gen-go.%v.%v.%v", v, goos, goarch))
 
 					// Build the binary.
