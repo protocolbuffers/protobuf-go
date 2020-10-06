@@ -98,7 +98,7 @@ func TestNewFile(t *testing.T) {
 		wantErr: `path must be populated`,
 	}, {
 		label:  "empty package and syntax",
-		inDesc: mustParseFile(`name:"weird" package:""`),
+		inDesc: mustParseFile(`name:"weird"`),
 	}, {
 		label:   "invalid syntax",
 		inDesc:  mustParseFile(`name:"weird" syntax:"proto9"`),
@@ -111,7 +111,6 @@ func TestNewFile(t *testing.T) {
 		label: "unresolvable import",
 		inDesc: mustParseFile(`
 			name:       "test.proto"
-			package:    ""
 			dependency: "dep.proto"
 		`),
 		wantErr: `could not resolve import "dep.proto": not found`,
@@ -119,7 +118,6 @@ func TestNewFile(t *testing.T) {
 		label: "unresolvable import but allowed",
 		inDesc: mustParseFile(`
 			name:       "test.proto"
-			package:    ""
 			dependency: "dep.proto"
 		`),
 		inOpts: FileOptions{AllowUnresolvable: true},
@@ -127,7 +125,6 @@ func TestNewFile(t *testing.T) {
 		label: "duplicate import",
 		inDesc: mustParseFile(`
 			name:       "test.proto"
-			package:    ""
 			dependency: ["dep.proto", "dep.proto"]
 		`),
 		inOpts:  FileOptions{AllowUnresolvable: true},
@@ -136,7 +133,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid weak import",
 		inDesc: mustParseFile(`
 			name:            "test.proto"
-			package:         ""
 			dependency:      "dep.proto"
 			weak_dependency: [-23]
 		`),
@@ -146,7 +142,6 @@ func TestNewFile(t *testing.T) {
 		label: "normal weak and public import",
 		inDesc: mustParseFile(`
 			name:              "test.proto"
-			package:           ""
 			dependency:        "dep.proto"
 			weak_dependency:   [0]
 			public_dependency: [0]
@@ -160,7 +155,6 @@ func TestNewFile(t *testing.T) {
 		},
 		inDesc: mustParseFile(`
 			name: "test.proto"
-			package: ""
 			dependency: ["public.proto", "leaf.proto"]
 		`),
 	}, {
@@ -237,7 +231,6 @@ func TestNewFile(t *testing.T) {
 		label: "resolve the wrong type",
 		inDesc: mustParseFile(`
 			name: "test.proto"
-			package: ""
 			message_type: [{
 				name: "M"
 				field: [{name:"F" number:1 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:"E"}]
@@ -249,7 +242,6 @@ func TestNewFile(t *testing.T) {
 		label: "auto-resolve unknown kind",
 		inDesc: mustParseFile(`
 			name: "test.proto"
-			package: ""
 			message_type: [{
 				name: "M"
 				field: [{name:"F" number:1 label:LABEL_OPTIONAL type_name:"E"}]
@@ -258,7 +250,6 @@ func TestNewFile(t *testing.T) {
 		`),
 		wantDesc: mustParseFile(`
 			name: "test.proto"
-			package: ""
 			message_type: [{
 				name: "M"
 				field: [{name:"F" number:1 label:LABEL_OPTIONAL type:TYPE_ENUM type_name:".M.E"}]
@@ -389,7 +380,6 @@ func TestNewFile(t *testing.T) {
 		label: "namespace conflict on enum value",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			enum_type: [{
 				name: "foo"
 				value: [{name:"foo" number:0}]
@@ -400,7 +390,6 @@ func TestNewFile(t *testing.T) {
 		label: "no namespace conflict on message field",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{
 				name: "foo"
 				field: [{name:"foo" number:1 label:LABEL_OPTIONAL type:TYPE_STRING}]
@@ -410,7 +399,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid name",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name: "$"}]
 		`),
 		wantErr: `descriptor "" has an invalid nested name: "$"`,
@@ -418,7 +406,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid empty enum",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{name:"E"}]}]
 		`),
 		wantErr: `enum "M.E" must contain at least one value declaration`,
@@ -426,7 +413,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid enum value without number",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{name:"E" value:[{name:"one"}]}]}]
 		`),
 		wantErr: `enum value "M.one" must have a specified number`,
@@ -434,14 +420,12 @@ func TestNewFile(t *testing.T) {
 		label: "valid enum",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{name:"E" value:[{name:"one" number:1}]}]}]
 		`),
 	}, {
 		label: "invalid enum reserved names",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:          "E"
 				reserved_name: [""]
@@ -455,7 +439,6 @@ func TestNewFile(t *testing.T) {
 		label: "duplicate enum reserved names",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:          "E"
 				reserved_name: ["foo", "foo"]
@@ -466,7 +449,6 @@ func TestNewFile(t *testing.T) {
 		label: "valid enum reserved names",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:          "E"
 				reserved_name: ["foo", "bar"]
@@ -477,7 +459,6 @@ func TestNewFile(t *testing.T) {
 		label: "use of enum reserved names",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:          "E"
 				reserved_name: ["foo", "bar"]
@@ -489,7 +470,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid enum reserved ranges",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:           "E"
 				reserved_range: [{start:5 end:4}]
@@ -500,7 +480,6 @@ func TestNewFile(t *testing.T) {
 		label: "overlapping enum reserved ranges",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:           "E"
 				reserved_range: [{start:1 end:1000}, {start:10 end:100}]
@@ -511,7 +490,6 @@ func TestNewFile(t *testing.T) {
 		label: "valid enum reserved names",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:           "E"
 				reserved_range: [{start:1 end:10}, {start:100 end:1000}]
@@ -522,7 +500,6 @@ func TestNewFile(t *testing.T) {
 		label: "use of enum reserved range",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:           "E"
 				reserved_range: [{start:1 end:10}, {start:100 end:1000}]
@@ -534,7 +511,6 @@ func TestNewFile(t *testing.T) {
 		label: "unused enum alias feature",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:    "E"
 				value:   [{name:"baz" number:500}]
@@ -546,7 +522,6 @@ func TestNewFile(t *testing.T) {
 		label: "enum number conflicts",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:  "E"
 				value: [{name:"foo" number:0}, {name:"bar" number:1}, {name:"baz" number:1}]
@@ -557,7 +532,6 @@ func TestNewFile(t *testing.T) {
 		label: "aliased enum numbers",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:    "E"
 				value:   [{name:"foo" number:0}, {name:"bar" number:1}, {name:"baz" number:1}]
@@ -569,7 +543,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:  "E"
 				value: [{name:"baz" number:500}]
@@ -581,7 +554,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:  "E"
 				value: [{name:"baz" number:0}]
@@ -592,7 +564,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:  "E"
 				value: [{name:"e_Foo" number:0}, {name:"fOo" number:1}]
@@ -603,7 +574,6 @@ func TestNewFile(t *testing.T) {
 		label: "proto2 enum has name prefix check",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:  "E"
 				value: [{name:"e_Foo" number:0}, {name:"fOo" number:1}]
@@ -614,7 +584,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:  "E"
 				value: [{name:"e_Foo" number:0}, {name:"fOo" number:0}]
@@ -626,7 +595,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" enum_type:[{
 				name:    "E"
 				value:   [{name:"e_Foo" number:0}, {name:"fOo" number:0}]
@@ -637,7 +605,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid message reserved names",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:          "M"
 				reserved_name: ["$"]
@@ -650,7 +617,6 @@ func TestNewFile(t *testing.T) {
 		label: "valid message reserved names",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:          "M"
 				reserved_name: ["foo", "bar"]
@@ -662,7 +628,6 @@ func TestNewFile(t *testing.T) {
 		label: "valid message reserved names",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:          "M"
 				reserved_name: ["foo", "bar"]
@@ -674,7 +639,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid reserved number",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:           "M"
 				reserved_range: [{start:1 end:1}]
@@ -686,7 +650,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid reserved ranges",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:           "M"
 				reserved_range: [{start:2 end:2}]
@@ -698,7 +661,6 @@ func TestNewFile(t *testing.T) {
 		label: "overlapping reserved ranges",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:           "M"
 				reserved_range: [{start:1 end:10}, {start:2 end:9}]
@@ -710,7 +672,6 @@ func TestNewFile(t *testing.T) {
 		label: "use of reserved message field number",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:           "M"
 				reserved_range: [{start:10 end:20}, {start:20 end:30}, {start:30 end:31}]
@@ -722,7 +683,6 @@ func TestNewFile(t *testing.T) {
 		label: "invalid extension ranges",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:            "M"
 				extension_range: [{start:-500 end:2}]
@@ -734,7 +694,6 @@ func TestNewFile(t *testing.T) {
 		label: "overlapping reserved and extension ranges",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:            "M"
 				reserved_range:  [{start:15 end:20}, {start:1 end:3}, {start:7 end:10}]
@@ -746,7 +705,6 @@ func TestNewFile(t *testing.T) {
 		label: "message field conflicting number",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:            "M"
 				field: [
@@ -761,7 +719,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:    "M"
 				options: {message_set_wire_format:true}
@@ -778,7 +735,6 @@ func TestNewFile(t *testing.T) {
 		label: "valid MessageSet",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:            "M"
 				extension_range: [{start:1 end:100000}]
@@ -797,7 +753,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:            "M"
 				extension_range: [{start:1 end:100000}]
@@ -809,7 +764,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name: "M"
 				field: [
@@ -824,7 +778,6 @@ func TestNewFile(t *testing.T) {
 		inDesc: mustParseFile(`
 			syntax:  "proto3"
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name:       "M"
 				field:      [{name:"_b_a_z_" number:1 label:LABEL_OPTIONAL type:TYPE_STRING oneof_index:0}]
@@ -835,7 +788,6 @@ func TestNewFile(t *testing.T) {
 		label: "proto2 message fields with no conflict",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			message_type: [{name:"M" nested_type:[{
 				name: "M"
 				field: [
@@ -848,7 +800,6 @@ func TestNewFile(t *testing.T) {
 		label: "proto3 message with unresolved enum",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			syntax:  "proto3"
 			message_type: [{
 				name: "M"
@@ -867,14 +818,12 @@ func TestNewFile(t *testing.T) {
 		label: "empty service",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			service: [{name:"service"}]
 		`),
 	}, {
 		label: "service with method with unresolved",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			service: [{
 				name: "service"
 				method: [{
@@ -893,7 +842,6 @@ func TestNewFile(t *testing.T) {
 		},
 		inDesc: mustParseFile(`
 			name:    "test.proto"
-			package: ""
 			dependency: ["proto2_enum.proto", "proto3_message.proto"]
 			service: [{
 				name: "service"
