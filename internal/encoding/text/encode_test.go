@@ -394,17 +394,19 @@ func TestEncodeStrings(t *testing.T) {
 			// String that has as few escaped characters as possible.
 			in: func() string {
 				var b []byte
-				for i := 0; i < utf8.RuneSelf; i++ {
+				for i := rune(0); i <= 0x00a0; i++ {
 					switch i {
 					case 0, '\\', '\n', '\'': // these must be escaped, so ignore them
 					default:
-						b = append(b, byte(i))
+						var r [utf8.UTFMax]byte
+						n := utf8.EncodeRune(r[:], i)
+						b = append(b, r[:n]...)
 					}
 				}
 				return string(b)
 			}(),
-			wantOut:      `"\x01\x02\x03\x04\x05\x06\x07\x08\t\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_` + "`abcdefghijklmnopqrstuvwxyz{|}~\\x7f\"",
-			wantOutASCII: `"\x01\x02\x03\x04\x05\x06\x07\x08\t\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_` + "`abcdefghijklmnopqrstuvwxyz{|}~\\x7f\"",
+			wantOut:      `"\x01\x02\x03\x04\x05\x06\x07\x08\t\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_` + "`" + `abcdefghijklmnopqrstuvwxyz{|}~\x7f\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f` + "\u00a0" + `"`,
+			wantOutASCII: `"\x01\x02\x03\x04\x05\x06\x07\x08\t\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_` + "`" + `abcdefghijklmnopqrstuvwxyz{|}~\x7f\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f\u00a0"`,
 		},
 		{
 			// Valid UTF-8 wire encoding of the RuneError rune.

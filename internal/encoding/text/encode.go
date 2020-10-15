@@ -141,7 +141,7 @@ func appendString(out []byte, in string, outputASCII bool) []byte {
 				out = strconv.AppendUint(out, uint64(r), 16)
 			}
 			in = in[n:]
-		case outputASCII && r >= utf8.RuneSelf:
+		case r >= utf8.RuneSelf && (outputASCII || r <= 0x009f):
 			out = append(out, '\\')
 			if r <= math.MaxUint16 {
 				out = append(out, 'u')
