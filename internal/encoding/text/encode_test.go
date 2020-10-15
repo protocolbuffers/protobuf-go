@@ -403,8 +403,8 @@ func TestEncodeStrings(t *testing.T) {
 				}
 				return string(b)
 			}(),
-			wantOut:      `"\x01\x02\x03\x04\x05\x06\x07\x08\t\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_` + "`abcdefghijklmnopqrstuvwxyz{|}~\x7f\"",
-			wantOutASCII: `"\x01\x02\x03\x04\x05\x06\x07\x08\t\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_` + "`abcdefghijklmnopqrstuvwxyz{|}~\x7f\"",
+			wantOut:      `"\x01\x02\x03\x04\x05\x06\x07\x08\t\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_` + "`abcdefghijklmnopqrstuvwxyz{|}~\\x7f\"",
+			wantOutASCII: `"\x01\x02\x03\x04\x05\x06\x07\x08\t\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_` + "`abcdefghijklmnopqrstuvwxyz{|}~\\x7f\"",
 		},
 		{
 			// Valid UTF-8 wire encoding of the RuneError rune.
@@ -481,6 +481,11 @@ func TestEncodeStrings(t *testing.T) {
 			in:           "\x0f",
 			wantOut:      `"\x0f"`,
 			wantOutASCII: `"\x0f"`,
+		},
+		{
+			in:           "\x7f",
+			wantOut:      `"\x7f"`,
+			wantOutASCII: `"\x7f"`,
 		},
 		{
 			in:           "\xff",
