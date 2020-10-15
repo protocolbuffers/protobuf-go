@@ -7,8 +7,8 @@
 package weakdeps
 
 import (
-	// Ensure that any program using "github.com/golang/protobuf"
-	// uses a version that wraps this module so that there is a
-	// unified view on what protobuf types are globally registered.
-	_ "github.com/golang/protobuf/proto"
+// Ensure that any program using "github.com/golang/protobuf"
+// uses a version that wraps this module so that there is a
+// unified view on what protobuf types are globally registered.
+// _ "github.com/golang/protobuf/proto" // TODO: add this back
 )
