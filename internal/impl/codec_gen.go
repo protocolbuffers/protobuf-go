@@ -4935,11 +4935,11 @@ func consumeString(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, 
 	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return out, errDecode
 	}
-	*p.String() = v
+	*p.String() = string(v)
 	out.n = n
 	return out, nil
 }
@@ -4967,14 +4967,14 @@ func consumeStringValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *code
 	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return out, errDecode
 	}
-	if !utf8.ValidString(v) {
+	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
-	*p.String() = v
+	*p.String() = string(v)
 	out.n = n
 	return out, nil
 }
@@ -5058,7 +5058,7 @@ func consumeStringPtr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInf
 	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return out, errDecode
 	}
@@ -5066,7 +5066,7 @@ func consumeStringPtr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInf
 	if *vp == nil {
 		*vp = new(string)
 	}
-	**vp = v
+	**vp = string(v)
 	out.n = n
 	return out, nil
 }
@@ -5095,18 +5095,18 @@ func consumeStringPtrValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *c
 	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return out, errDecode
 	}
-	if !utf8.ValidString(v) {
+	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
 	vp := p.StringPtr()
 	if *vp == nil {
 		*vp = new(string)
 	}
-	**vp = v
+	**vp = string(v)
 	out.n = n
 	return out, nil
 }
@@ -5143,11 +5143,11 @@ func consumeStringSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldI
 	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return out, errDecode
 	}
-	*sp = append(*sp, v)
+	*sp = append(*sp, string(v))
 	out.n = n
 	return out, nil
 }
@@ -5177,15 +5177,15 @@ func consumeStringSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f 
 	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return out, errDecode
 	}
-	if !utf8.ValidString(v) {
+	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
 	sp := p.StringSlice()
-	*sp = append(*sp, v)
+	*sp = append(*sp, string(v))
 	out.n = n
 	return out, nil
 }
@@ -5214,7 +5214,7 @@ func consumeStringValue(b []byte, _ protoreflect.Value, _ protowire.Number, wtyp
 	if wtyp != protowire.BytesType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return protoreflect.Value{}, out, errDecode
 	}
@@ -5244,11 +5244,11 @@ func consumeStringValueValidateUTF8(b []byte, _ protoreflect.Value, _ protowire.
 	if wtyp != protowire.BytesType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return protoreflect.Value{}, out, errDecode
 	}
-	if !utf8.ValidString(v) {
+	if !utf8.Valid(v) {
 		return protoreflect.Value{}, out, errInvalidUTF8{}
 	}
 	out.n = n
@@ -5289,7 +5289,7 @@ func consumeStringSliceValue(b []byte, listv protoreflect.Value, _ protowire.Num
 	if wtyp != protowire.BytesType {
 		return protoreflect.Value{}, out, errUnknown
 	}
-	v, n := protowire.ConsumeString(b)
+	v, n := protowire.ConsumeBytes(b)
 	if n < 0 {
 		return protoreflect.Value{}, out, errDecode
 	}

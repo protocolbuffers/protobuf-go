@@ -69,9 +69,7 @@ b = protowire.Append{{.WireType}}(b, {{.FromValue}})
 {{- end -}}
 
 {{- define "Consume" -}}
-{{- if eq .Name "String" -}}
-v, n := protowire.ConsumeString(b)
-{{- else if eq .WireType "Varint" -}}
+{{- if eq .WireType "Varint" -}}
 var v uint64
 var n int
 if len(b) >= 1 && b[0] < 0x80 {
@@ -149,7 +147,7 @@ func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *c
 	if n < 0 {
 		return out, errDecode
 	}
-	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
@@ -237,7 +235,7 @@ func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp protowire.Type
 	if n < 0 {
 		return out, errDecode
 	}
-	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
@@ -321,7 +319,7 @@ func consume{{.Name}}PtrValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f
 	if n < 0 {
 		return out, errDecode
 	}
-	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
 	vp := p.{{.GoType.PointerMethod}}Ptr()
@@ -429,7 +427,7 @@ func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type,
 	if n < 0 {
 		return out, errDecode
 	}
-	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
+	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
 	sp := p.{{.GoType.PointerMethod}}Slice()
@@ -553,7 +551,7 @@ func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ protowi
 	if n < 0 {
 		return protoreflect.Value{}, out, errDecode
 	}
-	if !utf8.ValidString(v) {
+	if !utf8.Valid(v) {
 		return protoreflect.Value{}, out, errInvalidUTF8{}
 	}
 	out.n = n

@@ -239,7 +239,7 @@ var ProtoKinds = []ProtoKind{
 		ToValue:    "protoreflect.ValueOfString(string(v))",
 		FromValue:  "v.String()",
 		GoType:     GoString,
-		ToGoType:   "v",
+		ToGoType:   "string(v)",
 		FromGoType: "v",
 	},
 	{
