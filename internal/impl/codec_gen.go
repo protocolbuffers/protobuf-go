@@ -5174,7 +5174,6 @@ func appendStringSliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ mar
 
 // consumeStringSliceValidateUTF8 wire decodes a []string pointer as a repeated String.
 func consumeStringSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	sp := p.StringSlice()
 	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
@@ -5185,6 +5184,7 @@ func consumeStringSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f 
 	if !utf8.ValidString(v) {
 		return out, errInvalidUTF8{}
 	}
+	sp := p.StringSlice()
 	*sp = append(*sp, v)
 	out.n = n
 	return out, nil
@@ -5514,7 +5514,6 @@ func appendBytesSliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ mars
 
 // consumeBytesSliceValidateUTF8 wire decodes a [][]byte pointer as a repeated Bytes.
 func consumeBytesSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	sp := p.BytesSlice()
 	if wtyp != protowire.BytesType {
 		return out, errUnknown
 	}
@@ -5525,6 +5524,7 @@ func consumeBytesSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
+	sp := p.BytesSlice()
 	*sp = append(*sp, append(emptyBuf[:], v...))
 	out.n = n
 	return out, nil

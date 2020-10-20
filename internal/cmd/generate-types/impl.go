@@ -422,7 +422,6 @@ func append{{.Name}}SliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, _ 
 
 // consume{{.Name}}SliceValidateUTF8 wire decodes a []{{.GoType}} pointer as a repeated {{.Name}}.
 func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, _ unmarshalOptions) (out unmarshalOutput, err error) {
-	sp := p.{{.GoType.PointerMethod}}Slice()
 	if wtyp != {{.WireType.Expr}} {
 		return out, errUnknown
 	}
@@ -433,6 +432,7 @@ func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type,
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
 		return out, errInvalidUTF8{}
 	}
+	sp := p.{{.GoType.PointerMethod}}Slice()
 	*sp = append(*sp, {{.ToGoType}})
 	out.n = n
 	return out, nil
