@@ -24,19 +24,23 @@ import (
 
 var (
 	run      bool
+	outfile  string
 	repoRoot string
 )
 
 func main() {
 	flag.BoolVar(&run, "execute", false, "Write generated files to destination.")
+	flag.StringVar(&outfile, "outfile", "", "Write this specific file to stdout.")
 	flag.Parse()
 
 	// Determine repository root path.
-	out, err := exec.Command("git", "rev-parse", "--show-toplevel").CombinedOutput()
-	check(err)
-	repoRoot = strings.TrimSpace(string(out))
+	if outfile == "" {
+		out, err := exec.Command("git", "rev-parse", "--show-toplevel").CombinedOutput()
+		check(err)
+		repoRoot = strings.TrimSpace(string(out))
+		chdirRoot()
+	}
 
-	chdirRoot()
 	writeSource("internal/filedesc/desc_list_gen.go", generateDescListTypes())
 	writeSource("internal/impl/codec_gen.go", generateImplCodec())
 	writeSource("internal/impl/message_reflect_gen.go", generateImplMessage())
@@ -233,6 +237,13 @@ func writeSource(file, src string) {
 		// Just print the error and output the unformatted file for examination.
 		fmt.Fprintf(os.Stderr, "%v:%v\n", file, err)
 		b = []byte(s)
+	}
+
+	if outfile != "" {
+		if outfile == file {
+			os.Stdout.Write(b)
+		}
+		return
 	}
 
 	absFile := filepath.Join(repoRoot, file)
