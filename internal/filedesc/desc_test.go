@@ -600,7 +600,7 @@ func checkAccessors(t *testing.T, p string, rv reflect.Value, want map[string]in
 }
 
 func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
-	const want = `FileDescriptor{
+	const wantFileDescriptor = `FileDescriptor{
 	Syntax:  proto2
 	Path:    "path/to/file.proto"
 	Package: test
@@ -763,11 +763,72 @@ func testFileFormat(t *testing.T, fd pref.FileDescriptor) {
 		}]
 	}]
 }`
-	tests := []struct{ fmt, want string }{{"%v", compactMultiFormat(want)}, {"%+v", want}}
+
+	const wantEnums = `Enums{{
+	Name: E1
+	Values: [
+		{Name: FOO}
+		{Name: BAR, Number: 1}
+	]
+	ReservedNames:  [FIZZ, BUZZ]
+	ReservedRanges: [10:20, 30]
+}}`
+
+	const wantExtensions = `Extensions{{
+	Name:        X
+	Number:      1000
+	Cardinality: repeated
+	Kind:        enum
+	JSONName:    "[test.X]"
+	IsExtension: true
+	IsPacked:    true
+	IsList:      true
+	Extendee:    test.B
+	Enum:        test.E1
+}}`
+
+	const wantImports = `FileImports{}`
+
+	const wantReservedNames = "Names{fizz, buzz}"
+
+	const wantReservedRanges = "FieldRanges{100:200, 300}"
+
+	const wantServices = `Services{{
+	Name: S
+	Methods: [{
+		Name:              M
+		Input:             test.A
+		Output:            test.C.A
+		IsStreamingClient: true
+		IsStreamingServer: true
+	}]
+}}`
+
+	tests := []struct {
+		path string
+		fmt  string
+		want string
+		val  interface{}
+	}{
+		{"fd", "%v", compactMultiFormat(wantFileDescriptor), fd},
+		{"fd", "%+v", wantFileDescriptor, fd},
+		{"fd.Enums()", "%v", compactMultiFormat(wantEnums), fd.Enums()},
+		{"fd.Enums()", "%+v", wantEnums, fd.Enums()},
+		{"fd.Extensions()", "%v", compactMultiFormat(wantExtensions), fd.Extensions()},
+		{"fd.Extensions()", "%+v", wantExtensions, fd.Extensions()},
+		{"fd.Imports()", "%v", compactMultiFormat(wantImports), fd.Imports()},
+		{"fd.Imports()", "%+v", wantImports, fd.Imports()},
+		{"fd.Messages(B).ReservedNames()", "%v", compactMultiFormat(wantReservedNames), fd.Messages().ByName("B").ReservedNames()},
+		{"fd.Messages(B).ReservedNames()", "%+v", wantReservedNames, fd.Messages().ByName("B").ReservedNames()},
+		{"fd.Messages(B).ReservedRanges()", "%v", compactMultiFormat(wantReservedRanges), fd.Messages().ByName("B").ReservedRanges()},
+		{"fd.Messages(B).ReservedRanges()", "%+v", wantReservedRanges, fd.Messages().ByName("B").ReservedRanges()},
+		{"fd.Services()", "%v", compactMultiFormat(wantServices), fd.Services()},
+		{"fd.Services()", "%+v", wantServices, fd.Services()},
+	}
 	for _, tt := range tests {
-		got := fmt.Sprintf(tt.fmt, fd)
+		got := fmt.Sprintf(tt.fmt, tt.val)
 		if diff := cmp.Diff(got, tt.want); diff != "" {
-			t.Errorf("fmt.Sprintf(%q, fd) mismatch (-got +want):\n%s", tt.fmt, diff)
+			t.Errorf("fmt.Sprintf(%q, %s) mismatch (-got +want):\n%s", tt.fmt, tt.path, diff)
 		}
 	}
 }
