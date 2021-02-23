@@ -27,14 +27,30 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
+// conflictPolicy configures the policy for handling registration conflicts.
+//
+// It can be over-written at compile time with a linker-initialized variable:
+//	go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn"
+//
+// It can be over-written at program execution with an environment variable:
+//	GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn ./main
+//
+// Neither of the above are covered by the compatibility promise and
+// may be removed in a future release of this module.
+var conflictPolicy = "panic" // "panic" | "warn" | "ignore"
+
 // ignoreConflict reports whether to ignore a registration conflict
 // given the descriptor being registered and the error.
 // It is a variable so that the behavior is easily overridden in another file.
 var ignoreConflict = func(d protoreflect.Descriptor, err error) bool {
 	const env = "GOLANG_PROTOBUF_REGISTRATION_CONFLICT"
 	const faq = "https://developers.google.com/protocol-buffers/docs/reference/go/faq#namespace-conflict"
-	switch os.Getenv(env) {
-	case "panic", "":
+	policy := conflictPolicy
+	if v := os.Getenv(env); v != "" {
+		policy = v
+	}
+	switch policy {
+	case "panic":
 		panic(fmt.Sprintf("%v\nSee %v\n", err, faq))
 	case "warn":
 		fmt.Fprintf(os.Stderr, "WARNING: %v\nSee %v\n\n", err, faq)
