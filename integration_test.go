@@ -180,25 +180,6 @@ func mustInitDeps(t *testing.T) {
 	testDir := filepath.Join(repoRoot, ".cache")
 	check(os.MkdirAll(testDir, 0775))
 
-	// Travis-CI has a hard-coded timeout where it kills the test after
-	// 10 minutes of a lack of activity on stdout.
-	// We work around this restriction by periodically printing the timestamp.
-	ticker := time.NewTicker(5 * time.Minute)
-	done := make(chan struct{})
-	go func() {
-		now := time.Now()
-		for {
-			select {
-			case t := <-ticker.C:
-				fmt.Printf("\tt=%0.fmin\n", t.Sub(now).Minutes())
-			case <-done:
-				return
-			}
-		}
-	}()
-	defer close(done)
-	defer ticker.Stop()
-
 	// Delete the current directory if non-empty,
 	// which only occurs if a dependency failed to initialize properly.
 	var workingDir string
@@ -295,7 +276,7 @@ func mustInitDeps(t *testing.T) {
 	registerBinary("staticcheck", filepath.Join(checkDir, "staticcheck"))
 	finishWork()
 
-	// Travis-CI sets GOROOT, which confuses invocations of the Go toolchain.
+	// GitHub actions sets GOROOT, which confuses invocations of the Go toolchain.
 	// Explicitly clear GOROOT, so each toolchain uses their default GOROOT.
 	check(os.Unsetenv("GOROOT"))
 
