@@ -21,6 +21,8 @@ import (
 	"google.golang.org/protobuf/internal/version"
 )
 
+const grpcDocURL = "https://grpc.io/docs/languages/go/quickstart/#regenerate-grpc-code"
+
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "--version" {
 		fmt.Fprintf(os.Stdout, "%v %v\n", filepath.Base(os.Args[0]), version.String())
@@ -28,18 +30,15 @@ func main() {
 	}
 
 	var (
-		flags        flag.FlagSet
-		plugins      = flags.String("plugins", "", "deprecated option")
-		importPrefix = flags.String("import_prefix", "", "deprecated option")
+		flags   flag.FlagSet
+		plugins = flags.String("plugins", "", "deprecated option")
 	)
 	protogen.Options{
 		ParamFunc: flags.Set,
 	}.Run(func(gen *protogen.Plugin) error {
 		if *plugins != "" {
-			return errors.New("protoc-gen-go: plugins are not supported; use 'protoc --go-grpc_out=...' to generate gRPC")
-		}
-		if *importPrefix != "" {
-			return errors.New("protoc-gen-go: import_prefix is not supported")
+			return errors.New("protoc-gen-go: plugins are not supported; use 'protoc --go-grpc_out=...' to generate gRPC\n\n" +
+				"See " + grpcDocURL + " for more information.")
 		}
 		for _, f := range gen.Files {
 			if f.Generate {

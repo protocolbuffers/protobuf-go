@@ -18,10 +18,6 @@ import (
 	"google.golang.org/protobuf/types/pluginpb"
 )
 
-func init() {
-	warnings = false // avoid spam in tests
-}
-
 func TestPluginParameters(t *testing.T) {
 	var flags flag.FlagSet
 	value := flags.Int("integer", 0, "")
@@ -58,32 +54,35 @@ func TestPluginParameterErrors(t *testing.T) {
 }
 
 func TestNoGoPackage(t *testing.T) {
-	gen, err := Options{}.New(&pluginpb.CodeGeneratorRequest{
+	_, err := Options{}.New(&pluginpb.CodeGeneratorRequest{
 		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
 				Name:    proto.String("testdata/go_package/no_go_package.proto"),
 				Syntax:  proto.String(protoreflect.Proto3.String()),
 				Package: proto.String("goproto.testdata"),
 			},
+		},
+	})
+	if err == nil {
+		t.Fatalf("missing go_package option: New(req) = nil, want error")
+	}
+}
+
+func TestInvalidImportPath(t *testing.T) {
+	_, err := Options{}.New(&pluginpb.CodeGeneratorRequest{
+		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
-				Name:       proto.String("testdata/go_package/no_go_package_import.proto"),
-				Syntax:     proto.String(protoreflect.Proto3.String()),
-				Package:    proto.String("goproto.testdata"),
-				Dependency: []string{"testdata/go_package/no_go_package.proto"},
+				Name:    proto.String("testdata/go_package/no_go_package.proto"),
+				Syntax:  proto.String(protoreflect.Proto3.String()),
+				Package: proto.String("goproto.testdata"),
+				Options: &descriptorpb.FileOptions{
+					GoPackage: proto.String("foo"),
+				},
 			},
 		},
 	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	for i, f := range gen.Files {
-		if got, want := string(f.GoPackageName), "goproto_testdata"; got != want {
-			t.Errorf("gen.Files[%d].GoPackageName = %v, want %v", i, got, want)
-		}
-		if got, want := string(f.GoImportPath), "testdata/go_package"; got != want {
-			t.Errorf("gen.Files[%d].GoImportPath = %v, want %v", i, got, want)
-		}
+	if err == nil {
+		t.Fatalf("missing go_package option: New(req) = nil, want error")
 	}
 }
 
@@ -102,13 +101,6 @@ func TestPackageNamesAndPaths(t *testing.T) {
 		wantFilename    string
 	}{
 		{
-			desc:            "no parameters, no go_package option",
-			generate:        true,
-			wantPackageName: "proto_package",
-			wantImportPath:  "dir",
-			wantFilename:    "dir/filename",
-		},
-		{
 			desc:            "go_package option sets import path",
 			goPackageOption: "golang.org/x/foo",
 			generate:        true,
@@ -125,21 +117,13 @@ func TestPackageNamesAndPaths(t *testing.T) {
 			wantFilename:    "golang.org/x/foo/filename",
 		},
 		{
-			desc:            "go_package option sets package",
-			goPackageOption: "foo",
-			generate:        true,
-			wantPackageName: "foo",
-			wantImportPath:  "dir",
-			wantFilename:    "dir/filename",
-		},
-		{
 			desc:            "command line sets import path for a file",
 			parameter:       "Mdir/filename.proto=golang.org/x/bar",
 			goPackageOption: "golang.org/x/foo",
 			generate:        true,
 			wantPackageName: "foo",
 			wantImportPath:  "golang.org/x/bar",
-			wantFilename:    "golang.org/x/foo/filename",
+			wantFilename:    "golang.org/x/bar/filename",
 		},
 		{
 			desc:            "command line sets import path for a file with package name specified",
@@ -148,25 +132,7 @@ func TestPackageNamesAndPaths(t *testing.T) {
 			generate:        true,
 			wantPackageName: "bar",
 			wantImportPath:  "golang.org/x/bar",
-			wantFilename:    "golang.org/x/foo/filename",
-		},
-		{
-			desc:            "import_path parameter sets import path of generated files",
-			parameter:       "import_path=golang.org/x/bar",
-			goPackageOption: "golang.org/x/foo",
-			generate:        true,
-			wantPackageName: "foo",
-			wantImportPath:  "golang.org/x/bar",
-			wantFilename:    "golang.org/x/foo/filename",
-		},
-		{
-			desc:            "import_path parameter does not set import path of dependencies",
-			parameter:       "import_path=golang.org/x/bar",
-			goPackageOption: "golang.org/x/foo",
-			generate:        false,
-			wantPackageName: "foo",
-			wantImportPath:  "golang.org/x/foo",
-			wantFilename:    "golang.org/x/foo/filename",
+			wantFilename:    "golang.org/x/bar/filename",
 		},
 		{
 			desc:            "module option set",
@@ -190,7 +156,7 @@ func TestPackageNamesAndPaths(t *testing.T) {
 			desc:            "module option implies paths=import",
 			parameter:       "module=golang.org/x,Mdir/filename.proto=golang.org/x/foo",
 			generate:        false,
-			wantPackageName: "proto_package",
+			wantPackageName: "foo",
 			wantImportPath:  "golang.org/x/foo",
 			wantFilename:    "foo/filename",
 		},
@@ -245,6 +211,7 @@ TEST: %v
 
 func TestPackageNameInference(t *testing.T) {
 	gen, err := Options{}.New(&pluginpb.CodeGeneratorRequest{
+		Parameter: proto.String("Mdir/file1.proto=path/to/file1"),
 		ProtoFile: []*descriptorpb.FileDescriptorProto{
 			{
 				Name:    proto.String("dir/file1.proto"),
@@ -254,7 +221,7 @@ func TestPackageNameInference(t *testing.T) {
 				Name:    proto.String("dir/file2.proto"),
 				Package: proto.String("proto.package"),
 				Options: &descriptorpb.FileOptions{
-					GoPackage: proto.String("foo"),
+					GoPackage: proto.String("path/to/file2"),
 				},
 			},
 		},
@@ -265,7 +232,7 @@ func TestPackageNameInference(t *testing.T) {
 	}
 	if f1, ok := gen.FilesByPath["dir/file1.proto"]; !ok {
 		t.Errorf("missing file info for dir/file1.proto")
-	} else if f1.GoPackageName != "foo" {
+	} else if f1.GoPackageName != "file1" {
 		t.Errorf("dir/file1.proto: GoPackageName=%v, want foo; package name should be derived from dir/file2.proto", f1.GoPackageName)
 	}
 }

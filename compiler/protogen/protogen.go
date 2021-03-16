@@ -20,7 +20,6 @@ import (
 	"go/token"
 	"go/types"
 	"io/ioutil"
-	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -164,8 +163,6 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 
 	packageNames := make(map[string]GoPackageName) // filename -> package name
 	importPaths := make(map[string]GoImportPath)   // filename -> import path
-	mfiles := make(map[string]bool)                // filename set
-	var packageImportPath GoImportPath
 	for _, param := range strings.Split(req.GetParameter(), ",") {
 		var value string
 		if i := strings.Index(param, "="); i >= 0 {
@@ -175,8 +172,6 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 		switch param {
 		case "":
 			// Ignore.
-		case "import_path":
-			packageImportPath = GoImportPath(value)
 		case "module":
 			gen.module = value
 		case "paths":
@@ -198,16 +193,13 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 			}
 		default:
 			if param[0] == 'M' {
-				if i := strings.Index(value, ";"); i >= 0 {
-					pkgName := GoPackageName(value[i+1:])
-					if otherName, ok := packageNames[param[1:]]; ok && pkgName != otherName {
-						return nil, fmt.Errorf("inconsistent package names for %q: %q != %q", value[:i], pkgName, otherName)
-					}
+				impPath, pkgName := splitImportPathAndPackageName(value)
+				if pkgName != "" {
 					packageNames[param[1:]] = pkgName
-					value = value[:i]
 				}
-				importPaths[param[1:]] = GoImportPath(value)
-				mfiles[param[1:]] = true
+				if impPath != "" {
+					importPaths[param[1:]] = impPath
+				}
 				continue
 			}
 			if opts.ParamFunc != nil {
@@ -217,17 +209,11 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 			}
 		}
 	}
-	if gen.module != "" {
-		// When the module= option is provided, we strip the module name
-		// prefix from generated files. This only makes sense if generated
-		// filenames are based on the import path, so default to paths=import
-		// and complain if source_relative was selected manually.
-		switch gen.pathType {
-		case pathTypeLegacy:
-			gen.pathType = pathTypeImport
-		case pathTypeSourceRelative:
-			return nil, fmt.Errorf("cannot use module= with paths=source_relative")
-		}
+	// When the module= option is provided, we strip the module name
+	// prefix from generated files. This only makes sense if generated
+	// filenames are based on the import path.
+	if gen.module != "" && gen.pathType == pathTypeSourceRelative {
+		return nil, fmt.Errorf("cannot use module= with paths=source_relative")
 	}
 
 	// Figure out the import path and package name for each file.
@@ -242,119 +228,52 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 	//
 	//     option go_package = "google.golang.org/protobuf/types/known/anypb";
 	//
-	// Build systems which want to exert full control over import paths may
-	// specify M<filename>=<import_path> flags.
-	//
-	// Other approaches are not recommend.
-	generatedFileNames := make(map[string]bool)
-	for _, name := range gen.Request.FileToGenerate {
-		generatedFileNames[name] = true
-	}
-	// We need to determine the import paths before the package names,
-	// because the Go package name for a file is sometimes derived from
-	// different file in the same package.
-	packageNameForImportPath := make(map[GoImportPath]GoPackageName)
+	// Alternatively, build systems which want to exert full control over
+	// import paths may specify M<filename>=<import_path> flags.
 	for _, fdesc := range gen.Request.ProtoFile {
+		// The "M" command-line flags take precedence over
+		// the "go_package" option in the .proto source file.
 		filename := fdesc.GetName()
-		packageName, importPath := goPackageOption(fdesc)
-		switch {
-		case importPaths[filename] != "":
-			// Command line: Mfoo.proto=quux/bar
-			//
-			// Explicit mapping of source file to import path.
-		case generatedFileNames[filename] && packageImportPath != "":
-			// Command line: import_path=quux/bar
-			//
-			// The import_path flag sets the import path for every file that
-			// we generate code for.
-			importPaths[filename] = packageImportPath
-		case importPath != "":
-			// Source file: option go_package = "quux/bar";
-			//
-			// The go_package option sets the import path. Most users should use this.
-			importPaths[filename] = importPath
-		default:
-			// Source filename.
-			//
-			// Last resort when nothing else is available.
-			importPaths[filename] = GoImportPath(path.Dir(filename))
+		impPath, pkgName := splitImportPathAndPackageName(fdesc.GetOptions().GetGoPackage())
+		if importPaths[filename] == "" && impPath != "" {
+			importPaths[filename] = impPath
 		}
-		if packageName != "" {
-			packageNameForImportPath[importPaths[filename]] = packageName
-		}
-	}
-	for _, fdesc := range gen.Request.ProtoFile {
-		filename := fdesc.GetName()
-		packageName, importPath := goPackageOption(fdesc)
-		defaultPackageName := packageNameForImportPath[importPaths[filename]]
-		switch {
-		case packageNames[filename] != "":
-			// A package name specified by the "M" command-line argument.
-		case packageName != "":
-			// TODO: For the "M" command-line argument, this means that the
-			// package name can be derived from the go_package option.
-			// Go package information should either consistently come from the
-			// command-line or the .proto source file, but not both.
-			// See how to make this consistent.
-
-			// Source file: option go_package = "quux/bar";
-			packageNames[filename] = packageName
-		case defaultPackageName != "":
-			// A go_package option in another file in the same package.
-			//
-			// This is a poor choice in general, since every source file should
-			// contain a go_package option. Supported mainly for historical
-			// compatibility.
-			packageNames[filename] = defaultPackageName
-		case generatedFileNames[filename] && packageImportPath != "":
-			// Command line: import_path=quux/bar
-			packageNames[filename] = cleanPackageName(path.Base(string(packageImportPath)))
-		case fdesc.GetPackage() != "":
-			// Source file: package quux.bar;
-			packageNames[filename] = cleanPackageName(fdesc.GetPackage())
-		default:
-			// Source filename.
-			packageNames[filename] = cleanPackageName(baseName(filename))
-		}
-
-		goPkgOpt := string(importPaths[filename])
-		if path.Base(string(goPkgOpt)) != string(packageNames[filename]) {
-			goPkgOpt += ";" + string(packageNames[filename])
+		if packageNames[filename] == "" && pkgName != "" {
+			packageNames[filename] = pkgName
 		}
 		switch {
-		case packageImportPath != "":
-			// Command line: import_path=quux/bar
-			warn("Deprecated use of the 'import_path' command-line argument. In %q, please specify:\n"+
-				"\toption go_package = %q;\n"+
-				"A future release of protoc-gen-go will no longer support the 'import_path' argument.\n"+
-				"See "+goPackageDocURL+" for more information.\n"+
-				"\n", fdesc.GetName(), goPkgOpt)
-		case mfiles[filename]:
-			// Command line: M=foo.proto=quux/bar
-		case packageName != "" && importPath == "":
-			// Source file: option go_package = "quux";
-			warn("Deprecated use of 'go_package' option without a full import path in %q, please specify:\n"+
-				"\toption go_package = %q;\n"+
-				"A future release of protoc-gen-go will require the import path be specified.\n"+
-				"See "+goPackageDocURL+" for more information.\n"+
-				"\n", fdesc.GetName(), goPkgOpt)
-		case packageName == "" && importPath == "":
-			// No Go package information provided.
-			dotIdx := strings.Index(goPkgOpt, ".")   // heuristic for top-level domain
-			slashIdx := strings.Index(goPkgOpt, "/") // heuristic for multi-segment path
-			if isFull := 0 <= dotIdx && dotIdx <= slashIdx; isFull {
-				warn("Missing 'go_package' option in %q, please specify:\n"+
-					"\toption go_package = %q;\n"+
-					"A future release of protoc-gen-go will require this be specified.\n"+
-					"See "+goPackageDocURL+" for more information.\n"+
-					"\n", fdesc.GetName(), goPkgOpt)
-			} else {
-				warn("Missing 'go_package' option in %q,\n"+
-					"please specify it with the full Go package path as\n"+
-					"a future release of protoc-gen-go will require this be specified.\n"+
-					"See "+goPackageDocURL+" for more information.\n"+
-					"\n", fdesc.GetName())
+		case importPaths[filename] == "":
+			// The import path must be specified one way or another.
+			return nil, fmt.Errorf(
+				"unable to determine Go import path for %q\n\n"+
+					"Please specify either:\n"+
+					"\t• a \"go_package\" option in the .proto source file, or\n"+
+					"\t• a \"M\" argument on the command line.\n\n"+
+					"See %v for more information.\n",
+				fdesc.GetName(), goPackageDocURL)
+		case !strings.Contains(string(importPaths[filename]), "/"):
+			// Check that import paths contain at least one slash to avoid a
+			// common mistake where import path is confused with package name.
+			return nil, fmt.Errorf(
+				"invalid Go import path %q for %q\n\n"+
+					"The import path must contain at least one forward slash ('/') character.\n\n"+
+					"See %v for more information.\n",
+				string(importPaths[filename]), fdesc.GetName(), goPackageDocURL)
+		case packageNames[filename] == "":
+			// If the package name is not explicitly specified,
+			// then derive a reasonable package name from the import path.
+			//
+			// NOTE: The package name is derived first from the import path in
+			// the "go_package" option (if present) before trying the "M" flag.
+			// The inverted order for this is because the primary use of the "M"
+			// flag is by build systems that have full control over the
+			// import paths all packages, where it is generally expected that
+			// the Go package name still be identical for the Go toolchain and
+			// for custom build systems like Bazel.
+			if impPath == "" {
+				impPath = importPaths[filename]
 			}
+			packageNames[filename] = cleanPackageName(path.Base(string(impPath)))
 		}
 	}
 
@@ -506,12 +425,6 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 		prefix = prefix[:len(prefix)-len(ext)]
 	}
 	switch gen.pathType {
-	case pathTypeLegacy:
-		// The default is to derive the output filename from the Go import path
-		// if the file contains a go_package option,or from the input filename instead.
-		if _, importPath := goPackageOption(p); importPath != "" {
-			prefix = path.Join(string(importPath), path.Base(prefix))
-		}
 	case pathTypeImport:
 		// If paths=import, the output filename is derived from the Go import path.
 		prefix = path.Join(string(f.GoImportPath), path.Base(prefix))
@@ -557,36 +470,13 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 	return f, nil
 }
 
-// goPackageOption interprets a file's go_package option.
-// If there is no go_package, it returns ("", "").
-// If there's a simple name, it returns (pkg, "").
-// If the option implies an import path, it returns (pkg, impPath).
-func goPackageOption(d *descriptorpb.FileDescriptorProto) (pkg GoPackageName, impPath GoImportPath) {
-	opt := d.GetOptions().GetGoPackage()
-	if opt == "" {
-		return "", ""
+// splitImportPathAndPackageName splits off the optional Go package name
+// from the Go import path when seperated by a ';' delimiter.
+func splitImportPathAndPackageName(s string) (GoImportPath, GoPackageName) {
+	if i := strings.Index(s, ";"); i >= 0 {
+		return GoImportPath(s[:i]), GoPackageName(s[i+1:])
 	}
-	rawPkg, impPath := goPackageOptionRaw(opt)
-	pkg = cleanPackageName(rawPkg)
-	if string(pkg) != rawPkg && impPath != "" {
-		warn("Malformed 'go_package' option in %q, please specify:\n"+
-			"\toption go_package = %q;\n"+
-			"A future release of protoc-gen-go will reject this.\n"+
-			"See "+goPackageDocURL+" for more information.\n"+
-			"\n", d.GetName(), string(impPath)+";"+string(pkg))
-	}
-	return pkg, impPath
-}
-func goPackageOptionRaw(opt string) (rawPkg string, impPath GoImportPath) {
-	// A semicolon-delimited suffix delimits the import path and package name.
-	if i := strings.Index(opt, ";"); i >= 0 {
-		return opt[i+1:], GoImportPath(opt[:i])
-	}
-	// The presence of a slash implies there's an import path.
-	if i := strings.LastIndex(opt, "/"); i >= 0 {
-		return opt[i+1:], GoImportPath(opt)
-	}
-	return opt, ""
+	return GoImportPath(s), ""
 }
 
 // An Enum describes an enum.
@@ -1060,7 +950,7 @@ func (g *GeneratedFile) QualifiedGoIdent(ident GoIdent) string {
 	if packageName, ok := g.packageNames[ident.GoImportPath]; ok {
 		return string(packageName) + "." + ident.GoName
 	}
-	packageName := cleanPackageName(baseName(string(ident.GoImportPath)))
+	packageName := cleanPackageName(path.Base(string(ident.GoImportPath)))
 	for i, orig := 1, packageName; g.usedPackageNames[packageName]; i++ {
 		packageName = orig + GoPackageName(strconv.Itoa(i))
 	}
@@ -1307,24 +1197,10 @@ func cleanPackageName(name string) GoPackageName {
 	return GoPackageName(strs.GoSanitized(name))
 }
 
-// baseName returns the last path element of the name, with the last dotted suffix removed.
-func baseName(name string) string {
-	// First, find the last element
-	if i := strings.LastIndex(name, "/"); i >= 0 {
-		name = name[i+1:]
-	}
-	// Now drop the suffix
-	if i := strings.LastIndex(name, "."); i >= 0 {
-		name = name[:i]
-	}
-	return name
-}
-
 type pathType int
 
 const (
-	pathTypeLegacy pathType = iota
-	pathTypeImport
+	pathTypeImport pathType = iota
 	pathTypeSourceRelative
 )
 
@@ -1381,12 +1257,4 @@ func (c Comments) String() string {
 		b = append(b, "\n"...)
 	}
 	return string(b)
-}
-
-var warnings = true
-
-func warn(format string, a ...interface{}) {
-	if warnings {
-		log.Printf("WARNING: "+format, a...)
-	}
 }
