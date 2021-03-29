@@ -11,7 +11,6 @@ package order
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -61,15 +60,6 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_order_order_proto_rawDescGZIP(), []int{0}
-}
-
-var extRange_Message = []protoiface.ExtensionRangeV1{
-	{Start: 30, End: 40},
-}
-
-// Deprecated: Use Message.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message
 }
 
 func (x *Message) GetField_2() string {

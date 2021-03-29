@@ -9,7 +9,6 @@ package messagesetpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -52,15 +51,6 @@ func (x *MessageSet) ProtoReflect() protoreflect.Message {
 // Deprecated: Use MessageSet.ProtoReflect.Descriptor instead.
 func (*MessageSet) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_messageset_messagesetpb_message_set_proto_rawDescGZIP(), []int{0}
-}
-
-var extRange_MessageSet = []protoiface.ExtensionRangeV1{
-	{Start: 4, End: 2147483646},
-}
-
-// Deprecated: Use MessageSet.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*MessageSet) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_MessageSet
 }
 
 type MessageSetContainer struct {

@@ -10,7 +10,6 @@ package test
 import (
 	proto "google.golang.org/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -1327,15 +1326,6 @@ func (*TestAllExtensions) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{4}
 }
 
-var extRange_TestAllExtensions = []protoiface.ExtensionRangeV1{
-	{Start: 1, End: 536870911},
-}
-
-// Deprecated: Use TestAllExtensions.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*TestAllExtensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_TestAllExtensions
-}
-
 type OptionalGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2099,15 +2089,6 @@ func (*TestPackedExtensions) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{14}
 }
 
-var extRange_TestPackedExtensions = []protoiface.ExtensionRangeV1{
-	{Start: 1, End: 536870911},
-}
-
-// Deprecated: Use TestPackedExtensions.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*TestPackedExtensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_TestPackedExtensions
-}
-
 type TestUnpackedExtensions struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -2145,15 +2126,6 @@ func (x *TestUnpackedExtensions) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TestUnpackedExtensions.ProtoReflect.Descriptor instead.
 func (*TestUnpackedExtensions) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{15}
-}
-
-var extRange_TestUnpackedExtensions = []protoiface.ExtensionRangeV1{
-	{Start: 1, End: 536870911},
-}
-
-// Deprecated: Use TestUnpackedExtensions.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*TestUnpackedExtensions) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_TestUnpackedExtensions
 }
 
 // Test that RPC services work.

@@ -9,7 +9,6 @@ package base
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -56,16 +55,6 @@ func (*BaseMessage) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_rawDescGZIP(), []int{0}
 }
 
-var extRange_BaseMessage = []protoiface.ExtensionRangeV1{
-	{Start: 4, End: 9},
-	{Start: 16, End: 536870911},
-}
-
-// Deprecated: Use BaseMessage.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*BaseMessage) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_BaseMessage
-}
-
 func (x *BaseMessage) GetField() string {
 	if x != nil && x.Field != nil {
 		return *x.Field
@@ -110,15 +99,6 @@ func (x *MessageSetWireFormatMessage) ProtoReflect() protoreflect.Message {
 // Deprecated: Use MessageSetWireFormatMessage.ProtoReflect.Descriptor instead.
 func (*MessageSetWireFormatMessage) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_rawDescGZIP(), []int{1}
-}
-
-var extRange_MessageSetWireFormatMessage = []protoiface.ExtensionRangeV1{
-	{Start: 100, End: 2147483646},
-}
-
-// Deprecated: Use MessageSetWireFormatMessage.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*MessageSetWireFormatMessage) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_MessageSetWireFormatMessage
 }
 
 var File_cmd_protoc_gen_go_testdata_extensions_base_base_proto protoreflect.FileDescriptor

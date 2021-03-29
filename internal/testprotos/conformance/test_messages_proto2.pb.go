@@ -42,7 +42,6 @@ package conformance
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -341,15 +340,6 @@ func (x *TestAllTypesProto2) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TestAllTypesProto2.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0}
-}
-
-var extRange_TestAllTypesProto2 = []protoiface.ExtensionRangeV1{
-	{Start: 120, End: 200},
-}
-
-// Deprecated: Use TestAllTypesProto2.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*TestAllTypesProto2) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_TestAllTypesProto2
 }
 
 func (x *TestAllTypesProto2) GetOptionalInt32() int32 {
@@ -1526,15 +1516,6 @@ func (x *TestAllTypesProto2_MessageSetCorrect) ProtoReflect() protoreflect.Messa
 // Deprecated: Use TestAllTypesProto2_MessageSetCorrect.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2_MessageSetCorrect) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 21}
-}
-
-var extRange_TestAllTypesProto2_MessageSetCorrect = []protoiface.ExtensionRangeV1{
-	{Start: 4, End: 2147483646},
-}
-
-// Deprecated: Use TestAllTypesProto2_MessageSetCorrect.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*TestAllTypesProto2_MessageSetCorrect) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_TestAllTypesProto2_MessageSetCorrect
 }
 
 type TestAllTypesProto2_MessageSetCorrectExtension1 struct {

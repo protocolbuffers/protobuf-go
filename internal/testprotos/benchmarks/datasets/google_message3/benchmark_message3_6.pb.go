@@ -37,7 +37,6 @@ package google_message3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -735,19 +734,6 @@ func (x *Message9182) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message9182.ProtoReflect.Descriptor instead.
 func (*Message9182) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_6_proto_rawDescGZIP(), []int{3}
-}
-
-var extRange_Message9182 = []protoiface.ExtensionRangeV1{
-	{Start: 3, End: 6},
-	{Start: 9, End: 15},
-	{Start: 23, End: 23},
-	{Start: 24, End: 24},
-	{Start: 1000, End: 536870911},
-}
-
-// Deprecated: Use Message9182.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message9182) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message9182
 }
 
 func (x *Message9182) GetField9205() string {

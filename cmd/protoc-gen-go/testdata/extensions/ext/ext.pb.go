@@ -11,7 +11,6 @@ import (
 	base "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/extensions/base"
 	extra "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/extensions/extra"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -288,15 +287,6 @@ func (x *Extendable) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Extendable.ProtoReflect.Descriptor instead.
 func (*Extendable) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_rawDescGZIP(), []int{4}
-}
-
-var extRange_Extendable = []protoiface.ExtensionRangeV1{
-	{Start: 1, End: 536870911},
-}
-
-// Deprecated: Use Extendable.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Extendable) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Extendable
 }
 
 // Message set wire format.

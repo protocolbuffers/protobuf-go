@@ -37,7 +37,6 @@ package google_message3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -698,18 +697,6 @@ func (x *Message730) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message730.ProtoReflect.Descriptor instead.
 func (*Message730) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_4_proto_rawDescGZIP(), []int{7}
-}
-
-var extRange_Message730 = []protoiface.ExtensionRangeV1{
-	{Start: 25, End: 25},
-	{Start: 29, End: 29},
-	{Start: 34, End: 34},
-	{Start: 15, End: 15},
-}
-
-// Deprecated: Use Message730.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message730) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message730
 }
 
 func (x *Message730) GetField897() string {
@@ -1810,16 +1797,6 @@ func (x *Message11873) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message11873.ProtoReflect.Descriptor instead.
 func (*Message11873) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_4_proto_rawDescGZIP(), []int{15}
-}
-
-var extRange_Message11873 = []protoiface.ExtensionRangeV1{
-	{Start: 9, End: 9},
-	{Start: 10, End: 10},
-}
-
-// Deprecated: Use Message11873.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message11873) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message11873
 }
 
 func (x *Message11873) GetField11876() string {

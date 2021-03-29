@@ -37,7 +37,6 @@ package google_message3
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -394,17 +393,6 @@ func (*Message728) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_5_proto_rawDescGZIP(), []int{6}
 }
 
-var extRange_Message728 = []protoiface.ExtensionRangeV1{
-	{Start: 10, End: 10},
-	{Start: 11, End: 11},
-	{Start: 12, End: 12},
-}
-
-// Deprecated: Use Message728.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message728) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message728
-}
-
 func (x *Message728) GetField887() string {
 	if x != nil && x.Field887 != nil {
 		return *x.Field887
@@ -637,16 +625,6 @@ func (x *Message697) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message697.ProtoReflect.Descriptor instead.
 func (*Message697) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_5_proto_rawDescGZIP(), []int{8}
-}
-
-var extRange_Message697 = []protoiface.ExtensionRangeV1{
-	{Start: 28, End: 28},
-	{Start: 26, End: 26},
-}
-
-// Deprecated: Use Message697.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message697) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message697
 }
 
 func (x *Message697) GetField743() string {
@@ -940,15 +918,6 @@ func (*Message0) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_5_proto_rawDescGZIP(), []int{9}
 }
 
-var extRange_Message0 = []protoiface.ExtensionRangeV1{
-	{Start: 4, End: 2147483646},
-}
-
-// Deprecated: Use Message0.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message0) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message0
-}
-
 type Message6578 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1219,15 +1188,6 @@ func (*Message10573) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_5_proto_rawDescGZIP(), []int{14}
 }
 
-var extRange_Message10573 = []protoiface.ExtensionRangeV1{
-	{Start: 10000, End: 536870911},
-}
-
-// Deprecated: Use Message10573.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message10573) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message10573
-}
-
 func (x *Message10573) GetField10580() []*Message10576 {
 	if x != nil {
 		return x.Field10580
@@ -1492,16 +1452,6 @@ func (x *Message10155) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message10155.ProtoReflect.Descriptor instead.
 func (*Message10155) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_5_proto_rawDescGZIP(), []int{17}
-}
-
-var extRange_Message10155 = []protoiface.ExtensionRangeV1{
-	{Start: 57, End: 57},
-	{Start: 1000, End: 536870911},
-}
-
-// Deprecated: Use Message10155.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message10155) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message10155
 }
 
 func (x *Message10155) GetField10195() int32 {
@@ -2505,15 +2455,6 @@ func (*Message13145) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_5_proto_rawDescGZIP(), []int{22}
 }
 
-var extRange_Message13145 = []protoiface.ExtensionRangeV1{
-	{Start: 1000, End: 536870911},
-}
-
-// Deprecated: Use Message13145.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message13145) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message13145
-}
-
 func (x *Message13145) GetField13155() Enum13146 {
 	if x != nil && x.Field13155 != nil {
 		return *x.Field13155
@@ -2886,15 +2827,6 @@ func (*Message8301) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_5_proto_rawDescGZIP(), []int{30}
 }
 
-var extRange_Message8301 = []protoiface.ExtensionRangeV1{
-	{Start: 64, End: 536870911},
-}
-
-// Deprecated: Use Message8301.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message8301) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message8301
-}
-
 func (x *Message8301) GetField8328() string {
 	if x != nil && x.Field8328 != nil {
 		return *x.Field8328
@@ -3069,15 +3001,6 @@ func (x *Message8302) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message8302.ProtoReflect.Descriptor instead.
 func (*Message8302) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_5_proto_rawDescGZIP(), []int{32}
-}
-
-var extRange_Message8302 = []protoiface.ExtensionRangeV1{
-	{Start: 64, End: 536870911},
-}
-
-// Deprecated: Use Message8302.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message8302) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message8302
 }
 
 func (x *Message8302) GetField8339() string {

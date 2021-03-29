@@ -11,7 +11,6 @@ package registry
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
@@ -213,15 +212,6 @@ func (x *Message1) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message1.ProtoReflect.Descriptor instead.
 func (*Message1) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_registry_test_proto_rawDescGZIP(), []int{0}
-}
-
-var extRange_Message1 = []protoiface.ExtensionRangeV1{
-	{Start: 10, End: 536870911},
-}
-
-// Deprecated: Use Message1.ProtoReflect.Descriptor.ExtensionRanges instead.
-func (*Message1) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
-	return extRange_Message1
 }
 
 type Message2 struct {
