@@ -128,6 +128,9 @@ func genGeneratedHeader(gen *protogen.Plugin, g *protogen.GeneratedFile, f *file
 		protocVersion := "(unknown)"
 		if v := gen.Request.GetCompilerVersion(); v != nil {
 			protocVersion = fmt.Sprintf("v%v.%v.%v", v.GetMajor(), v.GetMinor(), v.GetPatch())
+			if s := v.GetSuffix(); s != "" {
+				protocVersion += "-" + s
+			}
 		}
 		g.P("// \tprotoc-gen-go ", protocGenGoVersion)
 		g.P("// \tprotoc        ", protocVersion)
