@@ -21,7 +21,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
-// Unmarshal reads the given []byte into the given proto.Message.
+// Unmarshal reads the given []byte into the given [proto.Message].
 // The provided message must be mutable (e.g., a non-nil pointer to a message).
 func Unmarshal(b []byte, m proto.Message) error {
 	return UnmarshalOptions{}.Unmarshal(b, m)
@@ -51,7 +51,7 @@ type UnmarshalOptions struct {
 	}
 }
 
-// Unmarshal reads the given []byte and populates the given proto.Message
+// Unmarshal reads the given []byte and populates the given [proto.Message]
 // using options in the UnmarshalOptions object.
 // The provided message must be mutable (e.g., a non-nil pointer to a message).
 func (o UnmarshalOptions) Unmarshal(b []byte, m proto.Message) error {

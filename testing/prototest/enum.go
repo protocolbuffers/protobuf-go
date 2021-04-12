@@ -10,7 +10,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// Enum tests an EnumType implementation.
+// Enum tests an [protoreflect.EnumType] implementation.
 type Enum struct{}
 
 func (test Enum) Test(t testing.TB, et protoreflect.EnumType) {

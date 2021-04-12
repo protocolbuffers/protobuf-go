@@ -31,7 +31,7 @@ func Format(m proto.Message) string {
 	return MarshalOptions{Multiline: true}.Format(m)
 }
 
-// Marshal writes the given proto.Message in JSON format using default options.
+// Marshal writes the given [proto.Message] in JSON format using default options.
 // Do not depend on the output being stable. It may change over time across
 // different versions of the program.
 func Marshal(m proto.Message) ([]byte, error) {
@@ -102,7 +102,7 @@ func (o MarshalOptions) Format(m proto.Message) string {
 	return string(b)
 }
 
-// Marshal marshals the given proto.Message in the JSON format using options in
+// Marshal marshals the given [proto.Message] in the JSON format using options in
 // MarshalOptions. Do not depend on the output being stable. It may change over
 // time across different versions of the program.
 func (o MarshalOptions) Marshal(m proto.Message) ([]byte, error) {

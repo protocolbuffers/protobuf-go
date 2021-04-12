@@ -23,8 +23,8 @@ type extField struct {
 // A Types is a collection of dynamically constructed descriptors.
 // Its methods are safe for concurrent use.
 //
-// Types implements protoregistry.MessageTypeResolver and protoregistry.ExtensionTypeResolver.
-// A Types may be used as a proto.UnmarshalOptions.Resolver.
+// Types implements [protoregistry.MessageTypeResolver] and [protoregistry.ExtensionTypeResolver].
+// A Types may be used as a [google.golang.org/protobuf/proto.UnmarshalOptions.Resolver].
 type Types struct {
 	// atomicExtFiles is used with sync/atomic and hence must be the first word
 	// of the struct to guarantee 64-bit alignment.
@@ -52,7 +52,7 @@ func NewTypes(f *protoregistry.Files) *Types {
 // FindEnumByName looks up an enum by its full name;
 // e.g., "google.protobuf.Field.Kind".
 //
-// This returns (nil, protoregistry.NotFound) if not found.
+// This returns (nil, [protoregistry.NotFound]) if not found.
 func (t *Types) FindEnumByName(name protoreflect.FullName) (protoreflect.EnumType, error) {
 	d, err := t.files.FindDescriptorByName(name)
 	if err != nil {
@@ -70,7 +70,7 @@ func (t *Types) FindEnumByName(name protoreflect.FullName) (protoreflect.EnumTyp
 // where the extension is declared and is unrelated to the full name of the
 // message being extended.
 //
-// This returns (nil, protoregistry.NotFound) if not found.
+// This returns (nil, [protoregistry.NotFound]) if not found.
 func (t *Types) FindExtensionByName(name protoreflect.FullName) (protoreflect.ExtensionType, error) {
 	d, err := t.files.FindDescriptorByName(name)
 	if err != nil {
@@ -86,7 +86,7 @@ func (t *Types) FindExtensionByName(name protoreflect.FullName) (protoreflect.Ex
 // FindExtensionByNumber looks up an extension field by the field number
 // within some parent message, identified by full name.
 //
-// This returns (nil, protoregistry.NotFound) if not found.
+// This returns (nil, [protoregistry.NotFound]) if not found.
 func (t *Types) FindExtensionByNumber(message protoreflect.FullName, field protoreflect.FieldNumber) (protoreflect.ExtensionType, error) {
 	// Construct the extension number map lazily, since not every user will need it.
 	// Update the map if new files are added to the registry.
@@ -103,7 +103,7 @@ func (t *Types) FindExtensionByNumber(message protoreflect.FullName, field proto
 // FindMessageByName looks up a message by its full name;
 // e.g. "google.protobuf.Any".
 //
-// This returns (nil, protoregistry.NotFound) if not found.
+// This returns (nil, [protoregistry.NotFound]) if not found.
 func (t *Types) FindMessageByName(name protoreflect.FullName) (protoreflect.MessageType, error) {
 	d, err := t.files.FindDescriptorByName(name)
 	if err != nil {
@@ -119,7 +119,7 @@ func (t *Types) FindMessageByName(name protoreflect.FullName) (protoreflect.Mess
 // FindMessageByURL looks up a message by a URL identifier.
 // See documentation on google.protobuf.Any.type_url for the URL format.
 //
-// This returns (nil, protoregistry.NotFound) if not found.
+// This returns (nil, [protoregistry.NotFound]) if not found.
 func (t *Types) FindMessageByURL(url string) (protoreflect.MessageType, error) {
 	// This function is similar to FindMessageByName but
 	// truncates anything before and including '/' in the URL.
