@@ -128,7 +128,7 @@ func main() {
 	// Parse and print message structure.
 	defer log.Printf("fatal input: %q", buf) // debug printout if panic occurs
 	var m protopack.Message
-	m.UnmarshalDescriptor(buf, desc)
+	m.UnmarshalAbductive(buf, desc)
 	if *printSource {
 		fmt.Printf("%#v\n", m)
 	} else {

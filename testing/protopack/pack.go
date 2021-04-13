@@ -270,7 +270,7 @@ func (m Message) Marshal() []byte {
 //
 // Unmarshal is useful for debugging the protobuf wire format.
 func (m *Message) Unmarshal(in []byte) {
-	m.UnmarshalDescriptor(in, nil)
+	m.unmarshal(in, nil, false)
 }
 
 // UnmarshalDescriptor parses the input protobuf wire data as a syntax tree
@@ -289,22 +289,40 @@ func (m *Message) Unmarshal(in []byte) {
 // Known sub-messages are parsed as a Message and packed repeated fields are
 // parsed as a LengthPrefix.
 func (m *Message) UnmarshalDescriptor(in []byte, desc protoreflect.MessageDescriptor) {
+	m.unmarshal(in, desc, false)
+}
+
+// UnmarshalAbductive is like UnmarshalDescriptor, but infers abductively
+// whether any unknown bytes values is a message based on whether it is
+// a syntactically well-formed message.
+//
+// Note that the protobuf wire format is not fully self-describing,
+// so abductive inference may attempt to expand a bytes value as a message
+// that is not actually a message. It is a best-effort guess.
+func (m *Message) UnmarshalAbductive(in []byte, desc protoreflect.MessageDescriptor) {
+	m.unmarshal(in, desc, true)
+}
+
+func (m *Message) unmarshal(in []byte, desc protoreflect.MessageDescriptor, inferMessage bool) {
 	p := parser{in: in, out: *m}
-	p.parseMessage(desc, false)
+	p.parseMessage(desc, false, inferMessage)
 	*m = p.out
 }
 
 type parser struct {
 	in  []byte
 	out []Token
+
+	invalid bool
 }
 
-func (p *parser) parseMessage(msgDesc protoreflect.MessageDescriptor, group bool) {
+func (p *parser) parseMessage(msgDesc protoreflect.MessageDescriptor, group, inferMessage bool) {
 	for len(p.in) > 0 {
 		v, n := protowire.ConsumeVarint(p.in)
 		num, typ := protowire.DecodeTag(v)
-		if n < 0 || num < 0 || v > math.MaxUint32 {
+		if n < 0 || num <= 0 || v > math.MaxUint32 {
 			p.out, p.in = append(p.out, Raw(p.in)), nil
+			p.invalid = true
 			return
 		}
 		if typ == EndGroupType && group {
@@ -341,13 +359,14 @@ func (p *parser) parseMessage(msgDesc protoreflect.MessageDescriptor, group bool
 		case Fixed64Type:
 			p.parseFixed64(kind)
 		case BytesType:
-			p.parseBytes(isPacked, kind, subDesc)
+			p.parseBytes(isPacked, kind, subDesc, inferMessage)
 		case StartGroupType:
-			p.parseGroup(subDesc)
+			p.parseGroup(num, subDesc, inferMessage)
 		case EndGroupType:
-			// Handled above.
+			// Handled by p.parseGroup.
 		default:
 			p.out, p.in = append(p.out, Raw(p.in)), nil
+			p.invalid = true
 		}
 	}
 }
@@ -356,6 +375,7 @@ func (p *parser) parseVarint(kind protoreflect.Kind) {
 	v, n := protowire.ConsumeVarint(p.in)
 	if n < 0 {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
+		p.invalid = true
 		return
 	}
 	switch kind {
@@ -384,6 +404,7 @@ func (p *parser) parseFixed32(kind protoreflect.Kind) {
 	v, n := protowire.ConsumeFixed32(p.in)
 	if n < 0 {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
+		p.invalid = true
 		return
 	}
 	switch kind {
@@ -400,6 +421,7 @@ func (p *parser) parseFixed64(kind protoreflect.Kind) {
 	v, n := protowire.ConsumeFixed64(p.in)
 	if n < 0 {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
+		p.invalid = true
 		return
 	}
 	switch kind {
@@ -412,10 +434,11 @@ func (p *parser) parseFixed64(kind protoreflect.Kind) {
 	}
 }
 
-func (p *parser) parseBytes(isPacked bool, kind protoreflect.Kind, desc protoreflect.MessageDescriptor) {
+func (p *parser) parseBytes(isPacked bool, kind protoreflect.Kind, desc protoreflect.MessageDescriptor, inferMessage bool) {
 	v, n := protowire.ConsumeVarint(p.in)
 	if n < 0 {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
+		p.invalid = true
 		return
 	}
 	p.out, p.in = append(p.out, Uvarint(v)), p.in[n:]
@@ -424,6 +447,7 @@ func (p *parser) parseBytes(isPacked bool, kind protoreflect.Kind, desc protoref
 	}
 	if v > uint64(len(p.in)) {
 		p.out, p.in = append(p.out, Raw(p.in)), nil
+		p.invalid = true
 		return
 	}
 	p.out = p.out[:len(p.out)-1] // subsequent tokens contain prefix-length
@@ -434,11 +458,22 @@ func (p *parser) parseBytes(isPacked bool, kind protoreflect.Kind, desc protoref
 		switch kind {
 		case protoreflect.MessageKind:
 			p2 := parser{in: p.in[:v]}
-			p2.parseMessage(desc, false)
+			p2.parseMessage(desc, false, inferMessage)
 			p.out, p.in = append(p.out, LengthPrefix(p2.out)), p.in[v:]
 		case protoreflect.StringKind:
 			p.out, p.in = append(p.out, String(p.in[:v])), p.in[v:]
+		case protoreflect.BytesKind:
+			p.out, p.in = append(p.out, Bytes(p.in[:v])), p.in[v:]
 		default:
+			if inferMessage {
+				// Check whether this is a syntactically valid message.
+				p2 := parser{in: p.in[:v]}
+				p2.parseMessage(nil, false, inferMessage)
+				if !p2.invalid {
+					p.out, p.in = append(p.out, LengthPrefix(p2.out)), p.in[v:]
+					break
+				}
+			}
 			p.out, p.in = append(p.out, Bytes(p.in[:v])), p.in[v:]
 		}
 	}
@@ -466,9 +501,9 @@ func (p *parser) parsePacked(n int, kind protoreflect.Kind) {
 	p.out, p.in = append(p.out, LengthPrefix(p2.out)), p.in[n:]
 }
 
-func (p *parser) parseGroup(desc protoreflect.MessageDescriptor) {
+func (p *parser) parseGroup(startNum protowire.Number, desc protoreflect.MessageDescriptor, inferMessage bool) {
 	p2 := parser{in: p.in}
-	p2.parseMessage(desc, true)
+	p2.parseMessage(desc, true, inferMessage)
 	if len(p2.out) > 0 {
 		p.out = append(p.out, Message(p2.out))
 	}
@@ -476,8 +511,11 @@ func (p *parser) parseGroup(desc protoreflect.MessageDescriptor) {
 
 	// Append the trailing end group.
 	v, n := protowire.ConsumeVarint(p.in)
-	if num, typ := protowire.DecodeTag(v); typ == EndGroupType {
-		p.out, p.in = append(p.out, Tag{num, typ}), p.in[n:]
+	if endNum, typ := protowire.DecodeTag(v); typ == EndGroupType {
+		if startNum != endNum {
+			p.invalid = true
+		}
+		p.out, p.in = append(p.out, Tag{endNum, typ}), p.in[n:]
 		if m := n - protowire.SizeVarint(v); m > 0 {
 			p.out[len(p.out)-1] = Denormalized{uint(m), p.out[len(p.out)-1]}
 		}
