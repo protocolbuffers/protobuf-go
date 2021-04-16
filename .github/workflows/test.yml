@@ -4,13 +4,26 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.16.x]
-        os: [ubuntu-latest] # TODO: Add [macos-latest, windows-latest]
+        include:
+          - go-version: 1.16.x
+            arch: amd64
+            os: ubuntu-latest # TODO: Add [macos-latest, windows-latest]
+          - go-version: 1.16.x
+            arch: arm64
+            os: ubuntu-latest
     runs-on: ${{ matrix.os }}
     steps:
     - name: Install Linux dependencies
       if: runner.os == 'Linux'
       run: sudo apt-get -y install autoconf automake libtool curl make g++ unzip
+    - name: Setup GOARCH=arm64
+      if: ${{ matrix.arch == 'arm64' }}
+      run: echo "GOARCH=arm64" >> $GITHUB_ENV
+    - name: Setup qemu emulator
+      if: ${{ matrix.arch == 'arm64' }}
+      # setup qemu-user-static emulator and register it with binfmt_misc so that aarch64 binaries
+      # are automatically executed using qemu.
+      run: docker run --rm --privileged multiarch/qemu-user-static:5.2.0-2 --reset --credential yes --persistent yes
     - name: Install Go
       uses: actions/setup-go@v2
       with:
