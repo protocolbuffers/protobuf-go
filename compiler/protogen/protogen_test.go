@@ -109,6 +109,14 @@ func TestPackageNamesAndPaths(t *testing.T) {
 			wantFilename:    "golang.org/x/foo/filename",
 		},
 		{
+			desc:            "go_package option sets import path without slashes",
+			goPackageOption: "golang.org;foo",
+			generate:        true,
+			wantPackageName: "foo",
+			wantImportPath:  "golang.org",
+			wantFilename:    "golang.org/filename",
+		},
+		{
 			desc:            "go_package option sets import path and package",
 			goPackageOption: "golang.org/x/foo;bar",
 			generate:        true,
