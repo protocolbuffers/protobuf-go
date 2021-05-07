@@ -298,7 +298,7 @@ func popStep(p *protopath.Values) {
 	p.Values = p.Values[:len(p.Values)-1]
 }
 
-// amendErrors amends the previous error with the current error if it is
+// amendError amends the previous error with the current error if it is
 // considered more serious. The precedence order for errors is:
 //	nil < Break < Terminate < previous non-nil < current non-nil
 func amendError(prev, curr error) error {
