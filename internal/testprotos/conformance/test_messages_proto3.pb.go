@@ -1130,7 +1130,7 @@ func (x *TestAllTypesProto3) GetOneofNullValue() structpb.NullValue {
 	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofNullValue); ok {
 		return x.OneofNullValue
 	}
-	return structpb.NullValue_NULL_VALUE
+	return structpb.NullValue(0)
 }
 
 func (x *TestAllTypesProto3) GetOptionalBoolWrapper() *wrapperspb.BoolValue {
@@ -1305,7 +1305,7 @@ func (x *TestAllTypesProto3) GetOptionalNullValue() structpb.NullValue {
 	if x != nil {
 		return x.OptionalNullValue
 	}
-	return structpb.NullValue_NULL_VALUE
+	return structpb.NullValue(0)
 }
 
 func (x *TestAllTypesProto3) GetRepeatedDuration() []*durationpb.Duration {

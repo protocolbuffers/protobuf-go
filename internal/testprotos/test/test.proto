@@ -6,6 +6,7 @@ syntax = "proto2";
 
 package goproto.proto.test;
 
+import "google/protobuf/descriptor.proto";
 import "internal/testprotos/test/test_import.proto";
 import public "internal/testprotos/test/test_public.proto";
 import weak "internal/testprotos/test/weak1/test_weak.proto";
@@ -380,4 +381,8 @@ service TestDeprecatedService {
 
 message WeirdDefault {
   optional bytes weird_default = 1 [default = "hello, \"world!\"\ndead\xde\xad\xbe\xefbeef`"];
+}
+
+message RemoteDefault {
+  optional google.protobuf.FieldDescriptorProto.Type type = 1 [default = TYPE_ENUM];
 }

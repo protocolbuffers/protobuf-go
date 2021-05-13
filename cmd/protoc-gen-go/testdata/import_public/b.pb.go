@@ -67,7 +67,7 @@ func (x *Local) GetE() sub.E {
 	if x != nil && x.E != nil {
 		return *x.E
 	}
-	return sub.E_ZERO
+	return sub.E(0)
 }
 
 var File_cmd_protoc_gen_go_testdata_import_public_b_proto protoreflect.FileDescriptor

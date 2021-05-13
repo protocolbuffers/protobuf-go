@@ -1384,7 +1384,7 @@ func (x *KnownTypes) GetOptNull() structpb.NullValue {
 	if x != nil && x.OptNull != nil {
 		return *x.OptNull
 	}
-	return structpb.NullValue_NULL_VALUE
+	return structpb.NullValue(0)
 }
 
 func (x *KnownTypes) GetOptEmpty() *emptypb.Empty {

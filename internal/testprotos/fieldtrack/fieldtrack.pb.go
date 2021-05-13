@@ -251,7 +251,7 @@ func (x *TestFieldTrack) GetOptionalEnum() test.TestAllTypes_NestedEnum {
 	if x != nil && x.OptionalEnum != nil {
 		return *x.OptionalEnum
 	}
-	return test.TestAllTypes_FOO
+	return test.TestAllTypes_NestedEnum(0)
 }
 
 //go:nointerface

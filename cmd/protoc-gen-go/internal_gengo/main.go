@@ -447,7 +447,15 @@ func genMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageIn
 		case protoreflect.EnumKind:
 			idx := field.Desc.DefaultEnumValue().Index()
 			val := field.Enum.Values[idx]
-			consts = append(consts, fmt.Sprintf("%s = %s", name, g.QualifiedGoIdent(val.GoIdent)))
+			if val.GoIdent.GoImportPath == f.GoImportPath {
+				consts = append(consts, fmt.Sprintf("%s = %s", name, g.QualifiedGoIdent(val.GoIdent)))
+			} else {
+				// If the enum value is declared in a different Go package,
+				// reference it by number since the name may not be correct.
+				// See https://github.com/golang/protobuf/issues/513.
+				consts = append(consts, fmt.Sprintf("%s = %s(%d) // %s",
+					name, g.QualifiedGoIdent(field.Enum.GoIdent), val.Desc.Number(), g.QualifiedGoIdent(val.GoIdent)))
+			}
 		case protoreflect.FloatKind, protoreflect.DoubleKind:
 			if f := defVal.Float(); math.IsNaN(f) || math.IsInf(f, 0) {
 				var fn, arg string
@@ -550,7 +558,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 
 		// Getter for message field.
 		goType, pointer := fieldGoType(g, f, field)
-		defaultValue := fieldDefaultValue(g, m, field)
+		defaultValue := fieldDefaultValue(g, f, m, field)
 		g.Annotate(m.GoIdent.GoName+".Get"+field.GoName, field.Location)
 		leadingComments := appendDeprecationSuffix("",
 			field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
@@ -672,7 +680,7 @@ func fieldProtobufTagValue(field *protogen.Field) string {
 	return tag.Marshal(field.Desc, enumName)
 }
 
-func fieldDefaultValue(g *protogen.GeneratedFile, m *messageInfo, field *protogen.Field) string {
+func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, field *protogen.Field) string {
 	if field.Desc.IsList() {
 		return "nil"
 	}
@@ -691,7 +699,15 @@ func fieldDefaultValue(g *protogen.GeneratedFile, m *messageInfo, field *protoge
 	case protoreflect.MessageKind, protoreflect.GroupKind, protoreflect.BytesKind:
 		return "nil"
 	case protoreflect.EnumKind:
-		return g.QualifiedGoIdent(field.Enum.Values[0].GoIdent)
+		val := field.Enum.Values[0]
+		if val.GoIdent.GoImportPath == f.GoImportPath {
+			return g.QualifiedGoIdent(val.GoIdent)
+		} else {
+			// If the enum value is declared in a different Go package,
+			// reference it by number since the name may not be correct.
+			// See https://github.com/golang/protobuf/issues/513.
+			return g.QualifiedGoIdent(field.Enum.GoIdent) + "(" + strconv.FormatInt(int64(val.Desc.Number()), 32) + ")"
+		}
 	default:
 		return "0"
 	}
