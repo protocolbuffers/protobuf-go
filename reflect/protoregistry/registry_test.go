@@ -55,6 +55,7 @@ func TestFiles(t *testing.T) {
 		testFindPath struct {
 			inPath    string
 			wantFiles []file
+			wantErr   string
 		}
 	)
 
@@ -68,7 +69,7 @@ func TestFiles(t *testing.T) {
 		files: []testFile{
 			{inFile: mustMakeFile(`syntax:"proto2" name:"test1.proto" package:"foo.bar"`)},
 			{inFile: mustMakeFile(`syntax:"proto2" name:"foo/bar/test.proto" package:"my.test"`)},
-			{inFile: mustMakeFile(`syntax:"proto2" name:"foo/bar/test.proto" package:"foo.bar.baz"`), wantErr: "already registered"},
+			{inFile: mustMakeFile(`syntax:"proto2" name:"foo/bar/test.proto" package:"foo.bar.baz"`)},
 			{inFile: mustMakeFile(`syntax:"proto2" name:"test2.proto" package:"my.test.package"`)},
 			{inFile: mustMakeFile(`syntax:"proto2" name:"weird" package:"foo.bar"`)},
 			{inFile: mustMakeFile(`syntax:"proto2" name:"foo/bar/baz/../test.proto" package:"my.test"`)},
@@ -103,17 +104,16 @@ func TestFiles(t *testing.T) {
 		}},
 
 		findPaths: []testFindPath{{
-			inPath: "nothing",
+			inPath:  "nothing",
+			wantErr: "not found",
 		}, {
 			inPath: "weird",
 			wantFiles: []file{
 				{"weird", "foo.bar"},
 			},
 		}, {
-			inPath: "foo/bar/test.proto",
-			wantFiles: []file{
-				{"foo/bar/test.proto", "my.test"},
-			},
+			inPath:  "foo/bar/test.proto",
+			wantErr: `multiple files named "foo/bar/test.proto"`,
 		}},
 	}, {
 		// Test when new enum conflicts with existing package.
@@ -315,8 +315,12 @@ func TestFiles(t *testing.T) {
 
 			for _, tc := range tt.findPaths {
 				var gotFiles []file
-				if fd, err := files.FindFileByPath(tc.inPath); err == nil {
+				fd, gotErr := files.FindFileByPath(tc.inPath)
+				if gotErr == nil {
 					gotFiles = append(gotFiles, file{fd.Path(), fd.Package()})
+				}
+				if ((gotErr == nil) != (tc.wantErr == "")) || !strings.Contains(fmt.Sprint(gotErr), tc.wantErr) {
+					t.Errorf("FindFileByPath(%v) = %v, want %v", tc.inPath, gotErr, tc.wantErr)
 				}
 				if diff := cmp.Diff(tc.wantFiles, gotFiles, sortFiles); diff != "" {
 					t.Errorf("FindFileByPath(%v) mismatch (-want +got):\n%v", tc.inPath, diff)
