@@ -8,6 +8,7 @@ package main
 
 import (
 	"archive/tar"
+	"archive/zip"
 	"bytes"
 	"compress/gzip"
 	"crypto/sha256"
@@ -392,18 +393,31 @@ func mustHandleFlags(t *testing.T) {
 						t.Fatal(err)
 					}
 					out := new(bytes.Buffer)
-					gz, _ := gzip.NewWriterLevel(out, gzip.BestCompression)
-					gz.Comment = fmt.Sprintf("protoc-gen-go VERSION=%v GOOS=%v GOARCH=%v", v, goos, goarch)
-					tw := tar.NewWriter(gz)
-					tw.WriteHeader(&tar.Header{
-						Name: "protoc-gen-go",
-						Mode: int64(0775),
-						Size: int64(len(in)),
-					})
-					tw.Write(in)
-					tw.Close()
-					gz.Close()
-					if err := ioutil.WriteFile(binPath+".tar.gz", out.Bytes(), 0664); err != nil {
+					suffix := ""
+					comment := fmt.Sprintf("protoc-gen-go VERSION=%v GOOS=%v GOARCH=%v", v, goos, goarch)
+					switch goos {
+					case "windows":
+						suffix = ".zip"
+						zw := zip.NewWriter(out)
+						zw.SetComment(comment)
+						fw, _ := zw.Create("protoc-gen-go.exe")
+						fw.Write(in)
+						zw.Close()
+					default:
+						suffix = ".tar.gz"
+						gz, _ := gzip.NewWriterLevel(out, gzip.BestCompression)
+						gz.Comment = comment
+						tw := tar.NewWriter(gz)
+						tw.WriteHeader(&tar.Header{
+							Name: "protoc-gen-go",
+							Mode: int64(0775),
+							Size: int64(len(in)),
+						})
+						tw.Write(in)
+						tw.Close()
+						gz.Close()
+					}
+					if err := ioutil.WriteFile(binPath+suffix, out.Bytes(), 0664); err != nil {
 						t.Fatal(err)
 					}
 				}
