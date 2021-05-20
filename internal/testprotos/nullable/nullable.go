@@ -6,6 +6,7 @@ package nullable
 
 import (
 	"google.golang.org/protobuf/encoding/prototext"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/runtime/protoimpl"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -223,3 +224,43 @@ func (*Proto3_OneofString) isProto3_OneofUnion()  {}
 func (*Proto3_OneofBytes) isProto3_OneofUnion()   {}
 func (*Proto3_OneofEnum) isProto3_OneofUnion()    {}
 func (*Proto3_OneofMessage) isProto3_OneofUnion() {}
+
+type Methods struct {
+	OptionalInt32 int32 `protobuf:"varint,101,opt,name=optional_int32"`
+}
+
+func (x *Methods) ProtoMessage()  {}
+func (x *Methods) Reset()         { *x = Methods{} }
+func (x *Methods) String() string { return prototext.Format(protoimpl.X.ProtoMessageV2Of(x)) }
+
+func (x *Methods) Marshal() ([]byte, error) {
+	var b []byte
+	b = protowire.AppendTag(b, 101, protowire.VarintType)
+	b = protowire.AppendVarint(b, uint64(x.OptionalInt32))
+	return b, nil
+}
+
+func (x *Methods) Unmarshal(b []byte) error {
+	for len(b) > 0 {
+		num, typ, n := protowire.ConsumeTag(b)
+		if n < 0 {
+			return protowire.ParseError(n)
+		}
+		b = b[n:]
+		if num != 101 || typ != protowire.VarintType {
+			n = protowire.ConsumeFieldValue(num, typ, b)
+			if n < 0 {
+				return protowire.ParseError(n)
+			}
+			b = b[n:]
+			continue
+		}
+		v, n := protowire.ConsumeVarint(b)
+		if n < 0 {
+			return protowire.ParseError(n)
+		}
+		b = b[n:]
+		x.OptionalInt32 = int32(v)
+	}
+	return nil
+}

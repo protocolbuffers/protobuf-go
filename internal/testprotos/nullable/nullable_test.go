@@ -8,8 +8,11 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
+	"google.golang.org/protobuf/testing/protocmp"
 )
 
 func Test(t *testing.T) {
@@ -20,12 +23,48 @@ func Test(t *testing.T) {
 		t.Run(string(mt.Descriptor().FullName()), func(t *testing.T) {
 			testEmptyMessage(t, mt.Zero(), false)
 			testEmptyMessage(t, mt.New(), true)
+			//testMethods(t, mt)
+		})
+	}
+}
+
+var methodTestProtos = []protoreflect.MessageType{
+	protoimpl.X.ProtoMessageV2Of((*Methods)(nil)).ProtoReflect().Type(),
+}
+
+func TestMethods(t *testing.T) {
+	for _, mt := range methodTestProtos {
+		t.Run(string(mt.Descriptor().FullName()), func(t *testing.T) {
 			testMethods(t, mt)
 		})
 	}
 }
 
-var testMethods = func(*testing.T, protoreflect.MessageType) {}
+func testMethods(t *testing.T, mt protoreflect.MessageType) {
+	m1 := mt.New()
+	populated := testPopulateMessage(t, m1, 2)
+	b, err := proto.Marshal(m1.Interface())
+	if err != nil {
+		t.Errorf("proto.Marshal error: %v", err)
+	}
+	if populated && len(b) == 0 {
+		t.Errorf("len(proto.Marshal) = 0, want >0")
+	}
+	m2 := mt.New()
+	if err := proto.Unmarshal(b, m2.Interface()); err != nil {
+		t.Errorf("proto.Unmarshal error: %v", err)
+	}
+	if diff := cmp.Diff(m1.Interface(), m2.Interface(), protocmp.Transform()); diff != "" {
+		t.Errorf("message mismatch:\n%v", diff)
+	}
+	proto.Reset(m2.Interface())
+	testEmptyMessage(t, m2, true)
+	proto.Merge(m2.Interface(), m1.Interface())
+	if diff := cmp.Diff(m1.Interface(), m2.Interface(), protocmp.Transform()); diff != "" {
+		t.Errorf("message mismatch:\n%v", diff)
+	}
+	proto.Merge(mt.New().Interface(), mt.Zero().Interface())
+}
 
 func testEmptyMessage(t *testing.T, m protoreflect.Message, wantValid bool) {
 	numFields := func(m protoreflect.Message) (n int) {
