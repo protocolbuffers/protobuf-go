@@ -69,7 +69,7 @@ func TestFiles(t *testing.T) {
 		files: []testFile{
 			{inFile: mustMakeFile(`syntax:"proto2" name:"test1.proto" package:"foo.bar"`)},
 			{inFile: mustMakeFile(`syntax:"proto2" name:"foo/bar/test.proto" package:"my.test"`)},
-			{inFile: mustMakeFile(`syntax:"proto2" name:"foo/bar/test.proto" package:"foo.bar.baz"`)},
+			{inFile: mustMakeFile(`syntax:"proto2" name:"foo/bar/test.proto" package:"foo.bar.baz"`), wantErr: "already registered"},
 			{inFile: mustMakeFile(`syntax:"proto2" name:"test2.proto" package:"my.test.package"`)},
 			{inFile: mustMakeFile(`syntax:"proto2" name:"weird" package:"foo.bar"`)},
 			{inFile: mustMakeFile(`syntax:"proto2" name:"foo/bar/baz/../test.proto" package:"my.test"`)},
@@ -112,8 +112,10 @@ func TestFiles(t *testing.T) {
 				{"weird", "foo.bar"},
 			},
 		}, {
-			inPath:  "foo/bar/test.proto",
-			wantErr: `multiple files named "foo/bar/test.proto"`,
+			inPath: "foo/bar/test.proto",
+			wantFiles: []file{
+				{"foo/bar/test.proto", "my.test"},
+			},
 		}},
 	}, {
 		// Test when new enum conflicts with existing package.

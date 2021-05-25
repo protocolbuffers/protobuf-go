@@ -121,8 +121,13 @@ func (r *Files) RegisterFile(file protoreflect.FileDescriptor) error {
 		r.filesByPath = make(map[string][]protoreflect.FileDescriptor)
 	}
 	path := file.Path()
-	if len(r.filesByPath[path]) > 0 {
+	if prev := r.filesByPath[path]; len(prev) > 0 {
 		r.checkGenProtoConflict(path)
+		err := errors.New("file %q is already registered", file.Path())
+		err = amendErrorWithCaller(err, prev[0], file)
+		if !(r == GlobalFiles && ignoreConflict(file, err)) {
+			return err
+		}
 	}
 
 	for name := file.Package(); name != ""; name = name.Parent() {
