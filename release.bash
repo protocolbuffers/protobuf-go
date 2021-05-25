@@ -63,14 +63,14 @@ git change release
 git sync
 
 # Create commit for actual release.
-sed -i -e "s/\(\s*Minor\s*=\s*\)[0-9]*/\1$VERSION_MINOR/" internal/version/version.go
-sed -i -e "s/\(\s*Patch\s*=\s*\)[0-9]*/\1$VERSION_PATCH/" internal/version/version.go
-sed -i -e "s/\(\s*PreRelease\s*=\s*\)\"[^\"]*\"/\1\"$VERSION_PRERELEASE\"/" internal/version/version.go
+sed -i "" -e "s/\(Minor *= *\)[0-9]*/\1$VERSION_MINOR/" internal/version/version.go
+sed -i "" -e "s/\(Patch *= *\)[0-9]*/\1$VERSION_PATCH/" internal/version/version.go
+sed -i "" -e "s/\(PreRelease *= *\)\"[^\"]*\"/\1\"$VERSION_PRERELEASE\"/" internal/version/version.go
 if ! [[ -z $GEN_VERSION ]]; then
-	sed -i -e "s/\(\s*GenVersion\s*=\s*\)[0-9]*/\1$GEN_VERSION/" runtime/protoimpl/version.go
+	sed -i "" -e "s/\(GenVersion *= *\)[0-9]*/\1$GEN_VERSION/" runtime/protoimpl/version.go
 fi
 if ! [[ -z $MIN_VERSION ]]; then
-	sed -i -e "s/\(\s*MinVersion\s*=\s*\)[0-9]*/\1$MIN_VERSION/" runtime/protoimpl/version.go
+	sed -i "" -e "s/\(MinVersion *= *\)[0-9]*/\1$MIN_VERSION/" runtime/protoimpl/version.go
 fi
 git commit -a -m "all: release $(version_string)"
 
@@ -80,7 +80,7 @@ go test -mod=vendor -timeout=60m -count=1 integration_test.go "$@" -buildRelease
 # Create commit to start development after release.
 VERSION_PRERELEASE="${VERSION_PRERELEASE}.devel" # append ".devel"
 VERSION_PRERELEASE="${VERSION_PRERELEASE#"."}"   # trim possible leading "."
-sed -i -e "s/\(\s*PreRelease\s*=\s*\)\"[^\"]*\"/\1\"$VERSION_PRERELEASE\"/" internal/version/version.go
+sed -i "" -e "s/\(PreRelease *= *\)\"[^\"]*\"/\1\"$VERSION_PRERELEASE\"/" internal/version/version.go
 git commit -a -m "all: start $(version_string)"
 
 echo
