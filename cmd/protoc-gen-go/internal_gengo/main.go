@@ -791,8 +791,9 @@ func genMessageOneofWrapperTypes(g *protogen.GeneratedFile, f *fileInfo, m *mess
 			continue
 		}
 		ifName := oneofInterfaceName(oneof)
+		ifMethodName := oneofInterfaceMethodName(oneof)
 		g.P("type ", ifName, " interface {")
-		g.P(ifName, "()")
+		g.P(ifMethodName, "()")
 		g.P("}")
 		g.P()
 		for _, field := range oneof.Fields {
@@ -815,7 +816,7 @@ func genMessageOneofWrapperTypes(g *protogen.GeneratedFile, f *fileInfo, m *mess
 			g.P()
 		}
 		for _, field := range oneof.Fields {
-			g.P("func (*", field.GoIdent, ") ", ifName, "() {}")
+			g.P("func (*", field.GoIdent, ") ", ifMethodName, "() {}")
 			g.P()
 		}
 	}
@@ -824,6 +825,12 @@ func genMessageOneofWrapperTypes(g *protogen.GeneratedFile, f *fileInfo, m *mess
 // oneofInterfaceName returns the name of the interface type implemented by
 // the oneof field value types.
 func oneofInterfaceName(oneof *protogen.Oneof) string {
+	return "Is" + oneof.GoIdent.GoName
+}
+
+// oneofInterfaceMethodName returns the method name of the interface type implemented by
+// the oneof field value types.
+func oneofInterfaceMethodName(oneof *protogen.Oneof) string {
 	return "is" + oneof.GoIdent.GoName
 }
 
