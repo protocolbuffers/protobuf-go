@@ -706,7 +706,7 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 			// If the enum value is declared in a different Go package,
 			// reference it by number since the name may not be correct.
 			// See https://github.com/golang/protobuf/issues/513.
-			return g.QualifiedGoIdent(field.Enum.GoIdent) + "(" + strconv.FormatInt(int64(val.Desc.Number()), 32) + ")"
+			return g.QualifiedGoIdent(field.Enum.GoIdent) + "(" + strconv.FormatInt(int64(val.Desc.Number()), 10) + ")"
 		}
 	default:
 		return "0"

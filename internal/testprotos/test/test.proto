@@ -6,7 +6,7 @@ syntax = "proto2";
 
 package goproto.proto.test;
 
-import "google/protobuf/descriptor.proto";
+import "internal/testprotos/enums/enums.proto";
 import "internal/testprotos/test/test_import.proto";
 import public "internal/testprotos/test/test_public.proto";
 import weak "internal/testprotos/test/weak1/test_weak.proto";
@@ -384,5 +384,12 @@ message WeirdDefault {
 }
 
 message RemoteDefault {
-  optional google.protobuf.FieldDescriptorProto.Type type = 1 [default = TYPE_ENUM];
+  optional goproto.proto.enums.Enum default = 1;
+  optional goproto.proto.enums.Enum zero = 2 [default = ZERO];
+  optional goproto.proto.enums.Enum one = 3 [default = ONE];
+  optional goproto.proto.enums.Enum elevent = 4 [default = ELEVENT];
+  optional goproto.proto.enums.Enum seventeen = 5 [default = SEVENTEEN];
+  optional goproto.proto.enums.Enum thirtyseven = 6 [default = THIRTYSEVEN];
+  optional goproto.proto.enums.Enum sixtyseven = 7 [default = SIXTYSEVEN];
+  optional goproto.proto.enums.Enum negative = 8 [default = NEGATIVE];
 }
