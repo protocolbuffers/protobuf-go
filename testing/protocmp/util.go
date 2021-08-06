@@ -297,11 +297,11 @@ func (f *nameFilters) filterFieldName(m Message, k string) bool {
 		return true // treat missing fields as already filtered
 	}
 	var fd protoreflect.FieldDescriptor
-	switch mt := m[messageTypeKey].(messageType); {
+	switch mm := m[messageTypeKey].(messageMeta); {
 	case protoreflect.Name(k).IsValid():
-		fd = mt.md.Fields().ByTextName(k)
+		fd = mm.md.Fields().ByTextName(k)
 	default:
-		fd = mt.xds[k]
+		fd = mm.xds[k]
 	}
 	if fd != nil {
 		return f.names[fd.FullName()]
@@ -376,11 +376,11 @@ func isDefaultScalar(m Message, k string) bool {
 	}
 
 	var fd protoreflect.FieldDescriptor
-	switch mt := m[messageTypeKey].(messageType); {
+	switch mm := m[messageTypeKey].(messageMeta); {
 	case protoreflect.Name(k).IsValid():
-		fd = mt.md.Fields().ByTextName(k)
+		fd = mm.md.Fields().ByTextName(k)
 	default:
-		fd = mt.xds[k]
+		fd = mm.xds[k]
 	}
 	if fd == nil || !fd.Default().IsValid() {
 		return false

@@ -68,7 +68,7 @@ func (m reflectMessage) Range(f func(fd protoreflect.FieldDescriptor, v protoref
 	}
 
 	// Range over populated extension fields.
-	for _, xd := range m[messageTypeKey].(messageType).xds {
+	for _, xd := range m[messageTypeKey].(messageMeta).xds {
 		if m.Has(xd) && !f(xd, m.Get(xd)) {
 			return
 		}
@@ -91,7 +91,7 @@ func (m reflectMessage) Get(fd protoreflect.FieldDescriptor) protoreflect.Value 
 			return protoreflect.ValueOfMap(reflectMap{})
 		case fd.Message() != nil:
 			return protoreflect.ValueOfMessage(reflectMessage{
-				messageTypeKey: messageType{md: m.Descriptor()},
+				messageTypeKey: messageMeta{md: fd.Message()},
 			})
 		default:
 			return fd.Default()

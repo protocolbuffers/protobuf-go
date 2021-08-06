@@ -68,20 +68,28 @@ func (e Enum) String() string {
 }
 
 const (
-	messageTypeKey    = "@type"
+	// messageTypeKey indicates the protobuf message type.
+	// The value type is always messageMeta.
+	// From the public API, it presents itself as only the type, but the
+	// underlying data structure holds arbitrary metadata about the message.
+	messageTypeKey = "@type"
+
+	// messageInvalidKey indicates that the message is invalid.
+	// The value is always the boolean "true".
 	messageInvalidKey = "@invalid"
 )
 
-type messageType struct {
+type messageMeta struct {
+	m   proto.Message
 	md  protoreflect.MessageDescriptor
 	xds map[string]protoreflect.ExtensionDescriptor
 }
 
-func (t messageType) String() string {
+func (t messageMeta) String() string {
 	return string(t.md.FullName())
 }
 
-func (t1 messageType) Equal(t2 messageType) bool {
+func (t1 messageMeta) Equal(t2 messageMeta) bool {
 	return t1.md.FullName() == t2.md.FullName()
 }
 
@@ -109,11 +117,18 @@ func (t1 messageType) Equal(t2 messageType) bool {
 // Message values must not be created by or mutated by users.
 type Message map[string]interface{}
 
+// Unwrap returns the original message value.
+// It returns nil if this Message was not constructed from another message.
+func (m Message) Unwrap() proto.Message {
+	mm, _ := m[messageTypeKey].(messageMeta)
+	return mm.m
+}
+
 // Descriptor return the message descriptor.
 // It returns nil for a zero Message value.
 func (m Message) Descriptor() protoreflect.MessageDescriptor {
-	mt, _ := m[messageTypeKey].(messageType)
-	return mt.md
+	mm, _ := m[messageTypeKey].(messageMeta)
+	return mm.md
 }
 
 // ProtoReflect returns a reflective view of m.
@@ -201,7 +216,7 @@ func Transform(...option) cmp.Option {
 		case m == nil:
 			return nil
 		case !m.IsValid():
-			return Message{messageTypeKey: messageType{md: m.Descriptor()}, messageInvalidKey: true}
+			return Message{messageTypeKey: messageMeta{m: m.Interface(), md: m.Descriptor()}, messageInvalidKey: true}
 		default:
 			return transformMessage(m)
 		}
@@ -218,7 +233,7 @@ func isMessageType(t reflect.Type) bool {
 
 func transformMessage(m protoreflect.Message) Message {
 	mx := Message{}
-	mt := messageType{md: m.Descriptor(), xds: make(map[string]protoreflect.FieldDescriptor)}
+	mt := messageMeta{m: m.Interface(), md: m.Descriptor(), xds: make(map[string]protoreflect.FieldDescriptor)}
 
 	// Handle known and extension fields.
 	m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {

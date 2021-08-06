@@ -40,7 +40,7 @@ func TestTransform(t *testing.T) {
 			OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(5)},
 		},
 		want: Message{
-			messageTypeKey:            messageTypeOf(&testpb.TestAllTypes{}),
+			messageTypeKey:            messageMetaOf(&testpb.TestAllTypes{}),
 			"optional_bool":           bool(false),
 			"optional_int32":          int32(-32),
 			"optional_int64":          int64(-64),
@@ -51,7 +51,7 @@ func TestTransform(t *testing.T) {
 			"optional_string":         string("string"),
 			"optional_bytes":          []byte("bytes"),
 			"optional_nested_enum":    enumOf(testpb.TestAllTypes_NEG),
-			"optional_nested_message": Message{messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
+			"optional_nested_message": Message{messageTypeKey: messageMetaOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
 		},
 	}, {
 		in: &testpb.TestAllTypes{
@@ -74,7 +74,7 @@ func TestTransform(t *testing.T) {
 			},
 		},
 		want: Message{
-			messageTypeKey:    messageTypeOf(&testpb.TestAllTypes{}),
+			messageTypeKey:    messageMetaOf(&testpb.TestAllTypes{}),
 			"repeated_bool":   []bool{false, true},
 			"repeated_int32":  []int32{32, -32},
 			"repeated_int64":  []int64{64, -64},
@@ -89,8 +89,8 @@ func TestTransform(t *testing.T) {
 				enumOf(testpb.TestAllTypes_BAR),
 			},
 			"repeated_nested_message": []Message{
-				{messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
-				{messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(-5)},
+				{messageTypeKey: messageMetaOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
+				{messageTypeKey: messageMetaOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(-5)},
 			},
 		},
 	}, {
@@ -112,7 +112,7 @@ func TestTransform(t *testing.T) {
 			},
 		},
 		want: Message{
-			messageTypeKey:      messageTypeOf(&testpb.TestAllTypes{}),
+			messageTypeKey:      messageMetaOf(&testpb.TestAllTypes{}),
 			"map_bool_bool":     map[bool]bool{true: false},
 			"map_int32_int32":   map[int32]int32{-32: 32},
 			"map_int64_int64":   map[int64]int64{-64: 64},
@@ -126,7 +126,7 @@ func TestTransform(t *testing.T) {
 				"k": enumOf(testpb.TestAllTypes_FOO),
 			},
 			"map_string_nested_message": map[string]Message{
-				"k": {messageTypeKey: messageTypeOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
+				"k": {messageTypeKey: messageMetaOf(&testpb.TestAllTypes_NestedMessage{}), "a": int32(5)},
 			},
 		},
 	}, {
@@ -146,7 +146,7 @@ func TestTransform(t *testing.T) {
 			return m
 		}(),
 		want: Message{
-			messageTypeKey:                                 messageTypeOf(&testpb.TestAllExtensions{}),
+			messageTypeKey:                                 messageMetaOf(&testpb.TestAllExtensions{}),
 			"[goproto.proto.test.optional_bool]":           bool(false),
 			"[goproto.proto.test.optional_int32]":          int32(-32),
 			"[goproto.proto.test.optional_int64]":          int64(-64),
@@ -157,7 +157,7 @@ func TestTransform(t *testing.T) {
 			"[goproto.proto.test.optional_string]":         string("string"),
 			"[goproto.proto.test.optional_bytes]":          []byte("bytes"),
 			"[goproto.proto.test.optional_nested_enum]":    enumOf(testpb.TestAllTypes_NEG),
-			"[goproto.proto.test.optional_nested_message]": Message{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
+			"[goproto.proto.test.optional_nested_message]": Message{messageTypeKey: messageMetaOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
 		},
 	}, {
 		in: func() proto.Message {
@@ -182,7 +182,7 @@ func TestTransform(t *testing.T) {
 			return m
 		}(),
 		want: Message{
-			messageTypeKey:                         messageTypeOf(&testpb.TestAllExtensions{}),
+			messageTypeKey:                         messageMetaOf(&testpb.TestAllExtensions{}),
 			"[goproto.proto.test.repeated_bool]":   []bool{false, true},
 			"[goproto.proto.test.repeated_int32]":  []int32{32, -32},
 			"[goproto.proto.test.repeated_int64]":  []int64{64, -64},
@@ -197,8 +197,8 @@ func TestTransform(t *testing.T) {
 				enumOf(testpb.TestAllTypes_BAR),
 			},
 			"[goproto.proto.test.repeated_nested_message]": []Message{
-				{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
-				{messageTypeKey: messageTypeOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(-5)},
+				{messageTypeKey: messageMetaOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(5)},
+				{messageTypeKey: messageMetaOf(&testpb.TestAllExtensions_NestedMessage{}), "a": int32(-5)},
 			},
 		},
 	}, {
@@ -229,7 +229,7 @@ func TestTransform(t *testing.T) {
 			return m
 		}(),
 		want: Message{
-			messageTypeKey: messageTypeOf(&testpb.TestAllTypes{}),
+			messageTypeKey: messageMetaOf(&testpb.TestAllTypes{}),
 			"50000":        protoreflect.RawFields(protopack.Message{protopack.Tag{Number: 50000, Type: protopack.VarintType}, protopack.Uvarint(100)}.Marshal()),
 			"50001":        protoreflect.RawFields(protopack.Message{protopack.Tag{Number: 50001, Type: protopack.Fixed32Type}, protopack.Uint32(200)}.Marshal()),
 			"50002":        protoreflect.RawFields(protopack.Message{protopack.Tag{Number: 50002, Type: protopack.Fixed64Type}, protopack.Uint64(300)}.Marshal()),
@@ -258,6 +258,9 @@ func TestTransform(t *testing.T) {
 			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("Transform() mismatch (-want +got):\n%v", diff)
 			}
+			if got.Unwrap() != tt.in {
+				t.Errorf("got.Unwrap() = %p, want %p", got.Unwrap(), tt.in)
+			}
 		})
 	}
 }
@@ -266,6 +269,6 @@ func enumOf(e protoreflect.Enum) Enum {
 	return Enum{e.Number(), e.Descriptor()}
 }
 
-func messageTypeOf(m protoreflect.ProtoMessage) messageType {
-	return messageType{md: m.ProtoReflect().Descriptor()}
+func messageMetaOf(m protoreflect.ProtoMessage) messageMeta {
+	return messageMeta{m: m, md: m.ProtoReflect().Descriptor()}
 }
