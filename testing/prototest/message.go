@@ -643,7 +643,7 @@ func formatValue(v pref.Value) string {
 		if err != nil {
 			return fmt.Sprintf("<%v>", err)
 		}
-		return fmt.Sprintf("%v{%v}", v.Descriptor().FullName(), string(b))
+		return fmt.Sprintf("%v{%s}", v.Descriptor().FullName(), b)
 	case string:
 		return fmt.Sprintf("%q", v)
 	default:
