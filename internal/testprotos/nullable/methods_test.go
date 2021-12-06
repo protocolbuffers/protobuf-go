@@ -6,6 +6,7 @@
 // only test compatibility with the Marshal/Unmarshal functionality with
 // pure protobuf reflection since there is no support for nullable fields
 // in the table-driven implementation.
+//go:build protoreflect
 // +build protoreflect
 
 package nullable
