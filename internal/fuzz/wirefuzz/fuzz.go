@@ -41,7 +41,7 @@ func Fuzz(data []byte) (score int) {
 	// Unmarshal, Validate, and CheckInitialized should agree about initialization.
 	checkInit := proto.CheckInitialized(m1) == nil
 	methods := m1.ProtoReflect().ProtoMethods()
-	in := piface.UnmarshalInput{Message: mt.New(), Resolver: protoregistry.GlobalTypes}
+	in := piface.UnmarshalInput{Message: mt.New(), Resolver: protoregistry.GlobalTypes, Depth: 10000}
 	if checkInit {
 		// If the message initialized, the both Unmarshal and Validate should
 		// report it as such. False negatives are tolerated, but have a
