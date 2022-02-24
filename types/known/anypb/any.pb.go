@@ -58,7 +58,7 @@
 // of that message can be passed to the UnmarshalTo method:
 //
 //	m := new(foopb.MyMessage)
-//	if err := any.UnmarshalTo(m); err != nil {
+//	if err := anypb.UnmarshalTo(m); err != nil {
 //		... // handle error
 //	}
 //	... // make use of m
