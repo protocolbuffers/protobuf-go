@@ -272,10 +272,11 @@ func (e encoder) marshalSingular(val pref.Value, fd pref.FieldDescriptor) error 
 	case pref.Uint32Kind, pref.Fixed32Kind:
 		e.WriteUint(val.Uint())
 
-	case pref.Int64Kind, pref.Sint64Kind, pref.Uint64Kind,
-		pref.Sfixed64Kind, pref.Fixed64Kind:
-		// 64-bit integers are written out as JSON string.
-		e.WriteString(val.String())
+	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
+		e.WriteInt(val.Int())
+
+	case pref.Uint64Kind, pref.Fixed64Kind:
+		e.WriteUint(val.Uint())
 
 	case pref.FloatKind:
 		// Encoder.WriteFloat handles the special numbers NaN and infinites.

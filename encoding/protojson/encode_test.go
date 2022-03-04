@@ -74,15 +74,15 @@ func TestMarshal(t *testing.T) {
 		want: `{
   "optBool": false,
   "optInt32": 0,
-  "optInt64": "0",
+  "optInt64": 0,
   "optUint32": 0,
-  "optUint64": "0",
+  "optUint64": 0,
   "optSint32": 0,
-  "optSint64": "0",
+  "optSint64": 0,
   "optFixed32": 0,
-  "optFixed64": "0",
+  "optFixed64": 0,
   "optSfixed32": 0,
-  "optSfixed64": "0",
+  "optSfixed64": 0,
   "optFloat": 0,
   "optDouble": 0,
   "optBytes": "",
@@ -106,9 +106,9 @@ func TestMarshal(t *testing.T) {
 		want: `{
   "optBool": false,
   "optInt32": 0,
-  "optInt64": "0",
+  "optInt64": 0,
   "optUint32": 0,
-  "optUint64": "0",
+  "optUint64": 0,
   "optFloat": 0,
   "optDouble": 0,
   "optString": "",
@@ -136,12 +136,12 @@ func TestMarshal(t *testing.T) {
 		want: `{
   "optBool": true,
   "optInt32": 255,
-  "optInt64": "3735928559",
+  "optInt64": 3735928559,
   "optUint32": 47,
-  "optUint64": "3735928559",
+  "optUint64": 3735928559,
   "optSint32": -1001,
-  "optSint64": "-65535",
-  "optFixed64": "64",
+  "optSint64": -65535,
+  "optFixed64": 64,
   "optSfixed32": -32,
   "optFloat": 1.02,
   "optDouble": 1.234,
@@ -484,15 +484,15 @@ func TestMarshal(t *testing.T) {
     0
   ],
   "rptInt64": [
-    "-64",
-    "47"
+    -64,
+    47
   ],
   "rptUint32": [
     255,
     65535
   ],
   "rptUint64": [
-    "3735928559"
+    3735928559
   ],
   "rptFloat": [
     "NaN",
@@ -741,7 +741,7 @@ func TestMarshal(t *testing.T) {
 		},
 		want: `{
   "reqBool": false,
-  "reqSfixed64": "0",
+  "reqSfixed64": 0,
   "reqDouble": 1.23,
   "reqString": "hello",
   "reqEnum": "ONE"
@@ -759,7 +759,7 @@ func TestMarshal(t *testing.T) {
 		},
 		want: `{
   "reqBool": false,
-  "reqSfixed64": "0",
+  "reqSfixed64": 0,
   "reqDouble": 1.23,
   "reqString": "hello",
   "reqEnum": "ONE"
@@ -776,7 +776,7 @@ func TestMarshal(t *testing.T) {
 		},
 		want: `{
   "reqBool": false,
-  "reqSfixed64": "0",
+  "reqSfixed64": 0,
   "reqDouble": 1.23,
   "reqString": "hello",
   "reqEnum": "ONE",
@@ -1120,7 +1120,7 @@ func TestMarshal(t *testing.T) {
 	}, {
 		desc:  "Int64Value",
 		input: &wrapperspb.Int64Value{Value: 42},
-		want:  `"42"`,
+		want:  `42`,
 	}, {
 		desc:  "UInt32Value",
 		input: &wrapperspb.UInt32Value{Value: 42},
@@ -1128,7 +1128,7 @@ func TestMarshal(t *testing.T) {
 	}, {
 		desc:  "UInt64Value",
 		input: &wrapperspb.UInt64Value{Value: 42},
-		want:  `"42"`,
+		want:  `42`,
 	}, {
 		desc:  "FloatValue",
 		input: &wrapperspb.FloatValue{Value: 1.02},
@@ -1649,15 +1649,15 @@ func TestMarshal(t *testing.T) {
   "@type": "pb3.Scalars",
   "sBool": false,
   "sInt32": 0,
-  "sInt64": "0",
+  "sInt64": 0,
   "sUint32": 0,
-  "sUint64": "0",
+  "sUint64": 0,
   "sSint32": 0,
-  "sSint64": "0",
+  "sSint64": 0,
   "sFixed32": 0,
-  "sFixed64": "0",
+  "sFixed64": 0,
   "sSfixed32": 0,
-  "sSfixed64": "0",
+  "sSfixed64": 0,
   "sFloat": 0,
   "sDouble": 0,
   "sBytes": "",
@@ -1749,7 +1749,7 @@ func TestMarshal(t *testing.T) {
 		}(),
 		want: `{
   "@type": "google.protobuf.Int64Value",
-  "value": "42"
+  "value": 42
 }`,
 	}, {
 		desc: "Any with Duration",
@@ -1906,9 +1906,9 @@ func TestMarshal(t *testing.T) {
 		want: `{
   "optBool": false,
   "optInt32": 42,
-  "optInt64": "42",
+  "optInt64": 42,
   "optUint32": 42,
-  "optUint64": "42",
+  "optUint64": 42,
   "optFloat": 1.23,
   "optDouble": 3.1415,
   "optString": "hello",
@@ -1960,15 +1960,15 @@ func TestMarshal(t *testing.T) {
 		want: `{
   "sBool": false,
   "sInt32": 0,
-  "sInt64": "0",
+  "sInt64": 0,
   "sUint32": 0,
-  "sUint64": "0",
+  "sUint64": 0,
   "sSint32": 0,
-  "sSint64": "0",
+  "sSint64": 0,
   "sFixed32": 0,
-  "sFixed64": "0",
+  "sFixed64": 0,
   "sSfixed32": 0,
-  "sSfixed64": "0",
+  "sSfixed64": 0,
   "sFloat": 0,
   "sDouble": 0,
   "sBytes": "",
