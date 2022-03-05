@@ -2244,6 +2244,17 @@ func TestMarshal(t *testing.T) {
   }
 }`,
 	}, {
+		desc: "UseLowerCase in singular field",
+		mo:   protojson.MarshalOptions{LowerCaseEnum: true},
+		input: &pb2.Enums{
+			OptEnum:       pb2.Enum_ONE.Enum(),
+			OptNestedEnum: pb2.Enums_UNO.Enum(),
+		},
+		want: `{
+  "optEnum": "one",
+  "optNestedEnum": "uno"
+}`,
+	}, {
 		desc: "UseProtoNames",
 		mo:   protojson.MarshalOptions{UseProtoNames: true},
 		input: &pb2.Nests{
