@@ -7,6 +7,7 @@ package protojson
 import (
 	"encoding/base64"
 	"fmt"
+	"strings"
 
 	"google.golang.org/protobuf/internal/encoding/json"
 	"google.golang.org/protobuf/internal/encoding/messageset"
@@ -65,6 +66,9 @@ type MarshalOptions struct {
 
 	// UseEnumNumbers emits enum values as numbers.
 	UseEnumNumbers bool
+
+	// LowerCaseEnum applies toLower to enum names.
+	LowerCaseEnum bool
 
 	// EmitUnpopulated specifies whether to emit unpopulated fields. It does not
 	// emit unpopulated oneof fields or unpopulated extension fields.
@@ -272,10 +276,11 @@ func (e encoder) marshalSingular(val pref.Value, fd pref.FieldDescriptor) error 
 	case pref.Uint32Kind, pref.Fixed32Kind:
 		e.WriteUint(val.Uint())
 
-	case pref.Int64Kind, pref.Sint64Kind, pref.Uint64Kind,
-		pref.Sfixed64Kind, pref.Fixed64Kind:
-		// 64-bit integers are written out as JSON string.
-		e.WriteString(val.String())
+	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
+		e.WriteInt(val.Int())
+
+	case pref.Uint64Kind, pref.Fixed64Kind:
+		e.WriteUint(val.Uint())
 
 	case pref.FloatKind:
 		// Encoder.WriteFloat handles the special numbers NaN and infinites.
@@ -296,7 +301,11 @@ func (e encoder) marshalSingular(val pref.Value, fd pref.FieldDescriptor) error 
 			if e.opts.UseEnumNumbers || desc == nil {
 				e.WriteInt(int64(val.Enum()))
 			} else {
-				e.WriteString(string(desc.Name()))
+				jName := strings.TrimPrefix(string(desc.Name()), strings.ToUpper(snakeMe(string(fd.Enum().Name())))+"_")
+				if e.opts.LowerCaseEnum {
+					jName = strings.ToLower(jName)
+				}
+				e.WriteString(jName)
 			}
 		}
 

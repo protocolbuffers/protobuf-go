@@ -10,6 +10,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"google.golang.org/protobuf/internal/encoding/json"
 	"google.golang.org/protobuf/internal/encoding/messageset"
@@ -474,11 +475,26 @@ func unmarshalBytes(tok json.Token) (pref.Value, bool) {
 	return pref.ValueOfBytes(b), true
 }
 
+func snakeMe(s string) (snake string) {
+	for i, v := range s {
+		if i != 0 && unicode.IsUpper(v) {
+			snake += "_"
+		}
+		snake += string(v)
+	}
+	return snake
+}
+
 func unmarshalEnum(tok json.Token, fd pref.FieldDescriptor) (pref.Value, bool) {
 	switch tok.Kind() {
 	case json.String:
 		// Lookup EnumNumber based on name.
 		s := tok.ParsedString()
+		if enumVal := fd.Enum().Values().ByName(pref.Name(s)); enumVal != nil {
+			return pref.ValueOfEnum(enumVal.Number()), true
+		}
+		s = snakeMe(string(fd.Enum().Name())) + "_" + s
+		s = strings.ToUpper(s)
 		if enumVal := fd.Enum().Values().ByName(pref.Name(s)); enumVal != nil {
 			return pref.ValueOfEnum(enumVal.Number()), true
 		}
