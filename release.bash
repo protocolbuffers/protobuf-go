@@ -59,8 +59,8 @@ set -e
 if [[ $(git branch --list release) ]]; then
 	echo "error: release branch already exists"; exit 1
 fi
-git change release
-git sync
+git codereview change release
+git codereview sync
 
 # Create commit for actual release.
 INPLACE='-i ""' # BSD version of sed expects argument after -i
