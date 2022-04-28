@@ -381,6 +381,30 @@ func TestDecoder(t *testing.T) {
 			want: []R{{E: "invalid field name: 123name"}},
 		},
 		{
+			in:   `/`,
+			want: []R{{E: `invalid field name: /`}},
+		},
+		{
+			in:   `世界`,
+			want: []R{{E: `invalid field name: 世`}},
+		},
+		{
+			in:   `1a/b`,
+			want: []R{{E: `invalid field name: 1a`}},
+		},
+		{
+			in:   `1c\d`,
+			want: []R{{E: `invalid field name: 1c`}},
+		},
+		{
+			in:   "\x84f",
+			want: []R{{E: "invalid field name: \x84"}},
+		},
+		{
+			in:   "\uFFFDxxx",
+			want: []R{{E: "invalid field name: \uFFFD"}},
+		},
+		{
 			in: "[type]",
 			want: []R{
 				{K: text.Name, T: NT{K: text.TypeName, S: "type"}, RS: "[type]"},
