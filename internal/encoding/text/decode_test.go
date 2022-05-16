@@ -405,6 +405,10 @@ func TestDecoder(t *testing.T) {
 			want: []R{{E: "invalid field name: \uFFFD"}},
 		},
 		{
+			in:   "-a234567890123456789012345678901234567890abc",
+			want: []R{{E: "invalid field name: -a2345678901234567890123456789012…"}},
+		},
+		{
 			in: "[type]",
 			want: []R{
 				{K: text.Name, T: NT{K: text.TypeName, S: "type"}, RS: "[type]"},

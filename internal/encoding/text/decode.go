@@ -655,7 +655,11 @@ func consume(b []byte, n int) []byte {
 // errId extracts a byte sequence that looks like an invalid ID
 // (for the purposes of error reporting).
 func errId(seq []byte) []byte {
+	const maxLen = 32
 	for i := 0; i < len(seq); {
+		if i > maxLen {
+			return append(seq[:i:i], "…"...)
+		}
 		r, size := utf8.DecodeRune(seq[i:])
 		if r > utf8.RuneSelf || (r != '/' && isDelim(byte(r))) {
 			if i == 0 {
