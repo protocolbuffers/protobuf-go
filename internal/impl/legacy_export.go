@@ -81,8 +81,8 @@ func (Export) CompressGZIP(in []byte) (out []byte) {
 			blockHeader[0] = 0x01 // final bit per RFC 1951, section 3.2.3.
 			blockSize = len(in)
 		}
-		binary.LittleEndian.PutUint16(blockHeader[1:3], uint16(blockSize)^0x0000)
-		binary.LittleEndian.PutUint16(blockHeader[3:5], uint16(blockSize)^0xffff)
+		binary.LittleEndian.PutUint16(blockHeader[1:3], uint16(blockSize))
+		binary.LittleEndian.PutUint16(blockHeader[3:5], ^uint16(blockSize))
 		out = append(out, blockHeader[:]...)
 		out = append(out, in[:blockSize]...)
 		in = in[blockSize:]
