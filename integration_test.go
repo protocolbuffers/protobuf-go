@@ -38,7 +38,7 @@ var (
 	protobufVersion = "3.15.3"
 	protobufSHA256  = "" // ignored if protobufVersion is a git hash
 
-	golangVersions = []string{"1.11.13", "1.12.17", "1.13.15", "1.14.15", "1.15.15", "1.16.10", "1.17.3"}
+	golangVersions = []string{"1.11.13", "1.12.17", "1.13.15", "1.14.15", "1.15.15", "1.16.15", "1.17.10", "1.18.1"}
 	golangLatest   = golangVersions[len(golangVersions)-1]
 
 	staticcheckVersion = "2020.1.4"
