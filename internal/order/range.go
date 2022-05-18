@@ -25,7 +25,7 @@ type (
 	// FieldRnger is an interface for visiting all fields in a message.
 	// The protoreflect.Message type implements this interface.
 	FieldRanger interface{ Range(VisitField) }
-	// VisitField is called everytime a message field is visited.
+	// VisitField is called every time a message field is visited.
 	VisitField = func(pref.FieldDescriptor, pref.Value) bool
 )
 
@@ -76,7 +76,7 @@ type (
 	// EntryRanger is an interface for visiting all fields in a message.
 	// The protoreflect.Map type implements this interface.
 	EntryRanger interface{ Range(VisitEntry) }
-	// VisitEntry is called everytime a map entry is visited.
+	// VisitEntry is called every time a map entry is visited.
 	VisitEntry = func(pref.MapKey, pref.Value) bool
 )
 

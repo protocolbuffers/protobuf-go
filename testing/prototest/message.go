@@ -25,7 +25,7 @@ import (
 // TODO: Test invalid field descriptors or oneof descriptors.
 // TODO: This should test the functionality that can be provided by fast-paths.
 
-// Message tests a message implemention.
+// Message tests a message implementation.
 type Message struct {
 	// Resolver is used to determine the list of extension fields to test with.
 	// If nil, this defaults to using protoregistry.GlobalTypes.

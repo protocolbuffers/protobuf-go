@@ -124,7 +124,7 @@ func Test(t *testing.T) {
 			runGo("ProtocGenGo", command{Dir: "cmd/protoc-gen-go/testdata"}, "go", "test")
 			runGo("Conformance", command{Dir: "internal/conformance"}, "go", "test", "-execute")
 
-			// Only run the 32-bit compatability tests for Linux;
+			// Only run the 32-bit compatibility tests for Linux;
 			// avoid Darwin since 10.15 dropped support i386 code execution.
 			if runtime.GOOS == "linux" {
 				runGo("Arch32Bit", command{Dir: workDir, Env: append(os.Environ(), "GOARCH=386")}, "go", "test", "./...")
