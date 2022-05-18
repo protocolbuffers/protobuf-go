@@ -226,10 +226,7 @@ func (n Float64) checkOk(tok text.Token) string {
 	if !ok {
 		return fmt.Sprintf("Token.Float64() returned not OK for token: %v", tok.RawString())
 	}
-	if math.IsNaN(got) && math.IsNaN(n.val) {
-		return ""
-	}
-	if got != n.val {
+	if math.Float64bits(got) != math.Float64bits(n.val) {
 		return fmt.Sprintf("Token.Float64() got %v want %v for token: %v", got, n.val, tok.RawString())
 	}
 	return ""
@@ -251,10 +248,7 @@ func (n Float32) checkOk(tok text.Token) string {
 	if !ok {
 		return fmt.Sprintf("Token.Float32() returned not OK for token: %v", tok.RawString())
 	}
-	if math.IsNaN(float64(got)) && math.IsNaN(float64(n.val)) {
-		return ""
-	}
-	if got != n.val {
+	if math.Float32bits(got) != math.Float32bits(n.val) {
 		return fmt.Sprintf("Token.Float32() got %v want %v for token: %v", got, n.val, tok.RawString())
 	}
 	return ""
@@ -1123,7 +1117,7 @@ func TestDecoder(t *testing.T) {
 				{K: text.Scalar, T: ST{ok: Float64{0.0}}},
 				{K: text.Scalar, T: ST{ok: Float64{1.0}}},
 				{K: text.Scalar, T: ST{ok: Float64{10.0}}},
-				{K: text.Scalar, T: ST{ok: Float64{-0.0}}},
+				{K: text.Scalar, T: ST{ok: Float64{math.Copysign(0, -1)}}},
 				{K: text.Scalar, T: ST{ok: Float64{-1.0}}},
 				{K: text.Scalar, T: ST{ok: Float64{-10.0}}},
 				{K: text.Scalar, T: ST{ok: Float64{1.0}}},
@@ -1143,7 +1137,7 @@ func TestDecoder(t *testing.T) {
 				{K: text.Scalar, T: ST{ok: Float32{0.0}}},
 				{K: text.Scalar, T: ST{ok: Float32{1.0}}},
 				{K: text.Scalar, T: ST{ok: Float32{10.0}}},
-				{K: text.Scalar, T: ST{ok: Float32{-0.0}}},
+				{K: text.Scalar, T: ST{ok: Float32{float32(math.Copysign(0, -1))}}},
 				{K: text.Scalar, T: ST{ok: Float32{-1.0}}},
 				{K: text.Scalar, T: ST{ok: Float32{-10.0}}},
 				{K: text.Scalar, T: ST{ok: Float32{1.0}}},
