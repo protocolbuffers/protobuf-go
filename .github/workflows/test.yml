@@ -14,13 +14,13 @@ jobs:
       if: runner.os == 'Linux'
       run: sudo apt-get -y install autoconf automake libtool curl make g++ unzip
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Cache dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v3.0.2
       with:
         path: .cache
         key: ${{ runner.os }}-${{ hashFiles('integration_test.go') }}
