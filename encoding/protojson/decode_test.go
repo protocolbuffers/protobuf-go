@@ -13,7 +13,7 @@ import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
-	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/reflect/protoregistry"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
@@ -1984,7 +1984,7 @@ func TestUnmarshal(t *testing.T) {
 		wantMessage:  &anypb.Any{TypeUrl: "foo/pb2.Nested"},
 	}, {
 		desc:         "Any without registered type",
-		umo:          protojson.UnmarshalOptions{Resolver: new(preg.Types)},
+		umo:          protojson.UnmarshalOptions{Resolver: new(protoregistry.Types)},
 		inputMessage: &anypb.Any{},
 		inputText:    `{"@type": "foo/pb2.Nested"}`,
 		wantErr:      `(line 1:11): unable to resolve "foo/pb2.Nested":`,

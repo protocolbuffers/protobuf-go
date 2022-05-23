@@ -9,20 +9,20 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/internal/encoding/tag"
-	fdesc "google.golang.org/protobuf/internal/filedesc"
+	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/proto"
-	pdesc "google.golang.org/protobuf/reflect/protodesc"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protodesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 func Test(t *testing.T) {
-	fd := new(fdesc.Field)
-	fd.L0.ParentFile = fdesc.SurrogateProto3
+	fd := new(filedesc.Field)
+	fd.L0.ParentFile = filedesc.SurrogateProto3
 	fd.L0.FullName = "foo_field"
 	fd.L1.Number = 1337
-	fd.L1.Cardinality = pref.Repeated
-	fd.L1.Kind = pref.BytesKind
-	fd.L1.Default = fdesc.DefaultValue(pref.ValueOf([]byte("hello, \xde\xad\xbe\xef\n")), nil)
+	fd.L1.Cardinality = protoreflect.Repeated
+	fd.L1.Kind = protoreflect.BytesKind
+	fd.L1.Default = filedesc.DefaultValue(protoreflect.ValueOf([]byte("hello, \xde\xad\xbe\xef\n")), nil)
 
 	// Marshal test.
 	gotTag := tag.Marshal(fd, "")
@@ -34,7 +34,7 @@ func Test(t *testing.T) {
 	// Unmarshal test.
 	gotFD := tag.Unmarshal(wantTag, reflect.TypeOf([]byte{}), nil)
 	wantFD := fd
-	if !proto.Equal(pdesc.ToFieldDescriptorProto(gotFD), pdesc.ToFieldDescriptorProto(wantFD)) {
+	if !proto.Equal(protodesc.ToFieldDescriptorProto(gotFD), protodesc.ToFieldDescriptorProto(wantFD)) {
 		t.Errorf("Umarshal() mismatch:\ngot  %v\nwant %v", gotFD, wantFD)
 	}
 }

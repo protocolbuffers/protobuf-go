@@ -12,7 +12,7 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
-	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/reflect/protoregistry"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
@@ -1630,7 +1630,7 @@ value: "some bytes"
 		wantErr: "contains invalid UTF-8",
 	}, {
 		desc:         "Any expanded with unregistered type",
-		umo:          prototext.UnmarshalOptions{Resolver: new(preg.Types)},
+		umo:          prototext.UnmarshalOptions{Resolver: new(protoregistry.Types)},
 		inputMessage: &anypb.Any{},
 		inputText:    `[SomeMessage]: {}`,
 		wantErr:      "unable to resolve message [SomeMessage]",

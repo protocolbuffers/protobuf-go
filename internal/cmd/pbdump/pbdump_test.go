@@ -11,7 +11,7 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -27,7 +27,7 @@ func mustMakeMessage(s string) *descriptorpb.DescriptorProto {
 
 func TestFields(t *testing.T) {
 	type fieldsKind struct {
-		kind   pref.Kind
+		kind   protoreflect.Kind
 		fields string
 	}
 	tests := []struct {
@@ -35,31 +35,31 @@ func TestFields(t *testing.T) {
 		wantMsg  *descriptorpb.DescriptorProto
 		wantErr  string
 	}{{
-		inFields: []fieldsKind{{pref.MessageKind, ""}},
+		inFields: []fieldsKind{{protoreflect.MessageKind, ""}},
 		wantMsg:  mustMakeMessage(`name:"X"`),
 	}, {
-		inFields: []fieldsKind{{pref.MessageKind, "987654321"}},
+		inFields: []fieldsKind{{protoreflect.MessageKind, "987654321"}},
 		wantErr:  "invalid field: 987654321",
 	}, {
-		inFields: []fieldsKind{{pref.MessageKind, "-1"}},
+		inFields: []fieldsKind{{protoreflect.MessageKind, "-1"}},
 		wantErr:  "invalid field: -1",
 	}, {
-		inFields: []fieldsKind{{pref.MessageKind, "k"}},
+		inFields: []fieldsKind{{protoreflect.MessageKind, "k"}},
 		wantErr:  "invalid field: k",
 	}, {
-		inFields: []fieldsKind{{pref.MessageKind, "1.2"}, {pref.Int32Kind, "1"}},
+		inFields: []fieldsKind{{protoreflect.MessageKind, "1.2"}, {protoreflect.Int32Kind, "1"}},
 		wantErr:  "field 1 of int32 type cannot have sub-fields",
 	}, {
-		inFields: []fieldsKind{{pref.Int32Kind, "1"}, {pref.MessageKind, "1.2"}},
+		inFields: []fieldsKind{{protoreflect.Int32Kind, "1"}, {protoreflect.MessageKind, "1.2"}},
 		wantErr:  "field 1 of int32 type cannot have sub-fields",
 	}, {
-		inFields: []fieldsKind{{pref.Int32Kind, "30"}, {pref.Int32Kind, "30"}},
+		inFields: []fieldsKind{{protoreflect.Int32Kind, "30"}, {protoreflect.Int32Kind, "30"}},
 		wantErr:  "field 30 already set as int32 type",
 	}, {
 		inFields: []fieldsKind{
-			{pref.Int32Kind, "10.20.31"},
-			{pref.MessageKind, "  10.20.30, 10.21   "},
-			{pref.GroupKind, "10"},
+			{protoreflect.Int32Kind, "10.20.31"},
+			{protoreflect.MessageKind, "  10.20.30, 10.21   "},
+			{protoreflect.GroupKind, "10"},
 		},
 		wantMsg: mustMakeMessage(`
 			name: "X"
