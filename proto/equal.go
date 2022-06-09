@@ -33,6 +33,10 @@ func Equal(x, y Message) bool {
 	if x == nil || y == nil {
 		return x == nil && y == nil
 	}
+	if reflect.TypeOf(x).Kind() == reflect.Pointer && x == y {
+		// Avoid an expensive comparison if both inputs are identical pointers.
+		return true
+	}
 	mx := x.ProtoReflect()
 	my := y.ProtoReflect()
 	if mx.IsValid() != my.IsValid() {
