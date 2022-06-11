@@ -34,6 +34,7 @@
 package conformance
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -211,6 +212,13 @@ func (x *FailureSet) GetFailure() []string {
 	return nil
 }
 
+func (p *FailureSet) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FailureSet) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Represents a single test case's input.  The testee should:
 //
 //   1. parse this proto (which should always succeed)
@@ -382,6 +390,13 @@ func (*ConformanceRequest_JsonPayload) isConformanceRequest_Payload() {}
 func (*ConformanceRequest_JspbPayload) isConformanceRequest_Payload() {}
 
 func (*ConformanceRequest_TextPayload) isConformanceRequest_Payload() {}
+
+func (p *ConformanceRequest) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ConformanceRequest) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
 
 // Represents a single test case's output.
 type ConformanceResponse struct {
@@ -570,6 +585,13 @@ func (*ConformanceResponse_JspbPayload) isConformanceResponse_Result() {}
 
 func (*ConformanceResponse_TextPayload) isConformanceResponse_Result() {}
 
+func (p *ConformanceResponse) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ConformanceResponse) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Encoding options for jspb format.
 type JspbEncodingConfig struct {
 	state         protoimpl.MessageState
@@ -617,6 +639,13 @@ func (x *JspbEncodingConfig) GetUseJspbArrayAnyFormat() bool {
 		return x.UseJspbArrayAnyFormat
 	}
 	return false
+}
+
+func (p *JspbEncodingConfig) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *JspbEncodingConfig) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_conformance_conformance_proto protoreflect.FileDescriptor

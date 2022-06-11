@@ -8,6 +8,7 @@
 package annotations
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -112,6 +113,13 @@ func (x *AnnotationsTestMessage) GetAnnotationsTestField() string {
 		return *x.AnnotationsTestField
 	}
 	return ""
+}
+
+func (p *AnnotationsTestMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *AnnotationsTestMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_annotations_annotations_proto protoreflect.FileDescriptor

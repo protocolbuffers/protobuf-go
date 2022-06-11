@@ -9,6 +9,7 @@ package import_public
 
 import (
 	sub "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_public/sub"
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -68,6 +69,13 @@ func (x *Local) GetE() sub.E {
 		return *x.E
 	}
 	return sub.E(0)
+}
+
+func (p *Local) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Local) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_import_public_b_proto protoreflect.FileDescriptor

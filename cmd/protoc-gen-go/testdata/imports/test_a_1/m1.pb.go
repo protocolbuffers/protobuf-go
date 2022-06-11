@@ -8,6 +8,7 @@
 package test_a_1
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -95,6 +96,13 @@ func (*M1) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_rawDescGZIP(), []int{0}
 }
 
+func (p *M1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *M1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type M1_1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -140,6 +148,13 @@ func (x *M1_1) GetM1() *M1 {
 		return x.M1
 	}
 	return nil
+}
+
+func (p *M1_1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *M1_1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto protoreflect.FileDescriptor

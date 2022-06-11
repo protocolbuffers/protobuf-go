@@ -8,6 +8,7 @@
 package proto2
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	math "math"
@@ -1110,6 +1111,13 @@ func (*FieldTestMessage_OneofTwo_1) isFieldTestMessage_OneofTwo() {}
 
 func (*FieldTestMessage_OneofTwo_2) isFieldTestMessage_OneofTwo() {}
 
+func (p *FieldTestMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldTestMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type FieldTestMessage_OptionalGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1155,6 +1163,13 @@ func (x *FieldTestMessage_OptionalGroup) GetOptionalGroup() string {
 		return *x.OptionalGroup
 	}
 	return ""
+}
+
+func (p *FieldTestMessage_OptionalGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldTestMessage_OptionalGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type FieldTestMessage_RequiredGroup struct {
@@ -1204,6 +1219,13 @@ func (x *FieldTestMessage_RequiredGroup) GetRequiredGroup() string {
 	return ""
 }
 
+func (p *FieldTestMessage_RequiredGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldTestMessage_RequiredGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type FieldTestMessage_RepeatedGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1249,6 +1271,13 @@ func (x *FieldTestMessage_RepeatedGroup) GetRepeatedGroup() []string {
 		return x.RepeatedGroup
 	}
 	return nil
+}
+
+func (p *FieldTestMessage_RepeatedGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldTestMessage_RepeatedGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type FieldTestMessage_OneofGroup struct {
@@ -1298,6 +1327,13 @@ func (x *FieldTestMessage_OneofGroup) GetOneofGroupField() string {
 	return ""
 }
 
+func (p *FieldTestMessage_OneofGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldTestMessage_OneofGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type FieldTestMessage_Message struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1334,6 +1370,13 @@ func (x *FieldTestMessage_Message) ProtoReflect() protoreflect.Message {
 // Deprecated: Use FieldTestMessage_Message.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage_Message) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_proto2_fields_proto_rawDescGZIP(), []int{0, 7}
+}
+
+func (p *FieldTestMessage_Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldTestMessage_Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_proto2_fields_proto protoreflect.FileDescriptor

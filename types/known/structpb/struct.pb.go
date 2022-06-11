@@ -225,14 +225,6 @@ func (x *Struct) AsMap() map[string]interface{} {
 	return vs
 }
 
-func (x *Struct) MarshalJSON() ([]byte, error) {
-	return protojson.Marshal(x)
-}
-
-func (x *Struct) UnmarshalJSON(b []byte) error {
-	return protojson.Unmarshal(b, x)
-}
-
 func (x *Struct) Reset() {
 	*x = Struct{}
 	if protoimpl.UnsafeEnabled {
@@ -270,6 +262,13 @@ func (x *Struct) GetFields() map[string]*Value {
 		return x.Fields
 	}
 	return nil
+}
+
+func (p *Struct) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Struct) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // `Value` represents a dynamically typed value which can be either
@@ -432,14 +431,6 @@ func (x *Value) AsInterface() interface{} {
 	return nil
 }
 
-func (x *Value) MarshalJSON() ([]byte, error) {
-	return protojson.Marshal(x)
-}
-
-func (x *Value) UnmarshalJSON(b []byte) error {
-	return protojson.Unmarshal(b, x)
-}
-
 func (x *Value) Reset() {
 	*x = Value{}
 	if protoimpl.UnsafeEnabled {
@@ -567,6 +558,13 @@ func (*Value_StructValue) isValue_Kind() {}
 
 func (*Value_ListValue) isValue_Kind() {}
 
+func (p *Value) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Value) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // `ListValue` is a wrapper around a repeated field of values.
 //
 // The JSON representation for `ListValue` is JSON array.
@@ -601,14 +599,6 @@ func (x *ListValue) AsSlice() []interface{} {
 		vs[i] = v.AsInterface()
 	}
 	return vs
-}
-
-func (x *ListValue) MarshalJSON() ([]byte, error) {
-	return protojson.Marshal(x)
-}
-
-func (x *ListValue) UnmarshalJSON(b []byte) error {
-	return protojson.Unmarshal(b, x)
 }
 
 func (x *ListValue) Reset() {
@@ -648,6 +638,13 @@ func (x *ListValue) GetValues() []*Value {
 		return x.Values
 	}
 	return nil
+}
+
+func (p *ListValue) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ListValue) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_struct_proto protoreflect.FileDescriptor

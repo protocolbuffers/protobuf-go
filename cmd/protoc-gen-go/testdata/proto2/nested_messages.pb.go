@@ -8,6 +8,7 @@
 package proto2
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -69,6 +70,13 @@ func (x *Layer1) GetL3() *Layer1_Layer2_Layer3 {
 	return nil
 }
 
+func (p *Layer1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Layer1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Layer1_Layer2 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -116,6 +124,13 @@ func (x *Layer1_Layer2) GetL3() *Layer1_Layer2_Layer3 {
 	return nil
 }
 
+func (p *Layer1_Layer2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Layer1_Layer2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Layer1_Layer2_Layer3 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -152,6 +167,13 @@ func (x *Layer1_Layer2_Layer3) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Layer1_Layer2_Layer3.ProtoReflect.Descriptor instead.
 func (*Layer1_Layer2_Layer3) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_proto2_nested_messages_proto_rawDescGZIP(), []int{0, 0, 0}
+}
+
+func (p *Layer1_Layer2_Layer3) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Layer1_Layer2_Layer3) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_proto2_nested_messages_proto protoreflect.FileDescriptor

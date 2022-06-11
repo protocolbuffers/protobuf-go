@@ -10,6 +10,7 @@
 package comments
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -155,6 +156,13 @@ type Message1_Oneof1AField1 struct {
 
 func (*Message1_Oneof1AField1) isMessage1_Oneof1A() {}
 
+func (p *Message1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // COMMENT: Message2
 type Message2 struct {
 	state         protoimpl.MessageState
@@ -192,6 +200,13 @@ func (x *Message2) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message2.ProtoReflect.Descriptor instead.
 func (*Message2) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_comments_comments_proto_rawDescGZIP(), []int{1}
+}
+
+func (p *Message2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // COMMENT: Message1A.Leading
@@ -233,6 +248,13 @@ func (*Message1_Message1A) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_comments_comments_proto_rawDescGZIP(), []int{0, 0}
 }
 
+func (p *Message1_Message1A) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message1_Message1A) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // COMMENT: Message1B
 type Message1_Message1B struct {
 	state         protoimpl.MessageState
@@ -270,6 +292,13 @@ func (x *Message1_Message1B) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message1_Message1B.ProtoReflect.Descriptor instead.
 func (*Message1_Message1B) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_comments_comments_proto_rawDescGZIP(), []int{0, 1}
+}
+
+func (p *Message1_Message1B) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message1_Message1B) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // COMMENT: Message2A
@@ -311,6 +340,13 @@ func (*Message2_Message2A) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_comments_comments_proto_rawDescGZIP(), []int{1, 0}
 }
 
+func (p *Message2_Message2A) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message2_Message2A) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // COMMENT: Message2B
 type Message2_Message2B struct {
 	state         protoimpl.MessageState
@@ -348,6 +384,13 @@ func (x *Message2_Message2B) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message2_Message2B.ProtoReflect.Descriptor instead.
 func (*Message2_Message2B) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_comments_comments_proto_rawDescGZIP(), []int{1, 1}
+}
+
+func (p *Message2_Message2B) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message2_Message2B) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var file_cmd_protoc_gen_go_testdata_comments_comments_proto_extTypes = []protoimpl.ExtensionInfo{

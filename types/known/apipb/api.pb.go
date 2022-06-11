@@ -34,6 +34,7 @@
 package apipb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	sourcecontextpb "google.golang.org/protobuf/types/known/sourcecontextpb"
@@ -175,6 +176,13 @@ func (x *Api) GetSyntax() typepb.Syntax {
 	return typepb.Syntax(0)
 }
 
+func (p *Api) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Api) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Method represents a method of an API interface.
 type Method struct {
 	state         protoimpl.MessageState
@@ -276,6 +284,13 @@ func (x *Method) GetSyntax() typepb.Syntax {
 		return x.Syntax
 	}
 	return typepb.Syntax(0)
+}
+
+func (p *Method) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Method) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Declares an API Interface to be included in this interface. The including
@@ -412,6 +427,13 @@ func (x *Mixin) GetRoot() string {
 		return x.Root
 	}
 	return ""
+}
+
+func (p *Mixin) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Mixin) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_api_proto protoreflect.FileDescriptor

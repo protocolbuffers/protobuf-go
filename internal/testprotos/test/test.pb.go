@@ -8,6 +8,7 @@
 package test
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	enums "google.golang.org/protobuf/internal/testprotos/enums"
 	proto "google.golang.org/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -1116,6 +1117,13 @@ type TestAllTypes_OneofOptionalUint32 struct {
 
 func (*TestAllTypes_OneofOptionalUint32) isTestAllTypes_OneofOptional() {}
 
+func (p *TestAllTypes) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypes) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Deprecated: Do not use.
 type TestDeprecatedMessage struct {
 	state         protoimpl.MessageState
@@ -1195,6 +1203,13 @@ type TestDeprecatedMessage_DeprecatedOneofField struct {
 
 func (*TestDeprecatedMessage_DeprecatedOneofField) isTestDeprecatedMessage_DeprecatedOneof() {}
 
+func (p *TestDeprecatedMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestDeprecatedMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ForeignMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1250,6 +1265,13 @@ func (x *ForeignMessage) GetD() int32 {
 	return 0
 }
 
+func (p *ForeignMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ForeignMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestReservedFields struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1286,6 +1308,13 @@ func (x *TestReservedFields) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TestReservedFields.ProtoReflect.Descriptor instead.
 func (*TestReservedFields) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{3}
+}
+
+func (p *TestReservedFields) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestReservedFields) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestAllExtensions struct {
@@ -1325,6 +1354,13 @@ func (x *TestAllExtensions) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TestAllExtensions.ProtoReflect.Descriptor instead.
 func (*TestAllExtensions) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{4}
+}
+
+func (p *TestAllExtensions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllExtensions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type OptionalGroup struct {
@@ -1390,6 +1426,13 @@ func (x *OptionalGroup) GetOptionalNestedMessage() *TestAllExtensions_NestedMess
 	return nil
 }
 
+func (p *OptionalGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *OptionalGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type RepeatedGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1445,6 +1488,13 @@ func (x *RepeatedGroup) GetOptionalNestedMessage() *TestAllExtensions_NestedMess
 	return nil
 }
 
+func (p *RepeatedGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *RepeatedGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestNestedExtension struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1481,6 +1531,13 @@ func (x *TestNestedExtension) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TestNestedExtension.ProtoReflect.Descriptor instead.
 func (*TestNestedExtension) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{7}
+}
+
+func (p *TestNestedExtension) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestNestedExtension) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestRequired struct {
@@ -1528,6 +1585,13 @@ func (x *TestRequired) GetRequiredField() int32 {
 		return *x.RequiredField
 	}
 	return 0
+}
+
+func (p *TestRequired) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestRequired) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestRequiredForeign struct {
@@ -1620,6 +1684,13 @@ type TestRequiredForeign_OneofMessage struct {
 
 func (*TestRequiredForeign_OneofMessage) isTestRequiredForeign_OneofField() {}
 
+func (p *TestRequiredForeign) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestRequiredForeign) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestRequiredGroupFields struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1673,6 +1744,13 @@ func (x *TestRequiredGroupFields) GetRepeatedgroup() []*TestRequiredGroupFields_
 		return x.Repeatedgroup
 	}
 	return nil
+}
+
+func (p *TestRequiredGroupFields) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestRequiredGroupFields) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestWeak struct {
@@ -1747,6 +1825,13 @@ func (x *TestWeak) SetWeakMessage2(v proto.Message) {
 		w = &x.weakFields
 	}
 	protoimpl.X.SetWeak(w, 2, "goproto.proto.test.weak.WeakImportMessage2", v)
+}
+
+func (p *TestWeak) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestWeak) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestPackedTypes struct {
@@ -1900,6 +1985,13 @@ func (x *TestPackedTypes) GetPackedEnum() []ForeignEnum {
 	return nil
 }
 
+func (p *TestPackedTypes) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestPackedTypes) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestUnpackedTypes struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2051,6 +2143,13 @@ func (x *TestUnpackedTypes) GetUnpackedEnum() []ForeignEnum {
 	return nil
 }
 
+func (p *TestUnpackedTypes) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestUnpackedTypes) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestPackedExtensions struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -2088,6 +2187,13 @@ func (x *TestPackedExtensions) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TestPackedExtensions.ProtoReflect.Descriptor instead.
 func (*TestPackedExtensions) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{14}
+}
+
+func (p *TestPackedExtensions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestPackedExtensions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestUnpackedExtensions struct {
@@ -2129,6 +2235,13 @@ func (*TestUnpackedExtensions) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{15}
 }
 
+func (p *TestUnpackedExtensions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestUnpackedExtensions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Test that RPC services work.
 type FooRequest struct {
 	state         protoimpl.MessageState
@@ -2168,6 +2281,13 @@ func (*FooRequest) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{16}
 }
 
+func (p *FooRequest) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FooRequest) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type FooResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2204,6 +2324,13 @@ func (x *FooResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use FooResponse.ProtoReflect.Descriptor instead.
 func (*FooResponse) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{17}
+}
+
+func (p *FooResponse) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FooResponse) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type WeirdDefault struct {
@@ -2256,6 +2383,13 @@ func (x *WeirdDefault) GetWeirdDefault() []byte {
 		return x.WeirdDefault
 	}
 	return append([]byte(nil), Default_WeirdDefault_WeirdDefault...)
+}
+
+func (p *WeirdDefault) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *WeirdDefault) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type RemoteDefault struct {
@@ -2372,6 +2506,13 @@ func (x *RemoteDefault) GetNegative() enums.Enum {
 	return Default_RemoteDefault_Negative
 }
 
+func (p *RemoteDefault) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *RemoteDefault) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestAllTypes_NestedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2425,6 +2566,13 @@ func (x *TestAllTypes_NestedMessage) GetCorecursive() *TestAllTypes {
 		return x.Corecursive
 	}
 	return nil
+}
+
+func (p *TestAllTypes_NestedMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypes_NestedMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestAllTypes_OptionalGroup struct {
@@ -2490,6 +2638,13 @@ func (x *TestAllTypes_OptionalGroup) GetSameFieldNumber() int32 {
 	return 0
 }
 
+func (p *TestAllTypes_OptionalGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypes_OptionalGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestAllTypes_RepeatedGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2543,6 +2698,13 @@ func (x *TestAllTypes_RepeatedGroup) GetOptionalNestedMessage() *TestAllTypes_Ne
 		return x.OptionalNestedMessage
 	}
 	return nil
+}
+
+func (p *TestAllTypes_RepeatedGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypes_RepeatedGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestAllTypes_OneofGroup struct {
@@ -2600,6 +2762,13 @@ func (x *TestAllTypes_OneofGroup) GetB() int32 {
 	return 0
 }
 
+func (p *TestAllTypes_OneofGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypes_OneofGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestAllExtensions_NestedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2655,6 +2824,13 @@ func (x *TestAllExtensions_NestedMessage) GetCorecursive() *TestAllExtensions {
 	return nil
 }
 
+func (p *TestAllExtensions_NestedMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllExtensions_NestedMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestRequiredGroupFields_OptionalGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2702,6 +2878,13 @@ func (x *TestRequiredGroupFields_OptionalGroup) GetA() int32 {
 	return 0
 }
 
+func (p *TestRequiredGroupFields_OptionalGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestRequiredGroupFields_OptionalGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestRequiredGroupFields_RepeatedGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2747,6 +2930,13 @@ func (x *TestRequiredGroupFields_RepeatedGroup) GetA() int32 {
 		return *x.A
 	}
 	return 0
+}
+
+func (p *TestRequiredGroupFields_RepeatedGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestRequiredGroupFields_RepeatedGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var file_internal_testprotos_test_test_proto_extTypes = []protoimpl.ExtensionInfo{

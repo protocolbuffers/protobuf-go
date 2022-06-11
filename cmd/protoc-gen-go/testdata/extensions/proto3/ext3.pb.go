@@ -8,6 +8,7 @@
 package proto3
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
@@ -94,6 +95,13 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_rawDescGZIP(), []int{0}
+}
+
+func (p *Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_extTypes = []protoimpl.ExtensionInfo{

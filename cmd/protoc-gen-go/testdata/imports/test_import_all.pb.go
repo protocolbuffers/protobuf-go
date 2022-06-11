@@ -12,6 +12,7 @@ import (
 	test_a_1 "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports/test_a_1"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports/test_a_2"
 	test_b_1 "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports/test_b_1"
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -95,6 +96,13 @@ func (x *All) GetFmt() *fmt.M {
 		return x.Fmt
 	}
 	return nil
+}
+
+func (p *All) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *All) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_imports_test_import_all_proto protoreflect.FileDescriptor

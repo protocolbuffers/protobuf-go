@@ -8,6 +8,7 @@
 package msetextpb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	messagesetpb "google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -70,6 +71,13 @@ func (x *Ext1) GetExt1Field2() int32 {
 	return 0
 }
 
+func (p *Ext1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Ext1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Ext2 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -115,6 +123,13 @@ func (x *Ext2) GetExt2Field1() int32 {
 		return *x.Ext2Field1
 	}
 	return 0
+}
+
+func (p *Ext2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Ext2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type ExtRequired struct {
@@ -164,6 +179,13 @@ func (x *ExtRequired) GetRequiredField1() int32 {
 	return 0
 }
 
+func (p *ExtRequired) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ExtRequired) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ExtLargeNumber struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -200,6 +222,13 @@ func (x *ExtLargeNumber) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ExtLargeNumber.ProtoReflect.Descriptor instead.
 func (*ExtLargeNumber) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_messageset_msetextpb_msetextpb_proto_rawDescGZIP(), []int{3}
+}
+
+func (p *ExtLargeNumber) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ExtLargeNumber) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var file_internal_testprotos_messageset_msetextpb_msetextpb_proto_extTypes = []protoimpl.ExtensionInfo{

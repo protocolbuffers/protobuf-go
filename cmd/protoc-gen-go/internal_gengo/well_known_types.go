@@ -664,16 +664,6 @@ func genMessageKnownFunctions(g *protogen.GeneratedFile, f *fileInfo, m *message
 		g.P("}")
 		g.P()
 
-		g.P("func (x *Struct) MarshalJSON() ([]byte, error) {")
-		g.P("	return ", protojsonPackage.Ident("Marshal"), "(x)")
-		g.P("}")
-		g.P()
-
-		g.P("func (x *Struct) UnmarshalJSON(b []byte) error {")
-		g.P("	return ", protojsonPackage.Ident("Unmarshal"), "(b, x)")
-		g.P("}")
-		g.P()
-
 	case genid.ListValue_message_fullname:
 		g.P("// NewList constructs a ListValue from a general-purpose Go slice.")
 		g.P("// The slice elements are converted using NewValue.")
@@ -698,16 +688,6 @@ func genMessageKnownFunctions(g *protogen.GeneratedFile, f *fileInfo, m *message
 		g.P("		vs[i] = v.AsInterface()")
 		g.P("	}")
 		g.P("	return vs")
-		g.P("}")
-		g.P()
-
-		g.P("func (x *ListValue) MarshalJSON() ([]byte, error) {")
-		g.P("	return ", protojsonPackage.Ident("Marshal"), "(x)")
-		g.P("}")
-		g.P()
-
-		g.P("func (x *ListValue) UnmarshalJSON(b []byte) error {")
-		g.P("	return ", protojsonPackage.Ident("Unmarshal"), "(b, x)")
 		g.P("}")
 		g.P()
 
@@ -854,16 +834,6 @@ func genMessageKnownFunctions(g *protogen.GeneratedFile, f *fileInfo, m *message
 		g.P("		}")
 		g.P("	}")
 		g.P("	return nil")
-		g.P("}")
-		g.P()
-
-		g.P("func (x *Value) MarshalJSON() ([]byte, error) {")
-		g.P("	return ", protojsonPackage.Ident("Marshal"), "(x)")
-		g.P("}")
-		g.P()
-
-		g.P("func (x *Value) UnmarshalJSON(b []byte) error {")
-		g.P("	return ", protojsonPackage.Ident("Unmarshal"), "(b, x)")
 		g.P("}")
 		g.P()
 

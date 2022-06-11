@@ -8,6 +8,7 @@
 package test3
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -936,6 +937,13 @@ func (*TestAllTypes_OneofDouble) isTestAllTypes_OneofField() {}
 
 func (*TestAllTypes_OneofEnum) isTestAllTypes_OneofField() {}
 
+func (p *TestAllTypes) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypes) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ForeignMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -991,6 +999,13 @@ func (x *ForeignMessage) GetD() int32 {
 	return 0
 }
 
+func (p *ForeignMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ForeignMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestAllTypes_NestedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1044,6 +1059,13 @@ func (x *TestAllTypes_NestedMessage) GetCorecursive() *TestAllTypes {
 		return x.Corecursive
 	}
 	return nil
+}
+
+func (p *TestAllTypes_NestedMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypes_NestedMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_test3_test_proto protoreflect.FileDescriptor

@@ -8,6 +8,7 @@
 package test_a_2
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -50,6 +51,13 @@ func (x *M4) ProtoReflect() protoreflect.Message {
 // Deprecated: Use M4.ProtoReflect.Descriptor instead.
 func (*M4) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescGZIP(), []int{0}
+}
+
+func (p *M4) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *M4) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto protoreflect.FileDescriptor

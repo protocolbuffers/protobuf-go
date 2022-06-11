@@ -10,6 +10,7 @@
 package registry
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -214,6 +215,13 @@ func (*Message1) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_registry_test_proto_rawDescGZIP(), []int{0}
 }
 
+func (p *Message1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message2 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -252,6 +260,13 @@ func (*Message2) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_registry_test_proto_rawDescGZIP(), []int{1}
 }
 
+func (p *Message2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message3 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -288,6 +303,13 @@ func (x *Message3) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message3.ProtoReflect.Descriptor instead.
 func (*Message3) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_registry_test_proto_rawDescGZIP(), []int{2}
+}
+
+func (p *Message3) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message3) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message4 struct {
@@ -335,6 +357,13 @@ func (x *Message4) GetBoolField() bool {
 		return *x.BoolField
 	}
 	return false
+}
+
+func (p *Message4) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message4) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var file_internal_testprotos_registry_test_proto_extTypes = []protoimpl.ExtensionInfo{

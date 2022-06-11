@@ -8,6 +8,7 @@
 package test3
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -93,6 +94,13 @@ func (x *ImportMessage) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ImportMessage.ProtoReflect.Descriptor instead.
 func (*ImportMessage) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test3_test_import_proto_rawDescGZIP(), []int{0}
+}
+
+func (p *ImportMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ImportMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_test3_test_import_proto protoreflect.FileDescriptor

@@ -77,6 +77,7 @@
 package durationpb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	math "math"
@@ -292,6 +293,13 @@ func (x *Duration) GetNanos() int32 {
 		return x.Nanos
 	}
 	return 0
+}
+
+func (p *Duration) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Duration) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_duration_proto protoreflect.FileDescriptor

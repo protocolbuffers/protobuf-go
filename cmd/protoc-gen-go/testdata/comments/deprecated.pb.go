@@ -8,6 +8,7 @@
 package comments
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -107,6 +108,13 @@ func (x *DeprecatedMessage) GetDeprecatedField() string {
 		return x.DeprecatedField
 	}
 	return ""
+}
+
+func (p *DeprecatedMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *DeprecatedMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_comments_deprecated_proto protoreflect.FileDescriptor

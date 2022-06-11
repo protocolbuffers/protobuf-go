@@ -10,6 +10,7 @@ package ext
 import (
 	base "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/extensions/base"
 	extra "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/extensions/extra"
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -116,6 +117,13 @@ func (x *Message) GetData() []byte {
 	return nil
 }
 
+func (p *Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ExtensionGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -163,6 +171,13 @@ func (x *ExtensionGroup) GetExtensionGroup() string {
 	return ""
 }
 
+func (p *ExtensionGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ExtensionGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Extend in the scope of another type.
 type ExtendingMessage struct {
 	state         protoimpl.MessageState
@@ -200,6 +215,13 @@ func (x *ExtendingMessage) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ExtendingMessage.ProtoReflect.Descriptor instead.
 func (*ExtendingMessage) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_rawDescGZIP(), []int{2}
+}
+
+func (p *ExtendingMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ExtendingMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type RepeatedGroup struct {
@@ -249,6 +271,13 @@ func (x *RepeatedGroup) GetRepeatedXGroup() []string {
 	return nil
 }
 
+func (p *RepeatedGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *RepeatedGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // An extension of an extension.
 type Extendable struct {
 	state           protoimpl.MessageState
@@ -287,6 +316,13 @@ func (x *Extendable) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Extendable.ProtoReflect.Descriptor instead.
 func (*Extendable) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_rawDescGZIP(), []int{4}
+}
+
+func (p *Extendable) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Extendable) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Message set wire format.
@@ -328,6 +364,13 @@ func (*MessageSetWireFormatExtension) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_rawDescGZIP(), []int{5}
 }
 
+func (p *MessageSetWireFormatExtension) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MessageSetWireFormatExtension) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message_M struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -366,6 +409,13 @@ func (*Message_M) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_rawDescGZIP(), []int{0, 0}
 }
 
+func (p *Message_M) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message_M) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ExtendingMessage_ExtendingMessageSubmessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -402,6 +452,13 @@ func (x *ExtendingMessage_ExtendingMessageSubmessage) ProtoReflect() protoreflec
 // Deprecated: Use ExtendingMessage_ExtendingMessageSubmessage.ProtoReflect.Descriptor instead.
 func (*ExtendingMessage_ExtendingMessageSubmessage) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_rawDescGZIP(), []int{2, 0}
+}
+
+func (p *ExtendingMessage_ExtendingMessageSubmessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ExtendingMessage_ExtendingMessageSubmessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_extTypes = []protoimpl.ExtensionInfo{

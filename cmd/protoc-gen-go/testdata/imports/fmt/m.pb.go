@@ -8,6 +8,7 @@
 package fmt
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -50,6 +51,13 @@ func (x *M) ProtoReflect() protoreflect.Message {
 // Deprecated: Use M.ProtoReflect.Descriptor instead.
 func (*M) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_imports_fmt_m_proto_rawDescGZIP(), []int{0}
+}
+
+func (p *M) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *M) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_imports_fmt_m_proto protoreflect.FileDescriptor

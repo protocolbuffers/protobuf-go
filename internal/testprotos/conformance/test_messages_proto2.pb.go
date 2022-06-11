@@ -41,6 +41,7 @@
 package conformance
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -1233,6 +1234,13 @@ func (*TestAllTypesProto2_OneofDouble) isTestAllTypesProto2_OneofField() {}
 
 func (*TestAllTypesProto2_OneofEnum) isTestAllTypesProto2_OneofField() {}
 
+func (p *TestAllTypesProto2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypesProto2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ForeignMessageProto2 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1278,6 +1286,13 @@ func (x *ForeignMessageProto2) GetC() int32 {
 		return *x.C
 	}
 	return 0
+}
+
+func (p *ForeignMessageProto2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ForeignMessageProto2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type UnknownToTestAllTypes struct {
@@ -1367,6 +1382,13 @@ func (x *UnknownToTestAllTypes) GetRepeatedInt32() []int32 {
 	return nil
 }
 
+func (p *UnknownToTestAllTypes) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *UnknownToTestAllTypes) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestAllTypesProto2_NestedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1420,6 +1442,13 @@ func (x *TestAllTypesProto2_NestedMessage) GetCorecursive() *TestAllTypesProto2 
 		return x.Corecursive
 	}
 	return nil
+}
+
+func (p *TestAllTypesProto2_NestedMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypesProto2_NestedMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // groups
@@ -1478,6 +1507,13 @@ func (x *TestAllTypesProto2_Data) GetGroupUint32() uint32 {
 	return 0
 }
 
+func (p *TestAllTypesProto2_Data) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypesProto2_Data) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // message_set test case.
 type TestAllTypesProto2_MessageSetCorrect struct {
 	state           protoimpl.MessageState
@@ -1516,6 +1552,13 @@ func (x *TestAllTypesProto2_MessageSetCorrect) ProtoReflect() protoreflect.Messa
 // Deprecated: Use TestAllTypesProto2_MessageSetCorrect.ProtoReflect.Descriptor instead.
 func (*TestAllTypesProto2_MessageSetCorrect) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto2_proto_rawDescGZIP(), []int{0, 21}
+}
+
+func (p *TestAllTypesProto2_MessageSetCorrect) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypesProto2_MessageSetCorrect) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type TestAllTypesProto2_MessageSetCorrectExtension1 struct {
@@ -1565,6 +1608,13 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension1) GetStr() string {
 	return ""
 }
 
+func (p *TestAllTypesProto2_MessageSetCorrectExtension1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypesProto2_MessageSetCorrectExtension1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type TestAllTypesProto2_MessageSetCorrectExtension2 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1612,6 +1662,13 @@ func (x *TestAllTypesProto2_MessageSetCorrectExtension2) GetI() int32 {
 	return 0
 }
 
+func (p *TestAllTypesProto2_MessageSetCorrectExtension2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestAllTypesProto2_MessageSetCorrectExtension2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type UnknownToTestAllTypes_OptionalGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1657,6 +1714,13 @@ func (x *UnknownToTestAllTypes_OptionalGroup) GetA() int32 {
 		return *x.A
 	}
 	return 0
+}
+
+func (p *UnknownToTestAllTypes_OptionalGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *UnknownToTestAllTypes_OptionalGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var file_google_protobuf_test_messages_proto2_proto_extTypes = []protoimpl.ExtensionInfo{

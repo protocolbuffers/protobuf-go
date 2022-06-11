@@ -34,6 +34,7 @@
 package typepb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -359,6 +360,13 @@ func (x *Type) GetSyntax() Syntax {
 	return Syntax_SYNTAX_PROTO2
 }
 
+func (p *Type) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Type) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // A single field of a message type.
 type Field struct {
 	state         protoimpl.MessageState
@@ -491,6 +499,13 @@ func (x *Field) GetDefaultValue() string {
 	return ""
 }
 
+func (p *Field) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Field) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Enum type definition.
 type Enum struct {
 	state         protoimpl.MessageState
@@ -576,6 +591,13 @@ func (x *Enum) GetSyntax() Syntax {
 	return Syntax_SYNTAX_PROTO2
 }
 
+func (p *Enum) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Enum) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Enum value definition.
 type EnumValue struct {
 	state         protoimpl.MessageState
@@ -643,6 +665,13 @@ func (x *EnumValue) GetOptions() []*Option {
 	return nil
 }
 
+func (p *EnumValue) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *EnumValue) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // A protocol buffer option, which can be attached to a message, field,
 // enumeration, etc.
 type Option struct {
@@ -706,6 +735,13 @@ func (x *Option) GetValue() *anypb.Any {
 		return x.Value
 	}
 	return nil
+}
+
+func (p *Option) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Option) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_type_proto protoreflect.FileDescriptor

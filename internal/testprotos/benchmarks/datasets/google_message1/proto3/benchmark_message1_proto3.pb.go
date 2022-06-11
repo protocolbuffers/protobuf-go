@@ -36,6 +36,7 @@
 package proto3
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -409,6 +410,13 @@ func (x *GoogleMessage1) GetField131() int32 {
 	return 0
 }
 
+func (p *GoogleMessage1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *GoogleMessage1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type GoogleMessage1SubMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -606,6 +614,13 @@ func (x *GoogleMessage1SubMessage) GetField300() uint64 {
 		return x.Field300
 	}
 	return 0
+}
+
+func (p *GoogleMessage1SubMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *GoogleMessage1SubMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_datasets_google_message1_proto3_benchmark_message1_proto3_proto protoreflect.FileDescriptor

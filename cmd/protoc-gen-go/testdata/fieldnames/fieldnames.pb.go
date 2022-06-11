@@ -8,6 +8,7 @@
 package fieldnames
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -275,6 +276,13 @@ type Message_OneofMessageConflict_ struct {
 
 func (*Message_OneofMessageConflict_) isMessage_OneofConflictC() {}
 
+func (p *Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message_OneofMessageConflict struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -311,6 +319,13 @@ func (x *Message_OneofMessageConflict) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message_OneofMessageConflict.ProtoReflect.Descriptor instead.
 func (*Message_OneofMessageConflict) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_rawDescGZIP(), []int{0, 0}
+}
+
+func (p *Message_OneofMessageConflict) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message_OneofMessageConflict) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto protoreflect.FileDescriptor

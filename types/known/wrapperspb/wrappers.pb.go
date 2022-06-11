@@ -44,6 +44,7 @@
 package wrapperspb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -106,6 +107,13 @@ func (x *DoubleValue) GetValue() float64 {
 	return 0
 }
 
+func (p *DoubleValue) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *DoubleValue) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Wrapper message for `float`.
 //
 // The JSON representation for `FloatValue` is JSON number.
@@ -160,6 +168,13 @@ func (x *FloatValue) GetValue() float32 {
 		return x.Value
 	}
 	return 0
+}
+
+func (p *FloatValue) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FloatValue) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Wrapper message for `int64`.
@@ -218,6 +233,13 @@ func (x *Int64Value) GetValue() int64 {
 	return 0
 }
 
+func (p *Int64Value) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Int64Value) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Wrapper message for `uint64`.
 //
 // The JSON representation for `UInt64Value` is JSON string.
@@ -272,6 +294,13 @@ func (x *UInt64Value) GetValue() uint64 {
 		return x.Value
 	}
 	return 0
+}
+
+func (p *UInt64Value) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *UInt64Value) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Wrapper message for `int32`.
@@ -330,6 +359,13 @@ func (x *Int32Value) GetValue() int32 {
 	return 0
 }
 
+func (p *Int32Value) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Int32Value) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Wrapper message for `uint32`.
 //
 // The JSON representation for `UInt32Value` is JSON number.
@@ -384,6 +420,13 @@ func (x *UInt32Value) GetValue() uint32 {
 		return x.Value
 	}
 	return 0
+}
+
+func (p *UInt32Value) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *UInt32Value) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Wrapper message for `bool`.
@@ -442,6 +485,13 @@ func (x *BoolValue) GetValue() bool {
 	return false
 }
 
+func (p *BoolValue) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *BoolValue) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Wrapper message for `string`.
 //
 // The JSON representation for `StringValue` is JSON string.
@@ -498,6 +548,13 @@ func (x *StringValue) GetValue() string {
 	return ""
 }
 
+func (p *StringValue) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *StringValue) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Wrapper message for `bytes`.
 //
 // The JSON representation for `BytesValue` is JSON string.
@@ -552,6 +609,13 @@ func (x *BytesValue) GetValue() []byte {
 		return x.Value
 	}
 	return nil
+}
+
+func (p *BytesValue) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *BytesValue) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_wrappers_proto protoreflect.FileDescriptor

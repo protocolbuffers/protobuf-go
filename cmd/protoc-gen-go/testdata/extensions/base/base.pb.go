@@ -8,6 +8,7 @@
 package base
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -62,6 +63,13 @@ func (x *BaseMessage) GetField() string {
 	return ""
 }
 
+func (p *BaseMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *BaseMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type MessageSetWireFormatMessage struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -99,6 +107,13 @@ func (x *MessageSetWireFormatMessage) ProtoReflect() protoreflect.Message {
 // Deprecated: Use MessageSetWireFormatMessage.ProtoReflect.Descriptor instead.
 func (*MessageSetWireFormatMessage) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_rawDescGZIP(), []int{1}
+}
+
+func (p *MessageSetWireFormatMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MessageSetWireFormatMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_extensions_base_base_proto protoreflect.FileDescriptor

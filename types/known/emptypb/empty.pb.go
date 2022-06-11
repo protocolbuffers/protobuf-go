@@ -34,6 +34,7 @@
 package emptypb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -85,6 +86,13 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
 	return file_google_protobuf_empty_proto_rawDescGZIP(), []int{0}
+}
+
+func (p *Empty) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Empty) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_empty_proto protoreflect.FileDescriptor

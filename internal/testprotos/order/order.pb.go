@@ -10,6 +10,7 @@
 package order
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -106,6 +107,13 @@ type Message_Field_10 struct {
 }
 
 func (*Message_Field_10) isMessage_Oneof_1() {}
+
+func (p *Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
 
 var file_internal_testprotos_order_order_proto_extTypes = []protoimpl.ExtensionInfo{
 	{

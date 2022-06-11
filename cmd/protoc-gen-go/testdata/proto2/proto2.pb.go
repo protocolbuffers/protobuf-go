@@ -8,6 +8,7 @@
 package proto2
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -67,6 +68,13 @@ func (x *Message) GetM() *Message {
 		return x.M
 	}
 	return nil
+}
+
+func (p *Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_proto2_proto2_proto protoreflect.FileDescriptor

@@ -8,6 +8,7 @@
 package required
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -61,6 +62,13 @@ func (x *Int32) GetV() int32 {
 	return 0
 }
 
+func (p *Int32) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Int32) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Int64 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -106,6 +114,13 @@ func (x *Int64) GetV() int64 {
 		return *x.V
 	}
 	return 0
+}
+
+func (p *Int64) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Int64) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Uint32 struct {
@@ -155,6 +170,13 @@ func (x *Uint32) GetV() uint32 {
 	return 0
 }
 
+func (p *Uint32) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Uint32) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Uint64 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -200,6 +222,13 @@ func (x *Uint64) GetV() uint64 {
 		return *x.V
 	}
 	return 0
+}
+
+func (p *Uint64) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Uint64) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Sint32 struct {
@@ -249,6 +278,13 @@ func (x *Sint32) GetV() int32 {
 	return 0
 }
 
+func (p *Sint32) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Sint32) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Sint64 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -294,6 +330,13 @@ func (x *Sint64) GetV() int64 {
 		return *x.V
 	}
 	return 0
+}
+
+func (p *Sint64) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Sint64) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Fixed32 struct {
@@ -343,6 +386,13 @@ func (x *Fixed32) GetV() uint32 {
 	return 0
 }
 
+func (p *Fixed32) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Fixed32) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Fixed64 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -388,6 +438,13 @@ func (x *Fixed64) GetV() uint64 {
 		return *x.V
 	}
 	return 0
+}
+
+func (p *Fixed64) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Fixed64) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Float struct {
@@ -437,6 +494,13 @@ func (x *Float) GetV() float32 {
 	return 0
 }
 
+func (p *Float) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Float) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Double struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -482,6 +546,13 @@ func (x *Double) GetV() float64 {
 		return *x.V
 	}
 	return 0
+}
+
+func (p *Double) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Double) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Bool struct {
@@ -531,6 +602,13 @@ func (x *Bool) GetV() bool {
 	return false
 }
 
+func (p *Bool) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Bool) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type String struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -576,6 +654,13 @@ func (x *String) GetV() string {
 		return *x.V
 	}
 	return ""
+}
+
+func (p *String) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *String) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Bytes struct {
@@ -625,6 +710,13 @@ func (x *Bytes) GetV() []byte {
 	return nil
 }
 
+func (p *Bytes) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Bytes) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -670,6 +762,13 @@ func (x *Message) GetV() *Message_M {
 		return x.V
 	}
 	return nil
+}
+
+func (p *Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Group struct {
@@ -719,6 +818,13 @@ func (x *Group) GetGroup() *Group_Group {
 	return nil
 }
 
+func (p *Group) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Group) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message_M struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -755,6 +861,13 @@ func (x *Message_M) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message_M.ProtoReflect.Descriptor instead.
 func (*Message_M) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_required_required_proto_rawDescGZIP(), []int{13, 0}
+}
+
+func (p *Message_M) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message_M) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Group_Group struct {
@@ -802,6 +915,13 @@ func (x *Group_Group) GetV() int32 {
 		return *x.V
 	}
 	return 0
+}
+
+func (p *Group_Group) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Group_Group) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_required_required_proto protoreflect.FileDescriptor

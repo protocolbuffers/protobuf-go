@@ -8,6 +8,7 @@
 package extra
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -59,6 +60,13 @@ func (x *ExtraMessage) GetData() []byte {
 		return x.Data
 	}
 	return nil
+}
+
+func (p *ExtraMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ExtraMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_extensions_extra_extra_proto protoreflect.FileDescriptor

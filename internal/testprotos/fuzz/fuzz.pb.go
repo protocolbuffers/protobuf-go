@@ -8,6 +8,7 @@
 package fuzz
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	test "google.golang.org/protobuf/internal/testprotos/test"
 	test3 "google.golang.org/protobuf/internal/testprotos/test3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -118,6 +119,13 @@ func (x *Fuzz) GetTestAllTypes3() *test3.TestAllTypes {
 		return x.TestAllTypes3
 	}
 	return nil
+}
+
+func (p *Fuzz) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Fuzz) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_fuzz_fuzz_proto protoreflect.FileDescriptor

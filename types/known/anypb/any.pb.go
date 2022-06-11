@@ -119,6 +119,7 @@
 package anypb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	proto "google.golang.org/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoregistry "google.golang.org/protobuf/reflect/protoregistry"
@@ -412,6 +413,13 @@ func (x *Any) GetValue() []byte {
 		return x.Value
 	}
 	return nil
+}
+
+func (p *Any) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Any) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_any_proto protoreflect.FileDescriptor

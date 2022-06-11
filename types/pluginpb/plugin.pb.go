@@ -50,6 +50,7 @@
 package pluginpb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
@@ -188,6 +189,13 @@ func (x *Version) GetSuffix() string {
 	return ""
 }
 
+func (p *Version) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Version) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // An encoded CodeGeneratorRequest is written to the plugin's stdin.
 type CodeGeneratorRequest struct {
 	state         protoimpl.MessageState
@@ -279,6 +287,13 @@ func (x *CodeGeneratorRequest) GetCompilerVersion() *Version {
 	return nil
 }
 
+func (p *CodeGeneratorRequest) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *CodeGeneratorRequest) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // The plugin writes an encoded CodeGeneratorResponse to stdout.
 type CodeGeneratorResponse struct {
 	state         protoimpl.MessageState
@@ -351,6 +366,13 @@ func (x *CodeGeneratorResponse) GetFile() []*CodeGeneratorResponse_File {
 		return x.File
 	}
 	return nil
+}
+
+func (p *CodeGeneratorResponse) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *CodeGeneratorResponse) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Represents a single generated file.
@@ -475,6 +497,13 @@ func (x *CodeGeneratorResponse_File) GetGeneratedCodeInfo() *descriptorpb.Genera
 		return x.GeneratedCodeInfo
 	}
 	return nil
+}
+
+func (p *CodeGeneratorResponse_File) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *CodeGeneratorResponse_File) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_compiler_plugin_proto protoreflect.FileDescriptor

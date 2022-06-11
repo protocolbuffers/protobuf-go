@@ -333,6 +333,7 @@ func genMessage(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	genMessageDefaultDecls(g, f, m)
 	genMessageMethods(g, f, m)
 	genMessageOneofWrapperTypes(g, f, m)
+	genJSONFunctions(g, f, m)
 }
 
 func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {

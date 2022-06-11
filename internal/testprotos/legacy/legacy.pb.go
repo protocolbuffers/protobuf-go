@@ -8,6 +8,7 @@
 package legacy
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	proto2_20160225_2fc053c5 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	proto2_20160519_a4ab9ec5 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160519_a4ab9ec5"
 	proto2_20180125_92554152 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20180125_92554152"
@@ -159,6 +160,13 @@ func (x *Legacy) GetF12() *proto3_20190205_c823c79e.Message {
 		return x.F12
 	}
 	return nil
+}
+
+func (p *Legacy) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Legacy) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_legacy_legacy_proto protoreflect.FileDescriptor

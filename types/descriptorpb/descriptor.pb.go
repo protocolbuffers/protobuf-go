@@ -42,6 +42,7 @@
 package descriptorpb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -517,6 +518,13 @@ func (x *FileDescriptorSet) GetFile() []*FileDescriptorProto {
 	return nil
 }
 
+func (p *FileDescriptorSet) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FileDescriptorSet) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Describes a complete .proto file.
 type FileDescriptorProto struct {
 	state         protoimpl.MessageState
@@ -664,6 +672,13 @@ func (x *FileDescriptorProto) GetSyntax() string {
 	return ""
 }
 
+func (p *FileDescriptorProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FileDescriptorProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Describes a message type.
 type DescriptorProto struct {
 	state         protoimpl.MessageState
@@ -786,6 +801,13 @@ func (x *DescriptorProto) GetReservedName() []string {
 	return nil
 }
 
+func (p *DescriptorProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *DescriptorProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ExtensionRangeOptions struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -833,6 +855,13 @@ func (x *ExtensionRangeOptions) GetUninterpretedOption() []*UninterpretedOption 
 		return x.UninterpretedOption
 	}
 	return nil
+}
+
+func (p *ExtensionRangeOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ExtensionRangeOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Describes a field within a message.
@@ -1004,6 +1033,13 @@ func (x *FieldDescriptorProto) GetProto3Optional() bool {
 	return false
 }
 
+func (p *FieldDescriptorProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldDescriptorProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Describes a oneof.
 type OneofDescriptorProto struct {
 	state         protoimpl.MessageState
@@ -1058,6 +1094,13 @@ func (x *OneofDescriptorProto) GetOptions() *OneofOptions {
 		return x.Options
 	}
 	return nil
+}
+
+func (p *OneofDescriptorProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *OneofDescriptorProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Describes an enum type.
@@ -1145,6 +1188,13 @@ func (x *EnumDescriptorProto) GetReservedName() []string {
 	return nil
 }
 
+func (p *EnumDescriptorProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *EnumDescriptorProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Describes a value within an enum.
 type EnumValueDescriptorProto struct {
 	state         protoimpl.MessageState
@@ -1209,6 +1259,13 @@ func (x *EnumValueDescriptorProto) GetOptions() *EnumValueOptions {
 	return nil
 }
 
+func (p *EnumValueDescriptorProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *EnumValueDescriptorProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Describes a service.
 type ServiceDescriptorProto struct {
 	state         protoimpl.MessageState
@@ -1271,6 +1328,13 @@ func (x *ServiceDescriptorProto) GetOptions() *ServiceOptions {
 		return x.Options
 	}
 	return nil
+}
+
+func (p *ServiceDescriptorProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ServiceDescriptorProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Describes a method of a service.
@@ -1369,6 +1433,13 @@ func (x *MethodDescriptorProto) GetServerStreaming() bool {
 		return *x.ServerStreaming
 	}
 	return Default_MethodDescriptorProto_ServerStreaming
+}
+
+func (p *MethodDescriptorProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MethodDescriptorProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type FileOptions struct {
@@ -1658,6 +1729,13 @@ func (x *FileOptions) GetUninterpretedOption() []*UninterpretedOption {
 	return nil
 }
 
+func (p *FileOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FileOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type MessageOptions struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -1790,6 +1868,13 @@ func (x *MessageOptions) GetUninterpretedOption() []*UninterpretedOption {
 		return x.UninterpretedOption
 	}
 	return nil
+}
+
+func (p *MessageOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MessageOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type FieldOptions struct {
@@ -1951,6 +2036,13 @@ func (x *FieldOptions) GetUninterpretedOption() []*UninterpretedOption {
 	return nil
 }
 
+func (p *FieldOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type OneofOptions struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -1998,6 +2090,13 @@ func (x *OneofOptions) GetUninterpretedOption() []*UninterpretedOption {
 		return x.UninterpretedOption
 	}
 	return nil
+}
+
+func (p *OneofOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *OneofOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type EnumOptions struct {
@@ -2076,6 +2175,13 @@ func (x *EnumOptions) GetUninterpretedOption() []*UninterpretedOption {
 	return nil
 }
 
+func (p *EnumOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *EnumOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type EnumValueOptions struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -2142,6 +2248,13 @@ func (x *EnumValueOptions) GetUninterpretedOption() []*UninterpretedOption {
 	return nil
 }
 
+func (p *EnumValueOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *EnumValueOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ServiceOptions struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -2206,6 +2319,13 @@ func (x *ServiceOptions) GetUninterpretedOption() []*UninterpretedOption {
 		return x.UninterpretedOption
 	}
 	return nil
+}
+
+func (p *ServiceOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ServiceOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type MethodOptions struct {
@@ -2281,6 +2401,13 @@ func (x *MethodOptions) GetUninterpretedOption() []*UninterpretedOption {
 		return x.UninterpretedOption
 	}
 	return nil
+}
+
+func (p *MethodOptions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MethodOptions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // A message representing a option the parser does not recognize. This only
@@ -2386,6 +2513,13 @@ func (x *UninterpretedOption) GetAggregateValue() string {
 	return ""
 }
 
+func (p *UninterpretedOption) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *UninterpretedOption) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Encapsulates information about the original source file from which a
 // FileDescriptorProto was generated.
 type SourceCodeInfo struct {
@@ -2478,6 +2612,13 @@ func (x *SourceCodeInfo) GetLocation() []*SourceCodeInfo_Location {
 	return nil
 }
 
+func (p *SourceCodeInfo) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *SourceCodeInfo) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Describes the relationship between generated code and its original source
 // file. A GeneratedCodeInfo message is associated with only one generated
 // source file, but may contain references to different source .proto files.
@@ -2528,6 +2669,13 @@ func (x *GeneratedCodeInfo) GetAnnotation() []*GeneratedCodeInfo_Annotation {
 		return x.Annotation
 	}
 	return nil
+}
+
+func (p *GeneratedCodeInfo) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *GeneratedCodeInfo) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type DescriptorProto_ExtensionRange struct {
@@ -2593,6 +2741,13 @@ func (x *DescriptorProto_ExtensionRange) GetOptions() *ExtensionRangeOptions {
 	return nil
 }
 
+func (p *DescriptorProto_ExtensionRange) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *DescriptorProto_ExtensionRange) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Range of reserved tag numbers. Reserved tag numbers may not be used by
 // fields or extension ranges in the same message. Reserved ranges may
 // not overlap.
@@ -2649,6 +2804,13 @@ func (x *DescriptorProto_ReservedRange) GetEnd() int32 {
 		return *x.End
 	}
 	return 0
+}
+
+func (p *DescriptorProto_ReservedRange) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *DescriptorProto_ReservedRange) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Range of reserved numeric values. Reserved values may not be used by
@@ -2712,6 +2874,13 @@ func (x *EnumDescriptorProto_EnumReservedRange) GetEnd() int32 {
 	return 0
 }
 
+func (p *EnumDescriptorProto_EnumReservedRange) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *EnumDescriptorProto_EnumReservedRange) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // The name of the uninterpreted option.  Each string represents a segment in
 // a dot-separated name.  is_extension is true iff a segment represents an
 // extension (denoted with parentheses in options specs in .proto files).
@@ -2770,6 +2939,13 @@ func (x *UninterpretedOption_NamePart) GetIsExtension() bool {
 		return *x.IsExtension
 	}
 	return false
+}
+
+func (p *UninterpretedOption_NamePart) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *UninterpretedOption_NamePart) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type SourceCodeInfo_Location struct {
@@ -2926,6 +3102,13 @@ func (x *SourceCodeInfo_Location) GetLeadingDetachedComments() []string {
 	return nil
 }
 
+func (p *SourceCodeInfo_Location) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *SourceCodeInfo_Location) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type GeneratedCodeInfo_Annotation struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3003,6 +3186,13 @@ func (x *GeneratedCodeInfo_Annotation) GetEnd() int32 {
 		return *x.End
 	}
 	return 0
+}
+
+func (p *GeneratedCodeInfo_Annotation) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *GeneratedCodeInfo_Annotation) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_descriptor_proto protoreflect.FileDescriptor

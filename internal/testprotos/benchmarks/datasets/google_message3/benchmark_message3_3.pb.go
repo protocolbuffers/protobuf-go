@@ -36,6 +36,7 @@
 package google_message3
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -175,6 +176,13 @@ func (x *Message35546) GetField35567() string {
 		return *x.Field35567
 	}
 	return ""
+}
+
+func (p *Message35546) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message35546) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message2356 struct {
@@ -462,6 +470,13 @@ func (x *Message2356) GetField2398() string {
 		return *x.Field2398
 	}
 	return ""
+}
+
+func (p *Message2356) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message2356) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message7029 struct {
@@ -839,6 +854,13 @@ func (x *Message7029) GetField7224() int32 {
 	return 0
 }
 
+func (p *Message7029) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message7029) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message35538 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -884,6 +906,13 @@ func (x *Message35538) GetField35539() int64 {
 		return *x.Field35539
 	}
 	return 0
+}
+
+func (p *Message35538) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message35538) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message18921 struct {
@@ -1021,6 +1050,13 @@ func (x *Message18921) GetField18957() []*UnusedEmptyMessage {
 	return nil
 }
 
+func (p *Message18921) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message18921) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message35540 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1068,6 +1104,13 @@ func (x *Message35540) GetField35541() bool {
 	return false
 }
 
+func (p *Message35540) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message35540) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message3886 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1113,6 +1156,13 @@ func (x *Message3886) GetMessage3887() []*Message3886_Message3887 {
 		return x.Message3887
 	}
 	return nil
+}
+
+func (p *Message3886) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message3886) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message6743 struct {
@@ -1216,6 +1266,13 @@ func (x *Message6743) GetField6766() *Message6742 {
 		return x.Field6766
 	}
 	return nil
+}
+
+func (p *Message6743) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message6743) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message6773 struct {
@@ -1335,6 +1392,13 @@ func (x *Message6773) GetField6803() Enum6782 {
 		return *x.Field6803
 	}
 	return Enum6782_ENUM_VALUE6783
+}
+
+func (p *Message6773) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message6773) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message8224 struct {
@@ -1592,6 +1656,13 @@ func (x *Message8224) GetField8281() []*UnusedEmptyMessage {
 	return nil
 }
 
+func (p *Message8224) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message8224) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message8392 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1701,6 +1772,13 @@ func (x *Message8392) GetField8403() string {
 		return *x.Field8403
 	}
 	return ""
+}
+
+func (p *Message8392) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message8392) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message8130 struct {
@@ -1934,6 +2012,13 @@ func (x *Message8130) GetField8179() []*UnusedEmptyMessage {
 	return nil
 }
 
+func (p *Message8130) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message8130) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message8478 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2035,6 +2120,13 @@ func (x *Message8478) GetField8496() *UnusedEmptyMessage {
 		return x.Field8496
 	}
 	return nil
+}
+
+func (p *Message8478) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message8478) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message8479 struct {
@@ -2148,6 +2240,13 @@ func (x *Message8479) GetField8505() *UnusedEmptyMessage {
 	return nil
 }
 
+func (p *Message8479) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message8479) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message10319 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2243,6 +2342,13 @@ func (x *Message10319) GetField10346() string {
 	return ""
 }
 
+func (p *Message10319) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message10319) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message4016 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2314,6 +2420,13 @@ func (x *Message4016) GetField4020() int32 {
 	return 0
 }
 
+func (p *Message4016) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message4016) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message12669 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2383,6 +2496,13 @@ func (x *Message12669) GetField12684() Enum12670 {
 		return *x.Field12684
 	}
 	return Enum12670_ENUM_VALUE12671
+}
+
+func (p *Message12669) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message12669) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message12819 struct {
@@ -2470,6 +2590,13 @@ func (x *Message12819) GetField12839() float64 {
 		return *x.Field12839
 	}
 	return 0
+}
+
+func (p *Message12819) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message12819) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message12820 struct {
@@ -2575,6 +2702,13 @@ func (x *Message12820) GetField12847() int32 {
 	return 0
 }
 
+func (p *Message12820) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message12820) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message12821 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2654,6 +2788,13 @@ func (x *Message12821) GetField12852() int32 {
 	return 0
 }
 
+func (p *Message12821) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message12821) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message12818 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2731,6 +2872,13 @@ func (x *Message12818) GetField12833() []*Message12817 {
 		return x.Field12833
 	}
 	return nil
+}
+
+func (p *Message12818) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message12818) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message16479 struct {
@@ -2820,6 +2968,13 @@ func (x *Message16479) GetField16489() uint32 {
 	return 0
 }
 
+func (p *Message16479) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message16479) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message16722 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2897,6 +3052,13 @@ func (x *Message16722) GetField16756() string {
 		return *x.Field16756
 	}
 	return ""
+}
+
+func (p *Message16722) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message16722) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message16724 struct {
@@ -3042,6 +3204,13 @@ func (x *Message16724) GetField16773() bool {
 	return false
 }
 
+func (p *Message16724) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message16724) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message17728 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3078,6 +3247,13 @@ func (x *Message17728) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message17728.ProtoReflect.Descriptor instead.
 func (*Message17728) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_3_proto_rawDescGZIP(), []int{24}
+}
+
+func (p *Message17728) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message17728) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message24356 struct {
@@ -3239,6 +3415,13 @@ func (x *Message24356) GetField24573() []string {
 	return nil
 }
 
+func (p *Message24356) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message24356) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message24376 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3388,6 +3571,13 @@ func (x *Message24376) GetField24602() []string {
 		return x.Field24602
 	}
 	return nil
+}
+
+func (p *Message24376) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message24376) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message24366 struct {
@@ -3549,6 +3739,13 @@ func (x *Message24366) GetField24588() []string {
 	return nil
 }
 
+func (p *Message24366) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message24366) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message35546_Message35547 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3604,6 +3801,13 @@ func (x *Message35546_Message35547) GetField35570() int32 {
 	return 0
 }
 
+func (p *Message35546_Message35547) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message35546_Message35547) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message35546_Message35548 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3657,6 +3861,13 @@ func (x *Message35546_Message35548) GetField35572() int64 {
 		return *x.Field35572
 	}
 	return 0
+}
+
+func (p *Message35546_Message35548) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message35546_Message35548) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message2356_Message2357 struct {
@@ -3794,6 +4005,13 @@ func (x *Message2356_Message2357) GetField2410() []byte {
 	return nil
 }
 
+func (p *Message2356_Message2357) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message2356_Message2357) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message2356_Message2358 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3830,6 +4048,13 @@ func (x *Message2356_Message2358) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message2356_Message2358.ProtoReflect.Descriptor instead.
 func (*Message2356_Message2358) Descriptor() ([]byte, []int) {
 	return file_datasets_google_message3_benchmark_message3_3_proto_rawDescGZIP(), []int{1, 1}
+}
+
+func (p *Message2356_Message2358) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message2356_Message2358) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message2356_Message2359 struct {
@@ -3935,6 +4160,13 @@ func (x *Message2356_Message2359) GetField2420() float32 {
 	return 0
 }
 
+func (p *Message2356_Message2359) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message2356_Message2359) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message7029_Message7030 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3996,6 +4228,13 @@ func (x *Message7029_Message7030) GetField7228() int64 {
 		return *x.Field7228
 	}
 	return 0
+}
+
+func (p *Message7029_Message7030) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message7029_Message7030) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message7029_Message7031 struct {
@@ -4083,6 +4322,13 @@ func (x *Message7029_Message7031) GetField7234() int32 {
 		return *x.Field7234
 	}
 	return 0
+}
+
+func (p *Message7029_Message7031) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message7029_Message7031) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Message18921_Message18922 struct {
@@ -4308,6 +4554,13 @@ func (x *Message18921_Message18922) GetField18981() float32 {
 	return 0
 }
 
+func (p *Message18921_Message18922) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message18921_Message18922) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Message3886_Message3887 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4377,6 +4630,13 @@ func (x *Message3886_Message3887) GetField3935() []byte {
 		return x.Field3935
 	}
 	return nil
+}
+
+func (p *Message3886_Message3887) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message3886_Message3887) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_datasets_google_message3_benchmark_message3_3_proto protoreflect.FileDescriptor

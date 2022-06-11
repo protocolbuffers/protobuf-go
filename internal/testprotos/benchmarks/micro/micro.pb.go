@@ -8,6 +8,7 @@
 package micro
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -179,6 +180,13 @@ func (x *SixteenRequired) GetF16() int32 {
 		return *x.F16
 	}
 	return 0
+}
+
+func (p *SixteenRequired) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *SixteenRequired) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_benchmarks_micro_micro_proto protoreflect.FileDescriptor

@@ -12,6 +12,7 @@
 package irregular
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -161,6 +162,13 @@ type Message_OneofAberrantMessage struct {
 func (*Message_OneofMessage) isMessage_Union() {}
 
 func (*Message_OneofAberrantMessage) isMessage_Union() {}
+
+func (p *Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
 
 var File_internal_testprotos_irregular_test_proto protoreflect.FileDescriptor
 

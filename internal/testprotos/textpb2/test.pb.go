@@ -10,6 +10,7 @@
 package textpb2
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -301,6 +302,13 @@ func (x *Scalars) GetOptString() string {
 	return ""
 }
 
+func (p *Scalars) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Scalars) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message contains enum fields.
 type Enums struct {
 	state         protoimpl.MessageState
@@ -371,6 +379,13 @@ func (x *Enums) GetRptNestedEnum() []Enums_NestedEnum {
 		return x.RptNestedEnum
 	}
 	return nil
+}
+
+func (p *Enums) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Enums) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Message contains repeated fields.
@@ -485,6 +500,13 @@ func (x *Repeats) GetRptBytes() [][]byte {
 	return nil
 }
 
+func (p *Repeats) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Repeats) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message contains map fields.
 type Maps struct {
 	state         protoimpl.MessageState
@@ -541,6 +563,13 @@ func (x *Maps) GetStrToNested() map[string]*Nested {
 	return nil
 }
 
+func (p *Maps) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Maps) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message type used as submessage.
 type Nested struct {
 	state         protoimpl.MessageState
@@ -595,6 +624,13 @@ func (x *Nested) GetOptNested() *Nested {
 		return x.OptNested
 	}
 	return nil
+}
+
+func (p *Nested) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Nested) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Message contains message and group fields.
@@ -667,6 +703,13 @@ func (x *Nests) GetRptgroup() []*Nests_RptGroup {
 		return x.Rptgroup
 	}
 	return nil
+}
+
+func (p *Nests) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Nests) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Message contains required fields.
@@ -757,6 +800,13 @@ func (x *Requireds) GetReqNested() *Nested {
 	return nil
 }
 
+func (p *Requireds) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Requireds) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message contains both required and optional fields.
 type PartialRequired struct {
 	state         protoimpl.MessageState
@@ -813,6 +863,13 @@ func (x *PartialRequired) GetOptString() string {
 	return ""
 }
 
+func (p *PartialRequired) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *PartialRequired) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type NestedWithRequired struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -858,6 +915,13 @@ func (x *NestedWithRequired) GetReqString() string {
 		return *x.ReqString
 	}
 	return ""
+}
+
+func (p *NestedWithRequired) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *NestedWithRequired) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type IndirectRequired struct {
@@ -950,6 +1014,13 @@ type IndirectRequired_OneofNested struct {
 
 func (*IndirectRequired_OneofNested) isIndirectRequired_Union() {}
 
+func (p *IndirectRequired) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *IndirectRequired) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Extensions struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -1014,6 +1085,13 @@ func (x *Extensions) GetOptInt32() int32 {
 	return 0
 }
 
+func (p *Extensions) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Extensions) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type ExtensionsContainer struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1050,6 +1128,13 @@ func (x *ExtensionsContainer) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ExtensionsContainer.ProtoReflect.Descriptor instead.
 func (*ExtensionsContainer) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_textpb2_test_proto_rawDescGZIP(), []int{11}
+}
+
+func (p *ExtensionsContainer) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *ExtensionsContainer) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type MessageSet struct {
@@ -1089,6 +1174,13 @@ func (x *MessageSet) ProtoReflect() protoreflect.Message {
 // Deprecated: Use MessageSet.ProtoReflect.Descriptor instead.
 func (*MessageSet) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_textpb2_test_proto_rawDescGZIP(), []int{12}
+}
+
+func (p *MessageSet) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MessageSet) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type MessageSetExtension struct {
@@ -1138,6 +1230,13 @@ func (x *MessageSetExtension) GetOptString() string {
 	return ""
 }
 
+func (p *MessageSetExtension) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MessageSetExtension) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type FakeMessageSet struct {
 	state           protoimpl.MessageState
 	sizeCache       protoimpl.SizeCache
@@ -1175,6 +1274,13 @@ func (x *FakeMessageSet) ProtoReflect() protoreflect.Message {
 // Deprecated: Use FakeMessageSet.ProtoReflect.Descriptor instead.
 func (*FakeMessageSet) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_textpb2_test_proto_rawDescGZIP(), []int{14}
+}
+
+func (p *FakeMessageSet) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FakeMessageSet) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type FakeMessageSetExtension struct {
@@ -1222,6 +1328,13 @@ func (x *FakeMessageSetExtension) GetOptString() string {
 		return *x.OptString
 	}
 	return ""
+}
+
+func (p *FakeMessageSetExtension) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FakeMessageSetExtension) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Message contains well-known type fields.
@@ -1408,6 +1521,13 @@ func (x *KnownTypes) GetOptFieldmask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
+func (p *KnownTypes) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *KnownTypes) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Nests_OptGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1471,6 +1591,13 @@ func (x *Nests_OptGroup) GetOptnestedgroup() *Nests_OptGroup_OptNestedGroup {
 	return nil
 }
 
+func (p *Nests_OptGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Nests_OptGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Nests_RptGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1518,6 +1645,13 @@ func (x *Nests_RptGroup) GetRptString() []string {
 	return nil
 }
 
+func (p *Nests_RptGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Nests_RptGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type Nests_OptGroup_OptNestedGroup struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1563,6 +1697,13 @@ func (x *Nests_OptGroup_OptNestedGroup) GetOptFixed32() uint32 {
 		return *x.OptFixed32
 	}
 	return 0
+}
+
+func (p *Nests_OptGroup_OptNestedGroup) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Nests_OptGroup_OptNestedGroup) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var file_internal_testprotos_textpb2_test_proto_extTypes = []protoimpl.ExtensionInfo{

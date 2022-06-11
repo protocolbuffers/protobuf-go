@@ -8,6 +8,7 @@
 package nopackage
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -125,6 +126,13 @@ func (x *Message) GetEnumField() Enum {
 		return *x.EnumField
 	}
 	return Default_Message_EnumField
+}
+
+func (p *Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_nopackage_nopackage_proto protoreflect.FileDescriptor

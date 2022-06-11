@@ -34,6 +34,7 @@
 package benchmarks
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -123,6 +124,13 @@ func (x *BenchmarkDataset) GetPayload() [][]byte {
 		return x.Payload
 	}
 	return nil
+}
+
+func (p *BenchmarkDataset) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *BenchmarkDataset) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_benchmarks_proto protoreflect.FileDescriptor

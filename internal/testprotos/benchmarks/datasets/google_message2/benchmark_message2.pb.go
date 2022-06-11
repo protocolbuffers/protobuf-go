@@ -38,6 +38,7 @@
 package google_message2
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -342,6 +343,13 @@ func (x *GoogleMessage2) GetField206() bool {
 	return Default_GoogleMessage2_Field206
 }
 
+func (p *GoogleMessage2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *GoogleMessage2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type GoogleMessage2GroupedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -474,6 +482,13 @@ func (x *GoogleMessage2GroupedMessage) GetField11() int64 {
 		return *x.Field11
 	}
 	return 0
+}
+
+func (p *GoogleMessage2GroupedMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *GoogleMessage2GroupedMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type GoogleMessage2_Group1 struct {
@@ -646,6 +661,13 @@ func (x *GoogleMessage2_Group1) GetField31() *GoogleMessage2GroupedMessage {
 		return x.Field31
 	}
 	return nil
+}
+
+func (p *GoogleMessage2_Group1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *GoogleMessage2_Group1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_datasets_google_message2_benchmark_message2_proto protoreflect.FileDescriptor

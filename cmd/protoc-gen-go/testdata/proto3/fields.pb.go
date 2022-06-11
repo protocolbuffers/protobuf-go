@@ -8,6 +8,7 @@
 package proto3
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -392,6 +393,13 @@ func (x *FieldTestMessage) GetMapFixed64Enum() map[uint64]FieldTestMessage_Enum 
 	return nil
 }
 
+func (p *FieldTestMessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldTestMessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type FieldTestMessage_Message struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -428,6 +436,13 @@ func (x *FieldTestMessage_Message) ProtoReflect() protoreflect.Message {
 // Deprecated: Use FieldTestMessage_Message.ProtoReflect.Descriptor instead.
 func (*FieldTestMessage_Message) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescGZIP(), []int{0, 3}
+}
+
+func (p *FieldTestMessage_Message) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldTestMessage_Message) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_proto3_fields_proto protoreflect.FileDescriptor

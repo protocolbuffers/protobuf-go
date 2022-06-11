@@ -8,6 +8,7 @@
 package messagesetpb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -51,6 +52,13 @@ func (x *MessageSet) ProtoReflect() protoreflect.Message {
 // Deprecated: Use MessageSet.ProtoReflect.Descriptor instead.
 func (*MessageSet) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_messageset_messagesetpb_message_set_proto_rawDescGZIP(), []int{0}
+}
+
+func (p *MessageSet) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MessageSet) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type MessageSetContainer struct {
@@ -98,6 +106,13 @@ func (x *MessageSetContainer) GetMessageSet() *MessageSet {
 		return x.MessageSet
 	}
 	return nil
+}
+
+func (p *MessageSetContainer) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *MessageSetContainer) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_messageset_messagesetpb_message_set_proto protoreflect.FileDescriptor

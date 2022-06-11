@@ -78,6 +78,7 @@
 package fieldmaskpb
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	proto "google.golang.org/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -505,6 +506,13 @@ func (x *FieldMask) GetPaths() []string {
 		return x.Paths
 	}
 	return nil
+}
+
+func (p *FieldMask) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *FieldMask) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_google_protobuf_field_mask_proto protoreflect.FileDescriptor

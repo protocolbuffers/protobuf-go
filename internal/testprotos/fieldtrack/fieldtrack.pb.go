@@ -8,6 +8,7 @@
 package fieldtrack
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	_ "google.golang.org/protobuf/internal/testprotos/annotation"
 	test "google.golang.org/protobuf/internal/testprotos/test"
 	proto "google.golang.org/protobuf/proto"
@@ -611,6 +612,13 @@ func (x *TestFieldTrack) SetWeakMessage2(v proto.Message) {
 		_ = x.XXX_weak_WeakMessage2
 	}
 	protoimpl.X.SetWeak(w, 101, "goproto.proto.test.weak.WeakImportMessage2", v)
+}
+
+func (p *TestFieldTrack) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *TestFieldTrack) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_fieldtrack_fieldtrack_proto protoreflect.FileDescriptor

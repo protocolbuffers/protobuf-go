@@ -10,6 +10,7 @@
 package textpb3
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -280,6 +281,13 @@ func (x *Scalars) GetSString() string {
 	return ""
 }
 
+func (p *Scalars) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Scalars) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message contains repeated fields.
 type Repeats struct {
 	state         protoimpl.MessageState
@@ -390,6 +398,13 @@ func (x *Repeats) GetRptBytes() [][]byte {
 		return x.RptBytes
 	}
 	return nil
+}
+
+func (p *Repeats) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Repeats) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 type Proto3Optional struct {
@@ -519,6 +534,13 @@ func (x *Proto3Optional) GetOptMessage() *Nested {
 	return nil
 }
 
+func (p *Proto3Optional) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Proto3Optional) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message contains enum fields.
 type Enums struct {
 	state         protoimpl.MessageState
@@ -575,6 +597,13 @@ func (x *Enums) GetSNestedEnum() Enums_NestedEnum {
 	return Enums_CERO
 }
 
+func (p *Enums) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Enums) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message contains nested message field.
 type Nests struct {
 	state         protoimpl.MessageState
@@ -621,6 +650,13 @@ func (x *Nests) GetSNested() *Nested {
 		return x.SNested
 	}
 	return nil
+}
+
+func (p *Nests) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Nests) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Message type used as submessage.
@@ -677,6 +713,13 @@ func (x *Nested) GetSNested() *Nested {
 		return x.SNested
 	}
 	return nil
+}
+
+func (p *Nested) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Nested) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 // Message contains oneof field.
@@ -774,6 +817,13 @@ func (*Oneofs_OneofString) isOneofs_Union() {}
 
 func (*Oneofs_OneofNested) isOneofs_Union() {}
 
+func (p *Oneofs) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Oneofs) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message contains map fields.
 type Maps struct {
 	state         protoimpl.MessageState
@@ -854,6 +904,13 @@ func (x *Maps) GetStrToOneofs() map[string]*Oneofs {
 	return nil
 }
 
+func (p *Maps) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Maps) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 // Message for testing json_name option.
 type JSONNames struct {
 	state         protoimpl.MessageState
@@ -900,6 +957,13 @@ func (x *JSONNames) GetSString() string {
 		return x.SString
 	}
 	return ""
+}
+
+func (p *JSONNames) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *JSONNames) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_textpb3_test_proto protoreflect.FileDescriptor

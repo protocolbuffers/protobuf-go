@@ -8,6 +8,7 @@
 package weak2
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -59,6 +60,13 @@ func (x *WeakImportMessage2) GetA() int32 {
 		return *x.A
 	}
 	return 0
+}
+
+func (p *WeakImportMessage2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *WeakImportMessage2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_test_weak2_test_weak_proto protoreflect.FileDescriptor

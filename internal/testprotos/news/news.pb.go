@@ -8,6 +8,7 @@
 package news
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -160,6 +161,13 @@ func (x *Article) GetAttachments() []*anypb.Any {
 	return nil
 }
 
+func (p *Article) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Article) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type BinaryAttachment struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -215,6 +223,13 @@ func (x *BinaryAttachment) GetData() []byte {
 	return nil
 }
 
+func (p *BinaryAttachment) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *BinaryAttachment) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type KeyValueAttachment struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -268,6 +283,13 @@ func (x *KeyValueAttachment) GetData() map[string]string {
 		return x.Data
 	}
 	return nil
+}
+
+func (p *KeyValueAttachment) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *KeyValueAttachment) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_internal_testprotos_news_news_proto protoreflect.FileDescriptor

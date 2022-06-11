@@ -8,6 +8,7 @@
 package issue780_oneof_conflict
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -79,6 +80,13 @@ type Foo_GetBar struct {
 }
 
 func (*Foo_GetBar) isFoo_Bar() {}
+
+func (p *Foo) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *Foo) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
 
 var File_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto protoreflect.FileDescriptor
 

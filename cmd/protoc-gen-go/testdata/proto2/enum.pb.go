@@ -8,6 +8,7 @@
 package proto2
 
 import (
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -406,6 +407,13 @@ func (x *EnumContainerMessage1) GetDefaultDuplicate2() EnumType2 {
 	return Default_EnumContainerMessage1_DefaultDuplicate2
 }
 
+func (p *EnumContainerMessage1) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *EnumContainerMessage1) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type EnumContainerMessage1_EnumContainerMessage2 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -442,6 +450,13 @@ func (x *EnumContainerMessage1_EnumContainerMessage2) ProtoReflect() protoreflec
 // Deprecated: Use EnumContainerMessage1_EnumContainerMessage2.ProtoReflect.Descriptor instead.
 func (*EnumContainerMessage1_EnumContainerMessage2) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_proto2_enum_proto_rawDescGZIP(), []int{0, 0}
+}
+
+func (p *EnumContainerMessage1_EnumContainerMessage2) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *EnumContainerMessage1_EnumContainerMessage2) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
 }
 
 var File_cmd_protoc_gen_go_testdata_proto2_enum_proto protoreflect.FileDescriptor

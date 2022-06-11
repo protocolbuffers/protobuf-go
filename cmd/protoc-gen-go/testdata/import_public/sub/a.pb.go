@@ -9,6 +9,7 @@ package sub
 
 import (
 	sub2 "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_public/sub2"
+	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	math "math"
@@ -304,6 +305,13 @@ func (*M_OneofInt32) isM_OneofField() {}
 
 func (*M_OneofInt64) isM_OneofField() {}
 
+func (p *M) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *M) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
+
 type M_Submessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -383,6 +391,13 @@ type M_Submessage_SubmessageOneofInt64 struct {
 func (*M_Submessage_SubmessageOneofInt32) isM_Submessage_SubmessageOneofField() {}
 
 func (*M_Submessage_SubmessageOneofInt64) isM_Submessage_SubmessageOneofField() {}
+
+func (p *M_Submessage) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(p)
+}
+func (p *M_Submessage) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, p)
+}
 
 var file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
