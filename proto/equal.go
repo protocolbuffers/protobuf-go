@@ -33,7 +33,7 @@ func Equal(x, y Message) bool {
 	if x == nil || y == nil {
 		return x == nil && y == nil
 	}
-	if reflect.TypeOf(x).Kind() == reflect.Pointer && x == y {
+	if reflect.TypeOf(x).Kind() == reflect.Ptr && x == y {
 		// Avoid an expensive comparison if both inputs are identical pointers.
 		return true
 	}
