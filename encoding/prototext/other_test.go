@@ -9,7 +9,7 @@ import (
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
-	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/reflect/protoregistry"
 
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
 	"google.golang.org/protobuf/types/known/anypb"
@@ -23,7 +23,7 @@ import (
 func TestRoundTrip(t *testing.T) {
 	tests := []struct {
 		desc     string
-		resolver *preg.Types
+		resolver *protoregistry.Types
 		message  proto.Message
 	}{{
 		desc: "well-known type fields set to empty messages",
@@ -149,7 +149,7 @@ func TestRoundTrip(t *testing.T) {
 		},
 	}, {
 		desc:     "Any field without registered type",
-		resolver: new(preg.Types),
+		resolver: new(protoregistry.Types),
 		message: func() proto.Message {
 			m := &pb2.Nested{
 				OptString: proto.String("embedded inside Any"),

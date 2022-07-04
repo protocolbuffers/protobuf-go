@@ -17,10 +17,10 @@ import (
 	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/proto"
-	pdesc "google.golang.org/protobuf/reflect/protodesc"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
-	preg "google.golang.org/protobuf/reflect/protoregistry"
-	piface "google.golang.org/protobuf/runtime/protoiface"
+	"google.golang.org/protobuf/reflect/protodesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/runtime/protoiface"
 
 	proto2_20180125 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20180125_92554152"
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -34,13 +34,13 @@ type LegacyTestMessage struct {
 func (*LegacyTestMessage) Reset()         {}
 func (*LegacyTestMessage) String() string { return "" }
 func (*LegacyTestMessage) ProtoMessage()  {}
-func (*LegacyTestMessage) ExtensionRangeArray() []piface.ExtensionRangeV1 {
-	return []piface.ExtensionRangeV1{{Start: 10, End: 20}, {Start: 40, End: 80}, {Start: 10000, End: 20000}}
+func (*LegacyTestMessage) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
+	return []protoiface.ExtensionRangeV1{{Start: 10, End: 20}, {Start: 40, End: 80}, {Start: 10000, End: 20000}}
 }
 func (*LegacyTestMessage) Descriptor() ([]byte, []int) { return legacyFD, []int{0} }
 
 var legacyFD = func() []byte {
-	b, _ := proto.Marshal(pdesc.ToFileDescriptorProto(mustMakeFileDesc(`
+	b, _ := proto.Marshal(protodesc.ToFileDescriptorProto(mustMakeFileDesc(`
 		name:   "legacy.proto"
 		syntax: "proto2"
 		message_type: [{
@@ -53,11 +53,11 @@ var legacyFD = func() []byte {
 
 func init() {
 	mt := pimpl.Export{}.MessageTypeOf((*LegacyTestMessage)(nil))
-	preg.GlobalFiles.RegisterFile(mt.Descriptor().ParentFile())
-	preg.GlobalTypes.RegisterMessage(mt)
+	protoregistry.GlobalFiles.RegisterFile(mt.Descriptor().ParentFile())
+	protoregistry.GlobalTypes.RegisterMessage(mt)
 }
 
-func mustMakeExtensionType(fileDesc, extDesc string, t reflect.Type, r pdesc.Resolver) pref.ExtensionType {
+func mustMakeExtensionType(fileDesc, extDesc string, t reflect.Type, r protodesc.Resolver) protoreflect.ExtensionType {
 	s := fmt.Sprintf(`name:"test.proto" syntax:"proto2" %s extension:[{%s}]`, fileDesc, extDesc)
 	xd := mustMakeFileDesc(s, r).Extensions().Get(0)
 	xi := &pimpl.ExtensionInfo{}
@@ -65,12 +65,12 @@ func mustMakeExtensionType(fileDesc, extDesc string, t reflect.Type, r pdesc.Res
 	return xi
 }
 
-func mustMakeFileDesc(s string, r pdesc.Resolver) pref.FileDescriptor {
+func mustMakeFileDesc(s string, r protodesc.Resolver) protoreflect.FileDescriptor {
 	pb := new(descriptorpb.FileDescriptorProto)
 	if err := prototext.Unmarshal([]byte(s), pb); err != nil {
 		panic(err)
 	}
-	fd, err := pdesc.NewFile(pb, r)
+	fd, err := protodesc.NewFile(pb, r)
 	if err != nil {
 		panic(err)
 	}
@@ -90,7 +90,7 @@ var (
 		enumProto2Desc.ParentFile(),
 		testMessageV2Desc.ParentFile(),
 	)
-	extensionTypes = []pref.ExtensionType{
+	extensionTypes = []protoreflect.ExtensionType{
 		mustMakeExtensionType(
 			`package:"fizz.buzz" dependency:"legacy.proto"`,
 			`name:"optional_bool" number:10000 label:LABEL_OPTIONAL type:TYPE_BOOL default_value:"true" extendee:".LegacyTestMessage"`,
@@ -466,11 +466,11 @@ func TestLegacyExtensionConvert(t *testing.T) {
 
 			wantType := extensionTypes[i]
 			wantDesc := extensionDescs[i]
-			gotType := (pref.ExtensionType)(wantDesc)
+			gotType := (protoreflect.ExtensionType)(wantDesc)
 			gotDesc := wantType.(*pimpl.ExtensionInfo)
 
 			// Concurrently call accessors to trigger possible races.
-			for _, xt := range []pref.ExtensionType{wantType, wantDesc} {
+			for _, xt := range []protoreflect.ExtensionType{wantType, wantDesc} {
 				xt := xt
 				go func() { xt.New() }()
 				go func() { xt.Zero() }()
@@ -495,7 +495,7 @@ func TestLegacyExtensionConvert(t *testing.T) {
 					}
 					return out
 				}),
-				cmp.Transformer("", func(x pref.Descriptor) map[string]interface{} {
+				cmp.Transformer("", func(x protoreflect.Descriptor) map[string]interface{} {
 					out := make(map[string]interface{})
 					v := reflect.ValueOf(x)
 					for i := 0; i < v.NumMethod(); i++ {
@@ -513,7 +513,7 @@ func TestLegacyExtensionConvert(t *testing.T) {
 								// TODO: Cycle support in cmp would be useful here.
 								v := m.Call(nil)[0]
 								if !v.IsNil() {
-									out[name] = v.Interface().(pref.Descriptor).FullName()
+									out[name] = v.Interface().(protoreflect.Descriptor).FullName()
 								}
 							case "Type":
 								// Ignore ExtensionTypeDescriptor.Type method to avoid cycle.
@@ -524,12 +524,12 @@ func TestLegacyExtensionConvert(t *testing.T) {
 					}
 					return out
 				}),
-				cmp.Transformer("", func(xt pref.ExtensionType) map[string]interface{} {
+				cmp.Transformer("", func(xt protoreflect.ExtensionType) map[string]interface{} {
 					return map[string]interface{}{
 						"Descriptor": xt.TypeDescriptor(),
 					}
 				}),
-				cmp.Transformer("", func(v pref.Value) interface{} {
+				cmp.Transformer("", func(v protoreflect.Value) interface{} {
 					return v.Interface()
 				}),
 			}
@@ -575,7 +575,7 @@ func (*MessageB) Descriptor() ([]byte, []int) { return concurrentFD, []int{1} }
 func (Enum) EnumDescriptor() ([]byte, []int) { return concurrentFD, []int{0} }
 
 var concurrentFD = func() []byte {
-	b, _ := proto.Marshal(pdesc.ToFileDescriptorProto(mustMakeFileDesc(`
+	b, _ := proto.Marshal(protodesc.ToFileDescriptorProto(mustMakeFileDesc(`
 		name:    "concurrent.proto"
 		syntax:  "proto2"
 		package: "legacy"
@@ -606,9 +606,9 @@ var concurrentFD = func() []byte {
 // results in the exact same descriptor being created.
 func TestLegacyConcurrentInit(t *testing.T) {
 	const numParallel = 5
-	var messageATypes [numParallel]pref.MessageType
-	var messageBTypes [numParallel]pref.MessageType
-	var enumDescs [numParallel]pref.EnumDescriptor
+	var messageATypes [numParallel]protoreflect.MessageType
+	var messageBTypes [numParallel]protoreflect.MessageType
+	var enumDescs [numParallel]protoreflect.EnumDescriptor
 
 	// Concurrently load message and enum types.
 	var wg sync.WaitGroup
@@ -690,9 +690,9 @@ func (*LegacyTestMessageName2) XXX_MessageName() string {
 
 func TestLegacyMessageName(t *testing.T) {
 	tests := []struct {
-		in          piface.MessageV1
-		suggestName pref.FullName
-		wantName    pref.FullName
+		in          protoiface.MessageV1
+		suggestName protoreflect.FullName
+		wantName    protoreflect.FullName
 	}{
 		{new(LegacyTestMessageName1), "google.golang.org.LegacyTestMessageName1", "google.golang.org.LegacyTestMessageName1"},
 		{new(LegacyTestMessageName2), "", "google.golang.org.LegacyTestMessageName2"},

@@ -18,26 +18,25 @@ import (
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 // TODO: Test invalid field descriptors or oneof descriptors.
 // TODO: This should test the functionality that can be provided by fast-paths.
 
-// Message tests a message implemention.
+// Message tests a message implementation.
 type Message struct {
 	// Resolver is used to determine the list of extension fields to test with.
 	// If nil, this defaults to using protoregistry.GlobalTypes.
 	Resolver interface {
-		FindExtensionByName(field pref.FullName) (pref.ExtensionType, error)
-		FindExtensionByNumber(message pref.FullName, field pref.FieldNumber) (pref.ExtensionType, error)
-		RangeExtensionsByMessage(message pref.FullName, f func(pref.ExtensionType) bool)
+		FindExtensionByName(field protoreflect.FullName) (protoreflect.ExtensionType, error)
+		FindExtensionByNumber(message protoreflect.FullName, field protoreflect.FieldNumber) (protoreflect.ExtensionType, error)
+		RangeExtensionsByMessage(message protoreflect.FullName, f func(protoreflect.ExtensionType) bool)
 	}
 }
 
 // Test performs tests on a MessageType implementation.
-func (test Message) Test(t testing.TB, mt pref.MessageType) {
+func (test Message) Test(t testing.TB, mt protoreflect.MessageType) {
 	testType(t, mt)
 
 	md := mt.Descriptor()
@@ -49,8 +48,8 @@ func (test Message) Test(t testing.TB, mt pref.MessageType) {
 	if test.Resolver == nil {
 		test.Resolver = protoregistry.GlobalTypes
 	}
-	var extTypes []pref.ExtensionType
-	test.Resolver.RangeExtensionsByMessage(md.FullName(), func(e pref.ExtensionType) bool {
+	var extTypes []protoreflect.ExtensionType
+	test.Resolver.RangeExtensionsByMessage(md.FullName(), func(e protoreflect.ExtensionType) bool {
 		extTypes = append(extTypes, e)
 		return true
 	})
@@ -86,7 +85,7 @@ func (test Message) Test(t testing.TB, mt pref.MessageType) {
 	}
 }
 
-func testType(t testing.TB, mt pref.MessageType) {
+func testType(t testing.TB, mt protoreflect.MessageType) {
 	m := mt.New().Interface()
 	want := reflect.TypeOf(m)
 	if got := reflect.TypeOf(m.ProtoReflect().Interface()); got != want {
@@ -98,19 +97,19 @@ func testType(t testing.TB, mt pref.MessageType) {
 	if got := reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface()); got != want {
 		t.Errorf("type mismatch: reflect.TypeOf(m) != reflect.TypeOf(m.ProtoReflect().Type().Zero().Interface()): %v != %v", got, want)
 	}
-	if mt, ok := mt.(pref.MessageFieldTypes); ok {
+	if mt, ok := mt.(protoreflect.MessageFieldTypes); ok {
 		testFieldTypes(t, mt)
 	}
 }
 
-func testFieldTypes(t testing.TB, mt pref.MessageFieldTypes) {
-	descName := func(d pref.Descriptor) pref.FullName {
+func testFieldTypes(t testing.TB, mt protoreflect.MessageFieldTypes) {
+	descName := func(d protoreflect.Descriptor) protoreflect.FullName {
 		if d == nil {
 			return "<nil>"
 		}
 		return d.FullName()
 	}
-	typeName := func(mt pref.MessageType) pref.FullName {
+	typeName := func(mt protoreflect.MessageType) protoreflect.FullName {
 		if mt == nil {
 			return "<nil>"
 		}
@@ -173,7 +172,7 @@ func testFieldTypes(t testing.TB, mt pref.MessageFieldTypes) {
 			checkMessageDesc(i,
 				"mti.Descriptor()", "fd.Message()",
 				mti.Descriptor(), fd.Message())
-			if mti := mti.(pref.MessageFieldTypes); mti != nil {
+			if mti := mti.(protoreflect.MessageFieldTypes); mti != nil {
 				if fd.MapValue().Enum() != nil {
 					checkEnumDesc(i,
 						"mti.Enum(fd.MapValue().Index()).Descriptor()", "fd.MapValue().Enum()",
@@ -207,7 +206,7 @@ func testFieldTypes(t testing.TB, mt pref.MessageFieldTypes) {
 }
 
 // testField exercises set/get/has/clear of a field.
-func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
+func testField(t testing.TB, m protoreflect.Message, fd protoreflect.FieldDescriptor) {
 	name := fd.FullName()
 	num := fd.Number()
 
@@ -221,7 +220,7 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		if got, want := m.NewField(fd), fd.Default(); !valueEqual(got, want) {
 			t.Errorf("Message.NewField(%v) = %v, want default value %v", name, formatValue(got), formatValue(want))
 		}
-		if fd.Kind() == pref.FloatKind || fd.Kind() == pref.DoubleKind {
+		if fd.Kind() == protoreflect.FloatKind || fd.Kind() == protoreflect.DoubleKind {
 			testFieldFloat(t, m, fd)
 		}
 	}
@@ -232,20 +231,20 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		m.Set(fd, v)
 		wantHas := true
 		if n == 0 {
-			if fd.Syntax() == pref.Proto3 && fd.Message() == nil {
+			if fd.Syntax() == protoreflect.Proto3 && fd.Message() == nil {
 				wantHas = false
 			}
 			if fd.IsExtension() {
 				wantHas = true
 			}
-			if fd.Cardinality() == pref.Repeated {
+			if fd.Cardinality() == protoreflect.Repeated {
 				wantHas = false
 			}
 			if fd.ContainingOneof() != nil {
 				wantHas = true
 			}
 		}
-		if fd.Syntax() == pref.Proto3 && fd.Cardinality() != pref.Repeated && fd.ContainingOneof() == nil && fd.Kind() == pref.EnumKind && v.Enum() == 0 {
+		if fd.Syntax() == protoreflect.Proto3 && fd.Cardinality() != protoreflect.Repeated && fd.ContainingOneof() == nil && fd.Kind() == protoreflect.EnumKind && v.Enum() == 0 {
 			wantHas = false
 		}
 		if got, want := m.Has(fd), wantHas; got != want {
@@ -255,7 +254,7 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 			t.Errorf("after setting %q:\nMessage.Get(%v) = %v, want %v", name, num, formatValue(got), formatValue(want))
 		}
 		found := false
-		m.Range(func(d pref.FieldDescriptor, got pref.Value) bool {
+		m.Range(func(d protoreflect.FieldDescriptor, got protoreflect.Value) bool {
 			if fd != d {
 				return true
 			}
@@ -293,7 +292,7 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	switch {
 	case fd.IsList() || fd.IsMap():
 		m.Set(fd, m.Mutable(fd))
-		if got, want := m.Has(fd), (fd.IsExtension() && fd.Cardinality() != pref.Repeated) || fd.ContainingOneof() != nil; got != want {
+		if got, want := m.Has(fd), (fd.IsExtension() && fd.Cardinality() != protoreflect.Repeated) || fd.ContainingOneof() != nil; got != want {
 			t.Errorf("after setting %q to default:\nMessage.Has(%v) = %v, want %v", name, num, got, want)
 		}
 	case fd.Message() == nil:
@@ -305,9 +304,9 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	m.Clear(fd)
 
 	// Set to the wrong type.
-	v := pref.ValueOfString("")
-	if fd.Kind() == pref.StringKind {
-		v = pref.ValueOfInt32(0)
+	v := protoreflect.ValueOfString("")
+	if fd.Kind() == protoreflect.StringKind {
+		v = protoreflect.ValueOfInt32(0)
 	}
 	if !panics(func() {
 		m.Set(fd, v)
@@ -317,7 +316,7 @@ func testField(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 }
 
 // testFieldMap tests set/get/has/clear of entries in a map field.
-func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
+func testFieldMap(t testing.TB, m protoreflect.Message, fd protoreflect.FieldDescriptor) {
 	name := fd.FullName()
 	num := fd.Number()
 
@@ -331,7 +330,7 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		t.Errorf("message.Get(%v).NewValue() = %v, want %v", name, formatValue(got), formatValue(want))
 	}
 	if !panics(func() {
-		m.Set(fd, pref.ValueOfMap(mapv))
+		m.Set(fd, protoreflect.ValueOfMap(mapv))
 	}) {
 		t.Errorf("message.Set(%v, <invalid>) does not panic", name)
 	}
@@ -359,36 +358,36 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		v := newMapValue(fd, mapv, n, nil)
 		mapv.Set(k, v)
 		want.Set(k, v)
-		if got, want := m.Get(fd), pref.ValueOfMap(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), protoreflect.ValueOfMap(want); !valueEqual(got, want) {
 			t.Errorf("after inserting %d elements to %q:\nMessage.Get(%v) = %v, want %v", i, name, num, formatValue(got), formatValue(want))
 		}
 	}
 
 	// Set values.
-	want.Range(func(k pref.MapKey, v pref.Value) bool {
+	want.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 		nv := newMapValue(fd, mapv, 10, nil)
 		mapv.Set(k, nv)
 		want.Set(k, nv)
-		if got, want := m.Get(fd), pref.ValueOfMap(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), protoreflect.ValueOfMap(want); !valueEqual(got, want) {
 			t.Errorf("after setting element %v of %q:\nMessage.Get(%v) = %v, want %v", formatValue(k.Value()), name, num, formatValue(got), formatValue(want))
 		}
 		return true
 	})
 
 	// Clear values.
-	want.Range(func(k pref.MapKey, v pref.Value) bool {
+	want.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 		mapv.Clear(k)
 		want.Clear(k)
 		if got, want := m.Has(fd), want.Len() > 0; got != want {
 			t.Errorf("after clearing elements of %q:\nMessage.Has(%v) = %v, want %v", name, num, got, want)
 		}
-		if got, want := m.Get(fd), pref.ValueOfMap(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), protoreflect.ValueOfMap(want); !valueEqual(got, want) {
 			t.Errorf("after clearing elements of %q:\nMessage.Get(%v) = %v, want %v", name, num, formatValue(got), formatValue(want))
 		}
 		return true
 	})
 	if mapv := m.Get(fd).Map(); mapv.IsValid() {
-		t.Errorf("after clearing all elements: message.Get(%v).IsValid() = true, want false %v", name, formatValue(pref.ValueOfMap(mapv)))
+		t.Errorf("after clearing all elements: message.Get(%v).IsValid() = true, want false %v", name, formatValue(protoreflect.ValueOfMap(mapv)))
 	}
 
 	// Non-existent map keys.
@@ -422,18 +421,18 @@ func testFieldMap(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	}
 }
 
-type testMap map[interface{}]pref.Value
+type testMap map[interface{}]protoreflect.Value
 
-func (m testMap) Get(k pref.MapKey) pref.Value     { return m[k.Interface()] }
-func (m testMap) Set(k pref.MapKey, v pref.Value)  { m[k.Interface()] = v }
-func (m testMap) Has(k pref.MapKey) bool           { return m.Get(k).IsValid() }
-func (m testMap) Clear(k pref.MapKey)              { delete(m, k.Interface()) }
-func (m testMap) Mutable(k pref.MapKey) pref.Value { panic("unimplemented") }
-func (m testMap) Len() int                         { return len(m) }
-func (m testMap) NewValue() pref.Value             { panic("unimplemented") }
-func (m testMap) Range(f func(pref.MapKey, pref.Value) bool) {
+func (m testMap) Get(k protoreflect.MapKey) protoreflect.Value     { return m[k.Interface()] }
+func (m testMap) Set(k protoreflect.MapKey, v protoreflect.Value)  { m[k.Interface()] = v }
+func (m testMap) Has(k protoreflect.MapKey) bool                   { return m.Get(k).IsValid() }
+func (m testMap) Clear(k protoreflect.MapKey)                      { delete(m, k.Interface()) }
+func (m testMap) Mutable(k protoreflect.MapKey) protoreflect.Value { panic("unimplemented") }
+func (m testMap) Len() int                                         { return len(m) }
+func (m testMap) NewValue() protoreflect.Value                     { panic("unimplemented") }
+func (m testMap) Range(f func(protoreflect.MapKey, protoreflect.Value) bool) {
 	for k, v := range m {
-		if !f(pref.ValueOf(k).MapKey(), v) {
+		if !f(protoreflect.ValueOf(k).MapKey(), v) {
 			return
 		}
 	}
@@ -441,7 +440,7 @@ func (m testMap) Range(f func(pref.MapKey, pref.Value) bool) {
 func (m testMap) IsValid() bool { return true }
 
 // testFieldList exercises set/get/append/truncate of values in a list.
-func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
+func testFieldList(t testing.TB, m protoreflect.Message, fd protoreflect.FieldDescriptor) {
 	name := fd.FullName()
 	num := fd.Number()
 
@@ -451,7 +450,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		t.Errorf("message.Get(%v).IsValid() = true, want false", name)
 	}
 	if !panics(func() {
-		m.Set(fd, pref.ValueOfList(list))
+		m.Set(fd, protoreflect.ValueOfList(list))
 	}) {
 		t.Errorf("message.Set(%v, <invalid>) does not panic", name)
 	}
@@ -472,7 +471,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 	}
 
 	// Append values.
-	var want pref.List = &testList{}
+	var want protoreflect.List = &testList{}
 	for i, n := range []seed{1, 0, minVal, maxVal} {
 		if got, want := m.Has(fd), i > 0; got != want {
 			t.Errorf("after appending %d elements to %q:\nMessage.Has(%v) = %v, want %v", i, name, num, got, want)
@@ -481,7 +480,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		want.Append(v)
 		list.Append(v)
 
-		if got, want := m.Get(fd), pref.ValueOfList(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), protoreflect.ValueOfList(want); !valueEqual(got, want) {
 			t.Errorf("after appending %d elements to %q:\nMessage.Get(%v) = %v, want %v", i+1, name, num, formatValue(got), formatValue(want))
 		}
 	}
@@ -491,7 +490,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		v := newListElement(fd, list, seed(i+10), nil)
 		want.Set(i, v)
 		list.Set(i, v)
-		if got, want := m.Get(fd), pref.ValueOfList(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), protoreflect.ValueOfList(want); !valueEqual(got, want) {
 			t.Errorf("after setting element %d of %q:\nMessage.Get(%v) = %v, want %v", i, name, num, formatValue(got), formatValue(want))
 		}
 	}
@@ -504,7 +503,7 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 		if got, want := m.Has(fd), want.Len() > 0; got != want {
 			t.Errorf("after truncating %q to %d:\nMessage.Has(%v) = %v, want %v", name, n, num, got, want)
 		}
-		if got, want := m.Get(fd), pref.ValueOfList(want); !valueEqual(got, want) {
+		if got, want := m.Get(fd), protoreflect.ValueOfList(want); !valueEqual(got, want) {
 			t.Errorf("after truncating %q to %d:\nMessage.Get(%v) = %v, want %v", name, n, num, formatValue(got), formatValue(want))
 		}
 	}
@@ -530,29 +529,29 @@ func testFieldList(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 }
 
 type testList struct {
-	a []pref.Value
+	a []protoreflect.Value
 }
 
-func (l *testList) Append(v pref.Value)       { l.a = append(l.a, v) }
-func (l *testList) AppendMutable() pref.Value { panic("unimplemented") }
-func (l *testList) Get(n int) pref.Value      { return l.a[n] }
-func (l *testList) Len() int                  { return len(l.a) }
-func (l *testList) Set(n int, v pref.Value)   { l.a[n] = v }
-func (l *testList) Truncate(n int)            { l.a = l.a[:n] }
-func (l *testList) NewElement() pref.Value    { panic("unimplemented") }
-func (l *testList) IsValid() bool             { return true }
+func (l *testList) Append(v protoreflect.Value)       { l.a = append(l.a, v) }
+func (l *testList) AppendMutable() protoreflect.Value { panic("unimplemented") }
+func (l *testList) Get(n int) protoreflect.Value      { return l.a[n] }
+func (l *testList) Len() int                          { return len(l.a) }
+func (l *testList) Set(n int, v protoreflect.Value)   { l.a[n] = v }
+func (l *testList) Truncate(n int)                    { l.a = l.a[:n] }
+func (l *testList) NewElement() protoreflect.Value    { panic("unimplemented") }
+func (l *testList) IsValid() bool                     { return true }
 
 // testFieldFloat exercises some interesting floating-point scalar field values.
-func testFieldFloat(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
+func testFieldFloat(t testing.TB, m protoreflect.Message, fd protoreflect.FieldDescriptor) {
 	name := fd.FullName()
 	num := fd.Number()
 
 	for _, v := range []float64{math.Inf(-1), math.Inf(1), math.NaN(), math.Copysign(0, -1)} {
-		var val pref.Value
-		if fd.Kind() == pref.FloatKind {
-			val = pref.ValueOfFloat32(float32(v))
+		var val protoreflect.Value
+		if fd.Kind() == protoreflect.FloatKind {
+			val = protoreflect.ValueOfFloat32(float32(v))
 		} else {
-			val = pref.ValueOfFloat64(float64(v))
+			val = protoreflect.ValueOfFloat64(float64(v))
 		}
 		m.Set(fd, val)
 		// Note that Has is true for -0.
@@ -566,7 +565,7 @@ func testFieldFloat(t testing.TB, m pref.Message, fd pref.FieldDescriptor) {
 }
 
 // testOneof tests the behavior of fields in a oneof.
-func testOneof(t testing.TB, m pref.Message, od pref.OneofDescriptor) {
+func testOneof(t testing.TB, m protoreflect.Message, od protoreflect.OneofDescriptor) {
 	for _, mutable := range []bool{false, true} {
 		for i := 0; i < od.Fields().Len(); i++ {
 			fda := od.Fields().Get(i)
@@ -594,19 +593,19 @@ func testOneof(t testing.TB, m pref.Message, od pref.OneofDescriptor) {
 }
 
 // testUnknown tests the behavior of unknown fields.
-func testUnknown(t testing.TB, m pref.Message) {
+func testUnknown(t testing.TB, m protoreflect.Message) {
 	var b []byte
 	b = protowire.AppendTag(b, 1000, protowire.VarintType)
 	b = protowire.AppendVarint(b, 1001)
-	m.SetUnknown(pref.RawFields(b))
+	m.SetUnknown(protoreflect.RawFields(b))
 	if got, want := []byte(m.GetUnknown()), b; !bytes.Equal(got, want) {
 		t.Errorf("after setting unknown fields:\nGetUnknown() = %v, want %v", got, want)
 	}
 }
 
-func formatValue(v pref.Value) string {
+func formatValue(v protoreflect.Value) string {
 	switch v := v.Interface().(type) {
-	case pref.List:
+	case protoreflect.List:
 		var buf bytes.Buffer
 		buf.WriteString("list[")
 		for i := 0; i < v.Len(); i++ {
@@ -617,11 +616,11 @@ func formatValue(v pref.Value) string {
 		}
 		buf.WriteString("]")
 		return buf.String()
-	case pref.Map:
+	case protoreflect.Map:
 		var buf bytes.Buffer
 		buf.WriteString("map[")
-		var keys []pref.MapKey
-		v.Range(func(k pref.MapKey, v pref.Value) bool {
+		var keys []protoreflect.MapKey
+		v.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 			keys = append(keys, k)
 			return true
 		})
@@ -638,7 +637,7 @@ func formatValue(v pref.Value) string {
 		}
 		buf.WriteString("]")
 		return buf.String()
-	case pref.Message:
+	case protoreflect.Message:
 		b, err := prototext.Marshal(v.Interface())
 		if err != nil {
 			return fmt.Sprintf("<%v>", err)
@@ -651,15 +650,15 @@ func formatValue(v pref.Value) string {
 	}
 }
 
-func valueEqual(a, b pref.Value) bool {
+func valueEqual(a, b protoreflect.Value) bool {
 	ai, bi := a.Interface(), b.Interface()
 	switch ai.(type) {
-	case pref.Message:
+	case protoreflect.Message:
 		return proto.Equal(
 			a.Message().Interface(),
 			b.Message().Interface(),
 		)
-	case pref.List:
+	case protoreflect.List:
 		lista, listb := a.List(), b.List()
 		if lista.Len() != listb.Len() {
 			return false
@@ -670,13 +669,13 @@ func valueEqual(a, b pref.Value) bool {
 			}
 		}
 		return true
-	case pref.Map:
+	case protoreflect.Map:
 		mapa, mapb := a.Map(), b.Map()
 		if mapa.Len() != mapb.Len() {
 			return false
 		}
 		equal := true
-		mapa.Range(func(k pref.MapKey, v pref.Value) bool {
+		mapa.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 			if !valueEqual(v, mapb.Get(k)) {
 				equal = false
 				return false
@@ -727,7 +726,7 @@ func newSeed(n seed, adjust ...int) seed {
 //
 // The stack parameter is used to avoid infinite recursion when populating circular
 // data structures.
-func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.MessageDescriptor) pref.Value {
+func newValue(m protoreflect.Message, fd protoreflect.FieldDescriptor, n seed, stack []protoreflect.MessageDescriptor) protoreflect.Value {
 	switch {
 	case fd.IsList():
 		if n == 0 {
@@ -738,7 +737,7 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 		list.Append(newListElement(fd, list, minVal, stack))
 		list.Append(newListElement(fd, list, maxVal, stack))
 		list.Append(newListElement(fd, list, n, stack))
-		return pref.ValueOfList(list)
+		return protoreflect.ValueOfList(list)
 	case fd.IsMap():
 		if n == 0 {
 			return m.New().Mutable(fd)
@@ -748,7 +747,7 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 		mapv.Set(newMapKey(fd, minVal), newMapValue(fd, mapv, minVal, stack))
 		mapv.Set(newMapKey(fd, maxVal), newMapValue(fd, mapv, maxVal, stack))
 		mapv.Set(newMapKey(fd, n), newMapValue(fd, mapv, newSeed(n, 0), stack))
-		return pref.ValueOfMap(mapv)
+		return protoreflect.ValueOfMap(mapv)
 	case fd.Message() != nil:
 		return populateMessage(m.NewField(fd).Message(), n, stack)
 	default:
@@ -756,19 +755,19 @@ func newValue(m pref.Message, fd pref.FieldDescriptor, n seed, stack []pref.Mess
 	}
 }
 
-func newListElement(fd pref.FieldDescriptor, list pref.List, n seed, stack []pref.MessageDescriptor) pref.Value {
+func newListElement(fd protoreflect.FieldDescriptor, list protoreflect.List, n seed, stack []protoreflect.MessageDescriptor) protoreflect.Value {
 	if fd.Message() == nil {
 		return newScalarValue(fd, n)
 	}
 	return populateMessage(list.NewElement().Message(), n, stack)
 }
 
-func newMapKey(fd pref.FieldDescriptor, n seed) pref.MapKey {
+func newMapKey(fd protoreflect.FieldDescriptor, n seed) protoreflect.MapKey {
 	kd := fd.MapKey()
 	return newScalarValue(kd, n).MapKey()
 }
 
-func newMapValue(fd pref.FieldDescriptor, mapv pref.Map, n seed, stack []pref.MessageDescriptor) pref.Value {
+func newMapValue(fd protoreflect.FieldDescriptor, mapv protoreflect.Map, n seed, stack []protoreflect.MessageDescriptor) protoreflect.Value {
 	vd := fd.MapValue()
 	if vd.Message() == nil {
 		return newScalarValue(vd, n)
@@ -776,11 +775,11 @@ func newMapValue(fd pref.FieldDescriptor, mapv pref.Map, n seed, stack []pref.Me
 	return populateMessage(mapv.NewValue().Message(), n, stack)
 }
 
-func newScalarValue(fd pref.FieldDescriptor, n seed) pref.Value {
+func newScalarValue(fd protoreflect.FieldDescriptor, n seed) protoreflect.Value {
 	switch fd.Kind() {
-	case pref.BoolKind:
-		return pref.ValueOfBool(n != 0)
-	case pref.EnumKind:
+	case protoreflect.BoolKind:
+		return protoreflect.ValueOfBool(n != 0)
+	case protoreflect.EnumKind:
 		vals := fd.Enum().Values()
 		var i int
 		switch n {
@@ -791,85 +790,85 @@ func newScalarValue(fd pref.FieldDescriptor, n seed) pref.Value {
 		default:
 			i = int(n) % vals.Len()
 		}
-		return pref.ValueOfEnum(vals.Get(i).Number())
-	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
+		return protoreflect.ValueOfEnum(vals.Get(i).Number())
+	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
 		switch n {
 		case minVal:
-			return pref.ValueOfInt32(math.MinInt32)
+			return protoreflect.ValueOfInt32(math.MinInt32)
 		case maxVal:
-			return pref.ValueOfInt32(math.MaxInt32)
+			return protoreflect.ValueOfInt32(math.MaxInt32)
 		default:
-			return pref.ValueOfInt32(int32(n))
+			return protoreflect.ValueOfInt32(int32(n))
 		}
-	case pref.Uint32Kind, pref.Fixed32Kind:
-		switch n {
-		case minVal:
-			// Only use 0 for the zero value.
-			return pref.ValueOfUint32(1)
-		case maxVal:
-			return pref.ValueOfUint32(math.MaxInt32)
-		default:
-			return pref.ValueOfUint32(uint32(n))
-		}
-	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
-		switch n {
-		case minVal:
-			return pref.ValueOfInt64(math.MinInt64)
-		case maxVal:
-			return pref.ValueOfInt64(math.MaxInt64)
-		default:
-			return pref.ValueOfInt64(int64(n))
-		}
-	case pref.Uint64Kind, pref.Fixed64Kind:
+	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
 		switch n {
 		case minVal:
 			// Only use 0 for the zero value.
-			return pref.ValueOfUint64(1)
+			return protoreflect.ValueOfUint32(1)
 		case maxVal:
-			return pref.ValueOfUint64(math.MaxInt64)
+			return protoreflect.ValueOfUint32(math.MaxInt32)
 		default:
-			return pref.ValueOfUint64(uint64(n))
+			return protoreflect.ValueOfUint32(uint32(n))
 		}
-	case pref.FloatKind:
+	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
 		switch n {
 		case minVal:
-			return pref.ValueOfFloat32(math.SmallestNonzeroFloat32)
+			return protoreflect.ValueOfInt64(math.MinInt64)
 		case maxVal:
-			return pref.ValueOfFloat32(math.MaxFloat32)
+			return protoreflect.ValueOfInt64(math.MaxInt64)
 		default:
-			return pref.ValueOfFloat32(1.5 * float32(n))
+			return protoreflect.ValueOfInt64(int64(n))
 		}
-	case pref.DoubleKind:
+	case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
 		switch n {
 		case minVal:
-			return pref.ValueOfFloat64(math.SmallestNonzeroFloat64)
+			// Only use 0 for the zero value.
+			return protoreflect.ValueOfUint64(1)
 		case maxVal:
-			return pref.ValueOfFloat64(math.MaxFloat64)
+			return protoreflect.ValueOfUint64(math.MaxInt64)
 		default:
-			return pref.ValueOfFloat64(1.5 * float64(n))
+			return protoreflect.ValueOfUint64(uint64(n))
 		}
-	case pref.StringKind:
+	case protoreflect.FloatKind:
+		switch n {
+		case minVal:
+			return protoreflect.ValueOfFloat32(math.SmallestNonzeroFloat32)
+		case maxVal:
+			return protoreflect.ValueOfFloat32(math.MaxFloat32)
+		default:
+			return protoreflect.ValueOfFloat32(1.5 * float32(n))
+		}
+	case protoreflect.DoubleKind:
+		switch n {
+		case minVal:
+			return protoreflect.ValueOfFloat64(math.SmallestNonzeroFloat64)
+		case maxVal:
+			return protoreflect.ValueOfFloat64(math.MaxFloat64)
+		default:
+			return protoreflect.ValueOfFloat64(1.5 * float64(n))
+		}
+	case protoreflect.StringKind:
 		if n == 0 {
-			return pref.ValueOfString("")
+			return protoreflect.ValueOfString("")
 		}
-		return pref.ValueOfString(fmt.Sprintf("%d", n))
-	case pref.BytesKind:
+		return protoreflect.ValueOfString(fmt.Sprintf("%d", n))
+	case protoreflect.BytesKind:
 		if n == 0 {
-			return pref.ValueOfBytes(nil)
+			return protoreflect.ValueOfBytes(nil)
 		}
-		return pref.ValueOfBytes([]byte{byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)})
+		return protoreflect.ValueOfBytes([]byte{byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)})
 	}
 	panic("unhandled kind")
 }
 
-func populateMessage(m pref.Message, n seed, stack []pref.MessageDescriptor) pref.Value {
+func populateMessage(m protoreflect.Message, n seed, stack []protoreflect.MessageDescriptor) protoreflect.Value {
 	if n == 0 {
-		return pref.ValueOfMessage(m)
+		return protoreflect.ValueOfMessage(m)
 	}
 	md := m.Descriptor()
 	for _, x := range stack {
 		if md == x {
-			return pref.ValueOfMessage(m)
+			return protoreflect.ValueOfMessage(m)
 		}
 	}
 	stack = append(stack, md)
@@ -880,7 +879,7 @@ func populateMessage(m pref.Message, n seed, stack []pref.MessageDescriptor) pre
 		}
 		m.Set(fd, newValue(m, fd, newSeed(n, i), stack))
 	}
-	return pref.ValueOfMessage(m)
+	return protoreflect.ValueOfMessage(m)
 }
 
 func panics(f func()) (didPanic bool) {

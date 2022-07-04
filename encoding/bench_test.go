@@ -10,13 +10,13 @@ import (
 
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/encoding/prototext"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	tpb "google.golang.org/protobuf/internal/testprotos/test"
 )
 
 // The results of these microbenchmarks are unlikely to correspond well
-// to real world peformance. They are mainly useful as a quick check to
+// to real world performance. They are mainly useful as a quick check to
 // detect unexpected regressions and for profiling specific cases.
 
 const maxRecurseLevel = 3
@@ -27,7 +27,7 @@ func makeProto() *tpb.TestAllTypes {
 	return m
 }
 
-func fillMessage(m pref.Message, level int) {
+func fillMessage(m protoreflect.Message, level int) {
 	if level > maxRecurseLevel {
 		return
 	}
@@ -46,9 +46,9 @@ func fillMessage(m pref.Message, level int) {
 	}
 }
 
-func setScalarField(m pref.Message, fd pref.FieldDescriptor, level int) {
+func setScalarField(m protoreflect.Message, fd protoreflect.FieldDescriptor, level int) {
 	switch fd.Kind() {
-	case pref.MessageKind, pref.GroupKind:
+	case protoreflect.MessageKind, protoreflect.GroupKind:
 		val := m.NewField(fd)
 		fillMessage(val.Message(), level+1)
 		m.Set(fd, val)
@@ -57,45 +57,45 @@ func setScalarField(m pref.Message, fd pref.FieldDescriptor, level int) {
 	}
 }
 
-func scalarField(kind pref.Kind) pref.Value {
+func scalarField(kind protoreflect.Kind) protoreflect.Value {
 	switch kind {
-	case pref.BoolKind:
-		return pref.ValueOfBool(true)
+	case protoreflect.BoolKind:
+		return protoreflect.ValueOfBool(true)
 
-	case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
-		return pref.ValueOfInt32(1 << 30)
+	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
+		return protoreflect.ValueOfInt32(1 << 30)
 
-	case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
-		return pref.ValueOfInt64(1 << 30)
+	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
+		return protoreflect.ValueOfInt64(1 << 30)
 
-	case pref.Uint32Kind, pref.Fixed32Kind:
-		return pref.ValueOfUint32(1 << 30)
+	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
+		return protoreflect.ValueOfUint32(1 << 30)
 
-	case pref.Uint64Kind, pref.Fixed64Kind:
-		return pref.ValueOfUint64(1 << 30)
+	case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
+		return protoreflect.ValueOfUint64(1 << 30)
 
-	case pref.FloatKind:
-		return pref.ValueOfFloat32(3.14159265)
+	case protoreflect.FloatKind:
+		return protoreflect.ValueOfFloat32(3.14159265)
 
-	case pref.DoubleKind:
-		return pref.ValueOfFloat64(3.14159265)
+	case protoreflect.DoubleKind:
+		return protoreflect.ValueOfFloat64(3.14159265)
 
-	case pref.BytesKind:
-		return pref.ValueOfBytes([]byte("hello world"))
+	case protoreflect.BytesKind:
+		return protoreflect.ValueOfBytes([]byte("hello world"))
 
-	case pref.StringKind:
-		return pref.ValueOfString("hello world")
+	case protoreflect.StringKind:
+		return protoreflect.ValueOfString("hello world")
 
-	case pref.EnumKind:
-		return pref.ValueOfEnum(42)
+	case protoreflect.EnumKind:
+		return protoreflect.ValueOfEnum(42)
 	}
 
 	panic(fmt.Sprintf("FieldDescriptor.Kind %v is not valid", kind))
 }
 
-func setList(list pref.List, fd pref.FieldDescriptor, level int) {
+func setList(list protoreflect.List, fd protoreflect.FieldDescriptor, level int) {
 	switch fd.Kind() {
-	case pref.MessageKind, pref.GroupKind:
+	case protoreflect.MessageKind, protoreflect.GroupKind:
 		for i := 0; i < 10; i++ {
 			val := list.NewElement()
 			fillMessage(val.Message(), level+1)
@@ -108,14 +108,14 @@ func setList(list pref.List, fd pref.FieldDescriptor, level int) {
 	}
 }
 
-func setMap(mmap pref.Map, fd pref.FieldDescriptor, level int) {
+func setMap(mmap protoreflect.Map, fd protoreflect.FieldDescriptor, level int) {
 	fields := fd.Message().Fields()
 	keyDesc := fields.ByNumber(1)
 	valDesc := fields.ByNumber(2)
 
 	pkey := scalarField(keyDesc.Kind())
 	switch kind := valDesc.Kind(); kind {
-	case pref.MessageKind, pref.GroupKind:
+	case protoreflect.MessageKind, protoreflect.GroupKind:
 		val := mmap.NewValue()
 		fillMessage(val.Message(), level+1)
 		mmap.Set(pkey.MapKey(), val)

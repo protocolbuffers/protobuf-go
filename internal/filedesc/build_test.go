@@ -59,7 +59,7 @@ func TestInit(t *testing.T) {
 
 		// TODO: Test oneof and extension options. Testing these requires extending the
 		// options messages (because they contain no user-settable fields), but importing
-		// decriptor.proto from test.proto currently causes an import cycle. Add test
+		// descriptor.proto from test.proto currently causes an import cycle. Add test
 		// cases when that import cycle has been fixed.
 		descPkg.Append("OneofDescriptorProto.options"): true,
 	}

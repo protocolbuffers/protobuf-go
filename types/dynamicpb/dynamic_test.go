@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/proto"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
-	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/testing/prototest"
 	"google.golang.org/protobuf/types/dynamicpb"
 
@@ -40,7 +40,7 @@ func TestDynamicExtensions(t *testing.T) {
 }
 
 func TestDynamicEnums(t *testing.T) {
-	for _, enum := range []pref.Enum{
+	for _, enum := range []protoreflect.Enum{
 		testpb.TestAllTypes_FOO,
 		test3pb.TestAllTypes_FOO,
 	} {
@@ -51,24 +51,24 @@ func TestDynamicEnums(t *testing.T) {
 
 type extResolver struct{}
 
-func (extResolver) FindExtensionByName(field pref.FullName) (pref.ExtensionType, error) {
-	xt, err := preg.GlobalTypes.FindExtensionByName(field)
+func (extResolver) FindExtensionByName(field protoreflect.FullName) (protoreflect.ExtensionType, error) {
+	xt, err := protoregistry.GlobalTypes.FindExtensionByName(field)
 	if err != nil {
 		return nil, err
 	}
 	return dynamicpb.NewExtensionType(xt.TypeDescriptor().Descriptor()), nil
 }
 
-func (extResolver) FindExtensionByNumber(message pref.FullName, field pref.FieldNumber) (pref.ExtensionType, error) {
-	xt, err := preg.GlobalTypes.FindExtensionByNumber(message, field)
+func (extResolver) FindExtensionByNumber(message protoreflect.FullName, field protoreflect.FieldNumber) (protoreflect.ExtensionType, error) {
+	xt, err := protoregistry.GlobalTypes.FindExtensionByNumber(message, field)
 	if err != nil {
 		return nil, err
 	}
 	return dynamicpb.NewExtensionType(xt.TypeDescriptor().Descriptor()), nil
 }
 
-func (extResolver) RangeExtensionsByMessage(message pref.FullName, f func(pref.ExtensionType) bool) {
-	preg.GlobalTypes.RangeExtensionsByMessage(message, func(xt pref.ExtensionType) bool {
+func (extResolver) RangeExtensionsByMessage(message protoreflect.FullName, f func(protoreflect.ExtensionType) bool) {
+	protoregistry.GlobalTypes.RangeExtensionsByMessage(message, func(xt protoreflect.ExtensionType) bool {
 		return f(dynamicpb.NewExtensionType(xt.TypeDescriptor().Descriptor()))
 	})
 }

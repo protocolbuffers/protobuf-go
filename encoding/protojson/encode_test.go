@@ -15,7 +15,7 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
-	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/testing/protopack"
 
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
@@ -1585,7 +1585,7 @@ func TestMarshal(t *testing.T) {
 }`,
 	}, {
 		desc:    "Any without registered type",
-		mo:      protojson.MarshalOptions{Resolver: new(preg.Types)},
+		mo:      protojson.MarshalOptions{Resolver: new(protoregistry.Types)},
 		input:   &anypb.Any{TypeUrl: "foo/pb2.Nested"},
 		wantErr: true,
 	}, {

@@ -38,14 +38,14 @@ var (
 	protobufVersion = "3.15.3"
 	protobufSHA256  = "" // ignored if protobufVersion is a git hash
 
-	golangVersions = []string{"1.11.13", "1.12.17", "1.13.15", "1.14.15", "1.15.15", "1.16.10", "1.17.3"}
+	golangVersions = []string{"1.11.13", "1.12.17", "1.13.15", "1.14.15", "1.15.15", "1.16.15", "1.17.10", "1.18.1"}
 	golangLatest   = golangVersions[len(golangVersions)-1]
 
-	staticcheckVersion = "2020.1.4"
+	staticcheckVersion = "2022.1.2"
 	staticcheckSHA256s = map[string]string{
-		"darwin/amd64": "5706d101426c025e8f165309e0cb2932e54809eb035ff23ebe19df0f810699d8",
-		"linux/386":    "e4dbf94e940678ae7108f0d22c7c2992339bc10a8fb384e7e734b1531a429a1c",
-		"linux/amd64":  "09d2c2002236296de2c757df111fe3ae858b89f9e183f645ad01f8135c83c519",
+		"darwin/amd64": "baa35f8fb967ee2aacad57f026e3724fbf8d9b7ad8f682f4d44b2084a96e103b",
+		"linux/386":    "4cf74373e5d668b265d7a241b59ba7d26064f2cd6af50b77e62c2b3e2f3afb43",
+		"linux/amd64":  "6dbb7187e43812fa23363cdaaa90ab13544dd36e24d02e2347014e4cf265f06d",
 	}
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
@@ -124,7 +124,7 @@ func Test(t *testing.T) {
 			runGo("ProtocGenGo", command{Dir: "cmd/protoc-gen-go/testdata"}, "go", "test")
 			runGo("Conformance", command{Dir: "internal/conformance"}, "go", "test", "-execute")
 
-			// Only run the 32-bit compatability tests for Linux;
+			// Only run the 32-bit compatibility tests for Linux;
 			// avoid Darwin since 10.15 dropped support i386 code execution.
 			if runtime.GOOS == "linux" {
 				runGo("Arch32Bit", command{Dir: workDir, Env: append(os.Environ(), "GOARCH=386")}, "go", "test", "./...")

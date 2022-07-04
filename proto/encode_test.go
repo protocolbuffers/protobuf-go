@@ -16,7 +16,7 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/internal/errors"
 	orderpb "google.golang.org/protobuf/internal/testprotos/order"
@@ -202,7 +202,7 @@ func TestEncodeOrder(t *testing.T) {
 	proto.SetExtension(m, orderpb.E_Field_30, "thirty")
 	proto.SetExtension(m, orderpb.E_Field_31, "thirty-one")
 	proto.SetExtension(m, orderpb.E_Field_32, "thirty-two")
-	want := []pref.FieldNumber{
+	want := []protoreflect.FieldNumber{
 		30, 31, 32, // extensions first, in number order
 		1, 2, 20, // non-extension, non-oneof in number order
 		10, // oneofs last, undefined order
@@ -214,7 +214,7 @@ func TestEncodeOrder(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var got []pref.FieldNumber
+	var got []protoreflect.FieldNumber
 	for len(b) > 0 {
 		num, _, n := protowire.ConsumeField(b)
 		if n < 0 {

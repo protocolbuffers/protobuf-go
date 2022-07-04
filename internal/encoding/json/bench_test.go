@@ -19,7 +19,7 @@ func BenchmarkFloat(b *testing.B) {
 			b.Fatal(err)
 		}
 		if _, ok := val.Float(64); !ok {
-			b.Fatal("not a flaot")
+			b.Fatal("not a float")
 		}
 	}
 }

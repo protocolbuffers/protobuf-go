@@ -14,7 +14,7 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
-	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/testing/protopack"
 
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
@@ -1200,7 +1200,7 @@ opt_int32: 42
 	}, {
 		desc: "Any not expanded",
 		mo: prototext.MarshalOptions{
-			Resolver: new(preg.Types),
+			Resolver: new(protoregistry.Types),
 		},
 		input: func() proto.Message {
 			m := &pb2.Nested{
