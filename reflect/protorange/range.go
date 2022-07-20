@@ -300,6 +300,7 @@ func popStep(p *protopath.Values) {
 
 // amendError amends the previous error with the current error if it is
 // considered more serious. The precedence order for errors is:
+//
 //	nil < Break < Terminate < previous non-nil < current non-nil
 func amendError(prev, curr error) error {
 	switch {

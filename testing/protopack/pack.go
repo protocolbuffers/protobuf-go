@@ -173,6 +173,7 @@ func (m Message) Size() int {
 // Marshal encodes a syntax tree into the protobuf wire format.
 //
 // Example message definition:
+//
 //	message MyMessage {
 //		string field1 = 1;
 //		int64 field2 = 2;
@@ -180,6 +181,7 @@ func (m Message) Size() int {
 //	}
 //
 // Example encoded message:
+//
 //	b := Message{
 //		Tag{1, BytesType}, String("Hello, world!"),
 //		Tag{2, VarintType}, Varint(-10),
@@ -189,6 +191,7 @@ func (m Message) Size() int {
 //	}.Marshal()
 //
 // Resulting wire data:
+//
 //	0x0000  0a 0d 48 65 6c 6c 6f 2c  20 77 6f 72 6c 64 21 10  |..Hello, world!.|
 //	0x0010  f6 ff ff ff ff ff ff ff  ff 01 1a 0c cd cc 8c 3f  |...............?|
 //	0x0020  cd cc 0c 40 33 33 53 40                           |...@33S@|
@@ -252,6 +255,7 @@ func (m Message) Marshal() []byte {
 // inserted into the syntax tree as a Tag.
 //
 // The contents of each wire type is mapped to the following Go types:
+//
 //	VarintType   => Uvarint
 //	Fixed32Type  => Uint32
 //	Fixed64Type  => Uint64
@@ -261,6 +265,7 @@ func (m Message) Marshal() []byte {
 // Since the wire format is not self-describing, this function cannot parse
 // sub-messages and will leave them as the Bytes type. Further manual parsing
 // can be performed as such:
+//
 //	var m, m1, m2 Message
 //	m.Unmarshal(b)
 //	m1.Unmarshal(m[3].(Bytes))
@@ -279,6 +284,7 @@ func (m *Message) Unmarshal(in []byte) {
 // represent the wire data.
 //
 // The contents of each wire type is mapped to one of the following Go types:
+//
 //	VarintType   => Bool, Varint, Svarint, Uvarint
 //	Fixed32Type  => Int32, Uint32, Float32
 //	Fixed64Type  => Uint32, Uint64, Float64
