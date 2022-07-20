@@ -632,11 +632,11 @@ func makeNested(depth int) *testpb.TestAllTypes {
 	if depth <= 0 {
 		return nil
 	}
-	return testpb.TestAllTypes_builder{
-		OptionalNestedMessage: testpb.TestAllTypes_NestedMessage_builder{
+	return &testpb.TestAllTypes{
+		OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
 			Corecursive: makeNested(depth - 1),
-		}.Build(),
-	}.Build()
+		},
+	}
 }
 
 func BenchmarkEqualWithDeeplyNestedEqual(b *testing.B) {
