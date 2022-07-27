@@ -385,7 +385,7 @@ func mustHandleFlags(t *testing.T) {
 		t.Run("BuildRelease", func(t *testing.T) {
 			v := version.String()
 			for _, goos := range []string{"linux", "darwin", "windows"} {
-				for _, goarch := range []string{"386", "amd64"} {
+				for _, goarch := range []string{"386", "amd64", "arm64"} {
 					// Avoid Darwin since 10.15 dropped support for i386.
 					if goos == "darwin" && goarch == "386" {
 						continue
