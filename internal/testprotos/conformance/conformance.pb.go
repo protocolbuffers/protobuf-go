@@ -227,7 +227,7 @@ type ConformanceRequest struct {
 	//
 	// TODO(haberman): if/when we expand the conformance tests to support proto2,
 	// we will want to include a field that lets the payload/response be a
-	// protobuf_test_messages.proto2.TestAllTypes message instead.
+	// protobuf_test_messages.google.protobuf.TestAllTypes message instead.
 	//
 	// Types that are assignable to Payload:
 	//	*ConformanceRequest_ProtobufPayload
@@ -239,7 +239,7 @@ type ConformanceRequest struct {
 	RequestedOutputFormat WireFormat `protobuf:"varint,3,opt,name=requested_output_format,json=requestedOutputFormat,proto3,enum=conformance.WireFormat" json:"requested_output_format,omitempty"`
 	// The full name for the test message to use; for the moment, either:
 	// protobuf_test_messages.proto3.TestAllTypesProto3 or
-	// protobuf_test_messages.proto2.TestAllTypesProto2.
+	// protobuf_test_messages.google.protobuf.TestAllTypesProto2.
 	MessageType string `protobuf:"bytes,4,opt,name=message_type,json=messageType,proto3" json:"message_type,omitempty"`
 	// Each test is given a specific test category. Some category may need
 	// specific support in testee programs. Refer to the definition of TestCategory
