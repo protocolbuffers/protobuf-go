@@ -35,7 +35,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "3.15.3"
+	protobufVersion = "21.5"
 	protobufSHA256  = "" // ignored if protobufVersion is a git hash
 
 	golangVersions = func() []string {
