@@ -43,7 +43,7 @@ var (
 		switch runtime.GOOS + "/" + runtime.GOARCH {
 		case "darwin/arm64":
 		default:
-			vers = []string{"1.11.13", "1.12.17", "1.13.15", "1.14.15", "1.15.15"}
+			vers = []string{"1.13.15", "1.14.15", "1.15.15"}
 		}
 		return append(vers, "1.16.15", "1.17.12", "1.18.4")
 	}()
