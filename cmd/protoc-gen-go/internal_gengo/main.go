@@ -11,6 +11,7 @@ import (
 	"go/parser"
 	"go/token"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 	"unicode"
@@ -27,11 +28,19 @@ import (
 	"google.golang.org/protobuf/types/pluginpb"
 )
 
+const (
+	EnvSkipVersionMarkers        = "SKIP_VERSION_MARKERS"
+	EnvSkipExtensions            = "SKIP_EXTENSIONS"
+	EnvSkipReflectFileDescriptor = "SKIP_REFLECT_FILE_DESCRIPTOR"
+)
+
 // SupportedFeatures reports the set of supported protobuf language features.
 var SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 
 // GenerateVersionMarkers specifies whether to generate version markers.
 var GenerateVersionMarkers = true
+var GenerateExtensions = true
+var GenerateReflectFileDescriptor = true
 
 // Standard library dependencies.
 const (
@@ -66,6 +75,16 @@ type goImportPath interface {
 
 // GenerateFile generates the contents of a .pb.go file.
 func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.GeneratedFile {
+	if v := os.Getenv(EnvSkipVersionMarkers); v == "false" {
+		GenerateVersionMarkers = false
+	}
+	if v := os.Getenv(EnvSkipExtensions); v == "false" {
+		GenerateExtensions = false
+	}
+	if v := os.Getenv(EnvSkipReflectFileDescriptor); v == "false" {
+		GenerateReflectFileDescriptor = false
+	}
+
 	filename := file.GeneratedFilenamePrefix + ".pb.go"
 	g := gen.NewGeneratedFile(filename, file.GoImportPath)
 	f := newFileInfo(file)
@@ -98,9 +117,13 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 	for _, message := range f.allMessages {
 		genMessage(g, f, message)
 	}
-	genExtensions(g, f)
+	if GenerateExtensions {
+		genExtensions(g, f)
+	}
 
-	genReflectFileDescriptor(gen, g, f)
+	if GenerateReflectFileDescriptor {
+		genReflectFileDescriptor(gen, g, f)
+	}
 
 	return g
 }
@@ -337,7 +360,9 @@ func genMessage(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 
 func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	sf := f.allMessageFieldsByPtr[m]
-	genMessageInternalFields(g, f, m, sf)
+	if GenerateReflectFileDescriptor {
+		genMessageInternalFields(g, f, m, sf)
+	}
 	for _, field := range m.Fields {
 		genMessageField(g, f, m, field, sf)
 	}
@@ -495,7 +520,9 @@ func genMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageIn
 }
 
 func genMessageMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
-	genMessageBaseMethods(g, f, m)
+	if GenerateReflectFileDescriptor {
+		genMessageBaseMethods(g, f, m)
+	}
 	genMessageGetterMethods(g, f, m)
 	genMessageSetterMethods(g, f, m)
 }
