@@ -610,7 +610,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 			g.P("}")
 		default:
 			g.P(leadingComments, "func (x *", m.GoIdent, ") Get", field.GoName, "() ", goType, " {")
-			if !field.Desc.HasPresence() || defaultValue == "nil" {
+			if !field.Desc.HasPresence() || defaultValue == "nil" || !field.Desc.HasOptionalKeyword() {
 				g.P("if x != nil {")
 			} else {
 				g.P("if x != nil && x.", field.GoName, " != nil {")
@@ -685,7 +685,11 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		goType = "[]byte"
 		pointer = false // rely on nullability of slices for presence
 	case protoreflect.MessageKind, protoreflect.GroupKind:
-		goType = "*" + g.QualifiedGoIdent(field.Message.GoIdent)
+		if field.Desc.HasOptionalKeyword() {
+			goType = "*" + g.QualifiedGoIdent(field.Message.GoIdent)
+		} else {
+			goType = g.QualifiedGoIdent(field.Message.GoIdent)
+		}
 		pointer = false // pointer captured as part of the type
 	}
 	switch {
@@ -724,7 +728,11 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 	case protoreflect.StringKind:
 		return `""`
 	case protoreflect.MessageKind, protoreflect.GroupKind, protoreflect.BytesKind:
-		return "nil"
+		if field.Desc.HasOptionalKeyword() {
+			return "nil"
+		} else {
+			return g.QualifiedGoIdent(field.Message.GoIdent) + "{}"
+		}
 	case protoreflect.EnumKind:
 		val := field.Enum.Values[0]
 		if val.GoIdent.GoImportPath == f.GoImportPath {
