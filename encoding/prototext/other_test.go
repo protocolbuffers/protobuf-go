@@ -7,17 +7,17 @@ package prototext_test
 import (
 	"testing"
 
-	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoregistry"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/prototext"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoregistry"
 
-	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
-	"google.golang.org/protobuf/types/known/anypb"
-	"google.golang.org/protobuf/types/known/durationpb"
-	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/structpb"
-	"google.golang.org/protobuf/types/known/timestamppb"
-	"google.golang.org/protobuf/types/known/wrapperspb"
+	pb2 "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/textpb2"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/anypb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/durationpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/emptypb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/structpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/timestamppb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/wrapperspb"
 )
 
 func TestRoundTrip(t *testing.T) {

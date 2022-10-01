@@ -9,12 +9,12 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"google.golang.org/protobuf/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
 
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
-	textpb "google.golang.org/protobuf/internal/testprotos/textpb2"
-	anypb "google.golang.org/protobuf/types/known/anypb"
-	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
+	testpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/test"
+	textpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/textpb2"
+	anypb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/anypb"
+	wrapperspb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/wrapperspb"
 )
 
 func TestReflect(t *testing.T) {

@@ -9,16 +9,16 @@ import (
 	"strings"
 	"testing"
 
-	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/flags"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoregistry"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/prototext"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/flags"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoregistry"
 
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
-	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
-	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
-	pb3 "google.golang.org/protobuf/internal/testprotos/textpb3"
-	"google.golang.org/protobuf/types/known/anypb"
+	testpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/test"
+	weakpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/test/weak1"
+	pb2 "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/textpb2"
+	pb3 "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/textpb3"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/anypb"
 )
 
 func TestUnmarshal(t *testing.T) {

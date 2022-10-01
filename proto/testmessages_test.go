@@ -5,18 +5,18 @@
 package proto_test
 
 import (
-	"google.golang.org/protobuf/encoding/protowire"
-	"google.golang.org/protobuf/internal/impl"
-	"google.golang.org/protobuf/internal/protobuild"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/testing/protopack"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/protowire"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/impl"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/protobuild"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoregistry"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/testing/protopack"
 
-	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
-	requiredpb "google.golang.org/protobuf/internal/testprotos/required"
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
-	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	legacypb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/legacy"
+	requiredpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/required"
+	testpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/test"
+	test3pb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/test3"
 )
 
 type testProto struct {

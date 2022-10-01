@@ -7,16 +7,16 @@ package proto_test
 import (
 	"reflect"
 
-	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/filedesc"
-	"google.golang.org/protobuf/internal/flags"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protodesc"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/runtime/protoimpl"
-	"google.golang.org/protobuf/testing/protopack"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/prototext"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/filedesc"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/flags"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protodesc"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/runtime/protoimpl"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/testing/protopack"
 
-	"google.golang.org/protobuf/types/descriptorpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/descriptorpb"
 )
 
 func init() {

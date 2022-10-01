@@ -16,13 +16,13 @@ import (
 	"strings"
 	"time"
 
-	"google.golang.org/protobuf/encoding/protowire"
-	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/internal/genid"
-	"google.golang.org/protobuf/internal/order"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/protoregistry"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/protowire"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/detrand"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/genid"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/order"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoregistry"
 )
 
 // Format returns a formatted string for the message.

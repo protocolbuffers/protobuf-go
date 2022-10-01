@@ -11,22 +11,22 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/internal/flags"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/testing/protopack"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/protojson"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/detrand"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/flags"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoregistry"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/testing/protopack"
 
-	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
-	pb3 "google.golang.org/protobuf/internal/testprotos/textpb3"
-	"google.golang.org/protobuf/types/known/anypb"
-	"google.golang.org/protobuf/types/known/durationpb"
-	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/fieldmaskpb"
-	"google.golang.org/protobuf/types/known/structpb"
-	"google.golang.org/protobuf/types/known/timestamppb"
-	"google.golang.org/protobuf/types/known/wrapperspb"
+	pb2 "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/textpb2"
+	pb3 "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/textpb3"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/anypb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/durationpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/emptypb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/fieldmaskpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/structpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/timestamppb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/known/wrapperspb"
 )
 
 // Disable detrand to enable direct comparisons on outputs.

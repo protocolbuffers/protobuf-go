@@ -11,19 +11,19 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/internal/msgfmt"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/testing/protocmp"
-	"google.golang.org/protobuf/testing/protopack"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/detrand"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/msgfmt"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/testing/protocmp"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/testing/protopack"
 
-	testpb "google.golang.org/protobuf/internal/testprotos/test"
-	textpb "google.golang.org/protobuf/internal/testprotos/textpb2"
-	dynpb "google.golang.org/protobuf/types/dynamicpb"
-	anypb "google.golang.org/protobuf/types/known/anypb"
-	durpb "google.golang.org/protobuf/types/known/durationpb"
-	tspb "google.golang.org/protobuf/types/known/timestamppb"
-	wpb "google.golang.org/protobuf/types/known/wrapperspb"
+	testpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/test"
+	textpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/textpb2"
+	dynpb "github.com/infiniteloopcloud/protoc-gen-go-types/types/dynamicpb"
+	anypb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/anypb"
+	durpb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/durationpb"
+	tspb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/timestamppb"
+	wpb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/wrapperspb"
 )
 
 func init() {

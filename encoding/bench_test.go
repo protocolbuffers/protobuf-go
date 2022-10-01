@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"testing"
 
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/reflect/protoreflect"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/protojson"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/prototext"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
 
-	tpb "google.golang.org/protobuf/internal/testprotos/test"
+	tpb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/test"
 )
 
 // The results of these microbenchmarks are unlikely to correspond well

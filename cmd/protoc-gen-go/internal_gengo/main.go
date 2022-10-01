@@ -17,15 +17,15 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"google.golang.org/protobuf/compiler/protogen"
-	"google.golang.org/protobuf/internal/encoding/tag"
-	"google.golang.org/protobuf/internal/genid"
-	"google.golang.org/protobuf/internal/version"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/runtime/protoimpl"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/compiler/protogen"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/encoding/tag"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/genid"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/version"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/runtime/protoimpl"
 
-	"google.golang.org/protobuf/types/descriptorpb"
-	"google.golang.org/protobuf/types/pluginpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/descriptorpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/pluginpb"
 )
 
 const (
@@ -60,12 +60,12 @@ const (
 // patched to support unique build environments that impose restrictions
 // on the dependencies of generated source code.
 var (
-	protoPackage         goImportPath = protogen.GoImportPath("google.golang.org/protobuf/proto")
-	protoifacePackage    goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoiface")
-	protoimplPackage     goImportPath = protogen.GoImportPath("google.golang.org/protobuf/runtime/protoimpl")
-	protojsonPackage     goImportPath = protogen.GoImportPath("google.golang.org/protobuf/encoding/protojson")
-	protoreflectPackage  goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
-	protoregistryPackage goImportPath = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoregistry")
+	protoPackage         goImportPath = protogen.GoImportPath("github.com/infiniteloopcloud/protoc-gen-go-types/proto")
+	protoifacePackage    goImportPath = protogen.GoImportPath("github.com/infiniteloopcloud/protoc-gen-go-types/runtime/protoiface")
+	protoimplPackage     goImportPath = protogen.GoImportPath("github.com/infiniteloopcloud/protoc-gen-go-types/runtime/protoimpl")
+	protojsonPackage     goImportPath = protogen.GoImportPath("github.com/infiniteloopcloud/protoc-gen-go-types/encoding/protojson")
+	protoreflectPackage  goImportPath = protogen.GoImportPath("github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect")
+	protoregistryPackage goImportPath = protogen.GoImportPath("github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoregistry")
 )
 
 type goImportPath interface {

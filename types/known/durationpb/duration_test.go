@@ -12,10 +12,10 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"google.golang.org/protobuf/internal/detrand"
-	"google.golang.org/protobuf/testing/protocmp"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/detrand"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/testing/protocmp"
 
-	durpb "google.golang.org/protobuf/types/known/durationpb"
+	durpb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/durationpb"
 )
 
 func init() {

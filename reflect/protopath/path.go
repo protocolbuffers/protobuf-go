@@ -9,8 +9,8 @@ package protopath
 import (
 	"fmt"
 
-	"google.golang.org/protobuf/internal/msgfmt"
-	"google.golang.org/protobuf/reflect/protoreflect"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/msgfmt"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
 )
 
 // NOTE: The Path and Values are separate types here since there are use cases

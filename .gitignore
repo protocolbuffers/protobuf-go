@@ -2,6 +2,7 @@
 /.gocache/
 /bin/
 /vendor/
+.idea
 
 # This file includes artifacts of the system test that should not be checked in.
 # For files created by specific development environment (e.g. editor),

@@ -5,13 +5,13 @@
 package protodesc
 
 import (
-	"google.golang.org/protobuf/internal/encoding/defval"
-	"google.golang.org/protobuf/internal/errors"
-	"google.golang.org/protobuf/internal/filedesc"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/protoregistry"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/encoding/defval"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/errors"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/filedesc"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoregistry"
 
-	"google.golang.org/protobuf/types/descriptorpb"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/types/descriptorpb"
 )
 
 // resolver is a wrapper around a local registry of declarations within the file

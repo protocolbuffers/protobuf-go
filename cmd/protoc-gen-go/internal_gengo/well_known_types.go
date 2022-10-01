@@ -7,8 +7,8 @@ package internal_gengo
 import (
 	"strings"
 
-	"google.golang.org/protobuf/compiler/protogen"
-	"google.golang.org/protobuf/internal/genid"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/compiler/protogen"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/genid"
 )
 
 // Specialized support for well-known types are hard-coded into the generator
@@ -205,7 +205,7 @@ func genPackageKnownComment(f *fileInfo) protogen.Comments {
  The Value, Struct, and ListValue types have generated MarshalJSON and
  UnmarshalJSON methods such that they serialize JSON equivalent to what the
  messages themselves represent. Use of these types with the
- "google.golang.org/protobuf/encoding/protojson" package
+ "github.com/infiniteloopcloud/protoc-gen-go-types/encoding/protojson" package
  ensures that they will be serialized as their JSON equivalent.
 
 

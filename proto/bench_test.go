@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"google.golang.org/protobuf/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
 )
 
 // The results of these microbenchmarks are unlikely to correspond well

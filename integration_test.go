@@ -28,7 +28,7 @@ import (
 	"testing"
 	"time"
 
-	"google.golang.org/protobuf/internal/version"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/version"
 )
 
 var (

@@ -9,9 +9,9 @@ import (
 	"sort"
 	"sync/atomic"
 
-	"google.golang.org/protobuf/internal/flags"
-	proto "google.golang.org/protobuf/proto"
-	piface "google.golang.org/protobuf/runtime/protoiface"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/flags"
+	proto "github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	piface "github.com/infiniteloopcloud/protoc-gen-go-types/runtime/protoiface"
 )
 
 type marshalOptions struct {

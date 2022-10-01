@@ -14,11 +14,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/protojson"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/encoding/prototext"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
 
-	pb "google.golang.org/protobuf/internal/testprotos/conformance"
+	pb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/conformance"
 )
 
 func init() {

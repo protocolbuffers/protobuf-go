@@ -10,15 +10,15 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protopath"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/testing/protocmp"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/proto"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protopath"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoregistry"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/testing/protocmp"
 
-	newspb "google.golang.org/protobuf/internal/testprotos/news"
-	anypb "google.golang.org/protobuf/types/known/anypb"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	newspb "github.com/infiniteloopcloud/protoc-gen-go-types/internal/testprotos/news"
+	anypb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/anypb"
+	timestamppb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/timestamppb"
 )
 
 func mustMarshal(m proto.Message) []byte {

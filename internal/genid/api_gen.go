@@ -7,7 +7,7 @@
 package genid
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoreflect "github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
 )
 
 const File_google_protobuf_api_proto = "google/protobuf/api.proto"

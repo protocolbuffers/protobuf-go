@@ -10,15 +10,17 @@
 Package proto3_20160519_a4ab9ec5 is a generated protocol buffer package.
 
 It is generated from these files:
+
 	proto3_20160519_a4ab9ec5/test.proto
 
 It has these top-level messages:
+
 	SiblingMessage
 	Message
 */
 package proto3_20160519_a4ab9ec5
 
-import proto "google.golang.org/protobuf/internal/protolegacy"
+import proto "github.com/infiniteloopcloud/protoc-gen-go-types/internal/protolegacy"
 import fmt "fmt"
 import math "math"
 

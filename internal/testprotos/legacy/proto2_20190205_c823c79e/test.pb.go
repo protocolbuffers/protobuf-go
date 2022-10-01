@@ -11,7 +11,7 @@ import (
 	fmt "fmt"
 	math "math"
 
-	proto "google.golang.org/protobuf/internal/protolegacy"
+	proto "github.com/infiniteloopcloud/protoc-gen-go-types/internal/protolegacy"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

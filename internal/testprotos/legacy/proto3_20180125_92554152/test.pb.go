@@ -17,7 +17,7 @@ It has these top-level messages:
 */
 package proto3_20180125_92554152
 
-import proto "google.golang.org/protobuf/internal/protolegacy"
+import proto "github.com/infiniteloopcloud/protoc-gen-go-types/internal/protolegacy"
 import fmt "fmt"
 import math "math"
 

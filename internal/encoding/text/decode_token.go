@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"google.golang.org/protobuf/internal/flags"
+	"github.com/infiniteloopcloud/protoc-gen-go-types/internal/flags"
 )
 
 // Kind represents a token kind expressible in the textproto format.

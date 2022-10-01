@@ -10,15 +10,15 @@
 package textpb2
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	anypb "google.golang.org/protobuf/types/known/anypb"
-	durationpb "google.golang.org/protobuf/types/known/durationpb"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
-	structpb "google.golang.org/protobuf/types/known/structpb"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
+	protoreflect "github.com/infiniteloopcloud/protoc-gen-go-types/reflect/protoreflect"
+	protoimpl "github.com/infiniteloopcloud/protoc-gen-go-types/runtime/protoimpl"
+	anypb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/anypb"
+	durationpb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/durationpb"
+	emptypb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/emptypb"
+	fieldmaskpb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/fieldmaskpb"
+	structpb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/structpb"
+	timestamppb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/timestamppb"
+	wrapperspb "github.com/infiniteloopcloud/protoc-gen-go-types/types/known/wrapperspb"
 	reflect "reflect"
 	sync "sync"
 )
