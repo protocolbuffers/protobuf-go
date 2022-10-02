@@ -18,3 +18,26 @@ go install github.com/infiniteloopcloud/protoc-gen-go-types@latest
 These are actually environment variables.
 
 - `SKIP_PROTOBUF_SPECIFIC=false` - Skip protobuf specific code
+- `TYPE_OVERRIDE` - Enable type override
+
+### Type override
+
+Supported overwrite:
+
+- `TimeTime` -> `time.Time`
+
+#### Example
+
+```protobuf
+syntax = "proto3";
+
+message SomeStruct {
+  TimeTime created_at = 1; // This will be time.Time
+}
+
+message TimeTime {}
+```
+
+#### Important
+
+Currently the generator not importing the `time` package automatically. Temporary solution can be: `goimports -w *.pb.go`. 
