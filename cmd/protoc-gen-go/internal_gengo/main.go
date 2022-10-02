@@ -30,6 +30,7 @@ import (
 
 const (
 	EnvSkipProtobufSpecific = "SKIP_PROTOBUF_SPECIFIC"
+	EnvTypeOverride         = "TYPE_OVERRIDE"
 )
 
 // SupportedFeatures reports the set of supported protobuf language features.
@@ -37,6 +38,7 @@ var SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPT
 
 // GenerateVersionMarkers specifies whether to generate version markers.
 var GenerateProtobufSpecific = true
+var TypeOverride = false
 
 // Standard library dependencies.
 const (
@@ -73,6 +75,9 @@ type goImportPath interface {
 func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.GeneratedFile {
 	if v := os.Getenv(EnvSkipProtobufSpecific); v == "false" {
 		GenerateProtobufSpecific = false
+	}
+	if v := os.Getenv(EnvTypeOverride); v == "true" {
+		TypeOverride = true
 	}
 
 	filename := file.GeneratedFilenamePrefix + ".pb.go"
@@ -414,6 +419,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 	if pointer {
 		goType = "*" + goType
 	}
+	goType = goTypeOverride(goType)
 	tags := structTags{
 		{"protobuf", fieldProtobufTagValue(field)},
 		{"json", fieldJSONTagValue(field)},
@@ -453,6 +459,7 @@ func genMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageIn
 		}
 		name := "Default_" + m.GoIdent.GoName + "_" + field.GoName
 		goType, _ := fieldGoType(g, f, field)
+		goType = goTypeOverride(goType)
 		defVal := field.Desc.Default()
 		switch field.Desc.Kind() {
 		case protoreflect.StringKind:
@@ -575,6 +582,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 
 		// Getter for message field.
 		goType, pointer := fieldGoType(g, f, field)
+		goType = goTypeOverride(goType)
 		defaultValue := fieldDefaultValue(g, f, m, field)
 		g.Annotate(m.GoIdent.GoName+".Get"+field.GoName, field.Location)
 		leadingComments := appendDeprecationSuffix("",
@@ -724,7 +732,9 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 		if field.Desc.HasOptionalKeyword() {
 			return "nil"
 		} else {
-			return g.QualifiedGoIdent(field.Message.GoIdent) + "{}"
+			goType := g.QualifiedGoIdent(field.Message.GoIdent)
+			goType = goTypeOverride(goType)
+			return goType + "{}"
 		}
 	case protoreflect.EnumKind:
 		val := field.Enum.Values[0]
@@ -909,4 +919,14 @@ func (c trailingComment) String() string {
 		return ""
 	}
 	return s
+}
+
+func goTypeOverride(goType string) string {
+	if TypeOverride {
+		switch goType {
+		case "TimeTime":
+			return "time.Time"
+		}
+	}
+	return goType
 }
