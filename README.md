@@ -15,8 +15,6 @@ go install github.com/infiniteloopcloud/protoc-gen-go-types@latest
 
 ### Flags
 
-This are actually environment variables.
+These are actually environment variables.
 
-- `SKIP_VERSION_MARKERS=false` - Skip markers
-- `SKIP_EXTENSIONS=false` - Skip extensions
-- `SKIP_REFLECT_FILE_DESCRIPTOR=false` - Skip reflect file descriptors
+- `SKIP_PROTOBUF_SPECIFIC=false` - Skip protobuf specific code
