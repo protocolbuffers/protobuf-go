@@ -927,6 +927,10 @@ func goTypeOverride(goType string) string {
 		case "TimeTime":
 			return "time.Time"
 		}
+
+		if strings.Contains(goType, "RepeatedString") {
+			return strings.ReplaceAll(goType, "RepeatedString", "[]string")
+		}
 	}
 	return goType
 }
