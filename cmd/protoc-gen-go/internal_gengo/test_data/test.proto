@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = ".;proto";
+
+package proto;
+
+message Test {
+  TimeTime created_at = 1;
+  map<uint64, string> map_field = 2;
+  string test = 3;
+  String other = 43;
+}
+
+message TimeTime {}
+
+message String {
+  string string = 2;
+}
