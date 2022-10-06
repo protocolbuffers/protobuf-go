@@ -617,7 +617,6 @@ func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.Message
 	// adding new per-field methods such as setters.
 	usedNames := map[string]bool{
 		"Reset":               true,
-		"String":              true,
 		"ProtoMessage":        true,
 		"Marshal":             true,
 		"Unmarshal":           true,
