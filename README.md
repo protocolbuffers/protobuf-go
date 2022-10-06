@@ -25,6 +25,7 @@ These are actually environment variables.
 Supported overwrite:
 
 - `TimeTime` -> `time.Time`
+- `RepeatedString` -> `[]string`
 
 #### Example
 
