@@ -146,8 +146,8 @@ type encoder struct {
 	opts MarshalOptions
 }
 
-// typeFieldDesc is a synthetic field descriptor used for the "@type" field.
-var typeFieldDesc = func() protoreflect.FieldDescriptor {
+// TypeFieldDesc is a synthetic field descriptor used for the "@type" field.
+var TypeFieldDesc = func() protoreflect.FieldDescriptor {
 	var fd filedesc.Field
 	fd.L0.FullName = "@type"
 	fd.L0.Index = -1
@@ -164,7 +164,7 @@ type typeURLFieldRanger struct {
 }
 
 func (m typeURLFieldRanger) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if !f(typeFieldDesc, protoreflect.ValueOfString(m.typeURL)) {
+	if !f(TypeFieldDesc, protoreflect.ValueOfString(m.typeURL)) {
 		return
 	}
 	m.FieldRanger.Range(f)
