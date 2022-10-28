@@ -5,6 +5,9 @@ package proto;
 option go_package = ".;proto";
 
 import "./test_data/config.proto";
+// to test with other languages, switch to this import and run
+// protoc -I=test_data --java_out=test_data test_data/*.proto
+// import "config.proto";
 
 message RepeatedString {
 }
