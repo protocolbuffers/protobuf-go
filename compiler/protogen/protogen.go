@@ -950,7 +950,12 @@ func (g *GeneratedFile) QualifiedGoIdent(ident GoIdent) string {
 	if packageName, ok := g.packageNames[ident.GoImportPath]; ok {
 		return string(packageName) + "." + ident.GoName
 	}
-	packageName := cleanPackageName(path.Base(string(ident.GoImportPath)))
+	var packageName GoPackageName
+	if ident.GoImportAlias == "" {
+		packageName = cleanPackageName(path.Base(string(ident.GoImportPath)))
+	} else {
+		packageName = ident.GoImportAlias
+	}
 	for i, orig := 1, packageName; g.usedPackageNames[packageName]; i++ {
 		packageName = orig + GoPackageName(strconv.Itoa(i))
 	}
@@ -1163,8 +1168,9 @@ func (g *GeneratedFile) metaFile(content []byte) (string, error) {
 // A GoIdent is a Go identifier, consisting of a name and import path.
 // The name is a single identifier and may not be a dot-qualified selector.
 type GoIdent struct {
-	GoName       string
-	GoImportPath GoImportPath
+	GoName        string
+	GoImportAlias GoPackageName
+	GoImportPath  GoImportPath
 }
 
 func (id GoIdent) String() string { return fmt.Sprintf("%q.%v", id.GoImportPath, id.GoName) }

@@ -1,20 +1,19 @@
 syntax = "proto3";
 
-option go_package = ".;proto";
-
 package proto;
 
-message Test {
-  TimeTime created_at = 1;
-  map<uint64, RepeatedString> map_field = 2;
-  string test = 3;
-  String other = 43;
+option go_package = ".;proto";
+
+import "./test_data/config.proto";
+
+message RepeatedString {
 }
 
-message TimeTime {}
-
-message RepeatedString {}
-
-message String {
-  string string = 2;
+message Test {
+  int64 created_at = 1 [(go_type) = "time.Time", (go_import) = "time"];
+  map<uint64, RepeatedString> map_field = 2 [(go_type) = "map[uint64][]string", (go_import) = ""];
+  string test = 3;
+  string optStr = 4 [(go_type) = "null.String", (go_import) = "github.com/volatiletech/null/v9", (go_import_alias) = "null"];
+  int32 optInt = 5 [(go_type) = "null.Int32"];
+  int32 optBigInt = 6 [(go_type) = "null.Int64", (go_import) = "github.com/volatiletech/null/v9", (go_import_alias) = "null"];
 }

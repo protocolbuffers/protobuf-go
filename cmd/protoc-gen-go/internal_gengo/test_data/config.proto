@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.FieldOptions {
+  optional string go_type = 1000;
+  optional string go_import = 1001;
+  optional string go_import_alias = 1002;
+}
