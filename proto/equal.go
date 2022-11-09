@@ -74,6 +74,11 @@ func equalMessage(mx, my protoreflect.Message) bool {
 	return equalUnknown(mx.GetUnknown(), my.GetUnknown())
 }
 
+// EqualField compares two fields.
+func EqualField(fd protoreflect.FieldDescriptor, x, y protoreflect.Value) bool {
+	return equalField(fd, x, y)
+}
+
 // equalField compares two fields.
 func equalField(fd protoreflect.FieldDescriptor, x, y protoreflect.Value) bool {
 	switch {
