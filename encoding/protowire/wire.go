@@ -29,12 +29,8 @@ const (
 )
 
 // IsValid reports whether the field number is semantically valid.
-//
-// Note that while numbers within the reserved range are semantically invalid,
-// they are syntactically valid in the wire format.
-// Implementations may treat records with reserved field numbers as unknown.
 func (n Number) IsValid() bool {
-	return MinValidNumber <= n && n < FirstReservedNumber || LastReservedNumber < n && n <= MaxValidNumber
+	return MinValidNumber <= n && n <= MaxValidNumber
 }
 
 // Type represents the wire type.
