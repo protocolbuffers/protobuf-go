@@ -2283,6 +2283,18 @@ func TestMarshal(t *testing.T) {
     }
   ]
 }`,
+	}, {
+		desc: "Int/Uint64 as Integer when Write64KindsAsInteger is true",
+		mo:   protojson.MarshalOptions{Write64KindsAsInteger: true},
+		input: &pb3.Proto3Optional{
+			OptInt64:  proto.Int64(1111),
+			OptUint64: proto.Uint64(2222),
+		},
+
+		want: `{
+  "optInt64": 1111,
+  "optUint64": 2222
+}`,
 	}}
 
 	for _, tt := range tests {
