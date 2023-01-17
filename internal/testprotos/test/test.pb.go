@@ -190,11 +190,11 @@ func (TestAllTypes_NestedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{0, 0}
 }
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 type TestDeprecatedMessage_DeprecatedEnum int32
 
 const (
-	// Deprecated: Do not use.
+	// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 	TestDeprecatedMessage_DEPRECATED TestDeprecatedMessage_DeprecatedEnum = 0
 )
 
@@ -1116,13 +1116,13 @@ type TestAllTypes_OneofOptionalUint32 struct {
 
 func (*TestAllTypes_OneofOptionalUint32) isTestAllTypes_OneofOptional() {}
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 type TestDeprecatedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Deprecated: Do not use.
+	// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 	DeprecatedInt32 *int32 `protobuf:"varint,1,opt,name=deprecated_int32,json=deprecatedInt32" json:"deprecated_int32,omitempty"`
 	// Types that are assignable to DeprecatedOneof:
 	//	*TestDeprecatedMessage_DeprecatedOneofField
@@ -1161,7 +1161,7 @@ func (*TestDeprecatedMessage) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{1}
 }
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 func (x *TestDeprecatedMessage) GetDeprecatedInt32() int32 {
 	if x != nil && x.DeprecatedInt32 != nil {
 		return *x.DeprecatedInt32
@@ -1176,7 +1176,7 @@ func (m *TestDeprecatedMessage) GetDeprecatedOneof() isTestDeprecatedMessage_Dep
 	return nil
 }
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 func (x *TestDeprecatedMessage) GetDeprecatedOneofField() int32 {
 	if x, ok := x.GetDeprecatedOneof().(*TestDeprecatedMessage_DeprecatedOneofField); ok {
 		return x.DeprecatedOneofField
@@ -1189,7 +1189,7 @@ type isTestDeprecatedMessage_DeprecatedOneof interface {
 }
 
 type TestDeprecatedMessage_DeprecatedOneofField struct {
-	// Deprecated: Do not use.
+	// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 	DeprecatedOneofField int32 `protobuf:"varint,2,opt,name=deprecated_oneof_field,json=deprecatedOneofField,oneof"`
 }
 

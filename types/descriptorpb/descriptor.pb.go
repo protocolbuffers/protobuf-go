@@ -1396,7 +1396,7 @@ type FileOptions struct {
 	JavaMultipleFiles *bool `protobuf:"varint,10,opt,name=java_multiple_files,json=javaMultipleFiles,def=0" json:"java_multiple_files,omitempty"`
 	// This option does nothing.
 	//
-	// Deprecated: Do not use.
+	// Deprecated: Marked as deprecated in google/protobuf/descriptor.proto.
 	JavaGenerateEqualsAndHash *bool `protobuf:"varint,20,opt,name=java_generate_equals_and_hash,json=javaGenerateEqualsAndHash" json:"java_generate_equals_and_hash,omitempty"`
 	// If set true, then the Java2 code generator will generate code that
 	// throws an exception whenever an attempt is made to assign a non-UTF-8
@@ -1530,7 +1530,7 @@ func (x *FileOptions) GetJavaMultipleFiles() bool {
 	return Default_FileOptions_JavaMultipleFiles
 }
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in google/protobuf/descriptor.proto.
 func (x *FileOptions) GetJavaGenerateEqualsAndHash() bool {
 	if x != nil && x.JavaGenerateEqualsAndHash != nil {
 		return *x.JavaGenerateEqualsAndHash
