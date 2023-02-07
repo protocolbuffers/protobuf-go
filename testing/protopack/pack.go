@@ -7,7 +7,7 @@
 // This package is intended for use in debugging and/or creation of test data.
 // Proper usage of this package requires knowledge of the wire format.
 //
-// See https://developers.google.com/protocol-buffers/docs/encoding.
+// See https://protobuf.dev/programming-guides/encoding.
 package protopack
 
 import (

@@ -39,7 +39,7 @@ import (
 	"google.golang.org/protobuf/types/pluginpb"
 )
 
-const goPackageDocURL = "https://developers.google.com/protocol-buffers/docs/reference/go-generated#package"
+const goPackageDocURL = "https://protobuf.dev/reference/go/go-generated#package"
 
 // Run executes a function as a protoc plugin.
 //
