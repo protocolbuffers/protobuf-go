@@ -146,7 +146,7 @@ func Test(t *testing.T) {
 		checks := []string{
 			"all",     // start with all checks enabled
 			"-SA1019", // disable deprecated usage check
-			"-S*",     // disable code simplication checks
+			"-S*",     // disable code simplification checks
 			"-ST*",    // disable coding style checks
 			"-U*",     // disable unused declaration checks
 		}

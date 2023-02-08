@@ -53,7 +53,7 @@ func init() {
 					gengo.GenerateVersionMarkers = false
 					gengo.GenerateFile(gen, file)
 					generateIdentifiers(gen, file)
-					generateSouceContextStringer(gen, file)
+					generateSourceContextStringer(gen, file)
 				}
 			}
 			gen.SupportedFeatures = gengo.SupportedFeatures
@@ -324,10 +324,10 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 	processMessages(file.Messages)
 }
 
-// generateSouceContextStringer generates the implementation for the
+// generateSourceContextStringer generates the implementation for the
 // protoreflect.SourcePath.String method by using information present
 // in the descriptor.proto.
-func generateSouceContextStringer(gen *protogen.Plugin, file *protogen.File) {
+func generateSourceContextStringer(gen *protogen.Plugin, file *protogen.File) {
 	if file.Desc.Path() != "google/protobuf/descriptor.proto" {
 		return
 	}
