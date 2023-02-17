@@ -20,6 +20,7 @@ type Foo struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Bar:
+	//
 	//	*Foo_GetBar
 	Bar isFoo_Bar `protobuf_oneof:"bar"`
 }

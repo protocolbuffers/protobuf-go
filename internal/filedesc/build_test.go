@@ -53,6 +53,8 @@ func TestInit(t *testing.T) {
 		// The protoreflect descriptors don't include source info.
 		descPkg.Append("FileDescriptorProto.source_code_info"): true,
 		descPkg.Append("FileDescriptorProto.syntax"):           true,
+		// Nothing is using edition yet.
+		descPkg.Append("FileDescriptorProto.edition"): true,
 
 		// Impossible to test proto3 optional in a proto2 file.
 		descPkg.Append("FieldDescriptorProto.proto3_optional"): true,

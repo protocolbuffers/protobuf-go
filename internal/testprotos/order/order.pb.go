@@ -25,6 +25,7 @@ type Message struct {
 	Field_2 *string `protobuf:"bytes,2,opt,name=field_2,json=field2" json:"field_2,omitempty"`
 	Field_1 *string `protobuf:"bytes,1,opt,name=field_1,json=field1" json:"field_1,omitempty"`
 	// Types that are assignable to Oneof_1:
+	//
 	//	*Message_Field_10
 	Oneof_1  isMessage_Oneof_1 `protobuf_oneof:"oneof_1"`
 	Field_20 *string           `protobuf:"bytes,20,opt,name=field_20,json=field20" json:"field_20,omitempty"`
