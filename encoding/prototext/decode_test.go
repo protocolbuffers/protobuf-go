@@ -127,9 +127,9 @@ opt_int64: 3735928559
 opt_uint32: 0xff
 opt_uint64: 0xdeadbeef
 opt_sint32: -1001
-opt_sint64: -0xffff
+opt_sint64: -   0xffff
 opt_fixed64: 64
-opt_sfixed32: -32
+opt_sfixed32: -		32
 opt_float: 1.234
 opt_double: 1.23e+100
 opt_bytes: "\xe8\xb0\xb7\xe6\xad\x8c"
@@ -164,7 +164,8 @@ s_int64: 3735928559
 s_uint32: 0xff
 s_uint64: 0xdeadbeef
 s_sint32: -1001
-s_sint64: -0xffff
+s_sint64: -  #
+             0xffff
 s_fixed64: 64
 s_sfixed32: -32
 s_float: 1.234

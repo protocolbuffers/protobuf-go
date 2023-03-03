@@ -556,6 +556,14 @@ func TestDecoder(t *testing.T) {
 			want: []R{{E: "invalid field number: -123"}},
 		},
 		{
+			in:   "- \t 123.321e6",
+			want: []R{{E: "invalid field number: -123.321e6"}},
+		},
+		{
+			in:   "- # negative\n 123",
+			want: []R{{E: "invalid field number: -123"}},
+		},
+		{
 			// Field number > math.MaxInt32.
 			in:   "2147483648:",
 			want: []R{{E: "invalid field number: 2147483648"}},
