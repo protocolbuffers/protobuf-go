@@ -560,6 +560,14 @@ func TestDecoder(t *testing.T) {
 			want: []R{{E: "invalid field number: -123.321e6"}},
 		},
 		{
+			in:   "-",
+			want: []R{{E: "invalid field name: -"}},
+		},
+		{
+			in:   "- ",
+			want: []R{{E: "invalid field name: -"}},
+		},
+		{
 			in:   "- # negative\n 123",
 			want: []R{{E: "invalid field number: -123"}},
 		},

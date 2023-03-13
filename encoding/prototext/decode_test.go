@@ -309,6 +309,11 @@ s_string: "谷歌"
 		inputText:    "s_sfixed64: bad",
 		wantErr:      "invalid value for sfixed64",
 	}, {
+		desc:         "incomplete number value",
+		inputMessage: &pb3.Scalars{},
+		inputText:    `s_int32: - `,
+		wantErr:      "(line 1:10): invalid scalar value: -",
+	}, {
 		desc:         "conformance: FloatFieldMaxValue",
 		inputMessage: &pb2.Scalars{},
 		inputText:    `opt_float: 3.4028235e+38`,
