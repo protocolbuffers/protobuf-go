@@ -35,7 +35,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "22.0"
+	protobufVersion = "344f6dee76ea858acfd4fd575ab386438256842b"
 	protobufSHA256  = "" // ignored if protobufVersion is a git hash
 
 	golangVersions = func() []string {
@@ -253,7 +253,15 @@ func mustInitDeps(t *testing.T) {
 		command{Dir: protobufPath}.mustRun(t, "git", "checkout", checkoutVersion)
 
 		fmt.Printf("build %v\n", filepath.Base(protobufPath))
-		command{Dir: protobufPath}.mustRun(t, "bazel", "build", ":protoc", "//conformance:conformance_test_runner")
+		env := os.Environ()
+		if runtime.GOOS == "darwin" {
+			// Adding this environment variable appears to be necessary for macOS builds.
+			env = append(env, "CC=clang")
+		}
+		command{
+			Dir: protobufPath,
+			Env: env,
+		}.mustRun(t, "bazel", "build", ":protoc", "//conformance:conformance_test_runner")
 	}
 	check(os.Setenv("PROTOBUF_ROOT", protobufPath)) // for generate-protos
 	registerBinary("conform-test-runner", filepath.Join(protobufPath, "bazel-bin", "conformance", "conformance_test_runner"))
