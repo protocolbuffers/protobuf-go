@@ -2310,3 +2310,44 @@ func TestMarshal(t *testing.T) {
 		})
 	}
 }
+
+func TestEncodeAppend(t *testing.T) {
+	want := []byte("prefix")
+	got := append([]byte(nil), want...)
+	got, err := protojson.MarshalOptions{}.MarshalAppend(got, &pb3.Scalars{
+		SString: "value",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.HasPrefix(got, want) {
+		t.Fatalf("MarshalAppend modified prefix: got %v, want prefix %v", got, want)
+	}
+}
+
+func TestMarshalAppendAllocations(t *testing.T) {
+	m := &pb3.Scalars{SInt32: 1}
+	const count = 1000
+	size := 12
+	b := make([]byte, size)
+	// AllocsPerRun returns an integral value.
+	marshalAllocs := testing.AllocsPerRun(count, func() {
+		_, err := protojson.MarshalOptions{}.MarshalAppend(b[:0], m)
+		if err != nil {
+			t.Fatal(err)
+		}
+	})
+	b = nil
+	marshalAppendAllocs := testing.AllocsPerRun(count, func() {
+		var err error
+		b, err = protojson.MarshalOptions{}.MarshalAppend(b, m)
+		if err != nil {
+			t.Fatal(err)
+		}
+	})
+	if marshalAllocs != marshalAppendAllocs {
+		t.Errorf("%v allocs/op when writing to a preallocated buffer", marshalAllocs)
+		t.Errorf("%v allocs/op when repeatedly appending to a slice", marshalAppendAllocs)
+		t.Errorf("expect amortized allocs/op to be identical")
+	}
+}
