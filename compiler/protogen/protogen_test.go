@@ -11,8 +11,10 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
+	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/testing/protocmp"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"
@@ -342,5 +344,75 @@ var _ = bar.X
 	}
 	if diff := cmp.Diff(string(want), string(got)); diff != "" {
 		t.Fatalf("content mismatch (-want +got):\n%s", diff)
+	}
+}
+
+func TestAnnotations(t *testing.T) {
+	gen, err := Options{}.New(&pluginpb.CodeGeneratorRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	loc := Location{SourceFile: "foo.go"}
+	g := gen.NewGeneratedFile("foo.go", "golang.org/x/foo")
+
+	g.P("package foo")
+	g.P()
+
+	structName := "S"
+	fieldName := "Field"
+
+	messageLoc := loc.appendPath(genid.FileDescriptorProto_MessageType_field_number, 1)
+	fieldLoc := messageLoc.appendPath(genid.DescriptorProto_Field_field_number, 1)
+
+	g.Annotate(structName, messageLoc) // use deprecated version to test existing usages
+	g.P("type ", structName, " struct {")
+	g.AnnotateSymbol(structName+"."+fieldName, Annotation{Location: fieldLoc})
+	g.P(fieldName, " string")
+	g.P("}")
+	g.P()
+
+	g.AnnotateSymbol(fmt.Sprintf("%s.Set%s", structName, fieldName), Annotation{
+		Location: fieldLoc,
+		Semantic: descriptorpb.GeneratedCodeInfo_Annotation_SET.Enum(),
+	})
+	g.P("func (m *", structName, ") Set", fieldName, "(x string) {")
+	g.P("m.", fieldName, " = x")
+	g.P("}")
+	g.P()
+
+	want := &descriptorpb.GeneratedCodeInfo{
+		Annotation: []*descriptorpb.GeneratedCodeInfo_Annotation{
+			{ // S
+				SourceFile: proto.String("foo.go"),
+				Path:       []int32{4, 1}, // message S
+				Begin:      proto.Int32(18),
+				End:        proto.Int32(19),
+			},
+			{ // S.F
+				SourceFile: proto.String("foo.go"),
+				Path:       []int32{4, 1, 2, 1},
+				Begin:      proto.Int32(30),
+				End:        proto.Int32(35),
+			},
+			{ // SetF
+				SourceFile: proto.String("foo.go"),
+				Path:       []int32{4, 1, 2, 1},
+				Begin:      proto.Int32(58),
+				End:        proto.Int32(66),
+				Semantic:   descriptorpb.GeneratedCodeInfo_Annotation_SET.Enum(),
+			},
+		},
+	}
+
+	content, err := g.Content()
+	if err != nil {
+		t.Fatalf("g.Content() = %v", err)
+	}
+	got, err := g.generatedCodeInfo(content)
+	if err != nil {
+		t.Fatalf("g.generatedCodeInfo(...) = %v", err)
+	}
+	if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
+		t.Fatalf("GeneratedCodeInfo mismatch (-want +got):\n%s", diff)
 	}
 }
