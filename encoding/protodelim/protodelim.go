@@ -6,6 +6,7 @@
 package protodelim
 
 import (
+	"bufio"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -116,8 +117,23 @@ func (o UnmarshalOptions) UnmarshalFrom(r Reader, m proto.Message) error {
 		return errors.Wrap(&SizeTooLargeError{Size: size, MaxSize: uint64(maxSize)}, "")
 	}
 
-	b := make([]byte, size)
-	_, err := io.ReadFull(r, b)
+	var b []byte
+	var err error
+	if br, ok := r.(*bufio.Reader); ok {
+		// Use the []byte from the bufio.Reader instead of having to allocate one.
+		// This reduces CPU usage and allocated bytes.
+		b, err = br.Peek(int(size))
+		if err == nil {
+			defer br.Discard(int(size))
+		} else {
+			b = nil
+		}
+	}
+	if b == nil {
+		b = make([]byte, size)
+		_, err = io.ReadFull(r, b)
+	}
+
 	if err == io.EOF {
 		return io.ErrUnexpectedEOF
 	}
