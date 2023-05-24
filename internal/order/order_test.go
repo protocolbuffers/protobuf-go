@@ -65,9 +65,9 @@ func TestFieldOrder(t *testing.T) {
 			// Non-extension fields that are not within a oneof
 			// sorted next by field number.
 			{number: 1},
-			{number: 5, oneofIndex: -9}, // synthetic oneof
+			{number: 5, oneofIndex: -10}, // synthetic oneof
 			{number: 10},
-			{number: 11, oneofIndex: -10}, // synthetic oneof
+			{number: 11, oneofIndex: -9}, // synthetic oneof
 			{number: 12},
 
 			// Non-synthetic oneofs sorted last by index.
