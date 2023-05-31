@@ -1709,9 +1709,7 @@ func checkToken(t *testing.T, tok text.Token, idx int, r R, in string) {
 func errorf(t *testing.T, in string, fmtStr string, args ...interface{}) {
 	t.Helper()
 	vargs := []interface{}{in}
-	for _, arg := range args {
-		vargs = append(vargs, arg)
-	}
+	vargs = append(vargs, args...)
 	t.Errorf("input:\n%s\n~end~\n"+fmtStr, vargs...)
 }
 

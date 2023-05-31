@@ -5,7 +5,6 @@
 package impl
 
 import (
-	"fmt"
 	"reflect"
 
 	"google.golang.org/protobuf/proto"
@@ -36,7 +35,7 @@ func (mi *MessageInfo) merge(in protoiface.MergeInput) protoiface.MergeOutput {
 func (mi *MessageInfo) mergePointer(dst, src pointer, opts mergeOptions) {
 	mi.init()
 	if dst.IsNil() {
-		panic(fmt.Sprintf("invalid value: merging into nil message"))
+		panic("invalid value: merging into nil message")
 	}
 	if src.IsNil() {
 		return

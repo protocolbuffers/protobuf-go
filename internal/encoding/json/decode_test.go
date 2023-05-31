@@ -112,7 +112,7 @@ func (x F64) check(tok json.Token) string {
 
 	got, ok := tok.Float(64)
 	if !ok {
-		return fmt.Sprintf("Token.Float(64): returned not ok")
+		return "Token.Float(64): returned not ok"
 	}
 	if got != x.val {
 		return fmt.Sprintf("Token.Float(64): got %v, want %v", got, x.val)
@@ -131,7 +131,7 @@ func (x F32) check(tok json.Token) string {
 
 	got, ok := tok.Float(32)
 	if !ok {
-		return fmt.Sprintf("Token.Float(32): returned not ok")
+		return "Token.Float(32): returned not ok"
 	}
 	if float32(got) != x.val {
 		return fmt.Sprintf("Token.Float(32): got %v, want %v", got, x.val)
@@ -151,7 +151,7 @@ func (x xf64) check(tok json.Token) string {
 
 	_, ok := tok.Float(64)
 	if ok {
-		return fmt.Sprintf("Token.Float(64): returned ok")
+		return "Token.Float(64): returned ok"
 	}
 	return ""
 }
@@ -168,7 +168,7 @@ func (x xf32) check(tok json.Token) string {
 
 	_, ok := tok.Float(32)
 	if ok {
-		return fmt.Sprintf("Token.Float(32): returned ok")
+		return "Token.Float(32): returned ok"
 	}
 	return ""
 }
@@ -184,7 +184,7 @@ func (x I64) check(tok json.Token) string {
 
 	got, ok := tok.Int(64)
 	if !ok {
-		return fmt.Sprintf("Token.Int(64): returned not ok")
+		return "Token.Int(64): returned not ok"
 	}
 	if got != x.val {
 		return fmt.Sprintf("Token.Int(64): got %v, want %v", got, x.val)
@@ -203,7 +203,7 @@ func (x I32) check(tok json.Token) string {
 
 	got, ok := tok.Int(32)
 	if !ok {
-		return fmt.Sprintf("Token.Int(32): returned not ok")
+		return "Token.Int(32): returned not ok"
 	}
 	if int32(got) != x.val {
 		return fmt.Sprintf("Token.Int(32): got %v, want %v", got, x.val)
@@ -223,7 +223,7 @@ func (x xi64) check(tok json.Token) string {
 
 	_, ok := tok.Int(64)
 	if ok {
-		return fmt.Sprintf("Token.Int(64): returned ok")
+		return "Token.Int(64): returned ok"
 	}
 	return ""
 }
@@ -240,7 +240,7 @@ func (x xi32) check(tok json.Token) string {
 
 	_, ok := tok.Int(32)
 	if ok {
-		return fmt.Sprintf("Token.Int(32): returned ok")
+		return "Token.Int(32): returned ok"
 	}
 	return ""
 }
@@ -256,7 +256,7 @@ func (x Ui64) check(tok json.Token) string {
 
 	got, ok := tok.Uint(64)
 	if !ok {
-		return fmt.Sprintf("Token.Uint(64): returned not ok")
+		return "Token.Uint(64): returned not ok"
 	}
 	if got != x.val {
 		return fmt.Sprintf("Token.Uint(64): got %v, want %v", got, x.val)
@@ -275,7 +275,7 @@ func (x Ui32) check(tok json.Token) string {
 
 	got, ok := tok.Uint(32)
 	if !ok {
-		return fmt.Sprintf("Token.Uint(32): returned not ok")
+		return "Token.Uint(32): returned not ok"
 	}
 	if uint32(got) != x.val {
 		return fmt.Sprintf("Token.Uint(32): got %v, want %v", got, x.val)
@@ -295,7 +295,7 @@ func (x xui64) check(tok json.Token) string {
 
 	_, ok := tok.Uint(64)
 	if ok {
-		return fmt.Sprintf("Token.Uint(64): returned ok")
+		return "Token.Uint(64): returned ok"
 	}
 	return ""
 }
@@ -312,7 +312,7 @@ func (x xui32) check(tok json.Token) string {
 
 	_, ok := tok.Uint(32)
 	if ok {
-		return fmt.Sprintf("Token.Uint(32): returned ok")
+		return "Token.Uint(32): returned ok"
 	}
 	return ""
 }
@@ -1373,9 +1373,7 @@ func checkToken(t *testing.T, tok json.Token, idx int, r R, in string) {
 func errorf(t *testing.T, in string, fmtStr string, args ...interface{}) {
 	t.Helper()
 	vargs := []interface{}{in}
-	for _, arg := range args {
-		vargs = append(vargs, arg)
-	}
+	vargs = append(vargs, args...)
 	t.Errorf("input:\n%s\n~end~\n"+fmtStr, vargs...)
 }
 

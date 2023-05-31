@@ -288,10 +288,7 @@ func (e encoder) marshalMap(name string, mmap protoreflect.Map, fd protoreflect.
 
 		e.WriteName(string(genid.MapEntry_Value_field_name))
 		err = e.marshalSingular(val, fd.MapValue())
-		if err != nil {
-			return false
-		}
-		return true
+		return err == nil
 	})
 	return err
 }

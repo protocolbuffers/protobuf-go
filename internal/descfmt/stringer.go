@@ -229,7 +229,7 @@ func (rs *records) Append(v reflect.Value, accessors ...string) {
 		case reflect.Interface, reflect.Slice:
 			isZero = rv.IsNil()
 		case reflect.Bool:
-			isZero = rv.Bool() == false
+			isZero = !rv.Bool()
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 			isZero = rv.Int() == 0
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
