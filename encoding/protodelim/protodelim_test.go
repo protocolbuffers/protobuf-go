@@ -7,6 +7,7 @@ package protodelim_test
 import (
 	"bufio"
 	"bytes"
+	"encoding/binary"
 	"errors"
 	"io"
 	"testing"
@@ -200,5 +201,21 @@ func TestUnmarshalFrom_UnexpectedEOF(t *testing.T) {
 	err := protodelim.UnmarshalFrom(bufio.NewReader(buf), out)
 	if got, want := err, io.ErrUnexpectedEOF; got != want {
 		t.Errorf("protodelim.UnmarshalFrom(size-only buf, _) = %v, want %v", got, want)
+	}
+}
+
+func TestUnmarshalFrom_PrematureHeader(t *testing.T) {
+	var data = []byte{128} // continuation bit set
+	err := protodelim.UnmarshalFrom(bytes.NewReader(data[:]), nil)
+	if got, want := err, io.ErrUnexpectedEOF; !errors.Is(got, want) {
+		t.Errorf("protodelim.UnmarshalFrom(%#v, nil) = %#v; want = %#v", data, got, want)
+	}
+}
+
+func TestUnmarshalFrom_InvalidVarint(t *testing.T) {
+	var data = bytes.Repeat([]byte{128}, 2*binary.MaxVarintLen64) // continuation bit set
+	err := protodelim.UnmarshalFrom(bytes.NewReader(data[:]), nil)
+	if err == nil {
+		t.Errorf("protodelim.UnmarshalFrom unexpectedly did not error on invalid varint")
 	}
 }

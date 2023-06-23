@@ -96,7 +96,11 @@ func (o UnmarshalOptions) UnmarshalFrom(r Reader, m proto.Message) error {
 	sizeBuf := sizeArr[:0]
 	for i := range sizeArr {
 		b, err := r.ReadByte()
-		if err != nil && (err != io.EOF || i == 0) {
+		if err != nil {
+			// Immediate EOF is unexpected.
+			if err == io.EOF && i != 0 {
+				break
+			}
 			return err
 		}
 		sizeBuf = append(sizeBuf, b)
