@@ -11,5 +11,6 @@ extend google.protobuf.FieldOptions {
 	optional string moretags = 65003;
 	optional bool stdtime = 65004;
 	optional bool embed = 65005;
+	optional bool stdduration = 65006;
 }
 
