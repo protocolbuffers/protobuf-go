@@ -1,0 +1,15 @@
+syntax = "proto3";
+import "google/protobuf/descriptor.proto";
+
+package extra;
+option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/extra";
+
+
+extend google.protobuf.FieldOptions {
+	optional bool pointer = 65001;
+	optional string json = 65002;
+	optional string moretags = 65003;
+	optional bool stdtime = 65004;
+	optional bool embed = 65005;
+}
+

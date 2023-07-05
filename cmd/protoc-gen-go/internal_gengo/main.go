@@ -10,22 +10,28 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"log"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 	"unicode"
 	"unicode/utf8"
 
+	"google.golang.org/protobuf/cmd/protoc-gen-go/extra"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/internal/version"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"
 )
+
+var l = log.New(os.Stderr, "", 0)
 
 // SupportedFeatures reports the set of supported protobuf language features.
 var SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
@@ -92,6 +98,14 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 	for i, imps := 0, f.Desc.Imports(); i < imps.Len(); i++ {
 		genImport(gen, g, f, imps.Get(i))
 	}
+	// for _, message := range f.allMessages {
+	// 	for _, field := range message.Fields {
+	// 		forceStdTime := proto.GetExtension(field.Desc.Options(), extra.E_Stdtime).(bool)
+	// 		if forceStdTime {
+
+	// 		}
+	// 	}
+	// }
 	for _, enum := range f.allEnums {
 		genEnum(g, f, enum)
 	}
@@ -402,10 +416,17 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 	if pointer {
 		goType = "*" + goType
 	}
+
 	tags := structTags{
 		{"protobuf", fieldProtobufTagValue(field)},
 		{"json", fieldJSONTagValue(field)},
 	}
+
+	moreTagsString := proto.GetExtension(field.Desc.Options(), extra.E_Moretags).(string)
+	tags.AddFromString(moreTagsString)
+
+	embedStruct := proto.GetExtension(field.Desc.Options(), extra.E_Embed).(bool)
+
 	if field.Desc.IsMap() {
 		key := field.Message.Fields[0]
 		val := field.Message.Fields[1]
@@ -419,6 +440,11 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 	}
 
 	name := field.GoName
+	space := " "
+	if embedStruct {
+		name = ""
+		space = ""
+	}
 	if field.Desc.IsWeak() {
 		name = genid.WeakFieldPrefix_goname + name
 	}
@@ -426,8 +452,9 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 	leadingComments := appendDeprecationSuffix(field.Comments.Leading,
 		field.Desc.ParentFile(),
 		field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
+
 	g.P(leadingComments,
-		name, " ", goType, tags,
+		name, space, goType, tags,
 		trailingComment(field.Comments.Trailing))
 	sf.append(field.GoName)
 }
@@ -546,6 +573,10 @@ func genMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInf
 
 func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, field := range m.Fields {
+		embedStruct := proto.GetExtension(field.Desc.Options(), extra.E_Embed).(bool)
+		if embedStruct {
+			continue
+		}
 		genNoInterfacePragma(g, m.isTracked)
 
 		// Getter for parent oneof.
@@ -562,6 +593,12 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 
 		// Getter for message field.
 		goType, pointer := fieldGoType(g, f, field)
+
+		forcePointer := proto.GetExtension(field.Desc.Options(), extra.E_Pointer).(bool)
+		if forcePointer {
+			goType = "*" + goType
+		}
+
 		defaultValue := fieldDefaultValue(g, f, m, field)
 		g.Annotate(m.GoIdent.GoName+".Get"+field.GoName, field.Location)
 		leadingComments := appendDeprecationSuffix("",
@@ -594,7 +631,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 				g.P("if x != nil && x.", field.GoName, " != nil {")
 			}
 			star := ""
-			if pointer {
+			if pointer && !forcePointer {
 				star = "*"
 			}
 			g.P("return ", star, " x.", field.GoName)
@@ -608,7 +645,8 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 
 func genMessageSetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, field := range m.Fields {
-		if !field.Desc.IsWeak() {
+		embedStruct := proto.GetExtension(field.Desc.Options(), extra.E_Embed).(bool)
+		if !field.Desc.IsWeak() || embedStruct {
 			continue
 		}
 
@@ -643,6 +681,15 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		return "struct{}", false
 	}
 
+	forceStdTime := proto.GetExtension(field.Desc.Options(), extra.E_Stdtime).(bool)
+	if forceStdTime {
+		g.QualifiedGoIdent(timePackage.Ident("time"))
+		return "*time.Time", false
+	}
+
+	forcePointer := proto.GetExtension(field.Desc.Options(), extra.E_Pointer).(bool)
+	embedStruct := proto.GetExtension(field.Desc.Options(), extra.E_Embed).(bool)
+
 	pointer = field.Desc.HasPresence()
 	switch field.Desc.Kind() {
 	case protoreflect.BoolKind:
@@ -667,7 +714,11 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		goType = "[]byte"
 		pointer = false // rely on nullability of slices for presence
 	case protoreflect.MessageKind, protoreflect.GroupKind:
-		goType = "*" + g.QualifiedGoIdent(field.Message.GoIdent)
+		if embedStruct {
+			goType = g.QualifiedGoIdent(field.Message.GoIdent)
+		} else {
+			goType = "*" + g.QualifiedGoIdent(field.Message.GoIdent)
+		}
 		pointer = false // pointer captured as part of the type
 	}
 	switch {
@@ -678,7 +729,7 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		valType, _ := fieldGoType(g, f, field.Message.Fields[1])
 		return fmt.Sprintf("map[%v]%v", keyType, valType), false
 	}
-	return goType, pointer
+	return goType, pointer || forcePointer
 }
 
 func fieldProtobufTagValue(field *protogen.Field) string {
@@ -693,6 +744,12 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 	if field.Desc.IsList() {
 		return "nil"
 	}
+
+	forcePointer := proto.GetExtension(field.Desc.Options(), extra.E_Pointer).(bool)
+	if forcePointer {
+		return "nil"
+	}
+
 	if field.Desc.HasDefault() {
 		defVarName := "Default_" + m.GoIdent.GoName + "_" + field.GoName
 		if field.Desc.Kind() == protoreflect.BytesKind {
@@ -723,6 +780,10 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 }
 
 func fieldJSONTagValue(field *protogen.Field) string {
+	jsonOverwrite := proto.GetExtension(field.Desc.Options(), extra.E_Json).(string)
+	if jsonOverwrite != "" {
+		return jsonOverwrite
+	}
 	return string(field.Desc.Name()) + ",omitempty"
 }
 
@@ -868,6 +929,30 @@ func (tags structTags) String() string {
 		ss = append(ss, fmt.Sprintf("%s:%s", key, val))
 	}
 	return "`" + strings.Join(ss, " ") + "`"
+}
+
+func (tags *structTags) AddFromString(tagsStr string) {
+	if tags == nil {
+		return
+	}
+	for _, tag := range strings.Split(tagsStr, " ") {
+		if tag == "" {
+			continue
+		}
+		splitted := strings.Split(tag, ":")
+		if len(splitted) > 2 {
+			panic(fmt.Sprintf("invalid tag %q", tag))
+		}
+		key := splitted[0]
+		val := ""
+		if len(splitted) == 2 {
+			val = strings.Trim(splitted[1], "\"")
+			if val == "" {
+				panic(fmt.Sprintf("invalid tag %q", tag))
+			}
+		}
+		*tags = append(*tags, [2]string{key, val})
+	}
 }
 
 // appendDeprecationSuffix optionally appends a deprecation notice as a suffix.
