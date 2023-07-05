@@ -18,6 +18,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
+	"github.com/fatih/structtag"
 	"google.golang.org/protobuf/cmd/protoc-gen-go/extra"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/internal/encoding/tag"
@@ -934,23 +935,12 @@ func (tags *structTags) AddFromString(tagsStr string) {
 	if tags == nil {
 		return
 	}
-	for _, tag := range strings.Split(tagsStr, " ") {
-		if tag == "" {
-			continue
-		}
-		splitted := strings.Split(tag, ":")
-		if len(splitted) > 2 {
-			panic(fmt.Sprintf("invalid tag %q", tag))
-		}
-		key := splitted[0]
-		val := ""
-		if len(splitted) == 2 {
-			val = strings.Trim(splitted[1], "\"")
-			if val == "" {
-				panic(fmt.Sprintf("invalid tag %q", tag))
-			}
-		}
-		*tags = append(*tags, [2]string{key, val})
+	parsedTags, err := structtag.Parse(tagsStr)
+	if err != nil {
+		panic(fmt.Sprintf("invalid tag %q: %v", tagsStr, err))
+	}
+	for _, tag := range parsedTags.Tags() {
+		*tags = append(*tags, [2]string{tag.Key, tag.Value()})
 	}
 }
 
