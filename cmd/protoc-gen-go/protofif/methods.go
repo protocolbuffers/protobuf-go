@@ -3,7 +3,6 @@ package protofif
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -80,19 +79,16 @@ func (ts *Timestamp) MarshalBSONValue() (bsontype.Type, []byte, error) {
 	return bson.MarshalValue(ts.AsTime())
 }
 
-func (ts *Timestamp) UnmarshalBSONValue(btype bsontype.Type, data []byte) error {
+func (ts *Timestamp) UnmarshalBSON(data []byte) error {
 	if len(data) == 0 {
 		return nil
 	}
-	if btype != bson.TypeDateTime {
-		return fmt.Errorf("invalid timestamp type %s expected datetime", btype.String())
-	}
-	var timeVal time.Time
-	err := bson.UnmarshalValue(btype, data, &timeVal)
+	t := time.Time{}
+	err := bson.UnmarshalValue(bson.TypeDateTime, data, &t)
 	if err != nil {
 		return err
 	}
-	*ts = NewTimestampValue(timeVal)
+	*ts = NewTimestampValue(t)
 	return nil
 }
 
