@@ -26,6 +26,7 @@ func NewTimestampValue(t time.Time) Timestamp {
 	return Timestamp{
 		Seconds: t.Unix(),
 		Nanos:   int32(t.Nanosecond()),
+		Loc:     t.Location().String(),
 	}
 }
 
@@ -37,6 +38,7 @@ func NewTimestamp(t *time.Time) *Timestamp {
 	return &Timestamp{
 		Seconds: t.Unix(),
 		Nanos:   int32(t.Nanosecond()),
+		Loc:     t.Location().String(),
 	}
 }
 
@@ -44,7 +46,11 @@ func (t *Timestamp) AsTime() *time.Time {
 	if t == nil {
 		return nil
 	}
-	ts := time.Unix(t.Seconds, int64(t.Nanos))
+	loc, err := time.LoadLocation(t.Loc)
+	if err != nil {
+		loc = time.Local
+	}
+	ts := time.Unix(t.Seconds, int64(t.Nanos)).In(loc)
 	return &ts
 }
 
@@ -52,7 +58,11 @@ func (t *Timestamp) AsTimeValue() time.Time {
 	if t == nil {
 		return time.Time{}
 	}
-	return time.Unix(t.Seconds, int64(t.Nanos))
+	loc, err := time.LoadLocation(t.Loc)
+	if err != nil {
+		loc = time.Local
+	}
+	return time.Unix(t.Seconds, int64(t.Nanos)).In(loc)
 }
 
 func (ts *Timestamp) UnmarshalJSON(b []byte) error {

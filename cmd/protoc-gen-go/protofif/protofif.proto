@@ -14,6 +14,7 @@ extend google.protobuf.FieldOptions {
 message Timestamp {
 	int64 seconds = 1;
 	int32 nanos   = 2;
+	string loc    = 3;
 }
 
 message Duration {
