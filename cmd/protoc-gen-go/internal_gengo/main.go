@@ -19,7 +19,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/fatih/structtag"
-	"google.golang.org/protobuf/cmd/protoc-gen-go/extra"
+	"google.golang.org/protobuf/cmd/protoc-gen-go/protofif"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/genid"
@@ -416,10 +416,10 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		{"json", fieldJSONTagValue(field)},
 	}
 
-	moreTagsString := proto.GetExtension(field.Desc.Options(), extra.E_Moretags).(string)
+	moreTagsString := proto.GetExtension(field.Desc.Options(), protofif.E_Moretags).(string)
 	tags.AddFromString(moreTagsString)
 
-	embedStruct := proto.GetExtension(field.Desc.Options(), extra.E_Embed).(bool)
+	embedStruct := proto.GetExtension(field.Desc.Options(), protofif.E_Embed).(bool)
 
 	if field.Desc.IsMap() {
 		key := field.Message.Fields[0]
@@ -567,7 +567,7 @@ func genMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInf
 
 func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, field := range m.Fields {
-		embedStruct := proto.GetExtension(field.Desc.Options(), extra.E_Embed).(bool)
+		embedStruct := proto.GetExtension(field.Desc.Options(), protofif.E_Embed).(bool)
 		if embedStruct {
 			continue
 		}
@@ -587,11 +587,6 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 
 		// Getter for message field.
 		goType, pointer := fieldGoType(g, f, field)
-
-		forcePointer := proto.GetExtension(field.Desc.Options(), extra.E_Pointer).(bool)
-		if forcePointer {
-			goType = "*" + goType
-		}
 
 		defaultValue := fieldDefaultValue(g, f, m, field)
 		g.Annotate(m.GoIdent.GoName+".Get"+field.GoName, field.Location)
@@ -625,7 +620,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 				g.P("if x != nil && x.", field.GoName, " != nil {")
 			}
 			star := ""
-			if pointer && !forcePointer {
+			if pointer {
 				star = "*"
 			}
 			g.P("return ", star, " x.", field.GoName)
@@ -639,7 +634,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 
 func genMessageSetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, field := range m.Fields {
-		embedStruct := proto.GetExtension(field.Desc.Options(), extra.E_Embed).(bool)
+		embedStruct := proto.GetExtension(field.Desc.Options(), protofif.E_Embed).(bool)
 		if !field.Desc.IsWeak() || embedStruct {
 			continue
 		}
@@ -675,21 +670,6 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		return "struct{}", false
 	}
 
-	forceStdTime := proto.GetExtension(field.Desc.Options(), extra.E_Stdtime).(bool)
-	if forceStdTime {
-		g.QualifiedGoIdent(timePackage.Ident("time"))
-		return "*time.Time", false
-	}
-
-	forceStdDuration := proto.GetExtension(field.Desc.Options(), extra.E_Stdduration).(bool)
-	if forceStdDuration {
-		g.QualifiedGoIdent(timePackage.Ident("time"))
-		return "*time.Duration", false
-	}
-
-	forcePointer := proto.GetExtension(field.Desc.Options(), extra.E_Pointer).(bool)
-	embedStruct := proto.GetExtension(field.Desc.Options(), extra.E_Embed).(bool)
-
 	pointer = field.Desc.HasPresence()
 	switch field.Desc.Kind() {
 	case protoreflect.BoolKind:
@@ -714,11 +694,7 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		goType = "[]byte"
 		pointer = false // rely on nullability of slices for presence
 	case protoreflect.MessageKind, protoreflect.GroupKind:
-		if embedStruct {
-			goType = g.QualifiedGoIdent(field.Message.GoIdent)
-		} else {
-			goType = "*" + g.QualifiedGoIdent(field.Message.GoIdent)
-		}
+		goType = "*" + g.QualifiedGoIdent(field.Message.GoIdent)
 		pointer = false // pointer captured as part of the type
 	}
 	switch {
@@ -729,7 +705,7 @@ func fieldGoType(g *protogen.GeneratedFile, f *fileInfo, field *protogen.Field) 
 		valType, _ := fieldGoType(g, f, field.Message.Fields[1])
 		return fmt.Sprintf("map[%v]%v", keyType, valType), false
 	}
-	return goType, pointer || forcePointer
+	return goType, pointer
 }
 
 func fieldProtobufTagValue(field *protogen.Field) string {
@@ -742,11 +718,6 @@ func fieldProtobufTagValue(field *protogen.Field) string {
 
 func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, field *protogen.Field) string {
 	if field.Desc.IsList() {
-		return "nil"
-	}
-
-	forcePointer := proto.GetExtension(field.Desc.Options(), extra.E_Pointer).(bool)
-	if forcePointer {
 		return "nil"
 	}
 
@@ -780,7 +751,7 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 }
 
 func fieldJSONTagValue(field *protogen.Field) string {
-	jsonOverwrite := proto.GetExtension(field.Desc.Options(), extra.E_Json).(string)
+	jsonOverwrite := proto.GetExtension(field.Desc.Options(), protofif.E_Json).(string)
 	if jsonOverwrite != "" {
 		return jsonOverwrite
 	}

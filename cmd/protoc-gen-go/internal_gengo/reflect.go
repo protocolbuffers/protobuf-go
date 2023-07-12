@@ -368,5 +368,10 @@ func extensionTypesVarName(f *fileInfo) string {
 	return fileVarName(f.File, "extTypes")
 }
 func initFuncName(f *protogen.File) string {
+	// name := strings.Replace(f.Desc.Path(), ".proto", "", 1)
+	// name = strings.ReplaceAll(name, "-", "_")
+	// nameSplitted := strings.Split(name, "/")
+	// name = nameSplitted[len(nameSplitted)-1]
+	// return fmt.Sprintf("%s_%s_init", name, f.GoPackageName)
 	return fileVarName(f, "init")
 }

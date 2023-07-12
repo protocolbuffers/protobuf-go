@@ -86,6 +86,143 @@ var (
 	bytesZero   = protoreflect.ValueOfBytes(nil)
 )
 
+// type ptrConverter struct {
+// 	UnderlyingType reflect.Type
+// }
+
+// func (c *ptrConverter) PBValueOf(v reflect.Value) protoreflect.Value {
+// 	if v.Kind() != reflect.Ptr || v.Type().Elem() != c.UnderlyingType {
+// 		panic(fmt.Sprintf("invalid type: got %v, want *%v", v.Type(), c.UnderlyingType))
+// 	}
+// 	if v.IsNil() {
+// 		return protoreflect.ValueOfBytes(nil)
+// 	}
+// 	data := []byte{}
+// 	switch c.UnderlyingType.Kind() {
+// 	case reflect.Bool:
+// 		val := byte(0)
+// 		if v.Elem().Bool() {
+// 			val = 1
+// 		}
+// 		data = append(data, val)
+// 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+// 		binary.BigEndian.PutUint64(data, v.Elem().Uint())
+// 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+// 		uintRepresentation := uint64(v.Elem().Int())
+// 		binary.BigEndian.PutUint64(data, uintRepresentation)
+// 	case reflect.Float32, reflect.Float64:
+// 		uintRepresentation := math.Float64bits(v.Elem().Float())
+// 		binary.BigEndian.PutUint64(data, uintRepresentation)
+// 	case reflect.String:
+// 		data = append(data, []byte(v.Elem().String())...)
+// 	default:
+// 		panic(fmt.Sprintf("cannot handle ptr convertion on %v", v.Kind()))
+// 	}
+// 	return protoreflect.ValueOfBytes(data)
+// }
+
+// func (c *ptrConverter) GoValueOf(v protoreflect.Value) reflect.Value {
+// 	switch c.UnderlyingType.Kind() {
+// 	case reflect.Bool:
+// 		if len(v.Bytes()) == 0 {
+// 			return reflect.ValueOf((*bool)(nil))
+// 		}
+// 		val := false
+// 		if v.Bytes()[0] == 1 {
+// 			val = true
+// 		}
+// 		return reflect.ValueOf(&val)
+// 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+// 		if len(v.Bytes()) == 0 {
+// 			return reflect.New(reflect.PointerTo(c.UnderlyingType)).Elem()
+// 		}
+// 		val := binary.BigEndian.Uint64(v.Bytes())
+// 		return reflect.ValueOf(val).Convert(c.UnderlyingType).Addr()
+// 	case reflect.Float32, reflect.Float64:
+// 		if len(v.Bytes()) == 0 {
+// 			return reflect.New(reflect.PointerTo(c.UnderlyingType)).Elem()
+// 		}
+// 		val := math.Float64frombits(binary.BigEndian.Uint64(v.Bytes()))
+// 		return reflect.ValueOf(val).Convert(c.UnderlyingType).Addr()
+// 	case reflect.String:
+// 		if len(v.Bytes()) == 0 {
+// 			return reflect.ValueOf((*string)(nil))
+// 		}
+// 		return reflect.ValueOf(string(v.Bytes())).Addr()
+// 	default:
+// 		panic(fmt.Sprintf("cannot handle ptr convertion on %v", c.UnderlyingType.Kind()))
+// 	}
+// }
+
+// func (c *ptrConverter) IsValidPB(v protoreflect.Value) bool {
+// 	_, isBytes := v.Interface().([]byte)
+// 	return isBytes
+// }
+
+// func (c *ptrConverter) IsValidGo(v reflect.Value) bool {
+// 	if v.Kind() != reflect.Ptr || v.Type().Elem() != c.UnderlyingType {
+// 		return false
+// 	}
+// 	switch v.Kind() {
+// 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Float32, reflect.Float64, reflect.String:
+// 		return true
+// 	default:
+// 		return false
+// 	}
+// }
+
+// func (c *ptrConverter) New() protoreflect.Value {
+// 	return protoreflect.ValueOfBytes(nil)
+// }
+
+// func (c *ptrConverter) Zero() protoreflect.Value {
+// 	return protoreflect.ValueOfBytes(nil)
+// }
+
+// type timestampConverter struct{}
+
+// func (c *timestampConverter) PBValueOf(v reflect.Value) protoreflect.Value {
+// 	if v.Type() != reflect.TypeOf((*time.Time)(nil)) {
+// 		panic(fmt.Sprintf("invalid type: got %v, want *time.Time", v.Type()))
+// 	}
+// 	if v.IsNil() {
+// 		return protoreflect.ValueOfBytes(nil)
+// 	}
+// 	uintRepresentation := uint64(v.MethodByName("UnixMillis").Call(nil)[0].Int())
+// 	bytesRepresentation := make([]byte, 8)
+// 	binary.BigEndian.PutUint64(bytesRepresentation, uintRepresentation)
+// 	return protoreflect.ValueOfBytes(bytesRepresentation)
+// }
+
+// func (c *timestampConverter) GoValueOf(v protoreflect.Value) reflect.Value {
+// 	if bytesVal, isUint := v.Interface().([]byte); !isUint {
+// 		panic(fmt.Sprintf("invalid type: got %v, want uint64", v))
+// 	} else {
+// 		if bytesVal == nil {
+// 			return reflect.ValueOf((*time.Time)(nil))
+// 		}
+// 		val := int64(binary.BigEndian.Uint64(v.Bytes()))
+// 		return reflect.ValueOf(time.UnixMilli(val))
+// 	}
+// }
+
+// func (c *timestampConverter) IsValidPB(v protoreflect.Value) bool {
+// 	_, isUint := v.Interface().([]byte)
+// 	return isUint
+// }
+
+// func (c *timestampConverter) IsValidGo(v reflect.Value) bool {
+// 	return v.Type() == reflect.TypeOf((*time.Time)(nil))
+// }
+
+// func (c *timestampConverter) New() protoreflect.Value {
+// 	return protoreflect.ValueOfInt64(0)
+// }
+
+// func (c *timestampConverter) Zero() protoreflect.Value {
+// 	return protoreflect.ValueOfInt64(0)
+// }
+
 func newSingularConverter(t reflect.Type, fd protoreflect.FieldDescriptor) Converter {
 	defVal := func(fd protoreflect.FieldDescriptor, zero protoreflect.Value) protoreflect.Value {
 		if fd.Cardinality() == protoreflect.Repeated {
@@ -139,7 +276,7 @@ func newSingularConverter(t reflect.Type, fd protoreflect.FieldDescriptor) Conve
 	case protoreflect.MessageKind, protoreflect.GroupKind:
 		return newMessageConverter(t)
 	}
-	panic(fmt.Sprintf("invalid Go type %v for field %v", t, fd.FullName()))
+	panic(fmt.Sprintf("invalid Go type %v for field %v (expecting %v)", t, fd.FullName(), fd.Kind()))
 }
 
 type boolConverter struct {
