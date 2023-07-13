@@ -45,6 +45,7 @@ type coderFieldInfo struct {
 	tagsize    int                      // size of the varint-encoded tag
 	isPointer  bool                     // true if IsNil may be called on the struct field
 	isRequired bool                     // true if field is required
+	isEmbed    bool
 }
 
 func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
@@ -81,6 +82,13 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 		} else {
 			wiretag = protowire.EncodeTag(fd.Number(), protowire.BytesType)
 		}
+
+		isPointer := fd.Cardinality() == protoreflect.Repeated || fd.HasPresence()
+		isEmbed := isPointer && fs.Anonymous && ft.Kind() != reflect.Ptr
+		if isEmbed {
+			ft = reflect.PtrTo(ft)
+		}
+
 		var fieldOffset offset
 		var funcs pointerCoderFuncs
 		var childMessage *MessageInfo
@@ -125,8 +133,9 @@ func (mi *MessageInfo) makeCoderMethods(t reflect.Type, si structInfo) {
 			funcs:      funcs,
 			mi:         childMessage,
 			validation: newFieldValidationInfo(mi, si, fd, ft),
-			isPointer:  fd.Cardinality() == protoreflect.Repeated || fd.HasPresence(),
+			isPointer:  isPointer,
 			isRequired: fd.Cardinality() == protoreflect.Required,
+			isEmbed:    isEmbed,
 		}
 		mi.orderedCoderFields = append(mi.orderedCoderFields, cf)
 		mi.coderFields[cf.num] = cf

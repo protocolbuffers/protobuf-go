@@ -205,7 +205,6 @@ func makeMessageFieldCoder(fd protoreflect.FieldDescriptor, ft reflect.Type) poi
 	} else {
 		return pointerCoderFuncs{
 			size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
-				println("  -> message size on", f.num, f.ft.String())
 				m := asMessage(p.AsValueOf(ft).Elem())
 				return sizeMessage(m, f.tagsize, opts)
 			},
