@@ -5,7 +5,6 @@
 package impl
 
 import (
-	"fmt"
 	"math"
 	"sort"
 	"sync/atomic"
@@ -32,7 +31,6 @@ func (o marshalOptions) UseCachedSize() bool { return o.flags&piface.MarshalUseC
 
 // size is protoreflect.Methods.Size.
 func (mi *MessageInfo) size(in piface.SizeInput) piface.SizeOutput {
-	fmt.Println("fast size on ", mi.Desc.FullName())
 	var p pointer
 	if ms, ok := in.Message.(*messageState); ok {
 		p = ms.pointer()
