@@ -1,3 +1,8 @@
+# This is a fork of the official protocolbuffers/protobuf repository
+
+It is intended to replace the official repository to add extra possibilities is the protobuf compiler.
+The forked code is in the `master` branch, while the `main` branch is the official repository.
+
 # Go support for Protocol Buffers
 
 [![Go Reference](https://pkg.go.dev/badge/google.golang.org/protobuf.svg)](https://pkg.go.dev/google.golang.org/protobuf)
