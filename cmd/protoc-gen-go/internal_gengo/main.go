@@ -411,15 +411,20 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		goType = "*" + goType
 	}
 
+	embedStruct := proto.GetExtension(field.Desc.Options(), protofif.E_Embed).(bool)
+
 	tags := structTags{
 		{"protobuf", fieldProtobufTagValue(field)},
-		{"json", fieldJSONTagValue(field)},
+	}
+
+	if embedStruct {
+		tags = append(tags, [2]string{"json", ""})
+	} else {
+		tags = append(tags, [2]string{"json", fieldJSONTagValue(field)})
 	}
 
 	moreTagsString := proto.GetExtension(field.Desc.Options(), protofif.E_Moretags).(string)
 	tags.AddFromString(moreTagsString)
-
-	embedStruct := proto.GetExtension(field.Desc.Options(), protofif.E_Embed).(bool)
 
 	if field.Desc.IsMap() {
 		key := field.Message.Fields[0]
