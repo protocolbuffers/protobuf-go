@@ -26,10 +26,17 @@ type extField struct {
 // Types implements protoregistry.MessageTypeResolver and protoregistry.ExtensionTypeResolver.
 // A Types may be used as a proto.UnmarshalOptions.Resolver.
 type Types struct {
+	// atomicExtFiles is used with sync/atomic and hence must be the first word
+	// of the struct to guarantee 64-bit alignment.
+	//
+	// TODO(stapelberg): once we only support Go 1.19 and newer, switch this
+	// field to be of type atomic.Uint64 to guarantee alignment on
+	// stack-allocated values, too.
+	atomicExtFiles uint64
+	extMu          sync.Mutex
+
 	files *protoregistry.Files
 
-	extMu               sync.Mutex
-	atomicExtFiles      uint64
 	extensionsByMessage map[extField]protoreflect.ExtensionDescriptor
 }
 
