@@ -2194,6 +2194,222 @@ func TestMarshal(t *testing.T) {
   "optString": null
 }`,
 	}, {
+		desc: "EmitUnpopulated overrides EmitDefaultValues",
+		mo:   protojson.MarshalOptions{EmitUnpopulated: true, EmitDefaultValues: true},
+		input: &pb2.Nests{
+			RptNested: []*pb2.Nested{nil, {}},
+		},
+		want: `{
+  "optNested": null,
+  "optgroup": null,
+  "rptNested": [
+    {
+      "optString": null,
+      "optNested": null
+    },
+    {
+      "optString": null,
+      "optNested": null
+    }
+  ],
+  "rptgroup": []
+}`,
+	}, {
+		desc:  "EmitDefaultValues: proto2 optional scalars",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb2.Scalars{},
+		want:  `{}`,
+	}, {
+		desc:  "EmitDefaultValues: proto3 scalars",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb3.Scalars{},
+		want: `{
+  "sBool": false,
+  "sInt32": 0,
+  "sInt64": "0",
+  "sUint32": 0,
+  "sUint64": "0",
+  "sSint32": 0,
+  "sSint64": "0",
+  "sFixed32": 0,
+  "sFixed64": "0",
+  "sSfixed32": 0,
+  "sSfixed64": "0",
+  "sFloat": 0,
+  "sDouble": 0,
+  "sBytes": "",
+  "sString": ""
+}`,
+	}, {
+		desc:  "EmitDefaultValues: proto2 enum",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb2.Enums{},
+		want: `{
+  "rptEnum": [],
+  "rptNestedEnum": []
+}`,
+	}, {
+		desc:  "EmitDefaultValues: proto3 enum",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb3.Enums{},
+		want: `{
+  "sEnum": "ZERO",
+  "sNestedEnum": "CERO"
+}`,
+	}, {
+		desc:  "EmitDefaultValues: proto2 message and group fields",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb2.Nests{},
+		want: `{
+  "rptNested": [],
+  "rptgroup": []
+}`,
+	}, {
+		desc:  "EmitDefaultValues: proto3 message field",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb3.Nests{},
+		want:  `{}`,
+	}, {
+		desc: "EmitDefaultValues: proto2 empty message and group fields",
+		mo:   protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb2.Nests{
+			OptNested: &pb2.Nested{},
+			Optgroup:  &pb2.Nests_OptGroup{},
+		},
+		want: `{
+  "optNested": {},
+  "optgroup": {},
+  "rptNested": [],
+  "rptgroup": []
+}`,
+	}, {
+		desc: "EmitDefaultValues: proto3 empty message field",
+		mo:   protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb3.Nests{
+			SNested: &pb3.Nested{},
+		},
+		want: `{
+  "sNested": {
+    "sString": ""
+  }
+}`,
+	}, {
+		desc: "EmitDefaultValues: proto2 required fields",
+		mo: protojson.MarshalOptions{
+			AllowPartial:      true,
+			EmitDefaultValues: true,
+		},
+		input: &pb2.Requireds{},
+		want:  `{}`,
+	}, {
+		desc:  "EmitDefaultValues: repeated fields",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb2.Repeats{},
+		want: `{
+  "rptBool": [],
+  "rptInt32": [],
+  "rptInt64": [],
+  "rptUint32": [],
+  "rptUint64": [],
+  "rptFloat": [],
+  "rptDouble": [],
+  "rptString": [],
+  "rptBytes": []
+}`,
+	}, {
+		desc: "EmitDefaultValues: repeated containing empty message",
+		mo:   protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb2.Nests{
+			RptNested: []*pb2.Nested{nil, {}},
+		},
+		want: `{
+  "rptNested": [
+    {},
+    {}
+  ],
+  "rptgroup": []
+}`,
+	}, {
+		desc:  "EmitDefaultValues: map fields",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb3.Maps{},
+		want: `{
+  "int32ToStr": {},
+  "boolToUint32": {},
+  "uint64ToEnum": {},
+  "strToNested": {},
+  "strToOneofs": {}
+}`,
+	}, {
+		desc: "EmitDefaultValues: map containing empty message",
+		mo:   protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb3.Maps{
+			StrToNested: map[string]*pb3.Nested{
+				"nested": &pb3.Nested{},
+			},
+			StrToOneofs: map[string]*pb3.Oneofs{
+				"nested": &pb3.Oneofs{},
+			},
+		},
+		want: `{
+  "int32ToStr": {},
+  "boolToUint32": {},
+  "uint64ToEnum": {},
+  "strToNested": {
+    "nested": {
+      "sString": ""
+    }
+  },
+  "strToOneofs": {
+    "nested": {}
+  }
+}`,
+	}, {
+		desc:  "EmitDefaultValues: oneof fields",
+		mo:    protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb3.Oneofs{},
+		want:  `{}`,
+	}, {
+		desc: "EmitDefaultValues: extensions",
+		mo:   protojson.MarshalOptions{EmitDefaultValues: true},
+		input: func() proto.Message {
+			m := &pb2.Extensions{}
+			proto.SetExtension(m, pb2.E_OptExtNested, &pb2.Nested{})
+			proto.SetExtension(m, pb2.E_RptExtNested, []*pb2.Nested{
+				nil,
+				{},
+			})
+			return m
+		}(),
+		want: `{
+  "[pb2.opt_ext_nested]": {},
+  "[pb2.rpt_ext_nested]": [
+    {},
+    {}
+  ]
+}`,
+	}, {
+		desc: "EmitDefaultValues: with populated fields",
+		mo:   protojson.MarshalOptions{EmitDefaultValues: true},
+		input: &pb2.Scalars{
+			OptInt32:    proto.Int32(0xff),
+			OptUint32:   proto.Uint32(47),
+			OptSint32:   proto.Int32(-1001),
+			OptFixed32:  proto.Uint32(32),
+			OptSfixed32: proto.Int32(-32),
+			OptFloat:    proto.Float32(1.02),
+			OptBytes:    []byte("谷歌"),
+		},
+		want: `{
+  "optInt32": 255,
+  "optUint32": 47,
+  "optSint32": -1001,
+  "optFixed32": 32,
+  "optSfixed32": -32,
+  "optFloat": 1.02,
+  "optBytes": "6LC35q2M"
+}`,
+	}, {
 		desc: "UseEnumNumbers in singular field",
 		mo:   protojson.MarshalOptions{UseEnumNumbers: true},
 		input: &pb2.Enums{
