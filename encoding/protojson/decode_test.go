@@ -2437,6 +2437,43 @@ func TestUnmarshal(t *testing.T) {
 			TypeUrl: "type.googleapis.com/google.protobuf.Empty",
 		},
 	}, {
+		desc:         "DiscardUnknown: unknown enum name",
+		inputMessage: &pb3.Enums{},
+		inputText: `{
+  "sEnum": "UNNAMED"
+}`,
+		umo:         protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb3.Enums{},
+	}, {
+		desc:         "DiscardUnknown: repeated enum unknown name",
+		inputMessage: &pb2.Enums{},
+		inputText: `{
+  "rptEnum"      : ["TEN", 1, 42, "UNNAMED"]
+}`,
+		umo: protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb2.Enums{
+			RptEnum: []pb2.Enum{pb2.Enum_TEN, pb2.Enum_ONE, 42},
+		},
+	}, {
+		desc:         "DiscardUnknown: enum map value unknown name",
+		inputMessage: &pb3.Maps{},
+		inputText: `{
+  "uint64ToEnum": {
+    "1" : "ONE",
+	"2" : 2,
+	"10": 101,
+	"3": "UNNAMED"
+  }
+}`,
+		umo: protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb3.Maps{
+			Uint64ToEnum: map[uint64]pb3.Enum{
+				1:  pb3.Enum_ONE,
+				2:  pb3.Enum_TWO,
+				10: 101,
+			},
+		},
+	}, {
 		desc:         "weak fields",
 		inputMessage: &testpb.TestWeak{},
 		inputText:    `{"weak_message1":{"a":1}}`,
