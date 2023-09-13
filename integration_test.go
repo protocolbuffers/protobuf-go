@@ -38,22 +38,23 @@ var (
 	protobufVersion = "24.0-rc2"
 
 	golangVersions = func() []string {
-		var vers []string
-		switch runtime.GOOS + "/" + runtime.GOARCH {
-		case "darwin/arm64":
-		default:
-			vers = []string{"1.13.15", "1.14.15", "1.15.15"}
+		// Version policy: same version as is in the x/ repos' go.mod.
+		return []string{
+			"1.17.13",
+			"1.18.10",
+			"1.19.13",
+			"1.20.7",
+			"1.21.1",
 		}
-		return append(vers, "1.16.15", "1.17.13", "1.18.10", "1.19.6")
 	}()
 	golangLatest = golangVersions[len(golangVersions)-1]
 
-	staticcheckVersion = "2022.1.2"
+	staticcheckVersion = "2023.1.6"
 	staticcheckSHA256s = map[string]string{
-		"darwin/amd64": "baa35f8fb967ee2aacad57f026e3724fbf8d9b7ad8f682f4d44b2084a96e103b",
-		"darwin/arm64": "9f01a581eeea088d0a6272538360f6d84996d66ae554bfada8026fe24991daa0",
-		"linux/386":    "4cf74373e5d668b265d7a241b59ba7d26064f2cd6af50b77e62c2b3e2f3afb43",
-		"linux/amd64":  "6dbb7187e43812fa23363cdaaa90ab13544dd36e24d02e2347014e4cf265f06d",
+		"darwin/amd64": "b14a0cbd3c238713f5f9db41550893ea7d75d8d7822491c7f4e33e2fe43f6305",
+		"darwin/arm64": "f1c869abe6be2c6ab727dc9d6049766c947534766d71a1798c12a37526ea2b6f",
+		"linux/386":    "02859a7c44c7b5ab41a70d9b8107c01ab8d2c94075bae3d0b02157aff743ca42",
+		"linux/amd64":  "45337834da5dc7b8eff01cb6b3837e3759503cfbb8edf36b09e42f32bccb1f6e",
 	}
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
