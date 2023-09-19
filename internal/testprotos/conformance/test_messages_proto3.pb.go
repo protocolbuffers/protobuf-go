@@ -160,8 +160,8 @@ const (
 	TestAllTypesProto3_ALIAS_FOO TestAllTypesProto3_AliasedEnum = 0
 	TestAllTypesProto3_ALIAS_BAR TestAllTypesProto3_AliasedEnum = 1
 	TestAllTypesProto3_ALIAS_BAZ TestAllTypesProto3_AliasedEnum = 2
-	TestAllTypesProto3_QUX       TestAllTypesProto3_AliasedEnum = 2
-	TestAllTypesProto3_qux       TestAllTypesProto3_AliasedEnum = 2
+	TestAllTypesProto3_MOO       TestAllTypesProto3_AliasedEnum = 2
+	TestAllTypesProto3_moo       TestAllTypesProto3_AliasedEnum = 2
 	TestAllTypesProto3_bAz       TestAllTypesProto3_AliasedEnum = 2
 )
 
@@ -171,16 +171,16 @@ var (
 		0: "ALIAS_FOO",
 		1: "ALIAS_BAR",
 		2: "ALIAS_BAZ",
-		// Duplicate value: 2: "QUX",
-		// Duplicate value: 2: "qux",
+		// Duplicate value: 2: "MOO",
+		// Duplicate value: 2: "moo",
 		// Duplicate value: 2: "bAz",
 	}
 	TestAllTypesProto3_AliasedEnum_value = map[string]int32{
 		"ALIAS_FOO": 0,
 		"ALIAS_BAR": 1,
 		"ALIAS_BAZ": 2,
-		"QUX":       2,
-		"qux":       2,
+		"MOO":       2,
+		"moo":       2,
 		"bAz":       2,
 	}
 )
@@ -210,6 +210,52 @@ func (x TestAllTypesProto3_AliasedEnum) Number() protoreflect.EnumNumber {
 // Deprecated: Use TestAllTypesProto3_AliasedEnum.Descriptor instead.
 func (TestAllTypesProto3_AliasedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{0, 1}
+}
+
+type EnumOnlyProto3_Bool int32
+
+const (
+	EnumOnlyProto3_kFalse EnumOnlyProto3_Bool = 0
+	EnumOnlyProto3_kTrue  EnumOnlyProto3_Bool = 1
+)
+
+// Enum value maps for EnumOnlyProto3_Bool.
+var (
+	EnumOnlyProto3_Bool_name = map[int32]string{
+		0: "kFalse",
+		1: "kTrue",
+	}
+	EnumOnlyProto3_Bool_value = map[string]int32{
+		"kFalse": 0,
+		"kTrue":  1,
+	}
+)
+
+func (x EnumOnlyProto3_Bool) Enum() *EnumOnlyProto3_Bool {
+	p := new(EnumOnlyProto3_Bool)
+	*p = x
+	return p
+}
+
+func (x EnumOnlyProto3_Bool) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (EnumOnlyProto3_Bool) Descriptor() protoreflect.EnumDescriptor {
+	return file_google_protobuf_test_messages_proto3_proto_enumTypes[3].Descriptor()
+}
+
+func (EnumOnlyProto3_Bool) Type() protoreflect.EnumType {
+	return &file_google_protobuf_test_messages_proto3_proto_enumTypes[3]
+}
+
+func (x EnumOnlyProto3_Bool) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use EnumOnlyProto3_Bool.Descriptor instead.
+func (EnumOnlyProto3_Bool) EnumDescriptor() ([]byte, []int) {
+	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{3, 0}
 }
 
 // This proto includes every type of field in both singular and repeated
@@ -321,6 +367,7 @@ type TestAllTypesProto3 struct {
 	MapStringNestedEnum     map[string]TestAllTypesProto3_NestedEnum     `protobuf:"bytes,73,rep,name=map_string_nested_enum,json=mapStringNestedEnum,proto3" json:"map_string_nested_enum,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=protobuf_test_messages.proto3.TestAllTypesProto3_NestedEnum"`
 	MapStringForeignEnum    map[string]ForeignEnum                       `protobuf:"bytes,74,rep,name=map_string_foreign_enum,json=mapStringForeignEnum,proto3" json:"map_string_foreign_enum,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=protobuf_test_messages.proto3.ForeignEnum"`
 	// Types that are assignable to OneofField:
+	//
 	//	*TestAllTypesProto3_OneofUint32
 	//	*TestAllTypesProto3_OneofNestedMessage
 	//	*TestAllTypesProto3_OneofString
@@ -1594,6 +1641,82 @@ func (x *ForeignMessage) GetC() int32 {
 	return 0
 }
 
+type NullHypothesisProto3 struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *NullHypothesisProto3) Reset() {
+	*x = NullHypothesisProto3{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *NullHypothesisProto3) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NullHypothesisProto3) ProtoMessage() {}
+
+func (x *NullHypothesisProto3) ProtoReflect() protoreflect.Message {
+	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NullHypothesisProto3.ProtoReflect.Descriptor instead.
+func (*NullHypothesisProto3) Descriptor() ([]byte, []int) {
+	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{2}
+}
+
+type EnumOnlyProto3 struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *EnumOnlyProto3) Reset() {
+	*x = EnumOnlyProto3{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EnumOnlyProto3) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EnumOnlyProto3) ProtoMessage() {}
+
+func (x *EnumOnlyProto3) ProtoReflect() protoreflect.Message {
+	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EnumOnlyProto3.ProtoReflect.Descriptor instead.
+func (*EnumOnlyProto3) Descriptor() ([]byte, []int) {
+	return file_google_protobuf_test_messages_proto3_proto_rawDescGZIP(), []int{3}
+}
+
 type TestAllTypesProto3_NestedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1606,7 +1729,7 @@ type TestAllTypesProto3_NestedMessage struct {
 func (x *TestAllTypesProto3_NestedMessage) Reset() {
 	*x = TestAllTypesProto3_NestedMessage{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[2]
+		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1619,7 +1742,7 @@ func (x *TestAllTypesProto3_NestedMessage) String() string {
 func (*TestAllTypesProto3_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypesProto3_NestedMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[2]
+	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2395,20 +2518,24 @@ var file_google_protobuf_test_messages_proto3_proto_rawDesc = []byte{
 	0x12, 0x0d, 0x0a, 0x09, 0x41, 0x4c, 0x49, 0x41, 0x53, 0x5f, 0x46, 0x4f, 0x4f, 0x10, 0x00, 0x12,
 	0x0d, 0x0a, 0x09, 0x41, 0x4c, 0x49, 0x41, 0x53, 0x5f, 0x42, 0x41, 0x52, 0x10, 0x01, 0x12, 0x0d,
 	0x0a, 0x09, 0x41, 0x4c, 0x49, 0x41, 0x53, 0x5f, 0x42, 0x41, 0x5a, 0x10, 0x02, 0x12, 0x07, 0x0a,
-	0x03, 0x51, 0x55, 0x58, 0x10, 0x02, 0x12, 0x07, 0x0a, 0x03, 0x71, 0x75, 0x78, 0x10, 0x02, 0x12,
+	0x03, 0x4d, 0x4f, 0x4f, 0x10, 0x02, 0x12, 0x07, 0x0a, 0x03, 0x6d, 0x6f, 0x6f, 0x10, 0x02, 0x12,
 	0x07, 0x0a, 0x03, 0x62, 0x41, 0x7a, 0x10, 0x02, 0x1a, 0x02, 0x10, 0x01, 0x42, 0x0d, 0x0a, 0x0b,
 	0x6f, 0x6e, 0x65, 0x6f, 0x66, 0x5f, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x4a, 0x06, 0x08, 0xf5, 0x03,
 	0x10, 0xff, 0x03, 0x22, 0x1e, 0x0a, 0x0e, 0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e, 0x4d, 0x65,
 	0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x0c, 0x0a, 0x01, 0x63, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05,
-	0x52, 0x01, 0x63, 0x2a, 0x40, 0x0a, 0x0b, 0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e, 0x45, 0x6e,
-	0x75, 0x6d, 0x12, 0x0f, 0x0a, 0x0b, 0x46, 0x4f, 0x52, 0x45, 0x49, 0x47, 0x4e, 0x5f, 0x46, 0x4f,
-	0x4f, 0x10, 0x00, 0x12, 0x0f, 0x0a, 0x0b, 0x46, 0x4f, 0x52, 0x45, 0x49, 0x47, 0x4e, 0x5f, 0x42,
-	0x41, 0x52, 0x10, 0x01, 0x12, 0x0f, 0x0a, 0x0b, 0x46, 0x4f, 0x52, 0x45, 0x49, 0x47, 0x4e, 0x5f,
-	0x42, 0x41, 0x5a, 0x10, 0x02, 0x42, 0x38, 0x0a, 0x28, 0x63, 0x6f, 0x6d, 0x2e, 0x67, 0x6f, 0x6f,
-	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x74, 0x65, 0x73,
-	0x74, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33, 0x48, 0x01, 0xf8, 0x01, 0x01, 0xa2, 0x02, 0x06, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x33, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x01, 0x63, 0x22, 0x16, 0x0a, 0x14, 0x4e, 0x75, 0x6c, 0x6c, 0x48, 0x79, 0x70, 0x6f, 0x74,
+	0x68, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x33, 0x22, 0x2f, 0x0a, 0x0e, 0x45,
+	0x6e, 0x75, 0x6d, 0x4f, 0x6e, 0x6c, 0x79, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x33, 0x22, 0x1d, 0x0a,
+	0x04, 0x42, 0x6f, 0x6f, 0x6c, 0x12, 0x0a, 0x0a, 0x06, 0x6b, 0x46, 0x61, 0x6c, 0x73, 0x65, 0x10,
+	0x00, 0x12, 0x09, 0x0a, 0x05, 0x6b, 0x54, 0x72, 0x75, 0x65, 0x10, 0x01, 0x2a, 0x40, 0x0a, 0x0b,
+	0x46, 0x6f, 0x72, 0x65, 0x69, 0x67, 0x6e, 0x45, 0x6e, 0x75, 0x6d, 0x12, 0x0f, 0x0a, 0x0b, 0x46,
+	0x4f, 0x52, 0x45, 0x49, 0x47, 0x4e, 0x5f, 0x46, 0x4f, 0x4f, 0x10, 0x00, 0x12, 0x0f, 0x0a, 0x0b,
+	0x46, 0x4f, 0x52, 0x45, 0x49, 0x47, 0x4e, 0x5f, 0x42, 0x41, 0x52, 0x10, 0x01, 0x12, 0x0f, 0x0a,
+	0x0b, 0x46, 0x4f, 0x52, 0x45, 0x49, 0x47, 0x4e, 0x5f, 0x42, 0x41, 0x5a, 0x10, 0x02, 0x42, 0x38,
+	0x0a, 0x28, 0x63, 0x6f, 0x6d, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x62, 0x75, 0x66, 0x5f, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33, 0x48, 0x01, 0xf8, 0x01, 0x01, 0xa2,
+	0x02, 0x06, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x33, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2423,122 +2550,125 @@ func file_google_protobuf_test_messages_proto3_proto_rawDescGZIP() []byte {
 	return file_google_protobuf_test_messages_proto3_proto_rawDescData
 }
 
-var file_google_protobuf_test_messages_proto3_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_google_protobuf_test_messages_proto3_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_google_protobuf_test_messages_proto3_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_google_protobuf_test_messages_proto3_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_google_protobuf_test_messages_proto3_proto_goTypes = []interface{}{
 	(ForeignEnum)(0),                         // 0: protobuf_test_messages.proto3.ForeignEnum
 	(TestAllTypesProto3_NestedEnum)(0),       // 1: protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum
 	(TestAllTypesProto3_AliasedEnum)(0),      // 2: protobuf_test_messages.proto3.TestAllTypesProto3.AliasedEnum
-	(*TestAllTypesProto3)(nil),               // 3: protobuf_test_messages.proto3.TestAllTypesProto3
-	(*ForeignMessage)(nil),                   // 4: protobuf_test_messages.proto3.ForeignMessage
-	(*TestAllTypesProto3_NestedMessage)(nil), // 5: protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
-	nil,                                      // 6: protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32Int32Entry
-	nil,                                      // 7: protobuf_test_messages.proto3.TestAllTypesProto3.MapInt64Int64Entry
-	nil,                                      // 8: protobuf_test_messages.proto3.TestAllTypesProto3.MapUint32Uint32Entry
-	nil,                                      // 9: protobuf_test_messages.proto3.TestAllTypesProto3.MapUint64Uint64Entry
-	nil,                                      // 10: protobuf_test_messages.proto3.TestAllTypesProto3.MapSint32Sint32Entry
-	nil,                                      // 11: protobuf_test_messages.proto3.TestAllTypesProto3.MapSint64Sint64Entry
-	nil,                                      // 12: protobuf_test_messages.proto3.TestAllTypesProto3.MapFixed32Fixed32Entry
-	nil,                                      // 13: protobuf_test_messages.proto3.TestAllTypesProto3.MapFixed64Fixed64Entry
-	nil,                                      // 14: protobuf_test_messages.proto3.TestAllTypesProto3.MapSfixed32Sfixed32Entry
-	nil,                                      // 15: protobuf_test_messages.proto3.TestAllTypesProto3.MapSfixed64Sfixed64Entry
-	nil,                                      // 16: protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32FloatEntry
-	nil,                                      // 17: protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32DoubleEntry
-	nil,                                      // 18: protobuf_test_messages.proto3.TestAllTypesProto3.MapBoolBoolEntry
-	nil,                                      // 19: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringStringEntry
-	nil,                                      // 20: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringBytesEntry
-	nil,                                      // 21: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedMessageEntry
-	nil,                                      // 22: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignMessageEntry
-	nil,                                      // 23: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedEnumEntry
-	nil,                                      // 24: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignEnumEntry
-	(structpb.NullValue)(0),                  // 25: google.protobuf.NullValue
-	(*wrapperspb.BoolValue)(nil),             // 26: google.protobuf.BoolValue
-	(*wrapperspb.Int32Value)(nil),            // 27: google.protobuf.Int32Value
-	(*wrapperspb.Int64Value)(nil),            // 28: google.protobuf.Int64Value
-	(*wrapperspb.UInt32Value)(nil),           // 29: google.protobuf.UInt32Value
-	(*wrapperspb.UInt64Value)(nil),           // 30: google.protobuf.UInt64Value
-	(*wrapperspb.FloatValue)(nil),            // 31: google.protobuf.FloatValue
-	(*wrapperspb.DoubleValue)(nil),           // 32: google.protobuf.DoubleValue
-	(*wrapperspb.StringValue)(nil),           // 33: google.protobuf.StringValue
-	(*wrapperspb.BytesValue)(nil),            // 34: google.protobuf.BytesValue
-	(*durationpb.Duration)(nil),              // 35: google.protobuf.Duration
-	(*timestamppb.Timestamp)(nil),            // 36: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil),            // 37: google.protobuf.FieldMask
-	(*structpb.Struct)(nil),                  // 38: google.protobuf.Struct
-	(*anypb.Any)(nil),                        // 39: google.protobuf.Any
-	(*structpb.Value)(nil),                   // 40: google.protobuf.Value
-	(*structpb.ListValue)(nil),               // 41: google.protobuf.ListValue
+	(EnumOnlyProto3_Bool)(0),                 // 3: protobuf_test_messages.proto3.EnumOnlyProto3.Bool
+	(*TestAllTypesProto3)(nil),               // 4: protobuf_test_messages.proto3.TestAllTypesProto3
+	(*ForeignMessage)(nil),                   // 5: protobuf_test_messages.proto3.ForeignMessage
+	(*NullHypothesisProto3)(nil),             // 6: protobuf_test_messages.proto3.NullHypothesisProto3
+	(*EnumOnlyProto3)(nil),                   // 7: protobuf_test_messages.proto3.EnumOnlyProto3
+	(*TestAllTypesProto3_NestedMessage)(nil), // 8: protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
+	nil,                                      // 9: protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32Int32Entry
+	nil,                                      // 10: protobuf_test_messages.proto3.TestAllTypesProto3.MapInt64Int64Entry
+	nil,                                      // 11: protobuf_test_messages.proto3.TestAllTypesProto3.MapUint32Uint32Entry
+	nil,                                      // 12: protobuf_test_messages.proto3.TestAllTypesProto3.MapUint64Uint64Entry
+	nil,                                      // 13: protobuf_test_messages.proto3.TestAllTypesProto3.MapSint32Sint32Entry
+	nil,                                      // 14: protobuf_test_messages.proto3.TestAllTypesProto3.MapSint64Sint64Entry
+	nil,                                      // 15: protobuf_test_messages.proto3.TestAllTypesProto3.MapFixed32Fixed32Entry
+	nil,                                      // 16: protobuf_test_messages.proto3.TestAllTypesProto3.MapFixed64Fixed64Entry
+	nil,                                      // 17: protobuf_test_messages.proto3.TestAllTypesProto3.MapSfixed32Sfixed32Entry
+	nil,                                      // 18: protobuf_test_messages.proto3.TestAllTypesProto3.MapSfixed64Sfixed64Entry
+	nil,                                      // 19: protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32FloatEntry
+	nil,                                      // 20: protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32DoubleEntry
+	nil,                                      // 21: protobuf_test_messages.proto3.TestAllTypesProto3.MapBoolBoolEntry
+	nil,                                      // 22: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringStringEntry
+	nil,                                      // 23: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringBytesEntry
+	nil,                                      // 24: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedMessageEntry
+	nil,                                      // 25: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignMessageEntry
+	nil,                                      // 26: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedEnumEntry
+	nil,                                      // 27: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignEnumEntry
+	(structpb.NullValue)(0),                  // 28: google.protobuf.NullValue
+	(*wrapperspb.BoolValue)(nil),             // 29: google.protobuf.BoolValue
+	(*wrapperspb.Int32Value)(nil),            // 30: google.protobuf.Int32Value
+	(*wrapperspb.Int64Value)(nil),            // 31: google.protobuf.Int64Value
+	(*wrapperspb.UInt32Value)(nil),           // 32: google.protobuf.UInt32Value
+	(*wrapperspb.UInt64Value)(nil),           // 33: google.protobuf.UInt64Value
+	(*wrapperspb.FloatValue)(nil),            // 34: google.protobuf.FloatValue
+	(*wrapperspb.DoubleValue)(nil),           // 35: google.protobuf.DoubleValue
+	(*wrapperspb.StringValue)(nil),           // 36: google.protobuf.StringValue
+	(*wrapperspb.BytesValue)(nil),            // 37: google.protobuf.BytesValue
+	(*durationpb.Duration)(nil),              // 38: google.protobuf.Duration
+	(*timestamppb.Timestamp)(nil),            // 39: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),            // 40: google.protobuf.FieldMask
+	(*structpb.Struct)(nil),                  // 41: google.protobuf.Struct
+	(*anypb.Any)(nil),                        // 42: google.protobuf.Any
+	(*structpb.Value)(nil),                   // 43: google.protobuf.Value
+	(*structpb.ListValue)(nil),               // 44: google.protobuf.ListValue
 }
 var file_google_protobuf_test_messages_proto3_proto_depIdxs = []int32{
-	5,  // 0: protobuf_test_messages.proto3.TestAllTypesProto3.optional_nested_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
-	4,  // 1: protobuf_test_messages.proto3.TestAllTypesProto3.optional_foreign_message:type_name -> protobuf_test_messages.proto3.ForeignMessage
+	8,  // 0: protobuf_test_messages.proto3.TestAllTypesProto3.optional_nested_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
+	5,  // 1: protobuf_test_messages.proto3.TestAllTypesProto3.optional_foreign_message:type_name -> protobuf_test_messages.proto3.ForeignMessage
 	1,  // 2: protobuf_test_messages.proto3.TestAllTypesProto3.optional_nested_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum
 	0,  // 3: protobuf_test_messages.proto3.TestAllTypesProto3.optional_foreign_enum:type_name -> protobuf_test_messages.proto3.ForeignEnum
 	2,  // 4: protobuf_test_messages.proto3.TestAllTypesProto3.optional_aliased_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.AliasedEnum
-	3,  // 5: protobuf_test_messages.proto3.TestAllTypesProto3.recursive_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3
-	5,  // 6: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_nested_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
-	4,  // 7: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_foreign_message:type_name -> protobuf_test_messages.proto3.ForeignMessage
+	4,  // 5: protobuf_test_messages.proto3.TestAllTypesProto3.recursive_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3
+	8,  // 6: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_nested_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
+	5,  // 7: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_foreign_message:type_name -> protobuf_test_messages.proto3.ForeignMessage
 	1,  // 8: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_nested_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum
 	0,  // 9: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_foreign_enum:type_name -> protobuf_test_messages.proto3.ForeignEnum
 	1,  // 10: protobuf_test_messages.proto3.TestAllTypesProto3.packed_nested_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum
 	1,  // 11: protobuf_test_messages.proto3.TestAllTypesProto3.unpacked_nested_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum
-	6,  // 12: protobuf_test_messages.proto3.TestAllTypesProto3.map_int32_int32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32Int32Entry
-	7,  // 13: protobuf_test_messages.proto3.TestAllTypesProto3.map_int64_int64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapInt64Int64Entry
-	8,  // 14: protobuf_test_messages.proto3.TestAllTypesProto3.map_uint32_uint32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapUint32Uint32Entry
-	9,  // 15: protobuf_test_messages.proto3.TestAllTypesProto3.map_uint64_uint64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapUint64Uint64Entry
-	10, // 16: protobuf_test_messages.proto3.TestAllTypesProto3.map_sint32_sint32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapSint32Sint32Entry
-	11, // 17: protobuf_test_messages.proto3.TestAllTypesProto3.map_sint64_sint64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapSint64Sint64Entry
-	12, // 18: protobuf_test_messages.proto3.TestAllTypesProto3.map_fixed32_fixed32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapFixed32Fixed32Entry
-	13, // 19: protobuf_test_messages.proto3.TestAllTypesProto3.map_fixed64_fixed64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapFixed64Fixed64Entry
-	14, // 20: protobuf_test_messages.proto3.TestAllTypesProto3.map_sfixed32_sfixed32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapSfixed32Sfixed32Entry
-	15, // 21: protobuf_test_messages.proto3.TestAllTypesProto3.map_sfixed64_sfixed64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapSfixed64Sfixed64Entry
-	16, // 22: protobuf_test_messages.proto3.TestAllTypesProto3.map_int32_float:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32FloatEntry
-	17, // 23: protobuf_test_messages.proto3.TestAllTypesProto3.map_int32_double:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32DoubleEntry
-	18, // 24: protobuf_test_messages.proto3.TestAllTypesProto3.map_bool_bool:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapBoolBoolEntry
-	19, // 25: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_string:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringStringEntry
-	20, // 26: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_bytes:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringBytesEntry
-	21, // 27: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_nested_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedMessageEntry
-	22, // 28: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_foreign_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignMessageEntry
-	23, // 29: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_nested_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedEnumEntry
-	24, // 30: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_foreign_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignEnumEntry
-	5,  // 31: protobuf_test_messages.proto3.TestAllTypesProto3.oneof_nested_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
+	9,  // 12: protobuf_test_messages.proto3.TestAllTypesProto3.map_int32_int32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32Int32Entry
+	10, // 13: protobuf_test_messages.proto3.TestAllTypesProto3.map_int64_int64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapInt64Int64Entry
+	11, // 14: protobuf_test_messages.proto3.TestAllTypesProto3.map_uint32_uint32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapUint32Uint32Entry
+	12, // 15: protobuf_test_messages.proto3.TestAllTypesProto3.map_uint64_uint64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapUint64Uint64Entry
+	13, // 16: protobuf_test_messages.proto3.TestAllTypesProto3.map_sint32_sint32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapSint32Sint32Entry
+	14, // 17: protobuf_test_messages.proto3.TestAllTypesProto3.map_sint64_sint64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapSint64Sint64Entry
+	15, // 18: protobuf_test_messages.proto3.TestAllTypesProto3.map_fixed32_fixed32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapFixed32Fixed32Entry
+	16, // 19: protobuf_test_messages.proto3.TestAllTypesProto3.map_fixed64_fixed64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapFixed64Fixed64Entry
+	17, // 20: protobuf_test_messages.proto3.TestAllTypesProto3.map_sfixed32_sfixed32:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapSfixed32Sfixed32Entry
+	18, // 21: protobuf_test_messages.proto3.TestAllTypesProto3.map_sfixed64_sfixed64:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapSfixed64Sfixed64Entry
+	19, // 22: protobuf_test_messages.proto3.TestAllTypesProto3.map_int32_float:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32FloatEntry
+	20, // 23: protobuf_test_messages.proto3.TestAllTypesProto3.map_int32_double:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapInt32DoubleEntry
+	21, // 24: protobuf_test_messages.proto3.TestAllTypesProto3.map_bool_bool:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapBoolBoolEntry
+	22, // 25: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_string:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringStringEntry
+	23, // 26: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_bytes:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringBytesEntry
+	24, // 27: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_nested_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedMessageEntry
+	25, // 28: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_foreign_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignMessageEntry
+	26, // 29: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_nested_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedEnumEntry
+	27, // 30: protobuf_test_messages.proto3.TestAllTypesProto3.map_string_foreign_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignEnumEntry
+	8,  // 31: protobuf_test_messages.proto3.TestAllTypesProto3.oneof_nested_message:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
 	1,  // 32: protobuf_test_messages.proto3.TestAllTypesProto3.oneof_enum:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum
-	25, // 33: protobuf_test_messages.proto3.TestAllTypesProto3.oneof_null_value:type_name -> google.protobuf.NullValue
-	26, // 34: protobuf_test_messages.proto3.TestAllTypesProto3.optional_bool_wrapper:type_name -> google.protobuf.BoolValue
-	27, // 35: protobuf_test_messages.proto3.TestAllTypesProto3.optional_int32_wrapper:type_name -> google.protobuf.Int32Value
-	28, // 36: protobuf_test_messages.proto3.TestAllTypesProto3.optional_int64_wrapper:type_name -> google.protobuf.Int64Value
-	29, // 37: protobuf_test_messages.proto3.TestAllTypesProto3.optional_uint32_wrapper:type_name -> google.protobuf.UInt32Value
-	30, // 38: protobuf_test_messages.proto3.TestAllTypesProto3.optional_uint64_wrapper:type_name -> google.protobuf.UInt64Value
-	31, // 39: protobuf_test_messages.proto3.TestAllTypesProto3.optional_float_wrapper:type_name -> google.protobuf.FloatValue
-	32, // 40: protobuf_test_messages.proto3.TestAllTypesProto3.optional_double_wrapper:type_name -> google.protobuf.DoubleValue
-	33, // 41: protobuf_test_messages.proto3.TestAllTypesProto3.optional_string_wrapper:type_name -> google.protobuf.StringValue
-	34, // 42: protobuf_test_messages.proto3.TestAllTypesProto3.optional_bytes_wrapper:type_name -> google.protobuf.BytesValue
-	26, // 43: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_bool_wrapper:type_name -> google.protobuf.BoolValue
-	27, // 44: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_int32_wrapper:type_name -> google.protobuf.Int32Value
-	28, // 45: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_int64_wrapper:type_name -> google.protobuf.Int64Value
-	29, // 46: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_uint32_wrapper:type_name -> google.protobuf.UInt32Value
-	30, // 47: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_uint64_wrapper:type_name -> google.protobuf.UInt64Value
-	31, // 48: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_float_wrapper:type_name -> google.protobuf.FloatValue
-	32, // 49: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_double_wrapper:type_name -> google.protobuf.DoubleValue
-	33, // 50: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_string_wrapper:type_name -> google.protobuf.StringValue
-	34, // 51: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_bytes_wrapper:type_name -> google.protobuf.BytesValue
-	35, // 52: protobuf_test_messages.proto3.TestAllTypesProto3.optional_duration:type_name -> google.protobuf.Duration
-	36, // 53: protobuf_test_messages.proto3.TestAllTypesProto3.optional_timestamp:type_name -> google.protobuf.Timestamp
-	37, // 54: protobuf_test_messages.proto3.TestAllTypesProto3.optional_field_mask:type_name -> google.protobuf.FieldMask
-	38, // 55: protobuf_test_messages.proto3.TestAllTypesProto3.optional_struct:type_name -> google.protobuf.Struct
-	39, // 56: protobuf_test_messages.proto3.TestAllTypesProto3.optional_any:type_name -> google.protobuf.Any
-	40, // 57: protobuf_test_messages.proto3.TestAllTypesProto3.optional_value:type_name -> google.protobuf.Value
-	25, // 58: protobuf_test_messages.proto3.TestAllTypesProto3.optional_null_value:type_name -> google.protobuf.NullValue
-	35, // 59: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_duration:type_name -> google.protobuf.Duration
-	36, // 60: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_timestamp:type_name -> google.protobuf.Timestamp
-	37, // 61: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_fieldmask:type_name -> google.protobuf.FieldMask
-	38, // 62: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_struct:type_name -> google.protobuf.Struct
-	39, // 63: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_any:type_name -> google.protobuf.Any
-	40, // 64: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_value:type_name -> google.protobuf.Value
-	41, // 65: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_list_value:type_name -> google.protobuf.ListValue
-	3,  // 66: protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage.corecursive:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3
-	5,  // 67: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedMessageEntry.value:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
-	4,  // 68: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignMessageEntry.value:type_name -> protobuf_test_messages.proto3.ForeignMessage
+	28, // 33: protobuf_test_messages.proto3.TestAllTypesProto3.oneof_null_value:type_name -> google.protobuf.NullValue
+	29, // 34: protobuf_test_messages.proto3.TestAllTypesProto3.optional_bool_wrapper:type_name -> google.protobuf.BoolValue
+	30, // 35: protobuf_test_messages.proto3.TestAllTypesProto3.optional_int32_wrapper:type_name -> google.protobuf.Int32Value
+	31, // 36: protobuf_test_messages.proto3.TestAllTypesProto3.optional_int64_wrapper:type_name -> google.protobuf.Int64Value
+	32, // 37: protobuf_test_messages.proto3.TestAllTypesProto3.optional_uint32_wrapper:type_name -> google.protobuf.UInt32Value
+	33, // 38: protobuf_test_messages.proto3.TestAllTypesProto3.optional_uint64_wrapper:type_name -> google.protobuf.UInt64Value
+	34, // 39: protobuf_test_messages.proto3.TestAllTypesProto3.optional_float_wrapper:type_name -> google.protobuf.FloatValue
+	35, // 40: protobuf_test_messages.proto3.TestAllTypesProto3.optional_double_wrapper:type_name -> google.protobuf.DoubleValue
+	36, // 41: protobuf_test_messages.proto3.TestAllTypesProto3.optional_string_wrapper:type_name -> google.protobuf.StringValue
+	37, // 42: protobuf_test_messages.proto3.TestAllTypesProto3.optional_bytes_wrapper:type_name -> google.protobuf.BytesValue
+	29, // 43: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_bool_wrapper:type_name -> google.protobuf.BoolValue
+	30, // 44: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_int32_wrapper:type_name -> google.protobuf.Int32Value
+	31, // 45: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_int64_wrapper:type_name -> google.protobuf.Int64Value
+	32, // 46: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_uint32_wrapper:type_name -> google.protobuf.UInt32Value
+	33, // 47: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_uint64_wrapper:type_name -> google.protobuf.UInt64Value
+	34, // 48: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_float_wrapper:type_name -> google.protobuf.FloatValue
+	35, // 49: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_double_wrapper:type_name -> google.protobuf.DoubleValue
+	36, // 50: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_string_wrapper:type_name -> google.protobuf.StringValue
+	37, // 51: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_bytes_wrapper:type_name -> google.protobuf.BytesValue
+	38, // 52: protobuf_test_messages.proto3.TestAllTypesProto3.optional_duration:type_name -> google.protobuf.Duration
+	39, // 53: protobuf_test_messages.proto3.TestAllTypesProto3.optional_timestamp:type_name -> google.protobuf.Timestamp
+	40, // 54: protobuf_test_messages.proto3.TestAllTypesProto3.optional_field_mask:type_name -> google.protobuf.FieldMask
+	41, // 55: protobuf_test_messages.proto3.TestAllTypesProto3.optional_struct:type_name -> google.protobuf.Struct
+	42, // 56: protobuf_test_messages.proto3.TestAllTypesProto3.optional_any:type_name -> google.protobuf.Any
+	43, // 57: protobuf_test_messages.proto3.TestAllTypesProto3.optional_value:type_name -> google.protobuf.Value
+	28, // 58: protobuf_test_messages.proto3.TestAllTypesProto3.optional_null_value:type_name -> google.protobuf.NullValue
+	38, // 59: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_duration:type_name -> google.protobuf.Duration
+	39, // 60: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_timestamp:type_name -> google.protobuf.Timestamp
+	40, // 61: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_fieldmask:type_name -> google.protobuf.FieldMask
+	41, // 62: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_struct:type_name -> google.protobuf.Struct
+	42, // 63: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_any:type_name -> google.protobuf.Any
+	43, // 64: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_value:type_name -> google.protobuf.Value
+	44, // 65: protobuf_test_messages.proto3.TestAllTypesProto3.repeated_list_value:type_name -> google.protobuf.ListValue
+	4,  // 66: protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage.corecursive:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3
+	8,  // 67: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedMessageEntry.value:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedMessage
+	5,  // 68: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignMessageEntry.value:type_name -> protobuf_test_messages.proto3.ForeignMessage
 	1,  // 69: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringNestedEnumEntry.value:type_name -> protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum
 	0,  // 70: protobuf_test_messages.proto3.TestAllTypesProto3.MapStringForeignEnumEntry.value:type_name -> protobuf_test_messages.proto3.ForeignEnum
 	71, // [71:71] is the sub-list for method output_type
@@ -2579,6 +2709,30 @@ func file_google_protobuf_test_messages_proto3_proto_init() {
 			}
 		}
 		file_google_protobuf_test_messages_proto3_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*NullHypothesisProto3); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_google_protobuf_test_messages_proto3_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EnumOnlyProto3); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_google_protobuf_test_messages_proto3_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypesProto3_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -2608,8 +2762,8 @@ func file_google_protobuf_test_messages_proto3_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_google_protobuf_test_messages_proto3_proto_rawDesc,
-			NumEnums:      3,
-			NumMessages:   22,
+			NumEnums:      4,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

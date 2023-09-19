@@ -45,17 +45,20 @@ type Message struct {
 	// Oneof that conflicts with its first field: The oneof is renamed.
 	//
 	// Types that are assignable to OneofConflictA_:
+	//
 	//	*Message_OneofConflictA
 	OneofConflictA_ isMessage_OneofConflictA_ `protobuf_oneof:"oneof_conflict_a"`
 	// Oneof that conflicts with its second field: The field is renamed.
 	//
 	// Types that are assignable to OneofConflictB:
+	//
 	//	*Message_OneofNoConflict
 	//	*Message_OneofConflictB_
 	OneofConflictB isMessage_OneofConflictB `protobuf_oneof:"oneof_conflict_b"`
 	// Oneof with a field name that conflicts with a nested message.
 	//
 	// Types that are assignable to OneofConflictC:
+	//
 	//	*Message_OneofMessageConflict_
 	OneofConflictC isMessage_OneofConflictC `protobuf_oneof:"oneof_conflict_c"`
 }

@@ -16,8 +16,8 @@ import (
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/proto"
-	pdesc "google.golang.org/protobuf/reflect/protodesc"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protodesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	proto2_20160225 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	proto2_20160519 "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160519_a4ab9ec5"
@@ -34,7 +34,7 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-func mustLoadFileDesc(b []byte, _ []int) pref.FileDescriptor {
+func mustLoadFileDesc(b []byte, _ []int) protoreflect.FileDescriptor {
 	zr, err := gzip.NewReader(bytes.NewReader(b))
 	if err != nil {
 		panic(err)
@@ -48,7 +48,7 @@ func mustLoadFileDesc(b []byte, _ []int) pref.FileDescriptor {
 	if err != nil {
 		panic(err)
 	}
-	fd, err := pdesc.NewFile(p, nil)
+	fd, err := protodesc.NewFile(p, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -56,10 +56,10 @@ func mustLoadFileDesc(b []byte, _ []int) pref.FileDescriptor {
 }
 
 func TestDescriptor(t *testing.T) {
-	var tests []struct{ got, want pref.Descriptor }
+	var tests []struct{ got, want protoreflect.Descriptor }
 
 	fileDescP2_20160225 := mustLoadFileDesc(new(proto2_20160225.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto2_20160225.SiblingEnum(0))),
 		want: fileDescP2_20160225.Enums().ByName("SiblingEnum"),
 	}, {
@@ -98,7 +98,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP3_20160225 := mustLoadFileDesc(new(proto3_20160225.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto3_20160225.SiblingEnum(0))),
 		want: fileDescP3_20160225.Enums().ByName("SiblingEnum"),
 	}, {
@@ -116,7 +116,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP2_20160519 := mustLoadFileDesc(new(proto2_20160519.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto2_20160519.SiblingEnum(0))),
 		want: fileDescP2_20160519.Enums().ByName("SiblingEnum"),
 	}, {
@@ -155,7 +155,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP3_20160519 := mustLoadFileDesc(new(proto3_20160519.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto3_20160519.SiblingEnum(0))),
 		want: fileDescP3_20160519.Enums().ByName("SiblingEnum"),
 	}, {
@@ -173,7 +173,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP2_20180125 := mustLoadFileDesc(new(proto2_20180125.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto2_20180125.SiblingEnum(0))),
 		want: fileDescP2_20180125.Enums().ByName("SiblingEnum"),
 	}, {
@@ -212,7 +212,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP3_20180125 := mustLoadFileDesc(new(proto3_20180125.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto3_20180125.SiblingEnum(0))),
 		want: fileDescP3_20180125.Enums().ByName("SiblingEnum"),
 	}, {
@@ -230,7 +230,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP2_20180430 := mustLoadFileDesc(new(proto2_20180430.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto2_20180430.SiblingEnum(0))),
 		want: fileDescP2_20180430.Enums().ByName("SiblingEnum"),
 	}, {
@@ -269,7 +269,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP3_20180430 := mustLoadFileDesc(new(proto3_20180430.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto3_20180430.SiblingEnum(0))),
 		want: fileDescP3_20180430.Enums().ByName("SiblingEnum"),
 	}, {
@@ -287,7 +287,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP2_20180814 := mustLoadFileDesc(new(proto2_20180814.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto2_20180814.SiblingEnum(0))),
 		want: fileDescP2_20180814.Enums().ByName("SiblingEnum"),
 	}, {
@@ -326,7 +326,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP3_20180814 := mustLoadFileDesc(new(proto3_20180814.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto3_20180814.SiblingEnum(0))),
 		want: fileDescP3_20180814.Enums().ByName("SiblingEnum"),
 	}, {
@@ -344,7 +344,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP2_20190205 := mustLoadFileDesc(new(proto2_20190205.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto2_20190205.SiblingEnum(0))),
 		want: fileDescP2_20190205.Enums().ByName("SiblingEnum"),
 	}, {
@@ -383,7 +383,7 @@ func TestDescriptor(t *testing.T) {
 	}}...)
 
 	fileDescP3_20190205 := mustLoadFileDesc(new(proto3_20190205.Message).Descriptor())
-	tests = append(tests, []struct{ got, want pref.Descriptor }{{
+	tests = append(tests, []struct{ got, want protoreflect.Descriptor }{{
 		got:  impl.LegacyLoadEnumDesc(reflect.TypeOf(proto3_20190205.SiblingEnum(0))),
 		want: fileDescP3_20190205.Enums().ByName("SiblingEnum"),
 	}, {
@@ -415,7 +415,7 @@ func TestDescriptor(t *testing.T) {
 			}
 			return out
 		}),
-		cmp.Transformer("", func(x pref.Descriptor) map[string]interface{} {
+		cmp.Transformer("", func(x protoreflect.Descriptor) map[string]interface{} {
 			out := make(map[string]interface{})
 			v := reflect.ValueOf(x)
 			for i := 0; i < v.NumMethod(); i++ {
@@ -441,7 +441,7 @@ func TestDescriptor(t *testing.T) {
 						// TODO: Cycle support in cmp would be useful here.
 						v := m.Call(nil)[0]
 						if !v.IsNil() {
-							out[name] = v.Interface().(pref.Descriptor).FullName()
+							out[name] = v.Interface().(protoreflect.Descriptor).FullName()
 						}
 					default:
 						out[name] = m.Call(nil)[0].Interface()
@@ -450,7 +450,7 @@ func TestDescriptor(t *testing.T) {
 			}
 			return out
 		}),
-		cmp.Transformer("", func(v pref.Value) interface{} {
+		cmp.Transformer("", func(v protoreflect.Value) interface{} {
 			return v.Interface()
 		}),
 	}

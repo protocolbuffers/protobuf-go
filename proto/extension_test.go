@@ -14,7 +14,6 @@ import (
 
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
 	"google.golang.org/protobuf/testing/protocmp"
 
@@ -27,7 +26,7 @@ import (
 func TestExtensionFuncs(t *testing.T) {
 	for _, test := range []struct {
 		message     proto.Message
-		ext         pref.ExtensionType
+		ext         protoreflect.ExtensionType
 		wantDefault interface{}
 		value       interface{}
 	}{
@@ -209,10 +208,10 @@ func TestIsValid(t *testing.T) {
 func TestExtensionRanger(t *testing.T) {
 	tests := []struct {
 		msg  proto.Message
-		want map[pref.ExtensionType]interface{}
+		want map[protoreflect.ExtensionType]interface{}
 	}{{
 		msg: &testpb.TestAllExtensions{},
-		want: map[pref.ExtensionType]interface{}{
+		want: map[protoreflect.ExtensionType]interface{}{
 			testpb.E_OptionalInt32:         int32(5),
 			testpb.E_OptionalString:        string("hello"),
 			testpb.E_OptionalNestedMessage: &testpb.TestAllExtensions_NestedMessage{},
@@ -223,7 +222,7 @@ func TestExtensionRanger(t *testing.T) {
 		},
 	}, {
 		msg: &descpb.MessageOptions{},
-		want: map[pref.ExtensionType]interface{}{
+		want: map[protoreflect.ExtensionType]interface{}{
 			test3pb.E_OptionalInt32:          int32(5),
 			test3pb.E_OptionalString:         string("hello"),
 			test3pb.E_OptionalForeignMessage: &test3pb.ForeignMessage{},
@@ -241,8 +240,8 @@ func TestExtensionRanger(t *testing.T) {
 			proto.SetExtension(tt.msg, xt, v)
 		}
 
-		got := make(map[pref.ExtensionType]interface{})
-		proto.RangeExtensions(tt.msg, func(xt pref.ExtensionType, v interface{}) bool {
+		got := make(map[protoreflect.ExtensionType]interface{})
+		proto.RangeExtensions(tt.msg, func(xt protoreflect.ExtensionType, v interface{}) bool {
 			got[xt] = v
 			return true
 		})

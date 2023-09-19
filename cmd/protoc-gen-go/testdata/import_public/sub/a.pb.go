@@ -191,6 +191,7 @@ type M struct {
 	B  []byte   `protobuf:"bytes,5,opt,name=b,def=default" json:"b,omitempty"`
 	F  *float64 `protobuf:"fixed64,6,opt,name=f,def=nan" json:"f,omitempty"`
 	// Types that are assignable to OneofField:
+	//
 	//	*M_OneofInt32
 	//	*M_OneofInt64
 	OneofField isM_OneofField `protobuf_oneof:"oneof_field"`
@@ -310,6 +311,7 @@ type M_Submessage struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to SubmessageOneofField:
+	//
 	//	*M_Submessage_SubmessageOneofInt32
 	//	*M_Submessage_SubmessageOneofInt64
 	SubmessageOneofField isM_Submessage_SubmessageOneofField `protobuf_oneof:"submessage_oneof_field"`

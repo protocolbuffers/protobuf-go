@@ -99,6 +99,7 @@ func (p Values) Index(i int) (out struct {
 // Do not depend on the output being stable.
 //
 // For example:
+//
 //	(path.to.MyMessage).list_field[5].map_field["hello"] = {hello: "world"}
 func (p Values) String() string {
 	n := p.Len()

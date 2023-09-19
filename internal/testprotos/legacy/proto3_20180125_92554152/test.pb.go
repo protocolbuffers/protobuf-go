@@ -9,9 +9,11 @@
 Package proto3_20180125_92554152 is a generated protocol buffer package.
 
 It is generated from these files:
+
 	proto3_20180125_92554152/test.proto
 
 It has these top-level messages:
+
 	SiblingMessage
 	Message
 */

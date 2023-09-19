@@ -341,7 +341,7 @@ func runEncoderTest(t *testing.T, tc encoderTestCase, delims [2]byte) {
 	t.Helper()
 
 	if tc.wantOut != "" {
-		enc, err := text.NewEncoder("", delims, false)
+		enc, err := text.NewEncoder(nil, "", delims, false)
 		if err != nil {
 			t.Fatalf("NewEncoder returned error: %v", err)
 		}
@@ -352,7 +352,7 @@ func runEncoderTest(t *testing.T, tc encoderTestCase, delims [2]byte) {
 		}
 	}
 	if tc.wantOutIndent != "" {
-		enc, err := text.NewEncoder("\t", delims, false)
+		enc, err := text.NewEncoder(nil, "\t", delims, false)
 		if err != nil {
 			t.Fatalf("NewEncoder returned error: %v", err)
 		}
@@ -520,7 +520,7 @@ func runEncodeStringsTest(t *testing.T, in string, want string, outputASCII bool
 		charType = "ASCII"
 	}
 
-	enc, err := text.NewEncoder("", [2]byte{}, outputASCII)
+	enc, err := text.NewEncoder(nil, "", [2]byte{}, outputASCII)
 	if err != nil {
 		t.Fatalf("[%s] NewEncoder returned error: %v", charType, err)
 	}
@@ -532,7 +532,7 @@ func runEncodeStringsTest(t *testing.T, in string, want string, outputASCII bool
 }
 
 func TestReset(t *testing.T) {
-	enc, err := text.NewEncoder("\t", [2]byte{}, false)
+	enc, err := text.NewEncoder(nil, "\t", [2]byte{}, false)
 	if err != nil {
 		t.Fatalf("NewEncoder returned error: %v", err)
 	}

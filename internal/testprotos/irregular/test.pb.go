@@ -28,6 +28,7 @@ type Message struct {
 	RequiredMessage *IrregularMessage            `protobuf:"bytes,3,req,name=required_message,json=requiredMessage" json:"required_message,omitempty"`
 	MapMessage      map[string]*IrregularMessage `protobuf:"bytes,4,rep,name=map_message,json=mapMessage" json:"map_message,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Types that are assignable to Union:
+	//
 	//	*Message_OneofMessage
 	//	*Message_OneofAberrantMessage
 	Union                   isMessage_Union             `protobuf_oneof:"union"`

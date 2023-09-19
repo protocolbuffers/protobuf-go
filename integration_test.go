@@ -35,17 +35,26 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "3.15.3"
+	protobufVersion = "344f6dee76ea858acfd4fd575ab386438256842b"
 	protobufSHA256  = "" // ignored if protobufVersion is a git hash
 
-	golangVersions = []string{"1.11.13", "1.12.17", "1.13.15", "1.14.15", "1.15.15", "1.16.10", "1.17.3"}
-	golangLatest   = golangVersions[len(golangVersions)-1]
+	golangVersions = func() []string {
+		var vers []string
+		switch runtime.GOOS + "/" + runtime.GOARCH {
+		case "darwin/arm64":
+		default:
+			vers = []string{"1.13.15", "1.14.15", "1.15.15"}
+		}
+		return append(vers, "1.16.15", "1.17.13", "1.18.10", "1.19.6")
+	}()
+	golangLatest = golangVersions[len(golangVersions)-1]
 
-	staticcheckVersion = "2020.1.4"
+	staticcheckVersion = "2022.1.2"
 	staticcheckSHA256s = map[string]string{
-		"darwin/amd64": "5706d101426c025e8f165309e0cb2932e54809eb035ff23ebe19df0f810699d8",
-		"linux/386":    "e4dbf94e940678ae7108f0d22c7c2992339bc10a8fb384e7e734b1531a429a1c",
-		"linux/amd64":  "09d2c2002236296de2c757df111fe3ae858b89f9e183f645ad01f8135c83c519",
+		"darwin/amd64": "baa35f8fb967ee2aacad57f026e3724fbf8d9b7ad8f682f4d44b2084a96e103b",
+		"darwin/arm64": "9f01a581eeea088d0a6272538360f6d84996d66ae554bfada8026fe24991daa0",
+		"linux/386":    "4cf74373e5d668b265d7a241b59ba7d26064f2cd6af50b77e62c2b3e2f3afb43",
+		"linux/amd64":  "6dbb7187e43812fa23363cdaaa90ab13544dd36e24d02e2347014e4cf265f06d",
 	}
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
@@ -124,7 +133,7 @@ func Test(t *testing.T) {
 			runGo("ProtocGenGo", command{Dir: "cmd/protoc-gen-go/testdata"}, "go", "test")
 			runGo("Conformance", command{Dir: "internal/conformance"}, "go", "test", "-execute")
 
-			// Only run the 32-bit compatability tests for Linux;
+			// Only run the 32-bit compatibility tests for Linux;
 			// avoid Darwin since 10.15 dropped support i386 code execution.
 			if runtime.GOOS == "linux" {
 				runGo("Arch32Bit", command{Dir: workDir, Env: append(os.Environ(), "GOARCH=386")}, "go", "test", "./...")
@@ -137,7 +146,7 @@ func Test(t *testing.T) {
 		checks := []string{
 			"all",     // start with all checks enabled
 			"-SA1019", // disable deprecated usage check
-			"-S*",     // disable code simplication checks
+			"-S*",     // disable code simplification checks
 			"-ST*",    // disable coding style checks
 			"-U*",     // disable unused declaration checks
 		}
@@ -235,23 +244,28 @@ func mustInitDeps(t *testing.T) {
 	protobufPath = startWork("protobuf-" + protobufVersion)
 	if _, err := os.Stat(protobufPath); err != nil {
 		fmt.Printf("download %v\n", filepath.Base(protobufPath))
-		if isCommit := strings.Trim(protobufVersion, "0123456789abcdef") == ""; isCommit {
-			command{Dir: testDir}.mustRun(t, "git", "clone", "https://github.com/protocolbuffers/protobuf", "protobuf-"+protobufVersion)
-			command{Dir: protobufPath}.mustRun(t, "git", "checkout", protobufVersion)
-		} else {
-			url := fmt.Sprintf("https://github.com/google/protobuf/releases/download/v%v/protobuf-all-%v.tar.gz", protobufVersion, protobufVersion)
-			downloadArchive(check, protobufPath, url, "protobuf-"+protobufVersion, protobufSHA256)
+		checkoutVersion := protobufVersion
+		if isCommit := strings.Trim(protobufVersion, "0123456789abcdef") == ""; !isCommit {
+			// release tags have "v" prefix
+			checkoutVersion = "v" + protobufVersion
 		}
+		command{Dir: testDir}.mustRun(t, "git", "clone", "https://github.com/protocolbuffers/protobuf", "protobuf-"+protobufVersion)
+		command{Dir: protobufPath}.mustRun(t, "git", "checkout", checkoutVersion)
 
 		fmt.Printf("build %v\n", filepath.Base(protobufPath))
-		command{Dir: protobufPath}.mustRun(t, "./autogen.sh")
-		command{Dir: protobufPath}.mustRun(t, "./configure")
-		command{Dir: protobufPath}.mustRun(t, "make")
-		command{Dir: filepath.Join(protobufPath, "conformance")}.mustRun(t, "make")
+		env := os.Environ()
+		if runtime.GOOS == "darwin" {
+			// Adding this environment variable appears to be necessary for macOS builds.
+			env = append(env, "CC=clang")
+		}
+		command{
+			Dir: protobufPath,
+			Env: env,
+		}.mustRun(t, "bazel", "build", ":protoc", "//conformance:conformance_test_runner")
 	}
 	check(os.Setenv("PROTOBUF_ROOT", protobufPath)) // for generate-protos
-	registerBinary("conform-test-runner", filepath.Join(protobufPath, "conformance", "conformance-test-runner"))
-	registerBinary("protoc", filepath.Join(protobufPath, "src", "protoc"))
+	registerBinary("conform-test-runner", filepath.Join(protobufPath, "bazel-bin", "conformance", "conformance_test_runner"))
+	registerBinary("protoc", filepath.Join(protobufPath, "bazel-bin", "protoc"))
 	finishWork()
 
 	// Download each Go toolchain version.
@@ -376,7 +390,7 @@ func mustHandleFlags(t *testing.T) {
 		t.Run("BuildRelease", func(t *testing.T) {
 			v := version.String()
 			for _, goos := range []string{"linux", "darwin", "windows"} {
-				for _, goarch := range []string{"386", "amd64"} {
+				for _, goarch := range []string{"386", "amd64", "arm64"} {
 					// Avoid Darwin since 10.15 dropped support for i386.
 					if goos == "darwin" && goarch == "386" {
 						continue
