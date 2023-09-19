@@ -13,7 +13,7 @@
 // ...
 // }
 //
-// Go tags regexp: `(\s?|//)@go_tags\(` + "(`.*`)" + `\)\s`
+// Go tags regexp: `(\s?)@go_tags\(` + "(`.*`)" + `\)\s`
 package internal_gengo
 
 import (
@@ -33,7 +33,7 @@ var commentGoTagsRe *regexp.Regexp
 
 func init() {
 	var err error
-	commentGoTagsRe, err = regexp.Compile(`(\s?|//)@go_tags\(` + "(`.*`)" + `\)\s`)
+	commentGoTagsRe, err = regexp.Compile(`(\s?)@go_tags\(` + "(`.*`)" + `\)\s`)
 	if err != nil {
 		log.Fatalf("compile comment go tags regexp failed. %s", err)
 		return
