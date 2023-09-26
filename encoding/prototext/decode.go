@@ -739,7 +739,9 @@ func (d decoder) skipValue() error {
 			case text.ListClose:
 				return nil
 			case text.MessageOpen:
-				return d.skipMessageValue()
+				if err := d.skipMessageValue(); err != nil {
+					return err
+				}
 			default:
 				// Skip items. This will not validate whether skipped values are
 				// of the same type or not, same behavior as C++
