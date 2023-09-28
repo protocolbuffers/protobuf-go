@@ -10,11 +10,12 @@ import (
 	"testing"
 	"time"
 
+	"database/sql/driver"
+
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/testing/protocmp"
-
 	tspb "google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -102,3 +103,83 @@ type textError string
 
 func (e textError) Error() string     { return string(e) }
 func (e textError) Is(err error) bool { return err != nil && strings.Contains(err.Error(), e.Error()) }
+
+func TestTimestampValue(t *testing.T) {
+	tests := []struct {
+		in        *tspb.Timestamp
+		wantValue driver.Value
+		wantErr   error
+	}{
+		{in: nil, wantValue: nil, wantErr: textError("invalid nil Timestamp")},
+		{in: new(tspb.Timestamp), wantValue: new(tspb.Timestamp).AsTime()},
+		{in: &tspb.Timestamp{Seconds: -62135596800, Nanos: 0}, wantValue: (&tspb.Timestamp{Seconds: -62135596800, Nanos: 0}).AsTime()},
+		{in: &tspb.Timestamp{Seconds: -1, Nanos: -1}, wantValue: (&tspb.Timestamp{Seconds: -1, Nanos: -1}).AsTime()},
+		{in: &tspb.Timestamp{Seconds: -1, Nanos: 0}, wantValue: time.Unix(-1, 0).UTC()},
+		{in: &tspb.Timestamp{Seconds: -1, Nanos: +1}, wantValue: time.Unix(-1, +1).UTC()},
+		{in: &tspb.Timestamp{Seconds: 0, Nanos: 0}, wantValue: time.Unix(0, 0).UTC()},
+		{in: &tspb.Timestamp{Seconds: 0, Nanos: +1}, wantValue: time.Unix(0, +1).UTC()},
+		{in: &tspb.Timestamp{Seconds: +1, Nanos: 0}, wantValue: time.Unix(+1, 0).UTC()},
+		{in: &tspb.Timestamp{Seconds: +1, Nanos: +1}, wantValue: time.Unix(+1, +1).UTC()},
+		{in: &tspb.Timestamp{Seconds: minTimestamp, Nanos: 0}, wantValue: time.Date(1, 1, 1, 0, 0, 0, 0, time.UTC)},
+		{in: &tspb.Timestamp{Seconds: maxTimestamp, Nanos: 1e9 - 1}, wantValue: time.Date(9999, 12, 31, 23, 59, 59, 1e9-1, time.UTC)},
+		{in: &tspb.Timestamp{Seconds: -281836800, Nanos: 0}, wantValue: time.Date(1961, 1, 26, 0, 0, 0, 0, time.UTC)},
+		{in: &tspb.Timestamp{Seconds: 1296000000, Nanos: 0}, wantValue: time.Date(2011, 1, 26, 0, 0, 0, 0, time.UTC)},
+		{in: &tspb.Timestamp{Seconds: 1296012345, Nanos: 940483}, wantValue: time.Date(2011, 1, 26, 3, 25, 45, 940483, time.UTC)},
+	}
+
+	for _, tt := range tests {
+		v, gotErr := tt.in.Value()
+
+		if gotErr == nil {
+			if diff := cmp.Diff(tt.wantValue, v); diff != "" {
+				t.Errorf("Value(%v) mismatch (-want +got):\n%s", tt.in, diff)
+			}
+		}
+
+		if diff := cmp.Diff(tt.wantErr, gotErr, cmpopts.EquateErrors()); diff != "" {
+			t.Errorf("CheckValid(%v) mismatch (-want +got):\n%s", tt.in, diff)
+		}
+	}
+}
+
+func TestTimestampScan(t *testing.T) {
+	tests := []struct {
+		in      *tspb.Timestamp
+		scan    interface{}
+		want    driver.Value
+		wantErr error
+	}{
+		{in: nil, want: nil, wantErr: textError("invalid nil Timestamp"), scan: nil},
+		{in: &tspb.Timestamp{}, want: nil, wantErr: textError("invalid nil Timestamp"), scan: nil},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{}, scan: new(tspb.Timestamp).AsTime()},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: -2, Nanos: 999999999}, scan: time.Unix(-1, -1)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: -1, Nanos: 0}, scan: time.Unix(-1, 0)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: -1, Nanos: +1}, scan: time.Unix(-1, +1)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: 0, Nanos: 0}, scan: time.Unix(0, 0)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: 0, Nanos: +1}, scan: time.Unix(0, +1)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: +1, Nanos: 0}, scan: time.Unix(+1, 0)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: +1, Nanos: +1}, scan: time.Unix(+1, +1)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: minTimestamp, Nanos: 0}, scan: time.Date(1, 1, 1, 0, 0, 0, 0, time.UTC)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: maxTimestamp, Nanos: 1e9 - 1}, scan: time.Date(9999, 12, 31, 23, 59, 59, 1e9-1, time.UTC)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: -281836800, Nanos: 0}, scan: time.Date(1961, 1, 26, 0, 0, 0, 0, time.UTC)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: 1296000000, Nanos: 0}, scan: time.Date(2011, 1, 26, 0, 0, 0, 0, time.UTC)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: 1296012345, Nanos: 940483}, scan: time.Unix(1296012345, 940483)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: 1296012345, Nanos: 940483}, scan: time.Unix(1296012345, 940483).Format(time.RFC3339Nano)},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: 1296012345, Nanos: 940483}, scan: "invalid time string", wantErr: textError("error parsing timestamp data: parsing time \"invalid time string\" as \"2006-01-02T15:04:05.999999999Z07:00\": cannot parse \"invalid time string\" as \"2006\"")},
+		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: 1296012345, Nanos: 940483}, scan: int32(123), wantErr: textError("error converting timestamp data")},
+	}
+
+	for _, tt := range tests {
+		gotErr := tt.in.Scan(tt.scan)
+
+		if gotErr == nil {
+			if diff := cmp.Diff(tt.in, tt.want.(*tspb.Timestamp), protocmp.Transform()); diff != "" {
+				t.Errorf("Value(%v) mismatch (-want +got):\n%s", tt.in, diff)
+			}
+		}
+
+		if diff := cmp.Diff(tt.wantErr, gotErr, cmpopts.EquateErrors()); diff != "" {
+			t.Errorf("CheckValid(%v) mismatch (-want +got):\n%s", tt.in, diff)
+		}
+	}
+}
