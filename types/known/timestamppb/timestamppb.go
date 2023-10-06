@@ -12,29 +12,32 @@
 package timestamppb
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"fmt"
 	"time"
-
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 func (t *Timestamp) Value() (driver.Value, error) {
+	// If our timestamp is nil, return nil and no error.
 	if t == nil {
-		return nil, protoimpl.X.NewError("invalid nil Timestamp")
+		return sql.NullTime{}, nil
 	}
 
 	return t.AsTime(), nil
 }
 
 func (t *Timestamp) Scan(src interface{}) error {
+	// If our scan value is nil, set timestamp to nil and return.
 	if t == nil {
-		return protoimpl.X.NewError("invalid nil Timestamp")
+		t = nil
+		return nil
 	}
 
 	switch src := src.(type) {
 	case nil:
-		return protoimpl.X.NewError("invalid nil Timestamp")
+		t = nil
+		return nil
 	case time.Time:
 		*t = *New(src)
 		return nil

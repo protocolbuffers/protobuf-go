@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"database/sql"
 	"database/sql/driver"
 
 	"github.com/google/go-cmp/cmp"
@@ -110,7 +111,7 @@ func TestTimestampValue(t *testing.T) {
 		wantValue driver.Value
 		wantErr   error
 	}{
-		{in: nil, wantValue: nil, wantErr: textError("invalid nil Timestamp")},
+		{in: nil, wantValue: sql.NullTime{}},
 		{in: new(tspb.Timestamp), wantValue: new(tspb.Timestamp).AsTime()},
 		{in: &tspb.Timestamp{Seconds: -62135596800, Nanos: 0}, wantValue: (&tspb.Timestamp{Seconds: -62135596800, Nanos: 0}).AsTime()},
 		{in: &tspb.Timestamp{Seconds: -1, Nanos: -1}, wantValue: (&tspb.Timestamp{Seconds: -1, Nanos: -1}).AsTime()},
@@ -149,8 +150,7 @@ func TestTimestampScan(t *testing.T) {
 		want    driver.Value
 		wantErr error
 	}{
-		{in: nil, want: nil, wantErr: textError("invalid nil Timestamp"), scan: nil},
-		{in: &tspb.Timestamp{}, want: nil, wantErr: textError("invalid nil Timestamp"), scan: nil},
+		{in: nil, want: sql.NullTime{}, scan: nil},
 		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{}, scan: new(tspb.Timestamp).AsTime()},
 		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: -2, Nanos: 999999999}, scan: time.Unix(-1, -1)},
 		{in: &tspb.Timestamp{}, want: &tspb.Timestamp{Seconds: -1, Nanos: 0}, scan: time.Unix(-1, 0)},
@@ -173,8 +173,15 @@ func TestTimestampScan(t *testing.T) {
 		gotErr := tt.in.Scan(tt.scan)
 
 		if gotErr == nil {
-			if diff := cmp.Diff(tt.in, tt.want.(*tspb.Timestamp), protocmp.Transform()); diff != "" {
-				t.Errorf("Value(%v) mismatch (-want +got):\n%s", tt.in, diff)
+			switch ret := tt.want.(type) {
+			case *tspb.Timestamp:
+				if diff := cmp.Diff(tt.in, ret, protocmp.Transform()); diff != "" {
+					t.Errorf("Value(%v) mismatch (-want +got):\n%s", tt.in, diff)
+				}
+			case sql.NullTime:
+				if diff := cmp.Diff(sql.NullTime{}, ret, protocmp.Transform()); diff != "" {
+					t.Errorf("Value(%v) mismatch (-want +got):\n%s", tt.in, diff)
+				}
 			}
 		}
 
