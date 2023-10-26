@@ -35,7 +35,7 @@ func (p *SourcePath) appendFileDescriptorProto(b []byte) []byte {
 		b = p.appendSingularField(b, "source_code_info", (*SourcePath).appendSourceCodeInfo)
 	case 12:
 		b = p.appendSingularField(b, "syntax", nil)
-	case 13:
+	case 14:
 		b = p.appendSingularField(b, "edition", nil)
 	}
 	return b
@@ -393,13 +393,11 @@ func (p *SourcePath) appendFeatureSet(b []byte) []byte {
 	case 3:
 		b = p.appendSingularField(b, "repeated_field_encoding", nil)
 	case 4:
-		b = p.appendSingularField(b, "string_field_validation", nil)
+		b = p.appendSingularField(b, "utf8_validation", nil)
 	case 5:
 		b = p.appendSingularField(b, "message_encoding", nil)
 	case 6:
 		b = p.appendSingularField(b, "json_format", nil)
-	case 999:
-		b = p.appendSingularField(b, "raw_features", (*SourcePath).appendFeatureSet)
 	}
 	return b
 }
@@ -515,7 +513,7 @@ func (p *SourcePath) appendFieldOptions_EditionDefault(b []byte) []byte {
 		return b
 	}
 	switch (*p)[0] {
-	case 1:
+	case 3:
 		b = p.appendSingularField(b, "edition", nil)
 	case 2:
 		b = p.appendSingularField(b, "value", nil)

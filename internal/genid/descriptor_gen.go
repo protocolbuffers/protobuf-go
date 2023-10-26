@@ -12,6 +12,12 @@ import (
 
 const File_google_protobuf_descriptor_proto = "google/protobuf/descriptor.proto"
 
+// Full and short names for google.protobuf.Edition.
+const (
+	Edition_enum_fullname = "google.protobuf.Edition"
+	Edition_enum_name     = "Edition"
+)
+
 // Names for google.protobuf.FileDescriptorSet.
 const (
 	FileDescriptorSet_message_name     protoreflect.Name     = "FileDescriptorSet"
@@ -81,7 +87,7 @@ const (
 	FileDescriptorProto_Options_field_number          protoreflect.FieldNumber = 8
 	FileDescriptorProto_SourceCodeInfo_field_number   protoreflect.FieldNumber = 9
 	FileDescriptorProto_Syntax_field_number           protoreflect.FieldNumber = 12
-	FileDescriptorProto_Edition_field_number          protoreflect.FieldNumber = 13
+	FileDescriptorProto_Edition_field_number          protoreflect.FieldNumber = 14
 )
 
 // Names for google.protobuf.DescriptorProto.
@@ -668,7 +674,7 @@ const (
 
 // Field numbers for google.protobuf.FieldOptions.EditionDefault.
 const (
-	FieldOptions_EditionDefault_Edition_field_number protoreflect.FieldNumber = 1
+	FieldOptions_EditionDefault_Edition_field_number protoreflect.FieldNumber = 3
 	FieldOptions_EditionDefault_Value_field_number   protoreflect.FieldNumber = 2
 )
 
@@ -875,18 +881,16 @@ const (
 	FeatureSet_FieldPresence_field_name         protoreflect.Name = "field_presence"
 	FeatureSet_EnumType_field_name              protoreflect.Name = "enum_type"
 	FeatureSet_RepeatedFieldEncoding_field_name protoreflect.Name = "repeated_field_encoding"
-	FeatureSet_StringFieldValidation_field_name protoreflect.Name = "string_field_validation"
+	FeatureSet_Utf8Validation_field_name        protoreflect.Name = "utf8_validation"
 	FeatureSet_MessageEncoding_field_name       protoreflect.Name = "message_encoding"
 	FeatureSet_JsonFormat_field_name            protoreflect.Name = "json_format"
-	FeatureSet_RawFeatures_field_name           protoreflect.Name = "raw_features"
 
 	FeatureSet_FieldPresence_field_fullname         protoreflect.FullName = "google.protobuf.FeatureSet.field_presence"
 	FeatureSet_EnumType_field_fullname              protoreflect.FullName = "google.protobuf.FeatureSet.enum_type"
 	FeatureSet_RepeatedFieldEncoding_field_fullname protoreflect.FullName = "google.protobuf.FeatureSet.repeated_field_encoding"
-	FeatureSet_StringFieldValidation_field_fullname protoreflect.FullName = "google.protobuf.FeatureSet.string_field_validation"
+	FeatureSet_Utf8Validation_field_fullname        protoreflect.FullName = "google.protobuf.FeatureSet.utf8_validation"
 	FeatureSet_MessageEncoding_field_fullname       protoreflect.FullName = "google.protobuf.FeatureSet.message_encoding"
 	FeatureSet_JsonFormat_field_fullname            protoreflect.FullName = "google.protobuf.FeatureSet.json_format"
-	FeatureSet_RawFeatures_field_fullname           protoreflect.FullName = "google.protobuf.FeatureSet.raw_features"
 )
 
 // Field numbers for google.protobuf.FeatureSet.
@@ -894,10 +898,9 @@ const (
 	FeatureSet_FieldPresence_field_number         protoreflect.FieldNumber = 1
 	FeatureSet_EnumType_field_number              protoreflect.FieldNumber = 2
 	FeatureSet_RepeatedFieldEncoding_field_number protoreflect.FieldNumber = 3
-	FeatureSet_StringFieldValidation_field_number protoreflect.FieldNumber = 4
+	FeatureSet_Utf8Validation_field_number        protoreflect.FieldNumber = 4
 	FeatureSet_MessageEncoding_field_number       protoreflect.FieldNumber = 5
 	FeatureSet_JsonFormat_field_number            protoreflect.FieldNumber = 6
-	FeatureSet_RawFeatures_field_number           protoreflect.FieldNumber = 999
 )
 
 // Full and short names for google.protobuf.FeatureSet.FieldPresence.
@@ -918,10 +921,10 @@ const (
 	FeatureSet_RepeatedFieldEncoding_enum_name     = "RepeatedFieldEncoding"
 )
 
-// Full and short names for google.protobuf.FeatureSet.StringFieldValidation.
+// Full and short names for google.protobuf.FeatureSet.Utf8Validation.
 const (
-	FeatureSet_StringFieldValidation_enum_fullname = "google.protobuf.FeatureSet.StringFieldValidation"
-	FeatureSet_StringFieldValidation_enum_name     = "StringFieldValidation"
+	FeatureSet_Utf8Validation_enum_fullname = "google.protobuf.FeatureSet.Utf8Validation"
+	FeatureSet_Utf8Validation_enum_name     = "Utf8Validation"
 )
 
 // Full and short names for google.protobuf.FeatureSet.MessageEncoding.
@@ -934,6 +937,51 @@ const (
 const (
 	FeatureSet_JsonFormat_enum_fullname = "google.protobuf.FeatureSet.JsonFormat"
 	FeatureSet_JsonFormat_enum_name     = "JsonFormat"
+)
+
+// Names for google.protobuf.FeatureSetDefaults.
+const (
+	FeatureSetDefaults_message_name     protoreflect.Name     = "FeatureSetDefaults"
+	FeatureSetDefaults_message_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults"
+)
+
+// Field names for google.protobuf.FeatureSetDefaults.
+const (
+	FeatureSetDefaults_Defaults_field_name       protoreflect.Name = "defaults"
+	FeatureSetDefaults_MinimumEdition_field_name protoreflect.Name = "minimum_edition"
+	FeatureSetDefaults_MaximumEdition_field_name protoreflect.Name = "maximum_edition"
+
+	FeatureSetDefaults_Defaults_field_fullname       protoreflect.FullName = "google.protobuf.FeatureSetDefaults.defaults"
+	FeatureSetDefaults_MinimumEdition_field_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.minimum_edition"
+	FeatureSetDefaults_MaximumEdition_field_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.maximum_edition"
+)
+
+// Field numbers for google.protobuf.FeatureSetDefaults.
+const (
+	FeatureSetDefaults_Defaults_field_number       protoreflect.FieldNumber = 1
+	FeatureSetDefaults_MinimumEdition_field_number protoreflect.FieldNumber = 4
+	FeatureSetDefaults_MaximumEdition_field_number protoreflect.FieldNumber = 5
+)
+
+// Names for google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.
+const (
+	FeatureSetDefaults_FeatureSetEditionDefault_message_name     protoreflect.Name     = "FeatureSetEditionDefault"
+	FeatureSetDefaults_FeatureSetEditionDefault_message_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault"
+)
+
+// Field names for google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.
+const (
+	FeatureSetDefaults_FeatureSetEditionDefault_Edition_field_name  protoreflect.Name = "edition"
+	FeatureSetDefaults_FeatureSetEditionDefault_Features_field_name protoreflect.Name = "features"
+
+	FeatureSetDefaults_FeatureSetEditionDefault_Edition_field_fullname  protoreflect.FullName = "google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.edition"
+	FeatureSetDefaults_FeatureSetEditionDefault_Features_field_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.features"
+)
+
+// Field numbers for google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.
+const (
+	FeatureSetDefaults_FeatureSetEditionDefault_Edition_field_number  protoreflect.FieldNumber = 3
+	FeatureSetDefaults_FeatureSetEditionDefault_Features_field_number protoreflect.FieldNumber = 2
 )
 
 // Names for google.protobuf.SourceCodeInfo.
