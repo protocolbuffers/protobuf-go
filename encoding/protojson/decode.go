@@ -86,7 +86,7 @@ func (o UnmarshalOptions) unmarshal(b []byte, m proto.Message) error {
 		return dec.unexpectedTokenError(tok)
 	}
 
-	if o.AllowPartial {
+	if o.AllowPartial || o.AllowErrors {
 		return nil
 	}
 	return proto.CheckInitialized(m)

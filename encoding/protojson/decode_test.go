@@ -1083,6 +1083,38 @@ func TestUnmarshal(t *testing.T) {
 			ReqEnum:     pb2.Enum_ONE.Enum(),
 		},
 	}, {
+		desc:         "required fields partially set with AllowErrors",
+		umo:          protojson.UnmarshalOptions{AllowErrors: true},
+		inputMessage: &pb2.Requireds{},
+		inputText: `{
+  "reqBool": false,
+  "reqSfixed64": 42,
+  "reqString": "hello",
+  "reqEnum": "ONE"
+}`,
+		wantMessage: &pb2.Requireds{
+			ReqBool:     proto.Bool(false),
+			ReqSfixed64: proto.Int64(42),
+			ReqString:   proto.String("hello"),
+			ReqEnum:     pb2.Enum_ONE.Enum(),
+		},
+	}, {
+		desc:         "required fields partially set with AllowErrors",
+		umo:          protojson.UnmarshalOptions{AllowErrors: true},
+		inputMessage: &pb2.Requireds{},
+		inputText: `{
+  "reqBool": false,
+  "reqSfixed64": "",
+  "reqString": "hello",
+  "reqEnum": "ONE"
+}`,
+		wantMessage: &pb2.Requireds{
+			ReqBool:     proto.Bool(false),
+			ReqSfixed64: nil,
+			ReqString:   proto.String("hello"),
+			ReqEnum:     pb2.Enum_ONE.Enum(),
+		},
+	}, {
 		desc:         "required fields all set",
 		inputMessage: &pb2.Requireds{},
 		inputText: `{
@@ -1122,6 +1154,16 @@ func TestUnmarshal(t *testing.T) {
 			OptNested: &pb2.NestedWithRequired{},
 		},
 	}, {
+		desc:         "indirect required field with AllowErrors",
+		umo:          protojson.UnmarshalOptions{AllowErrors: true},
+		inputMessage: &pb2.IndirectRequired{},
+		inputText: `{
+  "optNested": {}
+}`,
+		wantMessage: &pb2.IndirectRequired{
+			OptNested: &pb2.NestedWithRequired{},
+		},
+	}, {
 		desc:         "indirect required field in repeated",
 		inputMessage: &pb2.IndirectRequired{},
 		inputText: `{
@@ -1142,6 +1184,24 @@ func TestUnmarshal(t *testing.T) {
 	}, {
 		desc:         "indirect required field in repeated with AllowPartial",
 		umo:          protojson.UnmarshalOptions{AllowPartial: true},
+		inputMessage: &pb2.IndirectRequired{},
+		inputText: `{
+  "rptNested": [
+    {"reqString": "one"},
+    {}
+  ]
+}`,
+		wantMessage: &pb2.IndirectRequired{
+			RptNested: []*pb2.NestedWithRequired{
+				{
+					ReqString: proto.String("one"),
+				},
+				{},
+			},
+		},
+	}, {
+		desc:         "indirect required field in repeated with AllowErrors",
+		umo:          protojson.UnmarshalOptions{AllowErrors: true},
 		inputMessage: &pb2.IndirectRequired{},
 		inputText: `{
   "rptNested": [
@@ -1198,6 +1258,26 @@ func TestUnmarshal(t *testing.T) {
 			},
 		},
 	}, {
+		desc:         "indirect required field in map with AllowErrors",
+		umo:          protojson.UnmarshalOptions{AllowErrors: true},
+		inputMessage: &pb2.IndirectRequired{},
+		inputText: `{
+  "strToNested": {
+    "missing": {},
+	"contains": {
+      "reqString": "here"
+    }
+  }
+}`,
+		wantMessage: &pb2.IndirectRequired{
+			StrToNested: map[string]*pb2.NestedWithRequired{
+				"missing": &pb2.NestedWithRequired{},
+				"contains": &pb2.NestedWithRequired{
+					ReqString: proto.String("here"),
+				},
+			},
+		},
+	}, {
 		desc:         "indirect required field in oneof",
 		inputMessage: &pb2.IndirectRequired{},
 		inputText: `{
@@ -1212,6 +1292,18 @@ func TestUnmarshal(t *testing.T) {
 	}, {
 		desc:         "indirect required field in oneof with AllowPartial",
 		umo:          protojson.UnmarshalOptions{AllowPartial: true},
+		inputMessage: &pb2.IndirectRequired{},
+		inputText: `{
+  "oneofNested": {}
+}`,
+		wantMessage: &pb2.IndirectRequired{
+			Union: &pb2.IndirectRequired_OneofNested{
+				OneofNested: &pb2.NestedWithRequired{},
+			},
+		},
+	}, {
+		desc:         "indirect required field in oneof with AllowErrors",
+		umo:          protojson.UnmarshalOptions{AllowErrors: true},
 		inputMessage: &pb2.IndirectRequired{},
 		inputText: `{
   "oneofNested": {}
@@ -2015,6 +2107,32 @@ func TestUnmarshal(t *testing.T) {
 		desc: "Any with partial required and AllowPartial",
 		umo: protojson.UnmarshalOptions{
 			AllowPartial: true,
+		},
+		inputMessage: &anypb.Any{},
+		inputText: `{
+  "@type": "pb2.PartialRequired",
+  "optString": "embedded inside Any"
+}`,
+		wantMessage: func() proto.Message {
+			m := &pb2.PartialRequired{
+				OptString: proto.String("embedded inside Any"),
+			}
+			b, err := proto.MarshalOptions{
+				Deterministic: true,
+				AllowPartial:  true,
+			}.Marshal(m)
+			if err != nil {
+				t.Fatalf("error in binary marshaling message for Any.value: %v", err)
+			}
+			return &anypb.Any{
+				TypeUrl: string(m.ProtoReflect().Descriptor().FullName()),
+				Value:   b,
+			}
+		}(),
+	}, {
+		desc: "Any with partial required and AllowErrors",
+		umo: protojson.UnmarshalOptions{
+			AllowErrors: true,
 		},
 		inputMessage: &anypb.Any{},
 		inputText: `{
