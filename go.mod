@@ -1,4 +1,4 @@
-module google.golang.org/protobuf
+module github.com/hacksomecn/protobuf-go
 
 go 1.11
 
@@ -8,5 +8,5 @@ require (
 )
 
 replace (
-	google.golang.org/protobuf => github.com/hacksomecn/protobuf-go v100.0.0
+	google.golang.org/protobuf => github.com/hacksomecn/protobuf-go v10.0.0
 )
