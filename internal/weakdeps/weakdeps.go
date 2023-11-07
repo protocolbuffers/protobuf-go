@@ -11,5 +11,5 @@ import (
 	// Ensure that any program using "github.com/golang/protobuf"
 	// uses a version that wraps this module so that there is a
 	// unified view on what protobuf types are globally registered.
-	_ "github.com/golang/protobuf/proto"
+	_ "google.golang.org/protobuf/proto"
 )
