@@ -9,5 +9,5 @@ require (
 )
 
 replace (
-	google.golang.org/protobuf v0.0.0 => github.com/hacksomecn/protobuf-go@"feature/gotags"
+	google.golang.org/protobuf v0.0.0 => github.com/hacksomecn/protobuf-go "feature/gotags"
 )
