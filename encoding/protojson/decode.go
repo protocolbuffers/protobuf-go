@@ -40,6 +40,10 @@ type UnmarshalOptions struct {
 	// If DiscardUnknown is set, unknown fields and enum name values are ignored.
 	DiscardUnknown bool
 
+	// If there's an error during unmarshalling scalar
+	// the error will be ignored and the field will be absent in the resulting message
+	AllowErrors bool
+
 	// Resolver is used for looking up types when unmarshaling
 	// google.protobuf.Any messages or extension fields.
 	// If nil, this defaults to using protoregistry.GlobalTypes.
@@ -82,7 +86,7 @@ func (o UnmarshalOptions) unmarshal(b []byte, m proto.Message) error {
 		return dec.unexpectedTokenError(tok)
 	}
 
-	if o.AllowPartial {
+	if o.AllowPartial || o.AllowErrors {
 		return nil
 	}
 	return proto.CheckInitialized(m)
@@ -233,7 +237,7 @@ func (d decoder) unmarshalMessage(m protoreflect.Message, skipTypeURL bool) erro
 			}
 
 			// Required or optional fields.
-			if err := d.unmarshalSingular(m, fd); err != nil {
+			if err := d.unmarshalSingular(m, fd); err != nil && !d.opts.AllowErrors {
 				return err
 			}
 		}
@@ -263,7 +267,7 @@ func (d decoder) unmarshalSingular(m protoreflect.Message, fd protoreflect.Field
 		val, err = d.unmarshalScalar(fd)
 	}
 
-	if err != nil {
+	if err != nil && !d.opts.AllowErrors {
 		return err
 	}
 	if val.IsValid() {
