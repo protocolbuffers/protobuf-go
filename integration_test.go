@@ -2,9 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-//go:build ignore
-// +build ignore
-
 package main
 
 import (
@@ -16,13 +13,16 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"runtime"
+	"runtime/debug"
 	"strings"
 	"sync"
 	"testing"
@@ -43,8 +43,8 @@ var (
 			"1.17.13",
 			"1.18.10",
 			"1.19.13",
-			"1.20.7",
-			"1.21.1",
+			"1.20.12",
+			"1.21.5",
 		}
 	}()
 	golangLatest = golangVersions[len(golangVersions)-1]
@@ -65,7 +65,25 @@ var (
 	protobufPath string
 )
 
-func Test(t *testing.T) {
+func TestIntegration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode")
+	}
+	if os.Getenv("GO_BUILDER_NAME") != "" {
+		// To start off, run on longtest builders, not longtest-race ones.
+		if race() {
+			t.Skip("skipping integration test in race mode on builders")
+		}
+		// When on a builder, run even if it's not explicitly requested
+		// provided our caller isn't already running it.
+		if os.Getenv("GO_PROTOBUF_INTEGRATION_TEST_RUNNING") == "1" {
+			t.Skip("protobuf integration test is already running, skipping nested invocation")
+		}
+		os.Setenv("GO_PROTOBUF_INTEGRATION_TEST_RUNNING", "1")
+	} else if flag.Lookup("test.run").Value.String() != "^TestIntegration$" {
+		t.Skip("not running integration test if not explicitly requested via test.bash")
+	}
+
 	mustInitDeps(t)
 	mustHandleFlags(t)
 
@@ -236,9 +254,7 @@ func mustInitDeps(t *testing.T) {
 	}
 	finishWork()
 
-	// Download and build the protobuf toolchain.
-	// We avoid downloading the pre-compiled binaries since they do not contain
-	// the conformance test runner.
+	// Get the protobuf toolchain.
 	protobufPath = startWork("protobuf-" + protobufVersion)
 	if _, err := os.Stat(protobufPath); err != nil {
 		fmt.Printf("download %v\n", filepath.Base(protobufPath))
@@ -250,16 +266,32 @@ func mustInitDeps(t *testing.T) {
 		command{Dir: testDir}.mustRun(t, "git", "clone", "https://github.com/protocolbuffers/protobuf", "protobuf-"+protobufVersion)
 		command{Dir: protobufPath}.mustRun(t, "git", "checkout", checkoutVersion)
 
-		fmt.Printf("build %v\n", filepath.Base(protobufPath))
-		env := os.Environ()
-		if runtime.GOOS == "darwin" {
-			// Adding this environment variable appears to be necessary for macOS builds.
-			env = append(env, "CC=clang")
+		if os.Getenv("GO_BUILDER_NAME") != "" {
+			// If this is running on the Go build infrastructure,
+			// use pre-built versions of these binaries that the
+			// builders are configured to provide in $PATH.
+			protocPath, err := exec.LookPath("protoc")
+			check(err)
+			confTestRunnerPath, err := exec.LookPath("conformance_test_runner")
+			check(err)
+			check(os.MkdirAll(filepath.Join(protobufPath, "bazel-bin", "conformance"), 0775))
+			check(os.Symlink(protocPath, filepath.Join(protobufPath, "bazel-bin", "protoc")))
+			check(os.Symlink(confTestRunnerPath, filepath.Join(protobufPath, "bazel-bin", "conformance", "conformance_test_runner")))
+		} else {
+			// In other environments, download and build the protobuf toolchain.
+			// We avoid downloading the pre-compiled binaries since they do not contain
+			// the conformance test runner.
+			fmt.Printf("build %v\n", filepath.Base(protobufPath))
+			env := os.Environ()
+			if runtime.GOOS == "darwin" {
+				// Adding this environment variable appears to be necessary for macOS builds.
+				env = append(env, "CC=clang")
+			}
+			command{
+				Dir: protobufPath,
+				Env: env,
+			}.mustRun(t, "bazel", "build", ":protoc", "//conformance:conformance_test_runner")
 		}
-		command{
-			Dir: protobufPath,
-			Env: env,
-		}.mustRun(t, "bazel", "build", ":protoc", "//conformance:conformance_test_runner")
 	}
 	check(os.Setenv("PROTOBUF_ROOT", protobufPath)) // for generate-protos
 	registerBinary("conform-test-runner", filepath.Join(protobufPath, "bazel-bin", "conformance", "conformance_test_runner"))
@@ -298,17 +330,23 @@ func mustInitDeps(t *testing.T) {
 	check(os.Setenv("GOCACHE", filepath.Join(repoRoot, ".gocache")))
 }
 
-func downloadFile(check func(error), dstPath, srcURL string) {
+func downloadFile(check func(error), dstPath, srcURL string, perm fs.FileMode) {
 	resp, err := http.Get(srcURL)
 	check(err)
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 4<<10))
+		check(fmt.Errorf("GET %q: non-200 OK status code: %v body: %q", srcURL, resp.Status, body))
+	}
 
 	check(os.MkdirAll(filepath.Dir(dstPath), 0775))
-	f, err := os.Create(dstPath)
+	f, err := os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm)
 	check(err)
 
 	_, err = io.Copy(f, resp.Body)
 	check(err)
+
+	check(f.Close())
 }
 
 func downloadArchive(check func(error), dstPath, srcURL, skipPrefix, wantSHA256 string) {
@@ -317,6 +355,10 @@ func downloadArchive(check func(error), dstPath, srcURL, skipPrefix, wantSHA256 
 	resp, err := http.Get(srcURL)
 	check(err)
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 4<<10))
+		check(fmt.Errorf("GET %q: non-200 OK status code: %v body: %q", srcURL, resp.Status, body))
+	}
 
 	var r io.Reader = resp.Body
 	if wantSHA256 != "" {
@@ -492,4 +534,27 @@ func (c command) mustRun(t *testing.T, args ...string) string {
 func mustRunCommand(t *testing.T, args ...string) string {
 	t.Helper()
 	return command{}.mustRun(t, args...)
+}
+
+// race is an approximation of whether the race detector is on.
+// It's used to skip the integration test on builders, without
+// preventing the integration test from running under the race
+// detector as a '//go:build !race' build constraint would.
+func race() bool {
+	bi, ok := debug.ReadBuildInfo()
+	if !ok {
+		return false
+	}
+	// Use reflect because the debug.BuildInfo.Settings field
+	// isn't available in Go 1.17.
+	s := reflect.ValueOf(bi).Elem().FieldByName("Settings")
+	if !s.IsValid() {
+		return false
+	}
+	for i := 0; i < s.Len(); i++ {
+		if s.Index(i).FieldByName("Key").String() == "-race" {
+			return s.Index(i).FieldByName("Value").String() == "true"
+		}
+	}
+	return false
 }
