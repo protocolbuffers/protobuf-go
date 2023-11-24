@@ -61,7 +61,6 @@ var (
 	purgeTimeout = 30 * 24 * time.Hour // 1 month
 
 	// Variables initialized by mustInitDeps.
-	goPath       string
 	modulePath   string
 	protobufPath string
 )
@@ -124,19 +123,18 @@ func Test(t *testing.T) {
 			}()
 		}
 
-		workDir := filepath.Join(goPath, "src", modulePath)
-		runGo("Normal", command{Dir: workDir}, "go", "test", "-race", "./...")
-		runGo("PureGo", command{Dir: workDir}, "go", "test", "-race", "-tags", "purego", "./...")
-		runGo("Reflect", command{Dir: workDir}, "go", "test", "-race", "-tags", "protoreflect", "./...")
+		runGo("Normal", command{}, "go", "test", "-race", "./...")
+		runGo("PureGo", command{}, "go", "test", "-race", "-tags", "purego", "./...")
+		runGo("Reflect", command{}, "go", "test", "-race", "-tags", "protoreflect", "./...")
 		if goVersion == golangLatest {
-			runGo("ProtoLegacy", command{Dir: workDir}, "go", "test", "-race", "-tags", "protolegacy", "./...")
+			runGo("ProtoLegacy", command{}, "go", "test", "-race", "-tags", "protolegacy", "./...")
 			runGo("ProtocGenGo", command{Dir: "cmd/protoc-gen-go/testdata"}, "go", "test")
 			runGo("Conformance", command{Dir: "internal/conformance"}, "go", "test", "-execute")
 
 			// Only run the 32-bit compatibility tests for Linux;
 			// avoid Darwin since 10.15 dropped support i386 code execution.
 			if runtime.GOOS == "linux" {
-				runGo("Arch32Bit", command{Dir: workDir, Env: append(os.Environ(), "GOARCH=386")}, "go", "test", "./...")
+				runGo("Arch32Bit", command{Env: append(os.Environ(), "GOARCH=386")}, "go", "test", "./...")
 			}
 		}
 	}
@@ -298,17 +296,6 @@ func mustInitDeps(t *testing.T) {
 
 	// Set a cache directory outside the test directory.
 	check(os.Setenv("GOCACHE", filepath.Join(repoRoot, ".gocache")))
-
-	// Setup GOPATH for pre-module support (i.e., go1.10 and earlier).
-	goPath = startWork("gopath")
-	modulePath = strings.TrimSpace(command{Dir: testDir}.mustRun(t, "go", "list", "-m", "-f", "{{.Path}}"))
-	check(os.RemoveAll(filepath.Join(goPath, "src")))
-	check(os.MkdirAll(filepath.Join(goPath, "src", filepath.Dir(modulePath)), 0775))
-	check(os.Symlink(repoRoot, filepath.Join(goPath, "src", modulePath)))
-	command{Dir: repoRoot}.mustRun(t, "go", "mod", "tidy")
-	command{Dir: repoRoot}.mustRun(t, "go", "mod", "vendor")
-	check(os.Setenv("GOPATH", goPath))
-	finishWork()
 }
 
 func downloadFile(check func(error), dstPath, srcURL string) {
