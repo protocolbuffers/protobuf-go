@@ -53,3 +53,16 @@ func (t *Timestamp) Scan(src interface{}) error {
 
 	return fmt.Errorf("error converting timestamp data")
 }
+
+func (t *Timestamp) UnmarshalJSON(b []byte) error {
+	var time time.Time
+	if err := time.UnmarshalJSON(b); err != nil {
+		return err
+	}
+	*t = *New(time)
+	return nil
+}
+
+func (t *Timestamp) MarshalJSON() ([]byte, error) {
+	return t.AsTime().MarshalJSON()
+}
