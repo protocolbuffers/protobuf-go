@@ -23,6 +23,7 @@ func TestDescriptorAccessors(t *testing.T) {
 		"Syntax":        true,
 		"Name":          true,
 		"FullName":      true,
+		"JSONName":      true,
 		"IsPlaceholder": true,
 		"Options":       true,
 		"ProtoInternal": true,

@@ -291,7 +291,7 @@ type Value struct {
 	//	*Value_BoolValue
 	//	*Value_StructValue
 	//	*Value_ListValue
-	Kind isValue_Kind `protobuf_oneof:"kind"`
+	Kind isValue_Kind `protobuf_oneof:"kind" json:"kind,omitempty"`
 }
 
 // NewValue constructs a Value from a general-purpose Go interface.
@@ -526,32 +526,32 @@ type isValue_Kind interface {
 
 type Value_NullValue struct {
 	// Represents a null value.
-	NullValue NullValue `protobuf:"varint,1,opt,name=null_value,json=nullValue,proto3,enum=google.protobuf.NullValue,oneof"`
+	NullValue NullValue `protobuf:"varint,1,opt,name=null_value,json=nullValue,proto3,enum=google.protobuf.NullValue,oneof" json:"nullValue"`
 }
 
 type Value_NumberValue struct {
 	// Represents a double value.
-	NumberValue float64 `protobuf:"fixed64,2,opt,name=number_value,json=numberValue,proto3,oneof"`
+	NumberValue float64 `protobuf:"fixed64,2,opt,name=number_value,json=numberValue,proto3,oneof" json:"numberValue"`
 }
 
 type Value_StringValue struct {
 	// Represents a string value.
-	StringValue string `protobuf:"bytes,3,opt,name=string_value,json=stringValue,proto3,oneof"`
+	StringValue string `protobuf:"bytes,3,opt,name=string_value,json=stringValue,proto3,oneof" json:"stringValue"`
 }
 
 type Value_BoolValue struct {
 	// Represents a boolean value.
-	BoolValue bool `protobuf:"varint,4,opt,name=bool_value,json=boolValue,proto3,oneof"`
+	BoolValue bool `protobuf:"varint,4,opt,name=bool_value,json=boolValue,proto3,oneof" json:"boolValue"`
 }
 
 type Value_StructValue struct {
 	// Represents a structured value.
-	StructValue *Struct `protobuf:"bytes,5,opt,name=struct_value,json=structValue,proto3,oneof"`
+	StructValue *Struct `protobuf:"bytes,5,opt,name=struct_value,json=structValue,proto3,oneof" json:"structValue"`
 }
 
 type Value_ListValue struct {
 	// Represents a repeated `Value`.
-	ListValue *ListValue `protobuf:"bytes,6,opt,name=list_value,json=listValue,proto3,oneof"`
+	ListValue *ListValue `protobuf:"bytes,6,opt,name=list_value,json=listValue,proto3,oneof" json:"listValue"`
 }
 
 func (*Value_NullValue) isValue_Kind() {}

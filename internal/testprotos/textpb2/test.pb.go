@@ -871,7 +871,7 @@ type IndirectRequired struct {
 	// Types that are assignable to Union:
 	//
 	//	*IndirectRequired_OneofNested
-	Union isIndirectRequired_Union `protobuf_oneof:"union"`
+	Union isIndirectRequired_Union `protobuf_oneof:"union" json:"union,omitempty"`
 }
 
 func (x *IndirectRequired) Reset() {
@@ -946,7 +946,7 @@ type isIndirectRequired_Union interface {
 }
 
 type IndirectRequired_OneofNested struct {
-	OneofNested *NestedWithRequired `protobuf:"bytes,4,opt,name=oneof_nested,json=oneofNested,oneof"`
+	OneofNested *NestedWithRequired `protobuf:"bytes,4,opt,name=oneof_nested,json=oneofNested,oneof" json:"oneofNested"`
 }
 
 func (*IndirectRequired_OneofNested) isIndirectRequired_Union() {}
