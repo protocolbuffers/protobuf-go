@@ -500,8 +500,8 @@ func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnkno
 		}
 		s = snakeMe(string(fd.Enum().Name())) + "_" + s
 		s = strings.ToUpper(s)
-		if enumVal := fd.Enum().Values().ByName(pref.Name(s)); enumVal != nil {
-			return pref.ValueOfEnum(enumVal.Number()), true
+		if enumVal := fd.Enum().Values().ByName(protoreflect.Name(s)); enumVal != nil {
+			return protoreflect.ValueOfEnum(enumVal.Number()), true
 		}
 
 	case json.Number:
