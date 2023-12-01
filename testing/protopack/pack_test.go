@@ -14,14 +14,13 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	pdesc "google.golang.org/protobuf/reflect/protodesc"
+	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
 
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-var msgDesc = func() pref.MessageDescriptor {
+var msgDesc = func() protoreflect.MessageDescriptor {
 	const s = `
 		name:   "test.proto"
 		syntax: "proto2"
@@ -50,7 +49,7 @@ var msgDesc = func() pref.MessageDescriptor {
 	if err := prototext.Unmarshal([]byte(s), pb); err != nil {
 		panic(err)
 	}
-	fd, err := pdesc.NewFile(pb, nil)
+	fd, err := protodesc.NewFile(pb, nil)
 	if err != nil {
 		panic(err)
 	}

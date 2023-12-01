@@ -356,7 +356,7 @@ func TestEncoder(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.desc, func(t *testing.T) {
 			if tc.wantOut != "" {
-				enc, err := json.NewEncoder("")
+				enc, err := json.NewEncoder(nil, "")
 				if err != nil {
 					t.Fatalf("NewEncoder() returned error: %v", err)
 				}
@@ -367,7 +367,7 @@ func TestEncoder(t *testing.T) {
 				}
 			}
 			if tc.wantOutIndent != "" {
-				enc, err := json.NewEncoder("\t")
+				enc, err := json.NewEncoder(nil, "\t")
 				if err != nil {
 					t.Fatalf("NewEncoder() returned error: %v", err)
 				}
@@ -387,7 +387,7 @@ func TestWriteStringError(t *testing.T) {
 
 	for _, in := range tests {
 		t.Run(in, func(t *testing.T) {
-			enc, err := json.NewEncoder("")
+			enc, err := json.NewEncoder(nil, "")
 			if err != nil {
 				t.Fatalf("NewEncoder() returned error: %v", err)
 			}

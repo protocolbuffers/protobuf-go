@@ -7,7 +7,7 @@ package irregular
 import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/reflect/protodesc"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoiface"
 
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -18,38 +18,38 @@ type IrregularMessage struct {
 	value string
 }
 
-func (m *IrregularMessage) ProtoReflect() pref.Message { return (*message)(m) }
+func (m *IrregularMessage) ProtoReflect() protoreflect.Message { return (*message)(m) }
 
 type message IrregularMessage
 
 type messageType struct{}
 
-func (messageType) New() pref.Message                  { return &message{} }
-func (messageType) Zero() pref.Message                 { return (*message)(nil) }
-func (messageType) Descriptor() pref.MessageDescriptor { return fileDesc.Messages().Get(0) }
+func (messageType) New() protoreflect.Message                  { return &message{} }
+func (messageType) Zero() protoreflect.Message                 { return (*message)(nil) }
+func (messageType) Descriptor() protoreflect.MessageDescriptor { return fileDesc.Messages().Get(0) }
 
-func (m *message) New() pref.Message                  { return &message{} }
-func (m *message) Descriptor() pref.MessageDescriptor { return fileDesc.Messages().Get(0) }
-func (m *message) Type() pref.MessageType             { return messageType{} }
-func (m *message) Interface() pref.ProtoMessage       { return (*IrregularMessage)(m) }
-func (m *message) ProtoMethods() *protoiface.Methods  { return nil }
+func (m *message) New() protoreflect.Message                  { return &message{} }
+func (m *message) Descriptor() protoreflect.MessageDescriptor { return fileDesc.Messages().Get(0) }
+func (m *message) Type() protoreflect.MessageType             { return messageType{} }
+func (m *message) Interface() protoreflect.ProtoMessage       { return (*IrregularMessage)(m) }
+func (m *message) ProtoMethods() *protoiface.Methods          { return nil }
 
 var fieldDescS = fileDesc.Messages().Get(0).Fields().Get(0)
 
-func (m *message) Range(f func(pref.FieldDescriptor, pref.Value) bool) {
+func (m *message) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if m.set {
-		f(fieldDescS, pref.ValueOf(m.value))
+		f(fieldDescS, protoreflect.ValueOf(m.value))
 	}
 }
 
-func (m *message) Has(fd pref.FieldDescriptor) bool {
+func (m *message) Has(fd protoreflect.FieldDescriptor) bool {
 	if fd == fieldDescS {
 		return m.set
 	}
 	panic("invalid field descriptor")
 }
 
-func (m *message) Clear(fd pref.FieldDescriptor) {
+func (m *message) Clear(fd protoreflect.FieldDescriptor) {
 	if fd == fieldDescS {
 		m.value = ""
 		m.set = false
@@ -58,14 +58,14 @@ func (m *message) Clear(fd pref.FieldDescriptor) {
 	panic("invalid field descriptor")
 }
 
-func (m *message) Get(fd pref.FieldDescriptor) pref.Value {
+func (m *message) Get(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	if fd == fieldDescS {
-		return pref.ValueOf(m.value)
+		return protoreflect.ValueOf(m.value)
 	}
 	panic("invalid field descriptor")
 }
 
-func (m *message) Set(fd pref.FieldDescriptor, v pref.Value) {
+func (m *message) Set(fd protoreflect.FieldDescriptor, v protoreflect.Value) {
 	if fd == fieldDescS {
 		m.value = v.String()
 		m.set = true
@@ -74,26 +74,26 @@ func (m *message) Set(fd pref.FieldDescriptor, v pref.Value) {
 	panic("invalid field descriptor")
 }
 
-func (m *message) Mutable(pref.FieldDescriptor) pref.Value {
+func (m *message) Mutable(protoreflect.FieldDescriptor) protoreflect.Value {
 	panic("invalid field descriptor")
 }
 
-func (m *message) NewField(pref.FieldDescriptor) pref.Value {
+func (m *message) NewField(protoreflect.FieldDescriptor) protoreflect.Value {
 	panic("invalid field descriptor")
 }
 
-func (m *message) WhichOneof(pref.OneofDescriptor) pref.FieldDescriptor {
+func (m *message) WhichOneof(protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	panic("invalid oneof descriptor")
 }
 
-func (m *message) GetUnknown() pref.RawFields { return nil }
-func (m *message) SetUnknown(pref.RawFields)  { return }
+func (m *message) GetUnknown() protoreflect.RawFields { return nil }
+func (m *message) SetUnknown(protoreflect.RawFields)  { return }
 
 func (m *message) IsValid() bool {
 	return m != nil
 }
 
-var fileDesc = func() pref.FileDescriptor {
+var fileDesc = func() protoreflect.FileDescriptor {
 	p := &descriptorpb.FileDescriptorProto{}
 	if err := prototext.Unmarshal([]byte(descriptorText), p); err != nil {
 		panic(err)

@@ -7,11 +7,6 @@ cd "$(git rev-parse --show-toplevel)"
 mkdir -p .cache/benchdata
 cd .cache/benchdata
 
-# Download small benchmark datasets.
-PROTOBUF_VERSION=v3.11.4
-curl -s -O https://raw.githubusercontent.com/protocolbuffers/protobuf/$PROTOBUF_VERSION/benchmarks/datasets/google_message1/proto2/dataset.google_message1_proto2.pb
-curl -s -O https://raw.githubusercontent.com/protocolbuffers/protobuf/$PROTOBUF_VERSION/benchmarks/datasets/google_message1/proto3/dataset.google_message1_proto3.pb
-curl -s -O https://raw.githubusercontent.com/protocolbuffers/protobuf/$PROTOBUF_VERSION/benchmarks/datasets/google_message2/dataset.google_message2.pb
-
-# Download large benchmark datasets.
-curl -s https://storage.googleapis.com/protobuf_opensource_benchmark_data/datasets.tar.gz | tar zx
+echo "This script needs to be updated to work with https://github.com/google/fleetbench" >&2
+echo "See https://github.com/golang/protobuf/issues/1570" >&2
+exit 1

@@ -158,6 +158,7 @@ type FieldTestMessage struct {
 	MapStringMessage    map[string]*FieldTestMessage_Message `protobuf:"bytes,501,rep,name=map_string_message,json=mapStringMessage" json:"map_string_message,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	MapFixed64Enum      map[uint64]FieldTestMessage_Enum     `protobuf:"bytes,502,rep,name=map_fixed64_enum,json=mapFixed64Enum" json:"map_fixed64_enum,omitempty" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=goproto.protoc.proto2.FieldTestMessage_Enum"`
 	// Types that are assignable to OneofField:
+	//
 	//	*FieldTestMessage_OneofBool
 	//	*FieldTestMessage_OneofEnum
 	//	*FieldTestMessage_OneofInt32
@@ -179,6 +180,7 @@ type FieldTestMessage struct {
 	//	*FieldTestMessage_OneofLargestTag
 	OneofField isFieldTestMessage_OneofField `protobuf_oneof:"oneof_field"`
 	// Types that are assignable to OneofTwo:
+	//
 	//	*FieldTestMessage_OneofTwo_1
 	//	*FieldTestMessage_OneofTwo_2
 	OneofTwo isFieldTestMessage_OneofTwo `protobuf_oneof:"oneof_two"`

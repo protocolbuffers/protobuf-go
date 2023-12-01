@@ -869,6 +869,7 @@ type IndirectRequired struct {
 	RptNested   []*NestedWithRequired          `protobuf:"bytes,2,rep,name=rpt_nested,json=rptNested" json:"rpt_nested,omitempty"`
 	StrToNested map[string]*NestedWithRequired `protobuf:"bytes,3,rep,name=str_to_nested,json=strToNested" json:"str_to_nested,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Types that are assignable to Union:
+	//
 	//	*IndirectRequired_OneofNested
 	Union isIndirectRequired_Union `protobuf_oneof:"union"`
 }

@@ -10,9 +10,11 @@
 Package proto2_20160519_a4ab9ec5 is a generated protocol buffer package.
 
 It is generated from these files:
+
 	proto2_20160519_a4ab9ec5/test.proto
 
 It has these top-level messages:
+
 	SiblingMessage
 	Message
 */

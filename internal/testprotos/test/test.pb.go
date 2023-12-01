@@ -190,11 +190,11 @@ func (TestAllTypes_NestedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{0, 0}
 }
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 type TestDeprecatedMessage_DeprecatedEnum int32
 
 const (
-	// Deprecated: Do not use.
+	// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 	TestDeprecatedMessage_DEPRECATED TestDeprecatedMessage_DeprecatedEnum = 0
 )
 
@@ -330,6 +330,7 @@ type TestAllTypes struct {
 	DefaultNestedEnum  *TestAllTypes_NestedEnum `protobuf:"varint,96,opt,name=default_nested_enum,json=defaultNestedEnum,enum=goproto.proto.test.TestAllTypes_NestedEnum,def=1" json:"default_nested_enum,omitempty"`
 	DefaultForeignEnum *ForeignEnum             `protobuf:"varint,97,opt,name=default_foreign_enum,json=defaultForeignEnum,enum=goproto.proto.test.ForeignEnum,def=5" json:"default_foreign_enum,omitempty"`
 	// Types that are assignable to OneofField:
+	//
 	//	*TestAllTypes_OneofUint32
 	//	*TestAllTypes_OneofNestedMessage
 	//	*TestAllTypes_OneofString
@@ -344,6 +345,7 @@ type TestAllTypes struct {
 	// A oneof with exactly one field.
 	//
 	// Types that are assignable to OneofOptional:
+	//
 	//	*TestAllTypes_OneofOptionalUint32
 	OneofOptional isTestAllTypes_OneofOptional `protobuf_oneof:"oneof_optional"`
 }
@@ -1116,15 +1118,16 @@ type TestAllTypes_OneofOptionalUint32 struct {
 
 func (*TestAllTypes_OneofOptionalUint32) isTestAllTypes_OneofOptional() {}
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 type TestDeprecatedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Deprecated: Do not use.
+	// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 	DeprecatedInt32 *int32 `protobuf:"varint,1,opt,name=deprecated_int32,json=deprecatedInt32" json:"deprecated_int32,omitempty"`
 	// Types that are assignable to DeprecatedOneof:
+	//
 	//	*TestDeprecatedMessage_DeprecatedOneofField
 	DeprecatedOneof isTestDeprecatedMessage_DeprecatedOneof `protobuf_oneof:"deprecated_oneof"`
 }
@@ -1161,7 +1164,7 @@ func (*TestDeprecatedMessage) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_test_test_proto_rawDescGZIP(), []int{1}
 }
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 func (x *TestDeprecatedMessage) GetDeprecatedInt32() int32 {
 	if x != nil && x.DeprecatedInt32 != nil {
 		return *x.DeprecatedInt32
@@ -1176,7 +1179,7 @@ func (m *TestDeprecatedMessage) GetDeprecatedOneof() isTestDeprecatedMessage_Dep
 	return nil
 }
 
-// Deprecated: Do not use.
+// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 func (x *TestDeprecatedMessage) GetDeprecatedOneofField() int32 {
 	if x, ok := x.GetDeprecatedOneof().(*TestDeprecatedMessage_DeprecatedOneofField); ok {
 		return x.DeprecatedOneofField
@@ -1189,7 +1192,7 @@ type isTestDeprecatedMessage_DeprecatedOneof interface {
 }
 
 type TestDeprecatedMessage_DeprecatedOneofField struct {
-	// Deprecated: Do not use.
+	// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
 	DeprecatedOneofField int32 `protobuf:"varint,2,opt,name=deprecated_oneof_field,json=deprecatedOneofField,oneof"`
 }
 
@@ -1539,6 +1542,7 @@ type TestRequiredForeign struct {
 	RepeatedMessage []*TestRequired         `protobuf:"bytes,2,rep,name=repeated_message,json=repeatedMessage" json:"repeated_message,omitempty"`
 	MapMessage      map[int32]*TestRequired `protobuf:"bytes,3,rep,name=map_message,json=mapMessage" json:"map_message,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Types that are assignable to OneofField:
+	//
 	//	*TestRequiredForeign_OneofMessage
 	OneofField isTestRequiredForeign_OneofField `protobuf_oneof:"oneof_field"`
 }
