@@ -35,7 +35,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "25.0-rc2"
+	protobufVersion = "25.1"
 
 	golangVersions = func() []string {
 		// Version policy: same version as is in the x/ repos' go.mod.
