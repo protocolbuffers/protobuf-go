@@ -367,8 +367,8 @@ func downloadArchive(check func(error), dstPath, srcURL, skipPrefix, wantSHA256 
 func mustHandleFlags(t *testing.T) {
 	if *regenerate {
 		t.Run("Generate", func(t *testing.T) {
-			fmt.Print(mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-types", "-execute"))
-			fmt.Print(mustRunCommand(t, "go", "run", "-tags", "protolegacy", "./internal/cmd/generate-protos", "-execute"))
+			fmt.Print(mustRunCommand(t, "go", "generate", "./internal/cmd/generate-types"))
+			fmt.Print(mustRunCommand(t, "go", "generate", "./internal/cmd/generate-protos"))
 			files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go")), "\n")
 			mustRunCommand(t, append([]string{"gofmt", "-w"}, files...)...)
 		})
