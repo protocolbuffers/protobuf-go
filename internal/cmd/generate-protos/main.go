@@ -53,7 +53,7 @@ func init() {
 					gengo.GenerateVersionMarkers = false
 					gengo.GenerateFile(gen, file)
 					generateIdentifiers(gen, file)
-					generateSouceContextStringer(gen, file)
+					generateSourceContextStringer(gen, file)
 				}
 			}
 			gen.SupportedFeatures = gengo.SupportedFeatures
@@ -195,23 +195,30 @@ func generateRemoteProtos() {
 		{"src", "google/protobuf/test_messages_proto3.proto", "google.golang.org/protobuf/internal/testprotos/conformance;conformance"},
 
 		// Benchmark protos.
-		{"benchmarks", "benchmarks.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks;benchmarks"},
-		{"benchmarks", "datasets/google_message1/proto2/benchmark_message1_proto2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message1/proto2;proto2"},
-		{"benchmarks", "datasets/google_message1/proto3/benchmark_message1_proto3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message1/proto3;proto3"},
-		{"benchmarks", "datasets/google_message2/benchmark_message2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message2;google_message2"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_1.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_4.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_5.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_6.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_7.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message3/benchmark_message3_8.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
-		{"benchmarks", "datasets/google_message4/benchmark_message4.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
-		{"benchmarks", "datasets/google_message4/benchmark_message4_1.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
-		{"benchmarks", "datasets/google_message4/benchmark_message4_2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
-		{"benchmarks", "datasets/google_message4/benchmark_message4_3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
+		// TODO: The protobuf repo no longer includes benchmarks.
+		//       CL removing them says they are superceded by google/fleetbench:
+		//         https://github.com/protocolbuffers/protobuf/commit/83c499de86224538e5d59adc3d0fa7fdb45b2c72
+		//       But that project's proto benchmark files are very different:
+		//         https://github.com/google/fleetbench/tree/main/fleetbench/proto
+		//       For now, commenting these out until benchmarks in this repo can be
+		//       reconciled with new fleetbench stuff.
+		//{"benchmarks", "benchmarks.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks;benchmarks"},
+		//{"benchmarks", "datasets/google_message1/proto2/benchmark_message1_proto2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message1/proto2;proto2"},
+		//{"benchmarks", "datasets/google_message1/proto3/benchmark_message1_proto3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message1/proto3;proto3"},
+		//{"benchmarks", "datasets/google_message2/benchmark_message2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message2;google_message2"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3_1.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3_2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3_3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3_4.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3_5.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3_6.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3_7.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message3/benchmark_message3_8.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message3;google_message3"},
+		//{"benchmarks", "datasets/google_message4/benchmark_message4.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
+		//{"benchmarks", "datasets/google_message4/benchmark_message4_1.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
+		//{"benchmarks", "datasets/google_message4/benchmark_message4_2.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
+		//{"benchmarks", "datasets/google_message4/benchmark_message4_3.proto", "google.golang.org/protobuf/internal/testprotos/benchmarks/datasets/google_message4;google_message4"},
 	}
 
 	opts := "module=" + modulePath
@@ -324,10 +331,10 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 	processMessages(file.Messages)
 }
 
-// generateSouceContextStringer generates the implementation for the
+// generateSourceContextStringer generates the implementation for the
 // protoreflect.SourcePath.String method by using information present
 // in the descriptor.proto.
-func generateSouceContextStringer(gen *protogen.Plugin, file *protogen.File) {
+func generateSourceContextStringer(gen *protogen.Plugin, file *protogen.File) {
 	if file.Desc.Path() != "google/protobuf/descriptor.proto" {
 		return
 	}

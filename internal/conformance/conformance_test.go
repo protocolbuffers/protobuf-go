@@ -40,7 +40,7 @@ func Test(t *testing.T) {
 	if !*execute {
 		t.SkipNow()
 	}
-	binPath := filepath.Join(*protoRoot, "conformance", "conformance-test-runner")
+	binPath := filepath.Join(*protoRoot, "bazel-bin", "conformance", "conformance_test_runner")
 	cmd := exec.Command(binPath,
 		"--failure_list", "failing_tests.txt",
 		"--text_format_failure_list", "failing_tests_text_format.txt",

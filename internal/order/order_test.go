@@ -11,7 +11,6 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
 )
 
 type fieldDesc struct {
@@ -20,15 +19,15 @@ type fieldDesc struct {
 	number     protoreflect.FieldNumber
 	extension  bool
 	oneofIndex int // non-zero means within oneof; negative means synthetic
-	pref.FieldDescriptor
+	protoreflect.FieldDescriptor
 }
 
-func (d fieldDesc) Index() int               { return d.index }
-func (d fieldDesc) Name() pref.Name          { return d.name.Name() }
-func (d fieldDesc) FullName() pref.FullName  { return d.name }
-func (d fieldDesc) Number() pref.FieldNumber { return d.number }
-func (d fieldDesc) IsExtension() bool        { return d.extension }
-func (d fieldDesc) ContainingOneof() pref.OneofDescriptor {
+func (d fieldDesc) Index() int                       { return d.index }
+func (d fieldDesc) Name() protoreflect.Name          { return d.name.Name() }
+func (d fieldDesc) FullName() protoreflect.FullName  { return d.name }
+func (d fieldDesc) Number() protoreflect.FieldNumber { return d.number }
+func (d fieldDesc) IsExtension() bool                { return d.extension }
+func (d fieldDesc) ContainingOneof() protoreflect.OneofDescriptor {
 	switch {
 	case d.oneofIndex < 0:
 		return oneofDesc{index: -d.oneofIndex, synthetic: true}
@@ -42,7 +41,7 @@ func (d fieldDesc) ContainingOneof() pref.OneofDescriptor {
 type oneofDesc struct {
 	index     int
 	synthetic bool
-	pref.OneofDescriptor
+	protoreflect.OneofDescriptor
 }
 
 func (d oneofDesc) Index() int        { return d.index }
@@ -66,9 +65,9 @@ func TestFieldOrder(t *testing.T) {
 			// Non-extension fields that are not within a oneof
 			// sorted next by field number.
 			{number: 1},
-			{number: 5, oneofIndex: -9}, // synthetic oneof
+			{number: 5, oneofIndex: -10}, // synthetic oneof
 			{number: 10},
-			{number: 11, oneofIndex: -10}, // synthetic oneof
+			{number: 11, oneofIndex: -9}, // synthetic oneof
 			{number: 12},
 
 			// Non-synthetic oneofs sorted last by index.
@@ -158,7 +157,7 @@ func TestKeyOrder(t *testing.T) {
 		t.Run(tt.label, func(t *testing.T) {
 			var got, want []protoreflect.MapKey
 			for _, v := range tt.keys {
-				want = append(want, pref.ValueOf(v).MapKey())
+				want = append(want, protoreflect.ValueOf(v).MapKey())
 			}
 			got = append(got, want...)
 			for i, j := range rand.Perm(len(got)) {

@@ -11,10 +11,13 @@ import (
 	"testing"
 )
 
+var (
+	fakeMessage = new(struct{ Message })
+	fakeList    = new(struct{ List })
+	fakeMap     = new(struct{ Map })
+)
+
 func TestValue(t *testing.T) {
-	fakeMessage := new(struct{ Message })
-	fakeList := new(struct{ List })
-	fakeMap := new(struct{ Map })
 
 	tests := []struct {
 		in   Value
@@ -94,6 +97,47 @@ func TestValue(t *testing.T) {
 			if got := tt.in.Map(); got != want {
 				t.Errorf("Value(%v).Map() = %v, want %v", tt.in, got, tt.want)
 			}
+		}
+	}
+}
+
+func TestValueEqual(t *testing.T) {
+	tests := []struct {
+		x, y Value
+		want bool
+	}{
+		{Value{}, Value{}, true},
+		{Value{}, ValueOfBool(true), false},
+		{ValueOfBool(true), ValueOfBool(true), true},
+		{ValueOfBool(true), ValueOfBool(false), false},
+		{ValueOfBool(false), ValueOfInt32(0), false},
+		{ValueOfInt32(0), ValueOfInt32(0), true},
+		{ValueOfInt32(0), ValueOfInt32(1), false},
+		{ValueOfInt32(0), ValueOfInt64(0), false},
+		{ValueOfInt64(123), ValueOfInt64(123), true},
+		{ValueOfFloat64(0), ValueOfFloat64(0), true},
+		{ValueOfFloat64(math.NaN()), ValueOfFloat64(math.NaN()), true},
+		{ValueOfFloat64(math.NaN()), ValueOfFloat64(0), false},
+		{ValueOfFloat64(math.Inf(1)), ValueOfFloat64(math.Inf(1)), true},
+		{ValueOfFloat64(math.Inf(-1)), ValueOfFloat64(math.Inf(1)), false},
+		{ValueOfBytes(nil), ValueOfBytes(nil), true},
+		{ValueOfBytes(nil), ValueOfBytes([]byte{}), true},
+		{ValueOfBytes(nil), ValueOfBytes([]byte{1}), false},
+		{ValueOfEnum(0), ValueOfEnum(0), true},
+		{ValueOfEnum(0), ValueOfEnum(1), false},
+		{ValueOfBool(false), ValueOfMessage(fakeMessage), false},
+		{ValueOfMessage(fakeMessage), ValueOfList(fakeList), false},
+		{ValueOfList(fakeList), ValueOfMap(fakeMap), false},
+		{ValueOfMap(fakeMap), ValueOfMessage(fakeMessage), false},
+
+		// Composite types are not tested here.
+		// See proto.TestEqual.
+	}
+
+	for _, tt := range tests {
+		got := tt.x.Equal(tt.y)
+		if got != tt.want {
+			t.Errorf("(%v).Equal(%v) = %v, want %v", tt.x, tt.y, got, tt.want)
 		}
 	}
 }

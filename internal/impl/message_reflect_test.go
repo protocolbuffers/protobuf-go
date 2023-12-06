@@ -13,14 +13,14 @@ import (
 	"sync"
 	"testing"
 
-	cmp "github.com/google/go-cmp/cmp"
-	cmpopts "github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 
 	"google.golang.org/protobuf/encoding/prototext"
 	pimpl "google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/proto"
-	pdesc "google.golang.org/protobuf/reflect/protodesc"
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protodesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/testing/protopack"
 
@@ -44,28 +44,28 @@ type (
 // Test operations performed on a message.
 type (
 	// check that the message contents match
-	equalMessage struct{ pref.Message }
+	equalMessage struct{ protoreflect.Message }
 	// check presence for specific fields in the message
-	hasFields map[pref.FieldNumber]bool
+	hasFields map[protoreflect.FieldNumber]bool
 	// check that specific message fields match
-	getFields map[pref.FieldNumber]pref.Value
+	getFields map[protoreflect.FieldNumber]protoreflect.Value
 	// set specific message fields
-	setFields map[pref.FieldNumber]pref.Value
+	setFields map[protoreflect.FieldNumber]protoreflect.Value
 	// clear specific fields in the message
-	clearFields []pref.FieldNumber
+	clearFields []protoreflect.FieldNumber
 	// check for the presence of specific oneof member fields.
-	whichOneofs map[pref.Name]pref.FieldNumber
+	whichOneofs map[protoreflect.Name]protoreflect.FieldNumber
 	// apply messageOps on each specified message field
-	messageFields        map[pref.FieldNumber]messageOps
-	messageFieldsMutable map[pref.FieldNumber]messageOps
+	messageFields        map[protoreflect.FieldNumber]messageOps
+	messageFieldsMutable map[protoreflect.FieldNumber]messageOps
 	// apply listOps on each specified list field
-	listFields        map[pref.FieldNumber]listOps
-	listFieldsMutable map[pref.FieldNumber]listOps
+	listFields        map[protoreflect.FieldNumber]listOps
+	listFieldsMutable map[protoreflect.FieldNumber]listOps
 	// apply mapOps on each specified map fields
-	mapFields        map[pref.FieldNumber]mapOps
-	mapFieldsMutable map[pref.FieldNumber]mapOps
+	mapFields        map[protoreflect.FieldNumber]mapOps
+	mapFieldsMutable map[protoreflect.FieldNumber]mapOps
 	// range through all fields and check that they match
-	rangeFields map[pref.FieldNumber]pref.Value
+	rangeFields map[protoreflect.FieldNumber]protoreflect.Value
 )
 
 func (equalMessage) isMessageOp()         {}
@@ -85,15 +85,15 @@ func (rangeFields) isMessageOp()          {}
 // Test operations performed on a list.
 type (
 	// check that the list contents match
-	equalList struct{ pref.List }
+	equalList struct{ protoreflect.List }
 	// check that list length matches
 	lenList int
 	// check that specific list entries match
-	getList map[int]pref.Value
+	getList map[int]protoreflect.Value
 	// set specific list entries
-	setList map[int]pref.Value
+	setList map[int]protoreflect.Value
 	// append entries to the list
-	appendList []pref.Value
+	appendList []protoreflect.Value
 	// apply messageOps on a newly appended message
 	appendMessageList messageOps
 	// truncate the list to the specified length
@@ -111,21 +111,21 @@ func (truncList) isListOp()         {}
 // Test operations performed on a map.
 type (
 	// check that the map contents match
-	equalMap struct{ pref.Map }
+	equalMap struct{ protoreflect.Map }
 	// check that map length matches
 	lenMap int
 	// check presence for specific entries in the map
 	hasMap map[interface{}]bool
 	// check that specific map entries match
-	getMap map[interface{}]pref.Value
+	getMap map[interface{}]protoreflect.Value
 	// set specific map entries
-	setMap map[interface{}]pref.Value
+	setMap map[interface{}]protoreflect.Value
 	// clear specific entries in the map
 	clearMap []interface{}
 	// apply messageOps on each specified message entry
 	messageMap map[interface{}]messageOps
 	// range through all entries and check that they match
-	rangeMap map[interface{}]pref.Value
+	rangeMap map[interface{}]protoreflect.Value
 )
 
 func (equalMap) isMapOp()   {}
@@ -163,34 +163,34 @@ type ScalarProto2 struct {
 	MyBytesA  *MyString  `protobuf:"22"`
 }
 
-func mustMakeEnumDesc(path string, syntax pref.Syntax, enumDesc string) pref.EnumDescriptor {
+func mustMakeEnumDesc(path string, syntax protoreflect.Syntax, enumDesc string) protoreflect.EnumDescriptor {
 	s := fmt.Sprintf(`name:%q syntax:%q enum_type:[{%s}]`, path, syntax, enumDesc)
 	pb := new(descriptorpb.FileDescriptorProto)
 	if err := prototext.Unmarshal([]byte(s), pb); err != nil {
 		panic(err)
 	}
-	fd, err := pdesc.NewFile(pb, nil)
+	fd, err := protodesc.NewFile(pb, nil)
 	if err != nil {
 		panic(err)
 	}
 	return fd.Enums().Get(0)
 }
 
-func mustMakeMessageDesc(path string, syntax pref.Syntax, fileDesc, msgDesc string, r pdesc.Resolver) pref.MessageDescriptor {
+func mustMakeMessageDesc(path string, syntax protoreflect.Syntax, fileDesc, msgDesc string, r protodesc.Resolver) protoreflect.MessageDescriptor {
 	s := fmt.Sprintf(`name:%q syntax:%q %s message_type:[{%s}]`, path, syntax, fileDesc, msgDesc)
 	pb := new(descriptorpb.FileDescriptorProto)
 	if err := prototext.Unmarshal([]byte(s), pb); err != nil {
 		panic(err)
 	}
-	fd, err := pdesc.NewFile(pb, r)
+	fd, err := protodesc.NewFile(pb, r)
 	if err != nil {
 		panic(err)
 	}
 	return fd.Messages().Get(0)
 }
 
-var V = pref.ValueOf
-var VE = func(n pref.EnumNumber) pref.Value { return V(n) }
+var V = protoreflect.ValueOf
+var VE = func(n protoreflect.EnumNumber) protoreflect.Value { return V(n) }
 
 type (
 	MyBool    bool
@@ -210,7 +210,7 @@ type (
 	MapBytes   map[MyString]MyBytes
 )
 
-var scalarProto2Type = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(ScalarProto2)), Desc: mustMakeMessageDesc("scalar2.proto", pref.Proto2, "", `
+var scalarProto2Type = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(ScalarProto2)), Desc: mustMakeMessageDesc("scalar2.proto", protoreflect.Proto2, "", `
 		name: "ScalarProto2"
 		field: [
 			{name:"f1"  number:1  label:LABEL_OPTIONAL type:TYPE_BOOL   default_value:"true"},
@@ -240,7 +240,7 @@ var scalarProto2Type = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(Scala
 	`, nil),
 }
 
-func (m *ScalarProto2) ProtoReflect() pref.Message { return scalarProto2Type.MessageOf(m) }
+func (m *ScalarProto2) ProtoReflect() protoreflect.Message { return scalarProto2Type.MessageOf(m) }
 
 func TestScalarProto2(t *testing.T) {
 	testMessage(t, nil, new(ScalarProto2).ProtoReflect(), messageOps{
@@ -312,7 +312,7 @@ type ScalarProto3 struct {
 	MyBytesA  MyString  `protobuf:"22"`
 }
 
-var scalarProto3Type = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(ScalarProto3)), Desc: mustMakeMessageDesc("scalar3.proto", pref.Proto3, "", `
+var scalarProto3Type = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(ScalarProto3)), Desc: mustMakeMessageDesc("scalar3.proto", protoreflect.Proto3, "", `
 		name: "ScalarProto3"
 		field: [
 			{name:"f1"  number:1  label:LABEL_OPTIONAL type:TYPE_BOOL},
@@ -342,7 +342,7 @@ var scalarProto3Type = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(Scala
 	`, nil),
 }
 
-func (m *ScalarProto3) ProtoReflect() pref.Message { return scalarProto3Type.MessageOf(m) }
+func (m *ScalarProto3) ProtoReflect() protoreflect.Message { return scalarProto3Type.MessageOf(m) }
 
 func TestScalarProto3(t *testing.T) {
 	testMessage(t, nil, new(ScalarProto3).ProtoReflect(), messageOps{
@@ -432,7 +432,7 @@ type ListScalars struct {
 	MyBytes4   ListStrings `protobuf:"19"`
 }
 
-var listScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(ListScalars)), Desc: mustMakeMessageDesc("list-scalars.proto", pref.Proto2, "", `
+var listScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(ListScalars)), Desc: mustMakeMessageDesc("list-scalars.proto", protoreflect.Proto2, "", `
 		name: "ListScalars"
 		field: [
 			{name:"f1"  number:1  label:LABEL_REPEATED type:TYPE_BOOL},
@@ -460,7 +460,7 @@ var listScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(ListSc
 	`, nil),
 }
 
-func (m *ListScalars) ProtoReflect() pref.Message { return listScalarsType.MessageOf(m) }
+func (m *ListScalars) ProtoReflect() protoreflect.Message { return listScalarsType.MessageOf(m) }
 
 func TestListScalars(t *testing.T) {
 	empty := new(ListScalars).ProtoReflect()
@@ -585,7 +585,7 @@ type MapScalars struct {
 	MyBytes4   MapStrings `protobuf:"25"`
 }
 
-var mapScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(MapScalars)), Desc: mustMakeMessageDesc("map-scalars.proto", pref.Proto2, "", `
+var mapScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(MapScalars)), Desc: mustMakeMessageDesc("map-scalars.proto", protoreflect.Proto2, "", `
 		name: "MapScalars"
 		field: [
 			{name:"f1"  number:1  label:LABEL_REPEATED type:TYPE_MESSAGE type_name:".MapScalars.F1Entry"},
@@ -650,7 +650,7 @@ var mapScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(MapScal
 	`, nil),
 }
 
-func (m *MapScalars) ProtoReflect() pref.Message { return mapScalarsType.MessageOf(m) }
+func (m *MapScalars) ProtoReflect() protoreflect.Message { return mapScalarsType.MessageOf(m) }
 
 func TestMapScalars(t *testing.T) {
 	empty := new(MapScalars).ProtoReflect()
@@ -775,7 +775,7 @@ type OneofScalars struct {
 	Union isOneofScalars_Union `protobuf_oneof:"union"`
 }
 
-var oneofScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(OneofScalars)), Desc: mustMakeMessageDesc("oneof-scalars.proto", pref.Proto2, "", `
+var oneofScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(OneofScalars)), Desc: mustMakeMessageDesc("oneof-scalars.proto", protoreflect.Proto2, "", `
 		name: "OneofScalars"
 		field: [
 			{name:"f1"  number:1  label:LABEL_OPTIONAL type:TYPE_BOOL   default_value:"true" oneof_index:0},
@@ -796,7 +796,7 @@ var oneofScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(Oneof
 	`, nil),
 }
 
-func (m *OneofScalars) ProtoReflect() pref.Message { return oneofScalarsType.MessageOf(m) }
+func (m *OneofScalars) ProtoReflect() protoreflect.Message { return oneofScalarsType.MessageOf(m) }
 
 func (*OneofScalars) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
@@ -933,29 +933,29 @@ func TestOneofs(t *testing.T) {
 
 type EnumProto2 int32
 
-var enumProto2Desc = mustMakeEnumDesc("enum2.proto", pref.Proto2, `
+var enumProto2Desc = mustMakeEnumDesc("enum2.proto", protoreflect.Proto2, `
 	name:  "EnumProto2"
 	value: [{name:"DEAD" number:0xdead}, {name:"BEEF" number:0xbeef}]
 `)
 
-func (e EnumProto2) Descriptor() pref.EnumDescriptor { return enumProto2Desc }
-func (e EnumProto2) Type() pref.EnumType             { return e }
-func (e EnumProto2) Enum() *EnumProto2               { return &e }
-func (e EnumProto2) Number() pref.EnumNumber         { return pref.EnumNumber(e) }
-func (t EnumProto2) New(n pref.EnumNumber) pref.Enum { return EnumProto2(n) }
+func (e EnumProto2) Descriptor() protoreflect.EnumDescriptor         { return enumProto2Desc }
+func (e EnumProto2) Type() protoreflect.EnumType                     { return e }
+func (e EnumProto2) Enum() *EnumProto2                               { return &e }
+func (e EnumProto2) Number() protoreflect.EnumNumber                 { return protoreflect.EnumNumber(e) }
+func (t EnumProto2) New(n protoreflect.EnumNumber) protoreflect.Enum { return EnumProto2(n) }
 
 type EnumProto3 int32
 
-var enumProto3Desc = mustMakeEnumDesc("enum3.proto", pref.Proto3, `
+var enumProto3Desc = mustMakeEnumDesc("enum3.proto", protoreflect.Proto3, `
 	name:  "EnumProto3",
 	value: [{name:"ALPHA" number:0}, {name:"BRAVO" number:1}]
 `)
 
-func (e EnumProto3) Descriptor() pref.EnumDescriptor { return enumProto3Desc }
-func (e EnumProto3) Type() pref.EnumType             { return e }
-func (e EnumProto3) Enum() *EnumProto3               { return &e }
-func (e EnumProto3) Number() pref.EnumNumber         { return pref.EnumNumber(e) }
-func (t EnumProto3) New(n pref.EnumNumber) pref.Enum { return EnumProto3(n) }
+func (e EnumProto3) Descriptor() protoreflect.EnumDescriptor         { return enumProto3Desc }
+func (e EnumProto3) Type() protoreflect.EnumType                     { return e }
+func (e EnumProto3) Enum() *EnumProto3                               { return &e }
+func (e EnumProto3) Number() protoreflect.EnumNumber                 { return protoreflect.EnumNumber(e) }
+func (t EnumProto3) New(n protoreflect.EnumNumber) protoreflect.Enum { return EnumProto3(n) }
 
 type EnumMessages struct {
 	EnumP2        *EnumProto2              `protobuf:"1"`
@@ -969,7 +969,7 @@ type EnumMessages struct {
 	Union         isEnumMessages_Union     `protobuf_oneof:"union"`
 }
 
-var enumMessagesType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(EnumMessages)), Desc: mustMakeMessageDesc("enum-messages.proto", pref.Proto2, `
+var enumMessagesType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(EnumMessages)), Desc: mustMakeMessageDesc("enum-messages.proto", protoreflect.Proto2, `
 		dependency: ["enum2.proto", "enum3.proto", "scalar2.proto", "scalar3.proto", "proto2_20180125_92554152/test.proto"]
 	`, `
 		name: "EnumMessages"
@@ -1001,7 +1001,7 @@ var enumMessagesType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(EnumM
 )),
 }
 
-func newFileRegistry(files ...pref.FileDescriptor) *protoregistry.Files {
+func newFileRegistry(files ...protoreflect.FileDescriptor) *protoregistry.Files {
 	r := new(protoregistry.Files)
 	for _, file := range files {
 		r.RegisterFile(file)
@@ -1009,7 +1009,7 @@ func newFileRegistry(files ...pref.FileDescriptor) *protoregistry.Files {
 	return r
 }
 
-func (m *EnumMessages) ProtoReflect() pref.Message { return enumMessagesType.MessageOf(m) }
+func (m *EnumMessages) ProtoReflect() protoreflect.Message { return enumMessagesType.MessageOf(m) }
 
 func (*EnumMessages) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
@@ -1161,24 +1161,24 @@ var cmpOpts = cmp.Options{
 		my := pimpl.Export{}.MessageOf(y).Interface()
 		return proto.Equal(mx, my)
 	}),
-	cmp.Transformer("UnwrapValue", func(pv pref.Value) interface{} {
+	cmp.Transformer("UnwrapValue", func(pv protoreflect.Value) interface{} {
 		switch v := pv.Interface().(type) {
-		case pref.Message:
-			out := make(map[pref.FieldNumber]pref.Value)
-			v.Range(func(fd pref.FieldDescriptor, v pref.Value) bool {
+		case protoreflect.Message:
+			out := make(map[protoreflect.FieldNumber]protoreflect.Value)
+			v.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 				out[fd.Number()] = v
 				return true
 			})
 			return out
-		case pref.List:
-			var out []pref.Value
+		case protoreflect.List:
+			var out []protoreflect.Value
 			for i := 0; i < v.Len(); i++ {
 				out = append(out, v.Get(i))
 			}
 			return out
-		case pref.Map:
-			out := make(map[interface{}]pref.Value)
-			v.Range(func(k pref.MapKey, v pref.Value) bool {
+		case protoreflect.Map:
+			out := make(map[interface{}]protoreflect.Value)
+			v.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 				out[k.Interface()] = v
 				return true
 			})
@@ -1190,7 +1190,7 @@ var cmpOpts = cmp.Options{
 	cmpopts.EquateNaNs(),
 }
 
-func testMessage(t *testing.T, p path, m pref.Message, tt messageOps) {
+func testMessage(t *testing.T, p path, m protoreflect.Message, tt messageOps) {
 	fieldDescs := m.Descriptor().Fields()
 	oneofDescs := m.Descriptor().Oneofs()
 	for i, op := range tt {
@@ -1201,8 +1201,8 @@ func testMessage(t *testing.T, p path, m pref.Message, tt messageOps) {
 				t.Errorf("operation %v, message mismatch (-want, +got):\n%s", p, diff)
 			}
 		case hasFields:
-			got := map[pref.FieldNumber]bool{}
-			want := map[pref.FieldNumber]bool(op)
+			got := map[protoreflect.FieldNumber]bool{}
+			want := map[protoreflect.FieldNumber]bool(op)
 			for n := range want {
 				fd := fieldDescs.ByNumber(n)
 				got[n] = m.Has(fd)
@@ -1211,8 +1211,8 @@ func testMessage(t *testing.T, p path, m pref.Message, tt messageOps) {
 				t.Errorf("operation %v, Message.Has mismatch (-want, +got):\n%s", p, diff)
 			}
 		case getFields:
-			got := map[pref.FieldNumber]pref.Value{}
-			want := map[pref.FieldNumber]pref.Value(op)
+			got := map[protoreflect.FieldNumber]protoreflect.Value{}
+			want := map[protoreflect.FieldNumber]protoreflect.Value(op)
 			for n := range want {
 				fd := fieldDescs.ByNumber(n)
 				got[n] = m.Get(fd)
@@ -1231,8 +1231,8 @@ func testMessage(t *testing.T, p path, m pref.Message, tt messageOps) {
 				m.Clear(fd)
 			}
 		case whichOneofs:
-			got := map[pref.Name]pref.FieldNumber{}
-			want := map[pref.Name]pref.FieldNumber(op)
+			got := map[protoreflect.Name]protoreflect.FieldNumber{}
+			want := map[protoreflect.Name]protoreflect.FieldNumber(op)
 			for s := range want {
 				od := oneofDescs.ByName(s)
 				fd := m.WhichOneof(od)
@@ -1288,9 +1288,9 @@ func testMessage(t *testing.T, p path, m pref.Message, tt messageOps) {
 				p.Pop()
 			}
 		case rangeFields:
-			got := map[pref.FieldNumber]pref.Value{}
-			want := map[pref.FieldNumber]pref.Value(op)
-			m.Range(func(fd pref.FieldDescriptor, v pref.Value) bool {
+			got := map[protoreflect.FieldNumber]protoreflect.Value{}
+			want := map[protoreflect.FieldNumber]protoreflect.Value(op)
+			m.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
 				got[fd.Number()] = v
 				return true
 			})
@@ -1304,7 +1304,7 @@ func testMessage(t *testing.T, p path, m pref.Message, tt messageOps) {
 	}
 }
 
-func testLists(t *testing.T, p path, v pref.List, tt listOps) {
+func testLists(t *testing.T, p path, v protoreflect.List, tt listOps) {
 	for i, op := range tt {
 		p.Push(i)
 		switch op := op.(type) {
@@ -1317,8 +1317,8 @@ func testLists(t *testing.T, p path, v pref.List, tt listOps) {
 				t.Errorf("operation %v, List.Len = %d, want %d", p, got, want)
 			}
 		case getList:
-			got := map[int]pref.Value{}
-			want := map[int]pref.Value(op)
+			got := map[int]protoreflect.Value{}
+			want := map[int]protoreflect.Value(op)
 			for n := range want {
 				got[n] = v.Get(n)
 			}
@@ -1346,7 +1346,7 @@ func testLists(t *testing.T, p path, v pref.List, tt listOps) {
 	}
 }
 
-func testMaps(t *testing.T, p path, m pref.Map, tt mapOps) {
+func testMaps(t *testing.T, p path, m protoreflect.Map, tt mapOps) {
 	for i, op := range tt {
 		p.Push(i)
 		switch op := op.(type) {
@@ -1368,8 +1368,8 @@ func testMaps(t *testing.T, p path, m pref.Map, tt mapOps) {
 				t.Errorf("operation %v, Map.Has mismatch (-want, +got):\n%s", p, diff)
 			}
 		case getMap:
-			got := map[interface{}]pref.Value{}
-			want := map[interface{}]pref.Value(op)
+			got := map[interface{}]protoreflect.Value{}
+			want := map[interface{}]protoreflect.Value(op)
 			for k := range want {
 				got[k] = m.Get(V(k).MapKey())
 			}
@@ -1393,9 +1393,9 @@ func testMaps(t *testing.T, p path, m pref.Map, tt mapOps) {
 				testMessage(t, p, m.Get(mk).Message(), tt)
 			}
 		case rangeMap:
-			got := map[interface{}]pref.Value{}
-			want := map[interface{}]pref.Value(op)
-			m.Range(func(k pref.MapKey, v pref.Value) bool {
+			got := map[interface{}]protoreflect.Value{}
+			want := map[interface{}]protoreflect.Value(op)
+			m.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 				got[k.Interface()] = v
 				return true
 			})
@@ -1409,7 +1409,7 @@ func testMaps(t *testing.T, p path, m pref.Map, tt mapOps) {
 	}
 }
 
-func getField(m pref.Message, n pref.FieldNumber) pref.Value {
+func getField(m protoreflect.Message, n protoreflect.FieldNumber) protoreflect.Value {
 	fd := m.Descriptor().Fields().ByNumber(n)
 	return m.Get(fd)
 }
@@ -1432,10 +1432,10 @@ type UnknownFieldsA struct {
 
 var unknownFieldsAType = pimpl.MessageInfo{
 	GoReflectType: reflect.TypeOf(new(UnknownFieldsA)),
-	Desc:          mustMakeMessageDesc("unknown.proto", pref.Proto2, "", `name: "UnknownFieldsA"`, nil),
+	Desc:          mustMakeMessageDesc("unknown.proto", protoreflect.Proto2, "", `name: "UnknownFieldsA"`, nil),
 }
 
-func (m *UnknownFieldsA) ProtoReflect() pref.Message { return unknownFieldsAType.MessageOf(m) }
+func (m *UnknownFieldsA) ProtoReflect() protoreflect.Message { return unknownFieldsAType.MessageOf(m) }
 
 type UnknownFieldsB struct {
 	XXX_unrecognized *[]byte
@@ -1443,10 +1443,10 @@ type UnknownFieldsB struct {
 
 var unknownFieldsBType = pimpl.MessageInfo{
 	GoReflectType: reflect.TypeOf(new(UnknownFieldsB)),
-	Desc:          mustMakeMessageDesc("unknown.proto", pref.Proto2, "", `name: "UnknownFieldsB"`, nil),
+	Desc:          mustMakeMessageDesc("unknown.proto", protoreflect.Proto2, "", `name: "UnknownFieldsB"`, nil),
 }
 
-func (m *UnknownFieldsB) ProtoReflect() pref.Message { return unknownFieldsBType.MessageOf(m) }
+func (m *UnknownFieldsB) ProtoReflect() protoreflect.Message { return unknownFieldsBType.MessageOf(m) }
 
 func TestUnknownFields(t *testing.T) {
 	for _, m := range []proto.Message{new(UnknownFieldsA), new(UnknownFieldsB)} {
@@ -1499,7 +1499,7 @@ func TestUnsafeAssumptions(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
 		go func() {
-			var ms [10]pref.Message
+			var ms [10]protoreflect.Message
 
 			// Store the message only in its reflective form.
 			// Trigger the GC after each iteration.
@@ -1537,7 +1537,7 @@ func TestUnsafeAssumptions(t *testing.T) {
 }
 
 func BenchmarkName(b *testing.B) {
-	var sink pref.FullName
+	var sink protoreflect.FullName
 	b.Run("Value", func(b *testing.B) {
 		b.ReportAllocs()
 		m := new(descriptorpb.FileDescriptorProto)
@@ -1558,7 +1558,7 @@ func BenchmarkName(b *testing.B) {
 func BenchmarkReflect(b *testing.B) {
 	m := new(testpb.TestAllTypes).ProtoReflect()
 	fds := m.Descriptor().Fields()
-	vs := make([]pref.Value, fds.Len())
+	vs := make([]protoreflect.Value, fds.Len())
 	for i := range vs {
 		vs[i] = m.NewField(fds.Get(i))
 	}
@@ -1598,7 +1598,7 @@ func BenchmarkReflect(b *testing.B) {
 	b.Run("Range", func(b *testing.B) {
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
-			m.Range(func(pref.FieldDescriptor, pref.Value) bool {
+			m.Range(func(protoreflect.FieldDescriptor, protoreflect.Value) bool {
 				return true
 			})
 		}

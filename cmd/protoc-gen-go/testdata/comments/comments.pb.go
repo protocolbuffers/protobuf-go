@@ -87,6 +87,7 @@ type Message1 struct {
 	// COMMENT: Oneof1A.Leading
 	//
 	// Types that are assignable to Oneof1A:
+	//
 	//	*Message1_Oneof1AField1
 	Oneof1A isMessage1_Oneof1A `protobuf_oneof:"Oneof1a"`
 }

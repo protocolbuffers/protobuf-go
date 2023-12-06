@@ -13,7 +13,7 @@ import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
-	preg "google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/reflect/protoregistry"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
@@ -1984,7 +1984,7 @@ func TestUnmarshal(t *testing.T) {
 		wantMessage:  &anypb.Any{TypeUrl: "foo/pb2.Nested"},
 	}, {
 		desc:         "Any without registered type",
-		umo:          protojson.UnmarshalOptions{Resolver: new(preg.Types)},
+		umo:          protojson.UnmarshalOptions{Resolver: new(protoregistry.Types)},
 		inputMessage: &anypb.Any{},
 		inputText:    `{"@type": "foo/pb2.Nested"}`,
 		wantErr:      `(line 1:11): unable to resolve "foo/pb2.Nested":`,
@@ -2435,6 +2435,43 @@ func TestUnmarshal(t *testing.T) {
 }`,
 		wantMessage: &anypb.Any{
 			TypeUrl: "type.googleapis.com/google.protobuf.Empty",
+		},
+	}, {
+		desc:         "DiscardUnknown: unknown enum name",
+		inputMessage: &pb3.Enums{},
+		inputText: `{
+  "sEnum": "UNNAMED"
+}`,
+		umo:         protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb3.Enums{},
+	}, {
+		desc:         "DiscardUnknown: repeated enum unknown name",
+		inputMessage: &pb2.Enums{},
+		inputText: `{
+  "rptEnum"      : ["TEN", 1, 42, "UNNAMED"]
+}`,
+		umo: protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb2.Enums{
+			RptEnum: []pb2.Enum{pb2.Enum_TEN, pb2.Enum_ONE, 42},
+		},
+	}, {
+		desc:         "DiscardUnknown: enum map value unknown name",
+		inputMessage: &pb3.Maps{},
+		inputText: `{
+  "uint64ToEnum": {
+    "1" : "ONE",
+	"2" : 2,
+	"10": 101,
+	"3": "UNNAMED"
+  }
+}`,
+		umo: protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb3.Maps{
+			Uint64ToEnum: map[uint64]pb3.Enum{
+				1:  pb3.Enum_ONE,
+				2:  pb3.Enum_TWO,
+				10: 101,
+			},
 		},
 	}, {
 		desc:         "weak fields",

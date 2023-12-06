@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
+	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/testing/protopack"
 
@@ -17,6 +18,13 @@ import (
 )
 
 func TestEqual(t *testing.T) {
+	identicalPtrPb := &testpb.TestAllTypes{MapStringString: map[string]string{"a": "b", "c": "d"}}
+
+	type incomparableMessage struct {
+		*testpb.TestAllTypes
+		pragma.DoNotCompare
+	}
+
 	tests := []struct {
 		x, y proto.Message
 		eq   bool
@@ -53,6 +61,34 @@ func TestEqual(t *testing.T) {
 			x:  new(testpb.TestAllTypes),
 			y:  new(testpb.TestAllExtensions),
 			eq: false,
+		},
+
+		// Identical input pointers
+		{
+			x:  identicalPtrPb,
+			y:  identicalPtrPb,
+			eq: true,
+		},
+
+		// Incomparable types. The top-level types are not actually directly
+		// compared (which would panic), but rather the comparison happens on the
+		// objects returned by ProtoReflect(). These tests are here just to ensure
+		// that any short-circuit checks do not accidentally try to compare
+		// incomparable top-level types.
+		{
+			x:  incomparableMessage{TestAllTypes: identicalPtrPb},
+			y:  incomparableMessage{TestAllTypes: identicalPtrPb},
+			eq: true,
+		},
+		{
+			x:  identicalPtrPb,
+			y:  incomparableMessage{TestAllTypes: identicalPtrPb},
+			eq: true,
+		},
+		{
+			x:  identicalPtrPb,
+			y:  &incomparableMessage{TestAllTypes: identicalPtrPb},
+			eq: true,
 		},
 
 		// Proto2 scalars.
@@ -560,5 +596,74 @@ func TestEqual(t *testing.T) {
 		if eq := proto.Equal(tt.x, tt.y); eq != tt.eq {
 			t.Errorf("Equal(x, y) = %v, want %v\n==== x ====\n%v==== y ====\n%v", eq, tt.eq, prototext.Format(tt.x), prototext.Format(tt.y))
 		}
+	}
+}
+
+func BenchmarkEqualWithSmallEmpty(b *testing.B) {
+	x := &testpb.ForeignMessage{}
+	y := &testpb.ForeignMessage{}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		proto.Equal(x, y)
+	}
+}
+
+func BenchmarkEqualWithIdenticalPtrEmpty(b *testing.B) {
+	x := &testpb.ForeignMessage{}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		proto.Equal(x, x)
+	}
+}
+
+func BenchmarkEqualWithLargeEmpty(b *testing.B) {
+	x := &testpb.TestAllTypes{}
+	y := &testpb.TestAllTypes{}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		proto.Equal(x, y)
+	}
+}
+
+func makeNested(depth int) *testpb.TestAllTypes {
+	if depth <= 0 {
+		return nil
+	}
+	return &testpb.TestAllTypes{
+		OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
+			Corecursive: makeNested(depth - 1),
+		},
+	}
+}
+
+func BenchmarkEqualWithDeeplyNestedEqual(b *testing.B) {
+	x := makeNested(20)
+	y := makeNested(20)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		proto.Equal(x, y)
+	}
+}
+
+func BenchmarkEqualWithDeeplyNestedDifferent(b *testing.B) {
+	x := makeNested(20)
+	y := makeNested(21)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		proto.Equal(x, y)
+	}
+}
+
+func BenchmarkEqualWithDeeplyNestedIdenticalPtr(b *testing.B) {
+	x := makeNested(20)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		proto.Equal(x, x)
 	}
 }

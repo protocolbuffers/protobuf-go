@@ -13,7 +13,7 @@ import (
 	"math"
 	"reflect"
 
-	pref "google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
@@ -33,25 +33,25 @@ type Value interface{}
 
 // A Message is a template to apply to a message. Keys are field names, including
 // extension names.
-type Message map[pref.Name]Value
+type Message map[protoreflect.Name]Value
 
 // Unknown is a key associated with the unknown fields of a message.
 // The value should be a []byte.
 const Unknown = "@unknown"
 
 // Build applies the template to a message.
-func (template Message) Build(m pref.Message) {
+func (template Message) Build(m protoreflect.Message) {
 	md := m.Descriptor()
 	fields := md.Fields()
-	exts := make(map[pref.Name]pref.FieldDescriptor)
-	protoregistry.GlobalTypes.RangeExtensionsByMessage(md.FullName(), func(xt pref.ExtensionType) bool {
+	exts := make(map[protoreflect.Name]protoreflect.FieldDescriptor)
+	protoregistry.GlobalTypes.RangeExtensionsByMessage(md.FullName(), func(xt protoreflect.ExtensionType) bool {
 		xd := xt.TypeDescriptor()
 		exts[xd.Name()] = xd
 		return true
 	})
 	for k, v := range template {
 		if k == Unknown {
-			m.SetUnknown(pref.RawFields(v.([]byte)))
+			m.SetUnknown(protoreflect.RawFields(v.([]byte)))
 			continue
 		}
 		fd := fields.ByName(k)
@@ -101,50 +101,50 @@ func (template Message) Build(m pref.Message) {
 	}
 }
 
-func fieldValue(fd pref.FieldDescriptor, v interface{}) pref.Value {
+func fieldValue(fd protoreflect.FieldDescriptor, v interface{}) protoreflect.Value {
 	switch o := v.(type) {
 	case int:
 		switch fd.Kind() {
-		case pref.Int32Kind, pref.Sint32Kind, pref.Sfixed32Kind:
+		case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
 			if o < math.MinInt32 || math.MaxInt32 < o {
 				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, int32(math.MinInt32), int32(math.MaxInt32)))
 			}
 			v = int32(o)
-		case pref.Uint32Kind, pref.Fixed32Kind:
+		case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
 			if o < 0 || math.MaxUint32 < 0 {
 				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, uint32(0), uint32(math.MaxUint32)))
 			}
 			v = uint32(o)
-		case pref.Int64Kind, pref.Sint64Kind, pref.Sfixed64Kind:
+		case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
 			v = int64(o)
-		case pref.Uint64Kind, pref.Fixed64Kind:
+		case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
 			if o < 0 {
 				panic(fmt.Sprintf("%v: value %v out of range [%v, %v]", fd.FullName(), o, uint64(0), uint64(math.MaxUint64)))
 			}
 			v = uint64(o)
-		case pref.FloatKind:
+		case protoreflect.FloatKind:
 			v = float32(o)
-		case pref.DoubleKind:
+		case protoreflect.DoubleKind:
 			v = float64(o)
-		case pref.EnumKind:
-			v = pref.EnumNumber(o)
+		case protoreflect.EnumKind:
+			v = protoreflect.EnumNumber(o)
 		default:
 			panic(fmt.Sprintf("%v: invalid value type int", fd.FullName()))
 		}
 	case float64:
 		switch fd.Kind() {
-		case pref.FloatKind:
+		case protoreflect.FloatKind:
 			v = float32(o)
 		}
 	case string:
 		switch fd.Kind() {
-		case pref.BytesKind:
+		case protoreflect.BytesKind:
 			v = []byte(o)
-		case pref.EnumKind:
-			v = fd.Enum().Values().ByName(pref.Name(o)).Number()
+		case protoreflect.EnumKind:
+			v = fd.Enum().Values().ByName(protoreflect.Name(o)).Number()
 		}
 	case []byte:
-		return pref.ValueOf(append([]byte{}, o...))
+		return protoreflect.ValueOf(append([]byte{}, o...))
 	}
-	return pref.ValueOf(v)
+	return protoreflect.ValueOf(v)
 }

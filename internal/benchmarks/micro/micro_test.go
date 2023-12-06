@@ -67,6 +67,14 @@ func BenchmarkEmptyMessage(b *testing.B) {
 			}
 		})
 	})
+	b.Run("New", func(b *testing.B) {
+		mt := (&emptypb.Empty{}).ProtoReflect().Type()
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				mt.New()
+			}
+		})
+	})
 }
 
 // BenchmarkRepeatedInt32 tests a message containing 500 non-packed repeated int32s.

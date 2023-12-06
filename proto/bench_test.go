@@ -14,7 +14,7 @@ import (
 )
 
 // The results of these microbenchmarks are unlikely to correspond well
-// to real world peformance. They are mainly useful as a quick check to
+// to real world performance. They are mainly useful as a quick check to
 // detect unexpected regressions and for profiling specific cases.
 
 var (

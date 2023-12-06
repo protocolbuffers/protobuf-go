@@ -14,11 +14,11 @@ import (
 	sync "sync"
 )
 
-// Deprecated: Do not use.
+// Deprecated: The entire proto file cmd/protoc-gen-go/testdata/comments/deprecated.proto is marked as deprecated.
 type DeprecatedEnum int32
 
 const (
-	// Deprecated: Do not use.
+	// Deprecated: The entire proto file cmd/protoc-gen-go/testdata/comments/deprecated.proto is marked as deprecated.
 	DeprecatedEnum_DEPRECATED DeprecatedEnum = 0
 )
 
@@ -59,13 +59,13 @@ func (DeprecatedEnum) EnumDescriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_comments_deprecated_proto_rawDescGZIP(), []int{0}
 }
 
-// Deprecated: Do not use.
+// Deprecated: The entire proto file cmd/protoc-gen-go/testdata/comments/deprecated.proto is marked as deprecated.
 type DeprecatedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Deprecated: Do not use.
+	// Deprecated: The entire proto file cmd/protoc-gen-go/testdata/comments/deprecated.proto is marked as deprecated.
 	DeprecatedField string `protobuf:"bytes,1,opt,name=deprecated_field,json=deprecatedField,proto3" json:"deprecated_field,omitempty"`
 }
 
@@ -101,7 +101,7 @@ func (*DeprecatedMessage) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_comments_deprecated_proto_rawDescGZIP(), []int{0}
 }
 
-// Deprecated: Do not use.
+// Deprecated: The entire proto file cmd/protoc-gen-go/testdata/comments/deprecated.proto is marked as deprecated.
 func (x *DeprecatedMessage) GetDeprecatedField() string {
 	if x != nil {
 		return x.DeprecatedField

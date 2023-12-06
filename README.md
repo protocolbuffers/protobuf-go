@@ -4,14 +4,14 @@
 [![Build Status](https://travis-ci.org/protocolbuffers/protobuf-go.svg?branch=master)](https://travis-ci.org/protocolbuffers/protobuf-go)
 
 This project hosts the Go implementation for
-[protocol buffers](https://developers.google.com/protocol-buffers), which is a
+[protocol buffers](https://protobuf.dev), which is a
 language-neutral, platform-neutral, extensible mechanism for serializing
 structured data. The protocol buffer language is a language for specifying the
 schema for structured data. This schema is compiled into language specific
 bindings. This project provides both a tool to generate Go code for the
 protocol buffer language, and also the runtime implementation to handle
 serialization of messages in Go. See the
-[protocol buffer developer guide](https://developers.google.com/protocol-buffers/docs/overview)
+[protocol buffer developer guide](https://protobuf.dev/overview)
 for more information about protocol buffers themselves.
 
 This project is comprised of two components:
@@ -20,7 +20,7 @@ This project is comprised of two components:
     [`protoc-gen-go`](https://pkg.go.dev/google.golang.org/protobuf/cmd/protoc-gen-go)
     tool is a compiler plugin to `protoc`, the protocol buffer compiler. It
     augments the `protoc` compiler so that it knows how to
-    [generate Go specific code for a given `.proto` file](https://developers.google.com/protocol-buffers/docs/reference/go-generated).
+    [generate Go specific code for a given `.proto` file](https://protobuf.dev/reference/go/go-generated).
 
 *   Runtime library: The
     [`protobuf`](https://pkg.go.dev/mod/google.golang.org/protobuf) module
@@ -34,7 +34,7 @@ This project is comprised of two components:
     [text](https://pkg.go.dev/google.golang.org/protobuf/encoding/prototext)).
 
 See the
-[developer guide for protocol buffers in Go](https://developers.google.com/protocol-buffers/docs/gotutorial)
+[developer guide for protocol buffers in Go](https://protobuf.dev/getting-started/gotutorial)
 for a general guide for how to get started using protobufs in Go.
 
 This project is the second major revision of the Go protocol buffer API
