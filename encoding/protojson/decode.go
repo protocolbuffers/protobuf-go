@@ -495,13 +495,13 @@ func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnkno
 		if enumVal := fd.Enum().Values().ByName(protoreflect.Name(s)); enumVal != nil {
 			return protoreflect.ValueOfEnum(enumVal.Number()), true
 		}
-		if discardUnknown {
-			return protoreflect.Value{}, true
-		}
 		s = snakeMe(string(fd.Enum().Name())) + "_" + s
 		s = strings.ToUpper(s)
 		if enumVal := fd.Enum().Values().ByName(protoreflect.Name(s)); enumVal != nil {
 			return protoreflect.ValueOfEnum(enumVal.Number()), true
+		}
+		if discardUnknown {
+			return protoreflect.Value{}, true
 		}
 
 	case json.Number:
