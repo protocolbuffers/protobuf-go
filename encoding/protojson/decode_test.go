@@ -2474,22 +2474,35 @@ func TestUnmarshal(t *testing.T) {
 			},
 		},
 	}, {
-		desc:         "weak fields",
-		inputMessage: &testpb.TestWeak{},
-		inputText:    `{"weak_message1":{"a":1}}`,
-		wantMessage: func() *testpb.TestWeak {
-			m := new(testpb.TestWeak)
-			m.SetWeakMessage1(&weakpb.WeakImportMessage1{A: proto.Int32(1)})
-			return m
-		}(),
-		skip: !flags.ProtoLegacy,
-	}, {
-		desc:         "weak fields; unknown field",
-		inputMessage: &testpb.TestWeak{},
-		inputText:    `{"weak_message1":{"a":1}, "weak_message2":{"a":1}}`,
-		wantErr:      `unknown field "weak_message2"`, // weak_message2 is unknown since the package containing it is not imported
-		skip:         !flags.ProtoLegacy,
-	}}
+		desc: "ForceUppercaseEnums: lowercase value with enum",
+		umo: protojson.UnmarshalOptions{
+			ForceUppercaseEnums: true,
+		},
+		inputMessage: &pb3.Enums{},
+		inputText: `{
+		"sEnum": "one"
+	}`,
+		wantMessage: &pb3.Enums{
+			SEnum: pb3.Enum_ONE,
+		},
+	},
+		{
+			desc:         "weak fields",
+			inputMessage: &testpb.TestWeak{},
+			inputText:    `{"weak_message1":{"a":1}}`,
+			wantMessage: func() *testpb.TestWeak {
+				m := new(testpb.TestWeak)
+				m.SetWeakMessage1(&weakpb.WeakImportMessage1{A: proto.Int32(1)})
+				return m
+			}(),
+			skip: !flags.ProtoLegacy,
+		}, {
+			desc:         "weak fields; unknown field",
+			inputMessage: &testpb.TestWeak{},
+			inputText:    `{"weak_message1":{"a":1}, "weak_message2":{"a":1}}`,
+			wantErr:      `unknown field "weak_message2"`, // weak_message2 is unknown since the package containing it is not imported
+			skip:         !flags.ProtoLegacy,
+		}}
 
 	for _, tt := range tests {
 		tt := tt

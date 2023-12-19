@@ -40,6 +40,10 @@ type UnmarshalOptions struct {
 	// If DiscardUnknown is set, unknown fields and enum name values are ignored.
 	DiscardUnknown bool
 
+	// If ForceUppercaseEnums is set, enum values are first uppercased
+	// before being looked up by name.
+	ForceUppercaseEnums bool
+
 	// Resolver is used for looking up types when unmarshaling
 	// google.protobuf.Any messages or extension fields.
 	// If nil, this defaults to using protoregistry.GlobalTypes.
@@ -331,7 +335,7 @@ func (d decoder) unmarshalScalar(fd protoreflect.FieldDescriptor) (protoreflect.
 		}
 
 	case protoreflect.EnumKind:
-		if v, ok := unmarshalEnum(tok, fd, d.opts.DiscardUnknown); ok {
+		if v, ok := unmarshalEnum(tok, fd, d.opts.DiscardUnknown, d.opts.ForceUppercaseEnums); ok {
 			return v, nil
 		}
 
@@ -476,11 +480,16 @@ func unmarshalBytes(tok json.Token) (protoreflect.Value, bool) {
 	return protoreflect.ValueOfBytes(b), true
 }
 
-func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnknown bool) (protoreflect.Value, bool) {
+func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnknown bool, forceUppercaseEnums bool) (protoreflect.Value, bool) {
 	switch tok.Kind() {
 	case json.String:
 		// Lookup EnumNumber based on name.
 		s := tok.ParsedString()
+
+		if forceUppercaseEnums {
+			s = strings.ToUpper(s)
+		}
+
 		if enumVal := fd.Enum().Values().ByName(protoreflect.Name(s)); enumVal != nil {
 			return protoreflect.ValueOfEnum(enumVal.Number()), true
 		}
