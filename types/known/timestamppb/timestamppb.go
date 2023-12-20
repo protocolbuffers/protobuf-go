@@ -13,12 +13,11 @@ package timestamppb
 
 import (
 	"database/sql"
-	"database/sql/driver"
 	"fmt"
 	"time"
 )
 
-func (t *Timestamp) Value() (driver.Value, error) {
+func (t *Timestamp) EncodeSpanner() (interface{}, error) {
 	// If our timestamp is nil, return nil and no error.
 	if t == nil {
 		return sql.NullTime{}, nil
