@@ -27,4 +27,7 @@ jobs:
           ~/.cache/bazel
         key: ${{ runner.os }}-${{ hashFiles('integration_test.go') }}
     - name: Test
+      env:
+        # Protobuf 25 does not yet support Bazel 7
+        USE_BAZEL_VERSION: latest-1
       run: go test -run='^TestIntegration$' -v -timeout=60m -count=1 -failfast "$@"
