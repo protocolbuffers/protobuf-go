@@ -151,7 +151,7 @@ func TestReflect(t *testing.T) {
 
 	for _, src := range tests {
 		dst := src.ProtoReflect().Type().New().Interface()
-		proto.Merge(dst, transformMessage(src.ProtoReflect()))
+		proto.Merge(dst, newTransformer().transformMessage(src.ProtoReflect()))
 		if diff := cmp.Diff(src, dst, Transform()); diff != "" {
 			t.Errorf("Merge mismatch (-want +got):\n%s", diff)
 		}
