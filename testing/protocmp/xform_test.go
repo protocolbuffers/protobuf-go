@@ -5,6 +5,7 @@
 package protocmp
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -12,7 +13,9 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/testing/protopack"
+	"google.golang.org/protobuf/types/known/anypb"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 )
@@ -254,7 +257,7 @@ func TestTransform(t *testing.T) {
 	}}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			got := transformMessage(tt.in.ProtoReflect())
+			got := newTransformer().transformMessage(tt.in.ProtoReflect())
 			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("Transform() mismatch (-want +got):\n%v", diff)
 			}
@@ -263,6 +266,34 @@ func TestTransform(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("messageTypeResolver", func(t *testing.T) {
+		r := unaryMessageTypeResolver{
+			Type: (&testpb.TestAllTypes{}).ProtoReflect().Type(),
+		}
+		m := &testpb.TestAllTypes{OptionalBool: proto.Bool(true)}
+		in, err := anypb.New(m)
+		if err != nil {
+			t.Fatalf("anypb.New() failed: %v", err)
+		}
+		in.TypeUrl = "type.googleapis.com/MagicTestMessage"
+
+		got := newTransformer(MessageTypeResolver(r)).transformMessage(in.ProtoReflect())
+		want := Message{
+			messageTypeKey: messageMetaOf(&anypb.Any{}),
+			"type_url":     "type.googleapis.com/MagicTestMessage",
+			"value": Message{
+				messageTypeKey:  messageMetaOf(m),
+				"optional_bool": true,
+			},
+		}
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("Transform() mismatch (-want +got):\n%v", diff)
+		}
+		if got.Unwrap() != in {
+			t.Errorf("got.Unwrap() = %p, want %p", got.Unwrap(), in)
+		}
+	})
 }
 
 func enumOf(e protoreflect.Enum) Enum {
@@ -271,4 +302,26 @@ func enumOf(e protoreflect.Enum) Enum {
 
 func messageMetaOf(m protoreflect.ProtoMessage) messageMeta {
 	return messageMeta{m: m, md: m.ProtoReflect().Descriptor()}
+}
+
+// A unaryMessageTypeResolver can only resolve one type, and it's
+// called "MagicTestMessage".
+type unaryMessageTypeResolver struct {
+	Type protoreflect.MessageType
+}
+
+func (r unaryMessageTypeResolver) FindMessageByName(message protoreflect.FullName) (protoreflect.MessageType, error) {
+	if message != "MagicTestMessage" {
+		return nil, protoregistry.NotFound
+	}
+	return r.Type, nil
+}
+
+func (r unaryMessageTypeResolver) FindMessageByURL(url string) (protoreflect.MessageType, error) {
+	const prefix = "type.googleapis.com/"
+
+	if !strings.HasPrefix(url, prefix) {
+		return nil, protoregistry.NotFound
+	}
+	return r.FindMessageByName(protoreflect.FullName(strings.TrimPrefix(url, prefix)))
 }
