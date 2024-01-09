@@ -314,8 +314,8 @@ func checkValidGroup(fd protoreflect.FieldDescriptor) error {
 	switch {
 	case fd.Kind() != protoreflect.GroupKind:
 		return nil
-	case fd.Syntax() != protoreflect.Proto2:
-		return errors.New("invalid under proto2 semantics")
+	case fd.Syntax() == protoreflect.Proto3:
+		return errors.New("invalid under proto3 semantics")
 	case md == nil || md.IsPlaceholder():
 		return errors.New("message must be resolvable")
 	case fd.FullName().Parent() != md.FullName().Parent():
