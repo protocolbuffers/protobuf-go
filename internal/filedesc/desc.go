@@ -80,6 +80,9 @@ type (
 		// IsFieldPresence is true if field_presence is EXPLICIT
 		// https://protobuf.dev/editions/features/#field_presence
 		IsFieldPresence bool
+		// IsFieldPresence is true if field_presence is LEGACY_REQUIRED
+		// https://protobuf.dev/editions/features/#field_presence
+		IsLegacyRequired bool
 		// IsOpenEnum is true if enum_type is OPEN
 		// https://protobuf.dev/editions/features/#enum_type
 		IsOpenEnum bool

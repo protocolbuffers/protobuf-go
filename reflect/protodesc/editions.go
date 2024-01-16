@@ -105,6 +105,7 @@ func mergeEditionFeatures(parentDesc protoreflect.Descriptor, child *descriptorp
 	if fp := child.FieldPresence; fp != nil {
 		parentFS.IsFieldPresence = *fp == descriptorpb.FeatureSet_LEGACY_REQUIRED ||
 			*fp == descriptorpb.FeatureSet_EXPLICIT
+		parentFS.IsLegacyRequired = *fp == descriptorpb.FeatureSet_LEGACY_REQUIRED
 	}
 	if et := child.EnumType; et != nil {
 		parentFS.IsOpenEnum = *et == descriptorpb.FeatureSet_OPEN
