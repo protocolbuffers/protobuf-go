@@ -68,7 +68,7 @@ type (
 		Extensions Extensions
 		Services   Services
 
-		EditionFeatures FileEditionFeatures
+		EditionFeatures EditionFeatures
 	}
 	FileL2 struct {
 		Options   func() protoreflect.ProtoMessage
@@ -76,10 +76,13 @@ type (
 		Locations SourceLocations
 	}
 
-	FileEditionFeatures struct {
+	EditionFeatures struct {
 		// IsFieldPresence is true if field_presence is EXPLICIT
 		// https://protobuf.dev/editions/features/#field_presence
 		IsFieldPresence bool
+		// IsFieldPresence is true if field_presence is LEGACY_REQUIRED
+		// https://protobuf.dev/editions/features/#field_presence
+		IsLegacyRequired bool
 		// IsOpenEnum is true if enum_type is OPEN
 		// https://protobuf.dev/editions/features/#enum_type
 		IsOpenEnum bool
@@ -156,6 +159,8 @@ type (
 	}
 	EnumL1 struct {
 		eagerValues bool // controls whether EnumL2.Values is already populated
+
+		EditionFeatures EditionFeatures
 	}
 	EnumL2 struct {
 		Options        func() protoreflect.ProtoMessage
@@ -217,6 +222,8 @@ type (
 		Extensions   Extensions
 		IsMapEntry   bool // promoted from google.protobuf.MessageOptions
 		IsMessageSet bool // promoted from google.protobuf.MessageOptions
+
+		EditionFeatures EditionFeatures
 	}
 	MessageL2 struct {
 		Options               func() protoreflect.ProtoMessage
@@ -250,8 +257,7 @@ type (
 		Enum             protoreflect.EnumDescriptor
 		Message          protoreflect.MessageDescriptor
 
-		// Edition features.
-		Presence bool
+		EditionFeatures EditionFeatures
 	}
 
 	Oneof struct {
@@ -261,6 +267,8 @@ type (
 	OneofL1 struct {
 		Options func() protoreflect.ProtoMessage
 		Fields  OneofFields // must be consistent with Message.Fields.ContainingOneof
+
+		EditionFeatures EditionFeatures
 	}
 )
 
@@ -310,13 +318,15 @@ func (fd *Field) Options() protoreflect.ProtoMessage {
 }
 func (fd *Field) Number() protoreflect.FieldNumber      { return fd.L1.Number }
 func (fd *Field) Cardinality() protoreflect.Cardinality { return fd.L1.Cardinality }
-func (fd *Field) Kind() protoreflect.Kind               { return fd.L1.Kind }
-func (fd *Field) HasJSONName() bool                     { return fd.L1.StringName.hasJSON }
-func (fd *Field) JSONName() string                      { return fd.L1.StringName.getJSON(fd) }
-func (fd *Field) TextName() string                      { return fd.L1.StringName.getText(fd) }
+func (fd *Field) Kind() protoreflect.Kind {
+	return fd.L1.Kind
+}
+func (fd *Field) HasJSONName() bool { return fd.L1.StringName.hasJSON }
+func (fd *Field) JSONName() string  { return fd.L1.StringName.getJSON(fd) }
+func (fd *Field) TextName() string  { return fd.L1.StringName.getText(fd) }
 func (fd *Field) HasPresence() bool {
-	if fd.L0.ParentFile.L1.Syntax == protoreflect.Editions {
-		return fd.L1.Presence || fd.L1.Message != nil || fd.L1.ContainingOneof != nil
+	if fd.Syntax() == protoreflect.Editions {
+		return fd.L1.EditionFeatures.IsFieldPresence || fd.L1.Message != nil || fd.L1.ContainingOneof != nil
 	}
 	return fd.L1.Cardinality != protoreflect.Repeated && (fd.L0.ParentFile.L1.Syntax == protoreflect.Proto2 || fd.L1.Message != nil || fd.L1.ContainingOneof != nil)
 }
