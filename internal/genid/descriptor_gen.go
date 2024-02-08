@@ -474,7 +474,6 @@ const (
 	FileOptions_CcGenericServices_field_name         protoreflect.Name = "cc_generic_services"
 	FileOptions_JavaGenericServices_field_name       protoreflect.Name = "java_generic_services"
 	FileOptions_PyGenericServices_field_name         protoreflect.Name = "py_generic_services"
-	FileOptions_PhpGenericServices_field_name        protoreflect.Name = "php_generic_services"
 	FileOptions_Deprecated_field_name                protoreflect.Name = "deprecated"
 	FileOptions_CcEnableArenas_field_name            protoreflect.Name = "cc_enable_arenas"
 	FileOptions_ObjcClassPrefix_field_name           protoreflect.Name = "objc_class_prefix"
@@ -497,7 +496,6 @@ const (
 	FileOptions_CcGenericServices_field_fullname         protoreflect.FullName = "google.protobuf.FileOptions.cc_generic_services"
 	FileOptions_JavaGenericServices_field_fullname       protoreflect.FullName = "google.protobuf.FileOptions.java_generic_services"
 	FileOptions_PyGenericServices_field_fullname         protoreflect.FullName = "google.protobuf.FileOptions.py_generic_services"
-	FileOptions_PhpGenericServices_field_fullname        protoreflect.FullName = "google.protobuf.FileOptions.php_generic_services"
 	FileOptions_Deprecated_field_fullname                protoreflect.FullName = "google.protobuf.FileOptions.deprecated"
 	FileOptions_CcEnableArenas_field_fullname            protoreflect.FullName = "google.protobuf.FileOptions.cc_enable_arenas"
 	FileOptions_ObjcClassPrefix_field_fullname           protoreflect.FullName = "google.protobuf.FileOptions.objc_class_prefix"
@@ -523,7 +521,6 @@ const (
 	FileOptions_CcGenericServices_field_number         protoreflect.FieldNumber = 16
 	FileOptions_JavaGenericServices_field_number       protoreflect.FieldNumber = 17
 	FileOptions_PyGenericServices_field_number         protoreflect.FieldNumber = 18
-	FileOptions_PhpGenericServices_field_number        protoreflect.FieldNumber = 42
 	FileOptions_Deprecated_field_number                protoreflect.FieldNumber = 23
 	FileOptions_CcEnableArenas_field_number            protoreflect.FieldNumber = 31
 	FileOptions_ObjcClassPrefix_field_number           protoreflect.FieldNumber = 36
