@@ -11,15 +11,14 @@ package google.protobuf;
 
 import "google/protobuf/descriptor.proto";
 
+option go_package = "google.golang.org/protobuf/reflect/protodesc/proto";
+
 extend google.protobuf.FeatureSet {
   optional GoFeatures go = 1002;
 }
 
 message GoFeatures {
   // Whether or not to generate the deprecated UnmarshalJSON method for enums.
-  // BEGIN GOOGLE-INTERNAL
-  // Can only be true for proto using the OPEN_V1 api.
-  // END GOOGLE-INTERNAL
   optional bool legacy_unmarshal_json_enum = 1 [
     retention = RETENTION_RUNTIME,
     targets = TARGET_TYPE_ENUM,

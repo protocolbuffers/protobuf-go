@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
+	gofeaturespb "google.golang.org/protobuf/types/gofeaturespb"
 )
 
 const (
@@ -125,6 +126,12 @@ func mergeEditionFeatures(parentDesc protoreflect.Descriptor, child *descriptorp
 
 	if jf := child.JsonFormat; jf != nil {
 		parentFS.IsJSONCompliant = *jf == descriptorpb.FeatureSet_ALLOW
+	}
+
+	if goFeatures, ok := proto.GetExtension(child, gofeaturespb.E_Go).(*gofeaturespb.GoFeatures); ok && goFeatures != nil {
+		if luje := goFeatures.LegacyUnmarshalJsonEnum; luje != nil {
+			parentFS.GenerateLegacyUnmarshalJSON = *luje
+		}
 	}
 
 	return parentFS

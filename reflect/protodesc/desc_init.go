@@ -28,6 +28,7 @@ func (r descsByName) initEnumDeclarations(eds []*descriptorpb.EnumDescriptorProt
 			opts = proto.Clone(opts).(*descriptorpb.EnumOptions)
 			e.L2.Options = func() protoreflect.ProtoMessage { return opts }
 		}
+		e.L1.EditionFeatures = mergeEditionFeatures(parent, ed.GetOptions().GetFeatures())
 		for _, s := range ed.GetReservedName() {
 			e.L2.ReservedNames.List = append(e.L2.ReservedNames.List, protoreflect.Name(s))
 		}
@@ -36,9 +37,6 @@ func (r descsByName) initEnumDeclarations(eds []*descriptorpb.EnumDescriptorProt
 				protoreflect.EnumNumber(rr.GetStart()),
 				protoreflect.EnumNumber(rr.GetEnd()),
 			})
-		}
-		if e.Base.L0.ParentFile.Syntax() == protoreflect.Editions {
-			e.L1.EditionFeatures = mergeEditionFeatures(parent, ed.GetOptions().GetFeatures())
 		}
 		if e.L2.Values.List, err = r.initEnumValuesFromDescriptorProto(ed.GetValue(), e, sb); err != nil {
 			return nil, err
