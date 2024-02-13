@@ -190,3 +190,34 @@ func TestTimestampScan(t *testing.T) {
 		}
 	}
 }
+
+func TestTimestampUnmarshalJSON(t *testing.T) {
+	tests := []struct {
+		in      string
+		got     *tspb.Timestamp
+		want    *tspb.Timestamp
+		wantErr error
+	}{
+		{in: `null`, want: &tspb.Timestamp{Seconds: 0, Nanos: 0}},
+		{in: `""`, want: &tspb.Timestamp{Seconds: 0, Nanos: 0}},
+		{in: ``, want: &tspb.Timestamp{Seconds: 0, Nanos: 0}},
+		{in: `"2024-02-06T15:47:04.627731624Z"`, want: &tspb.Timestamp{Seconds: 1707234424, Nanos: 627731624}},
+	}
+
+	for _, tt := range tests {
+		tt.got = &tspb.Timestamp{}
+		gotErr := tt.got.UnmarshalJSON([]byte(tt.in))
+
+		if gotErr == nil {
+			if tt.want == nil && tt.got != nil {
+				t.Errorf("UnmarshalJSON(%v) want nil, got %v", tt.in, tt.got)
+			} else if diff := cmp.Diff(tt.got, tt.want, protocmp.Transform()); diff != "" {
+				t.Errorf("Value(%v) mismatch (-want +got):\n%s", tt.want, diff)
+			}
+		}
+
+		if diff := cmp.Diff(tt.wantErr, gotErr, cmpopts.EquateErrors()); diff != "" {
+			t.Errorf("CheckValid(%v) mismatch (-want +got):\n%s", tt.want, diff)
+		}
+	}
+}

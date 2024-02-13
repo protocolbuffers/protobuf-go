@@ -13,9 +13,31 @@ package timestamppb
 
 import (
 	"database/sql"
+	"database/sql/driver"
 	"fmt"
 	"time"
 )
+
+func (t *Timestamp) UnmarshalJSON(b []byte) error {
+	if string(b) == "null" || string(b) == "" || string(b) == "\"\"" {
+		t = &Timestamp{Seconds: 0, Nanos: 0}
+		return nil
+	}
+
+	var tim time.Time
+	if err := tim.UnmarshalJSON(b); err != nil {
+		// TODO check and see if b is a string and if so, try to parse it as a string
+		//
+		return err
+	}
+
+	*t = *New(tim)
+	return nil
+}
+
+func (t *Timestamp) MarshalJSON() ([]byte, error) {
+	return t.AsTime().MarshalJSON()
+}
 
 func (t *Timestamp) EncodeSpanner() (interface{}, error) {
 	// If our timestamp is nil, return nil and no error.
@@ -53,15 +75,11 @@ func (t *Timestamp) Scan(src interface{}) error {
 	return fmt.Errorf("error converting timestamp data")
 }
 
-func (t *Timestamp) UnmarshalJSON(b []byte) error {
-	var time time.Time
-	if err := time.UnmarshalJSON(b); err != nil {
-		return err
+func (t *Timestamp) Value() (driver.Value, error) {
+	// If our timestamp is nil, return nil and no error.
+	if t == nil {
+		return sql.NullTime{}, nil
 	}
-	*t = *New(time)
-	return nil
-}
 
-func (t *Timestamp) MarshalJSON() ([]byte, error) {
-	return t.AsTime().MarshalJSON()
+	return t.AsTime(), nil
 }
