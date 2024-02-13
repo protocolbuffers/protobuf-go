@@ -5,11 +5,11 @@
 package protodesc
 
 import (
-	_ "embed"
 	"fmt"
 	"os"
 	"sync"
 
+	"google.golang.org/protobuf/internal/editiondefaults"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -22,14 +22,12 @@ const (
 	SupportedEditionsMaximum = descriptorpb.Edition_EDITION_2023
 )
 
-//go:embed editions_defaults.binpb
-var binaryEditionDefaults []byte
 var defaults = &descriptorpb.FeatureSetDefaults{}
 var defaultsCacheMu sync.Mutex
 var defaultsCache = make(map[filedesc.Edition]*descriptorpb.FeatureSet)
 
 func init() {
-	err := proto.Unmarshal(binaryEditionDefaults, defaults)
+	err := proto.Unmarshal(editiondefaults.Defaults, defaults)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unmarshal editions defaults: %v\n", err)
 		os.Exit(1)

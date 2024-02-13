@@ -26,5 +26,6 @@ import (
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/nopackage"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/proto2"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/proto3"
+	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/protoeditions"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/retention"
 )

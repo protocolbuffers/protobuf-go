@@ -102,7 +102,7 @@ func main() {
 }
 
 func generateEditionsDefaults() {
-	dest := filepath.Join(repoRoot, "reflect", "protodesc", "editions_defaults.binpb")
+	dest := filepath.Join(repoRoot, "internal", "editiondefaults", "editions_defaults.binpb")
 	// The enum in Go string formats to "EDITION_${EDITION}" but protoc expects
 	// the flag in the form "${EDITION}". To work around this, we trim the
 	// "EDITION_" prefix.
@@ -185,12 +185,6 @@ func generateLocalProtos() {
 		if filepath.Base(d.path) == "testdata" {
 			var imports []string
 			for sd := range subDirs {
-				// TODO remove once editions runtime support has landed. Right
-				// now editions based protos will crash the runtime test during
-				// init.
-				if strings.Contains(sd, "editions") {
-					continue
-				}
 				imports = append(imports, fmt.Sprintf("_ %q", path.Join(modulePath, d.path, filepath.ToSlash(sd))))
 			}
 			sort.Strings(imports)
@@ -321,6 +315,14 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 			g.P("const (")
 			g.P(enum.GoIdent.GoName, "_enum_fullname = ", strconv.Quote(string(enum.Desc.FullName())))
 			g.P(enum.GoIdent.GoName, "_enum_name = ", strconv.Quote(string(enum.Desc.Name())))
+			g.P(")")
+			g.P()
+
+			g.P("// Enum values for ", enum.Desc.FullName(), ".")
+			g.P("const (")
+			for _, v := range enum.Values {
+				g.P(v.GoIdent.GoName, "_enum_value = ", v.Desc.Number())
+			}
 			g.P(")")
 			g.P()
 		}
