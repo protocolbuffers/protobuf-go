@@ -26,8 +26,6 @@ func (t *Timestamp) UnmarshalJSON(b []byte) error {
 
 	var tim time.Time
 	if err := tim.UnmarshalJSON(b); err != nil {
-		// TODO check and see if b is a string and if so, try to parse it as a string
-		//
 		return err
 	}
 
