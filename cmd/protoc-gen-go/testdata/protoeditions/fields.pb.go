@@ -84,24 +84,24 @@ type FieldTestMessage struct {
 	OptionalBytes       []byte                               `protobuf:"bytes,16,opt,name=optional_bytes,json=optionalBytes" json:"optional_bytes,omitempty"`
 	Optional_Message    *FieldTestMessage_Message            `protobuf:"bytes,17,opt,name=optional_Message,json=optionalMessage" json:"optional_Message,omitempty"`
 	Optionalgroup       *FieldTestMessage_OptionalGroup      `protobuf:"group,18,opt,name=OptionalGroup,json=optionalgroup" json:"optionalgroup,omitempty"`
-	RequiredBool        *bool                                `protobuf:"varint,101,opt,name=required_bool,json=requiredBool" json:"required_bool,omitempty"`
-	RequiredEnum        *FieldTestMessage_Enum               `protobuf:"varint,102,opt,name=required_enum,json=requiredEnum,enum=goproto.protoc.protoeditions.FieldTestMessage_Enum" json:"required_enum,omitempty"`
-	RequiredInt32       *int32                               `protobuf:"varint,103,opt,name=required_int32,json=requiredInt32" json:"required_int32,omitempty"`
-	RequiredSint32      *int32                               `protobuf:"zigzag32,104,opt,name=required_sint32,json=requiredSint32" json:"required_sint32,omitempty"`
-	RequiredUint32      *uint32                              `protobuf:"varint,105,opt,name=required_uint32,json=requiredUint32" json:"required_uint32,omitempty"`
-	RequiredInt64       *int64                               `protobuf:"varint,106,opt,name=required_int64,json=requiredInt64" json:"required_int64,omitempty"`
-	RequiredSint64      *int64                               `protobuf:"zigzag64,107,opt,name=required_sint64,json=requiredSint64" json:"required_sint64,omitempty"`
-	RequiredUint64      *uint64                              `protobuf:"varint,108,opt,name=required_uint64,json=requiredUint64" json:"required_uint64,omitempty"`
-	RequiredSfixed32    *int32                               `protobuf:"fixed32,109,opt,name=required_sfixed32,json=requiredSfixed32" json:"required_sfixed32,omitempty"`
-	RequiredFixed32     *uint32                              `protobuf:"fixed32,110,opt,name=required_fixed32,json=requiredFixed32" json:"required_fixed32,omitempty"`
-	RequiredFloat       *float32                             `protobuf:"fixed32,111,opt,name=required_float,json=requiredFloat" json:"required_float,omitempty"`
-	RequiredSfixed64    *int64                               `protobuf:"fixed64,112,opt,name=required_sfixed64,json=requiredSfixed64" json:"required_sfixed64,omitempty"`
-	RequiredFixed64     *uint64                              `protobuf:"fixed64,113,opt,name=required_fixed64,json=requiredFixed64" json:"required_fixed64,omitempty"`
-	RequiredDouble      *float64                             `protobuf:"fixed64,114,opt,name=required_double,json=requiredDouble" json:"required_double,omitempty"`
-	RequiredString      *string                              `protobuf:"bytes,115,opt,name=required_string,json=requiredString" json:"required_string,omitempty"`
-	RequiredBytes       []byte                               `protobuf:"bytes,116,opt,name=required_bytes,json=requiredBytes" json:"required_bytes,omitempty"`
-	Required_Message    *FieldTestMessage_Message            `protobuf:"bytes,117,opt,name=required_Message,json=requiredMessage" json:"required_Message,omitempty"`
-	Requiredgroup       *FieldTestMessage_RequiredGroup      `protobuf:"group,118,opt,name=RequiredGroup,json=requiredgroup" json:"requiredgroup,omitempty"`
+	RequiredBool        *bool                                `protobuf:"varint,101,req,name=required_bool,json=requiredBool" json:"required_bool,omitempty"`
+	RequiredEnum        *FieldTestMessage_Enum               `protobuf:"varint,102,req,name=required_enum,json=requiredEnum,enum=goproto.protoc.protoeditions.FieldTestMessage_Enum" json:"required_enum,omitempty"`
+	RequiredInt32       *int32                               `protobuf:"varint,103,req,name=required_int32,json=requiredInt32" json:"required_int32,omitempty"`
+	RequiredSint32      *int32                               `protobuf:"zigzag32,104,req,name=required_sint32,json=requiredSint32" json:"required_sint32,omitempty"`
+	RequiredUint32      *uint32                              `protobuf:"varint,105,req,name=required_uint32,json=requiredUint32" json:"required_uint32,omitempty"`
+	RequiredInt64       *int64                               `protobuf:"varint,106,req,name=required_int64,json=requiredInt64" json:"required_int64,omitempty"`
+	RequiredSint64      *int64                               `protobuf:"zigzag64,107,req,name=required_sint64,json=requiredSint64" json:"required_sint64,omitempty"`
+	RequiredUint64      *uint64                              `protobuf:"varint,108,req,name=required_uint64,json=requiredUint64" json:"required_uint64,omitempty"`
+	RequiredSfixed32    *int32                               `protobuf:"fixed32,109,req,name=required_sfixed32,json=requiredSfixed32" json:"required_sfixed32,omitempty"`
+	RequiredFixed32     *uint32                              `protobuf:"fixed32,110,req,name=required_fixed32,json=requiredFixed32" json:"required_fixed32,omitempty"`
+	RequiredFloat       *float32                             `protobuf:"fixed32,111,req,name=required_float,json=requiredFloat" json:"required_float,omitempty"`
+	RequiredSfixed64    *int64                               `protobuf:"fixed64,112,req,name=required_sfixed64,json=requiredSfixed64" json:"required_sfixed64,omitempty"`
+	RequiredFixed64     *uint64                              `protobuf:"fixed64,113,req,name=required_fixed64,json=requiredFixed64" json:"required_fixed64,omitempty"`
+	RequiredDouble      *float64                             `protobuf:"fixed64,114,req,name=required_double,json=requiredDouble" json:"required_double,omitempty"`
+	RequiredString      *string                              `protobuf:"bytes,115,req,name=required_string,json=requiredString" json:"required_string,omitempty"`
+	RequiredBytes       []byte                               `protobuf:"bytes,116,req,name=required_bytes,json=requiredBytes" json:"required_bytes,omitempty"`
+	Required_Message    *FieldTestMessage_Message            `protobuf:"bytes,117,req,name=required_Message,json=requiredMessage" json:"required_Message,omitempty"`
+	Requiredgroup       *FieldTestMessage_RequiredGroup      `protobuf:"group,118,req,name=RequiredGroup,json=requiredgroup" json:"requiredgroup,omitempty"`
 	RepeatedBool        []bool                               `protobuf:"varint,201,rep,packed,name=repeated_bool,json=repeatedBool" json:"repeated_bool,omitempty"`
 	RepeatedEnum        []FieldTestMessage_Enum              `protobuf:"varint,202,rep,packed,name=repeated_enum,json=repeatedEnum,enum=goproto.protoc.protoeditions.FieldTestMessage_Enum" json:"repeated_enum,omitempty"`
 	RepeatedInt32       []int32                              `protobuf:"varint,203,rep,packed,name=repeated_int32,json=repeatedInt32" json:"repeated_int32,omitempty"`
@@ -1154,7 +1154,7 @@ type FieldTestMessage_RequiredGroup struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	RequiredGroup *string `protobuf:"bytes,119,opt,name=required_group,json=requiredGroup" json:"required_group,omitempty"`
+	RequiredGroup *string `protobuf:"bytes,119,req,name=required_group,json=requiredGroup" json:"required_group,omitempty"`
 }
 
 func (x *FieldTestMessage_RequiredGroup) Reset() {

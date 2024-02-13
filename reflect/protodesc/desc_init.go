@@ -166,6 +166,9 @@ func (r descsByName) initFieldsFromDescriptorProto(fds []*descriptorpb.FieldDesc
 		if f.Base.L0.ParentFile.Syntax() == protoreflect.Editions {
 			f.L1.EditionFeatures = mergeEditionFeatures(parent, fd.GetOptions().GetFeatures())
 
+			if f.L1.EditionFeatures.IsLegacyRequired {
+				f.L1.Cardinality = protoreflect.Required
+			}
 			// We reuse the existing field because the old option `[packed =
 			// true]` is mutually exclusive with the editions feature.
 			if canBePacked(fd) {
