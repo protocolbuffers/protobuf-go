@@ -18,24 +18,24 @@ import (
 	"time"
 )
 
-func (t *Timestamp) UnmarshalJSON(b []byte) error {
-	if string(b) == "null" || string(b) == "" || string(b) == "\"\"" {
-		t = &Timestamp{Seconds: 0, Nanos: 0}
-		return nil
-	}
+// func (t *Timestamp) UnmarshalJSON(b []byte) error {
+// 	if string(b) == "null" || string(b) == "" || string(b) == "\"\"" {
+// 		t = &Timestamp{Seconds: 0, Nanos: 0}
+// 		return nil
+// 	}
 
-	var tim time.Time
-	if err := tim.UnmarshalJSON(b); err != nil {
-		return err
-	}
+// 	var tim time.Time
+// 	if err := tim.UnmarshalJSON(b); err != nil {
+// 		return err
+// 	}
 
-	*t = *New(tim)
-	return nil
-}
+// 	*t = *New(tim)
+// 	return nil
+// }
 
-func (t *Timestamp) MarshalJSON() ([]byte, error) {
-	return t.AsTime().MarshalJSON()
-}
+// func (t *Timestamp) MarshalJSON() ([]byte, error) {
+// 	return t.AsTime().MarshalJSON()
+// }
 
 func (t *Timestamp) EncodeSpanner() (interface{}, error) {
 	// If our timestamp is nil, return nil and no error.
