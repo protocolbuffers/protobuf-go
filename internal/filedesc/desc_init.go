@@ -179,6 +179,10 @@ func (fd *File) unmarshalSeed(b []byte) {
 		fd.L1.Syntax = protoreflect.Proto2
 	}
 
+	if fd.L1.Syntax == protoreflect.Editions {
+		fd.L1.EditionFeatures = getFeaturesFor(fd.L1.Edition)
+	}
+
 	// Parse editions features from options if any
 	if options != nil {
 		fd.unmarshalSeedOptions(options)
@@ -250,8 +254,7 @@ func (fd *File) unmarshalSeedOptions(b []byte) {
 				if fd.Syntax() != protoreflect.Editions {
 					panic(fmt.Sprintf("invalid descriptor: using edition features in a proto with syntax %s", fd.Syntax()))
 				}
-				dfs := getFeaturesFor(fd.L1.Edition)
-				fd.L1.EditionFeatures = unmarshalFeatureSet(v, dfs)
+				fd.L1.EditionFeatures = unmarshalFeatureSet(v, fd.L1.EditionFeatures)
 			}
 		default:
 			m := protowire.ConsumeFieldValue(num, typ, b)

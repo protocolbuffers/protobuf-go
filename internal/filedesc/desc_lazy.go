@@ -510,7 +510,7 @@ func (fd *Field) unmarshalOptions(b []byte) {
 			v, m := protowire.ConsumeBytes(b)
 			b = b[m:]
 			switch num {
-			case genid.MessageOptions_Features_field_number:
+			case genid.FieldOptions_Features_field_number:
 				fd.L1.EditionFeatures = unmarshalFeatureSet(v, fd.L1.EditionFeatures)
 			}
 		default:
