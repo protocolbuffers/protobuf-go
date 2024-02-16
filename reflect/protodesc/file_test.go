@@ -829,6 +829,28 @@ func TestNewFile(t *testing.T) {
 			}]}]
 		`),
 	}, {
+		label: "proto3 message field with defaults",
+		inDesc: mustParseFile(`
+			syntax:  "proto3"
+			name:    "test.proto"
+			message_type: [{name:"M" nested_type:[{
+				name:       "M"
+				field:      [{name:"a" number:1 type:TYPE_STRING default_value:"abc"}]
+			}]}]
+		`),
+		wantErr: `message field "M.M.a" has invalid default: cannot be specified with implicit field presence`,
+	}, {
+		label: "proto editions implicit presence field with defaults",
+		inDesc: mustParseFile(`
+			syntax:  "proto3"
+			name:    "test.proto"
+			message_type: [{name:"M" nested_type:[{
+				name:       "M"
+				field:      [{name:"a" number:1 type:TYPE_STRING default_value:"abc" options:{features:{field_presence:IMPLICIT}}}]
+			}]}]
+		`),
+		wantErr: `message field "M.M.a" has invalid default: cannot be specified with implicit field presence`,
+	}, {
 		label: "proto2 message fields with no conflict",
 		inDesc: mustParseFile(`
 			name:    "test.proto"

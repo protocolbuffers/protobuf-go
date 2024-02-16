@@ -391,6 +391,9 @@ func (fd *Field) ProtoType(protoreflect.FieldDescriptor) {}
 // WARNING: This method is exempt from the compatibility promise and may be
 // removed in the future without warning.
 func (fd *Field) EnforceUTF8() bool {
+	if fd.L0.ParentFile.L1.Syntax == protoreflect.Editions {
+		return fd.L1.EditionFeatures.IsUTF8Validated
+	}
 	if fd.L1.HasEnforceUTF8 {
 		return fd.L1.EnforceUTF8
 	}

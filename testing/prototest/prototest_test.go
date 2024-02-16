@@ -20,12 +20,14 @@ import (
 	_ "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	_ "google.golang.org/protobuf/internal/testprotos/test/weak2"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	testeditionspb "google.golang.org/protobuf/internal/testprotos/testeditions"
 )
 
 func Test(t *testing.T) {
 	ms := []proto.Message{
 		(*testpb.TestAllTypes)(nil),
 		(*test3pb.TestAllTypes)(nil),
+		(*testeditionspb.TestAllTypes)(nil),
 		(*testpb.TestRequired)(nil),
 		(*irregularpb.Message)(nil),
 		(*testpb.TestAllExtensions)(nil),
