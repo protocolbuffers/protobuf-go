@@ -17,6 +17,7 @@ import (
 	requiredpb "google.golang.org/protobuf/internal/testprotos/required"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	testeditionspb "google.golang.org/protobuf/internal/testprotos/testeditions"
 )
 
 type testProto struct {
@@ -37,6 +38,7 @@ func makeMessages(in protobuild.Message, messages ...proto.Message) []proto.Mess
 			&testpb.TestAllTypes{},
 			&test3pb.TestAllTypes{},
 			&testpb.TestAllExtensions{},
+			&testeditionspb.TestAllTypes{},
 		}
 	}
 	for _, m := range messages {
@@ -51,6 +53,7 @@ func templateMessages(messages ...proto.Message) []protoreflect.MessageType {
 			(*testpb.TestAllTypes)(nil),
 			(*test3pb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 		}
 	}
 	var out []protoreflect.MessageType
@@ -637,7 +640,7 @@ var testValidMessages = []testProto{
 				"71.2.key": {"a": 2171},
 			},
 			"map_string_nested_enum": map[string]string{"73.1.key": "FOO", "73.2.key": "BAR"},
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.VarintType}, protopack.Varint(1056),
@@ -788,7 +791,7 @@ var testValidMessages = []testProto{
 			"map_string_nested_message": map[string]protobuild.Message{
 				"71.1.key": {"a": 1171},
 			},
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1156),
@@ -809,7 +812,7 @@ var testValidMessages = []testProto{
 			"map_string_nested_message": map[string]protobuild.Message{
 				"71.1.key": {"a": 1171},
 			},
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.VarintType}, protopack.Varint(0),
@@ -831,7 +834,7 @@ var testValidMessages = []testProto{
 		desc: "oneof (uint32)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_uint32": 1111,
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{111, protopack.VarintType}, protopack.Varint(1111)}.Marshal(),
 	},
 	{
@@ -840,7 +843,7 @@ var testValidMessages = []testProto{
 			"oneof_nested_message": protobuild.Message{
 				"a": 1112,
 			},
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{112, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 			protopack.Message{protopack.Tag{1, protopack.VarintType}, protopack.Varint(1112)},
 		})}.Marshal(),
@@ -849,7 +852,7 @@ var testValidMessages = []testProto{
 		desc: "oneof (empty message)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_nested_message": protobuild.Message{},
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{112, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{})}.Marshal(),
 	},
 	{
@@ -861,7 +864,7 @@ var testValidMessages = []testProto{
 					"optional_int32": 43,
 				},
 			},
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{112, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Message{protopack.Tag{1, protopack.VarintType}, protopack.Varint(1)},
@@ -917,63 +920,63 @@ var testValidMessages = []testProto{
 		desc: "oneof (string)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_string": "1113",
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{113, protopack.BytesType}, protopack.String("1113")}.Marshal(),
 	},
 	{
 		desc: "oneof (bytes)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_bytes": "1114",
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{114, protopack.BytesType}, protopack.String("1114")}.Marshal(),
 	},
 	{
 		desc: "oneof (bool)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_bool": true,
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{115, protopack.VarintType}, protopack.Bool(true)}.Marshal(),
 	},
 	{
 		desc: "oneof (uint64)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_uint64": 116,
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{116, protopack.VarintType}, protopack.Varint(116)}.Marshal(),
 	},
 	{
 		desc: "oneof (float)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_float": 117.5,
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{117, protopack.Fixed32Type}, protopack.Float32(117.5)}.Marshal(),
 	},
 	{
 		desc: "oneof (double)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_double": 118.5,
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{118, protopack.Fixed64Type}, protopack.Float64(118.5)}.Marshal(),
 	},
 	{
 		desc: "oneof (enum)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_enum": "BAR",
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{119, protopack.VarintType}, protopack.Varint(int(testpb.TestAllTypes_BAR))}.Marshal(),
 	},
 	{
 		desc: "oneof (zero)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_uint64": 0,
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{116, protopack.VarintType}, protopack.Varint(0)}.Marshal(),
 	},
 	{
 		desc: "oneof (overridden value)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_uint64": 2,
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{111, protopack.VarintType}, protopack.Varint(1),
 			protopack.Tag{116, protopack.VarintType}, protopack.Varint(2),
@@ -1021,7 +1024,7 @@ var testValidMessages = []testProto{
 		desc: "map field element mismatch",
 		decodeTo: makeMessages(protobuild.Message{
 			"map_int32_int32": map[int32]int32{1: 0},
-		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}),
+		}, &testpb.TestAllTypes{}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.VarintType}, protopack.Varint(1),
@@ -1432,6 +1435,7 @@ var testValidMessages = []testProto{
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
 			(*test3pb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
 		},
 	},
@@ -1636,6 +1640,7 @@ var testInvalidMessages = []testProto{
 		desc: "invalid field number zero",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
@@ -1646,6 +1651,7 @@ var testInvalidMessages = []testProto{
 		desc: "invalid field numbers zero and one",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{

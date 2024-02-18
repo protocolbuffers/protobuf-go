@@ -5,15 +5,16 @@
 package protodesc
 
 import (
-	_ "embed"
 	"fmt"
 	"os"
 	"sync"
 
+	"google.golang.org/protobuf/internal/editiondefaults"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
+	gofeaturespb "google.golang.org/protobuf/types/gofeaturespb"
 )
 
 const (
@@ -21,14 +22,12 @@ const (
 	SupportedEditionsMaximum = descriptorpb.Edition_EDITION_2023
 )
 
-//go:embed editions_defaults.binpb
-var binaryEditionDefaults []byte
 var defaults = &descriptorpb.FeatureSetDefaults{}
 var defaultsCacheMu sync.Mutex
 var defaultsCache = make(map[filedesc.Edition]*descriptorpb.FeatureSet)
 
 func init() {
-	err := proto.Unmarshal(binaryEditionDefaults, defaults)
+	err := proto.Unmarshal(editiondefaults.Defaults, defaults)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unmarshal editions defaults: %v\n", err)
 		os.Exit(1)
@@ -125,6 +124,12 @@ func mergeEditionFeatures(parentDesc protoreflect.Descriptor, child *descriptorp
 
 	if jf := child.JsonFormat; jf != nil {
 		parentFS.IsJSONCompliant = *jf == descriptorpb.FeatureSet_ALLOW
+	}
+
+	if goFeatures, ok := proto.GetExtension(child, gofeaturespb.E_Go).(*gofeaturespb.GoFeatures); ok && goFeatures != nil {
+		if luje := goFeatures.LegacyUnmarshalJsonEnum; luje != nil {
+			parentFS.GenerateLegacyUnmarshalJSON = *luje
+		}
 	}
 
 	return parentFS

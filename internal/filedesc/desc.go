@@ -98,6 +98,9 @@ type (
 		// IsJSONCompliant is true if json_format is ALLOW
 		// https://protobuf.dev/editions/features/#json_format
 		IsJSONCompliant bool
+		// GenerateLegacyUnmarshalJSON determines if the plugin generates the
+		// UnmarshalJSON([]byte) error method for enums.
+		GenerateLegacyUnmarshalJSON bool
 	}
 )
 

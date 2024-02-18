@@ -50,6 +50,49 @@ var (
 			]
 		}]
 	`)
+	protoEdition2023Message = mustParseFile(`
+		syntax:    "editions"
+		edition:   2023
+		name:      "proto_editions_2023_message.proto"
+		package:   "test.editions2023"
+		options: {
+			features: {
+				field_presence: IMPLICIT
+			}
+		}
+		message_type: [{
+			name:  "Message"
+			field: [
+				{name:"foo" number:1 type:TYPE_STRING},
+				{name:"bar" number:2 type:TYPE_STRING}
+			]
+		}]
+	`)
+	protoEdition2024Message = mustParseFile(`
+		syntax:    "editions"
+		edition:   2024
+		name:      "proto_editions_2024_message.proto"
+		package:   "test.editions2024"
+		message_type: [{
+			name:  "Message"
+			field: [
+				{
+					name:"foo" number:1
+					type:TYPE_STRING
+				},
+				{
+					name:"bar" number:2
+					type:TYPE_STRING
+					options: {
+						features: {
+							field_presence: IMPLICIT
+							utf8_validation: NONE
+						}
+					}
+				}
+			]
+		}]
+	`)
 	extendableMessage = mustParseFile(`
 		syntax:       "proto2"
 		name:         "extendable_message.proto"
