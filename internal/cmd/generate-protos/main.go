@@ -141,8 +141,9 @@ func generateLocalProtos() {
 		},
 		annotate: map[string]bool{"cmd/protoc-gen-go/testdata/annotations/annotations.proto": true},
 	}, {
-		path:    "internal/testprotos",
-		exclude: map[string]bool{"internal/testprotos/irregular/irregular.proto": true},
+		path:     "internal/testprotos",
+		exclude:  map[string]bool{"internal/testprotos/irregular/irregular.proto": true},
+		pkgPaths: map[string]string{"reflect/protodesc/proto/go_features.proto": "google.golang.org/protobuf/types/gofeaturespb"},
 	}, {
 		path:     "reflect/protodesc/proto",
 		pkgPaths: map[string]string{"reflect/protodesc/proto/go_features.proto": "google.golang.org/protobuf/types/gofeaturespb"},
