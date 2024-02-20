@@ -2029,3 +2029,11 @@ func (f filterResolver) FindExtensionByNumber(message protoreflect.FullName, fie
 	}
 	return xt, nil
 }
+
+func roundTripMessage(dst, src proto.Message) error {
+	b, err := proto.Marshal(src)
+	if err != nil {
+		return err
+	}
+	return proto.Unmarshal(b, dst)
+}
