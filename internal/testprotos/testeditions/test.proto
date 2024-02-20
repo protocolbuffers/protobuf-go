@@ -52,6 +52,12 @@ message TestAllTypes {
   bool optional_bool = 13;
   string optional_string = 14;
   bytes optional_bytes = 15;
+  message OptionalGroup {
+    int32 a = 17;
+    NestedMessage optional_nested_message = 1000;
+    int32 same_field_number = 16;
+  }
+  OptionalGroup optionalgroup = 16 [features.message_encoding = DELIMITED];
   NestedMessage optional_nested_message = 18;
   NestedEnum optional_nested_enum = 21;
 
@@ -70,6 +76,12 @@ message TestAllTypes {
   repeated bool repeated_bool = 43;
   repeated string repeated_string = 44;
   repeated bytes repeated_bytes = 45;
+
+  message RepeatedGroup {
+    int32 a = 47;
+  }
+  repeated RepeatedGroup repeatedgroup = 46
+      [features.message_encoding = DELIMITED];
   repeated NestedMessage repeated_nested_message = 48;
   repeated NestedEnum repeated_nested_enum = 51;
 

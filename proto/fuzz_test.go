@@ -54,7 +54,7 @@ func compareEquivalentProtos(t *testing.T, wireBytes []byte, m0, m1 proto.Messag
 		errorsMatch = errM1.Error() == errM0.Error()
 	}
 	if !errorsMatch {
-		t.Fatalf("errors not equal:\neditions error: %v\nproto2 error:%v", errM1, errM0)
+		t.Fatalf("errors not equal:\n%T error: %v\n%T error:%v", m0, errM0, m1, errM1)
 	}
 
 	// Marshal the editions proto and unmarshal it into the equivalent proto2
@@ -78,6 +78,10 @@ func compareEquivalentProtos(t *testing.T, wireBytes []byte, m0, m1 proto.Messag
 	})
 	if diff := cmp.Diff(m0Instance, roundTrippedM0, protocmp.Transform(), optNaN64, optNaN32); diff != "" {
 		t.Error(diff)
+	}
+
+	if sizeM0, sizeM1 := proto.Size(m0Instance), proto.Size(m1Instance); sizeM0 != sizeM1 {
+		t.Errorf("proto.Size() not equal:\n%T size = %v\n%T size = %v", m0, sizeM0, m1, sizeM1)
 	}
 }
 
