@@ -420,10 +420,11 @@ type (
 		L2 *ExtensionL2 // protected by fileDesc.once
 	}
 	ExtensionL1 struct {
-		Number      protoreflect.FieldNumber
-		Extendee    protoreflect.MessageDescriptor
-		Cardinality protoreflect.Cardinality
-		Kind        protoreflect.Kind
+		Number          protoreflect.FieldNumber
+		Extendee        protoreflect.MessageDescriptor
+		Cardinality     protoreflect.Cardinality
+		Kind            protoreflect.Kind
+		EditionFeatures EditionFeatures
 	}
 	ExtensionL2 struct {
 		Options          func() protoreflect.ProtoMessage

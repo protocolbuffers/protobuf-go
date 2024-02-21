@@ -126,6 +126,10 @@ message TestAllTypes {
   NestedEnum default_nested_enum = 96 [default = BAR];
   ForeignEnum default_foreign_enum = 97 [default = FOREIGN_BAR];
 
+  message OneofGroup {
+    int32 a = 1;
+    int32 b = 2;
+  }
   oneof oneof_field {
     uint32 oneof_uint32 = 111;
     NestedMessage oneof_nested_message = 112;
@@ -136,6 +140,7 @@ message TestAllTypes {
     float oneof_float = 117;
     double oneof_double = 118;
     NestedEnum oneof_enum = 119;
+    OneofGroup oneofgroup = 121 [features.message_encoding = DELIMITED];
   }
 
   // A oneof with exactly one field.
@@ -167,4 +172,74 @@ message TestRequiredForeign {
   oneof oneof_field {
     TestRequired oneof_message = 4;
   }
+}
+
+message TestRequiredGroupFields {
+  message OptionalGroup {
+    int32 a = 2 [features.field_presence = LEGACY_REQUIRED];
+  }
+  OptionalGroup optionalgroup = 1 [features.message_encoding = DELIMITED];
+  message RepeatedGroup {
+    int32 a = 4 [features.field_presence = LEGACY_REQUIRED];
+  }
+  repeated RepeatedGroup repeatedgroup = 3
+      [features.message_encoding = DELIMITED];
+}
+
+message TestPackedTypes {
+  repeated int32 packed_int32 = 90 [features.repeated_field_encoding = PACKED];
+  repeated int64 packed_int64 = 91 [features.repeated_field_encoding = PACKED];
+  repeated uint32 packed_uint32 = 92
+      [features.repeated_field_encoding = PACKED];
+  repeated uint64 packed_uint64 = 93
+      [features.repeated_field_encoding = PACKED];
+  repeated sint32 packed_sint32 = 94
+      [features.repeated_field_encoding = PACKED];
+  repeated sint64 packed_sint64 = 95
+      [features.repeated_field_encoding = PACKED];
+  repeated fixed32 packed_fixed32 = 96
+      [features.repeated_field_encoding = PACKED];
+  repeated fixed64 packed_fixed64 = 97
+      [features.repeated_field_encoding = PACKED];
+  repeated sfixed32 packed_sfixed32 = 98
+      [features.repeated_field_encoding = PACKED];
+  repeated sfixed64 packed_sfixed64 = 99
+      [features.repeated_field_encoding = PACKED];
+  repeated float packed_float = 100 [features.repeated_field_encoding = PACKED];
+  repeated double packed_double = 101
+      [features.repeated_field_encoding = PACKED];
+  repeated bool packed_bool = 102 [features.repeated_field_encoding = PACKED];
+  repeated ForeignEnum packed_enum = 103
+      [features.repeated_field_encoding = PACKED];
+}
+
+message TestPackedExtensions {
+  extensions 1 to max;
+}
+
+extend TestPackedExtensions {
+  repeated int32 packed_int32 = 90 [features.repeated_field_encoding = PACKED];
+  repeated int64 packed_int64 = 91 [features.repeated_field_encoding = PACKED];
+  repeated uint32 packed_uint32 = 92
+      [features.repeated_field_encoding = PACKED];
+  repeated uint64 packed_uint64 = 93
+      [features.repeated_field_encoding = PACKED];
+  repeated sint32 packed_sint32 = 94
+      [features.repeated_field_encoding = PACKED];
+  repeated sint64 packed_sint64 = 95
+      [features.repeated_field_encoding = PACKED];
+  repeated fixed32 packed_fixed32 = 96
+      [features.repeated_field_encoding = PACKED];
+  repeated fixed64 packed_fixed64 = 97
+      [features.repeated_field_encoding = PACKED];
+  repeated sfixed32 packed_sfixed32 = 98
+      [features.repeated_field_encoding = PACKED];
+  repeated sfixed64 packed_sfixed64 = 99
+      [features.repeated_field_encoding = PACKED];
+  repeated float packed_float = 100 [features.repeated_field_encoding = PACKED];
+  repeated double packed_double = 101
+      [features.repeated_field_encoding = PACKED];
+  repeated bool packed_bool = 102 [features.repeated_field_encoding = PACKED];
+  repeated ForeignEnum packed_enum = 103
+      [features.repeated_field_encoding = PACKED];
 }
