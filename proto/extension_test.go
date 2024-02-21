@@ -20,6 +20,7 @@ import (
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	testeditionspb "google.golang.org/protobuf/internal/testprotos/testeditions"
 	descpb "google.golang.org/protobuf/types/descriptorpb"
 )
 
@@ -39,6 +40,18 @@ func TestExtensionFuncs(t *testing.T) {
 		{
 			message:     &testpb.TestAllExtensions{},
 			ext:         testpb.E_RepeatedString,
+			wantDefault: ([]string)(nil),
+			value:       []string{"a", "b", "c"},
+		},
+		{
+			message:     &testeditionspb.TestAllExtensions{},
+			ext:         testeditionspb.E_OptionalInt32,
+			wantDefault: int32(0),
+			value:       int32(1),
+		},
+		{
+			message:     &testeditionspb.TestAllExtensions{},
+			ext:         testeditionspb.E_RepeatedString,
 			wantDefault: ([]string)(nil),
 			value:       []string{"a", "b", "c"},
 		},
@@ -219,6 +232,17 @@ func TestExtensionRanger(t *testing.T) {
 			testpb.E_RepeatedFloat:         []float32{+32.32, -32.32},
 			testpb.E_RepeatedNestedMessage: []*testpb.TestAllExtensions_NestedMessage{{}},
 			testpb.E_RepeatedNestedEnum:    []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAZ},
+		},
+	}, {
+		msg: &testeditionspb.TestAllExtensions{},
+		want: map[protoreflect.ExtensionType]interface{}{
+			testeditionspb.E_OptionalInt32:         int32(5),
+			testeditionspb.E_OptionalString:        string("hello"),
+			testeditionspb.E_OptionalNestedMessage: &testeditionspb.TestAllExtensions_NestedMessage{},
+			testeditionspb.E_OptionalNestedEnum:    testeditionspb.TestAllTypes_BAZ,
+			testeditionspb.E_RepeatedFloat:         []float32{+32.32, -32.32},
+			testeditionspb.E_RepeatedNestedMessage: []*testeditionspb.TestAllExtensions_NestedMessage{{}},
+			testeditionspb.E_RepeatedNestedEnum:    []testeditionspb.TestAllTypes_NestedEnum{testeditionspb.TestAllTypes_BAZ},
 		},
 	}, {
 		msg: &descpb.MessageOptions{},

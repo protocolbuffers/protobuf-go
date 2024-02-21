@@ -59,7 +59,9 @@ message TestAllTypes {
   }
   OptionalGroup optionalgroup = 16 [features.message_encoding = DELIMITED];
   NestedMessage optional_nested_message = 18;
+  ForeignMessage optional_foreign_message = 19;
   NestedEnum optional_nested_enum = 21;
+  ForeignEnum optional_foreign_enum = 22;
 
   repeated int32 repeated_int32 = 31;
   repeated int64 repeated_int64 = 32;
@@ -83,7 +85,9 @@ message TestAllTypes {
   repeated RepeatedGroup repeatedgroup = 46
       [features.message_encoding = DELIMITED];
   repeated NestedMessage repeated_nested_message = 48;
+  repeated ForeignMessage repeated_foreign_message = 49;
   repeated NestedEnum repeated_nested_enum = 51;
+  repeated ForeignEnum repeated_foreign_enum = 52;
 
   map<int32, int32> map_int32_int32 = 56;
   map<int64, int64> map_int64_int64 = 57;
@@ -120,6 +124,7 @@ message TestAllTypes {
   string default_string = 94 [default = "hello"];
   bytes default_bytes = 95 [default = "world"];
   NestedEnum default_nested_enum = 96 [default = BAR];
+  ForeignEnum default_foreign_enum = 97 [default = FOREIGN_BAR];
 
   oneof oneof_field {
     uint32 oneof_uint32 = 111;
@@ -137,4 +142,16 @@ message TestAllTypes {
   oneof oneof_optional {
     uint32 oneof_optional_uint32 = 120;
   }
+}
+
+message ForeignMessage {
+  int32 c = 1;
+  int32 d = 2;
+}
+
+enum ForeignEnum {
+  FOREIGN_ZERO = 0;
+  FOREIGN_FOO = 4;
+  FOREIGN_BAR = 5;
+  FOREIGN_BAZ = 6;
 }
