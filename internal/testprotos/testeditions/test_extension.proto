@@ -102,3 +102,8 @@ message RepeatedGroup {
   int32 a = 47;
   TestAllExtensions.NestedMessage optional_nested_message = 1001;
 }
+
+extend TestAllExtensions {
+  TestRequired single = 1000;
+  repeated TestRequired multi = 1001;
+}

@@ -477,6 +477,9 @@ func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd protoref
 	if fd.Syntax() == protoreflect.Editions && fd.L1.Kind == protoreflect.MessageKind && fd.L1.EditionFeatures.IsDelimitedEncoded {
 		fd.L1.Kind = protoreflect.GroupKind
 	}
+	if fd.Syntax() == protoreflect.Editions && fd.L1.EditionFeatures.IsLegacyRequired {
+		fd.L1.Cardinality = protoreflect.Required
+	}
 	if rawTypeName != nil {
 		name := makeFullName(sb, rawTypeName)
 		switch fd.L1.Kind {
