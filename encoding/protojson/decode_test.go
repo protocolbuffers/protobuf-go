@@ -19,6 +19,7 @@ import (
 	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
 	pb3 "google.golang.org/protobuf/internal/testprotos/textpb3"
+	pbeditions "google.golang.org/protobuf/internal/testprotos/textpbeditions"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -68,6 +69,52 @@ func TestUnmarshal(t *testing.T) {
   "optString": ""
 }`,
 		wantMessage: &pb2.Scalars{
+			OptBool:     proto.Bool(false),
+			OptInt32:    proto.Int32(0),
+			OptInt64:    proto.Int64(0),
+			OptUint32:   proto.Uint32(0),
+			OptUint64:   proto.Uint64(0),
+			OptSint32:   proto.Int32(0),
+			OptSint64:   proto.Int64(0),
+			OptFixed32:  proto.Uint32(0),
+			OptFixed64:  proto.Uint64(0),
+			OptSfixed32: proto.Int32(0),
+			OptSfixed64: proto.Int64(0),
+			OptFloat:    proto.Float32(0),
+			OptDouble:   proto.Float64(0),
+			OptBytes:    []byte{},
+			OptString:   proto.String(""),
+		},
+	}, {
+		inputMessage: &pbeditions.Scalars{},
+		inputText:    "{}",
+		wantMessage:  &pbeditions.Scalars{},
+	}, {
+		desc:         "unexpected value instead of EOF",
+		inputMessage: &pbeditions.Scalars{},
+		inputText:    "{} {}",
+		wantErr:      `(line 1:4): unexpected token {`,
+	}, {
+		desc:         "proto2 optional scalars set to zero values",
+		inputMessage: &pbeditions.Scalars{},
+		inputText: `{
+  "optBool": false,
+  "optInt32": 0,
+  "optInt64": 0,
+  "optUint32": 0,
+  "optUint64": 0,
+  "optSint32": 0,
+  "optSint64": 0,
+  "optFixed32": 0,
+  "optFixed64": 0,
+  "optSfixed32": 0,
+  "optSfixed64": 0,
+  "optFloat": 0,
+  "optDouble": 0,
+  "optBytes": "",
+  "optString": ""
+}`,
+		wantMessage: &pbeditions.Scalars{
 			OptBool:     proto.Bool(false),
 			OptInt32:    proto.Int32(0),
 			OptInt64:    proto.Int64(0),
@@ -155,6 +202,83 @@ func TestUnmarshal(t *testing.T) {
   "optString": null
 }`,
 		wantMessage: &pb2.Scalars{},
+	}, {
+		desc:         "protoeditions implicit scalars set to null",
+		inputMessage: &pbeditions.ImplicitScalars{},
+		inputText: `{
+  "sBool": null,
+  "sInt32": null,
+  "sInt64": null,
+  "sUint32": null,
+  "sUint64": null,
+  "sSint32": null,
+  "sSint64": null,
+  "sFixed32": null,
+  "sFixed64": null,
+  "sSfixed32": null,
+  "sSfixed64": null,
+  "sFloat": null,
+  "sDouble": null,
+  "sBytes": null,
+  "sString": null
+}`,
+		wantMessage: &pbeditions.ImplicitScalars{},
+	}, {
+		desc:         "boolean",
+		inputMessage: &pbeditions.ImplicitScalars{},
+		inputText:    `{"sBool": true}`,
+		wantMessage: &pbeditions.ImplicitScalars{
+			SBool: true,
+		},
+	}, {
+		desc:         "not boolean",
+		inputMessage: &pbeditions.ImplicitScalars{},
+		inputText:    `{"sBool": "true"}`,
+		wantErr:      `invalid value for bool type: "true"`,
+	}, {
+		desc:         "float and double",
+		inputMessage: &pbeditions.ImplicitScalars{},
+		inputText: `{
+  "sFloat": 1.234,
+  "sDouble": 5.678
+}`,
+		wantMessage: &pbeditions.ImplicitScalars{
+			SFloat:  1.234,
+			SDouble: 5.678,
+		},
+	}, {
+		desc:         "float and double in string",
+		inputMessage: &pbeditions.ImplicitScalars{},
+		inputText: `{
+  "sFloat": "1.234",
+  "sDouble": "5.678"
+}`,
+		wantMessage: &pbeditions.ImplicitScalars{
+			SFloat:  1.234,
+			SDouble: 5.678,
+		},
+	}, {
+		desc:         "float and double in E notation",
+		inputMessage: &pbeditions.ImplicitScalars{},
+		inputText: `{
+  "sFloat": 12.34E-1,
+  "sDouble": 5.678e4
+}`,
+		wantMessage: &pbeditions.ImplicitScalars{
+			SFloat:  1.234,
+			SDouble: 56780,
+		},
+	}, {
+		desc:         "float and double in string E notation",
+		inputMessage: &pbeditions.ImplicitScalars{},
+		inputText: `{
+  "sFloat": "12.34E-1",
+  "sDouble": "5.678e4"
+}`,
+		wantMessage: &pbeditions.ImplicitScalars{
+			SFloat:  1.234,
+			SDouble: 56780,
+		},
 	}, {
 		desc:         "proto3 scalars set to null",
 		inputMessage: &pb3.Scalars{},
@@ -2259,6 +2383,82 @@ func TestUnmarshal(t *testing.T) {
   }
 }`,
 		wantErr: `(line 5:14): invalid UTF-8`,
+	}, {
+		desc:         "well known types as field values in editions proto",
+		inputMessage: &pbeditions.KnownTypes{},
+		inputText: `{
+  "optBool": false,
+  "optInt32": 42,
+  "optInt64": "42",
+  "optUint32": 42,
+  "optUint64": "42",
+  "optFloat": 1.23,
+  "optDouble": 3.1415,
+  "optString": "hello",
+  "optBytes": "aGVsbG8=",
+  "optDuration": "123s",
+  "optTimestamp": "2019-03-19T23:03:21Z",
+  "optStruct": {
+    "string": "hello"
+  },
+  "optList": [
+    null,
+    "",
+    {},
+    []
+  ],
+  "optValue": "world",
+  "optEmpty": {},
+  "optAny": {
+    "@type": "google.protobuf.Empty",
+    "value": {}
+  },
+  "optFieldmask": "fooBar,barFoo"
+}`,
+		wantMessage: &pbeditions.KnownTypes{
+			OptBool:      &wrapperspb.BoolValue{Value: false},
+			OptInt32:     &wrapperspb.Int32Value{Value: 42},
+			OptInt64:     &wrapperspb.Int64Value{Value: 42},
+			OptUint32:    &wrapperspb.UInt32Value{Value: 42},
+			OptUint64:    &wrapperspb.UInt64Value{Value: 42},
+			OptFloat:     &wrapperspb.FloatValue{Value: 1.23},
+			OptDouble:    &wrapperspb.DoubleValue{Value: 3.1415},
+			OptString:    &wrapperspb.StringValue{Value: "hello"},
+			OptBytes:     &wrapperspb.BytesValue{Value: []byte("hello")},
+			OptDuration:  &durationpb.Duration{Seconds: 123},
+			OptTimestamp: &timestamppb.Timestamp{Seconds: 1553036601},
+			OptStruct: &structpb.Struct{
+				Fields: map[string]*structpb.Value{
+					"string": {Kind: &structpb.Value_StringValue{"hello"}},
+				},
+			},
+			OptList: &structpb.ListValue{
+				Values: []*structpb.Value{
+					{Kind: &structpb.Value_NullValue{}},
+					{Kind: &structpb.Value_StringValue{}},
+					{
+						Kind: &structpb.Value_StructValue{
+							&structpb.Struct{Fields: map[string]*structpb.Value{}},
+						},
+					},
+					{
+						Kind: &structpb.Value_ListValue{
+							&structpb.ListValue{Values: []*structpb.Value{}},
+						},
+					},
+				},
+			},
+			OptValue: &structpb.Value{
+				Kind: &structpb.Value_StringValue{"world"},
+			},
+			OptEmpty: &emptypb.Empty{},
+			OptAny: &anypb.Any{
+				TypeUrl: "google.protobuf.Empty",
+			},
+			OptFieldmask: &fieldmaskpb.FieldMask{
+				Paths: []string{"foo_bar", "bar_foo"},
+			},
+		},
 	}, {
 		desc:         "well known types as field values",
 		inputMessage: &pb2.KnownTypes{},

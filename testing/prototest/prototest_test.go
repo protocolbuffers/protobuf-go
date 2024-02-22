@@ -29,6 +29,7 @@ func Test(t *testing.T) {
 		(*test3pb.TestAllTypes)(nil),
 		(*testeditionspb.TestAllTypes)(nil),
 		(*testpb.TestRequired)(nil),
+		(*testeditionspb.TestRequired)(nil),
 		(*irregularpb.Message)(nil),
 		(*testpb.TestAllExtensions)(nil),
 		(*testeditionspb.TestAllExtensions)(nil),
