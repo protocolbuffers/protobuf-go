@@ -6,7 +6,7 @@ edition = "2023";
 
 package goproto.proto.test;
 
-import "reflect/protodesc/proto/go_features.proto";
+import "types/gofeaturespb/go_features.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/editionsfuzztest";
 option features.repeated_field_encoding = EXPANDED;

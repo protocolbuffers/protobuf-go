@@ -137,16 +137,13 @@ func generateLocalProtos() {
 		path: "cmd/protoc-gen-go/testdata",
 		pkgPaths: map[string]string{
 			"cmd/protoc-gen-go/testdata/nopackage/nopackage.proto": "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/nopackage",
-			"reflect/protodesc/proto/go_features.proto":            "google.golang.org/protobuf/types/gofeaturespb",
 		},
 		annotate: map[string]bool{"cmd/protoc-gen-go/testdata/annotations/annotations.proto": true},
 	}, {
-		path:     "internal/testprotos",
-		exclude:  map[string]bool{"internal/testprotos/irregular/irregular.proto": true},
-		pkgPaths: map[string]string{"reflect/protodesc/proto/go_features.proto": "google.golang.org/protobuf/types/gofeaturespb"},
+		path:    "internal/testprotos",
+		exclude: map[string]bool{"internal/testprotos/irregular/irregular.proto": true},
 	}, {
-		path:     "reflect/protodesc/proto",
-		pkgPaths: map[string]string{"reflect/protodesc/proto/go_features.proto": "google.golang.org/protobuf/types/gofeaturespb"},
+		path: "reflect/protodesc/proto",
 	}}
 	excludeRx := regexp.MustCompile(`legacy/.*/`)
 	for _, d := range dirs {

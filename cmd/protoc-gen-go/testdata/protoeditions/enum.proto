@@ -6,7 +6,7 @@ edition = "2023";
 
 package goproto.protoc.protoeditions;
 
-import "reflect/protodesc/proto/go_features.proto";
+import "types/gofeaturespb/go_features.proto";
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/protoeditions";
 option features.enum_type = CLOSED;
