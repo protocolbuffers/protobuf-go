@@ -31,6 +31,7 @@ func Test(t *testing.T) {
 		(*testpb.TestRequired)(nil),
 		(*irregularpb.Message)(nil),
 		(*testpb.TestAllExtensions)(nil),
+		(*testeditionspb.TestAllExtensions)(nil),
 		(*legacypb.Legacy)(nil),
 		protoimpl.X.MessageOf((*legacy1pb.Message)(nil)).Interface(),
 	}
