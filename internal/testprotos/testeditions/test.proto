@@ -81,9 +81,12 @@ message TestAllTypes {
 
   message RepeatedGroup {
     int32 a = 47;
+    NestedMessage optional_nested_message = 1001;
   }
-  repeated RepeatedGroup repeatedgroup = 46
-      [features.message_encoding = DELIMITED];
+  repeated RepeatedGroup repeatedgroup = 46 [
+    features.message_encoding = DELIMITED,
+    features.repeated_field_encoding = EXPANDED
+  ];
   repeated NestedMessage repeated_nested_message = 48;
   repeated ForeignMessage repeated_foreign_message = 49;
   repeated NestedEnum repeated_nested_enum = 51;

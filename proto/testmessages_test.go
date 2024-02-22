@@ -1672,7 +1672,7 @@ var testInvalidMessages = []testProto{
 		desc: "invalid UTF-8 in optional string field",
 		decodeTo: makeMessages(protobuild.Message{
 			"optional_string": "abc\xff",
-		}, &test3pb.TestAllTypes{}),
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{14, protopack.BytesType}, protopack.String("abc\xff"),
 		}.Marshal(),
@@ -1681,7 +1681,7 @@ var testInvalidMessages = []testProto{
 		desc: "invalid UTF-8 in singular string field",
 		decodeTo: makeMessages(protobuild.Message{
 			"singular_string": "abc\xff",
-		}, &test3pb.TestAllTypes{}),
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{94, protopack.BytesType}, protopack.String("abc\xff"),
 		}.Marshal(),
@@ -1690,7 +1690,7 @@ var testInvalidMessages = []testProto{
 		desc: "invalid UTF-8 in repeated string field",
 		decodeTo: makeMessages(protobuild.Message{
 			"repeated_string": []string{"foo", "abc\xff"},
-		}, &test3pb.TestAllTypes{}),
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{44, protopack.BytesType}, protopack.String("foo"),
 			protopack.Tag{44, protopack.BytesType}, protopack.String("abc\xff"),
@@ -1704,7 +1704,7 @@ var testInvalidMessages = []testProto{
 					"singular_string": "abc\xff",
 				},
 			},
-		}, &test3pb.TestAllTypes{}),
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{18, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
@@ -1717,14 +1717,14 @@ var testInvalidMessages = []testProto{
 		desc: "invalid UTF-8 in oneof field",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_string": "abc\xff",
-		}, &test3pb.TestAllTypes{}),
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{protopack.Tag{113, protopack.BytesType}, protopack.String("abc\xff")}.Marshal(),
 	},
 	{
 		desc: "invalid UTF-8 in map key",
 		decodeTo: makeMessages(protobuild.Message{
 			"map_string_string": map[string]string{"key\xff": "val"},
-		}, &test3pb.TestAllTypes{}),
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{69, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.BytesType}, protopack.String("key\xff"),
@@ -1736,7 +1736,7 @@ var testInvalidMessages = []testProto{
 		desc: "invalid UTF-8 in map value",
 		decodeTo: makeMessages(protobuild.Message{
 			"map_string_string": map[string]string{"key": "val\xff"},
-		}, &test3pb.TestAllTypes{}),
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
 		wire: protopack.Message{
 			protopack.Tag{69, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.BytesType}, protopack.String("key"),
@@ -1750,6 +1750,7 @@ var testInvalidMessages = []testProto{
 			(*testpb.TestAllTypes)(nil),
 			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{protopack.MinValidNumber - 1, protopack.VarintType}, protopack.Varint(1001),
@@ -1761,6 +1762,7 @@ var testInvalidMessages = []testProto{
 			(*testpb.TestAllTypes)(nil),
 			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{protopack.MinValidNumber - 1, protopack.VarintType}, protopack.Varint(1002),
@@ -1771,7 +1773,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid field numbers max and max+1",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{protopack.MaxValidNumber, protopack.VarintType}, protopack.Varint(1006),
@@ -1782,7 +1786,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid field number max+1",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{protopack.MaxValidNumber + 1, protopack.VarintType}, protopack.Varint(1008),
@@ -1792,7 +1798,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid field number wraps int32",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Varint(2234993595104), protopack.Varint(0),
@@ -1800,7 +1808,7 @@ var testInvalidMessages = []testProto{
 	},
 	{
 		desc:     "invalid field number in map",
-		decodeTo: []proto.Message{(*testpb.TestAllTypes)(nil)},
+		decodeTo: []proto.Message{(*testpb.TestAllTypes)(nil), (*testeditionspb.TestAllTypes)(nil)},
 		wire: protopack.Message{
 			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.VarintType}, protopack.Varint(1056),
@@ -1813,7 +1821,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid tag varint",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: []byte{0xff},
 	},
@@ -1821,7 +1831,9 @@ var testInvalidMessages = []testProto{
 		desc: "field number too small",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{0, protopack.VarintType}, protopack.Varint(0),
@@ -1831,7 +1843,9 @@ var testInvalidMessages = []testProto{
 		desc: "field number too large",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{protowire.MaxValidNumber + 1, protopack.VarintType}, protopack.Varint(0),
@@ -1841,7 +1855,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid tag varint in message field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{18, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
@@ -1853,7 +1869,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid tag varint in repeated message field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{48, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
@@ -1865,7 +1883,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid varint in group field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{16, protopack.StartGroupType},
@@ -1879,7 +1899,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid varint in repeated group field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{46, protopack.StartGroupType},
@@ -1893,7 +1915,9 @@ var testInvalidMessages = []testProto{
 		desc: "unterminated repeated group field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{46, protopack.StartGroupType},
@@ -1903,6 +1927,7 @@ var testInvalidMessages = []testProto{
 		desc: "invalid tag varint in map item",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
@@ -1916,6 +1941,7 @@ var testInvalidMessages = []testProto{
 		desc: "invalid tag varint in map message value",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{71, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
@@ -1930,7 +1956,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed int32 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{31, protopack.BytesType}, protopack.Bytes{0xff},
@@ -1940,7 +1968,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed int64 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{32, protopack.BytesType}, protopack.Bytes{0xff},
@@ -1950,7 +1980,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed uint32 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{33, protopack.BytesType}, protopack.Bytes{0xff},
@@ -1960,7 +1992,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed uint64 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{34, protopack.BytesType}, protopack.Bytes{0xff},
@@ -1970,7 +2004,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed sint32 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{35, protopack.BytesType}, protopack.Bytes{0xff},
@@ -1980,7 +2016,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed sint64 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{36, protopack.BytesType}, protopack.Bytes{0xff},
@@ -1990,7 +2028,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed fixed32 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{37, protopack.BytesType}, protopack.Bytes{0x00},
@@ -2000,7 +2040,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed fixed64 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{38, protopack.BytesType}, protopack.Bytes{0x00},
@@ -2010,7 +2052,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed sfixed32 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{39, protopack.BytesType}, protopack.Bytes{0x00},
@@ -2020,7 +2064,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed sfixed64 field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{40, protopack.BytesType}, protopack.Bytes{0x00},
@@ -2030,7 +2076,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed float field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{41, protopack.BytesType}, protopack.Bytes{0x00},
@@ -2040,7 +2088,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed double field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{42, protopack.BytesType}, protopack.Bytes{0x00},
@@ -2050,7 +2100,9 @@ var testInvalidMessages = []testProto{
 		desc: "invalid packed bool field",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{43, protopack.BytesType}, protopack.Bytes{0xff},
@@ -2060,7 +2112,9 @@ var testInvalidMessages = []testProto{
 		desc: "bytes field overruns message",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{18, protopack.BytesType}, protopack.LengthPrefix{protopack.Message{
@@ -2075,6 +2129,8 @@ var testInvalidMessages = []testProto{
 		desc: "varint field overruns message",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 			(*testpb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
@@ -2085,7 +2141,9 @@ var testInvalidMessages = []testProto{
 		desc: "bytes field lacks size",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{18, protopack.BytesType},
@@ -2095,7 +2153,9 @@ var testInvalidMessages = []testProto{
 		desc: "varint overflow",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.VarintType},
@@ -2106,7 +2166,9 @@ var testInvalidMessages = []testProto{
 		desc: "varint length overrun",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
 			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
 		},
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.VarintType},
