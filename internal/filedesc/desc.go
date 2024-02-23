@@ -337,12 +337,19 @@ func (fd *Field) HasOptionalKeyword() bool {
 	return (fd.L0.ParentFile.L1.Syntax == protoreflect.Proto2 && fd.L1.Cardinality == protoreflect.Optional && fd.L1.ContainingOneof == nil) || fd.L1.IsProto3Optional
 }
 func (fd *Field) IsPacked() bool {
-	if !fd.L1.HasPacked && fd.L0.ParentFile.L1.Syntax != protoreflect.Proto2 && fd.L1.Cardinality == protoreflect.Repeated {
-		switch fd.L1.Kind {
-		case protoreflect.StringKind, protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
-		default:
-			return true
-		}
+	if fd.L1.Cardinality != protoreflect.Repeated {
+		return false
+	}
+	switch fd.L1.Kind {
+	case protoreflect.StringKind, protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
+		return false
+	}
+	if fd.L0.ParentFile.L1.Syntax == protoreflect.Editions {
+		return fd.L1.EditionFeatures.IsPacked
+	}
+	if fd.L0.ParentFile.L1.Syntax == protoreflect.Proto3 {
+		// proto3 repeated fields are packed by default.
+		return !fd.L1.HasPacked || fd.L1.IsPacked
 	}
 	return fd.L1.IsPacked
 }
