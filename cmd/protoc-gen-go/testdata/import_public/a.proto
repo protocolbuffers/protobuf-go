@@ -9,7 +9,7 @@ package goproto.protoc.import_public;
 // Same Go package.
 import public "cmd/protoc-gen-go/testdata/import_public/b.proto";
 
-// Different Go  package.
+// Different Go package.
 import public "cmd/protoc-gen-go/testdata/import_public/sub/a.proto";
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_public";

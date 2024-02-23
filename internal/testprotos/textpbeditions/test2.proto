@@ -17,6 +17,7 @@ import "google/protobuf/wrappers.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/textpbeditions";
 option features.enum_type = CLOSED;
+option features.utf8_validation = NONE;
 
 // Scalars contains scalar fields.
 message Scalars {
@@ -74,18 +75,46 @@ enum Enum {
   TEN = 10;
 }
 
+enum OpenEnum {
+  option features.enum_type = OPEN;
+
+  UNKNOWN = 0;
+  EINS = 1;
+  ZWEI = 2;
+  ZEHN = 10;
+}
+
+message UTF8Validated {
+  string validated_string = 1
+      [features.utf8_validation = VERIFY, features.field_presence = IMPLICIT];
+}
+
+message NestsUTF8Validated {
+  UTF8Validated validated_message = 1;
+}
+
 // Message contains enum fields.
 message Enums {
   Enum opt_enum = 1;
   repeated Enum rpt_enum = 2;
+  OpenEnum implicit_enum = 5 [features.field_presence = IMPLICIT];
 
   enum NestedEnum {
     UNO = 1;
     DOS = 2;
     DIEZ = 10;
   }
+  enum NestedOpenEnum {
+    option features.enum_type = OPEN;
+
+    UNKNOWN = 0;
+    EINS = 1;
+    ZWEI = 2;
+    ZEHN = 10;
+  }
   NestedEnum opt_nested_enum = 3;
   repeated NestedEnum rpt_nested_enum = 4;
+  NestedOpenEnum implicit_nested_enum = 6 [features.field_presence = IMPLICIT];
 }
 
 // Message contains repeated fields.
