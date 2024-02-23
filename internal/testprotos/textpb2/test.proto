@@ -6,15 +6,16 @@
 syntax = "proto2";
 
 package pb2;
-option go_package = "google.golang.org/protobuf/internal/testprotos/textpb2";
 
 import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/field_mask.proto";
-import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
+
+option go_package = "google.golang.org/protobuf/internal/testprotos/textpb2";
 
 // Scalars contains optional scalar fields.
 message Scalars {
@@ -53,9 +54,9 @@ message Enums {
   repeated Enum rpt_enum = 2;
 
   enum NestedEnum {
-	UNO = 1;
-	DOS = 2;
-	DIEZ = 10;
+    UNO = 1;
+    DOS = 2;
+    DIEZ = 10;
   }
   optional NestedEnum opt_nested_enum = 3;
   repeated NestedEnum rpt_nested_enum = 4;
@@ -122,7 +123,8 @@ message PartialRequired {
   optional string opt_string = 2;
 }
 
-// Following messages are for testing required field nested in optional, repeated and map fields.
+// Following messages are for testing required field nested in optional,
+// repeated and map fields.
 
 message NestedWithRequired {
   required string req_string = 1;

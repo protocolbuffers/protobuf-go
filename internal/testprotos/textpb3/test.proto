@@ -6,6 +6,7 @@
 syntax = "proto3";
 
 package pb3;
+
 option go_package = "google.golang.org/protobuf/internal/testprotos/textpb3";
 
 // Scalars contains scalar field types.
@@ -72,10 +73,10 @@ message Enums {
   Enum s_enum = 1;
 
   enum NestedEnum {
-  	CERO = 0;
-	UNO = 1;
-	DOS = 2;
-	DIEZ = 10;
+    CERO = 0;
+    UNO = 1;
+    DOS = 2;
+    DIEZ = 10;
   }
   NestedEnum s_nested_enum = 3;
 }

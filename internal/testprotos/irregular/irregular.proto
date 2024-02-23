@@ -14,6 +14,6 @@ message IrregularMessage {
   optional string s = 1;
 }
 
-// AberrantMessage is a message with an implementation with a non-struct underlying type.
-message AberrantMessage {
-}
+// AberrantMessage is a message with an implementation with a non-struct
+// underlying type.
+message AberrantMessage {}

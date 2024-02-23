@@ -6,9 +6,9 @@ syntax = "proto3";
 
 package test;
 
-option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports";
-
 import "cmd/protoc-gen-go/testdata/imports/test_a_1/m1.proto";
+
+option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports";
 
 message A1M1 {
   test.a.M1 f = 1;

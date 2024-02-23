@@ -23,4 +23,3 @@ enum Enum {
 extend google.protobuf.MethodOptions {
   optional Enum extension_enum = 5000;
 }
-

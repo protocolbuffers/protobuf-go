@@ -74,7 +74,8 @@ message TestAllTypesProto3Editions {
   NestedMessage optional_nested_message = 18;
   ForeignMessageProto3Editions optional_foreign_message = 19;
   NestedEnum optional_nested_enum = 21 [features.field_presence = EXPLICIT];
-  ForeignEnumProto3Editions optional_foreign_enum = 22 [features.field_presence = EXPLICIT];
+  ForeignEnumProto3Editions optional_foreign_enum = 22
+      [features.field_presence = EXPLICIT];
 
   repeated int32 repeated_int32 = 31;
   repeated int64 repeated_int64 = 32;

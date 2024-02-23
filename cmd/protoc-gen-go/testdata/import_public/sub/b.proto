@@ -8,5 +8,4 @@ package goproto.protoc.import_public.sub;
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_public/sub";
 
-message M2 {
-}
+message M2 {}

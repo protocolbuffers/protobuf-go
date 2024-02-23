@@ -18,6 +18,7 @@ enum EnumType1 {
 
 enum EnumType2 {
   option allow_alias = true;
+
   duplicate1 = 1;
   duplicate2 = 1;
 
@@ -27,8 +28,8 @@ enum EnumType2 {
 }
 
 message EnumContainerMessage1 {
-  optional EnumType2 default_duplicate1 = 1 [default=duplicate1];
-  optional EnumType2 default_duplicate2 = 2 [default=duplicate2];
+  optional EnumType2 default_duplicate1 = 1 [default = duplicate1];
+  optional EnumType2 default_duplicate2 = 2 [default = duplicate2];
 
   // NestedEnumType1A comment.
   enum NestedEnumType1A {

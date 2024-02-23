@@ -16,7 +16,8 @@ import (
 	sync "sync"
 )
 
-// Fuzz is a container for every message we want to make available to the fuzzer.
+// Fuzz is a container for every message we want to make available to the
+// fuzzer.
 type Fuzz struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

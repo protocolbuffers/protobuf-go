@@ -8,5 +8,4 @@ package goproto.proto.test;
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/test";
 
-message PublicImportMessage {
-}
+message PublicImportMessage {}

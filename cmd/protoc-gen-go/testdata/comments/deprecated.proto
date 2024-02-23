@@ -11,10 +11,12 @@ option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/comme
 
 message DeprecatedMessage {
   option deprecated = true;
-  string deprecated_field = 1 [deprecated=true];
+
+  string deprecated_field = 1 [deprecated = true];
 }
 
 enum DeprecatedEnum {
   option deprecated = true;
-  DEPRECATED = 0 [deprecated=true];
+
+  DEPRECATED = 0 [deprecated = true];
 }
