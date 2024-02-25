@@ -3,6 +3,9 @@
 // license that can be found in the LICENSE file.
 
 syntax = "proto3";
+
 package test.a;
+
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports/test_a_2";
+
 message M3 {}

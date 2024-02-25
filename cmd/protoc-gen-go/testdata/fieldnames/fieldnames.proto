@@ -29,8 +29,8 @@ message Message {
   // Field names that conflict with each other after CamelCasing.
   optional string CamelCase = 20;
   optional string CamelCase_ = 21;
-  optional string camel_case = 22; // conflicts with 20, 21
-  optional string CamelCase__ = 23; // conflicts with 21, 21, renamed 22
+  optional string camel_case = 22;   // conflicts with 20, 21
+  optional string CamelCase__ = 23;  // conflicts with 21, 21, renamed 22
 
   // Field with a getter that conflicts with another field.
   optional string get_name = 30;

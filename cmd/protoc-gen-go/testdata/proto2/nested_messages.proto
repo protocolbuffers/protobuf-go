@@ -10,8 +10,7 @@ option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/proto
 
 message Layer1 {
   message Layer2 {
-    message Layer3 {
-    }
+    message Layer3 {}
     optional Layer3 l3 = 1;
   }
   optional Layer2 l2 = 1;

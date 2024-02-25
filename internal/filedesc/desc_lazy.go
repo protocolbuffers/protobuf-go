@@ -474,6 +474,12 @@ func (fd *Field) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd protoref
 			b = b[m:]
 		}
 	}
+	if fd.Syntax() == protoreflect.Editions && fd.L1.Kind == protoreflect.MessageKind && fd.L1.EditionFeatures.IsDelimitedEncoded {
+		fd.L1.Kind = protoreflect.GroupKind
+	}
+	if fd.Syntax() == protoreflect.Editions && fd.L1.EditionFeatures.IsLegacyRequired {
+		fd.L1.Cardinality = protoreflect.Required
+	}
 	if rawTypeName != nil {
 		name := makeFullName(sb, rawTypeName)
 		switch fd.L1.Kind {
@@ -550,6 +556,7 @@ func (od *Oneof) unmarshalFull(b []byte, sb *strs.Builder, pf *File, pd protoref
 func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawTypeName []byte
 	var rawOptions []byte
+	xd.L1.EditionFeatures = featuresFromParentDesc(xd.L1.Extendee)
 	xd.L2 = new(ExtensionL2)
 	for len(b) > 0 {
 		num, typ, n := protowire.ConsumeTag(b)
@@ -581,6 +588,12 @@ func (xd *Extension) unmarshalFull(b []byte, sb *strs.Builder) {
 			b = b[m:]
 		}
 	}
+	if xd.Syntax() == protoreflect.Editions && xd.L1.Kind == protoreflect.MessageKind && xd.L1.EditionFeatures.IsDelimitedEncoded {
+		xd.L1.Kind = protoreflect.GroupKind
+	}
+	if xd.Syntax() == protoreflect.Editions && xd.L1.EditionFeatures.IsLegacyRequired {
+		xd.L1.Cardinality = protoreflect.Required
+	}
 	if rawTypeName != nil {
 		name := makeFullName(sb, rawTypeName)
 		switch xd.L1.Kind {
@@ -604,6 +617,13 @@ func (xd *Extension) unmarshalOptions(b []byte) {
 			switch num {
 			case genid.FieldOptions_Packed_field_number:
 				xd.L2.IsPacked = protowire.DecodeBool(v)
+			}
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
+			b = b[m:]
+			switch num {
+			case genid.FieldOptions_Features_field_number:
+				xd.L1.EditionFeatures = unmarshalFeatureSet(v, xd.L1.EditionFeatures)
 			}
 		default:
 			m := protowire.ConsumeFieldValue(num, typ, b)

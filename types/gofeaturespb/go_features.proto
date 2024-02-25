@@ -11,7 +11,7 @@ package google.protobuf;
 
 import "google/protobuf/descriptor.proto";
 
-option go_package = "google.golang.org/protobuf/reflect/protodesc/proto";
+option go_package = "google.golang.org/protobuf/types/gofeaturespb";
 
 extend google.protobuf.FeatureSet {
   optional GoFeatures go = 1002;

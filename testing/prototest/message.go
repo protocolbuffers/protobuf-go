@@ -231,7 +231,7 @@ func testField(t testing.TB, m protoreflect.Message, fd protoreflect.FieldDescri
 		m.Set(fd, v)
 		wantHas := true
 		if n == 0 {
-			if fd.Syntax() == protoreflect.Proto3 && fd.Message() == nil {
+			if !fd.HasPresence() {
 				wantHas = false
 			}
 			if fd.IsExtension() {
@@ -244,7 +244,7 @@ func testField(t testing.TB, m protoreflect.Message, fd protoreflect.FieldDescri
 				wantHas = true
 			}
 		}
-		if fd.Syntax() == protoreflect.Proto3 && fd.Cardinality() != protoreflect.Repeated && fd.ContainingOneof() == nil && fd.Kind() == protoreflect.EnumKind && v.Enum() == 0 {
+		if !fd.HasPresence() && fd.Cardinality() != protoreflect.Repeated && fd.ContainingOneof() == nil && fd.Kind() == protoreflect.EnumKind && v.Enum() == 0 {
 			wantHas = false
 		}
 		if got, want := m.Has(fd), wantHas; got != want {

@@ -6,6 +6,7 @@
 syntax = "proto2";
 
 package testprotos;
+
 option go_package = "google.golang.org/protobuf/internal/testprotos/registry";
 
 message Message1 {

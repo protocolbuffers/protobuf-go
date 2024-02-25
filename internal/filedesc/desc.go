@@ -391,6 +391,9 @@ func (fd *Field) ProtoType(protoreflect.FieldDescriptor) {}
 // WARNING: This method is exempt from the compatibility promise and may be
 // removed in the future without warning.
 func (fd *Field) EnforceUTF8() bool {
+	if fd.L0.ParentFile.L1.Syntax == protoreflect.Editions {
+		return fd.L1.EditionFeatures.IsUTF8Validated
+	}
 	if fd.L1.HasEnforceUTF8 {
 		return fd.L1.EnforceUTF8
 	}
@@ -417,10 +420,11 @@ type (
 		L2 *ExtensionL2 // protected by fileDesc.once
 	}
 	ExtensionL1 struct {
-		Number      protoreflect.FieldNumber
-		Extendee    protoreflect.MessageDescriptor
-		Cardinality protoreflect.Cardinality
-		Kind        protoreflect.Kind
+		Number          protoreflect.FieldNumber
+		Extendee        protoreflect.MessageDescriptor
+		Cardinality     protoreflect.Cardinality
+		Kind            protoreflect.Kind
+		EditionFeatures EditionFeatures
 	}
 	ExtensionL2 struct {
 		Options          func() protoreflect.ProtoMessage

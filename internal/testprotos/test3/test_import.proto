@@ -8,9 +8,8 @@ package goproto.proto.test3;
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/test3";
 
-message ImportMessage {
-}
+message ImportMessage {}
 
 enum ImportEnum {
- IMPORT_ZERO = 0;
+  IMPORT_ZERO = 0;
 }

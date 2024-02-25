@@ -13,51 +13,51 @@ message Int32 {
 }
 
 message Int64 {
-  required int64 v =  1;
+  required int64 v = 1;
 }
 
 message Uint32 {
-  required uint32 v =  1;
+  required uint32 v = 1;
 }
 
 message Uint64 {
-  required uint64 v =  1;
+  required uint64 v = 1;
 }
 
 message Sint32 {
-  required sint32 v =  1;
+  required sint32 v = 1;
 }
 
 message Sint64 {
-  required sint64 v =  1;
+  required sint64 v = 1;
 }
 
 message Fixed32 {
-  required fixed32 v =  1;
+  required fixed32 v = 1;
 }
 
 message Fixed64 {
-  required fixed64 v =  1;
+  required fixed64 v = 1;
 }
 
 message Float {
-  required float v =  1;
+  required float v = 1;
 }
 
 message Double {
-  required double v =  1;
+  required double v = 1;
 }
 
 message Bool {
-  required bool v =  1;
+  required bool v = 1;
 }
 
 message String {
-  required string v =  1;
+  required string v = 1;
 }
 
 message Bytes {
-  required bytes v =  1;
+  required bytes v = 1;
 }
 
 message Message {

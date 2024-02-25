@@ -107,7 +107,7 @@ func validateMessageDeclarations(ms []filedesc.Message, mds []*descriptorpb.Desc
 		if isMessageSet && !flags.ProtoLegacy {
 			return errors.New("message %q is a MessageSet, which is a legacy proto1 feature that is no longer supported", m.FullName())
 		}
-		if isMessageSet && (m.Syntax() != protoreflect.Proto2 || m.Fields().Len() > 0 || m.ExtensionRanges().Len() == 0) {
+		if isMessageSet && (m.Syntax() == protoreflect.Proto3 || m.Fields().Len() > 0 || m.ExtensionRanges().Len() == 0) {
 			return errors.New("message %q is an invalid proto1 MessageSet", m.FullName())
 		}
 		if m.Syntax() == protoreflect.Proto3 {

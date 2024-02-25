@@ -6,9 +6,9 @@ syntax = "proto2";
 
 package goproto.protoc.import_public;
 
-option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_public";
-
 import "cmd/protoc-gen-go/testdata/import_public/sub/a.proto";
+
+option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_public";
 
 message Local {
   optional goproto.protoc.import_public.sub.M m = 1;

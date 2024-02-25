@@ -15,6 +15,7 @@ import (
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	testeditionspb "google.golang.org/protobuf/internal/testprotos/testeditions"
 )
 
 func TestEqual(t *testing.T) {
@@ -220,6 +221,135 @@ func TestEqual(t *testing.T) {
 			eq: true,
 		},
 
+		// Editions scalars.
+		{
+			x: &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+			y: &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalInt64: proto.Int64(1)},
+			y: &testeditionspb.TestAllTypes{OptionalInt64: proto.Int64(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalUint32: proto.Uint32(1)},
+			y: &testeditionspb.TestAllTypes{OptionalUint32: proto.Uint32(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalUint64: proto.Uint64(1)},
+			y: &testeditionspb.TestAllTypes{OptionalUint64: proto.Uint64(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalSint32: proto.Int32(1)},
+			y: &testeditionspb.TestAllTypes{OptionalSint32: proto.Int32(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalSint64: proto.Int64(1)},
+			y: &testeditionspb.TestAllTypes{OptionalSint64: proto.Int64(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalFixed32: proto.Uint32(1)},
+			y: &testeditionspb.TestAllTypes{OptionalFixed32: proto.Uint32(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalFixed64: proto.Uint64(1)},
+			y: &testeditionspb.TestAllTypes{OptionalFixed64: proto.Uint64(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalSfixed32: proto.Int32(1)},
+			y: &testeditionspb.TestAllTypes{OptionalSfixed32: proto.Int32(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalSfixed64: proto.Int64(1)},
+			y: &testeditionspb.TestAllTypes{OptionalSfixed64: proto.Int64(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(1)},
+			y: &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(1)},
+			y: &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(2)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(float32(math.NaN()))},
+			y: &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(float64(math.NaN()))},
+			y: &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalBool: proto.Bool(true)},
+			y: &testeditionspb.TestAllTypes{OptionalBool: proto.Bool(false)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalString: proto.String("a")},
+			y: &testeditionspb.TestAllTypes{OptionalString: proto.String("b")},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalBytes: []byte("a")},
+			y: &testeditionspb.TestAllTypes{OptionalBytes: []byte("b")},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalNestedEnum: testeditionspb.TestAllTypes_FOO.Enum()},
+			y: &testeditionspb.TestAllTypes{OptionalNestedEnum: testeditionspb.TestAllTypes_BAR.Enum()},
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalInt64: proto.Int64(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalInt64: proto.Int64(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalUint32: proto.Uint32(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalUint32: proto.Uint32(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalUint64: proto.Uint64(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalUint64: proto.Uint64(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalSint32: proto.Int32(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalSint32: proto.Int32(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalSint64: proto.Int64(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalSint64: proto.Int64(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalFixed32: proto.Uint32(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalFixed32: proto.Uint32(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalFixed64: proto.Uint64(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalFixed64: proto.Uint64(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalSfixed32: proto.Int32(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalSfixed32: proto.Int32(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalSfixed64: proto.Int64(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalSfixed64: proto.Int64(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(2)},
+			y:  &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(2)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(float32(math.NaN()))},
+			y:  &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(float32(math.NaN()))},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(float64(math.NaN()))},
+			y:  &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(float64(math.NaN()))},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalBool: proto.Bool(true)},
+			y:  &testeditionspb.TestAllTypes{OptionalBool: proto.Bool(true)},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalString: proto.String("abc")},
+			y:  &testeditionspb.TestAllTypes{OptionalString: proto.String("abc")},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalBytes: []byte("abc")},
+			y:  &testeditionspb.TestAllTypes{OptionalBytes: []byte("abc")},
+			eq: true,
+		}, {
+			x:  &testeditionspb.TestAllTypes{OptionalNestedEnum: testeditionspb.TestAllTypes_FOO.Enum()},
+			y:  &testeditionspb.TestAllTypes{OptionalNestedEnum: testeditionspb.TestAllTypes_FOO.Enum()},
+			eq: true,
+		},
+
 		// Proto2 presence.
 		{
 			x: &testpb.TestAllTypes{},
@@ -269,6 +399,57 @@ func TestEqual(t *testing.T) {
 		}, {
 			x: &testpb.TestAllTypes{},
 			y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_FOO.Enum()},
+		},
+
+		// Editions presence.
+		{
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalInt64: proto.Int64(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalUint32: proto.Uint32(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalUint64: proto.Uint64(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalSint32: proto.Int32(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalSint64: proto.Int64(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalFixed32: proto.Uint32(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalFixed64: proto.Uint64(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalSfixed32: proto.Int32(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalSfixed64: proto.Int64(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalFloat: proto.Float32(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalDouble: proto.Float64(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalBool: proto.Bool(false)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalString: proto.String("")},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalBytes: []byte{}},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalNestedEnum: testeditionspb.TestAllTypes_FOO.Enum()},
 		},
 
 		// Proto3 presence.
@@ -376,6 +557,60 @@ func TestEqual(t *testing.T) {
 			y: &testpb.TestAllTypes{DefaultNestedEnum: testpb.TestAllTypes_BAR.Enum()},
 		},
 
+		// Edition default values are not considered by Equal, so the following are still unequal.
+		{
+			x: &testeditionspb.TestAllTypes{DefaultInt32: proto.Int32(81)},
+			y: &testeditionspb.TestAllTypes{},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultInt32: proto.Int32(81)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultInt64: proto.Int64(82)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultUint32: proto.Uint32(83)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultUint64: proto.Uint64(84)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultSint32: proto.Int32(-85)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultSint64: proto.Int64(86)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultFixed32: proto.Uint32(87)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultFixed64: proto.Uint64(88)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultSfixed32: proto.Int32(89)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultSfixed64: proto.Int64(-90)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultFloat: proto.Float32(91.5)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultDouble: proto.Float64(92e3)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultBool: proto.Bool(true)},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultString: proto.String("hello")},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultBytes: []byte("world")},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{DefaultNestedEnum: testeditionspb.TestAllTypes_BAR.Enum()},
+		},
+
 		// Groups.
 		{
 			x: &testpb.TestAllTypes{Optionalgroup: &testpb.TestAllTypes_OptionalGroup{
@@ -387,6 +622,16 @@ func TestEqual(t *testing.T) {
 		}, {
 			x: &testpb.TestAllTypes{},
 			y: &testpb.TestAllTypes{Optionalgroup: &testpb.TestAllTypes_OptionalGroup{}},
+		}, {
+			x: &testeditionspb.TestAllTypes{Optionalgroup: &testeditionspb.TestAllTypes_OptionalGroup{
+				A: proto.Int32(1),
+			}},
+			y: &testeditionspb.TestAllTypes{Optionalgroup: &testeditionspb.TestAllTypes_OptionalGroup{
+				A: proto.Int32(2),
+			}},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{Optionalgroup: &testeditionspb.TestAllTypes_OptionalGroup{}},
 		},
 
 		// Messages.
@@ -400,6 +645,9 @@ func TestEqual(t *testing.T) {
 		}, {
 			x: &testpb.TestAllTypes{},
 			y: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{}},
+		}, {
+			x: &testeditionspb.TestAllTypes{},
+			y: &testeditionspb.TestAllTypes{OptionalNestedMessage: &testeditionspb.TestAllTypes_NestedMessage{}},
 		}, {
 			x: &test3pb.TestAllTypes{},
 			y: &test3pb.TestAllTypes{OptionalNestedMessage: &test3pb.TestAllTypes_NestedMessage{}},
@@ -477,6 +725,78 @@ func TestEqual(t *testing.T) {
 			}},
 		},
 
+		// Editions Lists.
+		{
+			x: &testeditionspb.TestAllTypes{RepeatedInt32: []int32{1}},
+			y: &testeditionspb.TestAllTypes{RepeatedInt32: []int32{1, 2}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedInt32: []int32{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedInt32: []int32{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedInt64: []int64{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedInt64: []int64{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedUint32: []uint32{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedUint32: []uint32{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedUint64: []uint64{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedUint64: []uint64{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedSint32: []int32{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedSint32: []int32{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedSint64: []int64{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedSint64: []int64{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedFixed32: []uint32{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedFixed32: []uint32{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedFixed64: []uint64{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedFixed64: []uint64{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedSfixed32: []int32{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedSfixed32: []int32{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedSfixed64: []int64{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedSfixed64: []int64{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedFloat: []float32{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedFloat: []float32{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedDouble: []float64{1, 2}},
+			y: &testeditionspb.TestAllTypes{RepeatedDouble: []float64{1, 3}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedBool: []bool{true, false}},
+			y: &testeditionspb.TestAllTypes{RepeatedBool: []bool{true, true}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedString: []string{"a", "b"}},
+			y: &testeditionspb.TestAllTypes{RepeatedString: []string{"a", "c"}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedBytes: [][]byte{[]byte("a"), []byte("b")}},
+			y: &testeditionspb.TestAllTypes{RepeatedBytes: [][]byte{[]byte("a"), []byte("c")}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedNestedEnum: []testeditionspb.TestAllTypes_NestedEnum{testeditionspb.TestAllTypes_FOO}},
+			y: &testeditionspb.TestAllTypes{RepeatedNestedEnum: []testeditionspb.TestAllTypes_NestedEnum{testeditionspb.TestAllTypes_BAR}},
+		}, {
+			x: &testeditionspb.TestAllTypes{Repeatedgroup: []*testeditionspb.TestAllTypes_RepeatedGroup{
+				{A: proto.Int32(1)},
+				{A: proto.Int32(2)},
+			}},
+			y: &testeditionspb.TestAllTypes{Repeatedgroup: []*testeditionspb.TestAllTypes_RepeatedGroup{
+				{A: proto.Int32(1)},
+				{A: proto.Int32(3)},
+			}},
+		}, {
+			x: &testeditionspb.TestAllTypes{RepeatedNestedMessage: []*testeditionspb.TestAllTypes_NestedMessage{
+				{A: proto.Int32(1)},
+				{A: proto.Int32(2)},
+			}},
+			y: &testeditionspb.TestAllTypes{RepeatedNestedMessage: []*testeditionspb.TestAllTypes_NestedMessage{
+				{A: proto.Int32(1)},
+				{A: proto.Int32(3)},
+			}},
+		},
+
 		// Maps: various configurations.
 		{
 			x: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2}},
@@ -487,6 +807,15 @@ func TestEqual(t *testing.T) {
 		}, {
 			x: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2, 3: 4}},
 			y: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2}},
+			y: &testeditionspb.TestAllTypes{MapInt32Int32: map[int32]int32{3: 4}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2}},
+			y: &testeditionspb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2, 3: 4}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2}},
 		},
 
 		// Maps: various types.
@@ -553,6 +882,69 @@ func TestEqual(t *testing.T) {
 				"a": testpb.TestAllTypes_FOO,
 				"b": testpb.TestAllTypes_BAZ,
 			}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapInt32Int32: map[int32]int32{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapInt64Int64: map[int64]int64{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapInt64Int64: map[int64]int64{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapUint32Uint32: map[uint32]uint32{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapUint32Uint32: map[uint32]uint32{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapUint64Uint64: map[uint64]uint64{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapUint64Uint64: map[uint64]uint64{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapSint32Sint32: map[int32]int32{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapSint32Sint32: map[int32]int32{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapSint64Sint64: map[int64]int64{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapSint64Sint64: map[int64]int64{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapFixed32Fixed32: map[uint32]uint32{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapFixed32Fixed32: map[uint32]uint32{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapFixed64Fixed64: map[uint64]uint64{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapFixed64Fixed64: map[uint64]uint64{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapSfixed32Sfixed32: map[int32]int32{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapSfixed32Sfixed32: map[int32]int32{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapSfixed64Sfixed64: map[int64]int64{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapSfixed64Sfixed64: map[int64]int64{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapInt32Float: map[int32]float32{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapInt32Float: map[int32]float32{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapInt32Double: map[int32]float64{1: 2, 3: 4}},
+			y: &testeditionspb.TestAllTypes{MapInt32Double: map[int32]float64{1: 2, 3: 5}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapBoolBool: map[bool]bool{true: false, false: true}},
+			y: &testeditionspb.TestAllTypes{MapBoolBool: map[bool]bool{true: false, false: false}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapStringString: map[string]string{"a": "b", "c": "d"}},
+			y: &testeditionspb.TestAllTypes{MapStringString: map[string]string{"a": "b", "c": "e"}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapStringBytes: map[string][]byte{"a": []byte("b"), "c": []byte("d")}},
+			y: &testeditionspb.TestAllTypes{MapStringBytes: map[string][]byte{"a": []byte("b"), "c": []byte("e")}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapStringNestedMessage: map[string]*testeditionspb.TestAllTypes_NestedMessage{
+				"a": {A: proto.Int32(1)},
+				"b": {A: proto.Int32(2)},
+			}},
+			y: &testeditionspb.TestAllTypes{MapStringNestedMessage: map[string]*testeditionspb.TestAllTypes_NestedMessage{
+				"a": {A: proto.Int32(1)},
+				"b": {A: proto.Int32(3)},
+			}},
+		}, {
+			x: &testeditionspb.TestAllTypes{MapStringNestedEnum: map[string]testeditionspb.TestAllTypes_NestedEnum{
+				"a": testeditionspb.TestAllTypes_FOO,
+				"b": testeditionspb.TestAllTypes_BAR,
+			}},
+			y: &testeditionspb.TestAllTypes{MapStringNestedEnum: map[string]testeditionspb.TestAllTypes_NestedEnum{
+				"a": testeditionspb.TestAllTypes_FOO,
+				"b": testeditionspb.TestAllTypes_BAZ,
+			}},
 		},
 
 		// Extensions.
@@ -583,6 +975,18 @@ func TestEqual(t *testing.T) {
 				protopack.Tag{100000, protopack.VarintType}, protopack.Varint(1),
 			}.Marshal())),
 			y: &testpb.TestAllTypes{},
+		}, {
+			x: build(&testeditionspb.TestAllTypes{}, unknown(protopack.Message{
+				protopack.Tag{100000, protopack.VarintType}, protopack.Varint(1),
+			}.Marshal())),
+			y: build(&testeditionspb.TestAllTypes{}, unknown(protopack.Message{
+				protopack.Tag{100000, protopack.VarintType}, protopack.Varint(2),
+			}.Marshal())),
+		}, {
+			x: build(&testeditionspb.TestAllTypes{}, unknown(protopack.Message{
+				protopack.Tag{100000, protopack.VarintType}, protopack.Varint(1),
+			}.Marshal())),
+			y: &testeditionspb.TestAllTypes{},
 		},
 	}
 

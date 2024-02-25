@@ -10,7 +10,6 @@ import "cmd/protoc-gen-go/testdata/retention/options_message.proto";
 import "google/protobuf/descriptor.proto";
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/retention";
-
 option (imported_plain_option) = 1;
 option (imported_runtime_retention_option) = 2;
 option (imported_source_retention_option) = 3;
