@@ -418,8 +418,9 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		tags = append(tags, gotrackTags...)
 	}
 
+	var leftLeading protogen.Comments
 	var leftTailing protogen.Comments
-	tags, _ = AppendGoTagsFromFieldComment(tags, field.Comments.Leading)
+	tags, leftLeading = AppendGoTagsFromFieldComment(tags, field.Comments.Leading)
 	tags, leftTailing = AppendGoTagsFromFieldComment(tags, field.Comments.Trailing)
 
 	name := field.GoName
@@ -427,7 +428,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		name = genid.WeakFieldPrefix_goname + name
 	}
 	g.Annotate(m.GoIdent.GoName+"."+name, field.Location)
-	leadingComments := appendDeprecationSuffix(field.Comments.Leading,
+	leadingComments := appendDeprecationSuffix(leftLeading,
 		field.Desc.ParentFile(),
 		field.Desc.Options().(*descriptorpb.FieldOptions).GetDeprecated())
 	g.P(leadingComments,
