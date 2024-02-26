@@ -40,9 +40,9 @@ func init() {
 	}
 }
 
-// AppendGoTagsFromTailingComment append extra tags parsed from tailing comment
+// AppendGoTagsFromFieldComment append extra tags parsed from tailing comment
 // tag with same name will be replaced except protobuf tags like "protobuf"、"protobuf_key"、"protobuf_val"
-func AppendGoTagsFromTailingComment(
+func AppendGoTagsFromFieldComment(
 	existsTags structTags,
 	tailComment protogen.Comments,
 ) (

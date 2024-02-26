@@ -36,7 +36,7 @@ func TestAppendGoTagsFromTailingComment(t *testing.T) {
 		{"protobuf_val", "string"},
 	}
 	str := "  @go_tags(`json:\"name,omitempty\" bson:\"name\"`) abc"
-	newTags, newTailing := AppendGoTagsFromTailingComment(tags, protogen.Comments(str))
+	newTags, newTailing := AppendGoTagsFromFieldComment(tags, protogen.Comments(str))
 	fmt.Println(newTailing)
 	fmt.Println(newTags)
 }

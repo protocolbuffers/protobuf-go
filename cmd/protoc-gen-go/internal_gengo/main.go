@@ -419,7 +419,8 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 	}
 
 	var leftTailing protogen.Comments
-	tags, leftTailing = AppendGoTagsFromTailingComment(tags, field.Comments.Trailing)
+	tags, _ = AppendGoTagsFromFieldComment(tags, field.Comments.Leading)
+	tags, leftTailing = AppendGoTagsFromFieldComment(tags, field.Comments.Trailing)
 
 	name := field.GoName
 	if field.Desc.IsWeak() {
