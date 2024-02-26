@@ -238,6 +238,11 @@ s_string: "谷歌"
 		inputText:    `unknown_field: { strings: [ [ ] ] }`,
 		wantErr:      `(line 1:29): invalid scalar value: [`,
 	}, {
+		desc:         "unknown list of message field",
+		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
+		inputMessage: &pb2.Scalars{},
+		inputText:    `unknown_field: [ { a: "b" }, { c: "d" } ]`,
+	}, {
 		desc:         "proto3 message cannot parse field number",
 		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
 		inputMessage: &pb3.Scalars{},

@@ -367,11 +367,24 @@ func consume{{.Name}}Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFie
 	sp := p.{{.GoType.PointerMethod}}Slice()
 	{{- if .WireType.Packable}}
 	if wtyp == protowire.BytesType {
-		s := *sp
 		b, n := protowire.ConsumeBytes(b)
 		if n < 0 {
 			return out, errDecode
 		}
+		{{if .WireType.ConstSize -}}
+		count := len(b) / {{template "Size" .}}
+		{{- else -}}
+		count := 0
+		for _, v := range b {
+			if v < 0x80 {
+				count++
+			}
+		}
+		{{- end}}
+		if count > 0 {
+			p.grow{{.GoType.PointerMethod}}Slice(count)
+		}
+		s := *sp
 		for len(b) > 0 {
 			{{template "Consume" .}}
 			if n < 0 {

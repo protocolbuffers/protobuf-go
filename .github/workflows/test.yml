@@ -13,16 +13,21 @@ jobs:
     - name: Install Linux dependencies
       if: runner.os == 'Linux'
       run: sudo apt-get -y install autoconf automake libtool curl make g++ unzip
-    - name: Install Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v3
-    - name: Cache dependencies
-      uses: actions/cache@v3.0.2
+    - name: Install Go
+      uses: actions/setup-go@v4
       with:
-        path: .cache
+        go-version: ${{ matrix.go-version }}
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          .cache
+          ~/.cache/bazel
         key: ${{ runner.os }}-${{ hashFiles('integration_test.go') }}
     - name: Test
-      run: go test -v -timeout=60m -count=1 -failfast integration_test.go
+      env:
+        # Protobuf 25 does not yet support Bazel 7
+        USE_BAZEL_VERSION: latest-1
+      run: go test -run='^TestIntegration$' -v -timeout=60m -count=1 -failfast "$@"

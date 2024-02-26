@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-//go:generate go run . -execute
+//go:generate go run -tags protolegacy . -execute
 
 package main
 
@@ -24,6 +24,7 @@ import (
 	gengo "google.golang.org/protobuf/cmd/protoc-gen-go/internal_gengo"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/internal/detrand"
+	"google.golang.org/protobuf/reflect/protodesc"
 )
 
 func init() {
@@ -89,6 +90,28 @@ func main() {
 
 	generateLocalProtos()
 	generateRemoteProtos()
+	generateEditionsDefaults()
+}
+
+func generateEditionsDefaults() {
+	dest := filepath.Join(repoRoot, "reflect", "protodesc", "editions_defaults.binpb")
+	// The enum in Go string formats to "EDITION_${EDITION}" but protoc expects
+	// the flag in the form "${EDITION}". To work around this, we trim the
+	// "EDITION_" prefix.
+	minEdition := strings.TrimPrefix(fmt.Sprint(protodesc.SupportedEditionsMinimum), "EDITION_")
+	maxEdition := strings.TrimPrefix(fmt.Sprint(protodesc.SupportedEditionsMaximum), "EDITION_")
+	cmd := exec.Command(
+		"protoc",
+		"--experimental_edition_defaults_out", dest,
+		"--experimental_edition_defaults_minimum", minEdition,
+		"--experimental_edition_defaults_maximum", maxEdition,
+		"--proto_path", protoRoot, "src/google/protobuf/descriptor.proto",
+	)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("executing: %v\n%s\n", strings.Join(cmd.Args, " "), out)
+	}
+	check(err)
 }
 
 func generateLocalProtos() {

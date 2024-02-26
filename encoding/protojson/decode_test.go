@@ -2437,6 +2437,43 @@ func TestUnmarshal(t *testing.T) {
 			TypeUrl: "type.googleapis.com/google.protobuf.Empty",
 		},
 	}, {
+		desc:         "DiscardUnknown: unknown enum name",
+		inputMessage: &pb3.Enums{},
+		inputText: `{
+  "sEnum": "UNNAMED"
+}`,
+		umo:         protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb3.Enums{},
+	}, {
+		desc:         "DiscardUnknown: repeated enum unknown name",
+		inputMessage: &pb2.Enums{},
+		inputText: `{
+  "rptEnum"      : ["TEN", 1, 42, "UNNAMED"]
+}`,
+		umo: protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb2.Enums{
+			RptEnum: []pb2.Enum{pb2.Enum_TEN, pb2.Enum_ONE, 42},
+		},
+	}, {
+		desc:         "DiscardUnknown: enum map value unknown name",
+		inputMessage: &pb3.Maps{},
+		inputText: `{
+  "uint64ToEnum": {
+    "1" : "ONE",
+	"2" : 2,
+	"10": 101,
+	"3": "UNNAMED"
+  }
+}`,
+		umo: protojson.UnmarshalOptions{DiscardUnknown: true},
+		wantMessage: &pb3.Maps{
+			Uint64ToEnum: map[uint64]pb3.Enum{
+				1:  pb3.Enum_ONE,
+				2:  pb3.Enum_TWO,
+				10: 101,
+			},
+		},
+	}, {
 		desc:         "weak fields",
 		inputMessage: &testpb.TestWeak{},
 		inputText:    `{"weak_message1":{"a":1}}`,
@@ -2452,6 +2489,87 @@ func TestUnmarshal(t *testing.T) {
 		inputText:    `{"weak_message1":{"a":1}, "weak_message2":{"a":1}}`,
 		wantErr:      `unknown field "weak_message2"`, // weak_message2 is unknown since the package containing it is not imported
 		skip:         !flags.ProtoLegacy,
+	}, {
+		desc:         "just at recursion limit: nested messages",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"optionalNestedMessage":{"corecursive":{"optionalNestedMessage":{"corecursive":{}}}}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5},
+	}, {
+		desc:         "exceed recursion limit: nested messages",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"optionalNestedMessage":{"corecursive":{"optionalNestedMessage":{"corecursive":{"optionalNestedMessage":{}}}}}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5},
+		wantErr:      "exceeded max recursion depth",
+	}, {
+
+		desc:         "just at recursion limit: maps",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"mapStringNestedMessage":{"key1":{"corecursive":{"mapStringNestedMessage":{}}}}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 3},
+	}, {
+		desc:         "exceed recursion limit: maps",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"mapStringNestedMessage":{"key1":{"corecursive":{"mapStringNestedMessage":{}}}}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 2},
+		wantErr:      "exceeded max recursion depth",
+	}, {
+		desc:         "just at recursion limit: arrays",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"repeatedNestedMessage":[{"corecursive":{"repeatedInt32":[1,2,3]}}]}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 3},
+	}, {
+		desc:         "exceed recursion limit: arrays",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"repeatedNestedMessage":[{"corecursive":{"repeatedNestedMessage":[{}]}}]}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 3},
+		wantErr:      "exceeded max recursion depth",
+	}, {
+		desc:         "just at recursion limit: value",
+		inputMessage: &structpb.Value{},
+		inputText:    `{"a":{"b":{"c":{"d":{}}}}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5},
+	}, {
+		desc:         "exceed recursion limit: value",
+		inputMessage: &structpb.Value{},
+		inputText:    `{"a":{"b":{"c":{"d":{"e":[]}}}}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5},
+		wantErr:      "exceeded max recursion depth",
+	}, {
+		desc:         "just at recursion limit: list value",
+		inputMessage: &structpb.ListValue{},
+		inputText:    `[[[[[1, 2, 3, 4]]]]]`,
+		// Note: the JSON appears to have recursion of only 5. But it's actually 6 because the
+		// first leaf value (1) is actually a message (google.protobuf.Value), even though the
+		// JSON doesn't use an open brace.
+		umo: protojson.UnmarshalOptions{RecursionLimit: 6},
+	}, {
+		desc:         "exceed recursion limit: list value",
+		inputMessage: &structpb.ListValue{},
+		inputText:    `[[[[[1, 2, 3, 4, ["a", "b"]]]]]]`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 6},
+		wantErr:      "exceeded max recursion depth",
+	}, {
+		desc:         "just at recursion limit: struct value",
+		inputMessage: &structpb.Struct{},
+		inputText:    `{"a":{"b":{"c":{"d":{}}}}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5},
+	}, {
+		desc:         "exceed recursion limit: struct value",
+		inputMessage: &structpb.Struct{},
+		inputText:    `{"a":{"b":{"c":{"d":{"e":{}]}}}}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5},
+		wantErr:      "exceeded max recursion depth",
+	}, {
+		desc:         "just at recursion limit: skip unknown",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"foo":{"bar":[{"baz":{}}]}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5, DiscardUnknown: true},
+	}, {
+		desc:         "exceed recursion limit: skip unknown",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"foo":{"bar":[{"baz":[{}]]}}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5, DiscardUnknown: true},
+		wantErr:      "exceeded max recursion depth",
 	}}
 
 	for _, tt := range tests {

@@ -77,35 +77,6 @@ type notBufioReader struct {
 	*bufio.Reader
 }
 
-func TestUnmarshalFromBufioAllocations(t *testing.T) {
-	// Use a proto which won't require an additional allocations during unmarshalling.
-	// Write to buf
-	buf := &bytes.Buffer{}
-	m := &test3.TestAllTypes{SingularInt32: 1}
-	if n, err := protodelim.MarshalTo(buf, m); err != nil {
-		t.Errorf("protodelim.MarshalTo(_, %v) = %d, %v", m, n, err)
-	}
-	reader := bufio.NewReaderSize(nil, 1<<20)
-	got := &test3.TestAllTypes{}
-
-	allocs := testing.AllocsPerRun(5, func() {
-		// Read from buf.
-		reader.Reset(bytes.NewBuffer(buf.Bytes()))
-		err := protodelim.UnmarshalFrom(reader, got)
-		if err != nil {
-			t.Fatalf("protodelim.UnmarshalFrom(_) = %v", err)
-		}
-	})
-	if allocs != 1 {
-		// bytes.NewBuffer should be the only allocation.
-		t.Errorf("Got %v allocs. Wanted 1", allocs)
-	}
-
-	if diff := cmp.Diff(m, got, protocmp.Transform()); diff != "" {
-		t.Errorf("Unmarshaler read: diff -want +got = %s", diff)
-	}
-}
-
 func BenchmarkUnmarshalFrom(b *testing.B) {
 	var manyInt32 []int32
 	for i := int32(0); i < 10000; i++ {

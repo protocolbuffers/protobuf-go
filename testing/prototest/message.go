@@ -35,7 +35,7 @@ type Message struct {
 	}
 }
 
-// Test performs tests on a MessageType implementation.
+// Test performs tests on a [protoreflect.MessageType] implementation.
 func (test Message) Test(t testing.TB, mt protoreflect.MessageType) {
 	testType(t, mt)
 
