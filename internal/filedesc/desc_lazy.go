@@ -280,7 +280,6 @@ func (md *Message) unmarshalFull(b []byte, sb *strs.Builder) {
 	var rawFields, rawOneofs [][]byte
 	var enumIdx, messageIdx, extensionIdx int
 	var rawOptions []byte
-	md.L1.EditionFeatures = featuresFromParentDesc(md.Parent())
 	md.L2 = new(MessageL2)
 	for len(b) > 0 {
 		num, typ, n := protowire.ConsumeTag(b)
@@ -352,13 +351,6 @@ func (md *Message) unmarshalOptions(b []byte) {
 				md.L1.IsMapEntry = protowire.DecodeBool(v)
 			case genid.MessageOptions_MessageSetWireFormat_field_number:
 				md.L1.IsMessageSet = protowire.DecodeBool(v)
-			}
-		case protowire.BytesType:
-			v, m := protowire.ConsumeBytes(b)
-			b = b[m:]
-			switch num {
-			case genid.MessageOptions_Features_field_number:
-				md.L1.EditionFeatures = unmarshalFeatureSet(v, md.L1.EditionFeatures)
 			}
 		default:
 			m := protowire.ConsumeFieldValue(num, typ, b)
