@@ -283,14 +283,24 @@ func mustInitDeps(t *testing.T) {
 			// the conformance test runner.
 			fmt.Printf("build %v\n", filepath.Base(protobufPath))
 			env := os.Environ()
+			args := []string{
+				"bazel", "build",
+				":protoc",
+				"//conformance:conformance_test_runner",
+			}
 			if runtime.GOOS == "darwin" {
 				// Adding this environment variable appears to be necessary for macOS builds.
 				env = append(env, "CC=clang")
+				// And this flag.
+				args = append(args,
+					"--macos_minimum_os=13.0",
+					"--host_macos_minimum_os=13.0",
+				)
 			}
 			command{
 				Dir: protobufPath,
 				Env: env,
-			}.mustRun(t, "bazel", "build", ":protoc", "//conformance:conformance_test_runner")
+			}.mustRun(t, args...)
 		}
 	}
 	check(os.Setenv("PROTOBUF_ROOT", protobufPath)) // for generate-protos
