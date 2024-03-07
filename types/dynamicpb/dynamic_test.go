@@ -5,6 +5,7 @@
 package dynamicpb_test
 
 import (
+	"fmt"
 	"testing"
 
 	"google.golang.org/protobuf/proto"
@@ -23,8 +24,10 @@ func TestConformance(t *testing.T) {
 		(*test3pb.TestAllTypes)(nil),
 		(*testpb.TestAllExtensions)(nil),
 	} {
-		mt := dynamicpb.NewMessageType(message.ProtoReflect().Descriptor())
-		prototest.Message{}.Test(t, mt)
+		t.Run(fmt.Sprintf("%T", message), func(t *testing.T) {
+			mt := dynamicpb.NewMessageType(message.ProtoReflect().Descriptor())
+			prototest.Message{}.Test(t, mt)
+		})
 	}
 }
 
@@ -32,10 +35,12 @@ func TestDynamicExtensions(t *testing.T) {
 	for _, message := range []proto.Message{
 		(*testpb.TestAllExtensions)(nil),
 	} {
-		mt := dynamicpb.NewMessageType(message.ProtoReflect().Descriptor())
-		prototest.Message{
-			Resolver: extResolver{},
-		}.Test(t, mt)
+		t.Run(fmt.Sprintf("%T", message), func(t *testing.T) {
+			mt := dynamicpb.NewMessageType(message.ProtoReflect().Descriptor())
+			prototest.Message{
+				Resolver: extResolver{},
+			}.Test(t, mt)
+		})
 	}
 }
 
@@ -44,8 +49,10 @@ func TestDynamicEnums(t *testing.T) {
 		testpb.TestAllTypes_FOO,
 		test3pb.TestAllTypes_FOO,
 	} {
-		et := dynamicpb.NewEnumType(enum.Descriptor())
-		prototest.Enum{}.Test(t, et)
+		t.Run(fmt.Sprintf("%v", enum), func(t *testing.T) {
+			et := dynamicpb.NewEnumType(enum.Descriptor())
+			prototest.Enum{}.Test(t, et)
+		})
 	}
 }
 

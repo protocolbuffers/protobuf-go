@@ -157,6 +157,9 @@ func TestEncodeOneofNilWrapper(t *testing.T) {
 }
 
 func TestMarshalAppendAllocations(t *testing.T) {
+	// This test ensures that MarshalAppend() has the same performance
+	// characteristics as the append() builtin, meaning that repeated calls do
+	// not allocate each time, but allocations are amortized.
 	m := &test3pb.TestAllTypes{SingularInt32: 1}
 	size := proto.Size(m)
 	const count = 1000
@@ -257,22 +260,24 @@ func TestEncodeLarge(t *testing.T) {
 // but exist to detect accidental changes in behavior.
 func TestEncodeEmpty(t *testing.T) {
 	for _, m := range []proto.Message{nil, (*testpb.TestAllTypes)(nil), &testpb.TestAllTypes{}} {
-		isValid := m != nil && m.ProtoReflect().IsValid()
+		t.Run(fmt.Sprintf("%T", m), func(t *testing.T) {
+			isValid := m != nil && m.ProtoReflect().IsValid()
 
-		b, err := proto.Marshal(m)
-		if err != nil {
-			t.Errorf("proto.Marshal() = %v", err)
-		}
-		if isNil := b == nil; isNil == isValid {
-			t.Errorf("proto.Marshal() == nil: %v, want %v", isNil, !isValid)
-		}
+			b, err := proto.Marshal(m)
+			if err != nil {
+				t.Errorf("proto.Marshal() = %v", err)
+			}
+			if isNil := b == nil; isNil == isValid {
+				t.Errorf("proto.Marshal() == nil: %v, want %v", isNil, !isValid)
+			}
 
-		b, err = proto.MarshalOptions{}.Marshal(m)
-		if err != nil {
-			t.Errorf("proto.MarshalOptions{}.Marshal() = %v", err)
-		}
-		if isNil := b == nil; isNil == isValid {
-			t.Errorf("proto.MarshalOptions{}.Marshal() = %v, want %v", isNil, !isValid)
-		}
+			b, err = proto.MarshalOptions{}.Marshal(m)
+			if err != nil {
+				t.Errorf("proto.MarshalOptions{}.Marshal() = %v", err)
+			}
+			if isNil := b == nil; isNil == isValid {
+				t.Errorf("proto.MarshalOptions{}.Marshal() = %v, want %v", isNil, !isValid)
+			}
+		})
 	}
 }
