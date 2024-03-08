@@ -319,6 +319,7 @@ func (md *Message) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd protor
 	md.L0.ParentFile = pf
 	md.L0.Parent = pd
 	md.L0.Index = i
+	md.L1.EditionFeatures = featuresFromParentDesc(md.Parent())
 
 	var prevField protoreflect.FieldNumber
 	var numEnums, numMessages, numExtensions int
@@ -423,6 +424,13 @@ func (md *Message) unmarshalSeedOptions(b []byte) {
 				md.L1.IsMapEntry = protowire.DecodeBool(v)
 			case genid.MessageOptions_MessageSetWireFormat_field_number:
 				md.L1.IsMessageSet = protowire.DecodeBool(v)
+			}
+		case protowire.BytesType:
+			v, m := protowire.ConsumeBytes(b)
+			b = b[m:]
+			switch num {
+			case genid.MessageOptions_Features_field_number:
+				md.L1.EditionFeatures = unmarshalFeatureSet(v, md.L1.EditionFeatures)
 			}
 		default:
 			m := protowire.ConsumeFieldValue(num, typ, b)

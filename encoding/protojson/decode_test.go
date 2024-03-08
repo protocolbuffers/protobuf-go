@@ -2770,6 +2770,23 @@ func TestUnmarshal(t *testing.T) {
 		inputText:    `{"foo":{"bar":[{"baz":[{}]]}}`,
 		umo:          protojson.UnmarshalOptions{RecursionLimit: 5, DiscardUnknown: true},
 		wantErr:      "exceeded max recursion depth",
+	}, {
+		desc:         "Object missing value: no DiscardUnknown",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"":}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5, DiscardUnknown: false},
+		wantErr:      `(line 1:2): unknown field ""`,
+	}, {
+		desc:         "Object missing value: DiscardUnknown",
+		inputMessage: &testpb.TestAllTypes{},
+		inputText:    `{"":}`,
+		umo:          protojson.UnmarshalOptions{RecursionLimit: 5, DiscardUnknown: true},
+		wantErr:      `(line 1:5): unexpected token`,
+	}, {
+		desc:         "Object missing value: Any",
+		inputMessage: &anypb.Any{},
+		inputText:    `{"":}`,
+		wantErr:      `(line 1:5): unexpected token`,
 	}}
 
 	for _, tt := range tests {

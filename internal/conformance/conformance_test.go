@@ -19,6 +19,7 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	pb "google.golang.org/protobuf/internal/testprotos/conformance"
+	epb "google.golang.org/protobuf/internal/testprotos/conformance/editions"
 )
 
 func init() {
@@ -45,6 +46,7 @@ func Test(t *testing.T) {
 		"--failure_list", "failing_tests.txt",
 		"--text_format_failure_list", "failing_tests_text_format.txt",
 		"--enforce_recommended",
+		"--maximum_edition", "2023",
 		os.Args[0])
 	cmd.Env = append(os.Environ(), "RUN_AS_CONFORMANCE_PLUGIN=1")
 	out, err := cmd.CombinedOutput()
@@ -95,8 +97,15 @@ func main() {
 
 func handle(req *pb.ConformanceRequest) (res *pb.ConformanceResponse) {
 	var msg proto.Message = &pb.TestAllTypesProto2{}
-	if req.GetMessageType() == "protobuf_test_messages.proto3.TestAllTypesProto3" {
+	switch req.GetMessageType() {
+	case "protobuf_test_messages.proto3.TestAllTypesProto3":
 		msg = &pb.TestAllTypesProto3{}
+	case "protobuf_test_messages.proto2.TestAllTypesProto2":
+		msg = &pb.TestAllTypesProto2{}
+	case "protobuf_test_messages.editions.proto3.TestAllTypesProto3":
+		msg = &epb.TestAllTypesProto3{}
+	case "protobuf_test_messages.editions.proto2.TestAllTypesProto2":
+		msg = &epb.TestAllTypesProto2{}
 	}
 
 	// Unmarshal the test message.

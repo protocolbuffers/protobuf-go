@@ -328,21 +328,29 @@ func (fd *Field) HasJSONName() bool { return fd.L1.StringName.hasJSON }
 func (fd *Field) JSONName() string  { return fd.L1.StringName.getJSON(fd) }
 func (fd *Field) TextName() string  { return fd.L1.StringName.getText(fd) }
 func (fd *Field) HasPresence() bool {
-	if fd.Syntax() == protoreflect.Editions {
-		return fd.L1.EditionFeatures.IsFieldPresence || fd.L1.Message != nil || fd.L1.ContainingOneof != nil
+	if fd.L1.Cardinality == protoreflect.Repeated {
+		return false
 	}
-	return fd.L1.Cardinality != protoreflect.Repeated && (fd.L0.ParentFile.L1.Syntax == protoreflect.Proto2 || fd.L1.Message != nil || fd.L1.ContainingOneof != nil)
+	explicitFieldPresence := fd.Syntax() == protoreflect.Editions && fd.L1.EditionFeatures.IsFieldPresence
+	return fd.Syntax() == protoreflect.Proto2 || explicitFieldPresence || fd.L1.Message != nil || fd.L1.ContainingOneof != nil
 }
 func (fd *Field) HasOptionalKeyword() bool {
 	return (fd.L0.ParentFile.L1.Syntax == protoreflect.Proto2 && fd.L1.Cardinality == protoreflect.Optional && fd.L1.ContainingOneof == nil) || fd.L1.IsProto3Optional
 }
 func (fd *Field) IsPacked() bool {
-	if !fd.L1.HasPacked && fd.L0.ParentFile.L1.Syntax != protoreflect.Proto2 && fd.L1.Cardinality == protoreflect.Repeated {
-		switch fd.L1.Kind {
-		case protoreflect.StringKind, protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
-		default:
-			return true
-		}
+	if fd.L1.Cardinality != protoreflect.Repeated {
+		return false
+	}
+	switch fd.L1.Kind {
+	case protoreflect.StringKind, protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
+		return false
+	}
+	if fd.L0.ParentFile.L1.Syntax == protoreflect.Editions {
+		return fd.L1.EditionFeatures.IsPacked
+	}
+	if fd.L0.ParentFile.L1.Syntax == protoreflect.Proto3 {
+		// proto3 repeated fields are packed by default.
+		return !fd.L1.HasPacked || fd.L1.IsPacked
 	}
 	return fd.L1.IsPacked
 }
