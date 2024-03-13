@@ -423,8 +423,26 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		tags = append(tags, [2]string{"json", fieldJSONTagValue(field)})
 	}
 
+	moretags := structtag.Tags{}
+	if bsonTagsEnabled := proto.GetExtension(m.Desc.Options(), protofif.E_Bsontags).(bool); bsonTagsEnabled {
+		moretags.Set(&structtag.Tag{
+			Key:  "bson",
+			Name: fmt.Sprintf("%s,omitempty", string(field.Desc.Name())),
+		})
+	}
+
 	moreTagsString := proto.GetExtension(field.Desc.Options(), protofif.E_Moretags).(string)
-	tags.AddFromString(moreTagsString)
+	if moreTagsString != "" {
+		tags, err := structtag.Parse(moreTagsString)
+		if err != nil {
+			l.Printf("Error parsing moretags for field %s: %v", field.Desc.Name(), err)
+		} else {
+			for _, tag := range tags.Tags() {
+				moretags.Set(tag)
+			}
+		}
+	}
+	tags.AddFromString(moretags.String())
 
 	if field.Desc.IsMap() {
 		key := field.Message.Fields[0]

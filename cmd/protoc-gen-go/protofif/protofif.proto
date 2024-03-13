@@ -4,19 +4,18 @@ import "google/protobuf/descriptor.proto";
 package protofif;
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/protofif";
 
+extend google.protobuf.MessageOptions { optional bool bsontags = 65001; }
 
 extend google.protobuf.FieldOptions {
-	optional string json = 65001;
-	optional string moretags = 65002;
-	optional bool embed = 65003;
+  optional string json = 65001;
+  optional string moretags = 65002;
+  optional bool embed = 65003;
 }
 
 message Timestamp {
-	int64 seconds = 1;
-	int32 nanos   = 2;
-	string loc    = 3;
+  int64 seconds = 1;
+  int32 nanos 	= 2;
+  string loc	  = 3;
 }
 
-message Duration {
-	int64 nanoseconds = 1;
-}
+message Duration { int64 nanoseconds = 1; }
