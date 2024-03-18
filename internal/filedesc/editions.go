@@ -17,6 +17,8 @@ var defaultsCache = make(map[Edition]EditionFeatures)
 
 func init() {
 	unmarshalEditionDefaults(editiondefaults.Defaults)
+	SurrogateProto2.L1.EditionFeatures = getFeaturesFor(EditionProto2)
+	SurrogateProto3.L1.EditionFeatures = getFeaturesFor(EditionProto3)
 }
 
 func unmarshalGoFeature(b []byte, parent EditionFeatures) EditionFeatures {

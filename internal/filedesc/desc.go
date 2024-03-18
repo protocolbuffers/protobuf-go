@@ -251,10 +251,6 @@ type (
 		StringName       stringName
 		IsProto3Optional bool // promoted from google.protobuf.FieldDescriptorProto
 		IsWeak           bool // promoted from google.protobuf.FieldOptions
-		HasPacked        bool // promoted from google.protobuf.FieldOptions
-		IsPacked         bool // promoted from google.protobuf.FieldOptions
-		HasEnforceUTF8   bool // promoted from google.protobuf.FieldOptions
-		EnforceUTF8      bool // promoted from google.protobuf.FieldOptions
 		Default          defaultValue
 		ContainingOneof  protoreflect.OneofDescriptor // must be consistent with Message.Oneofs.Fields
 		Enum             protoreflect.EnumDescriptor
@@ -345,14 +341,7 @@ func (fd *Field) IsPacked() bool {
 	case protoreflect.StringKind, protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
 		return false
 	}
-	if fd.L0.ParentFile.L1.Syntax == protoreflect.Editions {
-		return fd.L1.EditionFeatures.IsPacked
-	}
-	if fd.L0.ParentFile.L1.Syntax == protoreflect.Proto3 {
-		// proto3 repeated fields are packed by default.
-		return !fd.L1.HasPacked || fd.L1.IsPacked
-	}
-	return fd.L1.IsPacked
+	return fd.L1.EditionFeatures.IsPacked
 }
 func (fd *Field) IsExtension() bool { return false }
 func (fd *Field) IsWeak() bool      { return fd.L1.IsWeak }
@@ -399,13 +388,7 @@ func (fd *Field) ProtoType(protoreflect.FieldDescriptor) {}
 // WARNING: This method is exempt from the compatibility promise and may be
 // removed in the future without warning.
 func (fd *Field) EnforceUTF8() bool {
-	if fd.L0.ParentFile.L1.Syntax == protoreflect.Editions {
-		return fd.L1.EditionFeatures.IsUTF8Validated
-	}
-	if fd.L1.HasEnforceUTF8 {
-		return fd.L1.EnforceUTF8
-	}
-	return fd.L0.ParentFile.L1.Syntax == protoreflect.Proto3
+	return fd.L1.EditionFeatures.IsUTF8Validated
 }
 
 func (od *Oneof) IsSynthetic() bool {
@@ -433,12 +416,19 @@ type (
 		Cardinality     protoreflect.Cardinality
 		Kind            protoreflect.Kind
 		EditionFeatures EditionFeatures
+		// To resolve the EditionFeatures we need to resolve the Extendee which
+		// happens at the end of the initialization of L1. Thus, we need to buffer
+		// the unresolved features (which are parsed when starting to initialize
+		// L1). We cannot move this to L2 because it is required to initialize
+		// Kind properly. Because some of the options (i.e. packed) affect the
+		// EditionFeatures we need to unmarshal the full options after resolving
+		// the Extendee.
+		rawOptions []byte
 	}
 	ExtensionL2 struct {
 		Options          func() protoreflect.ProtoMessage
 		StringName       stringName
 		IsProto3Optional bool // promoted from google.protobuf.FieldDescriptorProto
-		IsPacked         bool // promoted from google.protobuf.FieldOptions
 		Default          defaultValue
 		Enum             protoreflect.EnumDescriptor
 		Message          protoreflect.MessageDescriptor
@@ -461,7 +451,7 @@ func (xd *Extension) HasPresence() bool                     { return xd.L1.Cardi
 func (xd *Extension) HasOptionalKeyword() bool {
 	return (xd.L0.ParentFile.L1.Syntax == protoreflect.Proto2 && xd.L1.Cardinality == protoreflect.Optional) || xd.lazyInit().IsProto3Optional
 }
-func (xd *Extension) IsPacked() bool                         { return xd.lazyInit().IsPacked }
+func (xd *Extension) IsPacked() bool                         { return xd.L1.EditionFeatures.IsPacked }
 func (xd *Extension) IsExtension() bool                      { return true }
 func (xd *Extension) IsWeak() bool                           { return false }
 func (xd *Extension) IsList() bool                           { return xd.Cardinality() == protoreflect.Repeated }

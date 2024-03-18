@@ -91,8 +91,10 @@ func (o FileOptions) New(fd *descriptorpb.FileDescriptorProto, r Resolver) (prot
 	switch fd.GetSyntax() {
 	case "proto2", "":
 		f.L1.Syntax = protoreflect.Proto2
+		f.L1.Edition = filedesc.EditionProto2
 	case "proto3":
 		f.L1.Syntax = protoreflect.Proto3
+		f.L1.Edition = filedesc.EditionProto3
 	case "editions":
 		f.L1.Syntax = protoreflect.Editions
 		f.L1.Edition = fromEditionProto(fd.GetEdition())
@@ -114,9 +116,7 @@ func (o FileOptions) New(fd *descriptorpb.FileDescriptorProto, r Resolver) (prot
 		opts = proto.Clone(opts).(*descriptorpb.FileOptions)
 		f.L2.Options = func() protoreflect.ProtoMessage { return opts }
 	}
-	if f.L1.Syntax == protoreflect.Editions {
-		initFileDescFromFeatureSet(f, fd.GetOptions().GetFeatures())
-	}
+	initFileDescFromFeatureSet(f, fd.GetOptions().GetFeatures())
 
 	f.L2.Imports = make(filedesc.FileImports, len(fd.GetDependency()))
 	for _, i := range fd.GetPublicDependency() {

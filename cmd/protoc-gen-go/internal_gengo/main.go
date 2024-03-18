@@ -289,11 +289,11 @@ func genEnum(g *protogen.GeneratedFile, f *fileInfo, e *enumInfo) {
 	genEnumReflectMethods(g, f, e)
 
 	// UnmarshalJSON method.
-	needsUnmarshalJSONMethod := e.genJSONMethod && e.Desc.Syntax() == protoreflect.Proto2
-	if fde, ok := e.Desc.(*filedesc.Enum); ok && fde.L1.EditionFeatures.GenerateLegacyUnmarshalJSON {
-		needsUnmarshalJSONMethod = true
+	needsUnmarshalJSONMethod := false
+	if fde, ok := e.Desc.(*filedesc.Enum); ok {
+		needsUnmarshalJSONMethod = fde.L1.EditionFeatures.GenerateLegacyUnmarshalJSON
 	}
-	if needsUnmarshalJSONMethod {
+	if e.genJSONMethod && needsUnmarshalJSONMethod {
 		g.P("// Deprecated: Do not use.")
 		g.P("func (x *", e.GoIdent, ") UnmarshalJSON(b []byte) error {")
 		g.P("num, err := ", protoimplPackage.Ident("X"), ".UnmarshalJSONEnum(x.Descriptor(), b)")

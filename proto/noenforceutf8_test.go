@@ -134,8 +134,7 @@ var messageInfo_TestNoEnforceUTF8 = protoimpl.MessageInfo{
 		}
 		md := fd.Messages().Get(0)
 		for i := 0; i < md.Fields().Len(); i++ {
-			md.Fields().Get(i).(*filedesc.Field).L1.HasEnforceUTF8 = true
-			md.Fields().Get(i).(*filedesc.Field).L1.EnforceUTF8 = false
+			md.Fields().Get(i).(*filedesc.Field).L1.EditionFeatures.IsUTF8Validated = false
 		}
 		return md
 	}(),
