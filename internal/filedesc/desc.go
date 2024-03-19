@@ -202,6 +202,9 @@ func (ed *Enum) lazyInit() *EnumL2 {
 	ed.L0.ParentFile.lazyInit() // implicitly initializes L2
 	return ed.L2
 }
+func (ed *Enum) IsClosed() bool {
+	return !ed.L1.EditionFeatures.IsOpenEnum
+}
 
 func (ed *EnumValue) Options() protoreflect.ProtoMessage {
 	if f := ed.L1.Options; f != nil {

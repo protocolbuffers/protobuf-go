@@ -718,6 +718,7 @@ func testFileFormat(t *testing.T, fd protoreflect.FileDescriptor) {
 				{Name: FOO}
 				{Name: BAR, Number: 1}
 			]
+			IsClosed: true
 		}]
 		Extensions: [{
 			Name:        X
@@ -739,6 +740,7 @@ func testFileFormat(t *testing.T, fd protoreflect.FileDescriptor) {
 		]
 		ReservedNames:  [FIZZ, BUZZ]
 		ReservedRanges: [10:20, 30]
+		IsClosed:       true
 	}]
 	Extensions: [{
 		Name:        X
@@ -772,6 +774,7 @@ func testFileFormat(t *testing.T, fd protoreflect.FileDescriptor) {
 	]
 	ReservedNames:  [FIZZ, BUZZ]
 	ReservedRanges: [10:20, 30]
+	IsClosed:       true
 }}`
 
 	const wantExtensions = `Extensions{{

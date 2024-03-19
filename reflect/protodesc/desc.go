@@ -219,10 +219,10 @@ func (o FileOptions) New(fd *descriptorpb.FileDescriptorProto, r Resolver) (prot
 	if err := validateEnumDeclarations(f.L1.Enums.List, fd.GetEnumType()); err != nil {
 		return nil, err
 	}
-	if err := validateMessageDeclarations(f.L1.Messages.List, fd.GetMessageType()); err != nil {
+	if err := validateMessageDeclarations(f, f.L1.Messages.List, fd.GetMessageType()); err != nil {
 		return nil, err
 	}
-	if err := validateExtensionDeclarations(f.L1.Extensions.List, fd.GetExtension()); err != nil {
+	if err := validateExtensionDeclarations(f, f.L1.Extensions.List, fd.GetExtension()); err != nil {
 		return nil, err
 	}
 

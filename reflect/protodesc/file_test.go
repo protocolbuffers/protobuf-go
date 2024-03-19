@@ -592,7 +592,7 @@ func TestNewFile(t *testing.T) {
 				value: [{name:"baz" number:500}]
 			}]}]
 		`),
-		wantErr: `enum "M.baz" using proto3 semantics must have zero number for the first value`,
+		wantErr: `enum "M.baz" using open semantics must have zero number for the first value`,
 	}, {
 		label: "valid proto3 enum",
 		inDesc: mustParseFile(`
@@ -613,7 +613,7 @@ func TestNewFile(t *testing.T) {
 				value: [{name:"e_Foo" number:0}, {name:"fOo" number:1}]
 			}]}]
 		`),
-		wantErr: `enum "M.E" using proto3 semantics has conflict: "fOo" with "e_Foo"`,
+		wantErr: `enum "M.E" using open semantics has conflict: "fOo" with "e_Foo"`,
 	}, {
 		label: "proto2 enum has name prefix check",
 		inDesc: mustParseFile(`
