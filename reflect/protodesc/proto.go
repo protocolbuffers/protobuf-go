@@ -73,6 +73,16 @@ func ToFileDescriptorProto(file protoreflect.FileDescriptor) *descriptorpb.FileD
 	if syntax := file.Syntax(); syntax != protoreflect.Proto2 && syntax.IsValid() {
 		p.Syntax = proto.String(file.Syntax().String())
 	}
+	if file.Syntax() == protoreflect.Editions {
+		desc := file
+		if fileImportDesc, ok := file.(protoreflect.FileImport); ok {
+			desc = fileImportDesc.FileDescriptor
+		}
+
+		if editionsInterface, ok := desc.(interface{ Edition() int32 }); ok {
+			p.Edition = descriptorpb.Edition(editionsInterface.Edition()).Enum()
+		}
+	}
 	return p
 }
 

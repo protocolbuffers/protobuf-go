@@ -108,9 +108,12 @@ func (fd *File) ParentFile() protoreflect.FileDescriptor { return fd }
 func (fd *File) Parent() protoreflect.Descriptor         { return nil }
 func (fd *File) Index() int                              { return 0 }
 func (fd *File) Syntax() protoreflect.Syntax             { return fd.L1.Syntax }
-func (fd *File) Name() protoreflect.Name                 { return fd.L1.Package.Name() }
-func (fd *File) FullName() protoreflect.FullName         { return fd.L1.Package }
-func (fd *File) IsPlaceholder() bool                     { return false }
+
+// Not exported and just used to reconstruct the original FileDescriptor proto
+func (fd *File) Edition() int32                  { return int32(fd.L1.Edition) }
+func (fd *File) Name() protoreflect.Name         { return fd.L1.Package.Name() }
+func (fd *File) FullName() protoreflect.FullName { return fd.L1.Package }
+func (fd *File) IsPlaceholder() bool             { return false }
 func (fd *File) Options() protoreflect.ProtoMessage {
 	if f := fd.lazyInit().Options; f != nil {
 		return f()

@@ -52,7 +52,7 @@ var (
 	`)
 	protoEdition2023Message = mustParseFile(`
 		syntax:    "editions"
-		edition:   2023
+		edition:   EDITION_2023
 		name:      "proto_editions_2023_message.proto"
 		package:   "test.editions2023"
 		options: {
@@ -70,7 +70,7 @@ var (
 	`)
 	protoEdition2024Message = mustParseFile(`
 		syntax:    "editions"
-		edition:   2024
+		edition:   EDITION_2024
 		name:      "proto_editions_2024_message.proto"
 		package:   "test.editions2024"
 		message_type: [{
@@ -419,6 +419,20 @@ func TestNewFile(t *testing.T) {
 				name: "M"
 				field: [{name:"F" number:1 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:".fizz.M.M"}]
 			}]
+		`),
+	}, {
+		label: "basic editions tests",
+		inDesc: mustParseFile(`
+			syntax: "editions"
+			edition: EDITION_2023
+			name: "test.proto"
+			package: "fizz"
+		`),
+		wantDesc: mustParseFile(`
+			syntax: "editions"
+			edition: EDITION_2023
+			name: "test.proto"
+			package: "fizz"
 		`),
 	}, {
 		label: "namespace conflict on enum value",
@@ -842,7 +856,8 @@ func TestNewFile(t *testing.T) {
 	}, {
 		label: "proto editions implicit presence field with defaults",
 		inDesc: mustParseFile(`
-			syntax:  "proto3"
+			syntax:    "editions"
+			edition:   EDITION_2023
 			name:    "test.proto"
 			message_type: [{name:"M" nested_type:[{
 				name:       "M"
