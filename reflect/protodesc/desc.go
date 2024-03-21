@@ -13,6 +13,7 @@
 package protodesc
 
 import (
+	"google.golang.org/protobuf/internal/editionssupport"
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/pragma"
@@ -101,7 +102,7 @@ func (o FileOptions) New(fd *descriptorpb.FileDescriptorProto, r Resolver) (prot
 	default:
 		return nil, errors.New("invalid syntax: %q", fd.GetSyntax())
 	}
-	if f.L1.Syntax == protoreflect.Editions && (fd.GetEdition() < SupportedEditionsMinimum || fd.GetEdition() > SupportedEditionsMaximum) {
+	if f.L1.Syntax == protoreflect.Editions && (fd.GetEdition() < editionssupport.Minimum || fd.GetEdition() > editionssupport.Maximum) {
 		return nil, errors.New("use of edition %v not yet supported by the Go Protobuf runtime", fd.GetEdition())
 	}
 	f.L1.Path = fd.GetName()

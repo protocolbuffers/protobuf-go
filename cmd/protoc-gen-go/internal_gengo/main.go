@@ -17,6 +17,7 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/compiler/protogen"
+	"google.golang.org/protobuf/internal/editionssupport"
 	"google.golang.org/protobuf/internal/encoding/tag"
 	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/internal/genid"
@@ -29,7 +30,10 @@ import (
 )
 
 // SupportedFeatures reports the set of supported protobuf language features.
-var SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
+var SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL | pluginpb.CodeGeneratorResponse_FEATURE_SUPPORTS_EDITIONS)
+
+var SupportedEditionsMinimum = editionssupport.Minimum
+var SupportedEditionsMaximum = editionssupport.Maximum
 
 // GenerateVersionMarkers specifies whether to generate version markers.
 var GenerateVersionMarkers = true

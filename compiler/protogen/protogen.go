@@ -108,6 +108,9 @@ type Plugin struct {
 	// google.protobuf.CodeGeneratorResponse.supported_features for details.
 	SupportedFeatures uint64
 
+	SupportedEditionsMinimum descriptorpb.Edition
+	SupportedEditionsMaximum descriptorpb.Edition
+
 	fileReg        *protoregistry.Files
 	enumsByName    map[protoreflect.FullName]*Enum
 	messagesByName map[protoreflect.FullName]*Message
@@ -395,6 +398,10 @@ func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 	}
 	if gen.SupportedFeatures > 0 {
 		resp.SupportedFeatures = proto.Uint64(gen.SupportedFeatures)
+	}
+	if gen.SupportedEditionsMinimum != descriptorpb.Edition_EDITION_UNKNOWN && gen.SupportedEditionsMaximum != descriptorpb.Edition_EDITION_UNKNOWN {
+		resp.MinimumEdition = proto.Int32(int32(gen.SupportedEditionsMinimum))
+		resp.MaximumEdition = proto.Int32(int32(gen.SupportedEditionsMaximum))
 	}
 	return resp
 }
