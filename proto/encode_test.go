@@ -309,3 +309,32 @@ func ExampleMarshal() {
 	// Output: 125ns encoded into 2 bytes of Protobuf wire format:
 	// 10 7d
 }
+
+// This example illustrates how to marshal (encode) many Protobuf messages into
+// wire-format encoding, using the same buffer.
+//
+// MarshalAppend will grow the buffer as needed, so over time it will grow large
+// enough to not need further allocations.
+//
+// If unbounded growth of the buffer is undesirable in your application, you can
+// use [MarshalOptions.Size] to determine a buffer size that is guaranteed to be
+// large enough for marshaling without allocations.
+func ExampleMarshalOptions_MarshalAppend_sameBuffer() {
+	var m proto.Message
+
+	opts := proto.MarshalOptions{
+		// set e.g. Deterministic: true, if needed
+	}
+
+	var buf []byte
+	for i := 0; i < 100000; i++ {
+		var err error
+		buf, err = opts.MarshalAppend(buf[:0], m)
+		if err != nil {
+			panic(err)
+		}
+		// cap(buf) will grow to hold the largest m.
+
+		// write buf to disk, network, etc.
+	}
+}

@@ -72,7 +72,7 @@ type MarshalOptions struct {
 
 // Marshal returns the wire-format encoding of m.
 //
-// This is the most convenient entry point for encoding a Protobuf message.
+// This is the most common entry point for encoding a Protobuf message.
 //
 // See the [MarshalOptions] type if you need more control.
 func Marshal(m Message) ([]byte, error) {
@@ -120,6 +120,9 @@ func emptyBytesForMessage(m Message) []byte {
 
 // MarshalAppend appends the wire-format encoding of m to b,
 // returning the result.
+//
+// This is a less common entry point than [Marshal], which is only needed if you
+// need to supply your own buffers for performance reasons.
 func (o MarshalOptions) MarshalAppend(b []byte, m Message) ([]byte, error) {
 	// Treat nil message interface as an empty message; nothing to append.
 	if m == nil {
