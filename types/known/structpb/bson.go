@@ -47,6 +47,10 @@ func NewBsonValue(t bsontype.Type, v []byte) (*Value, error) {
 		if err != nil {
 			return nil, protoimpl.X.NewError("invalid list: %v | error: %v", v, err)
 		}
+
+		// Since the input is a []interface{}, the result is a []interface{} as well
+		val = SanitizeMongoTypes(val).([]interface{})
+
 		v2, err := NewList(val)
 		if err != nil {
 			return nil, err
@@ -65,7 +69,7 @@ func NewBsonValue(t bsontype.Type, v []byte) (*Value, error) {
 		}
 		return NewStructValue(v2), nil
 	default:
-		return nil, protoimpl.X.NewError("invalid type: %v", t)
+		return nil, protoimpl.X.NewError("invalid type: %v | %T", t, t)
 	}
 }
 
@@ -83,6 +87,38 @@ func (x *Value) UnmarshalBSONValue(t bsontype.Type, b []byte) error {
 	}
 	*x = *x2
 	return nil
+}
+
+// Sometimes objects are returned as bson.D or bson.M, this function will convert them to the correct go types for proto compatibility
+func SanitizeMongoTypes(val interface{}) interface{} {
+	switch v := val.(type) {
+	case bson.D:
+		mapVal := make(map[string]interface{})
+		for _, item := range v {
+			mapVal[item.Key] = SanitizeMongoTypes(item.Value)
+		}
+		return mapVal
+	case bson.A:
+		var arr []interface{}
+		for _, item := range v {
+			arr = append(arr, SanitizeMongoTypes(item))
+		}
+		return arr
+	case bson.M:
+		var obj = make(map[string]interface{})
+		for key, item := range v {
+			obj[key] = SanitizeMongoTypes(item)
+		}
+		return obj
+	case []interface{}:
+		var arr []interface{}
+		for _, item := range v {
+			arr = append(arr, SanitizeMongoTypes(item))
+		}
+		return arr
+	default:
+		return val
+	}
 }
 
 // -------------------------------------------------------------- //
