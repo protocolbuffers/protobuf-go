@@ -61,7 +61,22 @@ func TestExtensionFuncs(t *testing.T) {
 			wantDefault: false,
 			value:       true,
 		},
+		{
+			message:     &descpb.MessageOptions{},
+			ext:         test3pb.E_OptionalInt32Ext,
+			wantDefault: int32(0),
+			value:       int32(1),
+		},
+		{
+			message:     &descpb.MessageOptions{},
+			ext:         test3pb.E_RepeatedInt32Ext,
+			wantDefault: ([]int32)(nil),
+			value:       []int32{1, 2, 3},
+		},
 	} {
+		if test.ext.TypeDescriptor().HasPresence() == test.ext.TypeDescriptor().IsList() {
+			t.Errorf("Extension %v has presence = %v, want %v", test.ext.TypeDescriptor().FullName(), test.ext.TypeDescriptor().HasPresence(), !test.ext.TypeDescriptor().IsList())
+		}
 		desc := fmt.Sprintf("Extension %v, value %v", test.ext.TypeDescriptor().FullName(), test.value)
 		if proto.HasExtension(test.message, test.ext) {
 			t.Errorf("%v:\nbefore setting extension HasExtension(...) = true, want false", desc)
@@ -247,15 +262,15 @@ func TestExtensionRanger(t *testing.T) {
 	}, {
 		msg: &descpb.MessageOptions{},
 		want: map[protoreflect.ExtensionType]interface{}{
-			test3pb.E_OptionalInt32:          int32(5),
-			test3pb.E_OptionalString:         string("hello"),
-			test3pb.E_OptionalForeignMessage: &test3pb.ForeignMessage{},
-			test3pb.E_OptionalForeignEnum:    test3pb.ForeignEnum_FOREIGN_BAR,
+			test3pb.E_OptionalInt32Ext:          int32(5),
+			test3pb.E_OptionalStringExt:         string("hello"),
+			test3pb.E_OptionalForeignMessageExt: &test3pb.ForeignMessage{},
+			test3pb.E_OptionalForeignEnumExt:    test3pb.ForeignEnum_FOREIGN_BAR,
 
-			test3pb.E_OptionalOptionalInt32:          int32(5),
-			test3pb.E_OptionalOptionalString:         string("hello"),
-			test3pb.E_OptionalOptionalForeignMessage: &test3pb.ForeignMessage{},
-			test3pb.E_OptionalOptionalForeignEnum:    test3pb.ForeignEnum_FOREIGN_BAR,
+			test3pb.E_OptionalOptionalInt32Ext:          int32(5),
+			test3pb.E_OptionalOptionalStringExt:         string("hello"),
+			test3pb.E_OptionalOptionalForeignMessageExt: &test3pb.ForeignMessage{},
+			test3pb.E_OptionalOptionalForeignEnumExt:    test3pb.ForeignEnum_FOREIGN_BAR,
 		},
 	}}
 
