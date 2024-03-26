@@ -71,6 +71,10 @@ type MarshalOptions struct {
 }
 
 // Marshal returns the wire-format encoding of m.
+//
+// This is the most convenient entry point for encoding a Protobuf message.
+//
+// See the [MarshalOptions] type if you need more control.
 func Marshal(m Message) ([]byte, error) {
 	// Treat nil message interface as an empty message; nothing to output.
 	if m == nil {

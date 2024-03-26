@@ -17,6 +17,7 @@ import (
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/known/durationpb"
 
 	"google.golang.org/protobuf/internal/errors"
 	orderpb "google.golang.org/protobuf/internal/testprotos/order"
@@ -280,4 +281,31 @@ func TestEncodeEmpty(t *testing.T) {
 			}
 		})
 	}
+}
+
+// This example illustrates how to marshal (encode) a Protobuf message struct
+// literal into wire-format encoding.
+//
+// This example hard-codes a duration of 125ns for the illustration of struct
+// fields, but note that you do not need to fill the fields of well-known types
+// like duration.proto yourself. To convert a time.Duration, use
+// [google.golang.org/protobuf/types/known/durationpb.New].
+func ExampleMarshal() {
+	b, err := proto.Marshal(&durationpb.Duration{
+		Nanos: 125,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("125ns encoded into %d bytes of Protobuf wire format:\n% x\n", len(b), b)
+
+	// You can use protoscope to explore the wire format:
+	// https://github.com/protocolbuffers/protoscope
+	//
+	// echo -n '10 7d' | xxd -r -ps | protoscope
+	// 2: 125
+
+	// Output: 125ns encoded into 2 bytes of Protobuf wire format:
+	// 10 7d
 }
