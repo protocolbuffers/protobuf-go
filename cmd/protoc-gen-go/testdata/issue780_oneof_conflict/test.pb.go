@@ -22,7 +22,7 @@ type Foo struct {
 	// Types that are assignable to Bar:
 	//
 	//	*Foo_GetBar
-	Bar isFoo_Bar `protobuf_oneof:"bar"`
+	Bar isFoo_Bar `protobuf_oneof:"bar" json:"bar,omitempty"`
 }
 
 func (x *Foo) Reset() {
@@ -76,7 +76,7 @@ type isFoo_Bar interface {
 }
 
 type Foo_GetBar struct {
-	GetBar string `protobuf:"bytes,1,opt,name=get_bar,json=getBar,oneof"`
+	GetBar string `protobuf:"bytes,1,opt,name=get_bar,json=getBar,oneof" json:"getBar"`
 }
 
 func (*Foo_GetBar) isFoo_Bar() {}

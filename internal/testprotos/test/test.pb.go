@@ -341,13 +341,13 @@ type TestAllTypes struct {
 	//	*TestAllTypes_OneofDouble
 	//	*TestAllTypes_OneofEnum
 	//	*TestAllTypes_Oneofgroup
-	OneofField isTestAllTypes_OneofField `protobuf_oneof:"oneof_field"`
+	OneofField isTestAllTypes_OneofField `protobuf_oneof:"oneof_field" json:"oneofField,omitempty"`
 	// A oneof with exactly one field.
 	//
 	// Types that are assignable to OneofOptional:
 	//
 	//	*TestAllTypes_OneofOptionalUint32
-	OneofOptional isTestAllTypes_OneofOptional `protobuf_oneof:"oneof_optional"`
+	OneofOptional isTestAllTypes_OneofOptional `protobuf_oneof:"oneof_optional" json:"oneofOptional,omitempty"`
 }
 
 // Default values for TestAllTypes fields.
@@ -1049,43 +1049,43 @@ type isTestAllTypes_OneofField interface {
 }
 
 type TestAllTypes_OneofUint32 struct {
-	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,oneof"`
+	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,oneof" json:"oneofUint32"`
 }
 
 type TestAllTypes_OneofNestedMessage struct {
-	OneofNestedMessage *TestAllTypes_NestedMessage `protobuf:"bytes,112,opt,name=oneof_nested_message,json=oneofNestedMessage,oneof"`
+	OneofNestedMessage *TestAllTypes_NestedMessage `protobuf:"bytes,112,opt,name=oneof_nested_message,json=oneofNestedMessage,oneof" json:"oneofNestedMessage"`
 }
 
 type TestAllTypes_OneofString struct {
-	OneofString string `protobuf:"bytes,113,opt,name=oneof_string,json=oneofString,oneof"`
+	OneofString string `protobuf:"bytes,113,opt,name=oneof_string,json=oneofString,oneof" json:"oneofString"`
 }
 
 type TestAllTypes_OneofBytes struct {
-	OneofBytes []byte `protobuf:"bytes,114,opt,name=oneof_bytes,json=oneofBytes,oneof"`
+	OneofBytes []byte `protobuf:"bytes,114,opt,name=oneof_bytes,json=oneofBytes,oneof" json:"oneofBytes"`
 }
 
 type TestAllTypes_OneofBool struct {
-	OneofBool bool `protobuf:"varint,115,opt,name=oneof_bool,json=oneofBool,oneof"`
+	OneofBool bool `protobuf:"varint,115,opt,name=oneof_bool,json=oneofBool,oneof" json:"oneofBool"`
 }
 
 type TestAllTypes_OneofUint64 struct {
-	OneofUint64 uint64 `protobuf:"varint,116,opt,name=oneof_uint64,json=oneofUint64,oneof"`
+	OneofUint64 uint64 `protobuf:"varint,116,opt,name=oneof_uint64,json=oneofUint64,oneof" json:"oneofUint64"`
 }
 
 type TestAllTypes_OneofFloat struct {
-	OneofFloat float32 `protobuf:"fixed32,117,opt,name=oneof_float,json=oneofFloat,oneof"`
+	OneofFloat float32 `protobuf:"fixed32,117,opt,name=oneof_float,json=oneofFloat,oneof" json:"oneofFloat"`
 }
 
 type TestAllTypes_OneofDouble struct {
-	OneofDouble float64 `protobuf:"fixed64,118,opt,name=oneof_double,json=oneofDouble,oneof"`
+	OneofDouble float64 `protobuf:"fixed64,118,opt,name=oneof_double,json=oneofDouble,oneof" json:"oneofDouble"`
 }
 
 type TestAllTypes_OneofEnum struct {
-	OneofEnum TestAllTypes_NestedEnum `protobuf:"varint,119,opt,name=oneof_enum,json=oneofEnum,enum=goproto.proto.test.TestAllTypes_NestedEnum,oneof"`
+	OneofEnum TestAllTypes_NestedEnum `protobuf:"varint,119,opt,name=oneof_enum,json=oneofEnum,enum=goproto.proto.test.TestAllTypes_NestedEnum,oneof" json:"oneofEnum"`
 }
 
 type TestAllTypes_Oneofgroup struct {
-	Oneofgroup *TestAllTypes_OneofGroup `protobuf:"group,121,opt,name=OneofGroup,json=oneofgroup,oneof"`
+	Oneofgroup *TestAllTypes_OneofGroup `protobuf:"group,121,opt,name=OneofGroup,json=oneofgroup,oneof" json:"oneofgroup"`
 }
 
 func (*TestAllTypes_OneofUint32) isTestAllTypes_OneofField() {}
@@ -1113,7 +1113,7 @@ type isTestAllTypes_OneofOptional interface {
 }
 
 type TestAllTypes_OneofOptionalUint32 struct {
-	OneofOptionalUint32 uint32 `protobuf:"varint,120,opt,name=oneof_optional_uint32,json=oneofOptionalUint32,oneof"`
+	OneofOptionalUint32 uint32 `protobuf:"varint,120,opt,name=oneof_optional_uint32,json=oneofOptionalUint32,oneof" json:"oneofOptionalUint32"`
 }
 
 func (*TestAllTypes_OneofOptionalUint32) isTestAllTypes_OneofOptional() {}
@@ -1129,7 +1129,7 @@ type TestDeprecatedMessage struct {
 	// Types that are assignable to DeprecatedOneof:
 	//
 	//	*TestDeprecatedMessage_DeprecatedOneofField
-	DeprecatedOneof isTestDeprecatedMessage_DeprecatedOneof `protobuf_oneof:"deprecated_oneof"`
+	DeprecatedOneof isTestDeprecatedMessage_DeprecatedOneof `protobuf_oneof:"deprecated_oneof" json:"deprecatedOneof,omitempty"`
 }
 
 func (x *TestDeprecatedMessage) Reset() {
@@ -1193,7 +1193,7 @@ type isTestDeprecatedMessage_DeprecatedOneof interface {
 
 type TestDeprecatedMessage_DeprecatedOneofField struct {
 	// Deprecated: Marked as deprecated in internal/testprotos/test/test.proto.
-	DeprecatedOneofField int32 `protobuf:"varint,2,opt,name=deprecated_oneof_field,json=deprecatedOneofField,oneof"`
+	DeprecatedOneofField int32 `protobuf:"varint,2,opt,name=deprecated_oneof_field,json=deprecatedOneofField,oneof" json:"deprecatedOneofField"`
 }
 
 func (*TestDeprecatedMessage_DeprecatedOneofField) isTestDeprecatedMessage_DeprecatedOneof() {}
@@ -1544,7 +1544,7 @@ type TestRequiredForeign struct {
 	// Types that are assignable to OneofField:
 	//
 	//	*TestRequiredForeign_OneofMessage
-	OneofField isTestRequiredForeign_OneofField `protobuf_oneof:"oneof_field"`
+	OneofField isTestRequiredForeign_OneofField `protobuf_oneof:"oneof_field" json:"oneofField,omitempty"`
 }
 
 func (x *TestRequiredForeign) Reset() {
@@ -1619,7 +1619,7 @@ type isTestRequiredForeign_OneofField interface {
 }
 
 type TestRequiredForeign_OneofMessage struct {
-	OneofMessage *TestRequired `protobuf:"bytes,4,opt,name=oneof_message,json=oneofMessage,oneof"`
+	OneofMessage *TestRequired `protobuf:"bytes,4,opt,name=oneof_message,json=oneofMessage,oneof" json:"oneofMessage"`
 }
 
 func (*TestRequiredForeign_OneofMessage) isTestRequiredForeign_OneofField() {}

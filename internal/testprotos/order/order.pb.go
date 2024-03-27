@@ -27,7 +27,7 @@ type Message struct {
 	// Types that are assignable to Oneof_1:
 	//
 	//	*Message_Field_10
-	Oneof_1  isMessage_Oneof_1 `protobuf_oneof:"oneof_1"`
+	Oneof_1  isMessage_Oneof_1 `protobuf_oneof:"oneof_1" json:"oneof1,omitempty"`
 	Field_20 *string           `protobuf:"bytes,20,opt,name=field_20,json=field20" json:"field_20,omitempty"`
 }
 
@@ -103,7 +103,7 @@ type isMessage_Oneof_1 interface {
 }
 
 type Message_Field_10 struct {
-	Field_10 string `protobuf:"bytes,10,opt,name=field_10,json=field10,oneof"`
+	Field_10 string `protobuf:"bytes,10,opt,name=field_10,json=field10,oneof" json:"field10"`
 }
 
 func (*Message_Field_10) isMessage_Oneof_1() {}

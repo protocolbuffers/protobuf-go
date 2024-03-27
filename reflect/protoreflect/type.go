@@ -425,6 +425,10 @@ type OneofDescriptor interface {
 	// Fields is a list of fields belonging to this oneof.
 	Fields() FieldDescriptors
 
+	// JSONName reports the name used for JSON serialization.
+	// It is usually the camel-cased form of the oneof name.
+	JSONName() string
+
 	isOneofDescriptor
 }
 type isOneofDescriptor interface{ ProtoType(OneofDescriptor) }

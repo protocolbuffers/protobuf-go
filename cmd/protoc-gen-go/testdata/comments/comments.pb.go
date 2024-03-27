@@ -89,7 +89,7 @@ type Message1 struct {
 	// Types that are assignable to Oneof1A:
 	//
 	//	*Message1_Oneof1AField1
-	Oneof1A isMessage1_Oneof1A `protobuf_oneof:"Oneof1a"`
+	Oneof1A isMessage1_Oneof1A `protobuf_oneof:"Oneof1a" json:"Oneof1a,omitempty"`
 }
 
 func (x *Message1) Reset() {
@@ -151,7 +151,7 @@ type isMessage1_Oneof1A interface {
 
 type Message1_Oneof1AField1 struct {
 	// COMMENT: Oneof1AField1.Leading
-	Oneof1AField1 string `protobuf:"bytes,2,opt,name=Oneof1AField1,oneof"` // COMMENT: Oneof1AField1.Trailing
+	Oneof1AField1 string `protobuf:"bytes,2,opt,name=Oneof1AField1,oneof" json:"Oneof1AField1"` // COMMENT: Oneof1AField1.Trailing
 }
 
 func (*Message1_Oneof1AField1) isMessage1_Oneof1A() {}

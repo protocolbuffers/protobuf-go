@@ -170,7 +170,7 @@ type TopLevelMessage struct {
 	// Types that are assignable to O:
 	//
 	//	*TopLevelMessage_I
-	O isTopLevelMessage_O `protobuf_oneof:"o"`
+	O isTopLevelMessage_O `protobuf_oneof:"o" json:"o,omitempty"`
 }
 
 func (x *TopLevelMessage) Reset() {
@@ -231,7 +231,7 @@ type isTopLevelMessage_O interface {
 }
 
 type TopLevelMessage_I struct {
-	I int64 `protobuf:"varint,2,opt,name=i,oneof"`
+	I int64 `protobuf:"varint,2,opt,name=i,oneof" json:"i"`
 }
 
 func (*TopLevelMessage_I) isTopLevelMessage_O() {}

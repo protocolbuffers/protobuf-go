@@ -194,7 +194,7 @@ type M struct {
 	//
 	//	*M_OneofInt32
 	//	*M_OneofInt64
-	OneofField isM_OneofField `protobuf_oneof:"oneof_field"`
+	OneofField isM_OneofField `protobuf_oneof:"oneof_field" json:"oneofField,omitempty"`
 }
 
 // Default values for M fields.
@@ -294,11 +294,11 @@ type isM_OneofField interface {
 }
 
 type M_OneofInt32 struct {
-	OneofInt32 int32 `protobuf:"varint,2,opt,name=oneof_int32,json=oneofInt32,oneof"`
+	OneofInt32 int32 `protobuf:"varint,2,opt,name=oneof_int32,json=oneofInt32,oneof" json:"oneofInt32"`
 }
 
 type M_OneofInt64 struct {
-	OneofInt64 int64 `protobuf:"varint,3,opt,name=oneof_int64,json=oneofInt64,oneof"`
+	OneofInt64 int64 `protobuf:"varint,3,opt,name=oneof_int64,json=oneofInt64,oneof" json:"oneofInt64"`
 }
 
 func (*M_OneofInt32) isM_OneofField() {}
@@ -314,7 +314,7 @@ type M_Submessage struct {
 	//
 	//	*M_Submessage_SubmessageOneofInt32
 	//	*M_Submessage_SubmessageOneofInt64
-	SubmessageOneofField isM_Submessage_SubmessageOneofField `protobuf_oneof:"submessage_oneof_field"`
+	SubmessageOneofField isM_Submessage_SubmessageOneofField `protobuf_oneof:"submessage_oneof_field" json:"submessageOneofField,omitempty"`
 }
 
 func (x *M_Submessage) Reset() {
@@ -375,11 +375,11 @@ type isM_Submessage_SubmessageOneofField interface {
 }
 
 type M_Submessage_SubmessageOneofInt32 struct {
-	SubmessageOneofInt32 int32 `protobuf:"varint,1,opt,name=submessage_oneof_int32,json=submessageOneofInt32,oneof"`
+	SubmessageOneofInt32 int32 `protobuf:"varint,1,opt,name=submessage_oneof_int32,json=submessageOneofInt32,oneof" json:"submessageOneofInt32"`
 }
 
 type M_Submessage_SubmessageOneofInt64 struct {
-	SubmessageOneofInt64 int64 `protobuf:"varint,2,opt,name=submessage_oneof_int64,json=submessageOneofInt64,oneof"`
+	SubmessageOneofInt64 int64 `protobuf:"varint,2,opt,name=submessage_oneof_int64,json=submessageOneofInt64,oneof" json:"submessageOneofInt64"`
 }
 
 func (*M_Submessage_SubmessageOneofInt32) isM_Submessage_SubmessageOneofField() {}
