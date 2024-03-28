@@ -261,8 +261,6 @@ func (m *extensionMap) Has(xt protoreflect.ExtensionType) (ok bool) {
 		return x.Value().List().Len() > 0
 	case xd.IsMap():
 		return x.Value().Map().Len() > 0
-	case xd.Message() != nil:
-		return x.Value().Message().IsValid()
 	}
 	return true
 }

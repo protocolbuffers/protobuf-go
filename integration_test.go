@@ -145,7 +145,8 @@ func TestIntegration(t *testing.T) {
 		runGo("PureGo", command{}, "go", "test", "-race", "-tags", "purego", "./...")
 		runGo("Reflect", command{}, "go", "test", "-race", "-tags", "protoreflect", "./...")
 		if goVersion == golangLatest {
-			runGo("ProtoLegacy", command{}, "go", "test", "-race", "-tags", "protolegacy", "./...")
+			runGo("ProtoLegacyRace", command{}, "go", "test", "-race", "-tags", "protolegacy", "./...")
+			runGo("ProtoLegacy", command{}, "go", "test", "-tags", "protolegacy", "./...")
 			runGo("ProtocGenGo", command{Dir: "cmd/protoc-gen-go/testdata"}, "go", "test")
 			runGo("Conformance", command{Dir: "internal/conformance"}, "go", "test", "-execute")
 

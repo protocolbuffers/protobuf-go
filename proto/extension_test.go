@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
+	"google.golang.org/protobuf/internal/test/race"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoimpl"
@@ -97,6 +98,64 @@ func TestExtensionFuncs(t *testing.T) {
 		if proto.HasExtension(test.message, test.ext) {
 			t.Errorf("%v:\nafter clearing extension HasExtension(...) = true, want false", desc)
 		}
+	}
+}
+
+func TestHasExtensionNoAlloc(t *testing.T) {
+	// If extensions are lazy, they are unmarshaled on first use. Verify that
+	// HasExtension does not do this by testing that it does not allocation. This
+	// test always passes if extension are eager (the default if protolegacy =
+	// false).
+	if race.Enabled {
+		t.Skip("HasExtension always allocates in -race mode")
+	}
+	// Create a message with a message extension. Doing it this way produces a
+	// non-lazy (eager) variant. Then do a marshal/unmarshal roundtrip to produce
+	// a lazy version (if protolegacy = true).
+	want := int32(42)
+	mEager := &testpb.TestAllExtensions{}
+	proto.SetExtension(mEager, testpb.E_OptionalNestedMessage, &testpb.TestAllExtensions_NestedMessage{
+		A:           proto.Int32(want),
+		Corecursive: &testpb.TestAllExtensions{},
+	})
+
+	b, err := proto.Marshal(mEager)
+	if err != nil {
+		t.Fatal(err)
+	}
+	mLazy := &testpb.TestAllExtensions{}
+	if err := proto.Unmarshal(b, mLazy); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, tc := range []struct {
+		name string
+		m    proto.Message
+	}{
+		{name: "Nil", m: nil},
+		{name: "Eager", m: mEager},
+		{name: "Lazy", m: mLazy},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			// Testing for allocations can be done with `testing.AllocsPerRun`, but it
+			// has some snags that complicate its use for us:
+			//  - It performs a warmup invocation before starting the measurement. We
+			//    want to skip this because lazy initialization only happens once.
+			//  - Despite returning a float64, the returned value is an integer, so <1
+			//    allocations per operation are returned as 0. Therefore, pass runs =
+			//    1.
+			warmup := true
+			avg := testing.AllocsPerRun(1, func() {
+				if warmup {
+					warmup = false
+					return
+				}
+				proto.HasExtension(tc.m, testpb.E_OptionalNestedMessage)
+			})
+			if avg != 0 {
+				t.Errorf("proto.HasExtension should not allocate, but allocated %.2fx per run", avg)
+			}
+		})
 	}
 }
 
