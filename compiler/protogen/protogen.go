@@ -143,7 +143,7 @@ type Options struct {
 	//   opts := &protogen.Options{
 	//     ParamFunc: flags.Set,
 	//   }
-	//   protogen.Run(opts, func(p *protogen.Plugin) error {
+	//   opts.Run(func(p *protogen.Plugin) error {
 	//     if *value { ... }
 	//   })
 	ParamFunc func(name, value string) error
