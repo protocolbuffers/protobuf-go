@@ -204,3 +204,41 @@ func BenchmarkRequired(b *testing.B) {
 		})
 	})
 }
+
+func BenchmarkExtension(b *testing.B) {
+	b.Run("Has/None", func(b *testing.B) {
+		m := &testpb.TestAllExtensions{}
+		for i := 0; i < b.N; i++ {
+			proto.HasExtension(m, testpb.E_OptionalNestedMessage)
+		}
+	})
+	b.Run("Has/Set", func(b *testing.B) {
+		m := &testpb.TestAllExtensions{}
+		ext := &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(-32)}
+		proto.SetExtension(m, testpb.E_OptionalNestedMessage, ext)
+		for i := 0; i < b.N; i++ {
+			proto.HasExtension(m, testpb.E_OptionalNestedMessage)
+		}
+	})
+	b.Run("Get/None", func(b *testing.B) {
+		m := &testpb.TestAllExtensions{}
+		for i := 0; i < b.N; i++ {
+			proto.GetExtension(m, testpb.E_OptionalNestedMessage)
+		}
+	})
+	b.Run("Get/Set", func(b *testing.B) {
+		m := &testpb.TestAllExtensions{}
+		ext := &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(-32)}
+		proto.SetExtension(m, testpb.E_OptionalNestedMessage, ext)
+		for i := 0; i < b.N; i++ {
+			proto.GetExtension(m, testpb.E_OptionalNestedMessage)
+		}
+	})
+	b.Run("Set", func(b *testing.B) {
+		m := &testpb.TestAllExtensions{}
+		ext := &testpb.TestAllExtensions_NestedMessage{A: proto.Int32(-32)}
+		for i := 0; i < b.N; i++ {
+			proto.SetExtension(m, testpb.E_OptionalNestedMessage, ext)
+		}
+	})
+}
