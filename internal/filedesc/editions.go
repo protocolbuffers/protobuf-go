@@ -20,6 +20,7 @@ func init() {
 	unmarshalEditionDefaults(editiondefaults.Defaults)
 	SurrogateProto2.L1.EditionFeatures = getFeaturesFor(EditionProto2)
 	SurrogateProto3.L1.EditionFeatures = getFeaturesFor(EditionProto3)
+	SurrogateEdition2023.L1.EditionFeatures = getFeaturesFor(Edition2023)
 }
 
 func unmarshalGoFeature(b []byte, parent EditionFeatures) EditionFeatures {

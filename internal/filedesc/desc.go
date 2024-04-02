@@ -538,8 +538,9 @@ func (md *Method) ProtoInternal(pragma.DoNotImplement)     {}
 // Surrogate files are can be used to create standalone descriptors
 // where the syntax is only information derived from the parent file.
 var (
-	SurrogateProto2 = &File{L1: FileL1{Syntax: protoreflect.Proto2}, L2: &FileL2{}}
-	SurrogateProto3 = &File{L1: FileL1{Syntax: protoreflect.Proto3}, L2: &FileL2{}}
+	SurrogateProto2      = &File{L1: FileL1{Syntax: protoreflect.Proto2}, L2: &FileL2{}}
+	SurrogateProto3      = &File{L1: FileL1{Syntax: protoreflect.Proto3}, L2: &FileL2{}}
+	SurrogateEdition2023 = &File{L1: FileL1{Syntax: protoreflect.Editions, Edition: Edition2023}, L2: &FileL2{}}
 )
 
 type (
