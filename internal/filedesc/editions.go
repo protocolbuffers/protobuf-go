@@ -14,6 +14,7 @@ import (
 )
 
 var defaultsCache = make(map[Edition]EditionFeatures)
+var defaultsKeys = []Edition{}
 
 func init() {
 	unmarshalEditionDefaults(editiondefaults.Defaults)
@@ -112,6 +113,7 @@ func unmarshalEditionDefault(b []byte) {
 		}
 	}
 	defaultsCache[ed] = fs
+	defaultsKeys = append(defaultsKeys, ed)
 }
 
 func unmarshalEditionDefaults(b []byte) {
@@ -137,8 +139,15 @@ func unmarshalEditionDefaults(b []byte) {
 }
 
 func getFeaturesFor(ed Edition) EditionFeatures {
-	if def, ok := defaultsCache[ed]; ok {
-		return def
+	match := EditionUnknown
+	for _, key := range defaultsKeys {
+		if key > ed {
+			break
+		}
+		match = key
 	}
-	panic(fmt.Sprintf("unsupported edition: %v", ed))
+	if match == EditionUnknown {
+		panic(fmt.Sprintf("unsupported edition: %v", ed))
+	}
+	return defaultsCache[match]
 }
