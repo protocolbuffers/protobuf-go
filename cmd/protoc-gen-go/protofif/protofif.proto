@@ -9,6 +9,8 @@ extend google.protobuf.MessageOptions {
   optional bool bsontags = 65001;
   // Defaults tag editable:"false" on all go struct fields
   optional bool non_editable = 65002;
+  // Defaults tag database:"default" on all go struct fields
+  optional bool database_default = 65003;
 }
 
 extend google.protobuf.FieldOptions {

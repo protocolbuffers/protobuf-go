@@ -438,6 +438,13 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		})
 	}
 
+	if databaseDefault := proto.GetExtension(m.Desc.Options(), protofif.E_DatabaseDefault).(bool); databaseDefault {
+		moretags.Set(&structtag.Tag{
+			Key:  "database",
+			Name: "default",
+		})
+	}
+
 	moreTagsString := proto.GetExtension(field.Desc.Options(), protofif.E_Moretags).(string)
 	if moreTagsString != "" {
 		tags, err := structtag.Parse(moreTagsString)
