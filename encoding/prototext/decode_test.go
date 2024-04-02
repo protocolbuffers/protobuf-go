@@ -622,10 +622,12 @@ OptGroup: {}
 		inputText: `
 opt_nested: {}
 OptGroup: {}
+delimited_field: {}
 `,
 		wantMessage: &pbeditions.Nests{
-			OptNested: &pbeditions.Nested{},
-			Optgroup:  &pbeditions.Nests_OptGroup{},
+			OptNested:      &pbeditions.Nested{},
+			Optgroup:       &pbeditions.Nests_OptGroup{},
+			DelimitedField: &pbeditions.Nests_OptGroup{},
 		},
 	}, {
 		desc:         "message fields with no field separator",
@@ -644,10 +646,12 @@ OptGroup {}
 		inputText: `
 opt_nested {}
 OptGroup {}
+delimited_field {}
 `,
 		wantMessage: &pbeditions.Nests{
-			OptNested: &pbeditions.Nested{},
-			Optgroup:  &pbeditions.Nests_OptGroup{},
+			OptNested:      &pbeditions.Nested{},
+			Optgroup:       &pbeditions.Nests_OptGroup{},
+			DelimitedField: &pbeditions.Nests_OptGroup{},
 		},
 	}, {
 		desc:         "group field name",
@@ -655,10 +659,15 @@ OptGroup {}
 		inputText:    `optgroup: {}`,
 		wantErr:      "unknown field: optgroup",
 	}, {
-		desc:         "delimited encoded message field name",
+		desc:         "delimited encoded group-line message field name",
 		inputMessage: &pbeditions.Nests{},
 		inputText:    `optgroup: {}`,
 		wantErr:      "unknown field: optgroup",
+	}, {
+		desc:         "delimited encoded message field name",
+		inputMessage: &pbeditions.Nests{},
+		inputText:    `Delimited_Field: {}`,
+		wantErr:      "unknown field: Delimited_Field",
 	}, {
 		desc:         "proto2 nested messages",
 		inputMessage: &pb2.Nests{},

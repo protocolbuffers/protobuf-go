@@ -323,12 +323,16 @@ func checkValidGroup(f *filedesc.File, fd protoreflect.FieldDescriptor) error {
 		return errors.New("invalid under proto3 semantics")
 	case md == nil || md.IsPlaceholder():
 		return errors.New("message must be resolvable")
-	case fd.FullName().Parent() != md.FullName().Parent():
-		return errors.New("message and field must be declared in the same scope")
-	case !unicode.IsUpper(rune(md.Name()[0])):
-		return errors.New("message name must start with an uppercase")
-	case fd.Name() != protoreflect.Name(strings.ToLower(string(md.Name()))):
-		return errors.New("field name must be lowercased form of the message name")
+	}
+	if f.L1.Edition < fromEditionProto(descriptorpb.Edition_EDITION_2023) {
+		switch {
+		case fd.FullName().Parent() != md.FullName().Parent():
+			return errors.New("message and field must be declared in the same scope")
+		case !unicode.IsUpper(rune(md.Name()[0])):
+			return errors.New("message name must start with an uppercase")
+		case fd.Name() != protoreflect.Name(strings.ToLower(string(md.Name()))):
+			return errors.New("field name must be lowercased form of the message name")
+		}
 	}
 	return nil
 }

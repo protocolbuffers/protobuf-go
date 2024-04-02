@@ -58,6 +58,8 @@ message TestAllTypes {
     int32 same_field_number = 16;
   }
   OptionalGroup optionalgroup = 16 [features.message_encoding = DELIMITED];
+  OptionalGroup not_group_like_delimited = 17
+      [features.message_encoding = DELIMITED];
   NestedMessage optional_nested_message = 18;
   ForeignMessage optional_foreign_message = 19;
   NestedEnum optional_nested_enum = 21;

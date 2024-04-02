@@ -7,6 +7,7 @@ package filedesc
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"sync"
 	"sync/atomic"
 
@@ -580,6 +581,34 @@ func (s *stringName) InitJSON(name string) {
 	s.nameJSON = name
 }
 
+// Returns true if this field is structured like the synthetic field of a proto2
+// group. This allows us to expand our treatment of delimited fields without
+// breaking proto2 files that have been upgraded to editions.
+func isGroupLike(fd protoreflect.FieldDescriptor) bool {
+	// Groups are always group types.
+	if fd.Kind() != protoreflect.GroupKind {
+		return false
+	}
+
+	// Group fields are always the lowercase type name.
+	if strings.ToLower(string(fd.Message().Name())) != string(fd.Name()) {
+		return false
+	}
+
+	// Groups could only be defined in the same file they're used.
+	if fd.Message().ParentFile() != fd.ParentFile() {
+		return false
+	}
+
+	// Group messages are always defined in the same scope as the field.  File
+	// level extensions will compare NULL == NULL here, which is why the file
+	// comparison above is necessary to ensure both come from the same file.
+	if fd.IsExtension() {
+		return fd.Parent() == fd.Message().Parent()
+	}
+	return fd.ContainingMessage() == fd.Message().Parent()
+}
+
 func (s *stringName) lazyInit(fd protoreflect.FieldDescriptor) *stringName {
 	s.once.Do(func() {
 		if fd.IsExtension() {
@@ -600,7 +629,7 @@ func (s *stringName) lazyInit(fd protoreflect.FieldDescriptor) *stringName {
 
 			// Format the text name.
 			s.nameText = string(fd.Name())
-			if fd.Kind() == protoreflect.GroupKind {
+			if isGroupLike(fd) {
 				s.nameText = string(fd.Message().Name())
 			}
 		}

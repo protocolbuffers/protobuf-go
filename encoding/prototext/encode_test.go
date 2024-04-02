@@ -527,7 +527,7 @@ OptGroup: {}
 }
 `,
 	}, {
-		desc: "protoeditions delimited encoded meesage field",
+		desc: "protoeditions group-like delimited encoded message field",
 		input: &pbeditions.Nests{
 			Optgroup: &pbeditions.Nests_OptGroup{
 				OptString: proto.String("inside a group"),
@@ -545,6 +545,29 @@ OptGroup: {}
     opt_string: "nested message inside a group"
   }
   OptNestedGroup: {
+    opt_fixed32: 47
+  }
+}
+`,
+	}, {
+		desc: "protoeditions delimited encoded message field",
+		input: &pbeditions.Nests{
+			DelimitedField: &pbeditions.Nests_OptGroup{
+				OptString: proto.String("second group"),
+				OptNested: &pbeditions.Nested{
+					OptString: proto.String("second nested message inside a group"),
+				},
+				NestedDelimitedField: &pbeditions.Nests_OptGroup_OptNestedGroup{
+					OptFixed32: proto.Uint32(47),
+				},
+			},
+		},
+		want: `delimited_field: {
+  opt_string: "second group"
+  opt_nested: {
+    opt_string: "second nested message inside a group"
+  }
+  nested_delimited_field: {
     opt_fixed32: 47
   }
 }
