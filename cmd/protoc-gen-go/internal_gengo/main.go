@@ -431,6 +431,13 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		})
 	}
 
+	if editableFalseEnabled := proto.GetExtension(m.Desc.Options(), protofif.E_NonEditable).(bool); editableFalseEnabled {
+		moretags.Set(&structtag.Tag{
+			Key:  "editable",
+			Name: "false",
+		})
+	}
+
 	moreTagsString := proto.GetExtension(field.Desc.Options(), protofif.E_Moretags).(string)
 	if moreTagsString != "" {
 		tags, err := structtag.Parse(moreTagsString)

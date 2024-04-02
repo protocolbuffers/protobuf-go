@@ -4,7 +4,12 @@ import "google/protobuf/descriptor.proto";
 package protofif;
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/protofif";
 
-extend google.protobuf.MessageOptions { optional bool bsontags = 65001; }
+extend google.protobuf.MessageOptions {
+  // Defaults tag bson:"<jsonname>,omitempty" on all go struct fields
+  optional bool bsontags = 65001;
+  // Defaults tag editable:"false" on all go struct fields
+  optional bool non_editable = 65002;
+}
 
 extend google.protobuf.FieldOptions {
   optional string json = 65001;
@@ -14,8 +19,8 @@ extend google.protobuf.FieldOptions {
 
 message Timestamp {
   int64 seconds = 1;
-  int32 nanos 	= 2;
-  string loc	  = 3;
+  int32 nanos = 2;
+  string loc = 3;
 }
 
 message Duration { int64 nanoseconds = 1; }
