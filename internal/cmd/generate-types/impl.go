@@ -783,55 +783,55 @@ func (m *{{.}}) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) b
 func (m *{{.}}) Has(fd protoreflect.FieldDescriptor) bool {
 	mi := m.messageInfo()
 	mi.init()
-	if fi, xt := mi.checkField(fd); fi != nil {
+	if fi, xd := mi.checkField(fd); fi != nil {
 		return fi.has(m.pointer())
 	} else {
-		return mi.extensionMap(m.pointer()).Has(xt)
+		return mi.extensionMap(m.pointer()).Has(xd)
 	}
 }
 func (m *{{.}}) Clear(fd protoreflect.FieldDescriptor) {
 	mi := m.messageInfo()
 	mi.init()
-	if fi, xt := mi.checkField(fd); fi != nil {
+	if fi, xd := mi.checkField(fd); fi != nil {
 		fi.clear(m.pointer())
 	} else {
-		mi.extensionMap(m.pointer()).Clear(xt)
+		mi.extensionMap(m.pointer()).Clear(xd)
 	}
 }
 func (m *{{.}}) Get(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	mi := m.messageInfo()
 	mi.init()
-	if fi, xt := mi.checkField(fd); fi != nil {
+	if fi, xd := mi.checkField(fd); fi != nil {
 		return fi.get(m.pointer())
 	} else {
-		return mi.extensionMap(m.pointer()).Get(xt)
+		return mi.extensionMap(m.pointer()).Get(xd)
 	}
 }
 func (m *{{.}}) Set(fd protoreflect.FieldDescriptor, v protoreflect.Value) {
 	mi := m.messageInfo()
 	mi.init()
-	if fi, xt := mi.checkField(fd); fi != nil {
+	if fi, xd := mi.checkField(fd); fi != nil {
 		fi.set(m.pointer(), v)
 	} else {
-		mi.extensionMap(m.pointer()).Set(xt, v)
+		mi.extensionMap(m.pointer()).Set(xd, v)
 	}
 }
 func (m *{{.}}) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	mi := m.messageInfo()
 	mi.init()
-	if fi, xt := mi.checkField(fd); fi != nil {
+	if fi, xd := mi.checkField(fd); fi != nil {
 		return fi.mutable(m.pointer())
 	} else {
-		return mi.extensionMap(m.pointer()).Mutable(xt)
+		return mi.extensionMap(m.pointer()).Mutable(xd)
 	}
 }
 func (m *{{.}}) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	mi := m.messageInfo()
 	mi.init()
-	if fi, xt := mi.checkField(fd); fi != nil {
+	if fi, xd := mi.checkField(fd); fi != nil {
 		return fi.newField()
 	} else {
-		return xt.New()
+		return xd.Type().New()
 	}
 }
 func (m *{{.}}) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
