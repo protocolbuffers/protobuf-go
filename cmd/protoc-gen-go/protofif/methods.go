@@ -42,6 +42,14 @@ func NewTimestamp(t *time.Time) *Timestamp {
 	}
 }
 
+func NewTimestampFromValue(t time.Time) *Timestamp {
+	return &Timestamp{
+		Seconds: t.Unix(),
+		Nanos:   int32(t.Nanosecond()),
+		Loc:     t.Location().String(),
+	}
+}
+
 func (t *Timestamp) AsTime() *time.Time {
 	if t == nil {
 		return nil
