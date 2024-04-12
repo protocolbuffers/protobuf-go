@@ -9,11 +9,11 @@
 // Protoc parse field tags from field's tailing comment, declare extra tags like:
 // message Example {
 // ...
-// string name = 1; // @go_tags(`bson:"name" yaml:"name"`) example nam
+// string name = 1; // @go_tags(`bson:"name" yaml:"name"`) FORM 1 support comment tail
 // ...
 // }
 //
-// Go tags regexp: `(\s?)@go_tags\(` + "(`.*`)" + `\)\s`
+// FORM 1: Go tags regexp: `(\s?)@go_tags\(` + "(`.*`)" + `\)\s`
 package internal_gengo
 
 import (
@@ -62,17 +62,19 @@ func AppendGoTagsFromFieldComment(
 	}
 
 	tailTags, newTailing := ParseGoTagsFromTailingComment(tailComment)
-	for key, tailTag := range tailTags {
+	for _, tailTag := range tailTags {
+		key := tailTag.Key
+		value := tailTag.Value
 		if tailingGoTagsExcludeKeys[key] {
 			continue
 		}
 
 		_, exists := tagsMap[key]
-		if !exists {
+		if !exists { // keep sequence
 			seqKeys = append(seqKeys, key)
 		}
 
-		tagsMap[key] = tailTag
+		tagsMap[key] = value
 	}
 
 	newTags = make([][2]string, 0)
@@ -84,12 +86,16 @@ func AppendGoTagsFromFieldComment(
 	return
 }
 
+type GoTag struct {
+	Key   string
+	Value string
+}
+
 // ParseGoTagsFromTailingComment parse go tags from comment
 func ParseGoTagsFromTailingComment(tailing protogen.Comments) (
-	tags map[string]string,
+	tags []GoTag,
 	newTailing protogen.Comments,
 ) {
-	tags = make(map[string]string)
 	newTailing = tailing
 
 	matched := commentGoTagsRe.FindStringSubmatch(string(tailing))
@@ -121,7 +127,10 @@ func ParseGoTagsFromTailingComment(tailing protogen.Comments) (
 		value := pair[separateIndex+1:]
 		value = strings.Trim(value, "\"")
 
-		tags[key] = value
+		tags = append(tags, GoTag{
+			Key:   key,
+			Value: value,
+		})
 	}
 
 	return
