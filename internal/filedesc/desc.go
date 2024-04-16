@@ -422,14 +422,6 @@ type (
 		Cardinality     protoreflect.Cardinality
 		Kind            protoreflect.Kind
 		EditionFeatures EditionFeatures
-		// To resolve the EditionFeatures we need to resolve the Extendee which
-		// happens at the end of the initialization of L1. Thus, we need to buffer
-		// the unresolved features (which are parsed when starting to initialize
-		// L1). We cannot move this to L2 because it is required to initialize
-		// Kind properly. Because some of the options (i.e. packed) affect the
-		// EditionFeatures we need to unmarshal the full options after resolving
-		// the Extendee.
-		rawOptions []byte
 	}
 	ExtensionL2 struct {
 		Options          func() protoreflect.ProtoMessage
@@ -457,7 +449,16 @@ func (xd *Extension) HasPresence() bool                     { return xd.L1.Cardi
 func (xd *Extension) HasOptionalKeyword() bool {
 	return (xd.L0.ParentFile.L1.Syntax == protoreflect.Proto2 && xd.L1.Cardinality == protoreflect.Optional) || xd.lazyInit().IsProto3Optional
 }
-func (xd *Extension) IsPacked() bool                         { return xd.L1.EditionFeatures.IsPacked }
+func (xd *Extension) IsPacked() bool {
+	if xd.L1.Cardinality != protoreflect.Repeated {
+		return false
+	}
+	switch xd.L1.Kind {
+	case protoreflect.StringKind, protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
+		return false
+	}
+	return xd.L1.EditionFeatures.IsPacked
+}
 func (xd *Extension) IsExtension() bool                      { return true }
 func (xd *Extension) IsWeak() bool                           { return false }
 func (xd *Extension) IsList() bool                           { return xd.Cardinality() == protoreflect.Repeated }

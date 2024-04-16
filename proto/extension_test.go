@@ -385,3 +385,25 @@ func TestExtensionGetRace(t *testing.T) {
 	}
 	wg.Wait()
 }
+
+func TestFeatureResolution(t *testing.T) {
+	for _, tc := range []struct {
+		input interface {
+			TypeDescriptor() protoreflect.ExtensionTypeDescriptor
+		}
+		wantPacked bool
+	}{
+		{testeditionspb.E_GlobalExpandedExtension, false},
+		{testeditionspb.E_GlobalPackedExtensionOverriden, true},
+		{testeditionspb.E_RepeatedFieldEncoding_MessageExpandedExtension, false},
+		{testeditionspb.E_RepeatedFieldEncoding_MessagePackedExtensionOverriden, true},
+		{testeditionspb.E_OtherFileGlobalExpandedExtensionOverriden, false},
+		{testeditionspb.E_OtherFileGlobalPackedExtension, true},
+		{testeditionspb.E_OtherRepeatedFieldEncoding_OtherFileMessagePackedExtension, true},
+		{testeditionspb.E_OtherRepeatedFieldEncoding_OtherFileMessageExpandedExtensionOverriden, false},
+	} {
+		if got, want := tc.input.TypeDescriptor().IsPacked(), tc.wantPacked; got != want {
+			t.Errorf("%v.IsPacked() = %v, want %v", tc.input.TypeDescriptor().FullName(), got, want)
+		}
+	}
+}

@@ -1982,7 +1982,7 @@ var file_internal_testprotos_textpbeditions_test2_proto_extTypes = []protoimpl.E
 		ExtensionType: ([]uint32)(nil),
 		Field:         31,
 		Name:          "pbeditions.rpt_ext_fixed32",
-		Tag:           "fixed32,31,rep,name=rpt_ext_fixed32",
+		Tag:           "fixed32,31,rep,packed,name=rpt_ext_fixed32",
 		Filename:      "internal/testprotos/textpbeditions/test2.proto",
 	},
 	{
@@ -1990,7 +1990,7 @@ var file_internal_testprotos_textpbeditions_test2_proto_extTypes = []protoimpl.E
 		ExtensionType: ([]Enum)(nil),
 		Field:         32,
 		Name:          "pbeditions.rpt_ext_enum",
-		Tag:           "varint,32,rep,name=rpt_ext_enum,enum=pbeditions.Enum",
+		Tag:           "varint,32,rep,packed,name=rpt_ext_enum,enum=pbeditions.Enum",
 		Filename:      "internal/testprotos/textpbeditions/test2.proto",
 	},
 	{
@@ -2062,7 +2062,7 @@ var file_internal_testprotos_textpbeditions_test2_proto_extTypes = []protoimpl.E
 		ExtensionType: ([]Enum)(nil),
 		Field:         62,
 		Name:          "pbeditions.ExtensionsContainer.rpt_ext_enum",
-		Tag:           "varint,62,rep,name=rpt_ext_enum,enum=pbeditions.Enum",
+		Tag:           "varint,62,rep,packed,name=rpt_ext_enum,enum=pbeditions.Enum",
 		Filename:      "internal/testprotos/textpbeditions/test2.proto",
 	},
 	{

@@ -34,20 +34,6 @@ func newRawFile(db Builder) *File {
 	for i := range fd.allExtensions {
 		xd := &fd.allExtensions[i]
 		xd.L1.Extendee = fd.resolveMessageDependency(xd.L1.Extendee, listExtTargets, int32(i))
-
-		// If the Extendee is not resolved, we cannot resolve the edition
-		// features of the parent. This should (to my knowledge) only happen
-		// for v1 messages for which we don't support editions. In v2 the
-		// Extendee should be resolved at binary start up time.
-		if _, ok := xd.L1.Extendee.(PlaceholderMessage); !ok {
-			xd.L1.EditionFeatures = featuresFromParentDesc(xd.L1.Extendee)
-		}
-		if xd.L1.rawOptions != nil {
-			xd.unmarshalOptions(xd.L1.rawOptions)
-		}
-		if xd.L1.Kind == protoreflect.MessageKind && xd.L1.EditionFeatures.IsDelimitedEncoded {
-			xd.L1.Kind = protoreflect.GroupKind
-		}
 	}
 
 	fd.checkDecls()
@@ -459,6 +445,7 @@ func (xd *Extension) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd prot
 	xd.L0.ParentFile = pf
 	xd.L0.Parent = pd
 	xd.L0.Index = i
+	xd.L1.EditionFeatures = featuresFromParentDesc(pd)
 
 	for len(b) > 0 {
 		num, typ, n := protowire.ConsumeTag(b)
@@ -484,12 +471,16 @@ func (xd *Extension) unmarshalSeed(b []byte, sb *strs.Builder, pf *File, pd prot
 			case genid.FieldDescriptorProto_Extendee_field_number:
 				xd.L1.Extendee = PlaceholderMessage(makeFullName(sb, v))
 			case genid.FieldDescriptorProto_Options_field_number:
-				xd.L1.rawOptions = v
+				xd.unmarshalOptions(v)
 			}
 		default:
 			m := protowire.ConsumeFieldValue(num, typ, b)
 			b = b[m:]
 		}
+	}
+
+	if xd.L1.Kind == protoreflect.MessageKind && xd.L1.EditionFeatures.IsDelimitedEncoded {
+		xd.L1.Kind = protoreflect.GroupKind
 	}
 }
 

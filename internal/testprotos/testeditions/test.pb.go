@@ -1853,7 +1853,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]int32)(nil),
 		Field:         90,
 		Name:          "goproto.proto.testeditions.packed_int32",
-		Tag:           "varint,90,rep,name=packed_int32",
+		Tag:           "varint,90,rep,packed,name=packed_int32",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1861,7 +1861,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]int64)(nil),
 		Field:         91,
 		Name:          "goproto.proto.testeditions.packed_int64",
-		Tag:           "varint,91,rep,name=packed_int64",
+		Tag:           "varint,91,rep,packed,name=packed_int64",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1869,7 +1869,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]uint32)(nil),
 		Field:         92,
 		Name:          "goproto.proto.testeditions.packed_uint32",
-		Tag:           "varint,92,rep,name=packed_uint32",
+		Tag:           "varint,92,rep,packed,name=packed_uint32",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1877,7 +1877,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]uint64)(nil),
 		Field:         93,
 		Name:          "goproto.proto.testeditions.packed_uint64",
-		Tag:           "varint,93,rep,name=packed_uint64",
+		Tag:           "varint,93,rep,packed,name=packed_uint64",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1885,7 +1885,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]int32)(nil),
 		Field:         94,
 		Name:          "goproto.proto.testeditions.packed_sint32",
-		Tag:           "zigzag32,94,rep,name=packed_sint32",
+		Tag:           "zigzag32,94,rep,packed,name=packed_sint32",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1893,7 +1893,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]int64)(nil),
 		Field:         95,
 		Name:          "goproto.proto.testeditions.packed_sint64",
-		Tag:           "zigzag64,95,rep,name=packed_sint64",
+		Tag:           "zigzag64,95,rep,packed,name=packed_sint64",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1901,7 +1901,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]uint32)(nil),
 		Field:         96,
 		Name:          "goproto.proto.testeditions.packed_fixed32",
-		Tag:           "fixed32,96,rep,name=packed_fixed32",
+		Tag:           "fixed32,96,rep,packed,name=packed_fixed32",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1909,7 +1909,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]uint64)(nil),
 		Field:         97,
 		Name:          "goproto.proto.testeditions.packed_fixed64",
-		Tag:           "fixed64,97,rep,name=packed_fixed64",
+		Tag:           "fixed64,97,rep,packed,name=packed_fixed64",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1917,7 +1917,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]int32)(nil),
 		Field:         98,
 		Name:          "goproto.proto.testeditions.packed_sfixed32",
-		Tag:           "fixed32,98,rep,name=packed_sfixed32",
+		Tag:           "fixed32,98,rep,packed,name=packed_sfixed32",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1925,7 +1925,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]int64)(nil),
 		Field:         99,
 		Name:          "goproto.proto.testeditions.packed_sfixed64",
-		Tag:           "fixed64,99,rep,name=packed_sfixed64",
+		Tag:           "fixed64,99,rep,packed,name=packed_sfixed64",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1933,7 +1933,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]float32)(nil),
 		Field:         100,
 		Name:          "goproto.proto.testeditions.packed_float",
-		Tag:           "fixed32,100,rep,name=packed_float",
+		Tag:           "fixed32,100,rep,packed,name=packed_float",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1941,7 +1941,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]float64)(nil),
 		Field:         101,
 		Name:          "goproto.proto.testeditions.packed_double",
-		Tag:           "fixed64,101,rep,name=packed_double",
+		Tag:           "fixed64,101,rep,packed,name=packed_double",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1949,7 +1949,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]bool)(nil),
 		Field:         102,
 		Name:          "goproto.proto.testeditions.packed_bool",
-		Tag:           "varint,102,rep,name=packed_bool",
+		Tag:           "varint,102,rep,packed,name=packed_bool",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 	{
@@ -1957,7 +1957,7 @@ var file_internal_testprotos_testeditions_test_proto_extTypes = []protoimpl.Exte
 		ExtensionType: ([]ForeignEnum)(nil),
 		Field:         103,
 		Name:          "goproto.proto.testeditions.packed_enum",
-		Tag:           "varint,103,rep,name=packed_enum,enum=goproto.proto.testeditions.ForeignEnum",
+		Tag:           "varint,103,rep,packed,name=packed_enum,enum=goproto.proto.testeditions.ForeignEnum",
 		Filename:      "internal/testprotos/testeditions/test.proto",
 	},
 }
