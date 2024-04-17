@@ -233,9 +233,15 @@ func sizeMessageInfo(p pointer, f *coderFieldInfo, opts marshalOptions) int {
 }
 
 func appendMessageInfo(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
+	calculatedSize := f.mi.sizePointer(p.Elem(), opts)
 	b = protowire.AppendVarint(b, f.wiretag)
-	b = protowire.AppendVarint(b, uint64(f.mi.sizePointer(p.Elem(), opts)))
-	return f.mi.marshalAppendPointer(b, p.Elem(), opts)
+	b = protowire.AppendVarint(b, uint64(calculatedSize))
+	before := len(b)
+	b, err := f.mi.marshalAppendPointer(b, p.Elem(), opts)
+	if measuredSize := len(b) - before; calculatedSize != measuredSize && err == nil {
+		return nil, errors.MismatchedSizeCalculation(calculatedSize, measuredSize)
+	}
+	return b, err
 }
 
 func consumeMessageInfo(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
@@ -267,9 +273,15 @@ func sizeMessage(m proto.Message, tagsize int, _ marshalOptions) int {
 }
 
 func appendMessage(b []byte, m proto.Message, wiretag uint64, opts marshalOptions) ([]byte, error) {
+	calculatedSize := proto.Size(m)
 	b = protowire.AppendVarint(b, wiretag)
-	b = protowire.AppendVarint(b, uint64(proto.Size(m)))
-	return opts.Options().MarshalAppend(b, m)
+	b = protowire.AppendVarint(b, uint64(calculatedSize))
+	before := len(b)
+	b, err := opts.Options().MarshalAppend(b, m)
+	if measuredSize := len(b) - before; calculatedSize != measuredSize && err == nil {
+		return nil, errors.MismatchedSizeCalculation(calculatedSize, measuredSize)
+	}
+	return b, err
 }
 
 func consumeMessage(b []byte, m proto.Message, wtyp protowire.Type, opts unmarshalOptions) (out unmarshalOutput, err error) {
@@ -482,9 +494,13 @@ func appendMessageSliceInfo(b []byte, p pointer, f *coderFieldInfo, opts marshal
 		b = protowire.AppendVarint(b, f.wiretag)
 		siz := f.mi.sizePointer(v, opts)
 		b = protowire.AppendVarint(b, uint64(siz))
+		before := len(b)
 		b, err = f.mi.marshalAppendPointer(b, v, opts)
 		if err != nil {
 			return b, err
+		}
+		if measuredSize := len(b) - before; siz != measuredSize {
+			return nil, errors.MismatchedSizeCalculation(siz, measuredSize)
 		}
 	}
 	return b, nil
@@ -538,9 +554,13 @@ func appendMessageSlice(b []byte, p pointer, wiretag uint64, goType reflect.Type
 		b = protowire.AppendVarint(b, wiretag)
 		siz := proto.Size(m)
 		b = protowire.AppendVarint(b, uint64(siz))
+		before := len(b)
 		b, err = opts.Options().MarshalAppend(b, m)
 		if err != nil {
 			return b, err
+		}
+		if measuredSize := len(b) - before; siz != measuredSize {
+			return nil, errors.MismatchedSizeCalculation(siz, measuredSize)
 		}
 	}
 	return b, nil
@@ -599,10 +619,14 @@ func appendMessageSliceValue(b []byte, listv protoreflect.Value, wiretag uint64,
 		b = protowire.AppendVarint(b, wiretag)
 		siz := proto.Size(m)
 		b = protowire.AppendVarint(b, uint64(siz))
+		before := len(b)
 		var err error
 		b, err = mopts.MarshalAppend(b, m)
 		if err != nil {
 			return b, err
+		}
+		if measuredSize := len(b) - before; siz != measuredSize {
+			return nil, errors.MismatchedSizeCalculation(siz, measuredSize)
 		}
 	}
 	return b, nil

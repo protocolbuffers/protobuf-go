@@ -5,12 +5,17 @@
 package proto
 
 import (
+	"errors"
+	"fmt"
+
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/encoding/messageset"
 	"google.golang.org/protobuf/internal/order"
 	"google.golang.org/protobuf/internal/pragma"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/runtime/protoiface"
+
+	protoerrors "google.golang.org/protobuf/internal/errors"
 )
 
 // MarshalOptions configures the marshaler.
@@ -175,6 +180,10 @@ func (o MarshalOptions) marshal(b []byte, m protoreflect.Message) (out protoifac
 		out.Buf, err = o.marshalMessageSlow(b, m)
 	}
 	if err != nil {
+		var mismatch *protoerrors.SizeMismatchError
+		if errors.As(err, &mismatch) {
+			return out, fmt.Errorf("marshaling %s: %v", string(m.Descriptor().FullName()), err)
+		}
 		return out, err
 	}
 	if allowPartial {
