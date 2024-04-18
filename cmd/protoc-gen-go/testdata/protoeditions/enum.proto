@@ -6,7 +6,7 @@ edition = "2023";
 
 package goproto.protoc.protoeditions;
 
-import "types/gofeaturespb/go_features.proto";
+import "google/protobuf/go_features.proto";
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/protoeditions";
 option features.enum_type = CLOSED;
@@ -58,7 +58,7 @@ message EnumContainerMessage1 {
 }
 
 enum LegacyUnmarshalJSONTest {
-  option features.(google.protobuf.go).legacy_unmarshal_json_enum = true;
+  option features.(pb.go).legacy_unmarshal_json_enum = true;
 
   FOO = 0;
   BAR = 1;

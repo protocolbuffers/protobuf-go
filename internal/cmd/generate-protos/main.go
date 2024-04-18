@@ -104,7 +104,7 @@ func main() {
 func generateEditionsDefaults() {
 	dest := filepath.Join(repoRoot, "internal", "editiondefaults", "editions_defaults.binpb")
 	srcDescriptorProto := filepath.Join(protoRoot, "src", "google", "protobuf", "descriptor.proto")
-	srcGoFeatures := filepath.Join(repoRoot, "types", "gofeaturespb", "go_features.proto")
+	srcGoFeatures := filepath.Join(repoRoot, "src", "google", "protobuf", "go_features.proto")
 	// The enum in Go string formats to "EDITION_${EDITION}" but protoc expects
 	// the flag in the form "${EDITION}". To work around this, we trim the
 	// "EDITION_" prefix.
@@ -115,8 +115,8 @@ func generateEditionsDefaults() {
 		"--experimental_edition_defaults_out", dest,
 		"--experimental_edition_defaults_minimum", minEdition,
 		"--experimental_edition_defaults_maximum", maxEdition,
-		"-I"+filepath.Join(protoRoot, "src"),
-		"--proto_path", repoRoot, srcDescriptorProto, srcGoFeatures,
+		"-I"+filepath.Join(protoRoot, "src"), "-I"+filepath.Join(repoRoot, "src"),
+		srcDescriptorProto, srcGoFeatures,
 	)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -146,7 +146,7 @@ func generateLocalProtos() {
 		path:    "internal/testprotos",
 		exclude: map[string]bool{"internal/testprotos/irregular/irregular.proto": true},
 	}, {
-		path: "reflect/protodesc/proto",
+		path: "src/",
 	}}
 	excludeRx := regexp.MustCompile(`legacy/.*/`)
 	for _, d := range dirs {
@@ -175,7 +175,7 @@ func generateLocalProtos() {
 			if d.annotate[filepath.ToSlash(relPath)] {
 				opts += ",annotate_code"
 			}
-			protoc("-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+tmpDir, relPath)
+			protoc("-I"+filepath.Join(repoRoot, "src"), "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+tmpDir, filepath.Join(repoRoot, relPath))
 			return nil
 		})
 

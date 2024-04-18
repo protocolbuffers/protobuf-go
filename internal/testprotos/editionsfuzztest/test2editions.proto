@@ -6,7 +6,7 @@ edition = "2023";
 
 package goproto.proto.test;
 
-import "types/gofeaturespb/go_features.proto";
+import "google/protobuf/go_features.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/editionsfuzztest";
 option features.repeated_field_encoding = EXPANDED;
@@ -20,7 +20,7 @@ message TestAllTypesProto2Editions {
 
   enum NestedEnum {
     option features.enum_type = CLOSED;
-    option features.(google.protobuf.go).legacy_unmarshal_json_enum = true;
+    option features.(pb.go).legacy_unmarshal_json_enum = true;
 
     FOO = 0;
     BAR = 1;
