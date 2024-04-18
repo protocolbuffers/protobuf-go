@@ -268,16 +268,17 @@ func isInitMessageInfo(p pointer, f *coderFieldInfo) error {
 	return f.mi.checkInitializedPointer(p.Elem())
 }
 
-func sizeMessage(m proto.Message, tagsize int, _ marshalOptions) int {
-	return protowire.SizeBytes(proto.Size(m)) + tagsize
+func sizeMessage(m proto.Message, tagsize int, opts marshalOptions) int {
+	return protowire.SizeBytes(opts.Options().Size(m)) + tagsize
 }
 
 func appendMessage(b []byte, m proto.Message, wiretag uint64, opts marshalOptions) ([]byte, error) {
-	calculatedSize := proto.Size(m)
+	mopts := opts.Options()
+	calculatedSize := mopts.Size(m)
 	b = protowire.AppendVarint(b, wiretag)
 	b = protowire.AppendVarint(b, uint64(calculatedSize))
 	before := len(b)
-	b, err := opts.Options().MarshalAppend(b, m)
+	b, err := mopts.MarshalAppend(b, m)
 	if measuredSize := len(b) - before; calculatedSize != measuredSize && err == nil {
 		return nil, errors.MismatchedSizeCalculation(calculatedSize, measuredSize)
 	}
@@ -417,8 +418,8 @@ func consumeGroupType(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInf
 	return f.mi.unmarshalPointer(b, p.Elem(), f.num, opts)
 }
 
-func sizeGroup(m proto.Message, tagsize int, _ marshalOptions) int {
-	return 2*tagsize + proto.Size(m)
+func sizeGroup(m proto.Message, tagsize int, opts marshalOptions) int {
+	return 2*tagsize + opts.Options().Size(m)
 }
 
 func appendGroup(b []byte, m proto.Message, wiretag uint64, opts marshalOptions) ([]byte, error) {
@@ -536,26 +537,28 @@ func isInitMessageSliceInfo(p pointer, f *coderFieldInfo) error {
 	return nil
 }
 
-func sizeMessageSlice(p pointer, goType reflect.Type, tagsize int, _ marshalOptions) int {
+func sizeMessageSlice(p pointer, goType reflect.Type, tagsize int, opts marshalOptions) int {
+	mopts := opts.Options()
 	s := p.PointerSlice()
 	n := 0
 	for _, v := range s {
 		m := asMessage(v.AsValueOf(goType.Elem()))
-		n += protowire.SizeBytes(proto.Size(m)) + tagsize
+		n += protowire.SizeBytes(mopts.Size(m)) + tagsize
 	}
 	return n
 }
 
 func appendMessageSlice(b []byte, p pointer, wiretag uint64, goType reflect.Type, opts marshalOptions) ([]byte, error) {
+	mopts := opts.Options()
 	s := p.PointerSlice()
 	var err error
 	for _, v := range s {
 		m := asMessage(v.AsValueOf(goType.Elem()))
 		b = protowire.AppendVarint(b, wiretag)
-		siz := proto.Size(m)
+		siz := mopts.Size(m)
 		b = protowire.AppendVarint(b, uint64(siz))
 		before := len(b)
-		b, err = opts.Options().MarshalAppend(b, m)
+		b, err = mopts.MarshalAppend(b, m)
 		if err != nil {
 			return b, err
 		}
@@ -602,11 +605,12 @@ func isInitMessageSlice(p pointer, goType reflect.Type) error {
 // Slices of messages
 
 func sizeMessageSliceValue(listv protoreflect.Value, tagsize int, opts marshalOptions) int {
+	mopts := opts.Options()
 	list := listv.List()
 	n := 0
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		m := list.Get(i).Message().Interface()
-		n += protowire.SizeBytes(proto.Size(m)) + tagsize
+		n += protowire.SizeBytes(mopts.Size(m)) + tagsize
 	}
 	return n
 }
@@ -617,7 +621,7 @@ func appendMessageSliceValue(b []byte, listv protoreflect.Value, wiretag uint64,
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		m := list.Get(i).Message().Interface()
 		b = protowire.AppendVarint(b, wiretag)
-		siz := proto.Size(m)
+		siz := mopts.Size(m)
 		b = protowire.AppendVarint(b, uint64(siz))
 		before := len(b)
 		var err error
@@ -675,11 +679,12 @@ var coderMessageSliceValue = valueCoderFuncs{
 }
 
 func sizeGroupSliceValue(listv protoreflect.Value, tagsize int, opts marshalOptions) int {
+	mopts := opts.Options()
 	list := listv.List()
 	n := 0
 	for i, llen := 0, list.Len(); i < llen; i++ {
 		m := list.Get(i).Message().Interface()
-		n += 2*tagsize + proto.Size(m)
+		n += 2*tagsize + mopts.Size(m)
 	}
 	return n
 }
@@ -762,12 +767,13 @@ func makeGroupSliceFieldCoder(fd protoreflect.FieldDescriptor, ft reflect.Type) 
 	}
 }
 
-func sizeGroupSlice(p pointer, messageType reflect.Type, tagsize int, _ marshalOptions) int {
+func sizeGroupSlice(p pointer, messageType reflect.Type, tagsize int, opts marshalOptions) int {
+	mopts := opts.Options()
 	s := p.PointerSlice()
 	n := 0
 	for _, v := range s {
 		m := asMessage(v.AsValueOf(messageType.Elem()))
-		n += 2*tagsize + proto.Size(m)
+		n += 2*tagsize + mopts.Size(m)
 	}
 	return n
 }

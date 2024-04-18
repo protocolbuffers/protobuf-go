@@ -75,6 +75,27 @@ type MarshalOptions struct {
 	UseCachedSize bool
 }
 
+// flags turns the specified MarshalOptions (user-facing) into
+// protoiface.MarshalInputFlags (used internally by the marshaler).
+//
+// See impl.marshalOptions.Options for the inverse operation.
+func (o MarshalOptions) flags() protoiface.MarshalInputFlags {
+	var flags protoiface.MarshalInputFlags
+
+	// Note: o.AllowPartial is always forced to true by MarshalOptions.marshal,
+	// which is why it is not a part of MarshalInputFlags.
+
+	if o.Deterministic {
+		flags |= protoiface.MarshalDeterministic
+	}
+
+	if o.UseCachedSize {
+		flags |= protoiface.MarshalUseCachedSize
+	}
+
+	return flags
+}
+
 // Marshal returns the wire-format encoding of m.
 //
 // This is the most common entry point for encoding a Protobuf message.
@@ -157,12 +178,7 @@ func (o MarshalOptions) marshal(b []byte, m protoreflect.Message) (out protoifac
 		in := protoiface.MarshalInput{
 			Message: m,
 			Buf:     b,
-		}
-		if o.Deterministic {
-			in.Flags |= protoiface.MarshalDeterministic
-		}
-		if o.UseCachedSize {
-			in.Flags |= protoiface.MarshalUseCachedSize
+			Flags:   o.flags(),
 		}
 		if methods.Size != nil {
 			sout := methods.Size(protoiface.SizeInput{
