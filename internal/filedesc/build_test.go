@@ -7,7 +7,7 @@ package filedesc_test
 import (
 	"bytes"
 	"compress/gzip"
-	"io/ioutil"
+	"io"
 	"testing"
 
 	"google.golang.org/protobuf/proto"
@@ -33,7 +33,7 @@ func TestInit(t *testing.T) {
 	want := &descriptorpb.FileDescriptorProto{}
 	zb, _ := (&testpb.TestAllTypes{}).Descriptor()
 	r, _ := gzip.NewReader(bytes.NewBuffer(zb))
-	b, _ := ioutil.ReadAll(r)
+	b, _ := io.ReadAll(r)
 	if err := proto.Unmarshal(b, want); err != nil {
 		t.Fatal(err)
 	}

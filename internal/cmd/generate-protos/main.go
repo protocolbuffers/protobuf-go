@@ -11,7 +11,6 @@ import (
 	"flag"
 	"fmt"
 	"go/format"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -126,7 +125,7 @@ func generateEditionsDefaults() {
 }
 
 func generateLocalProtos() {
-	tmpDir, err := ioutil.TempDir(repoRoot, "tmp")
+	tmpDir, err := os.MkdirTemp(repoRoot, "tmp")
 	check(err)
 	defer os.RemoveAll(tmpDir)
 
@@ -197,7 +196,7 @@ func generateLocalProtos() {
 			}...), "\n")
 			b, err := format.Source([]byte(s))
 			check(err)
-			check(ioutil.WriteFile(filepath.Join(tmpDir, filepath.FromSlash(d.path+"/gen_test.go")), b, 0664))
+			check(os.WriteFile(filepath.Join(tmpDir, filepath.FromSlash(d.path+"/gen_test.go")), b, 0664))
 		}
 	}
 
@@ -205,7 +204,7 @@ func generateLocalProtos() {
 }
 
 func generateRemoteProtos() {
-	tmpDir, err := ioutil.TempDir(repoRoot, "tmp")
+	tmpDir, err := os.MkdirTemp(repoRoot, "tmp")
 	check(err)
 	defer os.RemoveAll(tmpDir)
 
@@ -466,14 +465,14 @@ func syncOutput(dstDir, srcDir string) {
 }
 
 func copyFile(dstPath, srcPath string) (changed bool) {
-	src, err := ioutil.ReadFile(srcPath)
+	src, err := os.ReadFile(srcPath)
 	check(err)
 	check(os.MkdirAll(filepath.Dir(dstPath), 0775))
-	dst, _ := ioutil.ReadFile(dstPath)
+	dst, _ := os.ReadFile(dstPath)
 	if bytes.Equal(src, dst) {
 		return false
 	}
-	check(ioutil.WriteFile(dstPath, src, 0664))
+	check(os.WriteFile(dstPath, src, 0664))
 	return true
 }
 

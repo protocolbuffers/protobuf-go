@@ -7,7 +7,6 @@ package bench_test
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -175,7 +174,7 @@ func TestMain(m *testing.M) {
 		if filepath.Ext(path) != ".pb" {
 			return nil
 		}
-		raw, err := ioutil.ReadFile(path)
+		raw, err := os.ReadFile(path)
 		if err != nil {
 			panic(err)
 		}

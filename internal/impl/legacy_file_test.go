@@ -7,7 +7,7 @@ package impl_test
 import (
 	"bytes"
 	"compress/gzip"
-	"io/ioutil"
+	"io"
 	"reflect"
 	"testing"
 
@@ -39,7 +39,7 @@ func mustLoadFileDesc(b []byte, _ []int) protoreflect.FileDescriptor {
 	if err != nil {
 		panic(err)
 	}
-	b, err = ioutil.ReadAll(zr)
+	b, err = io.ReadAll(zr)
 	if err != nil {
 		panic(err)
 	}

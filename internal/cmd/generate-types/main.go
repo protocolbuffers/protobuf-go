@@ -11,7 +11,6 @@ import (
 	"flag"
 	"fmt"
 	"go/format"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -248,13 +247,13 @@ func writeSource(file, src string) {
 
 	absFile := filepath.Join(repoRoot, file)
 	if run {
-		prev, _ := ioutil.ReadFile(absFile)
+		prev, _ := os.ReadFile(absFile)
 		if !bytes.Equal(b, prev) {
 			fmt.Println("#", file)
-			check(ioutil.WriteFile(absFile, b, 0664))
+			check(os.WriteFile(absFile, b, 0664))
 		}
 	} else {
-		check(ioutil.WriteFile(absFile+".tmp", b, 0664))
+		check(os.WriteFile(absFile+".tmp", b, 0664))
 		defer os.Remove(absFile + ".tmp")
 
 		cmd := exec.Command("diff", file, file+".tmp", "-N", "-u")

@@ -7,7 +7,7 @@ package impl
 import (
 	"bytes"
 	"compress/gzip"
-	"io/ioutil"
+	"io"
 	"math"
 	"strings"
 	"testing"
@@ -30,7 +30,7 @@ func TestCompressGZIP(t *testing.T) {
 		if err != nil {
 			t.Errorf("unexpected gzip.NewReader error: %v", err)
 		}
-		b, err := ioutil.ReadAll(zr)
+		b, err := io.ReadAll(zr)
 		if err != nil {
 			t.Errorf("unexpected ioutil.ReadAll error: %v", err)
 		}

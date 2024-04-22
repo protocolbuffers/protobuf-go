@@ -7,7 +7,6 @@ package fuzztest
 
 import (
 	"flag"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -34,7 +33,7 @@ func Test(t *testing.T, fuzz func(b []byte) int) {
 	sort.Strings(names)
 	for _, name := range names {
 		t.Run(name, func(t *testing.T) {
-			b, err := ioutil.ReadFile(filepath.Join(*corpus, name))
+			b, err := os.ReadFile(filepath.Join(*corpus, name))
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -6,7 +6,7 @@ package main
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -19,11 +19,11 @@ import (
 )
 
 func TestAnnotations(t *testing.T) {
-	sourceFile, err := ioutil.ReadFile("testdata/annotations/annotations.pb.go")
+	sourceFile, err := os.ReadFile("testdata/annotations/annotations.pb.go")
 	if err != nil {
 		t.Fatal(err)
 	}
-	metaFile, err := ioutil.ReadFile("testdata/annotations/annotations.pb.go.meta")
+	metaFile, err := os.ReadFile("testdata/annotations/annotations.pb.go.meta")
 	if err != nil {
 		t.Fatal(err)
 	}

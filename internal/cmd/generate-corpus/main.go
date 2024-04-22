@@ -12,8 +12,8 @@ package main
 import (
 	"crypto/sha1"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/encoding/prototext"
@@ -114,7 +114,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if err := ioutil.WriteFile(fmt.Sprintf("internal/fuzz/wirefuzz/corpus/%x", sha1.Sum(wire)), wire, 0777); err != nil {
+		if err := os.WriteFile(fmt.Sprintf("internal/fuzz/wirefuzz/corpus/%x", sha1.Sum(wire)), wire, 0777); err != nil {
 			log.Fatal(err)
 		}
 
@@ -122,7 +122,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if err := ioutil.WriteFile(fmt.Sprintf("internal/fuzz/textfuzz/corpus/%x", sha1.Sum(text)), text, 0777); err != nil {
+		if err := os.WriteFile(fmt.Sprintf("internal/fuzz/textfuzz/corpus/%x", sha1.Sum(text)), text, 0777); err != nil {
 			log.Fatal(err)
 		}
 
@@ -130,7 +130,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if err := ioutil.WriteFile(fmt.Sprintf("internal/fuzz/jsonfuzz/corpus/%x", sha1.Sum(json)), json, 0777); err != nil {
+		if err := os.WriteFile(fmt.Sprintf("internal/fuzz/jsonfuzz/corpus/%x", sha1.Sum(json)), json, 0777); err != nil {
 			log.Fatal(err)
 		}
 	}

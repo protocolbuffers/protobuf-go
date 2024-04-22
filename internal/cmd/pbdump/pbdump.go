@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -111,14 +111,14 @@ func main() {
 	// Read message input.
 	var buf []byte
 	if flag.NArg() == 0 {
-		b, err := ioutil.ReadAll(os.Stdin)
+		b, err := io.ReadAll(os.Stdin)
 		if err != nil {
 			log.Fatalf("ReadAll error: %v", err)
 		}
 		buf = b
 	}
 	for _, f := range flag.Args() {
-		b, err := ioutil.ReadFile(f)
+		b, err := os.ReadFile(f)
 		if err != nil {
 			log.Fatalf("ReadFile error: %v", err)
 		}

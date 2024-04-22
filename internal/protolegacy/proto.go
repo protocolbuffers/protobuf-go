@@ -11,7 +11,7 @@ import (
 	"compress/gzip"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -48,7 +48,7 @@ func RegisterFile(s string, d []byte) {
 	if err != nil {
 		panic(fmt.Sprintf("proto: invalid compressed file descriptor: %v", err))
 	}
-	b, err := ioutil.ReadAll(zr)
+	b, err := io.ReadAll(zr)
 	if err != nil {
 		panic(fmt.Sprintf("proto: invalid compressed file descriptor: %v", err))
 	}
