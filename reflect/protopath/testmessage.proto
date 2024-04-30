@@ -1,0 +1,27 @@
+// Copyright 2024 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+syntax = "proto3";
+
+package testprotopath;
+
+option go_package = "github.com/protocolbuffers/protobuf-go/reflect/protopath/testmessage";
+
+message Test {
+  message Nested {
+    int32 intfield = 1;
+    string stringfield = 2;
+    bytes bytesfield = 3;
+    Test nested = 4;
+  }
+  Nested nested = 1;
+  repeated Test repeats = 2;
+  repeated int32 int32repeats = 3;
+  map<string, Nested> strkeymap = 4;
+  // All integral types are valid map key types
+  map<bool, Test> boolkeymap = 5;
+  map<int32, Test> int32keymap = 6;
+  map<int64, Test> int64keymap = 7;
+  map<uint32, Test> uint32keymap = 8;
+  map<uint64, Test> uint64keymap = 9;
+}

@@ -27,9 +27,6 @@ import (
 // The first step must be a [Root] step.
 type Path []Step
 
-// TODO: Provide a Parse function that parses something similar to or
-// perhaps identical to the output of Path.String.
-
 // Index returns the ith step in the path and supports negative indexing.
 // A negative index starts counting from the tail of the Path such that -1
 // refers to the last step, -2 refers to the second-to-last step, and so on.
