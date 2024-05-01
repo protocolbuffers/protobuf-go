@@ -7,6 +7,7 @@ package conformance_test
 import (
 	"encoding/binary"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -20,6 +21,7 @@ import (
 
 	pb "google.golang.org/protobuf/internal/testprotos/conformance"
 	epb "google.golang.org/protobuf/internal/testprotos/conformance/editions"
+	empb "google.golang.org/protobuf/internal/testprotos/conformance/editionsmigration"
 )
 
 func init() {
@@ -102,10 +104,14 @@ func handle(req *pb.ConformanceRequest) (res *pb.ConformanceResponse) {
 		msg = &pb.TestAllTypesProto3{}
 	case "protobuf_test_messages.proto2.TestAllTypesProto2":
 		msg = &pb.TestAllTypesProto2{}
+	case "protobuf_test_messages.editions.TestAllTypesEdition2023":
+		msg = &epb.TestAllTypesEdition2023{}
 	case "protobuf_test_messages.editions.proto3.TestAllTypesProto3":
-		msg = &epb.TestAllTypesProto3{}
+		msg = &empb.TestAllTypesProto3{}
 	case "protobuf_test_messages.editions.proto2.TestAllTypesProto2":
-		msg = &epb.TestAllTypesProto2{}
+		msg = &empb.TestAllTypesProto2{}
+	default:
+		panic(fmt.Sprintf("unknown message type: %s", req.GetMessageType()))
 	}
 
 	// Unmarshal the test message.

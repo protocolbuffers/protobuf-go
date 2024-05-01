@@ -22,7 +22,13 @@ message GoFeatures {
   optional bool legacy_unmarshal_json_enum = 1 [
     retention = RETENTION_RUNTIME,
     targets = TARGET_TYPE_ENUM,
-    edition_defaults = { edition: EDITION_PROTO2, value: "true" },
+    feature_support = {
+      edition_introduced: EDITION_2023,
+      edition_deprecated: EDITION_2023,
+      deprecation_warning: "The legacy UnmarshalJSON API is deprecated and "
+                           "will be removed in a future edition.",
+    },
+    edition_defaults = { edition: EDITION_LEGACY, value: "true" },
     edition_defaults = { edition: EDITION_PROTO3, value: "false" }
   ];
 }

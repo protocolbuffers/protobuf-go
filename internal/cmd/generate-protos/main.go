@@ -111,9 +111,9 @@ func generateEditionsDefaults() {
 	maxEdition := strings.TrimPrefix(fmt.Sprint(editionssupport.Maximum), "EDITION_")
 	cmd := exec.Command(
 		"protoc",
-		"--experimental_edition_defaults_out", dest,
-		"--experimental_edition_defaults_minimum", minEdition,
-		"--experimental_edition_defaults_maximum", maxEdition,
+		"--edition_defaults_out", dest,
+		"--edition_defaults_minimum", minEdition,
+		"--edition_defaults_maximum", maxEdition,
 		"-I"+filepath.Join(protoRoot, "src"), "-I"+filepath.Join(repoRoot, "src"),
 		srcDescriptorProto, srcGoFeatures,
 	)
@@ -230,8 +230,9 @@ func generateRemoteProtos() {
 		{"", "conformance/conformance.proto", "google.golang.org/protobuf/internal/testprotos/conformance;conformance"},
 		{"src", "google/protobuf/test_messages_proto2.proto", "google.golang.org/protobuf/internal/testprotos/conformance;conformance"},
 		{"src", "google/protobuf/test_messages_proto3.proto", "google.golang.org/protobuf/internal/testprotos/conformance;conformance"},
-		{"src", "google/protobuf/editions/golden/test_messages_proto2_editions.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editions;editions"},
-		{"src", "google/protobuf/editions/golden/test_messages_proto3_editions.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editions;editions"},
+		{"src", "editions/golden/test_messages_proto2_editions.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editionsmigration;editions"},
+		{"src", "editions/golden/test_messages_proto3_editions.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editionsmigration;editions"},
+		{"", "conformance/test_protos/test_messages_edition2023.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editions;editions"},
 
 		// Benchmark protos.
 		// TODO: The protobuf repo no longer includes benchmarks.
@@ -267,7 +268,7 @@ func generateRemoteProtos() {
 		}
 	}
 	for _, f := range files {
-		protoc("-I"+filepath.Join(protoRoot, f.prefix), "--go_out="+opts+":"+tmpDir, f.path)
+		protoc("-I"+protoRoot, "-I"+filepath.Join(protoRoot, f.prefix), "--go_out="+opts+":"+tmpDir, f.path)
 	}
 
 	syncOutput(repoRoot, tmpDir)

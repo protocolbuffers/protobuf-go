@@ -34,7 +34,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "26.0-rc2"
+	protobufVersion = "27.0-rc1"
 
 	golangVersions = func() []string {
 		// Version policy: same version as is in the x/ repos' go.mod.
@@ -500,6 +500,12 @@ func mustHaveCopyrightHeader(t *testing.T, files []string) {
 	var bad []string
 File:
 	for _, file := range files {
+		if strings.HasSuffix(file, "internal/testprotos/conformance/editions/test_messages_edition2023.pb.go") {
+			// TODO(lassefolger) the underlying proto file is checked into
+			// the protobuf repo without a copyright header. Fix is pending but
+			// might require a release.
+			continue
+		}
 		b, err := os.ReadFile(file)
 		if err != nil {
 			t.Fatal(err)
