@@ -409,6 +409,7 @@ func (od *Oneof) Options() protoreflect.ProtoMessage {
 func (od *Oneof) Fields() protoreflect.FieldDescriptors  { return &od.L1.Fields }
 func (od *Oneof) Format(s fmt.State, r rune)             { descfmt.FormatDesc(s, r, od) }
 func (od *Oneof) ProtoType(protoreflect.OneofDescriptor) {}
+func (od *Oneof) JSONName() string                       { return strs.JSONCamelCase(string(od.Name())) }
 
 type (
 	Extension struct {

@@ -31,7 +31,7 @@ type Message struct {
 	//
 	//	*Message_OneofMessage
 	//	*Message_OneofAberrantMessage
-	Union                   isMessage_Union             `protobuf_oneof:"union"`
+	Union                   isMessage_Union             `protobuf_oneof:"union" json:"union,omitempty"`
 	OptionalAberrantMessage *AberrantMessage            `protobuf:"bytes,7,opt,name=optional_aberrant_message,json=optionalAberrantMessage" json:"optional_aberrant_message,omitempty"`
 	RepeatedAberrantMessage []*AberrantMessage          `protobuf:"bytes,8,rep,name=repeated_aberrant_message,json=repeatedAberrantMessage" json:"repeated_aberrant_message,omitempty"`
 	RequiredAberrantMessage *AberrantMessage            `protobuf:"bytes,9,req,name=required_aberrant_message,json=requiredAberrantMessage" json:"required_aberrant_message,omitempty"`
@@ -152,11 +152,11 @@ type isMessage_Union interface {
 }
 
 type Message_OneofMessage struct {
-	OneofMessage *IrregularMessage `protobuf:"bytes,5,opt,name=oneof_message,json=oneofMessage,oneof"`
+	OneofMessage *IrregularMessage `protobuf:"bytes,5,opt,name=oneof_message,json=oneofMessage,oneof" json:"oneofMessage"`
 }
 
 type Message_OneofAberrantMessage struct {
-	OneofAberrantMessage *AberrantMessage `protobuf:"bytes,6,opt,name=oneof_aberrant_message,json=oneofAberrantMessage,oneof"`
+	OneofAberrantMessage *AberrantMessage `protobuf:"bytes,6,opt,name=oneof_aberrant_message,json=oneofAberrantMessage,oneof" json:"oneofAberrantMessage"`
 }
 
 func (*Message_OneofMessage) isMessage_Union() {}

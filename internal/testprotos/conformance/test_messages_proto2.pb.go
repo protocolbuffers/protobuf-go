@@ -382,7 +382,7 @@ type TestAllTypesProto2 struct {
 	//	*TestAllTypesProto2_OneofFloat
 	//	*TestAllTypesProto2_OneofDouble
 	//	*TestAllTypesProto2_OneofEnum
-	OneofField isTestAllTypesProto2_OneofField `protobuf_oneof:"oneof_field"`
+	OneofField isTestAllTypesProto2_OneofField `protobuf_oneof:"oneof_field" json:"oneofField,omitempty"`
 	Data       *TestAllTypesProto2_Data        `protobuf:"group,201,opt,name=Data,json=data" json:"data,omitempty"`
 	// default values
 	DefaultInt32    *int32   `protobuf:"varint,241,opt,name=default_int32,json=defaultInt32,def=-123456789" json:"default_int32,omitempty"`
@@ -1420,39 +1420,39 @@ type isTestAllTypesProto2_OneofField interface {
 }
 
 type TestAllTypesProto2_OneofUint32 struct {
-	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,oneof"`
+	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,oneof" json:"oneofUint32"`
 }
 
 type TestAllTypesProto2_OneofNestedMessage struct {
-	OneofNestedMessage *TestAllTypesProto2_NestedMessage `protobuf:"bytes,112,opt,name=oneof_nested_message,json=oneofNestedMessage,oneof"`
+	OneofNestedMessage *TestAllTypesProto2_NestedMessage `protobuf:"bytes,112,opt,name=oneof_nested_message,json=oneofNestedMessage,oneof" json:"oneofNestedMessage"`
 }
 
 type TestAllTypesProto2_OneofString struct {
-	OneofString string `protobuf:"bytes,113,opt,name=oneof_string,json=oneofString,oneof"`
+	OneofString string `protobuf:"bytes,113,opt,name=oneof_string,json=oneofString,oneof" json:"oneofString"`
 }
 
 type TestAllTypesProto2_OneofBytes struct {
-	OneofBytes []byte `protobuf:"bytes,114,opt,name=oneof_bytes,json=oneofBytes,oneof"`
+	OneofBytes []byte `protobuf:"bytes,114,opt,name=oneof_bytes,json=oneofBytes,oneof" json:"oneofBytes"`
 }
 
 type TestAllTypesProto2_OneofBool struct {
-	OneofBool bool `protobuf:"varint,115,opt,name=oneof_bool,json=oneofBool,oneof"`
+	OneofBool bool `protobuf:"varint,115,opt,name=oneof_bool,json=oneofBool,oneof" json:"oneofBool"`
 }
 
 type TestAllTypesProto2_OneofUint64 struct {
-	OneofUint64 uint64 `protobuf:"varint,116,opt,name=oneof_uint64,json=oneofUint64,oneof"`
+	OneofUint64 uint64 `protobuf:"varint,116,opt,name=oneof_uint64,json=oneofUint64,oneof" json:"oneofUint64"`
 }
 
 type TestAllTypesProto2_OneofFloat struct {
-	OneofFloat float32 `protobuf:"fixed32,117,opt,name=oneof_float,json=oneofFloat,oneof"`
+	OneofFloat float32 `protobuf:"fixed32,117,opt,name=oneof_float,json=oneofFloat,oneof" json:"oneofFloat"`
 }
 
 type TestAllTypesProto2_OneofDouble struct {
-	OneofDouble float64 `protobuf:"fixed64,118,opt,name=oneof_double,json=oneofDouble,oneof"`
+	OneofDouble float64 `protobuf:"fixed64,118,opt,name=oneof_double,json=oneofDouble,oneof" json:"oneofDouble"`
 }
 
 type TestAllTypesProto2_OneofEnum struct {
-	OneofEnum TestAllTypesProto2_NestedEnum `protobuf:"varint,119,opt,name=oneof_enum,json=oneofEnum,enum=protobuf_test_messages.proto2.TestAllTypesProto2_NestedEnum,oneof"`
+	OneofEnum TestAllTypesProto2_NestedEnum `protobuf:"varint,119,opt,name=oneof_enum,json=oneofEnum,enum=protobuf_test_messages.proto2.TestAllTypesProto2_NestedEnum,oneof" json:"oneofEnum"`
 }
 
 func (*TestAllTypesProto2_OneofUint32) isTestAllTypesProto2_OneofField() {}

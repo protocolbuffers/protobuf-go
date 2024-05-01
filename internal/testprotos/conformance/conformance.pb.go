@@ -209,7 +209,7 @@ type ConformanceRequest struct {
 	//	*ConformanceRequest_JsonPayload
 	//	*ConformanceRequest_JspbPayload
 	//	*ConformanceRequest_TextPayload
-	Payload isConformanceRequest_Payload `protobuf_oneof:"payload"`
+	Payload isConformanceRequest_Payload `protobuf_oneof:"payload" json:"payload,omitempty"`
 	// Which format should the testee serialize its message to?
 	RequestedOutputFormat WireFormat `protobuf:"varint,3,opt,name=requested_output_format,json=requestedOutputFormat,proto3,enum=conformance.WireFormat" json:"requested_output_format,omitempty"`
 	// The full name for the test message to use; for the moment, either:
@@ -334,20 +334,20 @@ type isConformanceRequest_Payload interface {
 }
 
 type ConformanceRequest_ProtobufPayload struct {
-	ProtobufPayload []byte `protobuf:"bytes,1,opt,name=protobuf_payload,json=protobufPayload,proto3,oneof"`
+	ProtobufPayload []byte `protobuf:"bytes,1,opt,name=protobuf_payload,json=protobufPayload,proto3,oneof" json:"protobufPayload"`
 }
 
 type ConformanceRequest_JsonPayload struct {
-	JsonPayload string `protobuf:"bytes,2,opt,name=json_payload,json=jsonPayload,proto3,oneof"`
+	JsonPayload string `protobuf:"bytes,2,opt,name=json_payload,json=jsonPayload,proto3,oneof" json:"jsonPayload"`
 }
 
 type ConformanceRequest_JspbPayload struct {
 	// Only used inside Google.  Opensource testees just skip it.
-	JspbPayload string `protobuf:"bytes,7,opt,name=jspb_payload,json=jspbPayload,proto3,oneof"`
+	JspbPayload string `protobuf:"bytes,7,opt,name=jspb_payload,json=jspbPayload,proto3,oneof" json:"jspbPayload"`
 }
 
 type ConformanceRequest_TextPayload struct {
-	TextPayload string `protobuf:"bytes,8,opt,name=text_payload,json=textPayload,proto3,oneof"`
+	TextPayload string `protobuf:"bytes,8,opt,name=text_payload,json=textPayload,proto3,oneof" json:"textPayload"`
 }
 
 func (*ConformanceRequest_ProtobufPayload) isConformanceRequest_Payload() {}
@@ -375,7 +375,7 @@ type ConformanceResponse struct {
 	//	*ConformanceResponse_Skipped
 	//	*ConformanceResponse_JspbPayload
 	//	*ConformanceResponse_TextPayload
-	Result isConformanceResponse_Result `protobuf_oneof:"result"`
+	Result isConformanceResponse_Result `protobuf_oneof:"result" json:"result,omitempty"`
 }
 
 func (x *ConformanceResponse) Reset() {
@@ -490,59 +490,59 @@ type ConformanceResponse_ParseError struct {
 	//
 	// Setting this string does not necessarily mean the testee failed the
 	// test.  Some of the test cases are intentionally invalid input.
-	ParseError string `protobuf:"bytes,1,opt,name=parse_error,json=parseError,proto3,oneof"`
+	ParseError string `protobuf:"bytes,1,opt,name=parse_error,json=parseError,proto3,oneof" json:"parseError"`
 }
 
 type ConformanceResponse_SerializeError struct {
 	// If the input was successfully parsed but errors occurred when
 	// serializing it to the requested output format, set the error message in
 	// this field.
-	SerializeError string `protobuf:"bytes,6,opt,name=serialize_error,json=serializeError,proto3,oneof"`
+	SerializeError string `protobuf:"bytes,6,opt,name=serialize_error,json=serializeError,proto3,oneof" json:"serializeError"`
 }
 
 type ConformanceResponse_TimeoutError struct {
 	// This should be set if the test program timed out.  The string should
 	// provide more information about what the child process was doing when it
 	// was killed.
-	TimeoutError string `protobuf:"bytes,9,opt,name=timeout_error,json=timeoutError,proto3,oneof"`
+	TimeoutError string `protobuf:"bytes,9,opt,name=timeout_error,json=timeoutError,proto3,oneof" json:"timeoutError"`
 }
 
 type ConformanceResponse_RuntimeError struct {
 	// This should be set if some other error occurred.  This will always
 	// indicate that the test failed.  The string can provide more information
 	// about the failure.
-	RuntimeError string `protobuf:"bytes,2,opt,name=runtime_error,json=runtimeError,proto3,oneof"`
+	RuntimeError string `protobuf:"bytes,2,opt,name=runtime_error,json=runtimeError,proto3,oneof" json:"runtimeError"`
 }
 
 type ConformanceResponse_ProtobufPayload struct {
 	// If the input was successfully parsed and the requested output was
 	// protobuf, serialize it to protobuf and set it in this field.
-	ProtobufPayload []byte `protobuf:"bytes,3,opt,name=protobuf_payload,json=protobufPayload,proto3,oneof"`
+	ProtobufPayload []byte `protobuf:"bytes,3,opt,name=protobuf_payload,json=protobufPayload,proto3,oneof" json:"protobufPayload"`
 }
 
 type ConformanceResponse_JsonPayload struct {
 	// If the input was successfully parsed and the requested output was JSON,
 	// serialize to JSON and set it in this field.
-	JsonPayload string `protobuf:"bytes,4,opt,name=json_payload,json=jsonPayload,proto3,oneof"`
+	JsonPayload string `protobuf:"bytes,4,opt,name=json_payload,json=jsonPayload,proto3,oneof" json:"jsonPayload"`
 }
 
 type ConformanceResponse_Skipped struct {
 	// For when the testee skipped the test, likely because a certain feature
 	// wasn't supported, like JSON input/output.
-	Skipped string `protobuf:"bytes,5,opt,name=skipped,proto3,oneof"`
+	Skipped string `protobuf:"bytes,5,opt,name=skipped,proto3,oneof" json:"skipped"`
 }
 
 type ConformanceResponse_JspbPayload struct {
 	// If the input was successfully parsed and the requested output was JSPB,
 	// serialize to JSPB and set it in this field. JSPB is only used inside
 	// Google. Opensource testees can just skip it.
-	JspbPayload string `protobuf:"bytes,7,opt,name=jspb_payload,json=jspbPayload,proto3,oneof"`
+	JspbPayload string `protobuf:"bytes,7,opt,name=jspb_payload,json=jspbPayload,proto3,oneof" json:"jspbPayload"`
 }
 
 type ConformanceResponse_TextPayload struct {
 	// If the input was successfully parsed and the requested output was
 	// TEXT_FORMAT, serialize to TEXT_FORMAT and set it in this field.
-	TextPayload string `protobuf:"bytes,8,opt,name=text_payload,json=textPayload,proto3,oneof"`
+	TextPayload string `protobuf:"bytes,8,opt,name=text_payload,json=textPayload,proto3,oneof" json:"textPayload"`
 }
 
 func (*ConformanceResponse_ParseError) isConformanceResponse_Result() {}

@@ -690,7 +690,7 @@ type Oneofs struct {
 	//	*Oneofs_OneofEnum
 	//	*Oneofs_OneofString
 	//	*Oneofs_OneofNested
-	Union isOneofs_Union `protobuf_oneof:"union"`
+	Union isOneofs_Union `protobuf_oneof:"union" json:"union,omitempty"`
 }
 
 func (x *Oneofs) Reset() {
@@ -758,15 +758,15 @@ type isOneofs_Union interface {
 }
 
 type Oneofs_OneofEnum struct {
-	OneofEnum Enum `protobuf:"varint,1,opt,name=oneof_enum,json=oneofEnum,proto3,enum=pb3.Enum,oneof"`
+	OneofEnum Enum `protobuf:"varint,1,opt,name=oneof_enum,json=oneofEnum,proto3,enum=pb3.Enum,oneof" json:"oneofEnum"`
 }
 
 type Oneofs_OneofString struct {
-	OneofString string `protobuf:"bytes,2,opt,name=oneof_string,json=oneofString,proto3,oneof"`
+	OneofString string `protobuf:"bytes,2,opt,name=oneof_string,json=oneofString,proto3,oneof" json:"oneofString"`
 }
 
 type Oneofs_OneofNested struct {
-	OneofNested *Nested `protobuf:"bytes,3,opt,name=oneof_nested,json=oneofNested,proto3,oneof"`
+	OneofNested *Nested `protobuf:"bytes,3,opt,name=oneof_nested,json=oneofNested,proto3,oneof" json:"oneofNested"`
 }
 
 func (*Oneofs_OneofEnum) isOneofs_Union() {}

@@ -47,20 +47,20 @@ type Message struct {
 	// Types that are assignable to OneofConflictA_:
 	//
 	//	*Message_OneofConflictA
-	OneofConflictA_ isMessage_OneofConflictA_ `protobuf_oneof:"oneof_conflict_a"`
+	OneofConflictA_ isMessage_OneofConflictA_ `protobuf_oneof:"oneof_conflict_a" json:"oneofConflictA,omitempty"`
 	// Oneof that conflicts with its second field: The field is renamed.
 	//
 	// Types that are assignable to OneofConflictB:
 	//
 	//	*Message_OneofNoConflict
 	//	*Message_OneofConflictB_
-	OneofConflictB isMessage_OneofConflictB `protobuf_oneof:"oneof_conflict_b"`
+	OneofConflictB isMessage_OneofConflictB `protobuf_oneof:"oneof_conflict_b" json:"oneofConflictB,omitempty"`
 	// Oneof with a field name that conflicts with a nested message.
 	//
 	// Types that are assignable to OneofConflictC:
 	//
 	//	*Message_OneofMessageConflict_
-	OneofConflictC isMessage_OneofConflictC `protobuf_oneof:"oneof_conflict_c"`
+	OneofConflictC isMessage_OneofConflictC `protobuf_oneof:"oneof_conflict_c" json:"oneofConflictC,omitempty"`
 }
 
 func (x *Message) Reset() {
@@ -247,7 +247,7 @@ type isMessage_OneofConflictA_ interface {
 }
 
 type Message_OneofConflictA struct {
-	OneofConflictA string `protobuf:"bytes,40,opt,name=OneofConflictA,oneof"`
+	OneofConflictA string `protobuf:"bytes,40,opt,name=OneofConflictA,oneof" json:"OneofConflictA"`
 }
 
 func (*Message_OneofConflictA) isMessage_OneofConflictA_() {}
@@ -257,11 +257,11 @@ type isMessage_OneofConflictB interface {
 }
 
 type Message_OneofNoConflict struct {
-	OneofNoConflict string `protobuf:"bytes,50,opt,name=oneof_no_conflict,json=oneofNoConflict,oneof"`
+	OneofNoConflict string `protobuf:"bytes,50,opt,name=oneof_no_conflict,json=oneofNoConflict,oneof" json:"oneofNoConflict"`
 }
 
 type Message_OneofConflictB_ struct {
-	OneofConflictB_ string `protobuf:"bytes,51,opt,name=OneofConflictB,oneof"`
+	OneofConflictB_ string `protobuf:"bytes,51,opt,name=OneofConflictB,oneof" json:"OneofConflictB"`
 }
 
 func (*Message_OneofNoConflict) isMessage_OneofConflictB() {}
@@ -273,7 +273,7 @@ type isMessage_OneofConflictC interface {
 }
 
 type Message_OneofMessageConflict_ struct {
-	OneofMessageConflict string `protobuf:"bytes,60,opt,name=oneof_message_conflict,json=oneofMessageConflict,oneof"`
+	OneofMessageConflict string `protobuf:"bytes,60,opt,name=oneof_message_conflict,json=oneofMessageConflict,oneof" json:"oneofMessageConflict"`
 }
 
 func (*Message_OneofMessageConflict_) isMessage_OneofConflictC() {}

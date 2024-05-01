@@ -355,7 +355,7 @@ type TestAllTypesProto3 struct {
 	//	*TestAllTypesProto3_OneofDouble
 	//	*TestAllTypesProto3_OneofEnum
 	//	*TestAllTypesProto3_OneofNullValue
-	OneofField isTestAllTypesProto3_OneofField `protobuf_oneof:"oneof_field"`
+	OneofField isTestAllTypesProto3_OneofField `protobuf_oneof:"oneof_field" json:"oneofField,omitempty"`
 	// Well-known types
 	OptionalBoolWrapper   *wrapperspb.BoolValue     `protobuf:"bytes,201,opt,name=optional_bool_wrapper,json=optionalBoolWrapper,proto3" json:"optional_bool_wrapper,omitempty"`
 	OptionalInt32Wrapper  *wrapperspb.Int32Value    `protobuf:"bytes,202,opt,name=optional_int32_wrapper,json=optionalInt32Wrapper,proto3" json:"optional_int32_wrapper,omitempty"`
@@ -1512,43 +1512,43 @@ type isTestAllTypesProto3_OneofField interface {
 }
 
 type TestAllTypesProto3_OneofUint32 struct {
-	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,proto3,oneof"`
+	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,proto3,oneof" json:"oneofUint32"`
 }
 
 type TestAllTypesProto3_OneofNestedMessage struct {
-	OneofNestedMessage *TestAllTypesProto3_NestedMessage `protobuf:"bytes,112,opt,name=oneof_nested_message,json=oneofNestedMessage,proto3,oneof"`
+	OneofNestedMessage *TestAllTypesProto3_NestedMessage `protobuf:"bytes,112,opt,name=oneof_nested_message,json=oneofNestedMessage,proto3,oneof" json:"oneofNestedMessage"`
 }
 
 type TestAllTypesProto3_OneofString struct {
-	OneofString string `protobuf:"bytes,113,opt,name=oneof_string,json=oneofString,proto3,oneof"`
+	OneofString string `protobuf:"bytes,113,opt,name=oneof_string,json=oneofString,proto3,oneof" json:"oneofString"`
 }
 
 type TestAllTypesProto3_OneofBytes struct {
-	OneofBytes []byte `protobuf:"bytes,114,opt,name=oneof_bytes,json=oneofBytes,proto3,oneof"`
+	OneofBytes []byte `protobuf:"bytes,114,opt,name=oneof_bytes,json=oneofBytes,proto3,oneof" json:"oneofBytes"`
 }
 
 type TestAllTypesProto3_OneofBool struct {
-	OneofBool bool `protobuf:"varint,115,opt,name=oneof_bool,json=oneofBool,proto3,oneof"`
+	OneofBool bool `protobuf:"varint,115,opt,name=oneof_bool,json=oneofBool,proto3,oneof" json:"oneofBool"`
 }
 
 type TestAllTypesProto3_OneofUint64 struct {
-	OneofUint64 uint64 `protobuf:"varint,116,opt,name=oneof_uint64,json=oneofUint64,proto3,oneof"`
+	OneofUint64 uint64 `protobuf:"varint,116,opt,name=oneof_uint64,json=oneofUint64,proto3,oneof" json:"oneofUint64"`
 }
 
 type TestAllTypesProto3_OneofFloat struct {
-	OneofFloat float32 `protobuf:"fixed32,117,opt,name=oneof_float,json=oneofFloat,proto3,oneof"`
+	OneofFloat float32 `protobuf:"fixed32,117,opt,name=oneof_float,json=oneofFloat,proto3,oneof" json:"oneofFloat"`
 }
 
 type TestAllTypesProto3_OneofDouble struct {
-	OneofDouble float64 `protobuf:"fixed64,118,opt,name=oneof_double,json=oneofDouble,proto3,oneof"`
+	OneofDouble float64 `protobuf:"fixed64,118,opt,name=oneof_double,json=oneofDouble,proto3,oneof" json:"oneofDouble"`
 }
 
 type TestAllTypesProto3_OneofEnum struct {
-	OneofEnum TestAllTypesProto3_NestedEnum `protobuf:"varint,119,opt,name=oneof_enum,json=oneofEnum,proto3,enum=protobuf_test_messages.proto3.TestAllTypesProto3_NestedEnum,oneof"`
+	OneofEnum TestAllTypesProto3_NestedEnum `protobuf:"varint,119,opt,name=oneof_enum,json=oneofEnum,proto3,enum=protobuf_test_messages.proto3.TestAllTypesProto3_NestedEnum,oneof" json:"oneofEnum"`
 }
 
 type TestAllTypesProto3_OneofNullValue struct {
-	OneofNullValue structpb.NullValue `protobuf:"varint,120,opt,name=oneof_null_value,json=oneofNullValue,proto3,enum=google.protobuf.NullValue,oneof"`
+	OneofNullValue structpb.NullValue `protobuf:"varint,120,opt,name=oneof_null_value,json=oneofNullValue,proto3,enum=google.protobuf.NullValue,oneof" json:"oneofNullValue"`
 }
 
 func (*TestAllTypesProto3_OneofUint32) isTestAllTypesProto3_OneofField() {}
