@@ -171,6 +171,16 @@ var descListTypesTemplate = template.Must(template.New("").Parse(`
 					if _, ok := p.byText[d.TextName()]; !ok {
 						p.byText[d.TextName()] = d
 					}
+					if isGroupLike(d) {
+						lowerJSONName := strings.ToLower(d.JSONName())
+						if _, ok := p.byJSON[lowerJSONName]; !ok {
+							p.byJSON[lowerJSONName] = d
+						}
+						lowerTextName := strings.ToLower(d.TextName())
+						if _, ok := p.byText[lowerTextName]; !ok {
+							p.byText[lowerTextName] = d
+						}
+					}
 					{{- end}}
 					{{- if .NumberExpr}}
 					if _, ok := p.byNum[d.Number()]; !ok {
@@ -200,6 +210,7 @@ func writeSource(file, src string) {
 		"fmt",
 		"math",
 		"reflect",
+		"strings",
 		"sync",
 		"unicode/utf8",
 		"",

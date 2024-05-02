@@ -657,12 +657,16 @@ delimited_field {}
 		desc:         "group field name",
 		inputMessage: &pb2.Nests{},
 		inputText:    `optgroup: {}`,
-		wantErr:      "unknown field: optgroup",
+		wantMessage: &pb2.Nests{
+			Optgroup: &pb2.Nests_OptGroup{},
+		},
 	}, {
-		desc:         "delimited encoded group-line message field name",
+		desc:         "delimited encoded group-like message field name",
 		inputMessage: &pbeditions.Nests{},
-		inputText:    `optgroup: {}`,
-		wantErr:      "unknown field: optgroup",
+		inputText:    `optgroup {}`,
+		wantMessage: &pbeditions.Nests{
+			Optgroup: &pbeditions.Nests_OptGroup{},
+		},
 	}, {
 		desc:         "delimited encoded message field name",
 		inputMessage: &pbeditions.Nests{},
