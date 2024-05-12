@@ -1,7 +1,7 @@
 # Go support for Protocol Buffers
 
 [![Go Reference](https://pkg.go.dev/badge/google.golang.org/protobuf.svg)](https://pkg.go.dev/google.golang.org/protobuf)
-[![Build Status](https://travis-ci.org/protocolbuffers/protobuf-go.svg?branch=master)](https://travis-ci.org/protocolbuffers/protobuf-go)
+[![Build Status](https://github.com/protocolbuffers/protobuf-go/actions/workflows/test.yml/badge.svg)](https://github.com/protocolbuffers/protobuf-go/actions/workflows/test.yml)
 
 This project hosts the Go implementation for
 [protocol buffers](https://protobuf.dev), which is a
