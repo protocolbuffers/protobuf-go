@@ -18,7 +18,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"reflect"
 	"regexp"
 	"runtime"
 	"runtime/debug"
@@ -560,15 +559,9 @@ func race() bool {
 	if !ok {
 		return false
 	}
-	// Use reflect because the debug.BuildInfo.Settings field
-	// isn't available in Go 1.17.
-	s := reflect.ValueOf(bi).Elem().FieldByName("Settings")
-	if !s.IsValid() {
-		return false
-	}
-	for i := 0; i < s.Len(); i++ {
-		if s.Index(i).FieldByName("Key").String() == "-race" {
-			return s.Index(i).FieldByName("Value").String() == "true"
+	for _, setting := range bi.Settings {
+		if setting.Key == "-race" {
+			return setting.Value == "true"
 		}
 	}
 	return false

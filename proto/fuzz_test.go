@@ -2,10 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Go native fuzzing was added in go1.18. Remove this once we stop supporting
-// go1.17.
-//go:build go1.18
-
 package proto_test
 
 import (
