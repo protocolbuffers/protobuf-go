@@ -37,13 +37,10 @@ var (
 	protobufVersion = "27.0-rc1"
 
 	golangVersions = func() []string {
-		// Version policy: same version as is in the x/ repos' go.mod.
+		// Version policy: oldest supported version of Go.
 		return []string{
-			"1.17.13",
-			"1.18.10",
-			"1.19.13",
-			"1.20.12",
-			"1.21.5",
+			"1.21.10",
+			"1.22.3",
 		}
 	}()
 	golangLatest = golangVersions[len(golangVersions)-1]
