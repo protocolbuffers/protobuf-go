@@ -255,6 +255,10 @@ func (m *extensionMap) Has(xd protoreflect.ExtensionTypeDescriptor) (ok bool) {
 	if !ok {
 		return false
 	}
+	if x.isUnexpandedLazy() {
+		// Avoid calling x.Value(), which triggers a lazy unmarshal.
+		return true
+	}
 	switch {
 	case xd.IsList():
 		return x.Value().List().Len() > 0

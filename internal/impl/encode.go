@@ -149,6 +149,14 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 	return b, nil
 }
 
+// fullyLazyExtensions returns true if we should attempt to keep extensions lazy over size and marshal.
+func fullyLazyExtensions(opts marshalOptions) bool {
+	// When deterministic marshaling is requested, force an unmarshal for lazy
+	// extensions to produce a deterministic result, instead of passing through
+	// bytes lazily that may or may not match what Go Protobuf would produce.
+	return opts.flags&piface.MarshalDeterministic == 0
+}
+
 func (mi *MessageInfo) sizeExtensions(ext *map[int32]ExtensionField, opts marshalOptions) (n int) {
 	if ext == nil {
 		return 0
@@ -157,6 +165,14 @@ func (mi *MessageInfo) sizeExtensions(ext *map[int32]ExtensionField, opts marsha
 		xi := getExtensionFieldInfo(x.Type())
 		if xi.funcs.size == nil {
 			continue
+		}
+		if fullyLazyExtensions(opts) {
+			// Don't expand the extension, instead use the buffer to calculate size
+			if lb := x.lazyBuffer(); lb != nil {
+				// We got hold of the buffer, so it's still lazy.
+				n += len(lb)
+				continue
+			}
 		}
 		n += xi.funcs.size(x.Value(), xi.tagsize, opts)
 	}
@@ -176,6 +192,13 @@ func (mi *MessageInfo) appendExtensions(b []byte, ext *map[int32]ExtensionField,
 		var err error
 		for _, x := range *ext {
 			xi := getExtensionFieldInfo(x.Type())
+			if fullyLazyExtensions(opts) {
+				// Don't expand the extension if it's still in wire format, instead use the buffer content.
+				if lb := x.lazyBuffer(); lb != nil {
+					b = append(b, lb...)
+					continue
+				}
+			}
 			b, err = xi.funcs.marshal(b, x.Value(), xi.wiretag, opts)
 		}
 		return b, err
@@ -191,6 +214,13 @@ func (mi *MessageInfo) appendExtensions(b []byte, ext *map[int32]ExtensionField,
 		for _, k := range keys {
 			x := (*ext)[int32(k)]
 			xi := getExtensionFieldInfo(x.Type())
+			if fullyLazyExtensions(opts) {
+				// Don't expand the extension if it's still in wire format, instead use the buffer content.
+				if lb := x.lazyBuffer(); lb != nil {
+					b = append(b, lb...)
+					continue
+				}
+			}
 			b, err = xi.funcs.marshal(b, x.Value(), xi.wiretag, opts)
 			if err != nil {
 				return b, err
