@@ -24,7 +24,7 @@ func TestExtensionType(t *testing.T) {
 	}
 	for _, test := range []struct {
 		xt    protoreflect.ExtensionType
-		value interface{}
+		value any
 	}{
 		{
 			xt:    testpb.E_OptionalInt32,

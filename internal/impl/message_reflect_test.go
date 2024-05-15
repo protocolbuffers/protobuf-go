@@ -115,17 +115,17 @@ type (
 	// check that map length matches
 	lenMap int
 	// check presence for specific entries in the map
-	hasMap map[interface{}]bool
+	hasMap map[any]bool
 	// check that specific map entries match
-	getMap map[interface{}]protoreflect.Value
+	getMap map[any]protoreflect.Value
 	// set specific map entries
-	setMap map[interface{}]protoreflect.Value
+	setMap map[any]protoreflect.Value
 	// clear specific entries in the map
-	clearMap []interface{}
+	clearMap []any
 	// apply messageOps on each specified message entry
-	messageMap map[interface{}]messageOps
+	messageMap map[any]messageOps
 	// range through all entries and check that they match
-	rangeMap map[interface{}]protoreflect.Value
+	rangeMap map[any]protoreflect.Value
 )
 
 func (equalMap) isMapOp()   {}
@@ -798,8 +798,8 @@ var oneofScalarsType = pimpl.MessageInfo{GoReflectType: reflect.TypeOf(new(Oneof
 
 func (m *OneofScalars) ProtoReflect() protoreflect.Message { return oneofScalarsType.MessageOf(m) }
 
-func (*OneofScalars) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
+func (*OneofScalars) XXX_OneofWrappers() []any {
+	return []any{
 		(*OneofScalars_Bool)(nil),
 		(*OneofScalars_Int32)(nil),
 		(*OneofScalars_Int64)(nil),
@@ -1011,8 +1011,8 @@ func newFileRegistry(files ...protoreflect.FileDescriptor) *protoregistry.Files 
 
 func (m *EnumMessages) ProtoReflect() protoreflect.Message { return enumMessagesType.MessageOf(m) }
 
-func (*EnumMessages) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
+func (*EnumMessages) XXX_OneofWrappers() []any {
+	return []any{
 		(*EnumMessages_OneofE2)(nil),
 		(*EnumMessages_OneofE3)(nil),
 		(*EnumMessages_OneofM2)(nil),
@@ -1161,7 +1161,7 @@ var cmpOpts = cmp.Options{
 		my := pimpl.Export{}.MessageOf(y).Interface()
 		return proto.Equal(mx, my)
 	}),
-	cmp.Transformer("UnwrapValue", func(pv protoreflect.Value) interface{} {
+	cmp.Transformer("UnwrapValue", func(pv protoreflect.Value) any {
 		switch v := pv.Interface().(type) {
 		case protoreflect.Message:
 			out := make(map[protoreflect.FieldNumber]protoreflect.Value)
@@ -1177,7 +1177,7 @@ var cmpOpts = cmp.Options{
 			}
 			return out
 		case protoreflect.Map:
-			out := make(map[interface{}]protoreflect.Value)
+			out := make(map[any]protoreflect.Value)
 			v.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 				out[k.Interface()] = v
 				return true
@@ -1359,8 +1359,8 @@ func testMaps(t *testing.T, p path, m protoreflect.Map, tt mapOps) {
 				t.Errorf("operation %v, Map.Len = %d, want %d", p, got, want)
 			}
 		case hasMap:
-			got := map[interface{}]bool{}
-			want := map[interface{}]bool(op)
+			got := map[any]bool{}
+			want := map[any]bool(op)
 			for k := range want {
 				got[k] = m.Has(V(k).MapKey())
 			}
@@ -1368,8 +1368,8 @@ func testMaps(t *testing.T, p path, m protoreflect.Map, tt mapOps) {
 				t.Errorf("operation %v, Map.Has mismatch (-want, +got):\n%s", p, diff)
 			}
 		case getMap:
-			got := map[interface{}]protoreflect.Value{}
-			want := map[interface{}]protoreflect.Value(op)
+			got := map[any]protoreflect.Value{}
+			want := map[any]protoreflect.Value(op)
 			for k := range want {
 				got[k] = m.Get(V(k).MapKey())
 			}
@@ -1393,8 +1393,8 @@ func testMaps(t *testing.T, p path, m protoreflect.Map, tt mapOps) {
 				testMessage(t, p, m.Get(mk).Message(), tt)
 			}
 		case rangeMap:
-			got := map[interface{}]protoreflect.Value{}
-			want := map[interface{}]protoreflect.Value(op)
+			got := map[any]protoreflect.Value{}
+			want := map[any]protoreflect.Value(op)
 			m.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
 				got[k.Interface()] = v
 				return true

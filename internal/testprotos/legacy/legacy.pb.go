@@ -281,7 +281,7 @@ func file_internal_testprotos_legacy_legacy_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_testprotos_legacy_legacy_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_internal_testprotos_legacy_legacy_proto_goTypes = []interface{}{
+var file_internal_testprotos_legacy_legacy_proto_goTypes = []any{
 	(*Legacy)(nil),                           // 0: google.golang.org.Legacy
 	(*proto2_20160225_2fc053c5.Message)(nil), // 1: google.golang.org.proto2_20160225.Message
 	(*proto3_20160225_2fc053c5.Message)(nil), // 2: google.golang.org.proto3_20160225.Message
@@ -322,7 +322,7 @@ func file_internal_testprotos_legacy_legacy_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_legacy_legacy_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_legacy_legacy_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Legacy); i {
 			case 0:
 				return &v.state

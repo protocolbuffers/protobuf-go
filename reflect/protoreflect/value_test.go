@@ -21,7 +21,7 @@ func TestValue(t *testing.T) {
 
 	tests := []struct {
 		in   Value
-		want interface{}
+		want any
 	}{
 		{in: Value{}},
 		{in: ValueOf(nil)},
@@ -146,7 +146,7 @@ func BenchmarkValue(b *testing.B) {
 	const testdata = "The quick brown fox jumped over the lazy dog."
 	var sink1 string
 	var sink2 Value
-	var sink3 interface{}
+	var sink3 any
 
 	// Baseline measures the time to store a string into a native variable.
 	b.Run("Baseline", func(b *testing.B) {

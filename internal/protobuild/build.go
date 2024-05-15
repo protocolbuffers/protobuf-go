@@ -29,7 +29,7 @@ import (
 // • A string containing the value name may be assigned to an enum field.
 //
 // • A slice may be assigned to a list, and a map may be assigned to a map.
-type Value interface{}
+type Value any
 
 // A Message is a template to apply to a message. Keys are field names, including
 // extension names.
@@ -101,7 +101,7 @@ func (template Message) Build(m protoreflect.Message) {
 	}
 }
 
-func fieldValue(fd protoreflect.FieldDescriptor, v interface{}) protoreflect.Value {
+func fieldValue(fd protoreflect.FieldDescriptor, v any) protoreflect.Value {
 	switch o := v.(type) {
 	case int:
 		switch fd.Kind() {

@@ -238,7 +238,7 @@ func file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_raw
 }
 
 var file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_goTypes = []interface{}{
+var file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_goTypes = []any{
 	(*Sub)(nil), // 0: lazy_extension_normalized_wire_test.Sub
 	(*Top)(nil), // 1: lazy_extension_normalized_wire_test.Top
 	(*Ext)(nil), // 2: lazy_extension_normalized_wire_test.Ext
@@ -261,7 +261,7 @@ func file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_ini
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Sub); i {
 			case 0:
 				return &v.state
@@ -275,7 +275,7 @@ func file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_ini
 				return nil
 			}
 		}
-		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*Top); i {
 			case 0:
 				return &v.state
@@ -287,7 +287,7 @@ func file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_ini
 				return nil
 			}
 		}
-		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*Ext); i {
 			case 0:
 				return &v.state

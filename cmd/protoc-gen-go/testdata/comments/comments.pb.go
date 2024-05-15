@@ -417,7 +417,7 @@ func file_cmd_protoc_gen_go_testdata_comments_comments_proto_rawDescGZIP() []byt
 
 var file_cmd_protoc_gen_go_testdata_comments_comments_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_cmd_protoc_gen_go_testdata_comments_comments_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_comments_comments_proto_goTypes = []any{
 	(Enum1)(0),                 // 0: goproto.protoc.comments.Enum1
 	(*Message1)(nil),           // 1: goproto.protoc.comments.Message1
 	(*Message2)(nil),           // 2: goproto.protoc.comments.Message2
@@ -442,7 +442,7 @@ func file_cmd_protoc_gen_go_testdata_comments_comments_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Message1); i {
 			case 0:
 				return &v.state
@@ -456,7 +456,7 @@ func file_cmd_protoc_gen_go_testdata_comments_comments_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*Message2); i {
 			case 0:
 				return &v.state
@@ -468,7 +468,7 @@ func file_cmd_protoc_gen_go_testdata_comments_comments_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*Message1_Message1A); i {
 			case 0:
 				return &v.state
@@ -480,7 +480,7 @@ func file_cmd_protoc_gen_go_testdata_comments_comments_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*Message1_Message1B); i {
 			case 0:
 				return &v.state
@@ -492,7 +492,7 @@ func file_cmd_protoc_gen_go_testdata_comments_comments_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*Message2_Message2A); i {
 			case 0:
 				return &v.state
@@ -504,7 +504,7 @@ func file_cmd_protoc_gen_go_testdata_comments_comments_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*Message2_Message2B); i {
 			case 0:
 				return &v.state
@@ -517,7 +517,7 @@ func file_cmd_protoc_gen_go_testdata_comments_comments_proto_init() {
 			}
 		}
 	}
-	file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_cmd_protoc_gen_go_testdata_comments_comments_proto_msgTypes[0].OneofWrappers = []any{
 		(*Message1_Oneof1AField1)(nil),
 	}
 	type x struct{}

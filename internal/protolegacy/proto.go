@@ -66,7 +66,7 @@ func RegisterType(m Message, s string) {
 	}
 }
 
-func RegisterMapType(interface{}, string) {
+func RegisterMapType(any, string) {
 	// Do nothing.
 }
 

@@ -3871,7 +3871,7 @@ func file_google_protobuf_test_messages_proto2_proto_rawDescGZIP() []byte {
 
 var file_google_protobuf_test_messages_proto2_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_google_protobuf_test_messages_proto2_proto_msgTypes = make([]protoimpl.MessageInfo, 40)
-var file_google_protobuf_test_messages_proto2_proto_goTypes = []interface{}{
+var file_google_protobuf_test_messages_proto2_proto_goTypes = []any{
 	(ForeignEnumProto2)(0),                     // 0: protobuf_test_messages.proto2.ForeignEnumProto2
 	(TestAllTypesProto2_NestedEnum)(0),         // 1: protobuf_test_messages.proto2.TestAllTypesProto2.NestedEnum
 	(EnumOnlyProto2_Bool)(0),                   // 2: protobuf_test_messages.proto2.EnumOnlyProto2.Bool
@@ -3992,7 +3992,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2); i {
 			case 0:
 				return &v.state
@@ -4006,7 +4006,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*ForeignMessageProto2); i {
 			case 0:
 				return &v.state
@@ -4018,7 +4018,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*GroupField); i {
 			case 0:
 				return &v.state
@@ -4030,7 +4030,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*UnknownToTestAllTypes); i {
 			case 0:
 				return &v.state
@@ -4042,7 +4042,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*NullHypothesisProto2); i {
 			case 0:
 				return &v.state
@@ -4054,7 +4054,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*EnumOnlyProto2); i {
 			case 0:
 				return &v.state
@@ -4066,7 +4066,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[6].Exporter = func(v any, i int) any {
 			switch v := v.(*OneStringProto2); i {
 			case 0:
 				return &v.state
@@ -4078,7 +4078,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[7].Exporter = func(v any, i int) any {
 			switch v := v.(*ProtoWithKeywords); i {
 			case 0:
 				return &v.state
@@ -4090,7 +4090,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[8].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllRequiredTypesProto2); i {
 			case 0:
 				return &v.state
@@ -4104,7 +4104,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[9].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -4116,7 +4116,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[29].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2_Data); i {
 			case 0:
 				return &v.state
@@ -4128,7 +4128,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[30].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2_MultiWordGroupField); i {
 			case 0:
 				return &v.state
@@ -4140,7 +4140,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[31].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2_MessageSetCorrect); i {
 			case 0:
 				return &v.state
@@ -4154,7 +4154,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[32].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2_MessageSetCorrectExtension1); i {
 			case 0:
 				return &v.state
@@ -4166,7 +4166,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[33].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2_MessageSetCorrectExtension2); i {
 			case 0:
 				return &v.state
@@ -4178,7 +4178,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[34].Exporter = func(v any, i int) any {
 			switch v := v.(*UnknownToTestAllTypes_OptionalGroup); i {
 			case 0:
 				return &v.state
@@ -4190,7 +4190,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[35].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllRequiredTypesProto2_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -4202,7 +4202,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[36].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllRequiredTypesProto2_Data); i {
 			case 0:
 				return &v.state
@@ -4214,7 +4214,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[37].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllRequiredTypesProto2_MessageSetCorrect); i {
 			case 0:
 				return &v.state
@@ -4228,7 +4228,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[38].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllRequiredTypesProto2_MessageSetCorrectExtension1); i {
 			case 0:
 				return &v.state
@@ -4240,7 +4240,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 				return nil
 			}
 		}
-		file_google_protobuf_test_messages_proto2_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_test_messages_proto2_proto_msgTypes[39].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllRequiredTypesProto2_MessageSetCorrectExtension2); i {
 			case 0:
 				return &v.state
@@ -4253,7 +4253,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 			}
 		}
 	}
-	file_google_protobuf_test_messages_proto2_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_google_protobuf_test_messages_proto2_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypesProto2_OneofUint32)(nil),
 		(*TestAllTypesProto2_OneofNestedMessage)(nil),
 		(*TestAllTypesProto2_OneofString)(nil),

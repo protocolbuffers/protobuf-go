@@ -266,7 +266,7 @@ func file_internal_testprotos_irregular_test_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_testprotos_irregular_test_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_internal_testprotos_irregular_test_proto_goTypes = []interface{}{
+var file_internal_testprotos_irregular_test_proto_goTypes = []any{
 	(*Message)(nil),          // 0: goproto.proto.irregular.Message
 	nil,                      // 1: goproto.proto.irregular.Message.MapMessageEntry
 	nil,                      // 2: goproto.proto.irregular.Message.MapAberrantMessageEntry
@@ -300,7 +300,7 @@ func file_internal_testprotos_irregular_test_proto_init() {
 	}
 	file_internal_testprotos_irregular_irregular_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_irregular_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_irregular_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state
@@ -313,7 +313,7 @@ func file_internal_testprotos_irregular_test_proto_init() {
 			}
 		}
 	}
-	file_internal_testprotos_irregular_test_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_internal_testprotos_irregular_test_proto_msgTypes[0].OneofWrappers = []any{
 		(*Message_OneofMessage)(nil),
 		(*Message_OneofAberrantMessage)(nil),
 	}

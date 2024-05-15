@@ -1494,7 +1494,7 @@ func file_internal_testprotos_editionsfuzztest_test3_proto_rawDescGZIP() []byte 
 
 var file_internal_testprotos_editionsfuzztest_test3_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
-var file_internal_testprotos_editionsfuzztest_test3_proto_goTypes = []interface{}{
+var file_internal_testprotos_editionsfuzztest_test3_proto_goTypes = []any{
 	(ForeignEnumProto3)(0),                   // 0: goproto.proto.test.ForeignEnumProto3
 	(TestAllTypesProto3_NestedEnum)(0),       // 1: goproto.proto.test.TestAllTypesProto3.NestedEnum
 	(*TestAllTypesProto3)(nil),               // 2: goproto.proto.test.TestAllTypesProto3
@@ -1566,7 +1566,7 @@ func file_internal_testprotos_editionsfuzztest_test3_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto3); i {
 			case 0:
 				return &v.state
@@ -1578,7 +1578,7 @@ func file_internal_testprotos_editionsfuzztest_test3_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*ForeignMessageProto3); i {
 			case 0:
 				return &v.state
@@ -1590,7 +1590,7 @@ func file_internal_testprotos_editionsfuzztest_test3_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto3_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -1603,7 +1603,7 @@ func file_internal_testprotos_editionsfuzztest_test3_proto_init() {
 			}
 		}
 	}
-	file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_internal_testprotos_editionsfuzztest_test3_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypesProto3_OneofUint32)(nil),
 		(*TestAllTypesProto3_OneofNestedMessage)(nil),
 		(*TestAllTypesProto3_OneofString)(nil),

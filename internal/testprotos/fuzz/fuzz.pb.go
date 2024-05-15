@@ -194,7 +194,7 @@ func file_internal_testprotos_fuzz_fuzz_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_testprotos_fuzz_fuzz_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_internal_testprotos_fuzz_fuzz_proto_goTypes = []interface{}{
+var file_internal_testprotos_fuzz_fuzz_proto_goTypes = []any{
 	(*Fuzz)(nil),                         // 0: goproto.proto.fuzz.Fuzz
 	(*test.TestAllTypes)(nil),            // 1: goproto.proto.test.TestAllTypes
 	(*test.TestAllExtensions)(nil),       // 2: goproto.proto.test.TestAllExtensions
@@ -227,7 +227,7 @@ func file_internal_testprotos_fuzz_fuzz_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_fuzz_fuzz_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_fuzz_fuzz_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Fuzz); i {
 			case 0:
 				return &v.state

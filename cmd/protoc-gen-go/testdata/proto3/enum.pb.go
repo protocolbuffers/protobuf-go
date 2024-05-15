@@ -93,7 +93,7 @@ func file_cmd_protoc_gen_go_testdata_proto3_enum_proto_rawDescGZIP() []byte {
 }
 
 var file_cmd_protoc_gen_go_testdata_proto3_enum_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_cmd_protoc_gen_go_testdata_proto3_enum_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_proto3_enum_proto_goTypes = []any{
 	(Enum)(0), // 0: goproto.protoc.proto3.Enum
 }
 var file_cmd_protoc_gen_go_testdata_proto3_enum_proto_depIdxs = []int32{

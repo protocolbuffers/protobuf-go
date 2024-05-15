@@ -1302,7 +1302,7 @@ func file_internal_testprotos_testeditions_test_extension_proto_rawDescGZIP() []
 }
 
 var file_internal_testprotos_testeditions_test_extension_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_internal_testprotos_testeditions_test_extension_proto_goTypes = []interface{}{
+var file_internal_testprotos_testeditions_test_extension_proto_goTypes = []any{
 	(*TestAllExtensions)(nil),               // 0: goproto.proto.testeditions.TestAllExtensions
 	(*OptionalGroup)(nil),                   // 1: goproto.proto.testeditions.OptionalGroup
 	(*RepeatedGroup)(nil),                   // 2: goproto.proto.testeditions.RepeatedGroup
@@ -1395,7 +1395,7 @@ func file_internal_testprotos_testeditions_test_extension_proto_init() {
 	}
 	file_internal_testprotos_testeditions_test_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllExtensions); i {
 			case 0:
 				return &v.state
@@ -1409,7 +1409,7 @@ func file_internal_testprotos_testeditions_test_extension_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*OptionalGroup); i {
 			case 0:
 				return &v.state
@@ -1421,7 +1421,7 @@ func file_internal_testprotos_testeditions_test_extension_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*RepeatedGroup); i {
 			case 0:
 				return &v.state
@@ -1433,7 +1433,7 @@ func file_internal_testprotos_testeditions_test_extension_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*TestFeatureResolution); i {
 			case 0:
 				return &v.state
@@ -1447,7 +1447,7 @@ func file_internal_testprotos_testeditions_test_extension_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*RepeatedFieldEncoding); i {
 			case 0:
 				return &v.state
@@ -1459,7 +1459,7 @@ func file_internal_testprotos_testeditions_test_extension_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_testeditions_test_extension_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllExtensions_NestedMessage); i {
 			case 0:
 				return &v.state

@@ -29,8 +29,8 @@ func TestExtensionFuncs(t *testing.T) {
 	for _, test := range []struct {
 		message     proto.Message
 		ext         protoreflect.ExtensionType
-		wantDefault interface{}
-		value       interface{}
+		wantDefault any
+		value       any
 	}{
 		{
 			message:     &testpb.TestAllExtensions{},
@@ -162,7 +162,7 @@ func TestHasExtensionNoAlloc(t *testing.T) {
 func TestIsValid(t *testing.T) {
 	tests := []struct {
 		xt   protoreflect.ExtensionType
-		vi   interface{}
+		vi   any
 		want bool
 	}{
 		{testpb.E_OptionalBool, nil, false},
@@ -295,10 +295,10 @@ func TestIsValid(t *testing.T) {
 func TestExtensionRanger(t *testing.T) {
 	tests := []struct {
 		msg  proto.Message
-		want map[protoreflect.ExtensionType]interface{}
+		want map[protoreflect.ExtensionType]any
 	}{{
 		msg: &testpb.TestAllExtensions{},
-		want: map[protoreflect.ExtensionType]interface{}{
+		want: map[protoreflect.ExtensionType]any{
 			testpb.E_OptionalInt32:         int32(5),
 			testpb.E_OptionalString:        string("hello"),
 			testpb.E_OptionalNestedMessage: &testpb.TestAllExtensions_NestedMessage{},
@@ -309,7 +309,7 @@ func TestExtensionRanger(t *testing.T) {
 		},
 	}, {
 		msg: &testeditionspb.TestAllExtensions{},
-		want: map[protoreflect.ExtensionType]interface{}{
+		want: map[protoreflect.ExtensionType]any{
 			testeditionspb.E_OptionalInt32:         int32(5),
 			testeditionspb.E_OptionalString:        string("hello"),
 			testeditionspb.E_OptionalNestedMessage: &testeditionspb.TestAllExtensions_NestedMessage{},
@@ -320,7 +320,7 @@ func TestExtensionRanger(t *testing.T) {
 		},
 	}, {
 		msg: &descpb.MessageOptions{},
-		want: map[protoreflect.ExtensionType]interface{}{
+		want: map[protoreflect.ExtensionType]any{
 			test3pb.E_OptionalInt32Ext:          int32(5),
 			test3pb.E_OptionalStringExt:         string("hello"),
 			test3pb.E_OptionalForeignMessageExt: &test3pb.ForeignMessage{},
@@ -338,8 +338,8 @@ func TestExtensionRanger(t *testing.T) {
 			proto.SetExtension(tt.msg, xt, v)
 		}
 
-		got := make(map[protoreflect.ExtensionType]interface{})
-		proto.RangeExtensions(tt.msg, func(xt protoreflect.ExtensionType, v interface{}) bool {
+		got := make(map[protoreflect.ExtensionType]any)
+		proto.RangeExtensions(tt.msg, func(xt protoreflect.ExtensionType, v any) bool {
 			got[xt] = v
 			return true
 		})

@@ -135,7 +135,7 @@ func file_internal_testprotos_test_test_import_proto_rawDescGZIP() []byte {
 
 var file_internal_testprotos_test_test_import_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_internal_testprotos_test_test_import_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_internal_testprotos_test_test_import_proto_goTypes = []interface{}{
+var file_internal_testprotos_test_test_import_proto_goTypes = []any{
 	(ImportEnum)(0),       // 0: goproto.proto.test.ImportEnum
 	(*ImportMessage)(nil), // 1: goproto.proto.test.ImportMessage
 }
@@ -153,7 +153,7 @@ func file_internal_testprotos_test_test_import_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_test_test_import_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_import_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*ImportMessage); i {
 			case 0:
 				return &v.state

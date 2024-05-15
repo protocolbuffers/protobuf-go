@@ -136,7 +136,7 @@ func file_internal_testprotos_messageset_messagesetpb_message_set_proto_rawDescG
 }
 
 var file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_internal_testprotos_messageset_messagesetpb_message_set_proto_goTypes = []interface{}{
+var file_internal_testprotos_messageset_messagesetpb_message_set_proto_goTypes = []any{
 	(*MessageSet)(nil),          // 0: goproto.proto.messageset.MessageSet
 	(*MessageSetContainer)(nil), // 1: goproto.proto.messageset.MessageSetContainer
 }
@@ -155,7 +155,7 @@ func file_internal_testprotos_messageset_messagesetpb_message_set_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*MessageSet); i {
 			case 0:
 				return &v.state
@@ -169,7 +169,7 @@ func file_internal_testprotos_messageset_messagesetpb_message_set_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*MessageSetContainer); i {
 			case 0:
 				return &v.state

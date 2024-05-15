@@ -54,8 +54,8 @@ type Proto2 struct {
 func (x *Proto2) ProtoMessage()  {}
 func (x *Proto2) Reset()         { *x = Proto2{} }
 func (x *Proto2) String() string { return prototext.Format(protoimpl.X.ProtoMessageV2Of(x)) }
-func (x *Proto2) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
+func (x *Proto2) XXX_OneofWrappers() []any {
+	return []any{
 		(*Proto2_OneofBool)(nil),
 		(*Proto2_OneofInt32)(nil),
 		(*Proto2_OneofInt64)(nil),
@@ -161,8 +161,8 @@ type Proto3 struct {
 func (x *Proto3) ProtoMessage()  {}
 func (x *Proto3) Reset()         { *x = Proto3{} }
 func (x *Proto3) String() string { return prototext.Format(protoimpl.X.ProtoMessageV2Of(x)) }
-func (x *Proto3) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
+func (x *Proto3) XXX_OneofWrappers() []any {
+	return []any{
 		(*Proto3_OneofBool)(nil),
 		(*Proto3_OneofInt32)(nil),
 		(*Proto3_OneofInt64)(nil),

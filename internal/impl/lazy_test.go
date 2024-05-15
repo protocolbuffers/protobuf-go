@@ -566,7 +566,7 @@ func (p pointer) Apply(f uintptr) pointer {
 	return pointer{p: unsafe.Pointer(uintptr(p.p) + uintptr(f))}
 }
 
-func pointerOfIface(v interface{}) pointer {
+func pointerOfIface(v any) pointer {
 	type ifaceHeader struct {
 		Type unsafe.Pointer
 		Data unsafe.Pointer
@@ -580,7 +580,7 @@ func (p pointer) AsValueOf(t reflect.Type) reflect.Value {
 
 // Highly implementation dependent - uses unsafe pointers to figure
 // out if the lazyExtensionValue is initialized.
-func extensionIsInitialized(t *testing.T, data interface{}, fieldNo int32) bool {
+func extensionIsInitialized(t *testing.T, data any, fieldNo int32) bool {
 	ext, ok := reflect.TypeOf(data).Elem().FieldByName("extensionFields")
 	if !ok {
 		t.Fatalf("Failed to retrieve offset of field \"extensionFields\".")

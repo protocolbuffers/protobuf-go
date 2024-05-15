@@ -2644,7 +2644,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_rawDescGZIP() []byte {
 
 var file_internal_testprotos_textpbeditions_test2_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_internal_testprotos_textpbeditions_test2_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
-var file_internal_testprotos_textpbeditions_test2_proto_goTypes = []interface{}{
+var file_internal_testprotos_textpbeditions_test2_proto_goTypes = []any{
 	(Enum)(0),                             // 0: pbeditions.Enum
 	(OpenEnum)(0),                         // 1: pbeditions.OpenEnum
 	(Enums_NestedEnum)(0),                 // 2: pbeditions.Enums.NestedEnum
@@ -2788,7 +2788,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Scalars); i {
 			case 0:
 				return &v.state
@@ -2800,7 +2800,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*ImplicitScalars); i {
 			case 0:
 				return &v.state
@@ -2812,7 +2812,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*UTF8Validated); i {
 			case 0:
 				return &v.state
@@ -2824,7 +2824,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*NestsUTF8Validated); i {
 			case 0:
 				return &v.state
@@ -2836,7 +2836,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*Enums); i {
 			case 0:
 				return &v.state
@@ -2848,7 +2848,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*Repeats); i {
 			case 0:
 				return &v.state
@@ -2860,7 +2860,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[6].Exporter = func(v any, i int) any {
 			switch v := v.(*Maps); i {
 			case 0:
 				return &v.state
@@ -2872,7 +2872,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[7].Exporter = func(v any, i int) any {
 			switch v := v.(*Nested); i {
 			case 0:
 				return &v.state
@@ -2884,7 +2884,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[8].Exporter = func(v any, i int) any {
 			switch v := v.(*Nests); i {
 			case 0:
 				return &v.state
@@ -2896,7 +2896,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[9].Exporter = func(v any, i int) any {
 			switch v := v.(*Requireds); i {
 			case 0:
 				return &v.state
@@ -2908,7 +2908,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[10].Exporter = func(v any, i int) any {
 			switch v := v.(*PartialRequired); i {
 			case 0:
 				return &v.state
@@ -2920,7 +2920,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[11].Exporter = func(v any, i int) any {
 			switch v := v.(*NestedWithRequired); i {
 			case 0:
 				return &v.state
@@ -2932,7 +2932,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[12].Exporter = func(v any, i int) any {
 			switch v := v.(*IndirectRequired); i {
 			case 0:
 				return &v.state
@@ -2944,7 +2944,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[13].Exporter = func(v any, i int) any {
 			switch v := v.(*Extensions); i {
 			case 0:
 				return &v.state
@@ -2958,7 +2958,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[14].Exporter = func(v any, i int) any {
 			switch v := v.(*ExtensionsContainer); i {
 			case 0:
 				return &v.state
@@ -2970,7 +2970,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[15].Exporter = func(v any, i int) any {
 			switch v := v.(*MessageSet); i {
 			case 0:
 				return &v.state
@@ -2984,7 +2984,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[16].Exporter = func(v any, i int) any {
 			switch v := v.(*MessageSetExtension); i {
 			case 0:
 				return &v.state
@@ -2996,7 +2996,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[17].Exporter = func(v any, i int) any {
 			switch v := v.(*FakeMessageSet); i {
 			case 0:
 				return &v.state
@@ -3010,7 +3010,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[18].Exporter = func(v any, i int) any {
 			switch v := v.(*FakeMessageSetExtension); i {
 			case 0:
 				return &v.state
@@ -3022,7 +3022,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[19].Exporter = func(v any, i int) any {
 			switch v := v.(*KnownTypes); i {
 			case 0:
 				return &v.state
@@ -3034,7 +3034,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[22].Exporter = func(v any, i int) any {
 			switch v := v.(*Nests_OptGroup); i {
 			case 0:
 				return &v.state
@@ -3046,7 +3046,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[23].Exporter = func(v any, i int) any {
 			switch v := v.(*Nests_RptGroup); i {
 			case 0:
 				return &v.state
@@ -3058,7 +3058,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpbeditions_test2_proto_msgTypes[24].Exporter = func(v any, i int) any {
 			switch v := v.(*Nests_OptGroup_OptNestedGroup); i {
 			case 0:
 				return &v.state
@@ -3071,7 +3071,7 @@ func file_internal_testprotos_textpbeditions_test2_proto_init() {
 			}
 		}
 	}
-	file_internal_testprotos_textpbeditions_test2_proto_msgTypes[12].OneofWrappers = []interface{}{
+	file_internal_testprotos_textpbeditions_test2_proto_msgTypes[12].OneofWrappers = []any{
 		(*IndirectRequired_OneofNested)(nil),
 	}
 	type x struct{}

@@ -90,7 +90,7 @@ func file_internal_testprotos_test_weak1_test_weak_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_testprotos_test_weak1_test_weak_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_internal_testprotos_test_weak1_test_weak_proto_goTypes = []interface{}{
+var file_internal_testprotos_test_weak1_test_weak_proto_goTypes = []any{
 	(*WeakImportMessage1)(nil), // 0: goproto.proto.test.weak.WeakImportMessage1
 }
 var file_internal_testprotos_test_weak1_test_weak_proto_depIdxs = []int32{
@@ -107,7 +107,7 @@ func file_internal_testprotos_test_weak1_test_weak_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_test_weak1_test_weak_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_weak1_test_weak_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*WeakImportMessage1); i {
 			case 0:
 				return &v.state

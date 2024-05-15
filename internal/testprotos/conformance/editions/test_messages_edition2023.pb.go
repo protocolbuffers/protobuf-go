@@ -1898,7 +1898,7 @@ func file_conformance_test_protos_test_messages_edition2023_proto_rawDescGZIP() 
 
 var file_conformance_test_protos_test_messages_edition2023_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_conformance_test_protos_test_messages_edition2023_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
-var file_conformance_test_protos_test_messages_edition2023_proto_goTypes = []interface{}{
+var file_conformance_test_protos_test_messages_edition2023_proto_goTypes = []any{
 	(ForeignEnumEdition2023)(0),                   // 0: protobuf_test_messages.editions.ForeignEnumEdition2023
 	(TestAllTypesEdition2023_NestedEnum)(0),       // 1: protobuf_test_messages.editions.TestAllTypesEdition2023.NestedEnum
 	(*TestAllTypesEdition2023)(nil),               // 2: protobuf_test_messages.editions.TestAllTypesEdition2023
@@ -1984,7 +1984,7 @@ func file_conformance_test_protos_test_messages_edition2023_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesEdition2023); i {
 			case 0:
 				return &v.state
@@ -1998,7 +1998,7 @@ func file_conformance_test_protos_test_messages_edition2023_proto_init() {
 				return nil
 			}
 		}
-		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*ForeignMessageEdition2023); i {
 			case 0:
 				return &v.state
@@ -2010,7 +2010,7 @@ func file_conformance_test_protos_test_messages_edition2023_proto_init() {
 				return nil
 			}
 		}
-		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*GroupLikeType); i {
 			case 0:
 				return &v.state
@@ -2022,7 +2022,7 @@ func file_conformance_test_protos_test_messages_edition2023_proto_init() {
 				return nil
 			}
 		}
-		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesEdition2023_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -2034,7 +2034,7 @@ func file_conformance_test_protos_test_messages_edition2023_proto_init() {
 				return nil
 			}
 		}
-		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[23].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesEdition2023_GroupLikeType); i {
 			case 0:
 				return &v.state
@@ -2047,7 +2047,7 @@ func file_conformance_test_protos_test_messages_edition2023_proto_init() {
 			}
 		}
 	}
-	file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypesEdition2023_OneofUint32)(nil),
 		(*TestAllTypesEdition2023_OneofNestedMessage)(nil),
 		(*TestAllTypesEdition2023_OneofString)(nil),

@@ -56,7 +56,7 @@ var file_internal_testprotos_annotation_annotation_proto_rawDesc = []byte{
 	0x2f, 0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e,
 }
 
-var file_internal_testprotos_annotation_annotation_proto_goTypes = []interface{}{
+var file_internal_testprotos_annotation_annotation_proto_goTypes = []any{
 	(*descriptorpb.MessageOptions)(nil), // 0: google.protobuf.MessageOptions
 }
 var file_internal_testprotos_annotation_annotation_proto_depIdxs = []int32{

@@ -112,7 +112,7 @@ func file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_rawDescG
 }
 
 var file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_goTypes = []any{
 	(*Foo)(nil), // 0: oneoftest.Foo
 }
 var file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_depIdxs = []int32{
@@ -129,7 +129,7 @@ func file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Foo); i {
 			case 0:
 				return &v.state
@@ -142,7 +142,7 @@ func file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_init() {
 			}
 		}
 	}
-	file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_msgTypes[0].OneofWrappers = []any{
 		(*Foo_GetBar)(nil),
 	}
 	type x struct{}

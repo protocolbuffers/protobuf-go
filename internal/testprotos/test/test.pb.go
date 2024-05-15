@@ -4809,7 +4809,7 @@ func file_internal_testprotos_test_test_proto_rawDescGZIP() []byte {
 
 var file_internal_testprotos_test_test_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_internal_testprotos_test_test_proto_msgTypes = make([]protoimpl.MessageInfo, 45)
-var file_internal_testprotos_test_test_proto_goTypes = []interface{}{
+var file_internal_testprotos_test_test_proto_goTypes = []any{
 	(ForeignEnum)(0),                          // 0: goproto.proto.test.ForeignEnum
 	(TestReservedEnumFields)(0),               // 1: goproto.proto.test.TestReservedEnumFields
 	(TestAllTypes_NestedEnum)(0),              // 2: goproto.proto.test.TestAllTypes.NestedEnum
@@ -5038,7 +5038,7 @@ func file_internal_testprotos_test_test_proto_init() {
 	file_internal_testprotos_test_test_public_proto_init()
 	file_internal_testprotos_test_test_import_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_test_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypes); i {
 			case 0:
 				return &v.state
@@ -5050,7 +5050,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*TestDeprecatedMessage); i {
 			case 0:
 				return &v.state
@@ -5062,7 +5062,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*ForeignMessage); i {
 			case 0:
 				return &v.state
@@ -5074,7 +5074,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*TestReservedFields); i {
 			case 0:
 				return &v.state
@@ -5086,7 +5086,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllExtensions); i {
 			case 0:
 				return &v.state
@@ -5100,7 +5100,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*OptionalGroup); i {
 			case 0:
 				return &v.state
@@ -5112,7 +5112,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[6].Exporter = func(v any, i int) any {
 			switch v := v.(*RepeatedGroup); i {
 			case 0:
 				return &v.state
@@ -5124,7 +5124,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[7].Exporter = func(v any, i int) any {
 			switch v := v.(*TestNestedExtension); i {
 			case 0:
 				return &v.state
@@ -5136,7 +5136,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[8].Exporter = func(v any, i int) any {
 			switch v := v.(*TestRequired); i {
 			case 0:
 				return &v.state
@@ -5148,7 +5148,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[9].Exporter = func(v any, i int) any {
 			switch v := v.(*TestRequiredForeign); i {
 			case 0:
 				return &v.state
@@ -5160,7 +5160,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[10].Exporter = func(v any, i int) any {
 			switch v := v.(*TestRequiredGroupFields); i {
 			case 0:
 				return &v.state
@@ -5172,7 +5172,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[11].Exporter = func(v any, i int) any {
 			switch v := v.(*TestWeak); i {
 			case 0:
 				return &v.state
@@ -5186,7 +5186,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[12].Exporter = func(v any, i int) any {
 			switch v := v.(*TestPackedTypes); i {
 			case 0:
 				return &v.state
@@ -5198,7 +5198,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[13].Exporter = func(v any, i int) any {
 			switch v := v.(*TestUnpackedTypes); i {
 			case 0:
 				return &v.state
@@ -5210,7 +5210,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[14].Exporter = func(v any, i int) any {
 			switch v := v.(*TestPackedExtensions); i {
 			case 0:
 				return &v.state
@@ -5224,7 +5224,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[15].Exporter = func(v any, i int) any {
 			switch v := v.(*TestUnpackedExtensions); i {
 			case 0:
 				return &v.state
@@ -5238,7 +5238,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[16].Exporter = func(v any, i int) any {
 			switch v := v.(*FooRequest); i {
 			case 0:
 				return &v.state
@@ -5250,7 +5250,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[17].Exporter = func(v any, i int) any {
 			switch v := v.(*FooResponse); i {
 			case 0:
 				return &v.state
@@ -5262,7 +5262,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[18].Exporter = func(v any, i int) any {
 			switch v := v.(*WeirdDefault); i {
 			case 0:
 				return &v.state
@@ -5274,7 +5274,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[19].Exporter = func(v any, i int) any {
 			switch v := v.(*RemoteDefault); i {
 			case 0:
 				return &v.state
@@ -5286,7 +5286,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[20].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypes_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -5298,7 +5298,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[21].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypes_OptionalGroup); i {
 			case 0:
 				return &v.state
@@ -5310,7 +5310,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[22].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypes_RepeatedGroup); i {
 			case 0:
 				return &v.state
@@ -5322,7 +5322,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[40].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypes_OneofGroup); i {
 			case 0:
 				return &v.state
@@ -5334,7 +5334,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[41].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllExtensions_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -5346,7 +5346,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[43].Exporter = func(v any, i int) any {
 			switch v := v.(*TestRequiredGroupFields_OptionalGroup); i {
 			case 0:
 				return &v.state
@@ -5358,7 +5358,7 @@ func file_internal_testprotos_test_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test_test_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test_test_proto_msgTypes[44].Exporter = func(v any, i int) any {
 			switch v := v.(*TestRequiredGroupFields_RepeatedGroup); i {
 			case 0:
 				return &v.state
@@ -5371,7 +5371,7 @@ func file_internal_testprotos_test_test_proto_init() {
 			}
 		}
 	}
-	file_internal_testprotos_test_test_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_internal_testprotos_test_test_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypes_OneofUint32)(nil),
 		(*TestAllTypes_OneofNestedMessage)(nil),
 		(*TestAllTypes_OneofString)(nil),
@@ -5384,10 +5384,10 @@ func file_internal_testprotos_test_test_proto_init() {
 		(*TestAllTypes_Oneofgroup)(nil),
 		(*TestAllTypes_OneofOptionalUint32)(nil),
 	}
-	file_internal_testprotos_test_test_proto_msgTypes[1].OneofWrappers = []interface{}{
+	file_internal_testprotos_test_test_proto_msgTypes[1].OneofWrappers = []any{
 		(*TestDeprecatedMessage_DeprecatedOneofField)(nil),
 	}
-	file_internal_testprotos_test_test_proto_msgTypes[9].OneofWrappers = []interface{}{
+	file_internal_testprotos_test_test_proto_msgTypes[9].OneofWrappers = []any{
 		(*TestRequiredForeign_OneofMessage)(nil),
 	}
 	type x struct{}

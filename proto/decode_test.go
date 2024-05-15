@@ -151,7 +151,7 @@ func unknown(raw protoreflect.RawFields) buildOpt {
 	}
 }
 
-func extend(desc protoreflect.ExtensionType, value interface{}) buildOpt {
+func extend(desc protoreflect.ExtensionType, value any) buildOpt {
 	return func(m proto.Message) {
 		proto.SetExtension(m, desc, value)
 	}

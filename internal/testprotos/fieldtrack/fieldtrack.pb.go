@@ -947,7 +947,7 @@ func file_internal_testprotos_fieldtrack_fieldtrack_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_testprotos_fieldtrack_fieldtrack_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
-var file_internal_testprotos_fieldtrack_fieldtrack_proto_goTypes = []interface{}{
+var file_internal_testprotos_fieldtrack_fieldtrack_proto_goTypes = []any{
 	(*TestFieldTrack)(nil),                  // 0: goproto.proto.test.TestFieldTrack
 	nil,                                     // 1: goproto.proto.test.TestFieldTrack.MapStringInt32Entry
 	nil,                                     // 2: goproto.proto.test.TestFieldTrack.MapStringInt64Entry
@@ -1006,7 +1006,7 @@ func file_internal_testprotos_fieldtrack_fieldtrack_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_fieldtrack_fieldtrack_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_fieldtrack_fieldtrack_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestFieldTrack); i {
 			case 0:
 				return &v.state

@@ -669,7 +669,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_rawDescGZIP() 
 
 var file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_goTypes = []any{
 	(Enum)(0),                           // 0: goproto.protoc.extension.proto3.Enum
 	(*Message)(nil),                     // 1: goproto.protoc.extension.proto3.Message
 	(*descriptorpb.MessageOptions)(nil), // 2: google.protobuf.MessageOptions
@@ -726,7 +726,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state

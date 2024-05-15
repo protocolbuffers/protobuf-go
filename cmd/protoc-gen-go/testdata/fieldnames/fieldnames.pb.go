@@ -388,7 +388,7 @@ func file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_rawDescGZIP() [
 }
 
 var file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_goTypes = []any{
 	(*Message)(nil),                      // 0: goproto.protoc.fieldnames.Message
 	(*Message_OneofMessageConflict)(nil), // 1: goproto.protoc.fieldnames.Message.OneofMessageConflict
 }
@@ -406,7 +406,7 @@ func file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state
@@ -418,7 +418,7 @@ func file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*Message_OneofMessageConflict); i {
 			case 0:
 				return &v.state
@@ -431,7 +431,7 @@ func file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_init() {
 			}
 		}
 	}
-	file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_cmd_protoc_gen_go_testdata_fieldnames_fieldnames_proto_msgTypes[0].OneofWrappers = []any{
 		(*Message_OneofConflictA)(nil),
 		(*Message_OneofNoConflict)(nil),
 		(*Message_OneofConflictB_)(nil),

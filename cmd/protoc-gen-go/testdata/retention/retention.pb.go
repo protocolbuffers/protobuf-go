@@ -601,7 +601,7 @@ func file_cmd_protoc_gen_go_testdata_retention_retention_proto_rawDescGZIP() []b
 
 var file_cmd_protoc_gen_go_testdata_retention_retention_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_cmd_protoc_gen_go_testdata_retention_retention_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_retention_retention_proto_goTypes = []any{
 	(TopLevelEnum)(0),                          // 0: testretention.TopLevelEnum
 	(TopLevelMessage_NestedEnum)(0),            // 1: testretention.TopLevelMessage.NestedEnum
 	(*Extendee)(nil),                           // 2: testretention.Extendee
@@ -658,7 +658,7 @@ func file_cmd_protoc_gen_go_testdata_retention_retention_proto_init() {
 	}
 	file_cmd_protoc_gen_go_testdata_retention_options_message_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Extendee); i {
 			case 0:
 				return &v.state
@@ -672,7 +672,7 @@ func file_cmd_protoc_gen_go_testdata_retention_retention_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*TopLevelMessage); i {
 			case 0:
 				return &v.state
@@ -686,7 +686,7 @@ func file_cmd_protoc_gen_go_testdata_retention_retention_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*TopLevelMessage_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -699,7 +699,7 @@ func file_cmd_protoc_gen_go_testdata_retention_retention_proto_init() {
 			}
 		}
 	}
-	file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[1].OneofWrappers = []interface{}{
+	file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[1].OneofWrappers = []any{
 		(*TopLevelMessage_I)(nil),
 	}
 	type x struct{}

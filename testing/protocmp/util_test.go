@@ -22,7 +22,7 @@ import (
 
 func TestEqual(t *testing.T) {
 	type test struct {
-		x, y interface{}
+		x, y any
 		opts cmp.Options
 		want bool
 	}
@@ -77,38 +77,38 @@ func TestEqual(t *testing.T) {
 		opts: cmp.Options{Transform()},
 		want: false,
 	}, {
-		x:    struct{ I interface{} }{(*testpb.TestAllTypes)(nil)},
-		y:    struct{ I interface{} }{(*testpb.TestAllTypes)(nil)},
+		x:    struct{ I any }{(*testpb.TestAllTypes)(nil)},
+		y:    struct{ I any }{(*testpb.TestAllTypes)(nil)},
 		opts: cmp.Options{Transform()},
 		want: true,
 	}, {
-		x:    struct{ I interface{} }{(*testpb.TestAllTypes)(nil)},
-		y:    struct{ I interface{} }{new(testpb.TestAllTypes)},
-		opts: cmp.Options{Transform()},
-		want: false,
-	}, {
-		x:    struct{ I interface{} }{(*testpb.TestAllTypes)(nil)},
-		y:    struct{ I interface{} }{dynamicpb.NewMessage(allTypesDesc)},
+		x:    struct{ I any }{(*testpb.TestAllTypes)(nil)},
+		y:    struct{ I any }{new(testpb.TestAllTypes)},
 		opts: cmp.Options{Transform()},
 		want: false,
 	}, {
-		x:    struct{ I interface{} }{(*testpb.TestAllTypes)(nil)},
-		y:    struct{ I interface{} }{new(testpb.TestAllTypes)},
+		x:    struct{ I any }{(*testpb.TestAllTypes)(nil)},
+		y:    struct{ I any }{dynamicpb.NewMessage(allTypesDesc)},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x:    struct{ I any }{(*testpb.TestAllTypes)(nil)},
+		y:    struct{ I any }{new(testpb.TestAllTypes)},
 		opts: cmp.Options{Transform(), IgnoreEmptyMessages()},
 		want: true,
 	}, {
-		x:    struct{ I interface{} }{(*testpb.TestAllTypes)(nil)},
-		y:    struct{ I interface{} }{dynamicpb.NewMessage(allTypesDesc)},
+		x:    struct{ I any }{(*testpb.TestAllTypes)(nil)},
+		y:    struct{ I any }{dynamicpb.NewMessage(allTypesDesc)},
 		opts: cmp.Options{Transform(), IgnoreEmptyMessages()},
 		want: true,
 	}, {
-		x:    struct{ I interface{} }{new(testpb.TestAllTypes)},
-		y:    struct{ I interface{} }{new(testpb.TestAllTypes)},
+		x:    struct{ I any }{new(testpb.TestAllTypes)},
+		y:    struct{ I any }{new(testpb.TestAllTypes)},
 		opts: cmp.Options{Transform()},
 		want: true,
 	}, {
-		x:    struct{ I interface{} }{new(testpb.TestAllTypes)},
-		y:    struct{ I interface{} }{dynamicpb.NewMessage(allTypesDesc)},
+		x:    struct{ I any }{new(testpb.TestAllTypes)},
+		y:    struct{ I any }{dynamicpb.NewMessage(allTypesDesc)},
 		opts: cmp.Options{Transform()},
 		want: true,
 	}, {
@@ -607,7 +607,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
 		opts: cmp.Options{
 			Transform(),
-			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter type
 	}, {
@@ -631,7 +631,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{OptionalNestedEnum: testpb.TestAllTypes_BAR.Enum()},
 		opts: cmp.Options{
 			Transform(),
-			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -652,7 +652,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR}},
 		opts: cmp.Options{
 			Transform(),
-			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter type
 	}, {
@@ -676,7 +676,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{RepeatedNestedEnum: []testpb.TestAllTypes_NestedEnum{testpb.TestAllTypes_BAR}},
 		opts: cmp.Options{
 			Transform(),
-			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -697,7 +697,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_BAR}},
 		opts: cmp.Options{
 			Transform(),
-			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterEnum(testpb.ForeignEnum(0), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter type
 	}, {
@@ -721,7 +721,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{MapStringNestedEnum: map[string]testpb.TestAllTypes_NestedEnum{"k": testpb.TestAllTypes_BAR}},
 		opts: cmp.Options{
 			Transform(),
-			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterEnum(testpb.TestAllTypes_NestedEnum(0), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -745,7 +745,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(2)}},
 		opts: cmp.Options{
 			Transform(),
-			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter type
 	}, {
@@ -769,7 +769,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{A: proto.Int32(2)}},
 		opts: cmp.Options{
 			Transform(),
-			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -790,7 +790,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(2)}}},
 		opts: cmp.Options{
 			Transform(),
-			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter type
 	}, {
@@ -814,7 +814,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{RepeatedNestedMessage: []*testpb.TestAllTypes_NestedMessage{{A: proto.Int32(2)}}},
 		opts: cmp.Options{
 			Transform(),
-			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -835,7 +835,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(2)}}},
 		opts: cmp.Options{
 			Transform(),
-			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterMessage(new(testpb.TestAllExtensions), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter type
 	}, {
@@ -859,7 +859,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{MapStringNestedMessage: map[string]*testpb.TestAllTypes_NestedMessage{"k": {A: proto.Int32(2)}}},
 		opts: cmp.Options{
 			Transform(),
-			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterMessage(new(testpb.TestAllTypes_NestedMessage), cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -883,7 +883,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
 		opts: cmp.Options{
 			Transform(),
-			FilterField(new(testpb.TestAllTypes), "optional_int64", cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterField(new(testpb.TestAllTypes), "optional_int64", cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter name
 	}, {
@@ -899,7 +899,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{OptionalInt32: proto.Int32(2)},
 		opts: cmp.Options{
 			Transform(),
-			FilterField(new(testpb.TestAllTypes), "optional_int32", cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterField(new(testpb.TestAllTypes), "optional_int32", cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -920,7 +920,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2}},
 		opts: cmp.Options{
 			Transform(),
-			FilterField(new(testpb.TestAllTypes), "repeated_int64", cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterField(new(testpb.TestAllTypes), "repeated_int64", cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter name
 	}, {
@@ -936,7 +936,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{RepeatedInt32: []int32{2}},
 		opts: cmp.Options{
 			Transform(),
-			FilterField(new(testpb.TestAllTypes), "repeated_int32", cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterField(new(testpb.TestAllTypes), "repeated_int32", cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -957,7 +957,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{2: 2}},
 		opts: cmp.Options{
 			Transform(),
-			FilterField(new(testpb.TestAllTypes), "map_int64_int64", cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterField(new(testpb.TestAllTypes), "map_int64_int64", cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter name
 	}, {
@@ -973,7 +973,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{MapInt32Int32: map[int32]int32{2: 2}},
 		opts: cmp.Options{
 			Transform(),
-			FilterField(new(testpb.TestAllTypes), "map_int32_int32", cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterField(new(testpb.TestAllTypes), "map_int32_int32", cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}, {
@@ -997,7 +997,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{2}},
 		opts: cmp.Options{
 			Transform(),
-			FilterOneof(new(testpb.TestAllTypes), "oneof_optional", cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterOneof(new(testpb.TestAllTypes), "oneof_optional", cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: false, // mismatching filter name
 	}, {
@@ -1021,7 +1021,7 @@ func TestEqual(t *testing.T) {
 		y: &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofUint32{2}},
 		opts: cmp.Options{
 			Transform(),
-			FilterOneof(new(testpb.TestAllTypes), "oneof_field", cmp.Comparer(func(x, y interface{}) bool { return true })),
+			FilterOneof(new(testpb.TestAllTypes), "oneof_field", cmp.Comparer(func(x, y any) bool { return true })),
 		},
 		want: true,
 	}}...)
@@ -1299,18 +1299,18 @@ func TestEqual(t *testing.T) {
 
 type setField struct {
 	num protoreflect.FieldNumber
-	val interface{}
+	val any
 }
 type setUnknown struct {
 	raw protoreflect.RawFields
 }
 type setExtension struct {
 	typ protoreflect.ExtensionType
-	val interface{}
+	val any
 }
 
 // apply applies a sequence of mutating operations to m.
-func apply(m proto.Message, ops ...interface{}) proto.Message {
+func apply(m proto.Message, ops ...any) proto.Message {
 	mr := m.ProtoReflect()
 	md := mr.Descriptor()
 	for _, op := range ops {

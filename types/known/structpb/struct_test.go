@@ -17,7 +17,7 @@ import (
 	spb "google.golang.org/protobuf/types/known/structpb"
 )
 
-var equateJSON = cmpopts.AcyclicTransformer("UnmarshalJSON", func(in []byte) (out interface{}) {
+var equateJSON = cmpopts.AcyclicTransformer("UnmarshalJSON", func(in []byte) (out any) {
 	if err := json.Unmarshal(in, &out); err != nil {
 		return in
 	}
@@ -26,17 +26,17 @@ var equateJSON = cmpopts.AcyclicTransformer("UnmarshalJSON", func(in []byte) (ou
 
 func TestToStruct(t *testing.T) {
 	tests := []struct {
-		in      map[string]interface{}
+		in      map[string]any
 		wantPB  *spb.Struct
 		wantErr error
 	}{{
 		in:     nil,
 		wantPB: new(spb.Struct),
 	}, {
-		in:     make(map[string]interface{}),
+		in:     make(map[string]any),
 		wantPB: new(spb.Struct),
 	}, {
-		in: map[string]interface{}{
+		in: map[string]any{
 			"nil":     nil,
 			"bool":    bool(false),
 			"int":     int(-123),
@@ -49,8 +49,8 @@ func TestToStruct(t *testing.T) {
 			"float64": float64(123.456),
 			"string":  string("hello, world!"),
 			"bytes":   []byte("\xde\xad\xbe\xef"),
-			"map":     map[string]interface{}{"k1": "v1", "k2": "v2"},
-			"slice":   []interface{}{"one", "two", "three"},
+			"map":     map[string]any{"k1": "v1", "k2": "v2"},
+			"slice":   []any{"one", "two", "three"},
 		},
 		wantPB: &spb.Struct{Fields: map[string]*spb.Value{
 			"nil":     spb.NewNullValue(),
@@ -76,13 +76,13 @@ func TestToStruct(t *testing.T) {
 			}}),
 		}},
 	}, {
-		in:      map[string]interface{}{"\xde\xad\xbe\xef": "<invalid UTF-8>"},
+		in:      map[string]any{"\xde\xad\xbe\xef": "<invalid UTF-8>"},
 		wantErr: cmpopts.AnyError,
 	}, {
-		in:      map[string]interface{}{"<invalid UTF-8>": "\xde\xad\xbe\xef"},
+		in:      map[string]any{"<invalid UTF-8>": "\xde\xad\xbe\xef"},
 		wantErr: cmpopts.AnyError,
 	}, {
-		in:      map[string]interface{}{"key": protoreflect.Name("named string")},
+		in:      map[string]any{"key": protoreflect.Name("named string")},
 		wantErr: cmpopts.AnyError,
 	}}
 
@@ -100,16 +100,16 @@ func TestToStruct(t *testing.T) {
 func TestFromStruct(t *testing.T) {
 	tests := []struct {
 		in   *spb.Struct
-		want map[string]interface{}
+		want map[string]any
 	}{{
 		in:   nil,
-		want: make(map[string]interface{}),
+		want: make(map[string]any),
 	}, {
 		in:   new(spb.Struct),
-		want: make(map[string]interface{}),
+		want: make(map[string]any),
 	}, {
 		in:   &spb.Struct{Fields: make(map[string]*spb.Value)},
-		want: make(map[string]interface{}),
+		want: make(map[string]any),
 	}, {
 		in: &spb.Struct{Fields: map[string]*spb.Value{
 			"nil":     spb.NewNullValue(),
@@ -134,7 +134,7 @@ func TestFromStruct(t *testing.T) {
 				spb.NewStringValue("three"),
 			}}),
 		}},
-		want: map[string]interface{}{
+		want: map[string]any{
 			"nil":     nil,
 			"bool":    bool(false),
 			"int":     float64(-123),
@@ -147,8 +147,8 @@ func TestFromStruct(t *testing.T) {
 			"float64": float64(float64(123.456)),
 			"string":  string("hello, world!"),
 			"bytes":   string("3q2+7w=="),
-			"map":     map[string]interface{}{"k1": "v1", "k2": "v2"},
-			"slice":   []interface{}{"one", "two", "three"},
+			"map":     map[string]any{"k1": "v1", "k2": "v2"},
+			"slice":   []any{"one", "two", "three"},
 		},
 	}}
 
@@ -173,17 +173,17 @@ func TestFromStruct(t *testing.T) {
 
 func TestToListValue(t *testing.T) {
 	tests := []struct {
-		in      []interface{}
+		in      []any
 		wantPB  *spb.ListValue
 		wantErr error
 	}{{
 		in:     nil,
 		wantPB: new(spb.ListValue),
 	}, {
-		in:     make([]interface{}, 0),
+		in:     make([]any, 0),
 		wantPB: new(spb.ListValue),
 	}, {
-		in: []interface{}{
+		in: []any{
 			nil,
 			bool(false),
 			int(-123),
@@ -196,8 +196,8 @@ func TestToListValue(t *testing.T) {
 			float64(123.456),
 			string("hello, world!"),
 			[]byte("\xde\xad\xbe\xef"),
-			map[string]interface{}{"k1": "v1", "k2": "v2"},
-			[]interface{}{"one", "two", "three"},
+			map[string]any{"k1": "v1", "k2": "v2"},
+			[]any{"one", "two", "three"},
 		},
 		wantPB: &spb.ListValue{Values: []*spb.Value{
 			spb.NewNullValue(),
@@ -223,10 +223,10 @@ func TestToListValue(t *testing.T) {
 			}}),
 		}},
 	}, {
-		in:      []interface{}{"\xde\xad\xbe\xef"},
+		in:      []any{"\xde\xad\xbe\xef"},
 		wantErr: cmpopts.AnyError,
 	}, {
-		in:      []interface{}{protoreflect.Name("named string")},
+		in:      []any{protoreflect.Name("named string")},
 		wantErr: cmpopts.AnyError,
 	}}
 
@@ -244,16 +244,16 @@ func TestToListValue(t *testing.T) {
 func TestFromListValue(t *testing.T) {
 	tests := []struct {
 		in   *spb.ListValue
-		want []interface{}
+		want []any
 	}{{
 		in:   nil,
-		want: make([]interface{}, 0),
+		want: make([]any, 0),
 	}, {
 		in:   new(spb.ListValue),
-		want: make([]interface{}, 0),
+		want: make([]any, 0),
 	}, {
 		in:   &spb.ListValue{Values: make([]*spb.Value, 0)},
-		want: make([]interface{}, 0),
+		want: make([]any, 0),
 	}, {
 		in: &spb.ListValue{Values: []*spb.Value{
 			spb.NewNullValue(),
@@ -278,7 +278,7 @@ func TestFromListValue(t *testing.T) {
 				spb.NewStringValue("three"),
 			}}),
 		}},
-		want: []interface{}{
+		want: []any{
 			nil,
 			bool(false),
 			float64(-123),
@@ -291,8 +291,8 @@ func TestFromListValue(t *testing.T) {
 			float64(float64(123.456)),
 			string("hello, world!"),
 			string("3q2+7w=="),
-			map[string]interface{}{"k1": "v1", "k2": "v2"},
-			[]interface{}{"one", "two", "three"},
+			map[string]any{"k1": "v1", "k2": "v2"},
+			[]any{"one", "two", "three"},
 		},
 	}}
 
@@ -317,7 +317,7 @@ func TestFromListValue(t *testing.T) {
 
 func TestToValue(t *testing.T) {
 	tests := []struct {
-		in      interface{}
+		in      any
 		wantPB  *spb.Value
 		wantErr error
 	}{{
@@ -357,25 +357,25 @@ func TestToValue(t *testing.T) {
 		in:     []byte("\xde\xad\xbe\xef"),
 		wantPB: spb.NewStringValue("3q2+7w=="),
 	}, {
-		in:     map[string]interface{}(nil),
+		in:     map[string]any(nil),
 		wantPB: spb.NewStructValue(nil),
 	}, {
-		in:     make(map[string]interface{}),
+		in:     make(map[string]any),
 		wantPB: spb.NewStructValue(nil),
 	}, {
-		in: map[string]interface{}{"k1": "v1", "k2": "v2"},
+		in: map[string]any{"k1": "v1", "k2": "v2"},
 		wantPB: spb.NewStructValue(&spb.Struct{Fields: map[string]*spb.Value{
 			"k1": spb.NewStringValue("v1"),
 			"k2": spb.NewStringValue("v2"),
 		}}),
 	}, {
-		in:     []interface{}(nil),
+		in:     []any(nil),
 		wantPB: spb.NewListValue(nil),
 	}, {
-		in:     make([]interface{}, 0),
+		in:     make([]any, 0),
 		wantPB: spb.NewListValue(nil),
 	}, {
-		in: []interface{}{"one", "two", "three"},
+		in: []any{"one", "two", "three"},
 		wantPB: spb.NewListValue(&spb.ListValue{Values: []*spb.Value{
 			spb.NewStringValue("one"),
 			spb.NewStringValue("two"),
@@ -403,7 +403,7 @@ func TestToValue(t *testing.T) {
 func TestFromValue(t *testing.T) {
 	tests := []struct {
 		in   *spb.Value
-		want interface{}
+		want any
 	}{{
 		in:   nil,
 		want: nil,
@@ -472,27 +472,27 @@ func TestFromValue(t *testing.T) {
 		want: nil,
 	}, {
 		in:   &spb.Value{Kind: &spb.Value_StructValue{}},
-		want: make(map[string]interface{}),
+		want: make(map[string]any),
 	}, {
 		in: spb.NewListValue(&spb.ListValue{Values: []*spb.Value{
 			spb.NewStringValue("one"),
 			spb.NewStringValue("two"),
 			spb.NewStringValue("three"),
 		}}),
-		want: []interface{}{"one", "two", "three"},
+		want: []any{"one", "two", "three"},
 	}, {
 		in:   &spb.Value{Kind: (*spb.Value_ListValue)(nil)},
 		want: nil,
 	}, {
 		in:   &spb.Value{Kind: &spb.Value_ListValue{}},
-		want: make([]interface{}, 0),
+		want: make([]any, 0),
 	}, {
 		in: spb.NewListValue(&spb.ListValue{Values: []*spb.Value{
 			spb.NewStringValue("one"),
 			spb.NewStringValue("two"),
 			spb.NewStringValue("three"),
 		}}),
-		want: []interface{}{"one", "two", "three"},
+		want: []any{"one", "two", "three"},
 	}}
 
 	for _, tt := range tests {

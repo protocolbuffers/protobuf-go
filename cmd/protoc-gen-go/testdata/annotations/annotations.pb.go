@@ -175,7 +175,7 @@ func file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_rawDescGZIP()
 
 var file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_goTypes = []any{
 	(AnnotationsTestEnum)(0),       // 0: goproto.protoc.annotations.AnnotationsTestEnum
 	(*AnnotationsTestMessage)(nil), // 1: goproto.protoc.annotations.AnnotationsTestMessage
 }
@@ -193,7 +193,7 @@ func file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*AnnotationsTestMessage); i {
 			case 0:
 				return &v.state

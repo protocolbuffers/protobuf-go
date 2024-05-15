@@ -345,7 +345,7 @@ func TestLegacyExtensions(t *testing.T) {
 
 	// Check that getting the zero value returns the default value for scalars,
 	// nil for singular messages, and an empty list for repeated fields.
-	defaultValues := map[int]interface{}{
+	defaultValues := map[int]any{
 		0: bool(true),
 		1: int32(-12345),
 		2: uint32(3200),
@@ -358,7 +358,7 @@ func TestLegacyExtensions(t *testing.T) {
 		9: nil,
 	}
 	for i, xt := range extensionTypes {
-		var got interface{}
+		var got any
 		xd := xt.TypeDescriptor()
 		if !(xd.IsList() || xd.IsMap() || xd.Message() != nil) {
 			got = xt.InterfaceOf(m.Get(xd))
@@ -382,7 +382,7 @@ func TestLegacyExtensions(t *testing.T) {
 	m1b := &proto2_20180125.Message_ChildMessage{F1: proto.String("m2b")}
 	m2a := &EnumMessages{EnumP2: EnumProto2(0x1b).Enum()}
 	m2b := &EnumMessages{EnumP2: EnumProto2(0x2b).Enum()}
-	setValues := map[int]interface{}{
+	setValues := map[int]any{
 		0:  bool(false),
 		1:  int32(-54321),
 		2:  uint32(6400),
@@ -413,7 +413,7 @@ func TestLegacyExtensions(t *testing.T) {
 	}
 
 	// Get the values and check for equality.
-	getValues := map[int]interface{}{
+	getValues := map[int]any{
 		0:  bool(false),
 		1:  int32(-54321),
 		2:  uint32(6400),
@@ -486,8 +486,8 @@ func TestLegacyExtensionConvert(t *testing.T) {
 				cmp.Comparer(func(x, y reflect.Type) bool {
 					return x == y
 				}),
-				cmp.Transformer("", func(x list) []interface{} {
-					out := make([]interface{}, x.Len())
+				cmp.Transformer("", func(x list) []any {
+					out := make([]any, x.Len())
 					v := reflect.ValueOf(x)
 					for i := 0; i < x.Len(); i++ {
 						m := v.MethodByName("Get")
@@ -495,8 +495,8 @@ func TestLegacyExtensionConvert(t *testing.T) {
 					}
 					return out
 				}),
-				cmp.Transformer("", func(x protoreflect.Descriptor) map[string]interface{} {
-					out := make(map[string]interface{})
+				cmp.Transformer("", func(x protoreflect.Descriptor) map[string]any {
+					out := make(map[string]any)
 					v := reflect.ValueOf(x)
 					for i := 0; i < v.NumMethod(); i++ {
 						name := v.Type().Method(i).Name
@@ -524,12 +524,12 @@ func TestLegacyExtensionConvert(t *testing.T) {
 					}
 					return out
 				}),
-				cmp.Transformer("", func(xt protoreflect.ExtensionType) map[string]interface{} {
-					return map[string]interface{}{
+				cmp.Transformer("", func(xt protoreflect.ExtensionType) map[string]any {
+					return map[string]any{
 						"Descriptor": xt.TypeDescriptor(),
 					}
 				}),
-				cmp.Transformer("", func(v protoreflect.Value) interface{} {
+				cmp.Transformer("", func(v protoreflect.Value) any {
 					return v.Interface()
 				}),
 			}

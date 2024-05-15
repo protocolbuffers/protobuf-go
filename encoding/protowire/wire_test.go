@@ -29,7 +29,7 @@ type (
 	}
 
 	// appendOp represents an Append operation.
-	appendOp  = interface{}
+	appendOp  = any
 	appendTag struct {
 		inNum  Number
 		inType Type
@@ -53,7 +53,7 @@ type (
 	appendRaw []byte
 
 	// consumeOp represents an Consume operation.
-	consumeOp    = interface{}
+	consumeOp    = any
 	consumeField struct {
 		wantNum  Number
 		wantType Type
@@ -99,7 +99,7 @@ type (
 		wantErr error
 	}
 
-	ops []interface{}
+	ops []any
 )
 
 // dhex decodes a hex-string and returns the bytes and panics if s is invalid.

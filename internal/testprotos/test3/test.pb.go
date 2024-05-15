@@ -1566,7 +1566,7 @@ func file_internal_testprotos_test3_test_proto_rawDescGZIP() []byte {
 
 var file_internal_testprotos_test3_test_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_internal_testprotos_test3_test_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
-var file_internal_testprotos_test3_test_proto_goTypes = []interface{}{
+var file_internal_testprotos_test3_test_proto_goTypes = []any{
 	(ForeignEnum)(0),                   // 0: goproto.proto.test3.ForeignEnum
 	(TestAllTypes_NestedEnum)(0),       // 1: goproto.proto.test3.TestAllTypes.NestedEnum
 	(*TestAllTypes)(nil),               // 2: goproto.proto.test3.TestAllTypes
@@ -1647,7 +1647,7 @@ func file_internal_testprotos_test3_test_proto_init() {
 	}
 	file_internal_testprotos_test3_test_import_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_test3_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test3_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypes); i {
 			case 0:
 				return &v.state
@@ -1659,7 +1659,7 @@ func file_internal_testprotos_test3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test3_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test3_test_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*ForeignMessage); i {
 			case 0:
 				return &v.state
@@ -1671,7 +1671,7 @@ func file_internal_testprotos_test3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_test3_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_test3_test_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypes_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -1684,7 +1684,7 @@ func file_internal_testprotos_test3_test_proto_init() {
 			}
 		}
 	}
-	file_internal_testprotos_test3_test_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_internal_testprotos_test3_test_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypes_OneofUint32)(nil),
 		(*TestAllTypes_OneofNestedMessage)(nil),
 		(*TestAllTypes_OneofString)(nil),

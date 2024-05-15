@@ -851,7 +851,7 @@ var file_internal_testprotos_test3_test_extension_proto_rawDesc = []byte{
 	0x6f, 0x74, 0x6f, 0x33,
 }
 
-var file_internal_testprotos_test3_test_extension_proto_goTypes = []interface{}{
+var file_internal_testprotos_test3_test_extension_proto_goTypes = []any{
 	(*descriptorpb.MessageOptions)(nil), // 0: google.protobuf.MessageOptions
 	(*ForeignMessage)(nil),              // 1: goproto.proto.test3.ForeignMessage
 	(ForeignEnum)(0),                    // 2: goproto.proto.test3.ForeignEnum

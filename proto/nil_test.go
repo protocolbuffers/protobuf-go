@@ -20,7 +20,7 @@ import (
 func TestNil(t *testing.T) {
 	nilMsg := (*testpb.TestAllExtensions)(nil)
 	extType := testpb.E_OptionalBool
-	extRanger := func(protoreflect.ExtensionType, interface{}) bool { return true }
+	extRanger := func(protoreflect.ExtensionType, any) bool { return true }
 
 	tests := []struct {
 		label string

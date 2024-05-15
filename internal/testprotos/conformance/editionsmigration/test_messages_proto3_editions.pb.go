@@ -2552,7 +2552,7 @@ func file_editions_golden_test_messages_proto3_editions_proto_rawDescGZIP() []by
 
 var file_editions_golden_test_messages_proto3_editions_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_editions_golden_test_messages_proto3_editions_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
-var file_editions_golden_test_messages_proto3_editions_proto_goTypes = []interface{}{
+var file_editions_golden_test_messages_proto3_editions_proto_goTypes = []any{
 	(ForeignEnum)(0),                         // 0: protobuf_test_messages.editions.proto3.ForeignEnum
 	(TestAllTypesProto3_NestedEnum)(0),       // 1: protobuf_test_messages.editions.proto3.TestAllTypesProto3.NestedEnum
 	(TestAllTypesProto3_AliasedEnum)(0),      // 2: protobuf_test_messages.editions.proto3.TestAllTypesProto3.AliasedEnum
@@ -2684,7 +2684,7 @@ func file_editions_golden_test_messages_proto3_editions_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto3); i {
 			case 0:
 				return &v.state
@@ -2696,7 +2696,7 @@ func file_editions_golden_test_messages_proto3_editions_proto_init() {
 				return nil
 			}
 		}
-		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*ForeignMessage); i {
 			case 0:
 				return &v.state
@@ -2708,7 +2708,7 @@ func file_editions_golden_test_messages_proto3_editions_proto_init() {
 				return nil
 			}
 		}
-		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*NullHypothesisProto3); i {
 			case 0:
 				return &v.state
@@ -2720,7 +2720,7 @@ func file_editions_golden_test_messages_proto3_editions_proto_init() {
 				return nil
 			}
 		}
-		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*EnumOnlyProto3); i {
 			case 0:
 				return &v.state
@@ -2732,7 +2732,7 @@ func file_editions_golden_test_messages_proto3_editions_proto_init() {
 				return nil
 			}
 		}
-		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_editions_golden_test_messages_proto3_editions_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto3_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -2745,7 +2745,7 @@ func file_editions_golden_test_messages_proto3_editions_proto_init() {
 			}
 		}
 	}
-	file_editions_golden_test_messages_proto3_editions_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_editions_golden_test_messages_proto3_editions_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypesProto3_OneofUint32)(nil),
 		(*TestAllTypesProto3_OneofNestedMessage)(nil),
 		(*TestAllTypesProto3_OneofString)(nil),

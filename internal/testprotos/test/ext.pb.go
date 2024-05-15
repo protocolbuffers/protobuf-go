@@ -51,7 +51,7 @@ var file_internal_testprotos_test_ext_proto_rawDesc = []byte{
 	0x74, 0x65, 0x73, 0x74,
 }
 
-var file_internal_testprotos_test_ext_proto_goTypes = []interface{}{
+var file_internal_testprotos_test_ext_proto_goTypes = []any{
 	(*TestAllExtensions)(nil), // 0: goproto.proto.test.TestAllExtensions
 }
 var file_internal_testprotos_test_ext_proto_depIdxs = []int32{

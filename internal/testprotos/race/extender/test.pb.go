@@ -114,7 +114,7 @@ func file_internal_testprotos_race_extender_test_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_testprotos_race_extender_test_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_internal_testprotos_race_extender_test_proto_goTypes = []interface{}{
+var file_internal_testprotos_race_extender_test_proto_goTypes = []any{
 	(*OtherMessage)(nil),      // 0: goproto.proto.test.OtherMessage
 	(*message.MyMessage)(nil), // 1: goproto.proto.test.MyMessage
 }
@@ -133,7 +133,7 @@ func file_internal_testprotos_race_extender_test_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_race_extender_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_race_extender_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*OtherMessage); i {
 			case 0:
 				return &v.state

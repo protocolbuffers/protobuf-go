@@ -513,7 +513,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_rawDescGZIP() []by
 
 var file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
 var file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_goTypes = []any{
 	(EnumType1)(0),                              // 0: goproto.protoc.protoeditions.EnumType1
 	(EnumType2)(0),                              // 1: goproto.protoc.protoeditions.EnumType2
 	(LegacyUnmarshalJSONTest)(0),                // 2: goproto.protoc.protoeditions.LegacyUnmarshalJSONTest
@@ -540,7 +540,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*EnumContainerMessage1); i {
 			case 0:
 				return &v.state
@@ -552,7 +552,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_enum_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*EnumContainerMessage1_EnumContainerMessage2); i {
 			case 0:
 				return &v.state

@@ -223,7 +223,7 @@ func TestFile(t *testing.T) {
 func testFileAccessors(t *testing.T, fd protoreflect.FileDescriptor) {
 	// Represent the descriptor as a map where each key is an accessor method
 	// and the value is either the wanted tail value or another accessor map.
-	type M = map[string]interface{}
+	type M = map[string]any
 	want := M{
 		"Parent":        nil,
 		"Index":         0,
@@ -521,7 +521,7 @@ func testFileAccessors(t *testing.T, fd protoreflect.FileDescriptor) {
 	}
 	checkAccessors(t, "", reflect.ValueOf(fd), want)
 }
-func checkAccessors(t *testing.T, p string, rv reflect.Value, want map[string]interface{}) {
+func checkAccessors(t *testing.T, p string, rv reflect.Value, want map[string]any) {
 	p0 := p
 	defer func() {
 		if ex := recover(); ex != nil {
@@ -566,7 +566,7 @@ func checkAccessors(t *testing.T, p string, rv reflect.Value, want map[string]in
 		}
 
 		// Check that the accessor output matches.
-		if want, ok := v.(map[string]interface{}); ok {
+		if want, ok := v.(map[string]any); ok {
 			checkAccessors(t, p, rets[0], want)
 			continue
 		}
@@ -811,7 +811,7 @@ func testFileFormat(t *testing.T, fd protoreflect.FileDescriptor) {
 		path string
 		fmt  string
 		want string
-		val  interface{}
+		val  any
 	}{
 		{"fd", "%v", compactMultiFormat(wantFileDescriptor), fd},
 		{"fd", "%+v", wantFileDescriptor, fd},

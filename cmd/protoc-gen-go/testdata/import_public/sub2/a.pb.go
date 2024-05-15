@@ -82,7 +82,7 @@ func file_cmd_protoc_gen_go_testdata_import_public_sub2_a_proto_rawDescGZIP() []
 }
 
 var file_cmd_protoc_gen_go_testdata_import_public_sub2_a_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_cmd_protoc_gen_go_testdata_import_public_sub2_a_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_import_public_sub2_a_proto_goTypes = []any{
 	(*Sub2Message)(nil), // 0: goproto.protoc.import_public.sub2.Sub2Message
 }
 var file_cmd_protoc_gen_go_testdata_import_public_sub2_a_proto_depIdxs = []int32{
@@ -99,7 +99,7 @@ func file_cmd_protoc_gen_go_testdata_import_public_sub2_a_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_import_public_sub2_a_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_import_public_sub2_a_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Sub2Message); i {
 			case 0:
 				return &v.state

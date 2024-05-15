@@ -1196,7 +1196,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_rawDescGZIP() []by
 
 var file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-var file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_goTypes = []any{
 	(Enum)(0),                             // 0: goproto.protoc.extension.ext.Enum
 	(*Message)(nil),                       // 1: goproto.protoc.extension.ext.Message
 	(*ExtensionGroup)(nil),                // 2: goproto.protoc.extension.ext.ExtensionGroup
@@ -1280,7 +1280,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Message); i {
 			case 0:
 				return &v.state
@@ -1292,7 +1292,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*ExtensionGroup); i {
 			case 0:
 				return &v.state
@@ -1304,7 +1304,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*ExtendingMessage); i {
 			case 0:
 				return &v.state
@@ -1316,7 +1316,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*RepeatedGroup); i {
 			case 0:
 				return &v.state
@@ -1328,7 +1328,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*Extendable); i {
 			case 0:
 				return &v.state
@@ -1342,7 +1342,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*MessageSetWireFormatExtension); i {
 			case 0:
 				return &v.state
@@ -1354,7 +1354,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[6].Exporter = func(v any, i int) any {
 			switch v := v.(*Message_M); i {
 			case 0:
 				return &v.state
@@ -1366,7 +1366,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_ext_ext_proto_msgTypes[7].Exporter = func(v any, i int) any {
 			switch v := v.(*ExtendingMessage_ExtendingMessageSubmessage); i {
 			case 0:
 				return &v.state

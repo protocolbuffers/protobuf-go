@@ -198,7 +198,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_rawDesc
 }
 
 var file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_goTypes = []any{
 	(*Layer1)(nil),               // 0: goproto.protoc.protoeditions.Layer1
 	(*Layer1_Layer2)(nil),        // 1: goproto.protoc.protoeditions.Layer1.Layer2
 	(*Layer1_Layer2_Layer3)(nil), // 2: goproto.protoc.protoeditions.Layer1.Layer2.Layer3
@@ -220,7 +220,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_init() 
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Layer1); i {
 			case 0:
 				return &v.state
@@ -232,7 +232,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_init() 
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*Layer1_Layer2); i {
 			case 0:
 				return &v.state
@@ -244,7 +244,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_init() 
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_nested_messages_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*Layer1_Layer2_Layer3); i {
 			case 0:
 				return &v.state

@@ -740,7 +740,7 @@ func (m *{{.}}) Interface() protoreflect.ProtoMessage {
 	return (*messageIfaceWrapper)(m)
 	{{- end -}}
 }
-func (m *{{.}}) protoUnwrap() interface{} {
+func (m *{{.}}) protoUnwrap() any {
 	return m.pointer().AsIfaceOf(m.messageInfo().GoReflectType.Elem())
 }
 func (m *{{.}}) ProtoMethods() *protoiface.Methods {

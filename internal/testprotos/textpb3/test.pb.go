@@ -1085,7 +1085,7 @@ func file_internal_testprotos_textpb3_test_proto_rawDescGZIP() []byte {
 
 var file_internal_testprotos_textpb3_test_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_internal_testprotos_textpb3_test_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
-var file_internal_testprotos_textpb3_test_proto_goTypes = []interface{}{
+var file_internal_testprotos_textpb3_test_proto_goTypes = []any{
 	(Enum)(0),              // 0: pb3.Enum
 	(Enums_NestedEnum)(0),  // 1: pb3.Enums.NestedEnum
 	(*Scalars)(nil),        // 2: pb3.Scalars
@@ -1133,7 +1133,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_textpb3_test_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Scalars); i {
 			case 0:
 				return &v.state
@@ -1145,7 +1145,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpb3_test_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*Repeats); i {
 			case 0:
 				return &v.state
@@ -1157,7 +1157,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpb3_test_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*Proto3Optional); i {
 			case 0:
 				return &v.state
@@ -1169,7 +1169,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpb3_test_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*Enums); i {
 			case 0:
 				return &v.state
@@ -1181,7 +1181,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpb3_test_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*Nests); i {
 			case 0:
 				return &v.state
@@ -1193,7 +1193,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpb3_test_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*Nested); i {
 			case 0:
 				return &v.state
@@ -1205,7 +1205,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpb3_test_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[6].Exporter = func(v any, i int) any {
 			switch v := v.(*Oneofs); i {
 			case 0:
 				return &v.state
@@ -1217,7 +1217,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpb3_test_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[7].Exporter = func(v any, i int) any {
 			switch v := v.(*Maps); i {
 			case 0:
 				return &v.state
@@ -1229,7 +1229,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_textpb3_test_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_textpb3_test_proto_msgTypes[8].Exporter = func(v any, i int) any {
 			switch v := v.(*JSONNames); i {
 			case 0:
 				return &v.state
@@ -1242,8 +1242,8 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 			}
 		}
 	}
-	file_internal_testprotos_textpb3_test_proto_msgTypes[2].OneofWrappers = []interface{}{}
-	file_internal_testprotos_textpb3_test_proto_msgTypes[6].OneofWrappers = []interface{}{
+	file_internal_testprotos_textpb3_test_proto_msgTypes[2].OneofWrappers = []any{}
+	file_internal_testprotos_textpb3_test_proto_msgTypes[6].OneofWrappers = []any{
 		(*Oneofs_OneofEnum)(nil),
 		(*Oneofs_OneofString)(nil),
 		(*Oneofs_OneofNested)(nil),

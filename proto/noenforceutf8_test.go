@@ -138,7 +138,7 @@ var messageInfo_TestNoEnforceUTF8 = protoimpl.MessageInfo{
 		}
 		return md
 	}(),
-	OneofWrappers: []interface{}{
+	OneofWrappers: []any{
 		(*TestNoEnforceUTF8_OneofString)(nil),
 		(*TestNoEnforceUTF8_OneofBytes)(nil),
 	},

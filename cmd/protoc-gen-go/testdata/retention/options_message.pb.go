@@ -192,7 +192,7 @@ func file_cmd_protoc_gen_go_testdata_retention_options_message_proto_rawDescGZIP
 }
 
 var file_cmd_protoc_gen_go_testdata_retention_options_message_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_cmd_protoc_gen_go_testdata_retention_options_message_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_retention_options_message_proto_goTypes = []any{
 	(*OptionsMessage)(nil),           // 0: testretention.OptionsMessage
 	(*descriptorpb.FileOptions)(nil), // 1: google.protobuf.FileOptions
 }
@@ -215,7 +215,7 @@ func file_cmd_protoc_gen_go_testdata_retention_options_message_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_retention_options_message_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_retention_options_message_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*OptionsMessage); i {
 			case 0:
 				return &v.state

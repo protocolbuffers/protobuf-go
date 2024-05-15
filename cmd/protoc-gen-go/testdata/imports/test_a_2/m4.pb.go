@@ -80,7 +80,7 @@ func file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescGZIP() []b
 }
 
 var file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_goTypes = []any{
 	(*M4)(nil), // 0: test.a.M4
 }
 var file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_depIdxs = []int32{
@@ -97,7 +97,7 @@ func file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*M4); i {
 			case 0:
 				return &v.state

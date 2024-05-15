@@ -136,7 +136,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_rawDescGZIP() []
 }
 
 var file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_goTypes = []any{
 	(*BaseMessage)(nil),                 // 0: goproto.protoc.extension.base.BaseMessage
 	(*MessageSetWireFormatMessage)(nil), // 1: goproto.protoc.extension.base.MessageSetWireFormatMessage
 }
@@ -154,7 +154,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*BaseMessage); i {
 			case 0:
 				return &v.state
@@ -168,7 +168,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_extensions_base_base_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*MessageSetWireFormatMessage); i {
 			case 0:
 				return &v.state

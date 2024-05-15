@@ -335,7 +335,7 @@ func file_internal_testprotos_news_news_proto_rawDescGZIP() []byte {
 
 var file_internal_testprotos_news_news_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_internal_testprotos_news_news_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_internal_testprotos_news_news_proto_goTypes = []interface{}{
+var file_internal_testprotos_news_news_proto_goTypes = []any{
 	(Article_Status)(0),           // 0: google.golang.org.Article.Status
 	(*Article)(nil),               // 1: google.golang.org.Article
 	(*BinaryAttachment)(nil),      // 2: google.golang.org.BinaryAttachment
@@ -362,7 +362,7 @@ func file_internal_testprotos_news_news_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_news_news_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_news_news_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Article); i {
 			case 0:
 				return &v.state
@@ -374,7 +374,7 @@ func file_internal_testprotos_news_news_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_news_news_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_news_news_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*BinaryAttachment); i {
 			case 0:
 				return &v.state
@@ -386,7 +386,7 @@ func file_internal_testprotos_news_news_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_news_news_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_news_news_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*KeyValueAttachment); i {
 			case 0:
 				return &v.state

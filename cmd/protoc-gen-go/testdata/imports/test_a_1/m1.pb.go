@@ -174,7 +174,7 @@ func file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_rawDescGZIP() []b
 
 var file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_goTypes = []any{
 	(E1)(0),      // 0: test.a.E1
 	(*M1)(nil),   // 1: test.a.M1
 	(*M1_1)(nil), // 2: test.a.M1_1
@@ -194,7 +194,7 @@ func file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*M1); i {
 			case 0:
 				return &v.state
@@ -206,7 +206,7 @@ func file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_imports_test_a_1_m1_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*M1_1); i {
 			case 0:
 				return &v.state

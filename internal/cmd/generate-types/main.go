@@ -195,7 +195,7 @@ var descListTypesTemplate = template.Must(template.New("").Parse(`
 	{{- end}}
 `))
 
-func mustExecute(t *template.Template, data interface{}) string {
+func mustExecute(t *template.Template, data any) string {
 	var b bytes.Buffer
 	if err := t.Execute(&b, data); err != nil {
 		panic(err)

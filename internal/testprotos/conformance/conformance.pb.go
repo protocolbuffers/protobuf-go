@@ -714,7 +714,7 @@ func file_conformance_conformance_proto_rawDescGZIP() []byte {
 
 var file_conformance_conformance_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_conformance_conformance_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_conformance_conformance_proto_goTypes = []interface{}{
+var file_conformance_conformance_proto_goTypes = []any{
 	(WireFormat)(0),             // 0: conformance.WireFormat
 	(TestCategory)(0),           // 1: conformance.TestCategory
 	(*FailureSet)(nil),          // 2: conformance.FailureSet
@@ -739,7 +739,7 @@ func file_conformance_conformance_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_conformance_conformance_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_conformance_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*FailureSet); i {
 			case 0:
 				return &v.state
@@ -751,7 +751,7 @@ func file_conformance_conformance_proto_init() {
 				return nil
 			}
 		}
-		file_conformance_conformance_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_conformance_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*ConformanceRequest); i {
 			case 0:
 				return &v.state
@@ -763,7 +763,7 @@ func file_conformance_conformance_proto_init() {
 				return nil
 			}
 		}
-		file_conformance_conformance_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_conformance_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*ConformanceResponse); i {
 			case 0:
 				return &v.state
@@ -775,7 +775,7 @@ func file_conformance_conformance_proto_init() {
 				return nil
 			}
 		}
-		file_conformance_conformance_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_conformance_conformance_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*JspbEncodingConfig); i {
 			case 0:
 				return &v.state
@@ -788,13 +788,13 @@ func file_conformance_conformance_proto_init() {
 			}
 		}
 	}
-	file_conformance_conformance_proto_msgTypes[1].OneofWrappers = []interface{}{
+	file_conformance_conformance_proto_msgTypes[1].OneofWrappers = []any{
 		(*ConformanceRequest_ProtobufPayload)(nil),
 		(*ConformanceRequest_JsonPayload)(nil),
 		(*ConformanceRequest_JspbPayload)(nil),
 		(*ConformanceRequest_TextPayload)(nil),
 	}
-	file_conformance_conformance_proto_msgTypes[2].OneofWrappers = []interface{}{
+	file_conformance_conformance_proto_msgTypes[2].OneofWrappers = []any{
 		(*ConformanceResponse_ParseError)(nil),
 		(*ConformanceResponse_SerializeError)(nil),
 		(*ConformanceResponse_TimeoutError)(nil),

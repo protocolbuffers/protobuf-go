@@ -473,7 +473,7 @@ func file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_rawDescGZIP() []b
 
 var file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_goTypes = []any{
 	(E)(0),                               // 0: goproto.protoc.import_public.sub.E
 	(M_Subenum)(0),                       // 1: goproto.protoc.import_public.sub.M.Subenum
 	(M_Submessage_Submessage_Subenum)(0), // 2: goproto.protoc.import_public.sub.M.Submessage.Submessage_Subenum
@@ -498,7 +498,7 @@ func file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_init() {
 	}
 	file_cmd_protoc_gen_go_testdata_import_public_sub_b_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*M); i {
 			case 0:
 				return &v.state
@@ -512,7 +512,7 @@ func file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*M_Submessage); i {
 			case 0:
 				return &v.state
@@ -525,11 +525,11 @@ func file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_init() {
 			}
 		}
 	}
-	file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes[0].OneofWrappers = []any{
 		(*M_OneofInt32)(nil),
 		(*M_OneofInt64)(nil),
 	}
-	file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes[1].OneofWrappers = []interface{}{
+	file_cmd_protoc_gen_go_testdata_import_public_sub_a_proto_msgTypes[1].OneofWrappers = []any{
 		(*M_Submessage_SubmessageOneofInt32)(nil),
 		(*M_Submessage_SubmessageOneofInt64)(nil),
 	}

@@ -108,7 +108,7 @@ func file_cmd_protoc_gen_go_testdata_import_public_b_proto_rawDescGZIP() []byte 
 }
 
 var file_cmd_protoc_gen_go_testdata_import_public_b_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_cmd_protoc_gen_go_testdata_import_public_b_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_import_public_b_proto_goTypes = []any{
 	(*Local)(nil), // 0: goproto.protoc.import_public.Local
 	(*sub.M)(nil), // 1: goproto.protoc.import_public.sub.M
 	(sub.E)(0),    // 2: goproto.protoc.import_public.sub.E
@@ -129,7 +129,7 @@ func file_cmd_protoc_gen_go_testdata_import_public_b_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_import_public_b_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_import_public_b_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Local); i {
 			case 0:
 				return &v.state

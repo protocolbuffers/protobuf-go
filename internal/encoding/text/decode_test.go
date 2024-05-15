@@ -25,7 +25,7 @@ type R struct {
 	// E is expected error substring from calling Decoder.Read if set.
 	E string
 	// T contains NT (if K is Name) or ST (if K is Scalar) or nil (others)
-	T interface{}
+	T any
 	// P is expected Token.Pos if set > 0.
 	P int
 	// RS is expected result from Token.RawString() if not empty.
@@ -1706,9 +1706,9 @@ func checkToken(t *testing.T, tok text.Token, idx int, r R, in string) {
 	}
 }
 
-func errorf(t *testing.T, in string, fmtStr string, args ...interface{}) {
+func errorf(t *testing.T, in string, fmtStr string, args ...any) {
 	t.Helper()
-	vargs := []interface{}{in}
+	vargs := []any{in}
 	for _, arg := range args {
 		vargs = append(vargs, arg)
 	}

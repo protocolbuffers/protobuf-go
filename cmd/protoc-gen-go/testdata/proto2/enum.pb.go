@@ -504,7 +504,7 @@ func file_cmd_protoc_gen_go_testdata_proto2_enum_proto_rawDescGZIP() []byte {
 
 var file_cmd_protoc_gen_go_testdata_proto2_enum_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
 var file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_cmd_protoc_gen_go_testdata_proto2_enum_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_proto2_enum_proto_goTypes = []any{
 	(EnumType1)(0), // 0: goproto.protoc.proto2.EnumType1
 	(EnumType2)(0), // 1: goproto.protoc.proto2.EnumType2
 	(EnumContainerMessage1_NestedEnumType1A)(0),                       // 2: goproto.protoc.proto2.EnumContainerMessage1.NestedEnumType1A
@@ -530,7 +530,7 @@ func file_cmd_protoc_gen_go_testdata_proto2_enum_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*EnumContainerMessage1); i {
 			case 0:
 				return &v.state
@@ -542,7 +542,7 @@ func file_cmd_protoc_gen_go_testdata_proto2_enum_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*EnumContainerMessage1_EnumContainerMessage2); i {
 			case 0:
 				return &v.state

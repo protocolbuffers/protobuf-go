@@ -1585,7 +1585,7 @@ func file_internal_testprotos_editionsfuzztest_test2editions_proto_rawDescGZIP()
 
 var file_internal_testprotos_editionsfuzztest_test2editions_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
-var file_internal_testprotos_editionsfuzztest_test2editions_proto_goTypes = []interface{}{
+var file_internal_testprotos_editionsfuzztest_test2editions_proto_goTypes = []any{
 	(TestAllTypesProto2Editions_NestedEnum)(0),       // 0: goproto.proto.test.TestAllTypesProto2Editions.NestedEnum
 	(*TestAllTypesProto2Editions)(nil),               // 1: goproto.proto.test.TestAllTypesProto2Editions
 	(*TestAllTypesProto2Editions_NestedMessage)(nil), // 2: goproto.proto.test.TestAllTypesProto2Editions.NestedMessage
@@ -1656,7 +1656,7 @@ func file_internal_testprotos_editionsfuzztest_test2editions_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2Editions); i {
 			case 0:
 				return &v.state
@@ -1668,7 +1668,7 @@ func file_internal_testprotos_editionsfuzztest_test2editions_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2Editions_NestedMessage); i {
 			case 0:
 				return &v.state
@@ -1680,7 +1680,7 @@ func file_internal_testprotos_editionsfuzztest_test2editions_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2Editions_OptionalGroup); i {
 			case 0:
 				return &v.state
@@ -1692,7 +1692,7 @@ func file_internal_testprotos_editionsfuzztest_test2editions_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2Editions_RepeatedGroup); i {
 			case 0:
 				return &v.state
@@ -1704,7 +1704,7 @@ func file_internal_testprotos_editionsfuzztest_test2editions_proto_init() {
 				return nil
 			}
 		}
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[21].Exporter = func(v any, i int) any {
 			switch v := v.(*TestAllTypesProto2Editions_OneofGroup); i {
 			case 0:
 				return &v.state
@@ -1717,7 +1717,7 @@ func file_internal_testprotos_editionsfuzztest_test2editions_proto_init() {
 			}
 		}
 	}
-	file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypesProto2Editions_OneofUint32)(nil),
 		(*TestAllTypesProto2Editions_OneofNestedMessage)(nil),
 		(*TestAllTypesProto2Editions_OneofString)(nil),

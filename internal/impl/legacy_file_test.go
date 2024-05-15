@@ -406,8 +406,8 @@ func TestDescriptor(t *testing.T) {
 		pragma.DoNotImplement
 	}
 	opts := cmp.Options{
-		cmp.Transformer("", func(x list) []interface{} {
-			out := make([]interface{}, x.Len())
+		cmp.Transformer("", func(x list) []any {
+			out := make([]any, x.Len())
 			v := reflect.ValueOf(x)
 			for i := 0; i < x.Len(); i++ {
 				m := v.MethodByName("Get")
@@ -415,8 +415,8 @@ func TestDescriptor(t *testing.T) {
 			}
 			return out
 		}),
-		cmp.Transformer("", func(x protoreflect.Descriptor) map[string]interface{} {
-			out := make(map[string]interface{})
+		cmp.Transformer("", func(x protoreflect.Descriptor) map[string]any {
+			out := make(map[string]any)
 			v := reflect.ValueOf(x)
 			for i := 0; i < v.NumMethod(); i++ {
 				name := v.Type().Method(i).Name
@@ -450,7 +450,7 @@ func TestDescriptor(t *testing.T) {
 			}
 			return out
 		}),
-		cmp.Transformer("", func(v protoreflect.Value) interface{} {
+		cmp.Transformer("", func(v protoreflect.Value) any {
 			return v.Interface()
 		}),
 	}

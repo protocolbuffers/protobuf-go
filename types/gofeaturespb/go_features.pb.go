@@ -126,7 +126,7 @@ func file_google_protobuf_go_features_proto_rawDescGZIP() []byte {
 }
 
 var file_google_protobuf_go_features_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_google_protobuf_go_features_proto_goTypes = []interface{}{
+var file_google_protobuf_go_features_proto_goTypes = []any{
 	(*GoFeatures)(nil),              // 0: pb.GoFeatures
 	(*descriptorpb.FeatureSet)(nil), // 1: google.protobuf.FeatureSet
 }
@@ -146,7 +146,7 @@ func file_google_protobuf_go_features_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_google_protobuf_go_features_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_google_protobuf_go_features_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*GoFeatures); i {
 			case 0:
 				return &v.state

@@ -86,8 +86,8 @@ func (m *AberrantMessage) ExtensionRangeArray() []protoiface.ExtensionRangeV1 {
 	return []protoiface.ExtensionRangeV1{{Start: 10, End: 100}}
 }
 
-func (m *AberrantMessage) XXX_OneofFuncs() []interface{} {
-	return []interface{}{
+func (m *AberrantMessage) XXX_OneofFuncs() []any {
+	return []any{
 		(*OneofBool)(nil),
 		(*OneofInt32)(nil),
 		(*OneofSint32)(nil),

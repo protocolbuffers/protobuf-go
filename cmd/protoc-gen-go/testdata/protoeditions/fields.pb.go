@@ -1738,7 +1738,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_rawDescGZIP() []
 
 var file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-var file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_goTypes = []interface{}{
+var file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_goTypes = []any{
 	(FieldTestMessage_Enum)(0),             // 0: goproto.protoc.protoeditions.FieldTestMessage.Enum
 	(*FieldTestMessage)(nil),               // 1: goproto.protoc.protoeditions.FieldTestMessage
 	(*FieldTestMessage_OptionalGroup)(nil), // 2: goproto.protoc.protoeditions.FieldTestMessage.OptionalGroup
@@ -1782,7 +1782,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*FieldTestMessage); i {
 			case 0:
 				return &v.state
@@ -1794,7 +1794,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*FieldTestMessage_OptionalGroup); i {
 			case 0:
 				return &v.state
@@ -1806,7 +1806,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*FieldTestMessage_RequiredGroup); i {
 			case 0:
 				return &v.state
@@ -1818,7 +1818,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*FieldTestMessage_RepeatedGroup); i {
 			case 0:
 				return &v.state
@@ -1830,7 +1830,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[7].Exporter = func(v any, i int) any {
 			switch v := v.(*FieldTestMessage_OneofGroup); i {
 			case 0:
 				return &v.state
@@ -1842,7 +1842,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_init() {
 				return nil
 			}
 		}
-		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[8].Exporter = func(v any, i int) any {
 			switch v := v.(*FieldTestMessage_Message); i {
 			case 0:
 				return &v.state
@@ -1855,7 +1855,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_init() {
 			}
 		}
 	}
-	file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[0].OneofWrappers = []interface{}{
+	file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[0].OneofWrappers = []any{
 		(*FieldTestMessage_OneofBool)(nil),
 		(*FieldTestMessage_OneofEnum)(nil),
 		(*FieldTestMessage_OneofInt32)(nil),

@@ -122,7 +122,7 @@ func file_internal_testprotos_enums_enums_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_testprotos_enums_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_internal_testprotos_enums_enums_proto_goTypes = []interface{}{
+var file_internal_testprotos_enums_enums_proto_goTypes = []any{
 	(Enum)(0), // 0: goproto.proto.enums.Enum
 }
 var file_internal_testprotos_enums_enums_proto_depIdxs = []int32{
