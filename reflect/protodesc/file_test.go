@@ -435,6 +435,30 @@ func TestNewFile(t *testing.T) {
 			package: "fizz"
 		`),
 	}, {
+		label: "proto3 message fields conflict",
+		inDesc: mustParseFile(`
+			syntax:  "proto3"
+			name:    "test.proto"
+			message_type: [{name:"M" nested_type:[{
+				name: "M"
+				field: [
+					{name:"_b_a_z_" number:1 label:LABEL_OPTIONAL type:TYPE_STRING},
+					{name:"baz" number:2 label:LABEL_OPTIONAL type:TYPE_STRING}
+				]
+			}]}]
+		`),
+		wantDesc: mustParseFile(`
+			syntax:  "proto3"
+			name:    "test.proto"
+			message_type: [{name:"M" nested_type:[{
+				name: "M"
+				field: [
+					{name:"_b_a_z_" number:1 label:LABEL_OPTIONAL type:TYPE_STRING},
+					{name:"baz" number:2 label:LABEL_OPTIONAL type:TYPE_STRING}
+				]
+			}]}]
+		`),
+	}, {
 		label: "namespace conflict on enum value",
 		inDesc: mustParseFile(`
 			name:    "test.proto"
@@ -817,20 +841,6 @@ func TestNewFile(t *testing.T) {
 			}]}]
 		`),
 		wantErr: `message "M.M" using proto3 semantics cannot have extension ranges`,
-	}, {
-		label: "proto3 message fields conflict",
-		inDesc: mustParseFile(`
-			syntax:  "proto3"
-			name:    "test.proto"
-			message_type: [{name:"M" nested_type:[{
-				name: "M"
-				field: [
-					{name:"_b_a_z_" number:1 label:LABEL_OPTIONAL type:TYPE_STRING},
-					{name:"baz" number:2 label:LABEL_OPTIONAL type:TYPE_STRING}
-				]
-			}]}]
-		`),
-		wantErr: `message "M.M" using proto3 semantics has conflict: "baz" with "_b_a_z_"`,
 	}, {
 		label: "proto3 message fields",
 		inDesc: mustParseFile(`
