@@ -49,8 +49,11 @@ func (mi *MessageInfo) sizePointer(p pointer, opts marshalOptions) (size int) {
 		return 0
 	}
 	if opts.UseCachedSize() && mi.sizecacheOffset.IsValid() {
-		if size := atomic.LoadInt32(p.Apply(mi.sizecacheOffset).Int32()); size >= 0 {
-			return int(size)
+		// The size cache contains the size + 1, to allow the
+		// zero value to be invalid, while also allowing for a
+		// 0 size to be cached.
+		if size := atomic.LoadInt32(p.Apply(mi.sizecacheOffset).Int32()); size > 0 {
+			return int(size - 1)
 		}
 	}
 	return mi.sizePointerSlow(p, opts)
@@ -60,7 +63,7 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 	if flags.ProtoLegacy && mi.isMessageSet {
 		size = sizeMessageSet(mi, p, opts)
 		if mi.sizecacheOffset.IsValid() {
-			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), int32(size))
+			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), int32(size+1))
 		}
 		return size
 	}
@@ -84,13 +87,16 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 		}
 	}
 	if mi.sizecacheOffset.IsValid() {
-		if size > math.MaxInt32 {
+		if size > (math.MaxInt32 - 1) {
 			// The size is too large for the int32 sizecache field.
 			// We will need to recompute the size when encoding;
 			// unfortunately expensive, but better than invalid output.
-			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), -1)
+			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), 0)
 		} else {
-			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), int32(size))
+			// The size cache contains the size + 1, to allow the
+			// zero value to be invalid, while also allowing for a
+			// 0 size to be cached.
+			atomic.StoreInt32(p.Apply(mi.sizecacheOffset).Int32(), int32(size+1))
 		}
 	}
 	return size
