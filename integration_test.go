@@ -36,8 +36,11 @@ var (
 	protobufVersion = "27.0-rc1"
 
 	golangVersions = func() []string {
-		// Version policy: oldest supported version of Go.
+		// Version policy: oldest supported version of Go, plus the version before that.
+		// This matches the version policy of the Google Cloud Client Libraries:
+		// https://cloud.google.com/go/getting-started/supported-go-versions
 		return []string{
+			"1.20.14",
 			"1.21.10",
 			"1.22.3",
 		}
