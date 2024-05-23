@@ -234,7 +234,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "not boolean",
 		inputMessage: &pbeditions.ImplicitScalars{},
 		inputText:    `{"sBool": "true"}`,
-		wantErr:      `invalid value for bool type: "true"`,
+		wantErr:      `invalid value for bool field sBool: "true"`,
 	}, {
 		desc:         "float and double",
 		inputMessage: &pbeditions.ImplicitScalars{},
@@ -311,7 +311,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "not boolean",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sBool": "true"}`,
-		wantErr:      `invalid value for bool type: "true"`,
+		wantErr:      `invalid value for bool field sBool: "true"`,
 	}, {
 		desc:         "float and double",
 		inputMessage: &pb3.Scalars{},
@@ -360,22 +360,22 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "float exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sFloat": 3.4e39}`,
-		wantErr:      `invalid value for float type: 3.4e39`,
+		wantErr:      `invalid value for float field sFloat: 3.4e39`,
 	}, {
 		desc:         "float in string exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sFloat": "-3.4e39"}`,
-		wantErr:      `invalid value for float type: "-3.4e39"`,
+		wantErr:      `invalid value for float field sFloat: "-3.4e39"`,
 	}, {
 		desc:         "double exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sDouble": -1.79e+309}`,
-		wantErr:      `invalid value for double type: -1.79e+309`,
+		wantErr:      `invalid value for double field sDouble: -1.79e+309`,
 	}, {
 		desc:         "double in string exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sDouble": "1.79e+309"}`,
-		wantErr:      `invalid value for double type: "1.79e+309"`,
+		wantErr:      `invalid value for double field sDouble: "1.79e+309"`,
 	}, {
 		desc:         "infinites",
 		inputMessage: &pb3.Scalars{},
@@ -388,22 +388,22 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "float string with leading space",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sFloat": " 1.234"}`,
-		wantErr:      `invalid value for float type: " 1.234"`,
+		wantErr:      `invalid value for float field sFloat: " 1.234"`,
 	}, {
 		desc:         "double string with trailing space",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sDouble": "5.678 "}`,
-		wantErr:      `invalid value for double type: "5.678 "`,
+		wantErr:      `invalid value for double field sDouble: "5.678 "`,
 	}, {
 		desc:         "not float",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sFloat": true}`,
-		wantErr:      `invalid value for float type: true`,
+		wantErr:      `invalid value for float field sFloat: true`,
 	}, {
 		desc:         "not double",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sDouble": "not a number"}`,
-		wantErr:      `invalid value for double type: "not a number"`,
+		wantErr:      `invalid value for double field sDouble: "not a number"`,
 	}, {
 		desc:         "integers",
 		inputMessage: &pb3.Scalars{},
@@ -469,42 +469,42 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "integer string with leading space",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sInt32": " 1234"}`,
-		wantErr:      `invalid value for int32 type: " 1234"`,
+		wantErr:      `invalid value for int32 field sInt32: " 1234"`,
 	}, {
 		desc:         "integer string with trailing space",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sUint32": "1e2 "}`,
-		wantErr:      `invalid value for uint32 type: "1e2 "`,
+		wantErr:      `invalid value for uint32 field sUint32: "1e2 "`,
 	}, {
 		desc:         "number is not an integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sInt32": 1.001}`,
-		wantErr:      `invalid value for int32 type: 1.001`,
+		wantErr:      `invalid value for int32 field sInt32: 1.001`,
 	}, {
 		desc:         "32-bit int exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sInt32": 2e10}`,
-		wantErr:      `invalid value for int32 type: 2e10`,
+		wantErr:      `invalid value for int32 field sInt32: 2e10`,
 	}, {
 		desc:         "64-bit int exceeds limit",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sSfixed64": -9e19}`,
-		wantErr:      `invalid value for sfixed64 type: -9e19`,
+		wantErr:      `invalid value for sfixed64 field sSfixed64: -9e19`,
 	}, {
 		desc:         "not integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sInt32": "not a number"}`,
-		wantErr:      `invalid value for int32 type: "not a number"`,
+		wantErr:      `invalid value for int32 field sInt32: "not a number"`,
 	}, {
 		desc:         "not unsigned integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sUint32": "not a number"}`,
-		wantErr:      `invalid value for uint32 type: "not a number"`,
+		wantErr:      `invalid value for uint32 field sUint32: "not a number"`,
 	}, {
 		desc:         "number is not an unsigned integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sUint32": -1}`,
-		wantErr:      `invalid value for uint32 type: -1`,
+		wantErr:      `invalid value for uint32 field sUint32: -1`,
 	}, {
 		desc:         "string",
 		inputMessage: &pb2.Scalars{},
@@ -521,7 +521,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "not string",
 		inputMessage: &pb2.Scalars{},
 		inputText:    `{"optString": 42}`,
-		wantErr:      `invalid value for string type: 42`,
+		wantErr:      `invalid value for string field optString: 42`,
 	}, {
 		desc:         "bytes",
 		inputMessage: &pb3.Scalars{},
@@ -540,7 +540,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "not bytes",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sBytes": true}`,
-		wantErr:      `invalid value for bytes type: true`,
+		wantErr:      `invalid value for bytes field sBytes: true`,
 	}, {
 		desc:         "proto2 enum",
 		inputMessage: &pb2.Enums{},
@@ -591,21 +591,21 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "sEnum": "1"
 }`,
-		wantErr: `invalid value for enum type: "1"`,
+		wantErr: `invalid value for enum field sEnum: "1"`,
 	}, {
 		desc:         "enum set to invalid named",
 		inputMessage: &pb3.Enums{},
 		inputText: `{
   "sEnum": "UNNAMED"
 }`,
-		wantErr: `invalid value for enum type: "UNNAMED"`,
+		wantErr: `invalid value for enum field sEnum: "UNNAMED"`,
 	}, {
 		desc:         "enum set to not enum",
 		inputMessage: &pb3.Enums{},
 		inputText: `{
   "sEnum": true
 }`,
-		wantErr: `invalid value for enum type: true`,
+		wantErr: `invalid value for enum field sEnum: true`,
 	}, {
 		desc:         "enum set to JSON null",
 		inputMessage: &pb3.Enums{},
@@ -957,7 +957,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "repeated scalars contain invalid type",
 		inputMessage: &pb2.Repeats{},
 		inputText:    `{"rptString": ["hello", null, "world"]}`,
-		wantErr:      `invalid value for string type: null`,
+		wantErr:      `invalid value for string field rptString: null`,
 	}, {
 		desc:         "repeated messages contain invalid type",
 		inputMessage: &pb2.Nests{},
@@ -1122,7 +1122,7 @@ func TestUnmarshal(t *testing.T) {
   "int32ToStr": {
     "101": true
 }`,
-		wantErr: `invalid value for string type: true`,
+		wantErr: `invalid value for string field value: true`,
 	}, {
 		desc:         "map contains null for scalar value",
 		inputMessage: &pb3.Maps{},
@@ -1130,7 +1130,7 @@ func TestUnmarshal(t *testing.T) {
   "int32ToStr": {
     "101": null
 }`,
-		wantErr: `invalid value for string type: null`,
+		wantErr: `invalid value for string field value: null`,
 	}, {
 		desc:         "map contains null for message value",
 		inputMessage: &pb3.Maps{},
@@ -1569,7 +1569,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "BoolValue invalid value",
 		inputMessage: &wrapperspb.BoolValue{},
 		inputText:    `{}`,
-		wantErr:      `invalid value for bool type: {`,
+		wantErr:      `invalid value for bool field value: {`,
 	}, {
 		desc:         "Int32Value",
 		inputMessage: &wrapperspb.Int32Value{},
@@ -1604,7 +1604,7 @@ func TestUnmarshal(t *testing.T) {
 		desc:         "FloatValue exceeds max limit",
 		inputMessage: &wrapperspb.FloatValue{},
 		inputText:    `1.23e+40`,
-		wantErr:      `invalid value for float type: 1.23e+40`,
+		wantErr:      `invalid value for float field value: 1.23e+40`,
 	}, {
 		desc:         "FloatValue Infinity",
 		inputMessage: &wrapperspb.FloatValue{},
@@ -2237,7 +2237,7 @@ func TestUnmarshal(t *testing.T) {
   "@type": "google.protobuf.Int64Value",
   "value": "forty-two"
 }`,
-		wantErr: `(line 3:12): invalid value for int64 type: "forty-two"`,
+		wantErr: `(line 3:12): invalid value for int64 field value: "forty-two"`,
 	}, {
 		desc:         "Any with invalid UInt64Value",
 		inputMessage: &anypb.Any{},
@@ -2245,7 +2245,7 @@ func TestUnmarshal(t *testing.T) {
   "@type": "google.protobuf.UInt64Value",
   "value": -42
 }`,
-		wantErr: `(line 3:12): invalid value for uint64 type: -42`,
+		wantErr: `(line 3:12): invalid value for uint64 field value: -42`,
 	}, {
 		desc:         "Any with Duration",
 		inputMessage: &anypb.Any{},
