@@ -33,7 +33,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "27.0-rc1"
+	protobufVersion = "27.0"
 
 	golangVersions = func() []string {
 		// Version policy: oldest supported version of Go, plus the version before that.
