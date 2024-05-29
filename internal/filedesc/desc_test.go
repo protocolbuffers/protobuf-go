@@ -19,7 +19,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
-
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
@@ -850,4 +849,104 @@ func compactMultiFormat(s string) string {
 		b = append(b, s...)
 	}
 	return string(b)
+}
+
+func TestMapsAreNotDelimited(t *testing.T) {
+	fileDescriptor := &descriptorpb.FileDescriptorProto{
+		Name:    proto.String("test.proto"),
+		Syntax:  proto.String("editions"),
+		Edition: descriptorpb.Edition_EDITION_2023.Enum(),
+		Options: &descriptorpb.FileOptions{
+			Features: &descriptorpb.FeatureSet{
+				MessageEncoding: descriptorpb.FeatureSet_DELIMITED.Enum(),
+			},
+		},
+		MessageType: []*descriptorpb.DescriptorProto{
+			{
+				Name: proto.String("MessageWithMaps"),
+				Field: []*descriptorpb.FieldDescriptorProto{
+					{
+						Name:     proto.String("map_with_message"),
+						Number:   proto.Int32(1),
+						Label:    descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum(),
+						Type:     descriptorpb.FieldDescriptorProto_TYPE_MESSAGE.Enum(),
+						TypeName: proto.String(".MessageWithMaps.MapWithMessageEntry"),
+						JsonName: proto.String("mapWithMessage"),
+					},
+					{
+						Name:     proto.String("message"),
+						Number:   proto.Int32(2),
+						Label:    descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum(),
+						Type:     descriptorpb.FieldDescriptorProto_TYPE_MESSAGE.Enum(),
+						TypeName: proto.String(".MessageWithMaps"),
+						JsonName: proto.String("message"),
+					},
+				},
+				NestedType: []*descriptorpb.DescriptorProto{
+					{
+						Name:    proto.String("MapWithMessageEntry"),
+						Options: &descriptorpb.MessageOptions{MapEntry: proto.Bool(true)},
+						Field: []*descriptorpb.FieldDescriptorProto{
+							{
+								Name:   proto.String("key"),
+								Number: proto.Int32(1),
+								Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
+								Type:   descriptorpb.FieldDescriptorProto_TYPE_STRING.Enum(),
+							},
+							{
+								Name:     proto.String("value"),
+								Number:   proto.Int32(2),
+								Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
+								Type:     descriptorpb.FieldDescriptorProto_TYPE_MESSAGE.Enum(),
+								TypeName: proto.String(".MessageWithMaps"),
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	fd1, err := protodesc.NewFile(fileDescriptor, nil)
+	if err != nil {
+		t.Fatalf("protodesc.NewFile() error: %v", err)
+	}
+
+	b, err := proto.Marshal(fileDescriptor)
+	if err != nil {
+		t.Fatalf("proto.Marshal() error: %v", err)
+	}
+	fd2 := filedesc.Builder{RawDescriptor: b}.Build().File
+
+	tests := []struct {
+		name string
+		desc protoreflect.FileDescriptor
+	}{
+		{"protodesc.NewFile", fd1},
+		{"filedesc.Builder.Build", fd2},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			mapField := tt.desc.Messages().Get(0).Fields().Get(0)
+			if !mapField.IsMap() {
+				t.Fatalf("field should be a map")
+			}
+			nonMapField := tt.desc.Messages().Get(0).Fields().Get(1)
+			if nonMapField.IsMap() {
+				t.Fatalf("field should not be a map")
+			}
+			// sanity check that delimited default has taken effect
+			if nonMapField.Kind() != protoreflect.GroupKind {
+				t.Fatalf("non-map field should have group kind, instead got %v", nonMapField.Kind())
+			}
+			// now we can confirm that the map fields are NOT groups
+			if mapField.Kind() != protoreflect.MessageKind {
+				t.Fatalf("map field should have message kind, instead got %v", mapField.Kind())
+			}
+			mapValField := mapField.Message().Fields().ByNumber(2)
+			if mapValField.Kind() != protoreflect.MessageKind {
+				t.Fatalf("map value field should have message kind, instead got %v", mapValField.Kind())
+			}
+		})
+	}
 }
