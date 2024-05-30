@@ -22,6 +22,7 @@ message GoFeatures {
   optional bool legacy_unmarshal_json_enum = 1 [
     retention = RETENTION_RUNTIME,
     targets = TARGET_TYPE_ENUM,
+    targets = TARGET_TYPE_FILE,
     feature_support = {
       edition_introduced: EDITION_2023,
       edition_deprecated: EDITION_2023,
