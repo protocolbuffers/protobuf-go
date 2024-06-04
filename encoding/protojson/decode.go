@@ -564,8 +564,6 @@ func (d decoder) unmarshalList(list protoreflect.List, fd protoreflect.FieldDesc
 			}
 		}
 	}
-
-	return nil
 }
 
 func (d decoder) unmarshalMap(mmap protoreflect.Map, fd protoreflect.FieldDescriptor) error {
