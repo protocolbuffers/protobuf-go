@@ -13,21 +13,21 @@ import (
 // The Value is used to represent all possible values a field may take.
 // The following shows which Go type is used to represent each proto [Kind]:
 //
-//	╔════════════╤═════════════════════════════════════╗
-//	║ Go type    │ Protobuf kind                       ║
-//	╠════════════╪═════════════════════════════════════╣
-//	║ bool       │ BoolKind                            ║
-//	║ int32      │ Int32Kind, Sint32Kind, Sfixed32Kind ║
-//	║ int64      │ Int64Kind, Sint64Kind, Sfixed64Kind ║
-//	║ uint32     │ Uint32Kind, Fixed32Kind             ║
-//	║ uint64     │ Uint64Kind, Fixed64Kind             ║
-//	║ float32    │ FloatKind                           ║
-//	║ float64    │ DoubleKind                          ║
-//	║ string     │ StringKind                          ║
-//	║ []byte     │ BytesKind                           ║
-//	║ EnumNumber │ EnumKind                            ║
-//	║ Message    │ MessageKind, GroupKind              ║
-//	╚════════════╧═════════════════════════════════════╝
+//	╔═══════════════════════╤═════════════════════════════════════╗
+//	║ Go type               │ Protobuf kind                       ║
+//	╠═══════════════════════╪═════════════════════════════════════╣
+//	║ bool                  │ BoolKind                            ║
+//	║ int32                 │ Int32Kind, Sint32Kind, Sfixed32Kind ║
+//	║ int64                 │ Int64Kind, Sint64Kind, Sfixed64Kind ║
+//	║ uint32                │ Uint32Kind, Fixed32Kind             ║
+//	║ uint64                │ Uint64Kind, Fixed64Kind             ║
+//	║ float32               │ FloatKind                           ║
+//	║ float64               │ DoubleKind                          ║
+//	║ string, ProtoStringer │ StringKind                          ║
+//	║ []byte                │ BytesKind                           ║
+//	║ EnumNumber            │ EnumKind                            ║
+//	║ Message               │ MessageKind, GroupKind              ║
+//	╚═══════════════════════╧═════════════════════════════════════╝
 //
 // Multiple protobuf Kinds may be represented by a single Go type if the type
 // can losslessly represent the information for the proto kind. For example,
@@ -111,6 +111,8 @@ func ValueOf(v interface{}) Value {
 		return ValueOfEnum(v)
 	case Message, List, Map:
 		return valueOfIface(v)
+	case ProtoStringer:
+		return valueOfIface(v)
 	case ProtoMessage:
 		panic(fmt.Sprintf("invalid proto.Message(%T) type, expected a protoreflect.Message type", v))
 	default:
@@ -187,6 +189,11 @@ func ValueOfMap(v Map) Value {
 	return valueOfIface(v)
 }
 
+// ValueOfProtoString returns a new ProtoStringer value.
+func ValueOfProtoString(v ProtoStringer) Value {
+	return valueOfIface(v)
+}
+
 // IsValid reports whether v is populated with a value.
 func (v Value) IsValid() bool {
 	return v.typ != nilType
@@ -256,6 +263,8 @@ func (v Value) typeName() string {
 			return "list"
 		case Map:
 			return "map"
+		case ProtoStringer:
+			return "protostringer"
 		default:
 			return fmt.Sprintf("<unknown: %T>", v)
 		}
@@ -344,6 +353,17 @@ func (v Value) Message() Message {
 		return vi
 	default:
 		panic(v.panicMessage("message"))
+	}
+}
+
+// [ProtoStringer] returns v as a [ProtoStringer] and panics if the type is not
+// a [ProtoStringer].
+func (v Value) ProtoStringer() ProtoStringer {
+	switch vi := v.getIface().(type) {
+	case ProtoStringer:
+		return vi
+	default:
+		panic(v.panicMessage("protostringer"))
 	}
 }
 
