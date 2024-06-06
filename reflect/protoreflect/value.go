@@ -283,3 +283,15 @@ type Map interface {
 	// be preserved in marshaling or other operations.
 	IsValid() bool
 }
+
+// ProtoStringer is a Go struct mapped to string
+// type in proto. Code gen tool may choose to use
+// struct implementing this interface instead of
+// string.
+type ProtoStringer interface {
+	// ProtoString converts value to string
+	ProtoString() (string, error)
+
+	// ParseProtoString sets value of struct from string
+	ParseProtoString(string) error
+}
