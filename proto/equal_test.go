@@ -224,6 +224,13 @@ func TestEqual(t *testing.T) {
 		// Editions scalars.
 		{
 			x: &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+			y: &testeditionspb.TestAllTypes{OptionalInt64: proto.Int64(1)},
+		},
+		{
+			x: &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(1)},
+			y: &testeditionspb.TestAllTypes{OptionalInt64: proto.Int64(0)},
+		}, {
+			x: &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(1)},
 			y: &testeditionspb.TestAllTypes{OptionalInt32: proto.Int32(2)},
 		}, {
 			x: &testeditionspb.TestAllTypes{OptionalInt64: proto.Int64(1)},
