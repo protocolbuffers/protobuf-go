@@ -62,6 +62,11 @@ func (t *Timestamp) AsTime() *time.Time {
 	return &ts
 }
 
+func (t *Timestamp) Add(d *Duration) *Timestamp {
+	timestamp := NewTimestampValue(t.AsTime().Add(d.AsDurationValue()))
+	return &timestamp
+}
+
 func (t *Timestamp) AsTimeValue() time.Time {
 	if t == nil {
 		return time.Time{}
