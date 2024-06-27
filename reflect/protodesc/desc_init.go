@@ -214,6 +214,9 @@ func (r descsByName) initExtensionDeclarations(xds []*descriptorpb.FieldDescript
 		if xd.JsonName != nil {
 			x.L2.StringName.InitJSON(xd.GetJsonName())
 		}
+		if x.L1.Kind == protoreflect.MessageKind && x.L1.EditionFeatures.IsDelimitedEncoded {
+			x.L1.Kind = protoreflect.GroupKind
+		}
 	}
 	return xs, nil
 }

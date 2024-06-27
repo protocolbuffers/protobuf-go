@@ -429,7 +429,7 @@ var file_internal_testprotos_testeditions_test_extension_proto_extTypes = []prot
 		ExtensionType: (*OptionalGroup)(nil),
 		Field:         16,
 		Name:          "goproto.proto.testeditions.optionalgroup",
-		Tag:           "bytes,16,opt,name=optionalgroup",
+		Tag:           "group,16,opt,name=OptionalGroup",
 		Filename:      "internal/testprotos/testeditions/test_extension.proto",
 	},
 	{
@@ -573,7 +573,7 @@ var file_internal_testprotos_testeditions_test_extension_proto_extTypes = []prot
 		ExtensionType: ([]*RepeatedGroup)(nil),
 		Field:         46,
 		Name:          "goproto.proto.testeditions.repeatedgroup",
-		Tag:           "bytes,46,rep,name=repeatedgroup",
+		Tag:           "group,46,rep,name=RepeatedGroup",
 		Filename:      "internal/testprotos/testeditions/test_extension.proto",
 	},
 	{

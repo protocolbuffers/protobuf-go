@@ -2806,7 +2806,7 @@ var file_editions_golden_test_messages_proto2_editions_proto_extTypes = []protoi
 		ExtensionType: (*GroupField)(nil),
 		Field:         121,
 		Name:          "protobuf_test_messages.editions.proto2.groupfield",
-		Tag:           "bytes,121,opt,name=groupfield",
+		Tag:           "group,121,opt,name=GroupField",
 		Filename:      "editions/golden/test_messages_proto2_editions.proto",
 	},
 	{

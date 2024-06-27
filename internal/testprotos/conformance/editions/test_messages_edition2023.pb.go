@@ -1251,7 +1251,7 @@ var file_conformance_test_protos_test_messages_edition2023_proto_extTypes = []pr
 		ExtensionType: (*GroupLikeType)(nil),
 		Field:         121,
 		Name:          "protobuf_test_messages.editions.groupliketype",
-		Tag:           "bytes,121,opt,name=groupliketype",
+		Tag:           "group,121,opt,name=GroupLikeType",
 		Filename:      "conformance/test_protos/test_messages_edition2023.proto",
 	},
 	{
@@ -1259,7 +1259,7 @@ var file_conformance_test_protos_test_messages_edition2023_proto_extTypes = []pr
 		ExtensionType: (*GroupLikeType)(nil),
 		Field:         122,
 		Name:          "protobuf_test_messages.editions.delimited_ext",
-		Tag:           "bytes,122,opt,name=delimited_ext",
+		Tag:           "group,122,opt,name=GroupLikeType",
 		Filename:      "conformance/test_protos/test_messages_edition2023.proto",
 	},
 }
