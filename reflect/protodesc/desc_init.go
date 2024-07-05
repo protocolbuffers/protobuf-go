@@ -150,6 +150,7 @@ func (r descsByName) initFieldsFromDescriptorProto(fds []*descriptorpb.FieldDesc
 			opts = proto.Clone(opts).(*descriptorpb.FieldOptions)
 			f.L1.Options = func() protoreflect.ProtoMessage { return opts }
 			f.L1.IsWeak = opts.GetWeak()
+			f.L1.IsLazy = opts.GetLazy()
 			if opts.Packed != nil {
 				f.L1.EditionFeatures.IsPacked = opts.GetPacked()
 			}
