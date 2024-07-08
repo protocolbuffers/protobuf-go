@@ -355,6 +355,20 @@ func (gen *Plugin) Error(err error) {
 // Response returns the generator output.
 func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 	resp := &pluginpb.CodeGeneratorResponse{}
+	// Always report the support for editions. Otherwise protoc might obfuscate
+	// the error by saying editions are not supported by the plugin.
+	// It is arguable if protoc should handle this but it is possible that the
+	// error only exists because the plugin does not support editions and thus
+	// it is not unreasonable for protoc to suspect it is the lack of editions
+	// support that led to this error.
+	if gen.SupportedFeatures > 0 {
+		resp.SupportedFeatures = proto.Uint64(gen.SupportedFeatures)
+	}
+	if gen.SupportedEditionsMinimum != descriptorpb.Edition_EDITION_UNKNOWN && gen.SupportedEditionsMaximum != descriptorpb.Edition_EDITION_UNKNOWN {
+		resp.MinimumEdition = proto.Int32(int32(gen.SupportedEditionsMinimum))
+		resp.MaximumEdition = proto.Int32(int32(gen.SupportedEditionsMaximum))
+	}
+
 	if gen.err != nil {
 		resp.Error = proto.String(gen.err.Error())
 		return resp
@@ -395,13 +409,6 @@ func (gen *Plugin) Response() *pluginpb.CodeGeneratorResponse {
 				Content: proto.String(meta),
 			})
 		}
-	}
-	if gen.SupportedFeatures > 0 {
-		resp.SupportedFeatures = proto.Uint64(gen.SupportedFeatures)
-	}
-	if gen.SupportedEditionsMinimum != descriptorpb.Edition_EDITION_UNKNOWN && gen.SupportedEditionsMaximum != descriptorpb.Edition_EDITION_UNKNOWN {
-		resp.MinimumEdition = proto.Int32(int32(gen.SupportedEditionsMinimum))
-		resp.MaximumEdition = proto.Int32(int32(gen.SupportedEditionsMaximum))
 	}
 	return resp
 }
