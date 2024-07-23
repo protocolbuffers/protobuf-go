@@ -1,10 +1,10 @@
-Recommended.Editions_Proto3.ProtobufInput.MessageUnknownFields_Print.TextFormatOutput
-Recommended.Editions_Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairBytes
-Recommended.Editions_Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairString
-Recommended.Editions_Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortBytes
-Recommended.Editions_Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortString
-Recommended.Proto3.ProtobufInput.MessageUnknownFields_Print.TextFormatOutput
-Recommended.Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairBytes
-Recommended.Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairString
-Recommended.Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortBytes
-Recommended.Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortString
+Recommended.Editions_Proto3.ProtobufInput.MessageUnknownFields_Print.TextFormatOutput                              # TEXT_FORMAT output we received from test was unparseable.
+Recommended.Editions_Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairBytes                      # Should have failed to parse, but didn't.
+Recommended.Editions_Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairString                     # Should have failed to parse, but didn't.
+Recommended.Editions_Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortBytes                  # Should have failed to parse, but didn't.
+Recommended.Editions_Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortString                 # Should have failed to parse, but didn't.
+Recommended.Proto3.ProtobufInput.MessageUnknownFields_Print.TextFormatOutput                                       # TEXT_FORMAT output we received from test was unparseable.
+Recommended.Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairBytes                               # Should have failed to parse, but didn't.
+Recommended.Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairString                              # Should have failed to parse, but didn't.
+Recommended.Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortBytes                           # Should have failed to parse, but didn't.
+Recommended.Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortString                          # Should have failed to parse, but didn't.
