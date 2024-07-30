@@ -120,6 +120,7 @@ package structpb
 
 import (
 	base64 "encoding/base64"
+	json "encoding/json"
 	protojson "google.golang.org/protobuf/encoding/protojson"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -296,19 +297,20 @@ type Value struct {
 
 // NewValue constructs a Value from a general-purpose Go interface.
 //
-//	╔════════════════════════╤════════════════════════════════════════════╗
-//	║ Go type                │ Conversion                                 ║
-//	╠════════════════════════╪════════════════════════════════════════════╣
-//	║ nil                    │ stored as NullValue                        ║
-//	║ bool                   │ stored as BoolValue                        ║
-//	║ int, int32, int64      │ stored as NumberValue                      ║
-//	║ uint, uint32, uint64   │ stored as NumberValue                      ║
-//	║ float32, float64       │ stored as NumberValue                      ║
-//	║ string                 │ stored as StringValue; must be valid UTF-8 ║
-//	║ []byte                 │ stored as StringValue; base64-encoded      ║
-//	║ map[string]any         │ stored as StructValue                      ║
-//	║ []any                  │ stored as ListValue                        ║
-//	╚════════════════════════╧════════════════════════════════════════════╝
+//	╔═══════════════════════════════════════╤════════════════════════════════════════════╗
+//	║ Go type                               │ Conversion                                 ║
+//	╠═══════════════════════════════════════╪════════════════════════════════════════════╣
+//	║ nil                                   │ stored as NullValue                        ║
+//	║ bool                                  │ stored as BoolValue                        ║
+//	║ int, int8, int16, int32, int64        │ stored as NumberValue                      ║
+//	║ uint, uint8, uint16, uint32, uint64   │ stored as NumberValue                      ║
+//	║ float32, float64                      │ stored as NumberValue                      ║
+//	║ json.Number                           │ stored as NumberValue                      ║
+//	║ string                                │ stored as StringValue; must be valid UTF-8 ║
+//	║ []byte                                │ stored as StringValue; base64-encoded      ║
+//	║ map[string]any                        │ stored as StructValue                      ║
+//	║ []any                                 │ stored as ListValue                        ║
+//	╚═══════════════════════════════════════╧════════════════════════════════════════════╝
 //
 // When converting an int64 or uint64 to a NumberValue, numeric precision loss
 // is possible since they are stored as a float64.
@@ -320,11 +322,19 @@ func NewValue(v any) (*Value, error) {
 		return NewBoolValue(v), nil
 	case int:
 		return NewNumberValue(float64(v)), nil
+	case int8:
+		return NewNumberValue(float64(v)), nil
+	case int16:
+		return NewNumberValue(float64(v)), nil
 	case int32:
 		return NewNumberValue(float64(v)), nil
 	case int64:
 		return NewNumberValue(float64(v)), nil
 	case uint:
+		return NewNumberValue(float64(v)), nil
+	case uint8:
+		return NewNumberValue(float64(v)), nil
+	case uint16:
 		return NewNumberValue(float64(v)), nil
 	case uint32:
 		return NewNumberValue(float64(v)), nil
@@ -334,6 +344,12 @@ func NewValue(v any) (*Value, error) {
 		return NewNumberValue(float64(v)), nil
 	case float64:
 		return NewNumberValue(float64(v)), nil
+	case json.Number:
+		n, err := v.Float64()
+		if err != nil {
+			return nil, protoimpl.X.NewError("invalid number format %q, expected a float64: %v", v, err)
+		}
+		return NewNumberValue(n), nil
 	case string:
 		if !utf8.ValidString(v) {
 			return nil, protoimpl.X.NewError("invalid UTF-8 in string: %q", v)

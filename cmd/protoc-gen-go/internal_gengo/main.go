@@ -41,6 +41,7 @@ var GenerateVersionMarkers = true
 // Standard library dependencies.
 const (
 	base64Package  = protogen.GoImportPath("encoding/base64")
+	jsonPackage    = protogen.GoImportPath("encoding/json")
 	mathPackage    = protogen.GoImportPath("math")
 	reflectPackage = protogen.GoImportPath("reflect")
 	sortPackage    = protogen.GoImportPath("sort")
