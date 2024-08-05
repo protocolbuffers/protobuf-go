@@ -311,6 +311,7 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 
 	var processEnums func([]*protogen.Enum)
 	var processMessages func([]*protogen.Message)
+	var processExtensions func([]*protogen.Extension)
 	const protoreflectPackage = protogen.GoImportPath("google.golang.org/protobuf/reflect/protoreflect")
 	processEnums = func(enums []*protogen.Enum) {
 		for _, enum := range enums {
@@ -377,10 +378,24 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 
 			processEnums(message.Enums)
 			processMessages(message.Messages)
+			processExtensions(message.Extensions)
 		}
+	}
+	processExtensions = func(extensions []*protogen.Extension) {
+		if len(extensions) == 0 {
+			return
+		}
+
+		g.P("// Extension numbers")
+		g.P("const (")
+		for _, ext := range extensions {
+			g.P(ext.Extendee.GoIdent.GoName, "_", ext.GoName, "_ext_number ", protoreflectPackage.Ident("FieldNumber"), " = ", ext.Desc.Number())
+		}
+		g.P(")")
 	}
 	processEnums(file.Enums)
 	processMessages(file.Messages)
+	processExtensions(file.Extensions)
 }
 
 // generateSourceContextStringer generates the implementation for the

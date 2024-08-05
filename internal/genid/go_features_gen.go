@@ -29,3 +29,8 @@ const (
 const (
 	GoFeatures_LegacyUnmarshalJsonEnum_field_number protoreflect.FieldNumber = 1
 )
+
+// Extension numbers
+const (
+	FeatureSet_Go_ext_number protoreflect.FieldNumber = 1002
+)
