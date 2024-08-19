@@ -1655,68 +1655,6 @@ func file_internal_testprotos_editionsfuzztest_test2editions_proto_init() {
 	if File_internal_testprotos_editionsfuzztest_test2editions_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypesProto2Editions); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypesProto2Editions_NestedMessage); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypesProto2Editions_OptionalGroup); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[3].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypesProto2Editions_RepeatedGroup); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[21].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypesProto2Editions_OneofGroup); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	file_internal_testprotos_editionsfuzztest_test2editions_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypesProto2Editions_OneofUint32)(nil),
 		(*TestAllTypesProto2Editions_OneofNestedMessage)(nil),

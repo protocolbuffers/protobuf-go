@@ -618,56 +618,6 @@ func file_google_protobuf_compiler_plugin_proto_init() {
 	if File_google_protobuf_compiler_plugin_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_google_protobuf_compiler_plugin_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*Version); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_compiler_plugin_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*CodeGeneratorRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_compiler_plugin_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*CodeGeneratorResponse); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_compiler_plugin_proto_msgTypes[3].Exporter = func(v any, i int) any {
-			switch v := v.(*CodeGeneratorResponse_File); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

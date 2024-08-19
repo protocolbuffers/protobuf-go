@@ -738,56 +738,6 @@ func file_conformance_conformance_proto_init() {
 	if File_conformance_conformance_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_conformance_conformance_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*FailureSet); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_conformance_conformance_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*ConformanceRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_conformance_conformance_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*ConformanceResponse); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_conformance_conformance_proto_msgTypes[3].Exporter = func(v any, i int) any {
-			switch v := v.(*JspbEncodingConfig); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	file_conformance_conformance_proto_msgTypes[1].OneofWrappers = []any{
 		(*ConformanceRequest_ProtobufPayload)(nil),
 		(*ConformanceRequest_JsonPayload)(nil),

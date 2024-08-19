@@ -657,48 +657,6 @@ func file_cmd_protoc_gen_go_testdata_retention_retention_proto_init() {
 		return
 	}
 	file_cmd_protoc_gen_go_testdata_retention_options_message_proto_init()
-	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*Extendee); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			case 3:
-				return &v.extensionFields
-			default:
-				return nil
-			}
-		}
-		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*TopLevelMessage); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			case 3:
-				return &v.extensionFields
-			default:
-				return nil
-			}
-		}
-		file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*TopLevelMessage_NestedMessage); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	file_cmd_protoc_gen_go_testdata_retention_retention_proto_msgTypes[1].OneofWrappers = []any{
 		(*TopLevelMessage_I)(nil),
 	}

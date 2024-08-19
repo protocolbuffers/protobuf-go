@@ -209,22 +209,6 @@ func file_internal_testprotos_order_order_proto_init() {
 	if File_internal_testprotos_order_order_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_order_order_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*Message); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			case 3:
-				return &v.extensionFields
-			default:
-				return nil
-			}
-		}
-	}
 	file_internal_testprotos_order_order_proto_msgTypes[0].OneofWrappers = []any{
 		(*Message_Field_10)(nil),
 	}

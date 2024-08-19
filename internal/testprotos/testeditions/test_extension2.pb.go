@@ -191,20 +191,6 @@ func file_internal_testprotos_testeditions_test_extension2_proto_init() {
 		return
 	}
 	file_internal_testprotos_testeditions_test_extension_proto_init()
-	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_testeditions_test_extension2_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*OtherRepeatedFieldEncoding); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

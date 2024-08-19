@@ -353,56 +353,6 @@ func file_internal_testprotos_messageset_msetextpb_msetextpb_proto_init() {
 	if File_internal_testprotos_messageset_msetextpb_msetextpb_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*Ext1); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*Ext2); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*ExtRequired); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[3].Exporter = func(v any, i int) any {
-			switch v := v.(*ExtLargeNumber); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

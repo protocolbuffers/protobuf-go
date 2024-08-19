@@ -95,20 +95,6 @@ func file_cmd_protoc_gen_go_testdata_imports_fmt_m_proto_init() {
 	if File_cmd_protoc_gen_go_testdata_imports_fmt_m_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_imports_fmt_m_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*M); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

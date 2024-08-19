@@ -134,20 +134,6 @@ func file_cmd_protoc_gen_go_testdata_import_public_c_proto_init() {
 		return
 	}
 	file_cmd_protoc_gen_go_testdata_import_public_a_proto_init()
-	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_import_public_c_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*UsingPublicImport); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

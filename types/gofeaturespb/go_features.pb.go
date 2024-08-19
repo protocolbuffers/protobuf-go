@@ -145,20 +145,6 @@ func file_google_protobuf_go_features_proto_init() {
 	if File_google_protobuf_go_features_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_google_protobuf_go_features_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*GoFeatures); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

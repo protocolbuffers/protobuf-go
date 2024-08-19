@@ -260,46 +260,6 @@ func file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_ini
 	if File_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*Sub); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			case 3:
-				return &v.extensionFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*Top); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*Ext); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

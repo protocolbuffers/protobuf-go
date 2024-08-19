@@ -1646,44 +1646,6 @@ func file_internal_testprotos_test3_test_proto_init() {
 		return
 	}
 	file_internal_testprotos_test3_test_import_proto_init()
-	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_test3_test_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_test3_test_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*ForeignMessage); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_testprotos_test3_test_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypes_NestedMessage); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	file_internal_testprotos_test3_test_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypes_OneofUint32)(nil),
 		(*TestAllTypes_OneofNestedMessage)(nil),

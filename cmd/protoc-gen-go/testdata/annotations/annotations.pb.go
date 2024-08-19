@@ -192,22 +192,6 @@ func file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_init() {
 	if File_cmd_protoc_gen_go_testdata_annotations_annotations_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_cmd_protoc_gen_go_testdata_annotations_annotations_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*AnnotationsTestMessage); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.weakFields
-			case 3:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

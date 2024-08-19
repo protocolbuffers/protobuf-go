@@ -2660,68 +2660,6 @@ func file_google_protobuf_test_messages_proto3_proto_init() {
 	if File_google_protobuf_test_messages_proto3_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_google_protobuf_test_messages_proto3_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypesProto3); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_test_messages_proto3_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*ForeignMessage); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_test_messages_proto3_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*NullHypothesisProto3); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_test_messages_proto3_proto_msgTypes[3].Exporter = func(v any, i int) any {
-			switch v := v.(*EnumOnlyProto3); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_test_messages_proto3_proto_msgTypes[4].Exporter = func(v any, i int) any {
-			switch v := v.(*TestAllTypesProto3_NestedMessage); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	file_google_protobuf_test_messages_proto3_proto_msgTypes[0].OneofWrappers = []any{
 		(*TestAllTypesProto3_OneofUint32)(nil),
 		(*TestAllTypesProto3_OneofNestedMessage)(nil),

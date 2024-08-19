@@ -758,44 +758,6 @@ func file_google_protobuf_struct_proto_init() {
 	if File_google_protobuf_struct_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_google_protobuf_struct_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*Struct); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_struct_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*Value); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_google_protobuf_struct_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*ListValue); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	file_google_protobuf_struct_proto_msgTypes[1].OneofWrappers = []any{
 		(*Value_NullValue)(nil),
 		(*Value_NumberValue)(nil),

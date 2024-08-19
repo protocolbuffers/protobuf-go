@@ -321,20 +321,6 @@ func file_internal_testprotos_legacy_legacy_proto_init() {
 	if File_internal_testprotos_legacy_legacy_proto != nil {
 		return
 	}
-	if !protoimpl.UnsafeEnabled {
-		file_internal_testprotos_legacy_legacy_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*Legacy); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
