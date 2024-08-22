@@ -166,11 +166,9 @@ type Scalars struct {
 
 func (x *Scalars) Reset() {
 	*x = Scalars{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Scalars) String() string {
@@ -181,7 +179,7 @@ func (*Scalars) ProtoMessage() {}
 
 func (x *Scalars) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -315,11 +313,9 @@ type Enums struct {
 
 func (x *Enums) Reset() {
 	*x = Enums{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Enums) String() string {
@@ -330,7 +326,7 @@ func (*Enums) ProtoMessage() {}
 
 func (x *Enums) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -392,11 +388,9 @@ type Repeats struct {
 
 func (x *Repeats) Reset() {
 	*x = Repeats{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Repeats) String() string {
@@ -407,7 +401,7 @@ func (*Repeats) ProtoMessage() {}
 
 func (x *Repeats) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -497,11 +491,9 @@ type Maps struct {
 
 func (x *Maps) Reset() {
 	*x = Maps{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Maps) String() string {
@@ -512,7 +504,7 @@ func (*Maps) ProtoMessage() {}
 
 func (x *Maps) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -553,11 +545,9 @@ type Nested struct {
 
 func (x *Nested) Reset() {
 	*x = Nested{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Nested) String() string {
@@ -568,7 +558,7 @@ func (*Nested) ProtoMessage() {}
 
 func (x *Nested) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -611,11 +601,9 @@ type Nests struct {
 
 func (x *Nests) Reset() {
 	*x = Nests{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[5]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Nests) String() string {
@@ -626,7 +614,7 @@ func (*Nests) ProtoMessage() {}
 
 func (x *Nests) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[5]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -685,11 +673,9 @@ type Requireds struct {
 
 func (x *Requireds) Reset() {
 	*x = Requireds{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[6]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Requireds) String() string {
@@ -700,7 +686,7 @@ func (*Requireds) ProtoMessage() {}
 
 func (x *Requireds) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[6]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -769,11 +755,9 @@ type PartialRequired struct {
 
 func (x *PartialRequired) Reset() {
 	*x = PartialRequired{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[7]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *PartialRequired) String() string {
@@ -784,7 +768,7 @@ func (*PartialRequired) ProtoMessage() {}
 
 func (x *PartialRequired) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[7]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -823,11 +807,9 @@ type NestedWithRequired struct {
 
 func (x *NestedWithRequired) Reset() {
 	*x = NestedWithRequired{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[8]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *NestedWithRequired) String() string {
@@ -838,7 +820,7 @@ func (*NestedWithRequired) ProtoMessage() {}
 
 func (x *NestedWithRequired) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[8]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -876,11 +858,9 @@ type IndirectRequired struct {
 
 func (x *IndirectRequired) Reset() {
 	*x = IndirectRequired{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[9]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *IndirectRequired) String() string {
@@ -891,7 +871,7 @@ func (*IndirectRequired) ProtoMessage() {}
 
 func (x *IndirectRequired) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[9]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -964,11 +944,9 @@ type Extensions struct {
 
 func (x *Extensions) Reset() {
 	*x = Extensions{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[10]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Extensions) String() string {
@@ -979,7 +957,7 @@ func (*Extensions) ProtoMessage() {}
 
 func (x *Extensions) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[10]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1023,11 +1001,9 @@ type ExtensionsContainer struct {
 
 func (x *ExtensionsContainer) Reset() {
 	*x = ExtensionsContainer{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[11]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *ExtensionsContainer) String() string {
@@ -1038,7 +1014,7 @@ func (*ExtensionsContainer) ProtoMessage() {}
 
 func (x *ExtensionsContainer) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[11]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1062,11 +1038,9 @@ type MessageSet struct {
 
 func (x *MessageSet) Reset() {
 	*x = MessageSet{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[12]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *MessageSet) String() string {
@@ -1077,7 +1051,7 @@ func (*MessageSet) ProtoMessage() {}
 
 func (x *MessageSet) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[12]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1102,11 +1076,9 @@ type MessageSetExtension struct {
 
 func (x *MessageSetExtension) Reset() {
 	*x = MessageSetExtension{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[13]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *MessageSetExtension) String() string {
@@ -1117,7 +1089,7 @@ func (*MessageSetExtension) ProtoMessage() {}
 
 func (x *MessageSetExtension) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[13]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1148,11 +1120,9 @@ type FakeMessageSet struct {
 
 func (x *FakeMessageSet) Reset() {
 	*x = FakeMessageSet{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[14]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FakeMessageSet) String() string {
@@ -1163,7 +1133,7 @@ func (*FakeMessageSet) ProtoMessage() {}
 
 func (x *FakeMessageSet) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[14]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1188,11 +1158,9 @@ type FakeMessageSetExtension struct {
 
 func (x *FakeMessageSetExtension) Reset() {
 	*x = FakeMessageSetExtension{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[15]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FakeMessageSetExtension) String() string {
@@ -1203,7 +1171,7 @@ func (*FakeMessageSetExtension) ProtoMessage() {}
 
 func (x *FakeMessageSetExtension) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[15]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1253,11 +1221,9 @@ type KnownTypes struct {
 
 func (x *KnownTypes) Reset() {
 	*x = KnownTypes{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[16]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *KnownTypes) String() string {
@@ -1268,7 +1234,7 @@ func (*KnownTypes) ProtoMessage() {}
 
 func (x *KnownTypes) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[16]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1421,11 +1387,9 @@ type Nests_OptGroup struct {
 
 func (x *Nests_OptGroup) Reset() {
 	*x = Nests_OptGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[19]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Nests_OptGroup) String() string {
@@ -1436,7 +1400,7 @@ func (*Nests_OptGroup) ProtoMessage() {}
 
 func (x *Nests_OptGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[19]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1482,11 +1446,9 @@ type Nests_RptGroup struct {
 
 func (x *Nests_RptGroup) Reset() {
 	*x = Nests_RptGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[20]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Nests_RptGroup) String() string {
@@ -1497,7 +1459,7 @@ func (*Nests_RptGroup) ProtoMessage() {}
 
 func (x *Nests_RptGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[20]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1529,11 +1491,9 @@ type Nests_OptGroup_OptNestedGroup struct {
 
 func (x *Nests_OptGroup_OptNestedGroup) Reset() {
 	*x = Nests_OptGroup_OptNestedGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[21]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Nests_OptGroup_OptNestedGroup) String() string {
@@ -1544,7 +1504,7 @@ func (*Nests_OptGroup_OptNestedGroup) ProtoMessage() {}
 
 func (x *Nests_OptGroup_OptNestedGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_textpb2_test_proto_msgTypes[21]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

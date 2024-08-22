@@ -35,11 +35,9 @@ type Fuzz struct {
 
 func (x *Fuzz) Reset() {
 	*x = Fuzz{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_fuzz_fuzz_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_fuzz_fuzz_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Fuzz) String() string {
@@ -50,7 +48,7 @@ func (*Fuzz) ProtoMessage() {}
 
 func (x *Fuzz) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_fuzz_fuzz_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

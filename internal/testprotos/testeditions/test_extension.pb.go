@@ -23,11 +23,9 @@ type TestAllExtensions struct {
 
 func (x *TestAllExtensions) Reset() {
 	*x = TestAllExtensions{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllExtensions) String() string {
@@ -38,7 +36,7 @@ func (*TestAllExtensions) ProtoMessage() {}
 
 func (x *TestAllExtensions) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -65,11 +63,9 @@ type OptionalGroup struct {
 
 func (x *OptionalGroup) Reset() {
 	*x = OptionalGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *OptionalGroup) String() string {
@@ -80,7 +76,7 @@ func (*OptionalGroup) ProtoMessage() {}
 
 func (x *OptionalGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -127,11 +123,9 @@ type RepeatedGroup struct {
 
 func (x *RepeatedGroup) Reset() {
 	*x = RepeatedGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *RepeatedGroup) String() string {
@@ -142,7 +136,7 @@ func (*RepeatedGroup) ProtoMessage() {}
 
 func (x *RepeatedGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -180,11 +174,9 @@ type TestFeatureResolution struct {
 
 func (x *TestFeatureResolution) Reset() {
 	*x = TestFeatureResolution{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestFeatureResolution) String() string {
@@ -195,7 +187,7 @@ func (*TestFeatureResolution) ProtoMessage() {}
 
 func (x *TestFeatureResolution) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -218,11 +210,9 @@ type RepeatedFieldEncoding struct {
 
 func (x *RepeatedFieldEncoding) Reset() {
 	*x = RepeatedFieldEncoding{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *RepeatedFieldEncoding) String() string {
@@ -233,7 +223,7 @@ func (*RepeatedFieldEncoding) ProtoMessage() {}
 
 func (x *RepeatedFieldEncoding) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -259,11 +249,9 @@ type TestAllExtensions_NestedMessage struct {
 
 func (x *TestAllExtensions_NestedMessage) Reset() {
 	*x = TestAllExtensions_NestedMessage{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[5]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllExtensions_NestedMessage) String() string {
@@ -274,7 +262,7 @@ func (*TestAllExtensions_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllExtensions_NestedMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_extension_proto_msgTypes[5]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

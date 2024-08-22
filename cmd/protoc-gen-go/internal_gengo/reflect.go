@@ -310,7 +310,7 @@ func genMessageReflectMethods(g *protogen.GeneratedFile, f *fileInfo, m *message
 	// ProtoReflect method.
 	g.P("func (x *", m.GoIdent, ") ProtoReflect() ", protoreflectPackage.Ident("Message"), " {")
 	g.P("mi := &", typesVar, "[", idx, "]")
-	g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " && x != nil {")
+	g.P("if x != nil {")
 	g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
 	g.P("if ms.LoadMessageInfo() == nil {")
 	g.P("ms.StoreMessageInfo(mi)")

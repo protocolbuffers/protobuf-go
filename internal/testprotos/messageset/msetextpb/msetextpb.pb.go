@@ -26,11 +26,9 @@ type Ext1 struct {
 
 func (x *Ext1) Reset() {
 	*x = Ext1{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Ext1) String() string {
@@ -41,7 +39,7 @@ func (*Ext1) ProtoMessage() {}
 
 func (x *Ext1) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -80,11 +78,9 @@ type Ext2 struct {
 
 func (x *Ext2) Reset() {
 	*x = Ext2{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Ext2) String() string {
@@ -95,7 +91,7 @@ func (*Ext2) ProtoMessage() {}
 
 func (x *Ext2) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -127,11 +123,9 @@ type ExtRequired struct {
 
 func (x *ExtRequired) Reset() {
 	*x = ExtRequired{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *ExtRequired) String() string {
@@ -142,7 +136,7 @@ func (*ExtRequired) ProtoMessage() {}
 
 func (x *ExtRequired) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -172,11 +166,9 @@ type ExtLargeNumber struct {
 
 func (x *ExtLargeNumber) Reset() {
 	*x = ExtLargeNumber{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *ExtLargeNumber) String() string {
@@ -187,7 +179,7 @@ func (*ExtLargeNumber) ProtoMessage() {}
 
 func (x *ExtLargeNumber) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_messageset_msetextpb_msetextpb_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

@@ -210,11 +210,9 @@ var (
 
 func (x *FieldTestMessage) Reset() {
 	*x = FieldTestMessage{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FieldTestMessage) String() string {
@@ -225,7 +223,7 @@ func (*FieldTestMessage) ProtoMessage() {}
 
 func (x *FieldTestMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1112,11 +1110,9 @@ type FieldTestMessage_OptionalGroup struct {
 
 func (x *FieldTestMessage_OptionalGroup) Reset() {
 	*x = FieldTestMessage_OptionalGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FieldTestMessage_OptionalGroup) String() string {
@@ -1127,7 +1123,7 @@ func (*FieldTestMessage_OptionalGroup) ProtoMessage() {}
 
 func (x *FieldTestMessage_OptionalGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1159,11 +1155,9 @@ type FieldTestMessage_RequiredGroup struct {
 
 func (x *FieldTestMessage_RequiredGroup) Reset() {
 	*x = FieldTestMessage_RequiredGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FieldTestMessage_RequiredGroup) String() string {
@@ -1174,7 +1168,7 @@ func (*FieldTestMessage_RequiredGroup) ProtoMessage() {}
 
 func (x *FieldTestMessage_RequiredGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1206,11 +1200,9 @@ type FieldTestMessage_RepeatedGroup struct {
 
 func (x *FieldTestMessage_RepeatedGroup) Reset() {
 	*x = FieldTestMessage_RepeatedGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FieldTestMessage_RepeatedGroup) String() string {
@@ -1221,7 +1213,7 @@ func (*FieldTestMessage_RepeatedGroup) ProtoMessage() {}
 
 func (x *FieldTestMessage_RepeatedGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1253,11 +1245,9 @@ type FieldTestMessage_OneofGroup struct {
 
 func (x *FieldTestMessage_OneofGroup) Reset() {
 	*x = FieldTestMessage_OneofGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[7]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FieldTestMessage_OneofGroup) String() string {
@@ -1268,7 +1258,7 @@ func (*FieldTestMessage_OneofGroup) ProtoMessage() {}
 
 func (x *FieldTestMessage_OneofGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[7]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1298,11 +1288,9 @@ type FieldTestMessage_Message struct {
 
 func (x *FieldTestMessage_Message) Reset() {
 	*x = FieldTestMessage_Message{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[8]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FieldTestMessage_Message) String() string {
@@ -1313,7 +1301,7 @@ func (*FieldTestMessage_Message) ProtoMessage() {}
 
 func (x *FieldTestMessage_Message) ProtoReflect() protoreflect.Message {
 	mi := &file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_msgTypes[8]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

@@ -22,11 +22,9 @@ type OtherRepeatedFieldEncoding struct {
 
 func (x *OtherRepeatedFieldEncoding) Reset() {
 	*x = OtherRepeatedFieldEncoding{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_extension2_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_extension2_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *OtherRepeatedFieldEncoding) String() string {
@@ -37,7 +35,7 @@ func (*OtherRepeatedFieldEncoding) ProtoMessage() {}
 
 func (x *OtherRepeatedFieldEncoding) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_extension2_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

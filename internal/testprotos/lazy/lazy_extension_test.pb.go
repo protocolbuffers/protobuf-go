@@ -168,11 +168,9 @@ type Holder struct {
 
 func (x *Holder) Reset() {
 	*x = Holder{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Holder) String() string {
@@ -183,7 +181,7 @@ func (*Holder) ProtoMessage() {}
 
 func (x *Holder) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -216,11 +214,9 @@ type Rabbit struct {
 
 func (x *Rabbit) Reset() {
 	*x = Rabbit{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Rabbit) String() string {
@@ -231,7 +227,7 @@ func (*Rabbit) ProtoMessage() {}
 
 func (x *Rabbit) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -263,11 +259,9 @@ type FlyingFox struct {
 
 func (x *FlyingFox) Reset() {
 	*x = FlyingFox{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *FlyingFox) String() string {
@@ -278,7 +272,7 @@ func (*FlyingFox) ProtoMessage() {}
 
 func (x *FlyingFox) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -311,11 +305,9 @@ type Tree struct {
 
 func (x *Tree) Reset() {
 	*x = Tree{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Tree) String() string {
@@ -326,7 +318,7 @@ func (*Tree) ProtoMessage() {}
 
 func (x *Tree) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -358,11 +350,9 @@ type Pipistrelle struct {
 
 func (x *Pipistrelle) Reset() {
 	*x = Pipistrelle{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Pipistrelle) String() string {
@@ -373,7 +363,7 @@ func (*Pipistrelle) ProtoMessage() {}
 
 func (x *Pipistrelle) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -405,11 +395,9 @@ type Pipistrelles struct {
 
 func (x *Pipistrelles) Reset() {
 	*x = Pipistrelles{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[5]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Pipistrelles) String() string {
@@ -420,7 +408,7 @@ func (*Pipistrelles) ProtoMessage() {}
 
 func (x *Pipistrelles) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[5]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -451,11 +439,9 @@ type BatNest struct {
 
 func (x *BatNest) Reset() {
 	*x = BatNest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[6]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *BatNest) String() string {
@@ -466,7 +452,7 @@ func (*BatNest) ProtoMessage() {}
 
 func (x *BatNest) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_lazy_lazy_extension_test_proto_msgTypes[6]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

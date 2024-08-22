@@ -413,11 +413,9 @@ type TestAllTypesProto3 struct {
 
 func (x *TestAllTypesProto3) Reset() {
 	*x = TestAllTypesProto3{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypesProto3) String() string {
@@ -428,7 +426,7 @@ func (*TestAllTypesProto3) ProtoMessage() {}
 
 func (x *TestAllTypesProto3) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1581,11 +1579,9 @@ type ForeignMessage struct {
 
 func (x *ForeignMessage) Reset() {
 	*x = ForeignMessage{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *ForeignMessage) String() string {
@@ -1596,7 +1592,7 @@ func (*ForeignMessage) ProtoMessage() {}
 
 func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1626,11 +1622,9 @@ type NullHypothesisProto3 struct {
 
 func (x *NullHypothesisProto3) Reset() {
 	*x = NullHypothesisProto3{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *NullHypothesisProto3) String() string {
@@ -1641,7 +1635,7 @@ func (*NullHypothesisProto3) ProtoMessage() {}
 
 func (x *NullHypothesisProto3) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1664,11 +1658,9 @@ type EnumOnlyProto3 struct {
 
 func (x *EnumOnlyProto3) Reset() {
 	*x = EnumOnlyProto3{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *EnumOnlyProto3) String() string {
@@ -1679,7 +1671,7 @@ func (*EnumOnlyProto3) ProtoMessage() {}
 
 func (x *EnumOnlyProto3) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1705,11 +1697,9 @@ type TestAllTypesProto3_NestedMessage struct {
 
 func (x *TestAllTypesProto3_NestedMessage) Reset() {
 	*x = TestAllTypesProto3_NestedMessage{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypesProto3_NestedMessage) String() string {
@@ -1720,7 +1710,7 @@ func (*TestAllTypesProto3_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypesProto3_NestedMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_test_messages_proto3_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

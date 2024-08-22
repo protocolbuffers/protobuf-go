@@ -234,11 +234,9 @@ func (x *Struct) UnmarshalJSON(b []byte) error {
 
 func (x *Struct) Reset() {
 	*x = Struct{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_struct_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_struct_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Struct) String() string {
@@ -249,7 +247,7 @@ func (*Struct) ProtoMessage() {}
 
 func (x *Struct) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_struct_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -457,11 +455,9 @@ func (x *Value) UnmarshalJSON(b []byte) error {
 
 func (x *Value) Reset() {
 	*x = Value{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_struct_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_struct_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Value) String() string {
@@ -472,7 +468,7 @@ func (*Value) ProtoMessage() {}
 
 func (x *Value) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_struct_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -629,11 +625,9 @@ func (x *ListValue) UnmarshalJSON(b []byte) error {
 
 func (x *ListValue) Reset() {
 	*x = ListValue{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_struct_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_struct_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *ListValue) String() string {
@@ -644,7 +638,7 @@ func (*ListValue) ProtoMessage() {}
 
 func (x *ListValue) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_struct_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

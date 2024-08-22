@@ -54,11 +54,9 @@ type SourceContext struct {
 
 func (x *SourceContext) Reset() {
 	*x = SourceContext{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_source_context_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_source_context_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *SourceContext) String() string {
@@ -69,7 +67,7 @@ func (*SourceContext) ProtoMessage() {}
 
 func (x *SourceContext) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_source_context_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

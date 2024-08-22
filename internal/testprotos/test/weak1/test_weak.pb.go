@@ -24,11 +24,9 @@ type WeakImportMessage1 struct {
 
 func (x *WeakImportMessage1) Reset() {
 	*x = WeakImportMessage1{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_test_weak1_test_weak_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_test_weak1_test_weak_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *WeakImportMessage1) String() string {
@@ -39,7 +37,7 @@ func (*WeakImportMessage1) ProtoMessage() {}
 
 func (x *WeakImportMessage1) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_test_weak1_test_weak_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

@@ -81,11 +81,9 @@ type Article struct {
 
 func (x *Article) Reset() {
 	*x = Article{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_news_news_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_news_news_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Article) String() string {
@@ -96,7 +94,7 @@ func (*Article) ProtoMessage() {}
 
 func (x *Article) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_news_news_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -171,11 +169,9 @@ type BinaryAttachment struct {
 
 func (x *BinaryAttachment) Reset() {
 	*x = BinaryAttachment{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_news_news_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_news_news_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *BinaryAttachment) String() string {
@@ -186,7 +182,7 @@ func (*BinaryAttachment) ProtoMessage() {}
 
 func (x *BinaryAttachment) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_news_news_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -226,11 +222,9 @@ type KeyValueAttachment struct {
 
 func (x *KeyValueAttachment) Reset() {
 	*x = KeyValueAttachment{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_news_news_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_news_news_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *KeyValueAttachment) String() string {
@@ -241,7 +235,7 @@ func (*KeyValueAttachment) ProtoMessage() {}
 
 func (x *KeyValueAttachment) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_news_news_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

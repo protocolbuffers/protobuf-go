@@ -362,11 +362,9 @@ const (
 
 func (x *EnumContainerMessage1) Reset() {
 	*x = EnumContainerMessage1{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *EnumContainerMessage1) String() string {
@@ -377,7 +375,7 @@ func (*EnumContainerMessage1) ProtoMessage() {}
 
 func (x *EnumContainerMessage1) ProtoReflect() protoreflect.Message {
 	mi := &file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -414,11 +412,9 @@ type EnumContainerMessage1_EnumContainerMessage2 struct {
 
 func (x *EnumContainerMessage1_EnumContainerMessage2) Reset() {
 	*x = EnumContainerMessage1_EnumContainerMessage2{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *EnumContainerMessage1_EnumContainerMessage2) String() string {
@@ -429,7 +425,7 @@ func (*EnumContainerMessage1_EnumContainerMessage2) ProtoMessage() {}
 
 func (x *EnumContainerMessage1_EnumContainerMessage2) ProtoReflect() protoreflect.Message {
 	mi := &file_cmd_protoc_gen_go_testdata_proto2_enum_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

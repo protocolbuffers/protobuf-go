@@ -254,11 +254,9 @@ func (x *Timestamp) check() uint {
 
 func (x *Timestamp) Reset() {
 	*x = Timestamp{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_timestamp_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_timestamp_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Timestamp) String() string {
@@ -269,7 +267,7 @@ func (*Timestamp) ProtoMessage() {}
 
 func (x *Timestamp) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_timestamp_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

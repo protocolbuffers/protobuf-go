@@ -184,11 +184,9 @@ type Message1 struct {
 
 func (x *Message1) Reset() {
 	*x = Message1{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_registry_test_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_registry_test_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Message1) String() string {
@@ -199,7 +197,7 @@ func (*Message1) ProtoMessage() {}
 
 func (x *Message1) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_registry_test_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -222,11 +220,9 @@ type Message2 struct {
 
 func (x *Message2) Reset() {
 	*x = Message2{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_registry_test_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_registry_test_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Message2) String() string {
@@ -237,7 +233,7 @@ func (*Message2) ProtoMessage() {}
 
 func (x *Message2) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_registry_test_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -260,11 +256,9 @@ type Message3 struct {
 
 func (x *Message3) Reset() {
 	*x = Message3{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_registry_test_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_registry_test_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Message3) String() string {
@@ -275,7 +269,7 @@ func (*Message3) ProtoMessage() {}
 
 func (x *Message3) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_registry_test_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -300,11 +294,9 @@ type Message4 struct {
 
 func (x *Message4) Reset() {
 	*x = Message4{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_registry_test_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_registry_test_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Message4) String() string {
@@ -315,7 +307,7 @@ func (*Message4) ProtoMessage() {}
 
 func (x *Message4) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_registry_test_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

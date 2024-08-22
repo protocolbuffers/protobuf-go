@@ -39,11 +39,9 @@ type SixteenRequired struct {
 
 func (x *SixteenRequired) Reset() {
 	*x = SixteenRequired{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_benchmarks_micro_micro_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_benchmarks_micro_micro_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *SixteenRequired) String() string {
@@ -54,7 +52,7 @@ func (*SixteenRequired) ProtoMessage() {}
 
 func (x *SixteenRequired) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_benchmarks_micro_micro_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

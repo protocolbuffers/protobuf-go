@@ -230,11 +230,9 @@ type TestAllTypesEdition2023 struct {
 
 func (x *TestAllTypesEdition2023) Reset() {
 	*x = TestAllTypesEdition2023{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypesEdition2023) String() string {
@@ -245,7 +243,7 @@ func (*TestAllTypesEdition2023) ProtoMessage() {}
 
 func (x *TestAllTypesEdition2023) ProtoReflect() protoreflect.Message {
 	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1042,11 +1040,9 @@ type ForeignMessageEdition2023 struct {
 
 func (x *ForeignMessageEdition2023) Reset() {
 	*x = ForeignMessageEdition2023{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *ForeignMessageEdition2023) String() string {
@@ -1057,7 +1053,7 @@ func (*ForeignMessageEdition2023) ProtoMessage() {}
 
 func (x *ForeignMessageEdition2023) ProtoReflect() protoreflect.Message {
 	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1089,11 +1085,9 @@ type GroupLikeType struct {
 
 func (x *GroupLikeType) Reset() {
 	*x = GroupLikeType{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *GroupLikeType) String() string {
@@ -1104,7 +1098,7 @@ func (*GroupLikeType) ProtoMessage() {}
 
 func (x *GroupLikeType) ProtoReflect() protoreflect.Message {
 	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1137,11 +1131,9 @@ type TestAllTypesEdition2023_NestedMessage struct {
 
 func (x *TestAllTypesEdition2023_NestedMessage) Reset() {
 	*x = TestAllTypesEdition2023_NestedMessage{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypesEdition2023_NestedMessage) String() string {
@@ -1152,7 +1144,7 @@ func (*TestAllTypesEdition2023_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypesEdition2023_NestedMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1193,11 +1185,9 @@ type TestAllTypesEdition2023_GroupLikeType struct {
 
 func (x *TestAllTypesEdition2023_GroupLikeType) Reset() {
 	*x = TestAllTypesEdition2023_GroupLikeType{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[23]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypesEdition2023_GroupLikeType) String() string {
@@ -1208,7 +1198,7 @@ func (*TestAllTypesEdition2023_GroupLikeType) ProtoMessage() {}
 
 func (x *TestAllTypesEdition2023_GroupLikeType) ProtoReflect() protoreflect.Message {
 	mi := &file_conformance_test_protos_test_messages_edition2023_proto_msgTypes[23]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

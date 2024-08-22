@@ -47,11 +47,9 @@ type Legacy struct {
 
 func (x *Legacy) Reset() {
 	*x = Legacy{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_legacy_legacy_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_legacy_legacy_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Legacy) String() string {
@@ -62,7 +60,7 @@ func (*Legacy) ProtoMessage() {}
 
 func (x *Legacy) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_legacy_legacy_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

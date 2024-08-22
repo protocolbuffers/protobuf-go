@@ -368,11 +368,9 @@ func (x *Any) UnmarshalNew() (proto.Message, error) {
 
 func (x *Any) Reset() {
 	*x = Any{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_any_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_google_protobuf_any_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *Any) String() string {
@@ -383,7 +381,7 @@ func (*Any) ProtoMessage() {}
 
 func (x *Any) ProtoReflect() protoreflect.Message {
 	mi := &file_google_protobuf_any_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

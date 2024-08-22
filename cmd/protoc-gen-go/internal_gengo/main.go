@@ -537,11 +537,9 @@ func genMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInf
 	// Reset method.
 	g.P("func (x *", m.GoIdent, ") Reset() {")
 	g.P("*x = ", m.GoIdent, "{}")
-	g.P("if ", protoimplPackage.Ident("UnsafeEnabled"), " {")
 	g.P("mi := &", messageTypesVarName(f), "[", f.allMessagesByPtr[m], "]")
 	g.P("ms := ", protoimplPackage.Ident("X"), ".MessageStateOf(", protoimplPackage.Ident("Pointer"), "(x))")
 	g.P("ms.StoreMessageInfo(mi)")
-	g.P("}")
 	g.P("}")
 	g.P()
 

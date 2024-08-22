@@ -75,11 +75,9 @@ type ImportMessage struct {
 
 func (x *ImportMessage) Reset() {
 	*x = ImportMessage{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_test_test_import_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_test_test_import_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *ImportMessage) String() string {
@@ -90,7 +88,7 @@ func (*ImportMessage) ProtoMessage() {}
 
 func (x *ImportMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_test_test_import_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

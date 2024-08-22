@@ -23,11 +23,9 @@ type MessageSet struct {
 
 func (x *MessageSet) Reset() {
 	*x = MessageSet{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *MessageSet) String() string {
@@ -38,7 +36,7 @@ func (*MessageSet) ProtoMessage() {}
 
 func (x *MessageSet) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -63,11 +61,9 @@ type MessageSetContainer struct {
 
 func (x *MessageSetContainer) Reset() {
 	*x = MessageSetContainer{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *MessageSetContainer) String() string {
@@ -78,7 +74,7 @@ func (*MessageSetContainer) ProtoMessage() {}
 
 func (x *MessageSetContainer) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_messageset_messagesetpb_message_set_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)

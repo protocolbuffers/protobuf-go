@@ -262,11 +262,9 @@ var (
 
 func (x *TestAllTypes) Reset() {
 	*x = TestAllTypes{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypes) String() string {
@@ -277,7 +275,7 @@ func (*TestAllTypes) ProtoMessage() {}
 
 func (x *TestAllTypes) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1098,11 +1096,9 @@ type ForeignMessage struct {
 
 func (x *ForeignMessage) Reset() {
 	*x = ForeignMessage{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *ForeignMessage) String() string {
@@ -1113,7 +1109,7 @@ func (*ForeignMessage) ProtoMessage() {}
 
 func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1152,11 +1148,9 @@ type TestRequired struct {
 
 func (x *TestRequired) Reset() {
 	*x = TestRequired{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestRequired) String() string {
@@ -1167,7 +1161,7 @@ func (*TestRequired) ProtoMessage() {}
 
 func (x *TestRequired) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1205,11 +1199,9 @@ type TestRequiredForeign struct {
 
 func (x *TestRequiredForeign) Reset() {
 	*x = TestRequiredForeign{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestRequiredForeign) String() string {
@@ -1220,7 +1212,7 @@ func (*TestRequiredForeign) ProtoMessage() {}
 
 func (x *TestRequiredForeign) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1291,11 +1283,9 @@ type TestRequiredGroupFields struct {
 
 func (x *TestRequiredGroupFields) Reset() {
 	*x = TestRequiredGroupFields{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestRequiredGroupFields) String() string {
@@ -1306,7 +1296,7 @@ func (*TestRequiredGroupFields) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1358,11 +1348,9 @@ type TestPackedTypes struct {
 
 func (x *TestPackedTypes) Reset() {
 	*x = TestPackedTypes{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[5]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestPackedTypes) String() string {
@@ -1373,7 +1361,7 @@ func (*TestPackedTypes) ProtoMessage() {}
 
 func (x *TestPackedTypes) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[5]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1495,11 +1483,9 @@ type TestPackedExtensions struct {
 
 func (x *TestPackedExtensions) Reset() {
 	*x = TestPackedExtensions{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[6]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestPackedExtensions) String() string {
@@ -1510,7 +1496,7 @@ func (*TestPackedExtensions) ProtoMessage() {}
 
 func (x *TestPackedExtensions) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[6]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1536,11 +1522,9 @@ type TestAllTypes_NestedMessage struct {
 
 func (x *TestAllTypes_NestedMessage) Reset() {
 	*x = TestAllTypes_NestedMessage{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[7]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypes_NestedMessage) String() string {
@@ -1551,7 +1535,7 @@ func (*TestAllTypes_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[7]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1592,11 +1576,9 @@ type TestAllTypes_OptionalGroup struct {
 
 func (x *TestAllTypes_OptionalGroup) Reset() {
 	*x = TestAllTypes_OptionalGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[8]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypes_OptionalGroup) String() string {
@@ -1607,7 +1589,7 @@ func (*TestAllTypes_OptionalGroup) ProtoMessage() {}
 
 func (x *TestAllTypes_OptionalGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[8]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1654,11 +1636,9 @@ type TestAllTypes_RepeatedGroup struct {
 
 func (x *TestAllTypes_RepeatedGroup) Reset() {
 	*x = TestAllTypes_RepeatedGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[9]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypes_RepeatedGroup) String() string {
@@ -1669,7 +1649,7 @@ func (*TestAllTypes_RepeatedGroup) ProtoMessage() {}
 
 func (x *TestAllTypes_RepeatedGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[9]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1709,11 +1689,9 @@ type TestAllTypes_OneofGroup struct {
 
 func (x *TestAllTypes_OneofGroup) Reset() {
 	*x = TestAllTypes_OneofGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[27]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestAllTypes_OneofGroup) String() string {
@@ -1724,7 +1702,7 @@ func (*TestAllTypes_OneofGroup) ProtoMessage() {}
 
 func (x *TestAllTypes_OneofGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[27]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1763,11 +1741,9 @@ type TestRequiredGroupFields_OptionalGroup struct {
 
 func (x *TestRequiredGroupFields_OptionalGroup) Reset() {
 	*x = TestRequiredGroupFields_OptionalGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[29]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestRequiredGroupFields_OptionalGroup) String() string {
@@ -1778,7 +1754,7 @@ func (*TestRequiredGroupFields_OptionalGroup) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields_OptionalGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[29]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
@@ -1810,11 +1786,9 @@ type TestRequiredGroupFields_RepeatedGroup struct {
 
 func (x *TestRequiredGroupFields_RepeatedGroup) Reset() {
 	*x = TestRequiredGroupFields_RepeatedGroup{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[30]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
+	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
 }
 
 func (x *TestRequiredGroupFields_RepeatedGroup) String() string {
@@ -1825,7 +1799,7 @@ func (*TestRequiredGroupFields_RepeatedGroup) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields_RepeatedGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_testprotos_testeditions_test_proto_msgTypes[30]
-	if protoimpl.UnsafeEnabled && x != nil {
+	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
 			ms.StoreMessageInfo(mi)
