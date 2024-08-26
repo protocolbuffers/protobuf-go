@@ -234,3 +234,9 @@ message KnownTypes {
 
   optional google.protobuf.FieldMask opt_fieldmask = 40;
 }
+
+// Message contains reserved field name.
+message ReservedFieldNames {
+  reserved "reserved_field";
+  optional int32 opt_int32 = 1;
+}

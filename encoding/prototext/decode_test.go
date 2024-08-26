@@ -307,6 +307,16 @@ s_string: "谷歌"
 		inputText:    "unknown_field: 456",
 		wantErr:      "unknown field",
 	}, {
+		desc:         "proto2 message contains reserved field name",
+		inputMessage: &pb2.ReservedFieldNames{},
+		inputText:    "reserved_field: 123 reserved_field { nested: 123 } opt_int32: 456",
+		wantMessage:  &pb2.ReservedFieldNames{OptInt32: proto.Int32(456)},
+	}, {
+		desc:         "proto3 message contains reserved field name",
+		inputMessage: &pb3.ReservedFieldNames{},
+		inputText:    "reserved_field: 123 reserved_field { nested: 123 } opt_int32: 456",
+		wantMessage:  &pb3.ReservedFieldNames{OptInt32: 456},
+	}, {
 		desc:         "proto2 message contains discarded unknown field",
 		umo:          prototext.UnmarshalOptions{DiscardUnknown: true},
 		inputMessage: &pb2.Scalars{},

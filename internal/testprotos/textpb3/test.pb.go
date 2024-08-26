@@ -885,6 +885,52 @@ func (x *JSONNames) GetSString() string {
 	return ""
 }
 
+// Message contains reserved field name.
+type ReservedFieldNames struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	OptInt32 int32 `protobuf:"varint,1,opt,name=opt_int32,json=optInt32,proto3" json:"opt_int32,omitempty"`
+}
+
+func (x *ReservedFieldNames) Reset() {
+	*x = ReservedFieldNames{}
+	mi := &file_internal_testprotos_textpb3_test_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReservedFieldNames) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReservedFieldNames) ProtoMessage() {}
+
+func (x *ReservedFieldNames) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_testprotos_textpb3_test_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReservedFieldNames.ProtoReflect.Descriptor instead.
+func (*ReservedFieldNames) Descriptor() ([]byte, []int) {
+	return file_internal_testprotos_textpb3_test_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ReservedFieldNames) GetOptInt32() int32 {
+	if x != nil {
+		return x.OptInt32
+	}
+	return 0
+}
+
 var File_internal_testprotos_textpb3_test_proto protoreflect.FileDescriptor
 
 var file_internal_testprotos_textpb3_test_proto_rawDesc = []byte{
@@ -1043,14 +1089,18 @@ var file_internal_testprotos_textpb3_test_proto_rawDesc = []byte{
 	0x6f, 0x66, 0x73, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x26,
 	0x0a, 0x09, 0x4a, 0x53, 0x4f, 0x4e, 0x4e, 0x61, 0x6d, 0x65, 0x73, 0x12, 0x19, 0x0a, 0x08, 0x73,
 	0x5f, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x66,
-	0x6f, 0x6f, 0x5f, 0x62, 0x61, 0x72, 0x2a, 0x2b, 0x0a, 0x04, 0x45, 0x6e, 0x75, 0x6d, 0x12, 0x08,
-	0x0a, 0x04, 0x5a, 0x45, 0x52, 0x4f, 0x10, 0x00, 0x12, 0x07, 0x0a, 0x03, 0x4f, 0x4e, 0x45, 0x10,
-	0x01, 0x12, 0x07, 0x0a, 0x03, 0x54, 0x57, 0x4f, 0x10, 0x02, 0x12, 0x07, 0x0a, 0x03, 0x54, 0x45,
-	0x4e, 0x10, 0x0a, 0x42, 0x38, 0x5a, 0x36, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x67, 0x6f,
-	0x6c, 0x61, 0x6e, 0x67, 0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
-	0x66, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x73, 0x2f, 0x74, 0x65, 0x78, 0x74, 0x70, 0x62, 0x33, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x6f, 0x5f, 0x62, 0x61, 0x72, 0x22, 0x41, 0x0a, 0x12, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76,
+	0x65, 0x64, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4e, 0x61, 0x6d, 0x65, 0x73, 0x12, 0x1b, 0x0a, 0x09,
+	0x6f, 0x70, 0x74, 0x5f, 0x69, 0x6e, 0x74, 0x33, 0x32, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x08, 0x6f, 0x70, 0x74, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x52, 0x0e, 0x72, 0x65, 0x73, 0x65, 0x72,
+	0x76, 0x65, 0x64, 0x5f, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x2a, 0x2b, 0x0a, 0x04, 0x45, 0x6e, 0x75,
+	0x6d, 0x12, 0x08, 0x0a, 0x04, 0x5a, 0x45, 0x52, 0x4f, 0x10, 0x00, 0x12, 0x07, 0x0a, 0x03, 0x4f,
+	0x4e, 0x45, 0x10, 0x01, 0x12, 0x07, 0x0a, 0x03, 0x54, 0x57, 0x4f, 0x10, 0x02, 0x12, 0x07, 0x0a,
+	0x03, 0x54, 0x45, 0x4e, 0x10, 0x0a, 0x42, 0x38, 0x5a, 0x36, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65,
+	0x2e, 0x67, 0x6f, 0x6c, 0x61, 0x6e, 0x67, 0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x62, 0x75, 0x66, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x74, 0x65,
+	0x73, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x73, 0x2f, 0x74, 0x65, 0x78, 0x74, 0x70, 0x62, 0x33,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1066,24 +1116,25 @@ func file_internal_testprotos_textpb3_test_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_testprotos_textpb3_test_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_internal_testprotos_textpb3_test_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_internal_testprotos_textpb3_test_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_internal_testprotos_textpb3_test_proto_goTypes = []any{
-	(Enum)(0),              // 0: pb3.Enum
-	(Enums_NestedEnum)(0),  // 1: pb3.Enums.NestedEnum
-	(*Scalars)(nil),        // 2: pb3.Scalars
-	(*Repeats)(nil),        // 3: pb3.Repeats
-	(*Proto3Optional)(nil), // 4: pb3.Proto3Optional
-	(*Enums)(nil),          // 5: pb3.Enums
-	(*Nests)(nil),          // 6: pb3.Nests
-	(*Nested)(nil),         // 7: pb3.Nested
-	(*Oneofs)(nil),         // 8: pb3.Oneofs
-	(*Maps)(nil),           // 9: pb3.Maps
-	(*JSONNames)(nil),      // 10: pb3.JSONNames
-	nil,                    // 11: pb3.Maps.Int32ToStrEntry
-	nil,                    // 12: pb3.Maps.BoolToUint32Entry
-	nil,                    // 13: pb3.Maps.Uint64ToEnumEntry
-	nil,                    // 14: pb3.Maps.StrToNestedEntry
-	nil,                    // 15: pb3.Maps.StrToOneofsEntry
+	(Enum)(0),                  // 0: pb3.Enum
+	(Enums_NestedEnum)(0),      // 1: pb3.Enums.NestedEnum
+	(*Scalars)(nil),            // 2: pb3.Scalars
+	(*Repeats)(nil),            // 3: pb3.Repeats
+	(*Proto3Optional)(nil),     // 4: pb3.Proto3Optional
+	(*Enums)(nil),              // 5: pb3.Enums
+	(*Nests)(nil),              // 6: pb3.Nests
+	(*Nested)(nil),             // 7: pb3.Nested
+	(*Oneofs)(nil),             // 8: pb3.Oneofs
+	(*Maps)(nil),               // 9: pb3.Maps
+	(*JSONNames)(nil),          // 10: pb3.JSONNames
+	(*ReservedFieldNames)(nil), // 11: pb3.ReservedFieldNames
+	nil,                        // 12: pb3.Maps.Int32ToStrEntry
+	nil,                        // 13: pb3.Maps.BoolToUint32Entry
+	nil,                        // 14: pb3.Maps.Uint64ToEnumEntry
+	nil,                        // 15: pb3.Maps.StrToNestedEntry
+	nil,                        // 16: pb3.Maps.StrToOneofsEntry
 }
 var file_internal_testprotos_textpb3_test_proto_depIdxs = []int32{
 	0,  // 0: pb3.Proto3Optional.opt_enum:type_name -> pb3.Enum
@@ -1094,11 +1145,11 @@ var file_internal_testprotos_textpb3_test_proto_depIdxs = []int32{
 	7,  // 5: pb3.Nested.s_nested:type_name -> pb3.Nested
 	0,  // 6: pb3.Oneofs.oneof_enum:type_name -> pb3.Enum
 	7,  // 7: pb3.Oneofs.oneof_nested:type_name -> pb3.Nested
-	11, // 8: pb3.Maps.int32_to_str:type_name -> pb3.Maps.Int32ToStrEntry
-	12, // 9: pb3.Maps.bool_to_uint32:type_name -> pb3.Maps.BoolToUint32Entry
-	13, // 10: pb3.Maps.uint64_to_enum:type_name -> pb3.Maps.Uint64ToEnumEntry
-	14, // 11: pb3.Maps.str_to_nested:type_name -> pb3.Maps.StrToNestedEntry
-	15, // 12: pb3.Maps.str_to_oneofs:type_name -> pb3.Maps.StrToOneofsEntry
+	12, // 8: pb3.Maps.int32_to_str:type_name -> pb3.Maps.Int32ToStrEntry
+	13, // 9: pb3.Maps.bool_to_uint32:type_name -> pb3.Maps.BoolToUint32Entry
+	14, // 10: pb3.Maps.uint64_to_enum:type_name -> pb3.Maps.Uint64ToEnumEntry
+	15, // 11: pb3.Maps.str_to_nested:type_name -> pb3.Maps.StrToNestedEntry
+	16, // 12: pb3.Maps.str_to_oneofs:type_name -> pb3.Maps.StrToOneofsEntry
 	0,  // 13: pb3.Maps.Uint64ToEnumEntry.value:type_name -> pb3.Enum
 	7,  // 14: pb3.Maps.StrToNestedEntry.value:type_name -> pb3.Nested
 	8,  // 15: pb3.Maps.StrToOneofsEntry.value:type_name -> pb3.Oneofs
@@ -1126,7 +1177,7 @@ func file_internal_testprotos_textpb3_test_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_internal_testprotos_textpb3_test_proto_rawDesc,
 			NumEnums:      2,
-			NumMessages:   14,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

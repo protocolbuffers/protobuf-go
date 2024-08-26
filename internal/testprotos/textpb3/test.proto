@@ -114,3 +114,9 @@ message Maps {
 message JSONNames {
   string s_string = 1 [json_name = "foo_bar"];
 }
+
+// Message contains reserved field name.
+message ReservedFieldNames {
+  reserved "reserved_field";
+  int32 opt_int32 = 1;
+}
