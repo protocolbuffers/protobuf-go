@@ -12,6 +12,7 @@ import weak "internal/testprotos/test/weak1/test_weak.proto";
 import weak "internal/testprotos/test/weak2/test_weak.proto";
 
 import "internal/testprotos/enums/enums.proto";
+import "internal/testprotos/required/required.proto";
 import "internal/testprotos/test/test_import.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/test";
@@ -152,6 +153,13 @@ message TestDeprecatedMessage {
   }
   oneof deprecated_oneof {
     int32 deprecated_oneof_field = 2 [deprecated = true];
+  }
+}
+
+message TestOneofWithRequired {
+  oneof oneof_field {
+    uint32 oneof_uint32 = 1;
+    goproto.proto.testrequired.Message oneof_required = 2;
   }
 }
 

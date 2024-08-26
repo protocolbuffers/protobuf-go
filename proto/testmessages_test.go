@@ -885,6 +885,14 @@ var testValidMessages = []testProto{
 	},
 
 	{
+		desc: "oneof with required message and uint32",
+		decodeTo: makeMessages(protobuild.Message{
+			"oneof_uint32": 1111,
+		}, &testpb.TestOneofWithRequired{}),
+		wire: protopack.Message{protopack.Tag{1, protopack.VarintType}, protopack.Varint(1111)}.Marshal(),
+	},
+
+	{
 		desc: "oneof (message)",
 		decodeTo: makeMessages(protobuild.Message{
 			"oneof_nested_message": protobuild.Message{
