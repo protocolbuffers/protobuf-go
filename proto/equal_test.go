@@ -1004,6 +1004,7 @@ func TestEqual(t *testing.T) {
 }
 
 func BenchmarkEqualWithSmallEmpty(b *testing.B) {
+	b.ReportAllocs()
 	x := &testpb.ForeignMessage{}
 	y := &testpb.ForeignMessage{}
 
@@ -1014,6 +1015,7 @@ func BenchmarkEqualWithSmallEmpty(b *testing.B) {
 }
 
 func BenchmarkEqualWithIdenticalPtrEmpty(b *testing.B) {
+	b.ReportAllocs()
 	x := &testpb.ForeignMessage{}
 
 	b.ResetTimer()
@@ -1023,8 +1025,31 @@ func BenchmarkEqualWithIdenticalPtrEmpty(b *testing.B) {
 }
 
 func BenchmarkEqualWithLargeEmpty(b *testing.B) {
-	x := &testpb.TestAllTypes{}
-	y := &testpb.TestAllTypes{}
+	b.ReportAllocs()
+	x := &testpb.TestManyMessageFieldsMessage{
+		F1:  makeNested(2),
+		F10: makeNested(2),
+		F20: makeNested(2),
+		F30: makeNested(2),
+		F40: makeNested(2),
+		F50: makeNested(2),
+		F60: makeNested(2),
+		F70: makeNested(2),
+		F80: makeNested(2),
+		F90: makeNested(2),
+	}
+	y := &testpb.TestManyMessageFieldsMessage{
+		F1:  makeNested(2),
+		F10: makeNested(2),
+		F20: makeNested(2),
+		F30: makeNested(2),
+		F40: makeNested(2),
+		F50: makeNested(2),
+		F60: makeNested(2),
+		F70: makeNested(2),
+		F80: makeNested(2),
+		F90: makeNested(2),
+	}
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1044,6 +1069,7 @@ func makeNested(depth int) *testpb.TestAllTypes {
 }
 
 func BenchmarkEqualWithDeeplyNestedEqual(b *testing.B) {
+	b.ReportAllocs()
 	x := makeNested(20)
 	y := makeNested(20)
 
@@ -1054,6 +1080,7 @@ func BenchmarkEqualWithDeeplyNestedEqual(b *testing.B) {
 }
 
 func BenchmarkEqualWithDeeplyNestedDifferent(b *testing.B) {
+	b.ReportAllocs()
 	x := makeNested(20)
 	y := makeNested(21)
 
@@ -1064,6 +1091,7 @@ func BenchmarkEqualWithDeeplyNestedDifferent(b *testing.B) {
 }
 
 func BenchmarkEqualWithDeeplyNestedIdenticalPtr(b *testing.B) {
+	b.ReportAllocs()
 	x := makeNested(20)
 
 	b.ResetTimer()
