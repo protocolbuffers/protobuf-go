@@ -11,7 +11,13 @@ option go_package = "google.golang.org/protobuf/internal/testprotos/messageset/m
 message MessageSet {
   option message_set_wire_format = true;
 
-  extensions 4 to max;
+  extensions 4 to 529999999;
+  extensions 530000000 to max
+  [declaration = {
+    number: 536870912
+    full_name: ".goproto.proto.messageset.ExtLargeNumber.message_set_extension"
+    type: ".goproto.proto.messageset.ExtLargeNumber"
+  }];
 }
 
 message MessageSetContainer {
