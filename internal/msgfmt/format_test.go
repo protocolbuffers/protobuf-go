@@ -20,7 +20,7 @@ import (
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	textpb "google.golang.org/protobuf/internal/testprotos/textpb2"
 	dynpb "google.golang.org/protobuf/types/dynamicpb"
-	anypb "google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/anypb"
 	durpb "google.golang.org/protobuf/types/known/durationpb"
 	tspb "google.golang.org/protobuf/types/known/timestamppb"
 	wpb "google.golang.org/protobuf/types/known/wrapperspb"

@@ -17,8 +17,8 @@ import (
 	"google.golang.org/protobuf/testing/protocmp"
 
 	newspb "google.golang.org/protobuf/internal/testprotos/news"
-	anypb "google.golang.org/protobuf/types/known/anypb"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func mustMarshal(m proto.Message) []byte {

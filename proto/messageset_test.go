@@ -10,8 +10,8 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/testing/protopack"
 
-	messagesetpb "google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
-	msetextpb "google.golang.org/protobuf/internal/testprotos/messageset/msetextpb"
+	"google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
+	"google.golang.org/protobuf/internal/testprotos/messageset/msetextpb"
 )
 
 func init() {
