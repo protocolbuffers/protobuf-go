@@ -98,7 +98,7 @@ func (f *ExtensionField) canLazy(xt protoreflect.ExtensionType) bool {
 	return false
 }
 
-// isUnexpandedLazy returns true if the ExensionField is lazy and not
+// isUnexpandedLazy returns true if the ExtensionField is lazy and not
 // yet expanded, which means it's present and already checked for
 // initialized required fields.
 func (f *ExtensionField) isUnexpandedLazy() bool {

@@ -5,7 +5,7 @@
 // Package filedesc provides functionality for constructing descriptors.
 //
 // The types in this package implement interfaces in the protoreflect package
-// related to protobuf descripriptors.
+// related to protobuf descriptors.
 package filedesc
 
 import (
@@ -40,7 +40,7 @@ type Builder struct {
 		protoregistry.ExtensionTypeResolver
 	}
 
-	// FileRegistry is use to lookup file, enum, and message dependencies.
+	// FileRegistry is used to lookup file, enum, and message dependencies.
 	// Once constructed, the file descriptor is registered here.
 	// If nil, it uses protoregistry.GlobalFiles.
 	FileRegistry interface {

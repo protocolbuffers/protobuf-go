@@ -1024,7 +1024,7 @@ func genMessageKnownFunctions(g *protogen.GeneratedFile, f *fileInfo, m *message
 		g.P()
 
 		g.P("// hasPathPrefix is like strings.HasPrefix, but further checks for either")
-		g.P("// an exact matche or that the prefix is delimited by a dot.")
+		g.P("// an exact match or that the prefix is delimited by a dot.")
 		g.P("func hasPathPrefix(path, prefix string) bool {")
 		g.P("	return ", stringsPackage.Ident("HasPrefix"), "(path, prefix) && (len(path) == len(prefix) || path[len(prefix)] == '.')")
 		g.P("}")

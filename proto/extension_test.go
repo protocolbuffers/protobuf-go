@@ -394,13 +394,13 @@ func TestFeatureResolution(t *testing.T) {
 		wantPacked bool
 	}{
 		{testeditionspb.E_GlobalExpandedExtension, false},
-		{testeditionspb.E_GlobalPackedExtensionOverriden, true},
+		{testeditionspb.E_GlobalPackedExtensionOverridden, true},
 		{testeditionspb.E_RepeatedFieldEncoding_MessageExpandedExtension, false},
-		{testeditionspb.E_RepeatedFieldEncoding_MessagePackedExtensionOverriden, true},
-		{testeditionspb.E_OtherFileGlobalExpandedExtensionOverriden, false},
+		{testeditionspb.E_RepeatedFieldEncoding_MessagePackedExtensionOverridden, true},
+		{testeditionspb.E_OtherFileGlobalExpandedExtensionOverridden, false},
 		{testeditionspb.E_OtherFileGlobalPackedExtension, true},
 		{testeditionspb.E_OtherRepeatedFieldEncoding_OtherFileMessagePackedExtension, true},
-		{testeditionspb.E_OtherRepeatedFieldEncoding_OtherFileMessageExpandedExtensionOverriden, false},
+		{testeditionspb.E_OtherRepeatedFieldEncoding_OtherFileMessageExpandedExtensionOverridden, false},
 	} {
 		if got, want := tc.input.TypeDescriptor().IsPacked(), tc.wantPacked; got != want {
 			t.Errorf("%v.IsPacked() = %v, want %v", tc.input.TypeDescriptor().FullName(), got, want)

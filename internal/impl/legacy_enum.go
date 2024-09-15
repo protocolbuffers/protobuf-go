@@ -32,7 +32,7 @@ func legacyEnumName(ed protoreflect.EnumDescriptor) string {
 }
 
 // legacyWrapEnum wraps v as a protoreflect.Enum,
-// where v must be a int32 kind and not implement the v2 API already.
+// where v must be an int32 kind and not implement the v2 API already.
 func legacyWrapEnum(v reflect.Value) protoreflect.Enum {
 	et := legacyLoadEnumType(v.Type())
 	return et.New(protoreflect.EnumNumber(v.Int()))

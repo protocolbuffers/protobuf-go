@@ -42,7 +42,7 @@ type number struct {
 	neg  bool
 	size int
 	// if neg, this is the length of whitespace and comments between
-	// the minus sign and the rest fo the number literal
+	// the minus sign and the rest of the number literal
 	sep int
 }
 

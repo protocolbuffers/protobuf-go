@@ -511,7 +511,7 @@ message RemoteDefault {
   optional goproto.proto.enums.Enum default = 1;
   optional goproto.proto.enums.Enum zero = 2 [default = ZERO];
   optional goproto.proto.enums.Enum one = 3 [default = ONE];
-  optional goproto.proto.enums.Enum elevent = 4 [default = ELEVENT];
+  optional goproto.proto.enums.Enum eleven = 4 [default = ELEVEN];
   optional goproto.proto.enums.Enum seventeen = 5 [default = SEVENTEEN];
   optional goproto.proto.enums.Enum thirtyseven = 6 [default = THIRTYSEVEN];
   optional goproto.proto.enums.Enum sixtyseven = 7 [default = SIXTYSEVEN];

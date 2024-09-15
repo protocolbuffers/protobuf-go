@@ -323,8 +323,8 @@ func (lazy *XXX_lazyUnmarshalInfo) FindFieldInProto(fieldNum uint32) (start, end
 // a repeated field), and bools indicating if field was found and if there
 // are multiple encodings of the field in the byte range.
 //
-// To hande the uncommon case where there are repeated encodings for the same
-// field which are not consecutive in the protobuf (so we need to returns
+// To handle the uncommon case where there are repeated encodings for the same
+// field which are not consecutive in the protobuf (so we need to return
 // multiple start/end offsets), we also return a slice multipleEntries.  If
 // multipleEntries is non-nil, then multiple entries were found, and the
 // values in the slice should be used, rather than start/end/found.

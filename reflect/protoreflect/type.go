@@ -214,7 +214,7 @@ type MessageDescriptor interface {
 	ExtensionRanges() FieldRanges
 	// ExtensionRangeOptions returns the ith extension range options.
 	//
-	// To avoid a dependency cycle, this method returns a proto.Message] value,
+	// To avoid a dependency cycle, this method returns a proto.Message value,
 	// which always contains a google.protobuf.ExtensionRangeOptions message.
 	// This method returns a typed nil-pointer if no options are present.
 	// The caller must import the descriptorpb package to use this.
@@ -471,7 +471,7 @@ type ExtensionDescriptors interface {
 }
 
 // ExtensionType encapsulates an [ExtensionDescriptor] with a concrete
-// Go implementation. The nested field descriptor must be for a extension field.
+// Go implementation. The nested field descriptor must be for an extension field.
 //
 // While a normal field is a member of the parent message that it is declared
 // within (see [Descriptor.Parent]), an extension field is a member of some other

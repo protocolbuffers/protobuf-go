@@ -276,7 +276,7 @@ func (v Value) Bool() bool {
 	}
 }
 
-// Int returns v as a int64 and panics if the type is not a int32 or int64.
+// Int returns v as an int64 and panics if the type is not an int32 or int64.
 func (v Value) Int() int64 {
 	switch v.typ {
 	case int32Type, int64Type:
@@ -416,7 +416,7 @@ func (k MapKey) Bool() bool {
 	return Value(k).Bool()
 }
 
-// Int returns k as a int64 and panics if the type is not a int32 or int64.
+// Int returns k as an int64 and panics if the type is not an int32 or int64.
 func (k MapKey) Int() int64 {
 	return Value(k).Int()
 }

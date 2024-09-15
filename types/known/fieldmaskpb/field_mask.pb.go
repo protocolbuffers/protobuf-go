@@ -426,7 +426,7 @@ func normalizePaths(paths []string) []string {
 }
 
 // hasPathPrefix is like strings.HasPrefix, but further checks for either
-// an exact matche or that the prefix is delimited by a dot.
+// an exact match or that the prefix is delimited by a dot.
 func hasPathPrefix(path, prefix string) bool {
 	return strings.HasPrefix(path, prefix) && (len(path) == len(prefix) || path[len(prefix)] == '.')
 }
