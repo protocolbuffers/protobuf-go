@@ -346,7 +346,7 @@ func (f *nameFilters) filterValue(v reflect.Value) bool {
 
 // IgnoreDefaultScalars ignores singular scalars that are unpopulated or
 // explicitly set to the default value.
-// This option does not effect elements in a list or entries in a map.
+// This option does not affect elements in a list or entries in a map.
 //
 // This must be used in conjunction with [Transform].
 func IgnoreDefaultScalars() cmp.Option {
