@@ -302,15 +302,16 @@ func (e encoder) marshalSingular(val protoreflect.Value, fd protoreflect.FieldDe
 			return errors.InvalidUTF8(string(fd.FullName()))
 		}
 
-	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
+	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
+		// 64-bit and 32-bit integers are written out as JSON number.
 		e.WriteInt(val.Int())
 
-	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
+	case protoreflect.Uint64Kind, protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
+		// 64-bit and 32-bit unsigned integers are written out as JSON number.
 		e.WriteUint(val.Uint())
 
-	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Uint64Kind,
-		protoreflect.Sfixed64Kind, protoreflect.Fixed64Kind:
-		// 64-bit integers are written out as JSON string.
+	case protoreflect.Sfixed64Kind, protoreflect.Fixed64Kind:
+		// 64-bit fixed are written out as JSON string.
 		e.WriteString(val.String())
 
 	case protoreflect.FloatKind:
