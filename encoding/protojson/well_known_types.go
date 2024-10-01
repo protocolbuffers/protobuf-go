@@ -176,7 +176,7 @@ func (d decoder) unmarshalAny(m protoreflect.Message) error {
 	// Use another decoder to parse the unread bytes for @type field. This
 	// avoids advancing a read from current decoder because the current JSON
 	// object may contain the fields of the embedded type.
-	dec := decoder{d.Clone(), UnmarshalOptions{RecursionLimit: d.opts.RecursionLimit}}
+	dec := decoder{d.Clone(), UnmarshalOptions{RecursionLimit: d.opts.RecursionLimit, AllowPartial: d.opts.AllowPartial}}
 	tok, err := findTypeURL(dec)
 	switch err {
 	case errEmptyObject:
@@ -348,7 +348,9 @@ func (d decoder) unmarshalAnyValue(unmarshal unmarshalFunc, m protoreflect.Messa
 		switch tok.Kind() {
 		case json.ObjectClose:
 			if !found {
-				return d.newError(tok.Pos(), `missing "value" field`)
+				if !d.opts.AllowPartial {
+					return d.newError(tok.Pos(), `missing "value" field`)
+				}
 			}
 			return nil
 

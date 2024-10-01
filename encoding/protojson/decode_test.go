@@ -2198,6 +2198,18 @@ func TestUnmarshal(t *testing.T) {
 			TypeUrl: "type.googleapis.com/google.protobuf.Empty",
 		},
 	}, {
+		desc:         "Any with Empty and no value and AllowPartial",
+		umo:          protojson.UnmarshalOptions{AllowPartial: true},
+		inputMessage: &anypb.Any{},
+		inputText: `{
+  "@type": "type.googleapis.com/google.protobuf.Empty"
+}`,
+		wantMessage: func() proto.Message {
+			return &anypb.Any{
+				TypeUrl: "type.googleapis.com/google.protobuf.Empty",
+			}
+		}(),
+	}, {
 		desc:         "Any with missing Empty",
 		inputMessage: &anypb.Any{},
 		inputText: `{
