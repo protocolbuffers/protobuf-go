@@ -2203,7 +2203,9 @@ func TestUnmarshal(t *testing.T) {
 		inputText: `{
   "@type": "type.googleapis.com/google.protobuf.Empty"
 }`,
-		wantErr: `(line 3:1): missing "value" field`,
+		wantMessage: &anypb.Any{
+			TypeUrl: "type.googleapis.com/google.protobuf.Empty",
+		},
 	}, {
 		desc:         "Any with StringValue containing invalid UTF8",
 		inputMessage: &anypb.Any{},
