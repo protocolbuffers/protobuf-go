@@ -16,6 +16,7 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -95,9 +96,13 @@ func main() {
 		panic("protobuf source root is not set")
 	}
 
+	// Generate editions_defaults.binpb first before generating any code for
+	// protos: the .proto files might specify a very recent edition for which
+	// editions_default.binpb was not yet updated.
+	generateEditionsDefaults()
+
 	generateLocalProtos()
 	generateRemoteProtos()
-	generateEditionsDefaults()
 }
 
 func generateEditionsDefaults() {
@@ -108,7 +113,7 @@ func generateEditionsDefaults() {
 	// the flag in the form "${EDITION}". To work around this, we trim the
 	// "EDITION_" prefix.
 	minEdition := strings.TrimPrefix(fmt.Sprint(editionssupport.Minimum), "EDITION_")
-	maxEdition := strings.TrimPrefix(fmt.Sprint(editionssupport.Maximum), "EDITION_")
+	maxEdition := strings.TrimPrefix(fmt.Sprint(editionssupport.MaximumKnown), "EDITION_")
 	cmd := exec.Command(
 		"protoc",
 		"--edition_defaults_out", dest,
@@ -279,8 +284,15 @@ func protoc(args ...string) {
 	cmd := exec.Command(
 		"protoc",
 		"--plugin=protoc-gen-go="+os.Args[0],
-		"--experimental_allow_proto3_optional",
-		"--experimental_editions")
+		"--experimental_allow_proto3_optional")
+	if slices.ContainsFunc(args, func(s string) bool {
+		return strings.Contains(s, "cmd/protoc-gen-go/testdata/") ||
+			strings.Contains(s, "internal/testprotos/")
+	}) {
+		// Our testprotos use edition features of upcoming editions that protoc
+		// has not yet declared support for:
+		cmd.Args = append(cmd.Args, "--experimental_editions")
+	}
 	cmd.Args = append(cmd.Args, args...)
 	cmd.Env = append(os.Environ(), "RUN_AS_PROTOC_PLUGIN=1")
 	out, err := cmd.CombinedOutput()
