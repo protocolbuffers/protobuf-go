@@ -38,7 +38,7 @@ import (
 //     Note that the next CL in step 8 must be submitted after this CL
 //     without any other CLs in-between.
 //
-//  6. Tag a new version, where the tag is is the current String.
+//  6. Tag a new version, where the tag is the current String.
 //
 //  7. Write release notes for all notable changes
 //     between this release and the last release.

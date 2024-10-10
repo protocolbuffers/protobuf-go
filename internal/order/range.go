@@ -22,7 +22,7 @@ var messageFieldPool = sync.Pool{
 }
 
 type (
-	// FieldRnger is an interface for visiting all fields in a message.
+	// FieldRanger is an interface for visiting all fields in a message.
 	// The protoreflect.Message type implements this interface.
 	FieldRanger interface{ Range(VisitField) }
 	// VisitField is called every time a message field is visited.
