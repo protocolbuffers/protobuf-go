@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/go-pg/pg/v10/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
@@ -93,6 +94,22 @@ func (ts *Timestamp) MarshalJSON() ([]byte, error) {
 		return nil, nil
 	}
 	return json.Marshal(ts.AsTime())
+}
+
+func (ts *Timestamp) AppendValue(b []byte, flags int) ([]byte, error) {
+	if ts == nil {
+		return types.AppendNull(b, flags), nil
+	}
+	return types.AppendTime(b, ts.AsTimeValue(), flags), nil
+}
+
+func (ts *Timestamp) ScanValue(rd types.Reader, n int) error {
+	tm, err := types.ScanTime(rd, n)
+	if err != nil {
+		return err
+	}
+	*ts = NewTimestampValue(tm)
+	return nil
 }
 
 func (ts *Timestamp) MarshalBSONValue() (bsontype.Type, []byte, error) {
