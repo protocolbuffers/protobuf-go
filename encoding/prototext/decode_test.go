@@ -5,12 +5,14 @@
 package prototext_test
 
 import (
+	"fmt"
 	"math"
 	"strings"
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/internal/flags"
+	"google.golang.org/protobuf/internal/protobuild"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoregistry"
 
@@ -23,7 +25,7 @@ import (
 )
 
 func TestUnmarshal(t *testing.T) {
-	tests := []struct {
+	type test struct {
 		desc         string
 		umo          prototext.UnmarshalOptions
 		inputMessage proto.Message
@@ -31,252 +33,12 @@ func TestUnmarshal(t *testing.T) {
 		wantMessage  proto.Message
 		wantErr      string // Expected error substring.
 		skip         bool
-	}{{
-		desc:         "proto2 empty message",
-		inputMessage: &pb2.Scalars{},
-		wantMessage:  &pb2.Scalars{},
-	}, {
-		desc:         "proto2 optional scalars set to zero values",
-		inputMessage: &pb2.Scalars{},
-		inputText: `opt_bool: false
-opt_int32: 0
-opt_int64: 0
-opt_uint32: 0
-opt_uint64: 0
-opt_sint32: 0
-opt_sint64: 0
-opt_fixed32: 0
-opt_fixed64: 0
-opt_sfixed32: 0
-opt_sfixed64: 0
-opt_float: 0
-opt_double: 0
-opt_bytes: ""
-opt_string: ""
-`,
-		wantMessage: &pb2.Scalars{
-			OptBool:     proto.Bool(false),
-			OptInt32:    proto.Int32(0),
-			OptInt64:    proto.Int64(0),
-			OptUint32:   proto.Uint32(0),
-			OptUint64:   proto.Uint64(0),
-			OptSint32:   proto.Int32(0),
-			OptSint64:   proto.Int64(0),
-			OptFixed32:  proto.Uint32(0),
-			OptFixed64:  proto.Uint64(0),
-			OptSfixed32: proto.Int32(0),
-			OptSfixed64: proto.Int64(0),
-			OptFloat:    proto.Float32(0),
-			OptDouble:   proto.Float64(0),
-			OptBytes:    []byte{},
-			OptString:   proto.String(""),
-		},
-	}, {
-		desc:         "protoeditions explicit scalars set to zero values",
-		inputMessage: &pbeditions.Scalars{},
-		inputText: `opt_bool: false
-opt_int32: 0
-opt_int64: 0
-opt_uint32: 0
-opt_uint64: 0
-opt_sint32: 0
-opt_sint64: 0
-opt_fixed32: 0
-opt_fixed64: 0
-opt_sfixed32: 0
-opt_sfixed64: 0
-opt_float: 0
-opt_double: 0
-opt_bytes: ""
-opt_string: ""
-`,
-		wantMessage: &pbeditions.Scalars{
-			OptBool:     proto.Bool(false),
-			OptInt32:    proto.Int32(0),
-			OptInt64:    proto.Int64(0),
-			OptUint32:   proto.Uint32(0),
-			OptUint64:   proto.Uint64(0),
-			OptSint32:   proto.Int32(0),
-			OptSint64:   proto.Int64(0),
-			OptFixed32:  proto.Uint32(0),
-			OptFixed64:  proto.Uint64(0),
-			OptSfixed32: proto.Int32(0),
-			OptSfixed64: proto.Int64(0),
-			OptFloat:    proto.Float32(0),
-			OptDouble:   proto.Float64(0),
-			OptBytes:    []byte{},
-			OptString:   proto.String(""),
-		},
-	}, {
-		desc:         "protoeditions implicit scalars set to zero values",
-		inputMessage: &pbeditions.ImplicitScalars{},
-		inputText: `s_bool: false
-s_int32: 0
-s_int64: 0
-s_uint32: 0
-s_uint64: 0
-s_sint32: 0
-s_sint64: 0
-s_fixed32: 0
-s_fixed64: 0
-s_sfixed32: 0
-s_sfixed64: 0
-s_float: 0
-s_double: 0
-s_bytes: ""
-s_string: ""
-`,
-		wantMessage: &pbeditions.ImplicitScalars{},
-	}, {
-		desc:         "proto3 scalars set to zero values",
-		inputMessage: &pb3.Scalars{},
-		inputText: `s_bool: false
-s_int32: 0
-s_int64: 0
-s_uint32: 0
-s_uint64: 0
-s_sint32: 0
-s_sint64: 0
-s_fixed32: 0
-s_fixed64: 0
-s_sfixed32: 0
-s_sfixed64: 0
-s_float: 0
-s_double: 0
-s_bytes: ""
-s_string: ""
-`,
-		wantMessage: &pb3.Scalars{},
-	}, {
-		desc:         "proto3 optional set to zero values",
-		inputMessage: &pb3.Proto3Optional{},
-		inputText: `opt_bool: false
-opt_int32: 0
-opt_int64: 0
-opt_uint32: 0
-opt_uint64: 0
-opt_float: 0
-opt_double: 0
-opt_string: ""
-opt_bytes: ""
-opt_enum: ZERO
-opt_message: {}
-`,
-		wantMessage: &pb3.Proto3Optional{
-			OptBool:    proto.Bool(false),
-			OptInt32:   proto.Int32(0),
-			OptInt64:   proto.Int64(0),
-			OptUint32:  proto.Uint32(0),
-			OptUint64:  proto.Uint64(0),
-			OptFloat:   proto.Float32(0),
-			OptDouble:  proto.Float64(0),
-			OptString:  proto.String(""),
-			OptBytes:   []byte{},
-			OptEnum:    pb3.Enum_ZERO.Enum(),
-			OptMessage: &pb3.Nested{},
-		},
-	}, {
-		desc:         "proto2 optional scalars",
-		inputMessage: &pb2.Scalars{},
-		inputText: `opt_bool: true
-opt_int32: 255
-opt_int64: 3735928559
-opt_uint32: 0xff
-opt_uint64: 0xdeadbeef
-opt_sint32: -1001
-opt_sint64: -   0xffff
-opt_fixed64: 64
-opt_sfixed32: -		32
-opt_float: 1.234
-opt_double: 1.23e+100
-opt_bytes: "\xe8\xb0\xb7\xe6\xad\x8c"
-opt_string: "谷歌"
-`,
-		wantMessage: &pb2.Scalars{
-			OptBool:     proto.Bool(true),
-			OptInt32:    proto.Int32(0xff),
-			OptInt64:    proto.Int64(0xdeadbeef),
-			OptUint32:   proto.Uint32(0xff),
-			OptUint64:   proto.Uint64(0xdeadbeef),
-			OptSint32:   proto.Int32(-1001),
-			OptSint64:   proto.Int64(-0xffff),
-			OptFixed64:  proto.Uint64(64),
-			OptSfixed32: proto.Int32(-32),
-			OptFloat:    proto.Float32(1.234),
-			OptDouble:   proto.Float64(1.23e100),
-			OptBytes:    []byte("\xe8\xb0\xb7\xe6\xad\x8c"),
-			OptString:   proto.String("谷歌"),
-		},
-	}, {
-		desc:         "protoeditions explicit scalars",
-		inputMessage: &pbeditions.Scalars{},
-		inputText: `opt_bool: true
-opt_int32: 255
-opt_int64: 3735928559
-opt_uint32: 0xff
-opt_uint64: 0xdeadbeef
-opt_sint32: -1001
-opt_sint64: -   0xffff
-opt_fixed64: 64
-opt_sfixed32: -		32
-opt_float: 1.234
-opt_double: 1.23e+100
-opt_bytes: "\xe8\xb0\xb7\xe6\xad\x8c"
-opt_string: "谷歌"
-`,
-		wantMessage: &pbeditions.Scalars{
-			OptBool:     proto.Bool(true),
-			OptInt32:    proto.Int32(0xff),
-			OptInt64:    proto.Int64(0xdeadbeef),
-			OptUint32:   proto.Uint32(0xff),
-			OptUint64:   proto.Uint64(0xdeadbeef),
-			OptSint32:   proto.Int32(-1001),
-			OptSint64:   proto.Int64(-0xffff),
-			OptFixed64:  proto.Uint64(64),
-			OptSfixed32: proto.Int32(-32),
-			OptFloat:    proto.Float32(1.234),
-			OptDouble:   proto.Float64(1.23e100),
-			OptBytes:    []byte("\xe8\xb0\xb7\xe6\xad\x8c"),
-			OptString:   proto.String("谷歌"),
-		},
-	}, {
+	}
+	tests := []test{{
 		desc:         "case sensitive",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `S_BOOL: true`,
 		wantErr:      "unknown field: S_BOOL",
-	}, {
-		desc:         "proto3 scalars",
-		inputMessage: &pb3.Scalars{},
-		inputText: `s_bool: true
-s_int32: 255
-s_int64: 3735928559
-s_uint32: 0xff
-s_uint64: 0xdeadbeef
-s_sint32: -1001
-s_sint64: -  #
-             0xffff
-s_fixed64: 64
-s_sfixed32: -32
-s_float: 1.234
-s_double: 1.23e+100
-s_bytes: "\xe8\xb0\xb7\xe6\xad\x8c"
-s_string: "谷歌"
-`,
-		wantMessage: &pb3.Scalars{
-			SBool:     true,
-			SInt32:    0xff,
-			SInt64:    0xdeadbeef,
-			SUint32:   0xff,
-			SUint64:   0xdeadbeef,
-			SSint32:   -1001,
-			SSint64:   -0xffff,
-			SFixed64:  64,
-			SSfixed32: -32,
-			SFloat:    1.234,
-			SDouble:   1.23e100,
-			SBytes:    []byte("\xe8\xb0\xb7\xe6\xad\x8c"),
-			SString:   "谷歌",
-		},
 	}, {
 		desc:         "proto2 string with invalid UTF-8",
 		inputMessage: &pb2.Scalars{},
@@ -509,28 +271,6 @@ s_bool: true
 `,
 		wantErr: `non-repeated field "s_bool" is repeated`,
 	}, {
-		desc:         "proto2 enum",
-		inputMessage: &pb2.Enums{},
-		inputText: `
-opt_enum: ONE
-opt_nested_enum: UNO
-`,
-		wantMessage: &pb2.Enums{
-			OptEnum:       pb2.Enum_ONE.Enum(),
-			OptNestedEnum: pb2.Enums_UNO.Enum(),
-		},
-	}, {
-		desc:         "protoeditions closed enum",
-		inputMessage: &pbeditions.Enums{},
-		inputText: `
-opt_enum: ONE
-opt_nested_enum: UNO
-`,
-		wantMessage: &pbeditions.Enums{
-			OptEnum:       pbeditions.Enum_ONE.Enum(),
-			OptNestedEnum: pbeditions.Enums_UNO.Enum(),
-		},
-	}, {
 		desc:         "protoeditions open enum",
 		inputMessage: &pbeditions.Enums{},
 		inputText: `
@@ -551,17 +291,6 @@ implicit_nested_enum: 10
 		wantMessage: &pbeditions.Enums{
 			ImplicitEnum:       pbeditions.OpenEnum_EINS,
 			ImplicitNestedEnum: pbeditions.Enums_ZEHN,
-		},
-	}, {
-		desc:         "proto2 enum set to numeric values",
-		inputMessage: &pb2.Enums{},
-		inputText: `
-opt_enum: 2
-opt_nested_enum: 2
-`,
-		wantMessage: &pb2.Enums{
-			OptEnum:       pb2.Enum_TWO.Enum(),
-			OptNestedEnum: pb2.Enums_DOS.Enum(),
 		},
 	}, {
 		desc:         "proto2 enum set to unnamed numeric values",
@@ -1904,6 +1633,175 @@ type_url: "pb2.Nested"
 		wantErr:      "unknown field: weak_message2", // weak_message2 is unknown since the package containing it is not imported
 		skip:         !flags.ProtoLegacy,
 	}}
+
+	for _, msg := range makeMessages(protobuild.Message{},
+		&pb2.Scalars{},
+		&pb3.Scalars{},
+		&pbeditions.Scalars{},
+	) {
+		tests = append(tests, test{
+			desc:         fmt.Sprintf("empty message (%T)", msg),
+			inputMessage: msg.ProtoReflect().Type().New().Interface(),
+			wantMessage:  msg,
+		})
+	}
+
+	for _, msg := range makeMessages(protobuild.Message{
+		"opt_bool":     false,
+		"opt_int32":    0,
+		"opt_int64":    0,
+		"opt_uint32":   0,
+		"opt_uint64":   0,
+		"opt_sint32":   0,
+		"opt_sint64":   0,
+		"opt_fixed32":  0,
+		"opt_fixed64":  0,
+		"opt_sfixed32": 0,
+		"opt_sfixed64": 0,
+		"opt_float":    0,
+		"opt_double":   0,
+		"opt_bytes":    []byte{},
+		"opt_string":   "",
+	},
+		&pb2.Scalars{},
+		&pb3.Proto3Optional{},
+		&pbeditions.Scalars{},
+	) {
+		tests = append(tests, test{
+			desc:         fmt.Sprintf("optional scalars set to zero values (%T)", msg),
+			inputMessage: msg.ProtoReflect().Type().New().Interface(),
+			inputText: `opt_bool: false
+opt_int32: 0
+opt_int64: 0
+opt_uint32: 0
+opt_uint64: 0
+opt_sint32: 0
+opt_sint64: 0
+opt_fixed32: 0
+opt_fixed64: 0
+opt_sfixed32: 0
+opt_sfixed64: 0
+opt_float: 0
+opt_double: 0
+opt_bytes: ""
+opt_string: ""
+`,
+			wantMessage: msg,
+		})
+	}
+
+	for _, msg := range makeMessages(protobuild.Message{
+		"s_bool":     false,
+		"s_int32":    0,
+		"s_int64":    0,
+		"s_uint32":   0,
+		"s_uint64":   0,
+		"s_sint32":   0,
+		"s_sint64":   0,
+		"s_fixed32":  0,
+		"s_fixed64":  0,
+		"s_sfixed32": 0,
+		"s_sfixed64": 0,
+		"s_float":    0,
+		"s_double":   0,
+		"s_bytes":    []byte{},
+		"s_string":   "",
+	},
+		&pb3.Scalars{},
+		&pbeditions.ImplicitScalars{},
+	) {
+		tests = append(tests, test{
+			desc:         fmt.Sprintf("implicit scalars set to zero values (%T)", msg),
+			inputMessage: msg.ProtoReflect().Type().New().Interface(),
+			inputText: `s_bool: false
+s_int32: 0
+s_int64: 0
+s_uint32: 0
+s_uint64: 0
+s_sint32: 0
+s_sint64: 0
+s_fixed32: 0
+s_fixed64: 0
+s_sfixed32: 0
+s_sfixed64: 0
+s_float: 0
+s_double: 0
+s_bytes: ""
+s_string: ""
+	`,
+			wantMessage: msg,
+		})
+	}
+
+	for _, msg := range makeMessages(protobuild.Message{
+		"opt_bool":     true,
+		"opt_int32":    0xff,
+		"opt_int64":    int64(0xdeadbeef),
+		"opt_uint32":   0xff,
+		"opt_uint64":   uint64(0xdeadbeef),
+		"opt_sint32":   -1001,
+		"opt_sint64":   -0xffff,
+		"opt_fixed64":  64,
+		"opt_sfixed32": -32,
+		"opt_float":    1.234,
+		"opt_double":   1.23e100,
+		"opt_bytes":    []byte("\xe8\xb0\xb7\xe6\xad\x8c"),
+		"opt_string":   "谷歌",
+	},
+		&pb2.Scalars{},
+		&pb3.Proto3Optional{},
+		&pbeditions.Scalars{},
+	) {
+		tests = append(tests, test{
+			desc:         fmt.Sprintf("optional scalars (%T)", msg),
+			inputMessage: msg.ProtoReflect().Type().New().Interface(),
+			inputText: `opt_bool: true
+opt_int32: 255
+opt_int64: 3735928559
+opt_uint32: 0xff
+opt_uint64: 0xdeadbeef
+opt_sint32: -1001
+opt_sint64: -  #
+             0xffff
+opt_fixed64: 64
+opt_sfixed32: -		32
+opt_float: 1.234
+opt_double: 1.23e+100
+opt_bytes: "\xe8\xb0\xb7\xe6\xad\x8c"
+opt_string: "谷歌"
+`,
+			wantMessage: msg,
+		})
+	}
+
+	for _, msg := range makeMessages(protobuild.Message{
+		"opt_enum":        "ONE",
+		"opt_nested_enum": "UNO",
+	},
+		&pb2.Enums{},
+		&pb3.OptionalEnums{},
+		&pbeditions.Enums{},
+	) {
+		tests = append(tests, test{
+			desc:         fmt.Sprintf("enum (%T)", msg),
+			inputMessage: msg.ProtoReflect().Type().New().Interface(),
+			inputText: `
+opt_enum: ONE
+opt_nested_enum: UNO
+`,
+			wantMessage: msg,
+		})
+
+		tests = append(tests, test{
+			desc:         fmt.Sprintf("enum set to numeric values (%T)", msg),
+			inputMessage: msg.ProtoReflect().Type().New().Interface(),
+			inputText: `
+opt_enum: 1
+opt_nested_enum: 1
+`,
+			wantMessage: msg,
+		})
+	}
 
 	for _, tt := range tests {
 		tt := tt

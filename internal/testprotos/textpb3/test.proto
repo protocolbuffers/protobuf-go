@@ -53,12 +53,36 @@ message Proto3Optional {
   optional int64 opt_int64 = 3;
   optional uint32 opt_uint32 = 4;
   optional uint64 opt_uint64 = 5;
-  optional float opt_float = 6;
-  optional double opt_double = 7;
-  optional string opt_string = 8;
-  optional bytes opt_bytes = 9;
+  optional sint32 opt_sint32 = 12;
+  optional sint64 opt_sint64 = 13;
+  optional fixed32 opt_fixed32 = 14;
+  optional fixed64 opt_fixed64 = 15;
+  optional sfixed32 opt_sfixed32 = 16;
+  optional sfixed64 opt_sfixed64 = 17;
+
+  // Textproto marshal outputs fields in the same order as this proto
+  // definition regardless of field number. Following fields are intended to
+  // test that assumption.
+
+  optional float opt_float = 20;
+  optional double opt_double = 21;
+
+  optional bytes opt_bytes = 8;
+  optional string opt_string = 9;
   optional Enum opt_enum = 10;
   optional Nested opt_message = 11;
+}
+
+message OptionalEnums {
+  optional Enum opt_enum = 1;
+
+  enum NestedEnum {
+    CERO = 0;
+    UNO = 1;
+    DOS = 2;
+    DIEZ = 10;
+  }
+  NestedEnum opt_nested_enum = 3;
 }
 
 enum Enum {

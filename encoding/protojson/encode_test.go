@@ -111,8 +111,8 @@ func TestMarshal(t *testing.T) {
   "optUint64": "0",
   "optFloat": 0,
   "optDouble": 0,
-  "optString": "",
   "optBytes": "",
+  "optString": "",
   "optEnum": "ZERO",
   "optMessage": {}
 }`,
