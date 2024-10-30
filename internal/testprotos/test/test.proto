@@ -56,6 +56,7 @@ message TestAllTypes {
   optional NestedEnum optional_nested_enum = 21;
   optional ForeignEnum optional_foreign_enum = 22;
   optional ImportEnum optional_import_enum = 23;
+  optional NestedMessage optional_lazy_nested_message = 24 [lazy = true];
 
   repeated int32 repeated_int32 = 31;
   repeated int64 repeated_int64 = 32;
