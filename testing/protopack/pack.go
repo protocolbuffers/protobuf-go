@@ -702,7 +702,7 @@ func formatType(t Type, source bool) (s string) {
 
 // formatString returns a quoted string for s.
 func formatString(s string) string {
-	// Use quoted string if it the same length as a raw string literal.
+	// Use quoted string if it's the same length as a raw string literal.
 	// Otherwise, attempt to use the raw string form.
 	qs := strconv.Quote(s)
 	if len(qs) == 1+len(s)+1 {

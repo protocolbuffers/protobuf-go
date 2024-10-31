@@ -60,7 +60,7 @@ func wellKnownTypeMarshaler(name protoreflect.FullName) marshalFunc {
 
 type unmarshalFunc func(decoder, protoreflect.Message) error
 
-// wellKnownTypeUnmarshaler returns a unmarshal function if the message type
+// wellKnownTypeUnmarshaler returns an unmarshal function if the message type
 // has specialized serialization behavior. It returns nil otherwise.
 func wellKnownTypeUnmarshaler(name protoreflect.FullName) unmarshalFunc {
 	if name.Parent() == genid.GoogleProtobuf_package {

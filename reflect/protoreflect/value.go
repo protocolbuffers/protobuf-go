@@ -243,7 +243,7 @@ type Map interface {
 	// Has reports whether an entry with the given key is in the map.
 	Has(MapKey) bool
 
-	// Clear clears the entry associated with they given key.
+	// Clear clears the entry associated with the given key.
 	// The operation does nothing if there is no entry associated with the key.
 	//
 	// Clear is a mutating operation and unsafe for concurrent use.
