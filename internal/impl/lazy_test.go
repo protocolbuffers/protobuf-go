@@ -542,7 +542,8 @@ func TestMarshalMessageSetLazyRace(t *testing.T) {
 		go func() {
 			defer wg.Done()
 			if err := func() error {
-				if !proto.HasExtension(h.GetData(), lazytestpb.E_Rabbit_MessageSetExtension) {
+				mm := proto.GetExtension(h.GetData(), lazytestpb.E_Rabbit_MessageSetExtension).(*lazytestpb.Rabbit)
+				if mm == nil {
 					return errors.New("proto: missing extension")
 				}
 				return nil
