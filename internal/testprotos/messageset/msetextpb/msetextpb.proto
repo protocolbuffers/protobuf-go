@@ -12,7 +12,7 @@ option go_package = "google.golang.org/protobuf/internal/testprotos/messageset/m
 
 message Ext1 {
   extend MessageSet {
-    optional Ext1 message_set_extension = 1000;
+    optional Ext1 message_set_ext1 = 1000;
   }
   optional int32 ext1_field1 = 1;
   optional int32 ext1_field2 = 2;
@@ -20,20 +20,20 @@ message Ext1 {
 
 message Ext2 {
   extend MessageSet {
-    optional Ext2 message_set_extension = 1001;
+    optional Ext2 message_set_ext2 = 1001;
   }
   optional int32 ext2_field1 = 1;
 }
 
 message ExtRequired {
   extend MessageSet {
-    optional ExtRequired message_set_extension = 1002;
+    optional ExtRequired message_set_extrequired = 1002;
   }
   required int32 required_field1 = 1;
 }
 
 message ExtLargeNumber {
   extend MessageSet {
-    optional ExtLargeNumber message_set_extension = 536870912;  // 1<<29
+    optional ExtLargeNumber message_set_extlarge = 536870912;  // 1<<29
   }
 }

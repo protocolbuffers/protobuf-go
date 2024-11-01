@@ -18,11 +18,11 @@ func TestConcurrentInitialization(t *testing.T) {
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		epb.E_Ext1_MessageSetExtension.ValueOf(&epb.Ext1{})
+		epb.E_Ext1_MessageSetExt1.ValueOf(&epb.Ext1{})
 	}()
 	go func() {
 		defer wg.Done()
-		epb.E_Ext1_MessageSetExtension.TypeDescriptor().Message()
+		epb.E_Ext1_MessageSetExt1.TypeDescriptor().Message()
 	}()
 	wg.Wait()
 }

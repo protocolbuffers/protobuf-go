@@ -15,7 +15,7 @@ message MessageSet {
   extensions 530000000 to max
   [declaration = {
     number: 536870912
-    full_name: ".goproto.proto.messageset.ExtLargeNumber.message_set_extension"
+    full_name: ".goproto.proto.messageset.ExtLargeNumber.message_set_extlarge"
     type: ".goproto.proto.messageset.ExtLargeNumber"
   }];
 }

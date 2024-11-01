@@ -7,11 +7,12 @@ package proto_test
 import (
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/flags"
+	"google.golang.org/protobuf/internal/protobuild"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/testing/protopack"
 
 	"google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
-	"google.golang.org/protobuf/internal/testprotos/messageset/msetextpb"
+	_ "google.golang.org/protobuf/internal/testprotos/messageset/msetextpb"
 )
 
 func init() {
@@ -24,13 +25,16 @@ func init() {
 var messageSetTestProtos = []testProto{
 	{
 		desc: "MessageSet type_id before message content",
-		decodeTo: []proto.Message{func() proto.Message {
-			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
-			proto.SetExtension(m.MessageSet, msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
-				Ext1Field1: proto.Int32(10),
-			})
-			return m
-		}()},
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set": protobuild.Message{
+					"message_set_ext1": protobuild.Message{
+						"ext1_field1": 10,
+					},
+				},
+			},
+			&messagesetpb.MessageSetContainer{},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.StartGroupType},
@@ -44,13 +48,16 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet type_id after message content",
-		decodeTo: []proto.Message{func() proto.Message {
-			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
-			proto.SetExtension(m.MessageSet, msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
-				Ext1Field1: proto.Int32(10),
-			})
-			return m
-		}()},
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set": protobuild.Message{
+					"message_set_ext1": protobuild.Message{
+						"ext1_field1": 10,
+					},
+				},
+			},
+			&messagesetpb.MessageSetContainer{},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.StartGroupType},
@@ -64,12 +71,14 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet does not preserve unknown field",
-		decodeTo: []proto.Message{build(
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set_ext1": protobuild.Message{
+					"ext1_field1": 10,
+				},
+			},
 			&messagesetpb.MessageSet{},
-			extend(msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
-				Ext1Field1: proto.Int32(10),
-			}),
-		)},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.StartGroupType},
 			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
@@ -83,14 +92,16 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet with unknown type_id",
-		decodeTo: []proto.Message{build(
+		decodeTo: makeMessages(
+			protobuild.Message{
+				protobuild.Unknown: protopack.Message{
+					protopack.Tag{999, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+						protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
+					}),
+				}.Marshal(),
+			},
 			&messagesetpb.MessageSet{},
-			unknown(protopack.Message{
-				protopack.Tag{999, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
-					protopack.Tag{1, protopack.VarintType}, protopack.Varint(10),
-				}),
-			}.Marshal()),
-		)},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.StartGroupType},
 			protopack.Tag{2, protopack.VarintType}, protopack.Varint(999),
@@ -102,13 +113,15 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet merges repeated message fields in item",
-		decodeTo: []proto.Message{build(
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set_ext1": protobuild.Message{
+					"ext1_field1": 10,
+					"ext1_field2": 20,
+				},
+			},
 			&messagesetpb.MessageSet{},
-			extend(msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
-				Ext1Field1: proto.Int32(10),
-				Ext1Field2: proto.Int32(20),
-			}),
-		)},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.StartGroupType},
 			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
@@ -123,16 +136,18 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet merges message fields in repeated items",
-		decodeTo: []proto.Message{build(
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set_ext1": protobuild.Message{
+					"ext1_field1": 10,
+					"ext1_field2": 20,
+				},
+				"message_set_ext2": protobuild.Message{
+					"ext2_field1": 30,
+				},
+			},
 			&messagesetpb.MessageSet{},
-			extend(msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
-				Ext1Field1: proto.Int32(10),
-				Ext1Field2: proto.Int32(20),
-			}),
-			extend(msetextpb.E_Ext2_MessageSetExtension, &msetextpb.Ext2{
-				Ext2Field1: proto.Int32(30),
-			}),
-		)},
+		),
 		wire: protopack.Message{
 			// Ext1, field1
 			protopack.Tag{1, protopack.StartGroupType},
@@ -159,9 +174,10 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet with missing type_id",
-		decodeTo: []proto.Message{build(
+		decodeTo: makeMessages(
+			protobuild.Message{},
 			&messagesetpb.MessageSet{},
-		)},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.StartGroupType},
 			protopack.Tag{3, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
@@ -172,10 +188,12 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet with missing message",
-		decodeTo: []proto.Message{build(
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set_ext1": protobuild.Message{},
+			},
 			&messagesetpb.MessageSet{},
-			extend(msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{}),
-		)},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.StartGroupType},
 			protopack.Tag{2, protopack.VarintType}, protopack.Varint(1000),
@@ -184,11 +202,14 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet with type id out of valid field number range",
-		decodeTo: []proto.Message{func() proto.Message {
-			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
-			proto.SetExtension(m.MessageSet, msetextpb.E_ExtLargeNumber_MessageSetExtension, &msetextpb.ExtLargeNumber{})
-			return m
-		}()},
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set": protobuild.Message{
+					"message_set_extlarge": protobuild.Message{},
+				},
+			},
+			&messagesetpb.MessageSetContainer{},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.StartGroupType},
@@ -200,15 +221,16 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet with unknown type id out of valid field number range",
-		decodeTo: []proto.Message{func() proto.Message {
-			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
-			m.MessageSet.ProtoReflect().SetUnknown(
-				protopack.Message{
-					protopack.Tag{protowire.MaxValidNumber + 2, protopack.BytesType}, protopack.LengthPrefix{},
-				}.Marshal(),
-			)
-			return m
-		}()},
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set": protobuild.Message{
+					protobuild.Unknown: protopack.Message{
+						protopack.Tag{protowire.MaxValidNumber + 2, protopack.BytesType}, protopack.LengthPrefix{},
+					}.Marshal(),
+				},
+			},
+			&messagesetpb.MessageSetContainer{},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.StartGroupType},
@@ -220,13 +242,16 @@ var messageSetTestProtos = []testProto{
 	},
 	{
 		desc: "MessageSet with unknown field",
-		decodeTo: []proto.Message{func() proto.Message {
-			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
-			proto.SetExtension(m.MessageSet, msetextpb.E_Ext1_MessageSetExtension, &msetextpb.Ext1{
-				Ext1Field1: proto.Int32(10),
-			})
-			return m
-		}()},
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set": protobuild.Message{
+					"message_set_ext1": protobuild.Message{
+						"ext1_field1": 10,
+					},
+				},
+			},
+			&messagesetpb.MessageSetContainer{},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.StartGroupType},
@@ -242,13 +267,16 @@ var messageSetTestProtos = []testProto{
 	{
 		desc:          "MessageSet with required field set",
 		checkFastInit: true,
-		decodeTo: []proto.Message{func() proto.Message {
-			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
-			proto.SetExtension(m.MessageSet, msetextpb.E_ExtRequired_MessageSetExtension, &msetextpb.ExtRequired{
-				RequiredField1: proto.Int32(1),
-			})
-			return m
-		}()},
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set": protobuild.Message{
+					"message_set_extrequired": protobuild.Message{
+						"required_field1": 1,
+					},
+				},
+			},
+			&messagesetpb.MessageSetContainer{},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.StartGroupType},
@@ -264,11 +292,14 @@ var messageSetTestProtos = []testProto{
 		desc:          "MessageSet with required field unset",
 		checkFastInit: true,
 		partial:       true,
-		decodeTo: []proto.Message{func() proto.Message {
-			m := &messagesetpb.MessageSetContainer{MessageSet: &messagesetpb.MessageSet{}}
-			proto.SetExtension(m.MessageSet, msetextpb.E_ExtRequired_MessageSetExtension, &msetextpb.ExtRequired{})
-			return m
-		}()},
+		decodeTo: makeMessages(
+			protobuild.Message{
+				"message_set": protobuild.Message{
+					"message_set_extrequired": protobuild.Message{},
+				},
+			},
+			&messagesetpb.MessageSetContainer{},
+		),
 		wire: protopack.Message{
 			protopack.Tag{1, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
 				protopack.Tag{1, protopack.StartGroupType},
