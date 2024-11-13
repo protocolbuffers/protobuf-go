@@ -23,6 +23,8 @@ func (errInvalidUTF8) Error() string     { return "string field contains invalid
 func (errInvalidUTF8) InvalidUTF8() bool { return true }
 func (errInvalidUTF8) Unwrap() error     { return errors.Error }
 
+var ErrInvalidUTF8 = errInvalidUTF8{}
+
 // initOneofFieldCoders initializes the fast-path functions for the fields in a oneof.
 //
 // For size, marshal, and isInit operations, functions are set only on the first field

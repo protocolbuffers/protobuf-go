@@ -42,3 +42,5 @@ type (
 )
 
 var X impl.Export
+
+var ErrInvalidUTF8 = impl.ErrInvalidUTF8
