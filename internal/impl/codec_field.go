@@ -334,6 +334,71 @@ var coderMessageValue = valueCoderFuncs{
 	merge:     mergeMessageValue,
 }
 
+func makeProtoStringerFieldCoder(ft reflect.Type) pointerCoderFuncs {
+	return pointerCoderFuncs{
+		size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
+			ps := p.AsValueOf(ft).Elem().Interface().(protoreflect.ProtoStringer)
+			if reflect.ValueOf(ps).IsNil() {
+				return 0
+			}
+			v, err := ps.ProtoString()
+			if err != nil {
+				panic(err)
+			}
+			return f.tagsize + protowire.SizeBytes(len(v))
+		},
+		marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
+			ps := p.AsValueOf(ft).Elem().Interface().(protoreflect.ProtoStringer)
+			if reflect.ValueOf(ps).IsNil() {
+				return b, nil
+			}
+			v, err := ps.ProtoString()
+			if err != nil {
+				return nil, err
+			}
+			b = protowire.AppendVarint(b, f.wiretag)
+			b = protowire.AppendString(b, v)
+			return b, nil
+		},
+		unmarshal: func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
+			if wtyp != protowire.BytesType {
+				return out, errUnknown
+			}
+			d, n := protowire.ConsumeString(b)
+			if n < 0 {
+				return out, protowire.ParseError(n)
+			}
+			out.n = n
+			ps := p.AsValueOf(ft).Elem()
+			if ps.IsNil() {
+				ps.Set(reflect.New(ft.Elem()))
+			}
+			if err := ps.Interface().(protoreflect.ProtoStringer).ParseProtoString(d); err != nil {
+				return out, err
+			}
+			return out, nil
+		},
+		merge: func(dst, src pointer, _ *coderFieldInfo, _ mergeOptions) {
+			srcp := src.AsValueOf(ft).Elem()
+			dstp := dst.AsValueOf(ft).Elem()
+			if srcp.IsNil() {
+				dstp.Set(reflect.Zero(ft))
+			} else {
+				if dstp.IsNil() {
+					dstp.Set(reflect.New(ft.Elem()))
+				}
+				v, err := srcp.Interface().(protoreflect.ProtoStringer).ProtoString()
+				if err != nil {
+					panic(err)
+				}
+				if err := dstp.Interface().(protoreflect.ProtoStringer).ParseProtoString(v); err != nil {
+					panic(err)
+				}
+			}
+		},
+	}
+}
+
 func sizeGroupValue(v protoreflect.Value, tagsize int, opts marshalOptions) int {
 	m := v.Message().Interface()
 	return sizeGroup(m, tagsize, opts)
@@ -668,6 +733,62 @@ func isInitMessageSliceValue(listv protoreflect.Value) error {
 		}
 	}
 	return nil
+}
+
+func makeProtoStringerSliceFieldCoder(ft reflect.Type) pointerCoderFuncs {
+	return pointerCoderFuncs{
+		size: func(p pointer, f *coderFieldInfo, opts marshalOptions) int {
+			n := 0
+			for _, v := range p.PointerSlice() {
+				v, err := v.AsValueOf(ft.Elem()).Interface().(protoreflect.ProtoStringer).ProtoString()
+				if err != nil {
+					panic(err)
+				}
+				n += f.tagsize + protowire.SizeBytes(len(v))
+			}
+			return n
+		},
+		marshal: func(b []byte, p pointer, f *coderFieldInfo, opts marshalOptions) ([]byte, error) {
+			for _, v := range p.PointerSlice() {
+				v, err := v.AsValueOf(ft.Elem()).Interface().(protoreflect.ProtoStringer).ProtoString()
+				if err != nil {
+					return nil, err
+				}
+				b = protowire.AppendVarint(b, f.wiretag)
+				b = protowire.AppendString(b, v)
+			}
+			return b, nil
+		},
+		unmarshal: func(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, opts unmarshalOptions) (out unmarshalOutput, err error) {
+			if wtyp != protowire.BytesType {
+				return out, errUnknown
+			}
+			v, n := protowire.ConsumeString(b)
+			if n < 0 {
+				return out, protowire.ParseError(n)
+			}
+			ps := reflect.New(ft.Elem())
+			if err := ps.Interface().(protoreflect.ProtoStringer).ParseProtoString(v); err != nil {
+				return out, err
+			}
+			p.AppendPointerSlice(pointerOfValue(ps))
+			out.n = n
+			return out, nil
+		},
+		merge: func(dst, src pointer, f *coderFieldInfo, opts mergeOptions) {
+			for _, sp := range src.PointerSlice() {
+				ps := reflect.New(ft.Elem())
+				v, err := sp.AsValueOf(ft.Elem()).Interface().(protoreflect.ProtoStringer).ProtoString()
+				if err != nil {
+					panic(err)
+				}
+				if err := ps.Interface().(protoreflect.ProtoStringer).ParseProtoString(v); err != nil {
+					panic(err)
+				}
+				dst.AppendPointerSlice(pointerOfValue(ps))
+			}
+		},
+	}
 }
 
 var coderMessageSliceValue = valueCoderFuncs{

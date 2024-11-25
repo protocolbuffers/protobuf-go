@@ -292,8 +292,18 @@ func fieldInfoForScalar(fd protoreflect.FieldDescriptor, fs reflect.StructField,
 				return rv.Float() != 0 || math.Signbit(rv.Float())
 			case reflect.String, reflect.Slice:
 				return rv.Len() > 0
+			case reflect.Ptr:
+				if _, ok := rv.Interface().(protoreflect.ProtoStringer); ok {
+					return !rv.IsNil()
+				}
+				fallthrough
+			case reflect.Struct:
+				if _, ok := rv.Interface().(protoreflect.ProtoStringer); ok {
+					return !rv.IsNil()
+				}
+				fallthrough
 			default:
-				panic(fmt.Sprintf("field %v has invalid type: %v", fd.FullName(), rv.Type())) // should never happen
+				panic(fmt.Sprintf("field %v has invalid type: %v %s", fd.FullName(), rv.Type(), rv.Kind())) // should never happen
 			}
 		},
 		clear: func(p pointer) {

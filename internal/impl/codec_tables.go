@@ -111,6 +111,9 @@ func fieldCoder(fd protoreflect.FieldDescriptor, ft reflect.Type) (*MessageInfo,
 			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 && strs.EnforceUTF8(fd) {
 				return nil, coderBytesSliceValidateUTF8
 			}
+			if ft.Implements(reflect.TypeOf((*protoreflect.ProtoStringer)(nil)).Elem()) {
+				return nil, makeProtoStringerSliceFieldCoder(ft)
+			}
 			if ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8 {
 				return nil, coderBytesSlice
 			}
@@ -197,6 +200,9 @@ func fieldCoder(fd protoreflect.FieldDescriptor, ft reflect.Type) (*MessageInfo,
 		return getMessageInfo(ft), makeMessageFieldCoder(fd, ft)
 	case fd.Kind() == protoreflect.GroupKind:
 		return getMessageInfo(ft), makeGroupFieldCoder(fd, ft)
+	case fd.Kind() == protoreflect.StringKind && ft.Kind() == reflect.Ptr &&
+		ft.Implements(reflect.TypeOf((*protoreflect.ProtoStringer)(nil)).Elem()):
+		return nil, makeProtoStringerFieldCoder(ft)
 	case !fd.HasPresence() && fd.ContainingOneof() == nil:
 		// Populated oneof fields always encode even if set to the zero value,
 		// which normally are not encoded in proto3.
