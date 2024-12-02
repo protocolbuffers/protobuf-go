@@ -69,7 +69,7 @@ const (
 	Edition_EDITION_2023 Edition = 1000
 	Edition_EDITION_2024 Edition = 1001
 	// Placeholder editions for testing feature resolution.  These should not be
-	// used or relyed on outside of tests.
+	// used or relied on outside of tests.
 	Edition_EDITION_1_TEST_ONLY     Edition = 1
 	Edition_EDITION_2_TEST_ONLY     Edition = 2
 	Edition_EDITION_99997_TEST_ONLY Edition = 99997

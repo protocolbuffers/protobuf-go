@@ -241,7 +241,7 @@ func generateRemoteProtos() {
 
 		// Benchmark protos.
 		// TODO: The protobuf repo no longer includes benchmarks.
-		//       CL removing them says they are superceded by google/fleetbench:
+		//       CL removing them says they are superseded by google/fleetbench:
 		//         https://github.com/protocolbuffers/protobuf/commit/83c499de86224538e5d59adc3d0fa7fdb45b2c72
 		//       But that project's proto benchmark files are very different:
 		//         https://github.com/google/fleetbench/tree/main/fleetbench/proto

@@ -453,7 +453,7 @@ type MessageTypeResolver interface {
 //
 // The [Types] type implements this interface.
 type ExtensionTypeResolver interface {
-	// FindExtensionByName looks up a extension field by the field's full name.
+	// FindExtensionByName looks up an extension field by the field's full name.
 	// Note that this is the full name of the field as determined by
 	// where the extension is declared and is unrelated to the full name of the
 	// message being extended.
@@ -461,7 +461,7 @@ type ExtensionTypeResolver interface {
 	// This returns (nil, NotFound) if not found.
 	FindExtensionByName(field protoreflect.FullName) (protoreflect.ExtensionType, error)
 
-	// FindExtensionByNumber looks up a extension field by the field number
+	// FindExtensionByNumber looks up an extension field by the field number
 	// within some parent message, identified by full name.
 	//
 	// This returns (nil, NotFound) if not found.
@@ -657,7 +657,7 @@ func (r *Types) FindMessageByURL(url string) (protoreflect.MessageType, error) {
 	return nil, NotFound
 }
 
-// FindExtensionByName looks up a extension field by the field's full name.
+// FindExtensionByName looks up an extension field by the field's full name.
 // Note that this is the full name of the field as determined by
 // where the extension is declared and is unrelated to the full name of the
 // message being extended.
@@ -700,7 +700,7 @@ func (r *Types) FindExtensionByName(field protoreflect.FullName) (protoreflect.E
 	return nil, NotFound
 }
 
-// FindExtensionByNumber looks up a extension field by the field number
+// FindExtensionByNumber looks up an extension field by the field number
 // within some parent message, identified by full name.
 //
 // This returns (nil, [NotFound]) if not found.

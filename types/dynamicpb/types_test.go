@@ -143,7 +143,7 @@ func TestDynamicTypesFindExtensionByNameOrNumber(t *testing.T) {
 			t.Fatalf("types.FindExtensionByNumber(%q, %v) = %v", messageName, number, err)
 		}
 		if xt != xt2 {
-			t.Fatalf("FindExtensionByName returned a differet extension than FindExtensionByNumber")
+			t.Fatalf("FindExtensionByName returned a different extension than FindExtensionByNumber")
 		}
 	}
 }
