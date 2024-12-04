@@ -15,12 +15,11 @@ import (
 )
 
 type Message struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	I32           *int32                 `protobuf:"varint,1,opt,name=i32" json:"i32,omitempty"`
+	M             *Message               `protobuf:"bytes,2,opt,name=m" json:"m,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	I32 *int32   `protobuf:"varint,1,opt,name=i32" json:"i32,omitempty"`
-	M   *Message `protobuf:"bytes,2,opt,name=m" json:"m,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message) Reset() {

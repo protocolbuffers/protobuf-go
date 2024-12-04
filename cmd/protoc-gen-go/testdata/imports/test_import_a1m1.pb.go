@@ -16,11 +16,10 @@ import (
 )
 
 type A1M1 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	F             *test_a_1.M1           `protobuf:"bytes,1,opt,name=f,proto3" json:"f,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	F *test_a_1.M1 `protobuf:"bytes,1,opt,name=f,proto3" json:"f,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *A1M1) Reset() {

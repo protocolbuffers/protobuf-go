@@ -77,19 +77,18 @@ func (Enum1) EnumDescriptor() ([]byte, []int) {
 
 // COMMENT: Message1.Leading
 type Message1 struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields
-
+	state protoimpl.MessageState `protogen:"open.v1"`
 	// COMMENT: Field1A.Leading
 	Field1A *string `protobuf:"bytes,1,opt,name=Field1A" json:"Field1A,omitempty"` // COMMENT: Field1A.Trailing
 	// COMMENT: Oneof1A.Leading
 	//
-	// Types that are assignable to Oneof1A:
+	// Types that are valid to be assigned to Oneof1A:
 	//
 	//	*Message1_Oneof1AField1
-	Oneof1A isMessage1_Oneof1A `protobuf_oneof:"Oneof1a"`
+	Oneof1A         isMessage1_Oneof1A `protobuf_oneof:"Oneof1a"`
+	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Message1) Reset() {
@@ -129,16 +128,18 @@ func (x *Message1) GetField1A() string {
 	return ""
 }
 
-func (m *Message1) GetOneof1A() isMessage1_Oneof1A {
-	if m != nil {
-		return m.Oneof1A
+func (x *Message1) GetOneof1A() isMessage1_Oneof1A {
+	if x != nil {
+		return x.Oneof1A
 	}
 	return nil
 }
 
 func (x *Message1) GetOneof1AField1() string {
-	if x, ok := x.GetOneof1A().(*Message1_Oneof1AField1); ok {
-		return x.Oneof1AField1
+	if x != nil {
+		if x, ok := x.Oneof1A.(*Message1_Oneof1AField1); ok {
+			return x.Oneof1AField1
+		}
 	}
 	return ""
 }
@@ -156,9 +157,9 @@ func (*Message1_Oneof1AField1) isMessage1_Oneof1A() {}
 
 // COMMENT: Message2
 type Message2 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message2) Reset() {
@@ -193,9 +194,9 @@ func (*Message2) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message1A.Leading
 type Message1_Message1A struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message1_Message1A) Reset() {
@@ -230,9 +231,9 @@ func (*Message1_Message1A) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message1B
 type Message1_Message1B struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message1_Message1B) Reset() {
@@ -267,9 +268,9 @@ func (*Message1_Message1B) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message2A
 type Message2_Message2A struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message2_Message2A) Reset() {
@@ -304,9 +305,9 @@ func (*Message2_Message2A) Descriptor() ([]byte, []int) {
 
 // COMMENT: Message2B
 type Message2_Message2B struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message2_Message2B) Reset() {

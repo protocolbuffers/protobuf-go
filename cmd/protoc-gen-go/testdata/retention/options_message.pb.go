@@ -17,13 +17,12 @@ import (
 
 // Retention attributes set on fields nested within a message
 type OptionsMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	PlainField            *int32 `protobuf:"varint,1,opt,name=plain_field,json=plainField" json:"plain_field,omitempty"`
-	RuntimeRetentionField *int32 `protobuf:"varint,2,opt,name=runtime_retention_field,json=runtimeRetentionField" json:"runtime_retention_field,omitempty"`
-	SourceRetentionField  *int32 `protobuf:"varint,3,opt,name=source_retention_field,json=sourceRetentionField" json:"source_retention_field,omitempty"`
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	PlainField            *int32                 `protobuf:"varint,1,opt,name=plain_field,json=plainField" json:"plain_field,omitempty"`
+	RuntimeRetentionField *int32                 `protobuf:"varint,2,opt,name=runtime_retention_field,json=runtimeRetentionField" json:"runtime_retention_field,omitempty"`
+	SourceRetentionField  *int32                 `protobuf:"varint,3,opt,name=source_retention_field,json=sourceRetentionField" json:"source_retention_field,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *OptionsMessage) Reset() {

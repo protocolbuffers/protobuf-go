@@ -19,10 +19,7 @@ import (
 // Fuzz is a container for every message we want to make available to the
 // fuzzer.
 type Fuzz struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state                   protoimpl.MessageState        `protogen:"open.v1"`
 	TestAllTypes            *test.TestAllTypes            `protobuf:"bytes,1,opt,name=test_all_types,json=testAllTypes" json:"test_all_types,omitempty"`
 	TestAllExtensions       *test.TestAllExtensions       `protobuf:"bytes,2,opt,name=test_all_extensions,json=testAllExtensions" json:"test_all_extensions,omitempty"`
 	TestRequired            *test.TestRequired            `protobuf:"bytes,3,opt,name=test_required,json=testRequired" json:"test_required,omitempty"`
@@ -31,6 +28,8 @@ type Fuzz struct {
 	TestPackedTypes         *test.TestPackedTypes         `protobuf:"bytes,6,opt,name=test_packed_types,json=testPackedTypes" json:"test_packed_types,omitempty"`
 	TestPackedExtensions    *test.TestPackedExtensions    `protobuf:"bytes,7,opt,name=test_packed_extensions,json=testPackedExtensions" json:"test_packed_extensions,omitempty"`
 	TestAllTypes3           *test3.TestAllTypes           `protobuf:"bytes,8,opt,name=test_all_types3,json=testAllTypes3" json:"test_all_types3,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
 }
 
 func (x *Fuzz) Reset() {

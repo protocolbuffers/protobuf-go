@@ -176,10 +176,10 @@ func (Enum3) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message1 struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
 	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Message1) Reset() {
@@ -213,9 +213,9 @@ func (*Message1) Descriptor() ([]byte, []int) {
 }
 
 type Message2 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message2) Reset() {
@@ -249,9 +249,9 @@ func (*Message2) Descriptor() ([]byte, []int) {
 }
 
 type Message3 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message3) Reset() {
@@ -285,11 +285,10 @@ func (*Message3) Descriptor() ([]byte, []int) {
 }
 
 type Message4 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BoolField     *bool                  `protobuf:"varint,30,opt,name=bool_field,json=boolField" json:"bool_field,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	BoolField *bool `protobuf:"varint,30,opt,name=bool_field,json=boolField" json:"bool_field,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message4) Reset() {

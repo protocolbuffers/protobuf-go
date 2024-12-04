@@ -68,12 +68,11 @@ func (Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	StringField   *string                `protobuf:"bytes,1,opt,name=string_field,json=stringField" json:"string_field,omitempty"`
+	EnumField     *Enum                  `protobuf:"varint,2,opt,name=enum_field,json=enumField,enum=Enum,def=0" json:"enum_field,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	StringField *string `protobuf:"bytes,1,opt,name=string_field,json=stringField" json:"string_field,omitempty"`
-	EnumField   *Enum   `protobuf:"varint,2,opt,name=enum_field,json=enumField,enum=Enum,def=0" json:"enum_field,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 // Default values for Message fields.

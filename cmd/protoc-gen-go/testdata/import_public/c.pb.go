@@ -16,15 +16,14 @@ import (
 )
 
 type UsingPublicImport struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state protoimpl.MessageState `protogen:"open.v1"`
 	// Local is declared in b.proto, which is a public import of a.proto.
 	Local *Local `protobuf:"bytes,1,opt,name=local" json:"local,omitempty"`
 	// Sub2Message is declared in sub2/a.proto, which is a public import of
 	// sub/a.proto, which is a public import of a.proto.
-	Sub2 *sub2.Sub2Message `protobuf:"bytes,2,opt,name=sub2" json:"sub2,omitempty"` // declared in sub2/a.proto
+	Sub2          *sub2.Sub2Message `protobuf:"bytes,2,opt,name=sub2" json:"sub2,omitempty"` // declared in sub2/a.proto
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UsingPublicImport) Reset() {

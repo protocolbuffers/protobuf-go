@@ -15,12 +15,11 @@ import (
 )
 
 type Layer1 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	L2            *Layer1_Layer2         `protobuf:"bytes,1,opt,name=l2" json:"l2,omitempty"`
+	L3            *Layer1_Layer2_Layer3  `protobuf:"bytes,2,opt,name=l3" json:"l3,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	L2 *Layer1_Layer2        `protobuf:"bytes,1,opt,name=l2" json:"l2,omitempty"`
-	L3 *Layer1_Layer2_Layer3 `protobuf:"bytes,2,opt,name=l3" json:"l3,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Layer1) Reset() {
@@ -68,11 +67,10 @@ func (x *Layer1) GetL3() *Layer1_Layer2_Layer3 {
 }
 
 type Layer1_Layer2 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	L3            *Layer1_Layer2_Layer3  `protobuf:"bytes,1,opt,name=l3" json:"l3,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	L3 *Layer1_Layer2_Layer3 `protobuf:"bytes,1,opt,name=l3" json:"l3,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Layer1_Layer2) Reset() {
@@ -113,9 +111,9 @@ func (x *Layer1_Layer2) GetL3() *Layer1_Layer2_Layer3 {
 }
 
 type Layer1_Layer2_Layer3 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Layer1_Layer2_Layer3) Reset() {

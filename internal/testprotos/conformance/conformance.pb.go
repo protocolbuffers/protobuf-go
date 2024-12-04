@@ -143,15 +143,14 @@ func (TestCategory) EnumDescriptor() ([]byte, []int) {
 // Therefore, this may or may not have a failure message. Failure messages
 // may be truncated for our failure lists.
 type TestStatus struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Name           string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	FailureMessage string `protobuf:"bytes,2,opt,name=failure_message,json=failureMessage,proto3" json:"failure_message,omitempty"`
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	FailureMessage string                 `protobuf:"bytes,2,opt,name=failure_message,json=failureMessage,proto3" json:"failure_message,omitempty"`
 	// What an actual test name matched to in a failure list. Can be wildcarded or
 	// an exact match without wildcards.
-	MatchedName string `protobuf:"bytes,3,opt,name=matched_name,json=matchedName,proto3" json:"matched_name,omitempty"`
+	MatchedName   string `protobuf:"bytes,3,opt,name=matched_name,json=matchedName,proto3" json:"matched_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TestStatus) Reset() {
@@ -209,11 +208,10 @@ func (x *TestStatus) GetMatchedName() string {
 // This will be known by message_type == "conformance.FailureSet", a conformance
 // test should return a serialized FailureSet in protobuf_payload.
 type FailureSet struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Test          []*TestStatus          `protobuf:"bytes,2,rep,name=test,proto3" json:"test,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Test []*TestStatus `protobuf:"bytes,2,rep,name=test,proto3" json:"test,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *FailureSet) Reset() {
@@ -259,15 +257,12 @@ func (x *FailureSet) GetTest() []*TestStatus {
 //  2. parse the protobuf or JSON payload in "payload" (which may fail)
 //  3. if the parse succeeded, serialize the message in the requested format.
 type ConformanceRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state protoimpl.MessageState `protogen:"open.v1"`
 	// The payload (whether protobuf of JSON) is always for a
 	// protobuf_test_messages.proto3.TestAllTypes proto (as defined in
 	// src/google/protobuf/proto3_test_messages.proto).
 	//
-	// Types that are assignable to Payload:
+	// Types that are valid to be assigned to Payload:
 	//
 	//	*ConformanceRequest_ProtobufPayload
 	//	*ConformanceRequest_JsonPayload
@@ -292,6 +287,8 @@ type ConformanceRequest struct {
 	// This can be used in json and text format. If true, testee should print
 	// unknown fields instead of ignore. This feature is optional.
 	PrintUnknownFields bool `protobuf:"varint,9,opt,name=print_unknown_fields,json=printUnknownFields,proto3" json:"print_unknown_fields,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *ConformanceRequest) Reset() {
@@ -324,37 +321,45 @@ func (*ConformanceRequest) Descriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{2}
 }
 
-func (m *ConformanceRequest) GetPayload() isConformanceRequest_Payload {
-	if m != nil {
-		return m.Payload
+func (x *ConformanceRequest) GetPayload() isConformanceRequest_Payload {
+	if x != nil {
+		return x.Payload
 	}
 	return nil
 }
 
 func (x *ConformanceRequest) GetProtobufPayload() []byte {
-	if x, ok := x.GetPayload().(*ConformanceRequest_ProtobufPayload); ok {
-		return x.ProtobufPayload
+	if x != nil {
+		if x, ok := x.Payload.(*ConformanceRequest_ProtobufPayload); ok {
+			return x.ProtobufPayload
+		}
 	}
 	return nil
 }
 
 func (x *ConformanceRequest) GetJsonPayload() string {
-	if x, ok := x.GetPayload().(*ConformanceRequest_JsonPayload); ok {
-		return x.JsonPayload
+	if x != nil {
+		if x, ok := x.Payload.(*ConformanceRequest_JsonPayload); ok {
+			return x.JsonPayload
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceRequest) GetJspbPayload() string {
-	if x, ok := x.GetPayload().(*ConformanceRequest_JspbPayload); ok {
-		return x.JspbPayload
+	if x != nil {
+		if x, ok := x.Payload.(*ConformanceRequest_JspbPayload); ok {
+			return x.JspbPayload
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceRequest) GetTextPayload() string {
-	if x, ok := x.GetPayload().(*ConformanceRequest_TextPayload); ok {
-		return x.TextPayload
+	if x != nil {
+		if x, ok := x.Payload.(*ConformanceRequest_TextPayload); ok {
+			return x.TextPayload
+		}
 	}
 	return ""
 }
@@ -425,11 +430,8 @@ func (*ConformanceRequest_TextPayload) isConformanceRequest_Payload() {}
 
 // Represents a single test case's output.
 type ConformanceResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	// Types that are assignable to Result:
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Result:
 	//
 	//	*ConformanceResponse_ParseError
 	//	*ConformanceResponse_SerializeError
@@ -440,7 +442,9 @@ type ConformanceResponse struct {
 	//	*ConformanceResponse_Skipped
 	//	*ConformanceResponse_JspbPayload
 	//	*ConformanceResponse_TextPayload
-	Result isConformanceResponse_Result `protobuf_oneof:"result"`
+	Result        isConformanceResponse_Result `protobuf_oneof:"result"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ConformanceResponse) Reset() {
@@ -473,72 +477,90 @@ func (*ConformanceResponse) Descriptor() ([]byte, []int) {
 	return file_conformance_conformance_proto_rawDescGZIP(), []int{3}
 }
 
-func (m *ConformanceResponse) GetResult() isConformanceResponse_Result {
-	if m != nil {
-		return m.Result
+func (x *ConformanceResponse) GetResult() isConformanceResponse_Result {
+	if x != nil {
+		return x.Result
 	}
 	return nil
 }
 
 func (x *ConformanceResponse) GetParseError() string {
-	if x, ok := x.GetResult().(*ConformanceResponse_ParseError); ok {
-		return x.ParseError
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_ParseError); ok {
+			return x.ParseError
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceResponse) GetSerializeError() string {
-	if x, ok := x.GetResult().(*ConformanceResponse_SerializeError); ok {
-		return x.SerializeError
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_SerializeError); ok {
+			return x.SerializeError
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceResponse) GetTimeoutError() string {
-	if x, ok := x.GetResult().(*ConformanceResponse_TimeoutError); ok {
-		return x.TimeoutError
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_TimeoutError); ok {
+			return x.TimeoutError
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceResponse) GetRuntimeError() string {
-	if x, ok := x.GetResult().(*ConformanceResponse_RuntimeError); ok {
-		return x.RuntimeError
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_RuntimeError); ok {
+			return x.RuntimeError
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceResponse) GetProtobufPayload() []byte {
-	if x, ok := x.GetResult().(*ConformanceResponse_ProtobufPayload); ok {
-		return x.ProtobufPayload
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_ProtobufPayload); ok {
+			return x.ProtobufPayload
+		}
 	}
 	return nil
 }
 
 func (x *ConformanceResponse) GetJsonPayload() string {
-	if x, ok := x.GetResult().(*ConformanceResponse_JsonPayload); ok {
-		return x.JsonPayload
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_JsonPayload); ok {
+			return x.JsonPayload
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceResponse) GetSkipped() string {
-	if x, ok := x.GetResult().(*ConformanceResponse_Skipped); ok {
-		return x.Skipped
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_Skipped); ok {
+			return x.Skipped
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceResponse) GetJspbPayload() string {
-	if x, ok := x.GetResult().(*ConformanceResponse_JspbPayload); ok {
-		return x.JspbPayload
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_JspbPayload); ok {
+			return x.JspbPayload
+		}
 	}
 	return ""
 }
 
 func (x *ConformanceResponse) GetTextPayload() string {
-	if x, ok := x.GetResult().(*ConformanceResponse_TextPayload); ok {
-		return x.TextPayload
+	if x != nil {
+		if x, ok := x.Result.(*ConformanceResponse_TextPayload); ok {
+			return x.TextPayload
+		}
 	}
 	return ""
 }
@@ -628,12 +650,11 @@ func (*ConformanceResponse_TextPayload) isConformanceResponse_Result() {}
 
 // Encoding options for jspb format.
 type JspbEncodingConfig struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state protoimpl.MessageState `protogen:"open.v1"`
 	// Encode the value field of Any as jspb array if true, otherwise binary.
 	UseJspbArrayAnyFormat bool `protobuf:"varint,1,opt,name=use_jspb_array_any_format,json=useJspbArrayAnyFormat,proto3" json:"use_jspb_array_any_format,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *JspbEncodingConfig) Reset() {

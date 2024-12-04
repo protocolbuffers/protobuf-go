@@ -54,13 +54,12 @@ type M_Submessage_SubmessageOneofInt64 = sub.M_Submessage_SubmessageOneofInt64
 var E_ExtensionField = sub.E_ExtensionField
 
 type Public struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	M             *sub.M                 `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
+	E             *sub.E                 `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
+	Local         *Local                 `protobuf:"bytes,3,opt,name=local" json:"local,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	M     *sub.M `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
-	E     *sub.E `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
-	Local *Local `protobuf:"bytes,3,opt,name=local" json:"local,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Public) Reset() {

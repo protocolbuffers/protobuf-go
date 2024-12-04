@@ -58,9 +58,9 @@ func (E1) EnumDescriptor() ([]byte, []int) {
 }
 
 type M1 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *M1) Reset() {
@@ -94,11 +94,10 @@ func (*M1) Descriptor() ([]byte, []int) {
 }
 
 type M1_1 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	M1            *M1                    `protobuf:"bytes,1,opt,name=m1,proto3" json:"m1,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	M1 *M1 `protobuf:"bytes,1,opt,name=m1,proto3" json:"m1,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *M1_1) Reset() {

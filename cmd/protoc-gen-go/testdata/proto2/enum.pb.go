@@ -346,12 +346,11 @@ func (EnumContainerMessage1_EnumContainerMessage2_NestedEnumType2B) EnumDescript
 }
 
 type EnumContainerMessage1 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	DefaultDuplicate1 *EnumType2 `protobuf:"varint,1,opt,name=default_duplicate1,json=defaultDuplicate1,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate1,omitempty"`
-	DefaultDuplicate2 *EnumType2 `protobuf:"varint,2,opt,name=default_duplicate2,json=defaultDuplicate2,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate2,omitempty"`
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	DefaultDuplicate1 *EnumType2             `protobuf:"varint,1,opt,name=default_duplicate1,json=defaultDuplicate1,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate1,omitempty"`
+	DefaultDuplicate2 *EnumType2             `protobuf:"varint,2,opt,name=default_duplicate2,json=defaultDuplicate2,enum=goproto.protoc.proto2.EnumType2,def=1" json:"default_duplicate2,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 // Default values for EnumContainerMessage1 fields.
@@ -405,9 +404,9 @@ func (x *EnumContainerMessage1) GetDefaultDuplicate2() EnumType2 {
 }
 
 type EnumContainerMessage1_EnumContainerMessage2 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *EnumContainerMessage1_EnumContainerMessage2) Reset() {

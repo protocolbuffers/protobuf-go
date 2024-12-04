@@ -119,10 +119,7 @@ func (TestAllTypesProto3_NestedEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type TestAllTypesProto3 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state                  protoimpl.MessageState                       `protogen:"open.v1"`
 	SingularInt32          int32                                        `protobuf:"varint,81,opt,name=singular_int32,json=singularInt32,proto3" json:"singular_int32,omitempty"`
 	SingularInt64          int64                                        `protobuf:"varint,82,opt,name=singular_int64,json=singularInt64,proto3" json:"singular_int64,omitempty"`
 	SingularUint32         uint32                                       `protobuf:"varint,83,opt,name=singular_uint32,json=singularUint32,proto3" json:"singular_uint32,omitempty"`
@@ -180,24 +177,24 @@ type TestAllTypesProto3 struct {
 	RepeatedForeignMessage []*ForeignMessageProto3                      `protobuf:"bytes,49,rep,name=repeated_foreign_message,json=repeatedForeignMessage,proto3" json:"repeated_foreign_message,omitempty"`
 	RepeatedNestedEnum     []TestAllTypesProto3_NestedEnum              `protobuf:"varint,51,rep,packed,name=repeated_nested_enum,json=repeatedNestedEnum,proto3,enum=goproto.proto.test.TestAllTypesProto3_NestedEnum" json:"repeated_nested_enum,omitempty"`
 	RepeatedForeignEnum    []ForeignEnumProto3                          `protobuf:"varint,52,rep,packed,name=repeated_foreign_enum,json=repeatedForeignEnum,proto3,enum=goproto.proto.test.ForeignEnumProto3" json:"repeated_foreign_enum,omitempty"`
-	MapInt32Int32          map[int32]int32                              `protobuf:"bytes,56,rep,name=map_int32_int32,json=mapInt32Int32,proto3" json:"map_int32_int32,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	MapInt64Int64          map[int64]int64                              `protobuf:"bytes,57,rep,name=map_int64_int64,json=mapInt64Int64,proto3" json:"map_int64_int64,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	MapUint32Uint32        map[uint32]uint32                            `protobuf:"bytes,58,rep,name=map_uint32_uint32,json=mapUint32Uint32,proto3" json:"map_uint32_uint32,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	MapUint64Uint64        map[uint64]uint64                            `protobuf:"bytes,59,rep,name=map_uint64_uint64,json=mapUint64Uint64,proto3" json:"map_uint64_uint64,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	MapSint32Sint32        map[int32]int32                              `protobuf:"bytes,60,rep,name=map_sint32_sint32,json=mapSint32Sint32,proto3" json:"map_sint32_sint32,omitempty" protobuf_key:"zigzag32,1,opt,name=key,proto3" protobuf_val:"zigzag32,2,opt,name=value,proto3"`
-	MapSint64Sint64        map[int64]int64                              `protobuf:"bytes,61,rep,name=map_sint64_sint64,json=mapSint64Sint64,proto3" json:"map_sint64_sint64,omitempty" protobuf_key:"zigzag64,1,opt,name=key,proto3" protobuf_val:"zigzag64,2,opt,name=value,proto3"`
-	MapFixed32Fixed32      map[uint32]uint32                            `protobuf:"bytes,62,rep,name=map_fixed32_fixed32,json=mapFixed32Fixed32,proto3" json:"map_fixed32_fixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key,proto3" protobuf_val:"fixed32,2,opt,name=value,proto3"`
-	MapFixed64Fixed64      map[uint64]uint64                            `protobuf:"bytes,63,rep,name=map_fixed64_fixed64,json=mapFixed64Fixed64,proto3" json:"map_fixed64_fixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key,proto3" protobuf_val:"fixed64,2,opt,name=value,proto3"`
-	MapSfixed32Sfixed32    map[int32]int32                              `protobuf:"bytes,64,rep,name=map_sfixed32_sfixed32,json=mapSfixed32Sfixed32,proto3" json:"map_sfixed32_sfixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key,proto3" protobuf_val:"fixed32,2,opt,name=value,proto3"`
-	MapSfixed64Sfixed64    map[int64]int64                              `protobuf:"bytes,65,rep,name=map_sfixed64_sfixed64,json=mapSfixed64Sfixed64,proto3" json:"map_sfixed64_sfixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key,proto3" protobuf_val:"fixed64,2,opt,name=value,proto3"`
-	MapInt32Float          map[int32]float32                            `protobuf:"bytes,66,rep,name=map_int32_float,json=mapInt32Float,proto3" json:"map_int32_float,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"fixed32,2,opt,name=value,proto3"`
-	MapInt32Double         map[int32]float64                            `protobuf:"bytes,67,rep,name=map_int32_double,json=mapInt32Double,proto3" json:"map_int32_double,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"fixed64,2,opt,name=value,proto3"`
-	MapBoolBool            map[bool]bool                                `protobuf:"bytes,68,rep,name=map_bool_bool,json=mapBoolBool,proto3" json:"map_bool_bool,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	MapStringString        map[string]string                            `protobuf:"bytes,69,rep,name=map_string_string,json=mapStringString,proto3" json:"map_string_string,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	MapStringBytes         map[string][]byte                            `protobuf:"bytes,70,rep,name=map_string_bytes,json=mapStringBytes,proto3" json:"map_string_bytes,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	MapStringNestedMessage map[string]*TestAllTypesProto3_NestedMessage `protobuf:"bytes,71,rep,name=map_string_nested_message,json=mapStringNestedMessage,proto3" json:"map_string_nested_message,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	MapStringNestedEnum    map[string]TestAllTypesProto3_NestedEnum     `protobuf:"bytes,73,rep,name=map_string_nested_enum,json=mapStringNestedEnum,proto3" json:"map_string_nested_enum,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=goproto.proto.test.TestAllTypesProto3_NestedEnum"`
-	// Types that are assignable to OneofField:
+	MapInt32Int32          map[int32]int32                              `protobuf:"bytes,56,rep,name=map_int32_int32,json=mapInt32Int32,proto3" json:"map_int32_int32,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	MapInt64Int64          map[int64]int64                              `protobuf:"bytes,57,rep,name=map_int64_int64,json=mapInt64Int64,proto3" json:"map_int64_int64,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	MapUint32Uint32        map[uint32]uint32                            `protobuf:"bytes,58,rep,name=map_uint32_uint32,json=mapUint32Uint32,proto3" json:"map_uint32_uint32,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	MapUint64Uint64        map[uint64]uint64                            `protobuf:"bytes,59,rep,name=map_uint64_uint64,json=mapUint64Uint64,proto3" json:"map_uint64_uint64,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	MapSint32Sint32        map[int32]int32                              `protobuf:"bytes,60,rep,name=map_sint32_sint32,json=mapSint32Sint32,proto3" json:"map_sint32_sint32,omitempty" protobuf_key:"zigzag32,1,opt,name=key" protobuf_val:"zigzag32,2,opt,name=value"`
+	MapSint64Sint64        map[int64]int64                              `protobuf:"bytes,61,rep,name=map_sint64_sint64,json=mapSint64Sint64,proto3" json:"map_sint64_sint64,omitempty" protobuf_key:"zigzag64,1,opt,name=key" protobuf_val:"zigzag64,2,opt,name=value"`
+	MapFixed32Fixed32      map[uint32]uint32                            `protobuf:"bytes,62,rep,name=map_fixed32_fixed32,json=mapFixed32Fixed32,proto3" json:"map_fixed32_fixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
+	MapFixed64Fixed64      map[uint64]uint64                            `protobuf:"bytes,63,rep,name=map_fixed64_fixed64,json=mapFixed64Fixed64,proto3" json:"map_fixed64_fixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
+	MapSfixed32Sfixed32    map[int32]int32                              `protobuf:"bytes,64,rep,name=map_sfixed32_sfixed32,json=mapSfixed32Sfixed32,proto3" json:"map_sfixed32_sfixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
+	MapSfixed64Sfixed64    map[int64]int64                              `protobuf:"bytes,65,rep,name=map_sfixed64_sfixed64,json=mapSfixed64Sfixed64,proto3" json:"map_sfixed64_sfixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
+	MapInt32Float          map[int32]float32                            `protobuf:"bytes,66,rep,name=map_int32_float,json=mapInt32Float,proto3" json:"map_int32_float,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
+	MapInt32Double         map[int32]float64                            `protobuf:"bytes,67,rep,name=map_int32_double,json=mapInt32Double,proto3" json:"map_int32_double,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
+	MapBoolBool            map[bool]bool                                `protobuf:"bytes,68,rep,name=map_bool_bool,json=mapBoolBool,proto3" json:"map_bool_bool,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	MapStringString        map[string]string                            `protobuf:"bytes,69,rep,name=map_string_string,json=mapStringString,proto3" json:"map_string_string,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	MapStringBytes         map[string][]byte                            `protobuf:"bytes,70,rep,name=map_string_bytes,json=mapStringBytes,proto3" json:"map_string_bytes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	MapStringNestedMessage map[string]*TestAllTypesProto3_NestedMessage `protobuf:"bytes,71,rep,name=map_string_nested_message,json=mapStringNestedMessage,proto3" json:"map_string_nested_message,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	MapStringNestedEnum    map[string]TestAllTypesProto3_NestedEnum     `protobuf:"bytes,73,rep,name=map_string_nested_enum,json=mapStringNestedEnum,proto3" json:"map_string_nested_enum,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=goproto.proto.test.TestAllTypesProto3_NestedEnum"`
+	// Types that are valid to be assigned to OneofField:
 	//
 	//	*TestAllTypesProto3_OneofUint32
 	//	*TestAllTypesProto3_OneofNestedMessage
@@ -208,7 +205,9 @@ type TestAllTypesProto3 struct {
 	//	*TestAllTypesProto3_OneofFloat
 	//	*TestAllTypesProto3_OneofDouble
 	//	*TestAllTypesProto3_OneofEnum
-	OneofField isTestAllTypesProto3_OneofField `protobuf_oneof:"oneof_field"`
+	OneofField    isTestAllTypesProto3_OneofField `protobuf_oneof:"oneof_field"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TestAllTypesProto3) Reset() {
@@ -759,72 +758,90 @@ func (x *TestAllTypesProto3) GetMapStringNestedEnum() map[string]TestAllTypesPro
 	return nil
 }
 
-func (m *TestAllTypesProto3) GetOneofField() isTestAllTypesProto3_OneofField {
-	if m != nil {
-		return m.OneofField
+func (x *TestAllTypesProto3) GetOneofField() isTestAllTypesProto3_OneofField {
+	if x != nil {
+		return x.OneofField
 	}
 	return nil
 }
 
 func (x *TestAllTypesProto3) GetOneofUint32() uint32 {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofUint32); ok {
-		return x.OneofUint32
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofUint32); ok {
+			return x.OneofUint32
+		}
 	}
 	return 0
 }
 
 func (x *TestAllTypesProto3) GetOneofNestedMessage() *TestAllTypesProto3_NestedMessage {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofNestedMessage); ok {
-		return x.OneofNestedMessage
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofNestedMessage); ok {
+			return x.OneofNestedMessage
+		}
 	}
 	return nil
 }
 
 func (x *TestAllTypesProto3) GetOneofString() string {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofString); ok {
-		return x.OneofString
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofString); ok {
+			return x.OneofString
+		}
 	}
 	return ""
 }
 
 func (x *TestAllTypesProto3) GetOneofBytes() []byte {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofBytes); ok {
-		return x.OneofBytes
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofBytes); ok {
+			return x.OneofBytes
+		}
 	}
 	return nil
 }
 
 func (x *TestAllTypesProto3) GetOneofBool() bool {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofBool); ok {
-		return x.OneofBool
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofBool); ok {
+			return x.OneofBool
+		}
 	}
 	return false
 }
 
 func (x *TestAllTypesProto3) GetOneofUint64() uint64 {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofUint64); ok {
-		return x.OneofUint64
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofUint64); ok {
+			return x.OneofUint64
+		}
 	}
 	return 0
 }
 
 func (x *TestAllTypesProto3) GetOneofFloat() float32 {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofFloat); ok {
-		return x.OneofFloat
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofFloat); ok {
+			return x.OneofFloat
+		}
 	}
 	return 0
 }
 
 func (x *TestAllTypesProto3) GetOneofDouble() float64 {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofDouble); ok {
-		return x.OneofDouble
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofDouble); ok {
+			return x.OneofDouble
+		}
 	}
 	return 0
 }
 
 func (x *TestAllTypesProto3) GetOneofEnum() TestAllTypesProto3_NestedEnum {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3_OneofEnum); ok {
-		return x.OneofEnum
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3_OneofEnum); ok {
+			return x.OneofEnum
+		}
 	}
 	return TestAllTypesProto3_FOO
 }
@@ -888,12 +905,11 @@ func (*TestAllTypesProto3_OneofDouble) isTestAllTypesProto3_OneofField() {}
 func (*TestAllTypesProto3_OneofEnum) isTestAllTypesProto3_OneofField() {}
 
 type ForeignMessageProto3 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	C             int32                  `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
+	D             int32                  `protobuf:"varint,2,opt,name=d,proto3" json:"d,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	C int32 `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
-	D int32 `protobuf:"varint,2,opt,name=d,proto3" json:"d,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ForeignMessageProto3) Reset() {
@@ -941,12 +957,11 @@ func (x *ForeignMessageProto3) GetD() int32 {
 }
 
 type TestAllTypesProto3_NestedMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	A             int32                  `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
+	Corecursive   *TestAllTypesProto3    `protobuf:"bytes,2,opt,name=corecursive,proto3" json:"corecursive,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	A           int32               `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
-	Corecursive *TestAllTypesProto3 `protobuf:"bytes,2,opt,name=corecursive,proto3" json:"corecursive,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TestAllTypesProto3_NestedMessage) Reset() {

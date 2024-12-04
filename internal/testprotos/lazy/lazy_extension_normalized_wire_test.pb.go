@@ -15,13 +15,12 @@ import (
 )
 
 type Sub struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	C               *uint32                `protobuf:"varint,3,opt,name=c" json:"c,omitempty"`
+	Grandchild      *Sub                   `protobuf:"bytes,4,opt,name=grandchild" json:"grandchild,omitempty"`
 	extensionFields protoimpl.ExtensionFields
-
-	C          *uint32 `protobuf:"varint,3,opt,name=c" json:"c,omitempty"`
-	Grandchild *Sub    `protobuf:"bytes,4,opt,name=grandchild" json:"grandchild,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Sub) Reset() {
@@ -69,12 +68,11 @@ func (x *Sub) GetGrandchild() *Sub {
 }
 
 type Top struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	A             *uint32                `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
+	Child         *Sub                   `protobuf:"bytes,2,opt,name=child" json:"child,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	A     *uint32 `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
-	Child *Sub    `protobuf:"bytes,2,opt,name=child" json:"child,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Top) Reset() {
@@ -122,11 +120,10 @@ func (x *Top) GetChild() *Sub {
 }
 
 type Ext struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SomeFlag      *bool                  `protobuf:"varint,1,opt,name=some_flag,json=someFlag" json:"some_flag,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	SomeFlag *bool `protobuf:"varint,1,opt,name=some_flag,json=someFlag" json:"some_flag,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Ext) Reset() {

@@ -15,15 +15,14 @@ import (
 )
 
 type MessageWithMaps struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state              protoimpl.MessageState                   `protogen:"open.v1"`
 	MapWithoutMessage  map[string]string                        `protobuf:"bytes,1,rep,name=map_without_message,json=mapWithoutMessage" json:"map_without_message,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	MapWithoutMessageB map[uint32][]byte                        `protobuf:"bytes,2,rep,name=map_without_message_b,json=mapWithoutMessageB" json:"map_without_message_b,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	MapWithMessage     map[int64]*MessageWithMaps_NestedMessage `protobuf:"bytes,3,rep,name=map_with_message,json=mapWithMessage" json:"map_with_message,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	NestedMessage      *MessageWithMaps_NestedMessage           `protobuf:"group,4,opt,name=NestedMessage,json=nestedMessage" json:"nested_message,omitempty"`
 	RepeatedMessage    []*MessageWithMaps_NestedMessage         `protobuf:"group,5,rep,name=NestedMessage,json=repeatedMessage" json:"repeated_message,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *MessageWithMaps) Reset() {
@@ -92,12 +91,11 @@ func (x *MessageWithMaps) GetRepeatedMessage() []*MessageWithMaps_NestedMessage 
 }
 
 type MessageWithMaps_NestedMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            *uint64                `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Id   *uint64 `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
-	Name *string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MessageWithMaps_NestedMessage) Reset() {

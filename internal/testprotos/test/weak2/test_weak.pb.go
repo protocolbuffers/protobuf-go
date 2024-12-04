@@ -15,11 +15,10 @@ import (
 )
 
 type WeakImportMessage2 struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	A             *int32                 `protobuf:"varint,1,req,name=a" json:"a,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	A *int32 `protobuf:"varint,1,req,name=a" json:"a,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WeakImportMessage2) Reset() {

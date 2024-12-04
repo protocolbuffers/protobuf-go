@@ -159,11 +159,10 @@ func (PipistrelleSpecies) EnumDescriptor() ([]byte, []int) {
 
 // This message contains a message set.
 type Holder struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Data          *messagesetpb.MessageSet `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Data *messagesetpb.MessageSet `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Holder) Reset() {
@@ -205,11 +204,10 @@ func (x *Holder) GetData() *messagesetpb.MessageSet {
 
 // This message may be inserted into a message set.
 type Rabbit struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Name *string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Rabbit) Reset() {
@@ -250,11 +248,10 @@ func (x *Rabbit) GetName() string {
 }
 
 type FlyingFox struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Species       *FlyingFoxSpecies      `protobuf:"varint,1,opt,name=species,enum=lazy_extension_test.FlyingFoxSpecies" json:"species,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Species *FlyingFoxSpecies `protobuf:"varint,1,opt,name=species,enum=lazy_extension_test.FlyingFoxSpecies" json:"species,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *FlyingFox) Reset() {
@@ -295,12 +292,11 @@ func (x *FlyingFox) GetSpecies() FlyingFoxSpecies {
 }
 
 type Tree struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Eucalyptus      *bool                  `protobuf:"varint,1,opt,name=eucalyptus" json:"eucalyptus,omitempty"`
 	extensionFields protoimpl.ExtensionFields
-
-	Eucalyptus *bool `protobuf:"varint,1,opt,name=eucalyptus" json:"eucalyptus,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Tree) Reset() {
@@ -341,11 +337,10 @@ func (x *Tree) GetEucalyptus() bool {
 }
 
 type Pipistrelle struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Species       *PipistrelleSpecies    `protobuf:"varint,1,opt,name=species,enum=lazy_extension_test.PipistrelleSpecies" json:"species,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Species *PipistrelleSpecies `protobuf:"varint,1,opt,name=species,enum=lazy_extension_test.PipistrelleSpecies" json:"species,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Pipistrelle) Reset() {
@@ -386,11 +381,10 @@ func (x *Pipistrelle) GetSpecies() PipistrelleSpecies {
 }
 
 type Pipistrelles struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Species       *PipistrelleSpecies    `protobuf:"varint,1,opt,name=species,enum=lazy_extension_test.PipistrelleSpecies" json:"species,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Species *PipistrelleSpecies `protobuf:"varint,1,opt,name=species,enum=lazy_extension_test.PipistrelleSpecies" json:"species,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Pipistrelles) Reset() {
@@ -432,9 +426,9 @@ func (x *Pipistrelles) GetSpecies() PipistrelleSpecies {
 
 // And the ugly version that is not encouraged
 type BatNest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BatNest) Reset() {

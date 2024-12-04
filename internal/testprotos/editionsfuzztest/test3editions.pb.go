@@ -119,10 +119,7 @@ func (TestAllTypesProto3Editions_NestedEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type TestAllTypesProto3Editions struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state                  protoimpl.MessageState                               `protogen:"open.v1"`
 	SingularInt32          int32                                                `protobuf:"varint,81,opt,name=singular_int32,json=singularInt32" json:"singular_int32,omitempty"`
 	SingularInt64          int64                                                `protobuf:"varint,82,opt,name=singular_int64,json=singularInt64" json:"singular_int64,omitempty"`
 	SingularUint32         uint32                                               `protobuf:"varint,83,opt,name=singular_uint32,json=singularUint32" json:"singular_uint32,omitempty"`
@@ -197,7 +194,7 @@ type TestAllTypesProto3Editions struct {
 	MapStringBytes         map[string][]byte                                    `protobuf:"bytes,70,rep,name=map_string_bytes,json=mapStringBytes" json:"map_string_bytes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	MapStringNestedMessage map[string]*TestAllTypesProto3Editions_NestedMessage `protobuf:"bytes,71,rep,name=map_string_nested_message,json=mapStringNestedMessage" json:"map_string_nested_message,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	MapStringNestedEnum    map[string]TestAllTypesProto3Editions_NestedEnum     `protobuf:"bytes,73,rep,name=map_string_nested_enum,json=mapStringNestedEnum" json:"map_string_nested_enum,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=goproto.proto.test.TestAllTypesProto3Editions_NestedEnum"`
-	// Types that are assignable to OneofField:
+	// Types that are valid to be assigned to OneofField:
 	//
 	//	*TestAllTypesProto3Editions_OneofUint32
 	//	*TestAllTypesProto3Editions_OneofNestedMessage
@@ -208,7 +205,9 @@ type TestAllTypesProto3Editions struct {
 	//	*TestAllTypesProto3Editions_OneofFloat
 	//	*TestAllTypesProto3Editions_OneofDouble
 	//	*TestAllTypesProto3Editions_OneofEnum
-	OneofField isTestAllTypesProto3Editions_OneofField `protobuf_oneof:"oneof_field"`
+	OneofField    isTestAllTypesProto3Editions_OneofField `protobuf_oneof:"oneof_field"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TestAllTypesProto3Editions) Reset() {
@@ -759,72 +758,90 @@ func (x *TestAllTypesProto3Editions) GetMapStringNestedEnum() map[string]TestAll
 	return nil
 }
 
-func (m *TestAllTypesProto3Editions) GetOneofField() isTestAllTypesProto3Editions_OneofField {
-	if m != nil {
-		return m.OneofField
+func (x *TestAllTypesProto3Editions) GetOneofField() isTestAllTypesProto3Editions_OneofField {
+	if x != nil {
+		return x.OneofField
 	}
 	return nil
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofUint32() uint32 {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofUint32); ok {
-		return x.OneofUint32
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofUint32); ok {
+			return x.OneofUint32
+		}
 	}
 	return 0
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofNestedMessage() *TestAllTypesProto3Editions_NestedMessage {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofNestedMessage); ok {
-		return x.OneofNestedMessage
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofNestedMessage); ok {
+			return x.OneofNestedMessage
+		}
 	}
 	return nil
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofString() string {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofString); ok {
-		return x.OneofString
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofString); ok {
+			return x.OneofString
+		}
 	}
 	return ""
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofBytes() []byte {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofBytes); ok {
-		return x.OneofBytes
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofBytes); ok {
+			return x.OneofBytes
+		}
 	}
 	return nil
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofBool() bool {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofBool); ok {
-		return x.OneofBool
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofBool); ok {
+			return x.OneofBool
+		}
 	}
 	return false
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofUint64() uint64 {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofUint64); ok {
-		return x.OneofUint64
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofUint64); ok {
+			return x.OneofUint64
+		}
 	}
 	return 0
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofFloat() float32 {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofFloat); ok {
-		return x.OneofFloat
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofFloat); ok {
+			return x.OneofFloat
+		}
 	}
 	return 0
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofDouble() float64 {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofDouble); ok {
-		return x.OneofDouble
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofDouble); ok {
+			return x.OneofDouble
+		}
 	}
 	return 0
 }
 
 func (x *TestAllTypesProto3Editions) GetOneofEnum() TestAllTypesProto3Editions_NestedEnum {
-	if x, ok := x.GetOneofField().(*TestAllTypesProto3Editions_OneofEnum); ok {
-		return x.OneofEnum
+	if x != nil {
+		if x, ok := x.OneofField.(*TestAllTypesProto3Editions_OneofEnum); ok {
+			return x.OneofEnum
+		}
 	}
 	return TestAllTypesProto3Editions_FOO
 }
@@ -888,12 +905,11 @@ func (*TestAllTypesProto3Editions_OneofDouble) isTestAllTypesProto3Editions_Oneo
 func (*TestAllTypesProto3Editions_OneofEnum) isTestAllTypesProto3Editions_OneofField() {}
 
 type ForeignMessageProto3Editions struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	C             int32                  `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
+	D             int32                  `protobuf:"varint,2,opt,name=d" json:"d,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	C int32 `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
-	D int32 `protobuf:"varint,2,opt,name=d" json:"d,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ForeignMessageProto3Editions) Reset() {
@@ -941,12 +957,11 @@ func (x *ForeignMessageProto3Editions) GetD() int32 {
 }
 
 type TestAllTypesProto3Editions_NestedMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	A             int32                       `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
+	Corecursive   *TestAllTypesProto3Editions `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	A           int32                       `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
-	Corecursive *TestAllTypesProto3Editions `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TestAllTypesProto3Editions_NestedMessage) Reset() {

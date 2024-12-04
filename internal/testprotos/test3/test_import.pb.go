@@ -58,9 +58,9 @@ func (ImportEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type ImportMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ImportMessage) Reset() {

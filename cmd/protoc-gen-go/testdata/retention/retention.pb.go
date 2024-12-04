@@ -122,10 +122,10 @@ func (TopLevelMessage_NestedEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type Extendee struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
 	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Extendee) Reset() {
@@ -159,16 +159,15 @@ func (*Extendee) Descriptor() ([]byte, []int) {
 }
 
 type TopLevelMessage struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
-	extensionFields protoimpl.ExtensionFields
-
-	F *float32 `protobuf:"fixed32,1,opt,name=f" json:"f,omitempty"`
-	// Types that are assignable to O:
+	state protoimpl.MessageState `protogen:"open.v1"`
+	F     *float32               `protobuf:"fixed32,1,opt,name=f" json:"f,omitempty"`
+	// Types that are valid to be assigned to O:
 	//
 	//	*TopLevelMessage_I
-	O isTopLevelMessage_O `protobuf_oneof:"o"`
+	O               isTopLevelMessage_O `protobuf_oneof:"o"`
+	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *TopLevelMessage) Reset() {
@@ -208,16 +207,18 @@ func (x *TopLevelMessage) GetF() float32 {
 	return 0
 }
 
-func (m *TopLevelMessage) GetO() isTopLevelMessage_O {
-	if m != nil {
-		return m.O
+func (x *TopLevelMessage) GetO() isTopLevelMessage_O {
+	if x != nil {
+		return x.O
 	}
 	return nil
 }
 
 func (x *TopLevelMessage) GetI() int64 {
-	if x, ok := x.GetO().(*TopLevelMessage_I); ok {
-		return x.I
+	if x != nil {
+		if x, ok := x.O.(*TopLevelMessage_I); ok {
+			return x.I
+		}
 	}
 	return 0
 }
@@ -233,9 +234,9 @@ type TopLevelMessage_I struct {
 func (*TopLevelMessage_I) isTopLevelMessage_O() {}
 
 type TopLevelMessage_NestedMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TopLevelMessage_NestedMessage) Reset() {

@@ -61,12 +61,11 @@ func (DeprecatedEnum) EnumDescriptor() ([]byte, []int) {
 
 // Deprecated: The entire proto file cmd/protoc-gen-go/testdata/comments/deprecated.proto is marked as deprecated.
 type DeprecatedMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state protoimpl.MessageState `protogen:"open.v1"`
 	// Deprecated: The entire proto file cmd/protoc-gen-go/testdata/comments/deprecated.proto is marked as deprecated.
 	DeprecatedField string `protobuf:"bytes,1,opt,name=deprecated_field,json=deprecatedField,proto3" json:"deprecated_field,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *DeprecatedMessage) Reset() {

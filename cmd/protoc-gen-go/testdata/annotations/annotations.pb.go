@@ -69,13 +69,13 @@ func (AnnotationsTestEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type AnnotationsTestMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	AnnotationsTestField *string                `protobuf:"bytes,1,opt,name=AnnotationsTestField" json:"AnnotationsTestField,omitempty"`
+	// Deprecated: Do not use. This will be deleted in the near future.
+	XXX_weak_M    struct{} `protobuf:"bytes,2,opt,name=m,weak=fmt.M" json:"m,omitempty"`
 	weakFields    protoimpl.WeakFields
 	unknownFields protoimpl.UnknownFields
-
-	AnnotationsTestField *string  `protobuf:"bytes,1,opt,name=AnnotationsTestField" json:"AnnotationsTestField,omitempty"`
-	XXX_weak_M           struct{} `protobuf:"bytes,2,opt,name=m,weak=fmt.M" json:"m,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AnnotationsTestMessage) Reset() {

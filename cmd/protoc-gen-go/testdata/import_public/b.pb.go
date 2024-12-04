@@ -16,12 +16,11 @@ import (
 )
 
 type Local struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	M             *sub.M                 `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
+	E             *sub.E                 `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	M *sub.M `protobuf:"bytes,1,opt,name=m" json:"m,omitempty"`
-	E *sub.E `protobuf:"varint,2,opt,name=e,enum=goproto.protoc.import_public.sub.E" json:"e,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Local) Reset() {

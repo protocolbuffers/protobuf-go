@@ -15,10 +15,10 @@ import (
 )
 
 type TestAllExtensions struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
 	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *TestAllExtensions) Reset() {
@@ -52,13 +52,12 @@ func (*TestAllExtensions) Descriptor() ([]byte, []int) {
 }
 
 type OptionalGroup struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state                 protoimpl.MessageState           `protogen:"open.v1"`
 	A                     *int32                           `protobuf:"varint,17,opt,name=a" json:"a,omitempty"`
 	SameFieldNumber       *int32                           `protobuf:"varint,16,opt,name=same_field_number,json=sameFieldNumber" json:"same_field_number,omitempty"`
 	OptionalNestedMessage *TestAllExtensions_NestedMessage `protobuf:"bytes,1000,opt,name=optional_nested_message,json=optionalNestedMessage" json:"optional_nested_message,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *OptionalGroup) Reset() {
@@ -113,12 +112,11 @@ func (x *OptionalGroup) GetOptionalNestedMessage() *TestAllExtensions_NestedMess
 }
 
 type RepeatedGroup struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state                 protoimpl.MessageState           `protogen:"open.v1"`
 	A                     *int32                           `protobuf:"varint,47,opt,name=a" json:"a,omitempty"`
 	OptionalNestedMessage *TestAllExtensions_NestedMessage `protobuf:"bytes,1001,opt,name=optional_nested_message,json=optionalNestedMessage" json:"optional_nested_message,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *RepeatedGroup) Reset() {
@@ -166,10 +164,10 @@ func (x *RepeatedGroup) GetOptionalNestedMessage() *TestAllExtensions_NestedMess
 }
 
 type TestFeatureResolution struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
 	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *TestFeatureResolution) Reset() {
@@ -203,9 +201,9 @@ func (*TestFeatureResolution) Descriptor() ([]byte, []int) {
 }
 
 type RepeatedFieldEncoding struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RepeatedFieldEncoding) Reset() {
@@ -239,12 +237,11 @@ func (*RepeatedFieldEncoding) Descriptor() ([]byte, []int) {
 }
 
 type TestAllExtensions_NestedMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	A             *int32                 `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
+	Corecursive   *TestAllExtensions     `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	A           *int32             `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
-	Corecursive *TestAllExtensions `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TestAllExtensions_NestedMessage) Reset() {

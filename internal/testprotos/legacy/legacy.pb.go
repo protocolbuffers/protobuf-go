@@ -27,22 +27,21 @@ import (
 )
 
 type Legacy struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState            `protogen:"open.v1"`
+	F1            *proto2_20160225_2fc053c5.Message `protobuf:"bytes,1,opt,name=f1,proto3" json:"f1,omitempty"`
+	F2            *proto3_20160225_2fc053c5.Message `protobuf:"bytes,2,opt,name=f2,proto3" json:"f2,omitempty"`
+	F3            *proto2_20160519_a4ab9ec5.Message `protobuf:"bytes,3,opt,name=f3,proto3" json:"f3,omitempty"`
+	F4            *proto3_20160519_a4ab9ec5.Message `protobuf:"bytes,4,opt,name=f4,proto3" json:"f4,omitempty"`
+	F5            *proto2_20180125_92554152.Message `protobuf:"bytes,5,opt,name=f5,proto3" json:"f5,omitempty"`
+	F6            *proto3_20180125_92554152.Message `protobuf:"bytes,6,opt,name=f6,proto3" json:"f6,omitempty"`
+	F7            *proto2_20180430_b4deda09.Message `protobuf:"bytes,7,opt,name=f7,proto3" json:"f7,omitempty"`
+	F8            *proto3_20180430_b4deda09.Message `protobuf:"bytes,8,opt,name=f8,proto3" json:"f8,omitempty"`
+	F9            *proto2_20180814_aa810b61.Message `protobuf:"bytes,9,opt,name=f9,proto3" json:"f9,omitempty"`
+	F10           *proto3_20180814_aa810b61.Message `protobuf:"bytes,10,opt,name=f10,proto3" json:"f10,omitempty"`
+	F11           *proto2_20190205_c823c79e.Message `protobuf:"bytes,11,opt,name=f11,proto3" json:"f11,omitempty"`
+	F12           *proto3_20190205_c823c79e.Message `protobuf:"bytes,12,opt,name=f12,proto3" json:"f12,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	F1  *proto2_20160225_2fc053c5.Message `protobuf:"bytes,1,opt,name=f1,proto3" json:"f1,omitempty"`
-	F2  *proto3_20160225_2fc053c5.Message `protobuf:"bytes,2,opt,name=f2,proto3" json:"f2,omitempty"`
-	F3  *proto2_20160519_a4ab9ec5.Message `protobuf:"bytes,3,opt,name=f3,proto3" json:"f3,omitempty"`
-	F4  *proto3_20160519_a4ab9ec5.Message `protobuf:"bytes,4,opt,name=f4,proto3" json:"f4,omitempty"`
-	F5  *proto2_20180125_92554152.Message `protobuf:"bytes,5,opt,name=f5,proto3" json:"f5,omitempty"`
-	F6  *proto3_20180125_92554152.Message `protobuf:"bytes,6,opt,name=f6,proto3" json:"f6,omitempty"`
-	F7  *proto2_20180430_b4deda09.Message `protobuf:"bytes,7,opt,name=f7,proto3" json:"f7,omitempty"`
-	F8  *proto3_20180430_b4deda09.Message `protobuf:"bytes,8,opt,name=f8,proto3" json:"f8,omitempty"`
-	F9  *proto2_20180814_aa810b61.Message `protobuf:"bytes,9,opt,name=f9,proto3" json:"f9,omitempty"`
-	F10 *proto3_20180814_aa810b61.Message `protobuf:"bytes,10,opt,name=f10,proto3" json:"f10,omitempty"`
-	F11 *proto2_20190205_c823c79e.Message `protobuf:"bytes,11,opt,name=f11,proto3" json:"f11,omitempty"`
-	F12 *proto3_20190205_c823c79e.Message `protobuf:"bytes,12,opt,name=f12,proto3" json:"f12,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Legacy) Reset() {

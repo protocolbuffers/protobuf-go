@@ -12,7 +12,6 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/gofeaturespb"
 	reflect "reflect"
-	sync "sync"
 )
 
 type Strip int32
@@ -54,11 +53,6 @@ func (Strip) Type() protoreflect.EnumType {
 
 func (x Strip) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use Strip.Descriptor instead.
-func (Strip) EnumDescriptor() ([]byte, []int) {
-	return file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescGZIP(), []int{0}
 }
 
 type Both int32
@@ -108,11 +102,6 @@ func (x Both) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Both.Descriptor instead.
-func (Both) EnumDescriptor() ([]byte, []int) {
-	return file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescGZIP(), []int{1}
-}
-
 type BothNoPrefix int32
 
 const (
@@ -152,11 +141,6 @@ func (BothNoPrefix) Type() protoreflect.EnumType {
 
 func (x BothNoPrefix) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use BothNoPrefix.Descriptor instead.
-func (BothNoPrefix) EnumDescriptor() ([]byte, []int) {
-	return file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescGZIP(), []int{2}
 }
 
 type BothButOne int32
@@ -205,11 +189,6 @@ func (x BothButOne) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use BothButOne.Descriptor instead.
-func (BothButOne) EnumDescriptor() ([]byte, []int) {
-	return file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescGZIP(), []int{3}
-}
-
 var File_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto protoreflect.FileDescriptor
 
 var file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDesc = []byte{
@@ -239,18 +218,6 @@ var file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDesc = []byte
 	0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x2f, 0x65,
 	0x6e, 0x75, 0x6d, 0x70, 0x72, 0x65, 0x66, 0x69, 0x78, 0x92, 0x03, 0x05, 0xd2, 0x3e, 0x02, 0x18,
 	0x03, 0x62, 0x08, 0x65, 0x64, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x70, 0xe9, 0x07,
-}
-
-var (
-	file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescOnce sync.Once
-	file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescData = file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDesc
-)
-
-func file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescGZIP() []byte {
-	file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescOnce.Do(func() {
-		file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescData = protoimpl.X.CompressGZIP(file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescData)
-	})
-	return file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDescData
 }
 
 var file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_enumTypes = make([]protoimpl.EnumInfo, 4)

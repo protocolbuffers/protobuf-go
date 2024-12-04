@@ -179,9 +179,9 @@ func (ContainerForNestedEnum_NestedEnum) EnumDescriptor() ([]byte, []int) {
 }
 
 type ContainerForNestedEnum struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ContainerForNestedEnum) Reset() {

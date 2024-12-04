@@ -174,25 +174,24 @@ func (Enums_NestedEnum) EnumDescriptor() ([]byte, []int) {
 
 // Scalars contains scalar field types.
 type Scalars struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SBool         bool                   `protobuf:"varint,1,opt,name=s_bool,json=sBool,proto3" json:"s_bool,omitempty"`
+	SInt32        int32                  `protobuf:"varint,2,opt,name=s_int32,json=sInt32,proto3" json:"s_int32,omitempty"`
+	SInt64        int64                  `protobuf:"varint,3,opt,name=s_int64,json=sInt64,proto3" json:"s_int64,omitempty"`
+	SUint32       uint32                 `protobuf:"varint,4,opt,name=s_uint32,json=sUint32,proto3" json:"s_uint32,omitempty"`
+	SUint64       uint64                 `protobuf:"varint,5,opt,name=s_uint64,json=sUint64,proto3" json:"s_uint64,omitempty"`
+	SSint32       int32                  `protobuf:"zigzag32,6,opt,name=s_sint32,json=sSint32,proto3" json:"s_sint32,omitempty"`
+	SSint64       int64                  `protobuf:"zigzag64,7,opt,name=s_sint64,json=sSint64,proto3" json:"s_sint64,omitempty"`
+	SFixed32      uint32                 `protobuf:"fixed32,8,opt,name=s_fixed32,json=sFixed32,proto3" json:"s_fixed32,omitempty"`
+	SFixed64      uint64                 `protobuf:"fixed64,9,opt,name=s_fixed64,json=sFixed64,proto3" json:"s_fixed64,omitempty"`
+	SSfixed32     int32                  `protobuf:"fixed32,10,opt,name=s_sfixed32,json=sSfixed32,proto3" json:"s_sfixed32,omitempty"`
+	SSfixed64     int64                  `protobuf:"fixed64,11,opt,name=s_sfixed64,json=sSfixed64,proto3" json:"s_sfixed64,omitempty"`
+	SFloat        float32                `protobuf:"fixed32,20,opt,name=s_float,json=sFloat,proto3" json:"s_float,omitempty"`
+	SDouble       float64                `protobuf:"fixed64,21,opt,name=s_double,json=sDouble,proto3" json:"s_double,omitempty"`
+	SBytes        []byte                 `protobuf:"bytes,14,opt,name=s_bytes,json=sBytes,proto3" json:"s_bytes,omitempty"`
+	SString       string                 `protobuf:"bytes,13,opt,name=s_string,json=sString,proto3" json:"s_string,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	SBool     bool    `protobuf:"varint,1,opt,name=s_bool,json=sBool,proto3" json:"s_bool,omitempty"`
-	SInt32    int32   `protobuf:"varint,2,opt,name=s_int32,json=sInt32,proto3" json:"s_int32,omitempty"`
-	SInt64    int64   `protobuf:"varint,3,opt,name=s_int64,json=sInt64,proto3" json:"s_int64,omitempty"`
-	SUint32   uint32  `protobuf:"varint,4,opt,name=s_uint32,json=sUint32,proto3" json:"s_uint32,omitempty"`
-	SUint64   uint64  `protobuf:"varint,5,opt,name=s_uint64,json=sUint64,proto3" json:"s_uint64,omitempty"`
-	SSint32   int32   `protobuf:"zigzag32,6,opt,name=s_sint32,json=sSint32,proto3" json:"s_sint32,omitempty"`
-	SSint64   int64   `protobuf:"zigzag64,7,opt,name=s_sint64,json=sSint64,proto3" json:"s_sint64,omitempty"`
-	SFixed32  uint32  `protobuf:"fixed32,8,opt,name=s_fixed32,json=sFixed32,proto3" json:"s_fixed32,omitempty"`
-	SFixed64  uint64  `protobuf:"fixed64,9,opt,name=s_fixed64,json=sFixed64,proto3" json:"s_fixed64,omitempty"`
-	SSfixed32 int32   `protobuf:"fixed32,10,opt,name=s_sfixed32,json=sSfixed32,proto3" json:"s_sfixed32,omitempty"`
-	SSfixed64 int64   `protobuf:"fixed64,11,opt,name=s_sfixed64,json=sSfixed64,proto3" json:"s_sfixed64,omitempty"`
-	SFloat    float32 `protobuf:"fixed32,20,opt,name=s_float,json=sFloat,proto3" json:"s_float,omitempty"`
-	SDouble   float64 `protobuf:"fixed64,21,opt,name=s_double,json=sDouble,proto3" json:"s_double,omitempty"`
-	SBytes    []byte  `protobuf:"bytes,14,opt,name=s_bytes,json=sBytes,proto3" json:"s_bytes,omitempty"`
-	SString   string  `protobuf:"bytes,13,opt,name=s_string,json=sString,proto3" json:"s_string,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Scalars) Reset() {
@@ -332,19 +331,18 @@ func (x *Scalars) GetSString() string {
 
 // Message contains repeated fields.
 type Repeats struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RptBool       []bool                 `protobuf:"varint,1,rep,packed,name=rpt_bool,json=rptBool,proto3" json:"rpt_bool,omitempty"`
+	RptInt32      []int32                `protobuf:"varint,2,rep,packed,name=rpt_int32,json=rptInt32,proto3" json:"rpt_int32,omitempty"`
+	RptInt64      []int64                `protobuf:"varint,3,rep,packed,name=rpt_int64,json=rptInt64,proto3" json:"rpt_int64,omitempty"`
+	RptUint32     []uint32               `protobuf:"varint,4,rep,packed,name=rpt_uint32,json=rptUint32,proto3" json:"rpt_uint32,omitempty"`
+	RptUint64     []uint64               `protobuf:"varint,5,rep,packed,name=rpt_uint64,json=rptUint64,proto3" json:"rpt_uint64,omitempty"`
+	RptFloat      []float32              `protobuf:"fixed32,6,rep,packed,name=rpt_float,json=rptFloat,proto3" json:"rpt_float,omitempty"`
+	RptDouble     []float64              `protobuf:"fixed64,7,rep,packed,name=rpt_double,json=rptDouble,proto3" json:"rpt_double,omitempty"`
+	RptString     []string               `protobuf:"bytes,8,rep,name=rpt_string,json=rptString,proto3" json:"rpt_string,omitempty"`
+	RptBytes      [][]byte               `protobuf:"bytes,9,rep,name=rpt_bytes,json=rptBytes,proto3" json:"rpt_bytes,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	RptBool   []bool    `protobuf:"varint,1,rep,packed,name=rpt_bool,json=rptBool,proto3" json:"rpt_bool,omitempty"`
-	RptInt32  []int32   `protobuf:"varint,2,rep,packed,name=rpt_int32,json=rptInt32,proto3" json:"rpt_int32,omitempty"`
-	RptInt64  []int64   `protobuf:"varint,3,rep,packed,name=rpt_int64,json=rptInt64,proto3" json:"rpt_int64,omitempty"`
-	RptUint32 []uint32  `protobuf:"varint,4,rep,packed,name=rpt_uint32,json=rptUint32,proto3" json:"rpt_uint32,omitempty"`
-	RptUint64 []uint64  `protobuf:"varint,5,rep,packed,name=rpt_uint64,json=rptUint64,proto3" json:"rpt_uint64,omitempty"`
-	RptFloat  []float32 `protobuf:"fixed32,6,rep,packed,name=rpt_float,json=rptFloat,proto3" json:"rpt_float,omitempty"`
-	RptDouble []float64 `protobuf:"fixed64,7,rep,packed,name=rpt_double,json=rptDouble,proto3" json:"rpt_double,omitempty"`
-	RptString []string  `protobuf:"bytes,8,rep,name=rpt_string,json=rptString,proto3" json:"rpt_string,omitempty"`
-	RptBytes  [][]byte  `protobuf:"bytes,9,rep,name=rpt_bytes,json=rptBytes,proto3" json:"rpt_bytes,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Repeats) Reset() {
@@ -441,27 +439,26 @@ func (x *Repeats) GetRptBytes() [][]byte {
 }
 
 type Proto3Optional struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OptBool       *bool                  `protobuf:"varint,1,opt,name=opt_bool,json=optBool,proto3,oneof" json:"opt_bool,omitempty"`
+	OptInt32      *int32                 `protobuf:"varint,2,opt,name=opt_int32,json=optInt32,proto3,oneof" json:"opt_int32,omitempty"`
+	OptInt64      *int64                 `protobuf:"varint,3,opt,name=opt_int64,json=optInt64,proto3,oneof" json:"opt_int64,omitempty"`
+	OptUint32     *uint32                `protobuf:"varint,4,opt,name=opt_uint32,json=optUint32,proto3,oneof" json:"opt_uint32,omitempty"`
+	OptUint64     *uint64                `protobuf:"varint,5,opt,name=opt_uint64,json=optUint64,proto3,oneof" json:"opt_uint64,omitempty"`
+	OptSint32     *int32                 `protobuf:"zigzag32,12,opt,name=opt_sint32,json=optSint32,proto3,oneof" json:"opt_sint32,omitempty"`
+	OptSint64     *int64                 `protobuf:"zigzag64,13,opt,name=opt_sint64,json=optSint64,proto3,oneof" json:"opt_sint64,omitempty"`
+	OptFixed32    *uint32                `protobuf:"fixed32,14,opt,name=opt_fixed32,json=optFixed32,proto3,oneof" json:"opt_fixed32,omitempty"`
+	OptFixed64    *uint64                `protobuf:"fixed64,15,opt,name=opt_fixed64,json=optFixed64,proto3,oneof" json:"opt_fixed64,omitempty"`
+	OptSfixed32   *int32                 `protobuf:"fixed32,16,opt,name=opt_sfixed32,json=optSfixed32,proto3,oneof" json:"opt_sfixed32,omitempty"`
+	OptSfixed64   *int64                 `protobuf:"fixed64,17,opt,name=opt_sfixed64,json=optSfixed64,proto3,oneof" json:"opt_sfixed64,omitempty"`
+	OptFloat      *float32               `protobuf:"fixed32,20,opt,name=opt_float,json=optFloat,proto3,oneof" json:"opt_float,omitempty"`
+	OptDouble     *float64               `protobuf:"fixed64,21,opt,name=opt_double,json=optDouble,proto3,oneof" json:"opt_double,omitempty"`
+	OptBytes      []byte                 `protobuf:"bytes,8,opt,name=opt_bytes,json=optBytes,proto3,oneof" json:"opt_bytes,omitempty"`
+	OptString     *string                `protobuf:"bytes,9,opt,name=opt_string,json=optString,proto3,oneof" json:"opt_string,omitempty"`
+	OptEnum       *Enum                  `protobuf:"varint,10,opt,name=opt_enum,json=optEnum,proto3,enum=pb3.Enum,oneof" json:"opt_enum,omitempty"`
+	OptMessage    *Nested                `protobuf:"bytes,11,opt,name=opt_message,json=optMessage,proto3,oneof" json:"opt_message,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	OptBool     *bool    `protobuf:"varint,1,opt,name=opt_bool,json=optBool,proto3,oneof" json:"opt_bool,omitempty"`
-	OptInt32    *int32   `protobuf:"varint,2,opt,name=opt_int32,json=optInt32,proto3,oneof" json:"opt_int32,omitempty"`
-	OptInt64    *int64   `protobuf:"varint,3,opt,name=opt_int64,json=optInt64,proto3,oneof" json:"opt_int64,omitempty"`
-	OptUint32   *uint32  `protobuf:"varint,4,opt,name=opt_uint32,json=optUint32,proto3,oneof" json:"opt_uint32,omitempty"`
-	OptUint64   *uint64  `protobuf:"varint,5,opt,name=opt_uint64,json=optUint64,proto3,oneof" json:"opt_uint64,omitempty"`
-	OptSint32   *int32   `protobuf:"zigzag32,12,opt,name=opt_sint32,json=optSint32,proto3,oneof" json:"opt_sint32,omitempty"`
-	OptSint64   *int64   `protobuf:"zigzag64,13,opt,name=opt_sint64,json=optSint64,proto3,oneof" json:"opt_sint64,omitempty"`
-	OptFixed32  *uint32  `protobuf:"fixed32,14,opt,name=opt_fixed32,json=optFixed32,proto3,oneof" json:"opt_fixed32,omitempty"`
-	OptFixed64  *uint64  `protobuf:"fixed64,15,opt,name=opt_fixed64,json=optFixed64,proto3,oneof" json:"opt_fixed64,omitempty"`
-	OptSfixed32 *int32   `protobuf:"fixed32,16,opt,name=opt_sfixed32,json=optSfixed32,proto3,oneof" json:"opt_sfixed32,omitempty"`
-	OptSfixed64 *int64   `protobuf:"fixed64,17,opt,name=opt_sfixed64,json=optSfixed64,proto3,oneof" json:"opt_sfixed64,omitempty"`
-	OptFloat    *float32 `protobuf:"fixed32,20,opt,name=opt_float,json=optFloat,proto3,oneof" json:"opt_float,omitempty"`
-	OptDouble   *float64 `protobuf:"fixed64,21,opt,name=opt_double,json=optDouble,proto3,oneof" json:"opt_double,omitempty"`
-	OptBytes    []byte   `protobuf:"bytes,8,opt,name=opt_bytes,json=optBytes,proto3,oneof" json:"opt_bytes,omitempty"`
-	OptString   *string  `protobuf:"bytes,9,opt,name=opt_string,json=optString,proto3,oneof" json:"opt_string,omitempty"`
-	OptEnum     *Enum    `protobuf:"varint,10,opt,name=opt_enum,json=optEnum,proto3,enum=pb3.Enum,oneof" json:"opt_enum,omitempty"`
-	OptMessage  *Nested  `protobuf:"bytes,11,opt,name=opt_message,json=optMessage,proto3,oneof" json:"opt_message,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Proto3Optional) Reset() {
@@ -614,12 +611,11 @@ func (x *Proto3Optional) GetOptMessage() *Nested {
 }
 
 type OptionalEnums struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
+	state         protoimpl.MessageState   `protogen:"open.v1"`
 	OptEnum       *Enum                    `protobuf:"varint,1,opt,name=opt_enum,json=optEnum,proto3,enum=pb3.Enum,oneof" json:"opt_enum,omitempty"`
 	OptNestedEnum OptionalEnums_NestedEnum `protobuf:"varint,3,opt,name=opt_nested_enum,json=optNestedEnum,proto3,enum=pb3.OptionalEnums_NestedEnum" json:"opt_nested_enum,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *OptionalEnums) Reset() {
@@ -668,12 +664,11 @@ func (x *OptionalEnums) GetOptNestedEnum() OptionalEnums_NestedEnum {
 
 // Message contains enum fields.
 type Enums struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SEnum         Enum                   `protobuf:"varint,1,opt,name=s_enum,json=sEnum,proto3,enum=pb3.Enum" json:"s_enum,omitempty"`
+	SNestedEnum   Enums_NestedEnum       `protobuf:"varint,3,opt,name=s_nested_enum,json=sNestedEnum,proto3,enum=pb3.Enums_NestedEnum" json:"s_nested_enum,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	SEnum       Enum             `protobuf:"varint,1,opt,name=s_enum,json=sEnum,proto3,enum=pb3.Enum" json:"s_enum,omitempty"`
-	SNestedEnum Enums_NestedEnum `protobuf:"varint,3,opt,name=s_nested_enum,json=sNestedEnum,proto3,enum=pb3.Enums_NestedEnum" json:"s_nested_enum,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Enums) Reset() {
@@ -722,11 +717,10 @@ func (x *Enums) GetSNestedEnum() Enums_NestedEnum {
 
 // Message contains nested message field.
 type Nests struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SNested       *Nested                `protobuf:"bytes,2,opt,name=s_nested,json=sNested,proto3" json:"s_nested,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	SNested *Nested `protobuf:"bytes,2,opt,name=s_nested,json=sNested,proto3" json:"s_nested,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Nests) Reset() {
@@ -768,12 +762,11 @@ func (x *Nests) GetSNested() *Nested {
 
 // Message type used as submessage.
 type Nested struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SString       string                 `protobuf:"bytes,1,opt,name=s_string,json=sString,proto3" json:"s_string,omitempty"`
+	SNested       *Nested                `protobuf:"bytes,2,opt,name=s_nested,json=sNested,proto3" json:"s_nested,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	SString string  `protobuf:"bytes,1,opt,name=s_string,json=sString,proto3" json:"s_string,omitempty"`
-	SNested *Nested `protobuf:"bytes,2,opt,name=s_nested,json=sNested,proto3" json:"s_nested,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Nested) Reset() {
@@ -822,16 +815,15 @@ func (x *Nested) GetSNested() *Nested {
 
 // Message contains oneof field.
 type Oneofs struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	// Types that are assignable to Union:
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Union:
 	//
 	//	*Oneofs_OneofEnum
 	//	*Oneofs_OneofString
 	//	*Oneofs_OneofNested
-	Union isOneofs_Union `protobuf_oneof:"union"`
+	Union         isOneofs_Union `protobuf_oneof:"union"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Oneofs) Reset() {
@@ -864,30 +856,36 @@ func (*Oneofs) Descriptor() ([]byte, []int) {
 	return file_internal_testprotos_textpb3_test_proto_rawDescGZIP(), []int{7}
 }
 
-func (m *Oneofs) GetUnion() isOneofs_Union {
-	if m != nil {
-		return m.Union
+func (x *Oneofs) GetUnion() isOneofs_Union {
+	if x != nil {
+		return x.Union
 	}
 	return nil
 }
 
 func (x *Oneofs) GetOneofEnum() Enum {
-	if x, ok := x.GetUnion().(*Oneofs_OneofEnum); ok {
-		return x.OneofEnum
+	if x != nil {
+		if x, ok := x.Union.(*Oneofs_OneofEnum); ok {
+			return x.OneofEnum
+		}
 	}
 	return Enum_ZERO
 }
 
 func (x *Oneofs) GetOneofString() string {
-	if x, ok := x.GetUnion().(*Oneofs_OneofString); ok {
-		return x.OneofString
+	if x != nil {
+		if x, ok := x.Union.(*Oneofs_OneofString); ok {
+			return x.OneofString
+		}
 	}
 	return ""
 }
 
 func (x *Oneofs) GetOneofNested() *Nested {
-	if x, ok := x.GetUnion().(*Oneofs_OneofNested); ok {
-		return x.OneofNested
+	if x != nil {
+		if x, ok := x.Union.(*Oneofs_OneofNested); ok {
+			return x.OneofNested
+		}
 	}
 	return nil
 }
@@ -916,15 +914,14 @@ func (*Oneofs_OneofNested) isOneofs_Union() {}
 
 // Message contains map fields.
 type Maps struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Int32ToStr    map[int32]string       `protobuf:"bytes,1,rep,name=int32_to_str,json=int32ToStr,proto3" json:"int32_to_str,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	BoolToUint32  map[bool]uint32        `protobuf:"bytes,2,rep,name=bool_to_uint32,json=boolToUint32,proto3" json:"bool_to_uint32,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	Uint64ToEnum  map[uint64]Enum        `protobuf:"bytes,3,rep,name=uint64_to_enum,json=uint64ToEnum,proto3" json:"uint64_to_enum,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=pb3.Enum"`
+	StrToNested   map[string]*Nested     `protobuf:"bytes,4,rep,name=str_to_nested,json=strToNested,proto3" json:"str_to_nested,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	StrToOneofs   map[string]*Oneofs     `protobuf:"bytes,5,rep,name=str_to_oneofs,json=strToOneofs,proto3" json:"str_to_oneofs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
-
-	Int32ToStr   map[int32]string   `protobuf:"bytes,1,rep,name=int32_to_str,json=int32ToStr,proto3" json:"int32_to_str,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	BoolToUint32 map[bool]uint32    `protobuf:"bytes,2,rep,name=bool_to_uint32,json=boolToUint32,proto3" json:"bool_to_uint32,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	Uint64ToEnum map[uint64]Enum    `protobuf:"bytes,3,rep,name=uint64_to_enum,json=uint64ToEnum,proto3" json:"uint64_to_enum,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=pb3.Enum"`
-	StrToNested  map[string]*Nested `protobuf:"bytes,4,rep,name=str_to_nested,json=strToNested,proto3" json:"str_to_nested,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	StrToOneofs  map[string]*Oneofs `protobuf:"bytes,5,rep,name=str_to_oneofs,json=strToOneofs,proto3" json:"str_to_oneofs,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Maps) Reset() {
@@ -994,11 +991,10 @@ func (x *Maps) GetStrToOneofs() map[string]*Oneofs {
 
 // Message for testing json_name option.
 type JSONNames struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SString       string                 `protobuf:"bytes,1,opt,name=s_string,json=foo_bar,proto3" json:"s_string,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	SString string `protobuf:"bytes,1,opt,name=s_string,json=foo_bar,proto3" json:"s_string,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *JSONNames) Reset() {
@@ -1040,11 +1036,10 @@ func (x *JSONNames) GetSString() string {
 
 // Message contains reserved field name.
 type ReservedFieldNames struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OptInt32      int32                  `protobuf:"varint,1,opt,name=opt_int32,json=optInt32,proto3" json:"opt_int32,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	OptInt32 int32 `protobuf:"varint,1,opt,name=opt_int32,json=optInt32,proto3" json:"opt_int32,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ReservedFieldNames) Reset() {

@@ -70,11 +70,10 @@ func (Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Data          []byte                 `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Data []byte `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message) Reset() {
@@ -115,11 +114,10 @@ func (x *Message) GetData() []byte {
 }
 
 type ExtensionGroup struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	ExtensionGroup *string `protobuf:"bytes,120,opt,name=extension_group,json=extensionGroup" json:"extension_group,omitempty"`
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ExtensionGroup *string                `protobuf:"bytes,120,opt,name=extension_group,json=extensionGroup" json:"extension_group,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ExtensionGroup) Reset() {
@@ -161,9 +159,9 @@ func (x *ExtensionGroup) GetExtensionGroup() string {
 
 // Extend in the scope of another type.
 type ExtendingMessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ExtendingMessage) Reset() {
@@ -197,11 +195,10 @@ func (*ExtendingMessage) Descriptor() ([]byte, []int) {
 }
 
 type RepeatedGroup struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	RepeatedXGroup []string `protobuf:"bytes,319,rep,name=repeated_x_group,json=repeatedXGroup" json:"repeated_x_group,omitempty"`
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	RepeatedXGroup []string               `protobuf:"bytes,319,rep,name=repeated_x_group,json=repeatedXGroup" json:"repeated_x_group,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *RepeatedGroup) Reset() {
@@ -243,10 +240,10 @@ func (x *RepeatedGroup) GetRepeatedXGroup() []string {
 
 // An extension of an extension.
 type Extendable struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
 	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Extendable) Reset() {
@@ -281,9 +278,9 @@ func (*Extendable) Descriptor() ([]byte, []int) {
 
 // Message set wire format.
 type MessageSetWireFormatExtension struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MessageSetWireFormatExtension) Reset() {
@@ -317,9 +314,9 @@ func (*MessageSetWireFormatExtension) Descriptor() ([]byte, []int) {
 }
 
 type Message_M struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message_M) Reset() {
@@ -353,9 +350,9 @@ func (*Message_M) Descriptor() ([]byte, []int) {
 }
 
 type ExtendingMessage_ExtendingMessageSubmessage struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ExtendingMessage_ExtendingMessageSubmessage) Reset() {

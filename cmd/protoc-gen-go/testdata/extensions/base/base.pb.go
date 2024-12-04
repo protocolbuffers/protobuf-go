@@ -15,12 +15,11 @@ import (
 )
 
 type BaseMessage struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Field           *string                `protobuf:"bytes,1,opt,name=field" json:"field,omitempty"`
 	extensionFields protoimpl.ExtensionFields
-
-	Field *string `protobuf:"bytes,1,opt,name=field" json:"field,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *BaseMessage) Reset() {
@@ -61,10 +60,10 @@ func (x *BaseMessage) GetField() string {
 }
 
 type MessageSetWireFormatMessage struct {
-	state           protoimpl.MessageState
-	sizeCache       protoimpl.SizeCache
-	unknownFields   protoimpl.UnknownFields
+	state           protoimpl.MessageState `protogen:"open.v1"`
 	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *MessageSetWireFormatMessage) Reset() {

@@ -15,14 +15,13 @@ import (
 )
 
 type Foo struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	// Types that are assignable to Bar:
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Bar:
 	//
 	//	*Foo_GetBar
-	Bar isFoo_Bar `protobuf_oneof:"bar"`
+	Bar           isFoo_Bar `protobuf_oneof:"bar"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Foo) Reset() {
@@ -55,16 +54,18 @@ func (*Foo) Descriptor() ([]byte, []int) {
 	return file_cmd_protoc_gen_go_testdata_issue780_oneof_conflict_test_proto_rawDescGZIP(), []int{0}
 }
 
-func (m *Foo) GetBar() isFoo_Bar {
-	if m != nil {
-		return m.Bar
+func (x *Foo) GetBar() isFoo_Bar {
+	if x != nil {
+		return x.Bar
 	}
 	return nil
 }
 
 func (x *Foo) GetGetBar() string {
-	if x, ok := x.GetBar().(*Foo_GetBar); ok {
-		return x.GetBar
+	if x != nil {
+		if x, ok := x.Bar.(*Foo_GetBar); ok {
+			return x.GetBar
+		}
 	}
 	return ""
 }

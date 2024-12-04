@@ -59,9 +59,9 @@ func (Enum) EnumDescriptor() ([]byte, []int) {
 }
 
 type Message struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message) Reset() {

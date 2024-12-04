@@ -66,17 +66,16 @@ func (Article_Status) EnumDescriptor() ([]byte, []int) {
 }
 
 type Article struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Author        string                 `protobuf:"bytes,1,opt,name=author,proto3" json:"author,omitempty"`
+	Date          *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=date,proto3" json:"date,omitempty"`
+	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Content       string                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Status        Article_Status         `protobuf:"varint,8,opt,name=status,proto3,enum=google.golang.org.Article_Status" json:"status,omitempty"`
+	Tags          []string               `protobuf:"bytes,7,rep,name=tags,proto3" json:"tags,omitempty"`
+	Attachments   []*anypb.Any           `protobuf:"bytes,6,rep,name=attachments,proto3" json:"attachments,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Author      string                 `protobuf:"bytes,1,opt,name=author,proto3" json:"author,omitempty"`
-	Date        *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=date,proto3" json:"date,omitempty"`
-	Title       string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Content     string                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
-	Status      Article_Status         `protobuf:"varint,8,opt,name=status,proto3,enum=google.golang.org.Article_Status" json:"status,omitempty"`
-	Tags        []string               `protobuf:"bytes,7,rep,name=tags,proto3" json:"tags,omitempty"`
-	Attachments []*anypb.Any           `protobuf:"bytes,6,rep,name=attachments,proto3" json:"attachments,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Article) Reset() {
@@ -159,12 +158,11 @@ func (x *Article) GetAttachments() []*anypb.Any {
 }
 
 type BinaryAttachment struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Data          []byte                 `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
-
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Data []byte `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BinaryAttachment) Reset() {
@@ -212,12 +210,11 @@ func (x *BinaryAttachment) GetData() []byte {
 }
 
 type KeyValueAttachment struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Data          map[string]string      `protobuf:"bytes,2,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
-
-	Name string            `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Data map[string]string `protobuf:"bytes,2,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *KeyValueAttachment) Reset() {
