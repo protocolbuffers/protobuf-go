@@ -2,71 +2,76 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-syntax = "proto2";
+edition = "2023";
 
 package goproto.proto.testrequired;
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/required";
 
 message Int32 {
-  required int32 v = 1;
+  int32 v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Int64 {
-  required int64 v = 1;
+  int64 v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Uint32 {
-  required uint32 v = 1;
+  uint32 v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Uint64 {
-  required uint64 v = 1;
+  uint64 v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Sint32 {
-  required sint32 v = 1;
+  sint32 v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Sint64 {
-  required sint64 v = 1;
+  sint64 v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Fixed32 {
-  required fixed32 v = 1;
+  fixed32 v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Fixed64 {
-  required fixed64 v = 1;
+  fixed64 v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Float {
-  required float v = 1;
+  float v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Double {
-  required double v = 1;
+  double v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Bool {
-  required bool v = 1;
+  bool v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message String {
-  required string v = 1;
+  string v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Bytes {
-  required bytes v = 1;
+  bytes v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Message {
   message M {}
-  required M v = 1;
+  M v = 1 [features.field_presence = LEGACY_REQUIRED];
 }
 
 message Group {
-  required group Group = 1 {
-    optional int32 v = 1;
+  message Group {
+    int32 v = 1;
   }
+
+  Group group = 1 [
+    features.field_presence = LEGACY_REQUIRED,
+    features.message_encoding = DELIMITED
+  ];
 }

@@ -1120,20 +1120,26 @@ const (
 
 // Field names for google.protobuf.FeatureSetDefaults.
 const (
-	FeatureSetDefaults_Defaults_field_name       protoreflect.Name = "defaults"
-	FeatureSetDefaults_MinimumEdition_field_name protoreflect.Name = "minimum_edition"
-	FeatureSetDefaults_MaximumEdition_field_name protoreflect.Name = "maximum_edition"
+	FeatureSetDefaults_Defaults_field_name                 protoreflect.Name = "defaults"
+	FeatureSetDefaults_MinimumEditionDeprecated_field_name protoreflect.Name = "minimum_edition"
+	FeatureSetDefaults_MaximumEditionDeprecated_field_name protoreflect.Name = "maximum_edition"
+	FeatureSetDefaults_MinimumEdition_field_name           protoreflect.Name = "minimum_edition"
+	FeatureSetDefaults_MaximumEdition_field_name           protoreflect.Name = "maximum_edition"
 
-	FeatureSetDefaults_Defaults_field_fullname       protoreflect.FullName = "google.protobuf.FeatureSetDefaults.defaults"
-	FeatureSetDefaults_MinimumEdition_field_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.minimum_edition"
-	FeatureSetDefaults_MaximumEdition_field_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.maximum_edition"
+	FeatureSetDefaults_Defaults_field_fullname                 protoreflect.FullName = "google.protobuf.FeatureSetDefaults.defaults"
+	FeatureSetDefaults_MinimumEditionDeprecated_field_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.minimum_edition"
+	FeatureSetDefaults_MaximumEditionDeprecated_field_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.maximum_edition"
+	FeatureSetDefaults_MinimumEdition_field_fullname           protoreflect.FullName = "google.protobuf.FeatureSetDefaults.minimum_edition"
+	FeatureSetDefaults_MaximumEdition_field_fullname           protoreflect.FullName = "google.protobuf.FeatureSetDefaults.maximum_edition"
 )
 
 // Field numbers for google.protobuf.FeatureSetDefaults.
 const (
-	FeatureSetDefaults_Defaults_field_number       protoreflect.FieldNumber = 1
-	FeatureSetDefaults_MinimumEdition_field_number protoreflect.FieldNumber = 4
-	FeatureSetDefaults_MaximumEdition_field_number protoreflect.FieldNumber = 5
+	FeatureSetDefaults_Defaults_field_number                 protoreflect.FieldNumber = 1
+	FeatureSetDefaults_MinimumEditionDeprecated_field_number protoreflect.FieldNumber = 2
+	FeatureSetDefaults_MaximumEditionDeprecated_field_number protoreflect.FieldNumber = 3
+	FeatureSetDefaults_MinimumEdition_field_number           protoreflect.FieldNumber = 4
+	FeatureSetDefaults_MaximumEdition_field_number           protoreflect.FieldNumber = 5
 )
 
 // Names for google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.
@@ -1147,10 +1153,12 @@ const (
 	FeatureSetDefaults_FeatureSetEditionDefault_Edition_field_name             protoreflect.Name = "edition"
 	FeatureSetDefaults_FeatureSetEditionDefault_OverridableFeatures_field_name protoreflect.Name = "overridable_features"
 	FeatureSetDefaults_FeatureSetEditionDefault_FixedFeatures_field_name       protoreflect.Name = "fixed_features"
+	FeatureSetDefaults_FeatureSetEditionDefault_Features_field_name            protoreflect.Name = "features"
 
 	FeatureSetDefaults_FeatureSetEditionDefault_Edition_field_fullname             protoreflect.FullName = "google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.edition"
 	FeatureSetDefaults_FeatureSetEditionDefault_OverridableFeatures_field_fullname protoreflect.FullName = "google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.overridable_features"
 	FeatureSetDefaults_FeatureSetEditionDefault_FixedFeatures_field_fullname       protoreflect.FullName = "google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.fixed_features"
+	FeatureSetDefaults_FeatureSetEditionDefault_Features_field_fullname            protoreflect.FullName = "google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.features"
 )
 
 // Field numbers for google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault.
@@ -1158,6 +1166,7 @@ const (
 	FeatureSetDefaults_FeatureSetEditionDefault_Edition_field_number             protoreflect.FieldNumber = 3
 	FeatureSetDefaults_FeatureSetEditionDefault_OverridableFeatures_field_number protoreflect.FieldNumber = 4
 	FeatureSetDefaults_FeatureSetEditionDefault_FixedFeatures_field_number       protoreflect.FieldNumber = 5
+	FeatureSetDefaults_FeatureSetEditionDefault_Features_field_number            protoreflect.FieldNumber = 2
 )
 
 // Names for google.protobuf.SourceCodeInfo.

@@ -398,6 +398,10 @@ message TestRequiredGroupFields {
   }
 }
 
+message TestRequiredLazy {
+  optional TestRequired optional_lazy_message = 1 [lazy = true];
+}
+
 message TestWeak {
   optional goproto.proto.test.weak.WeakImportMessage1 weak_message1 = 1
       [weak = true];

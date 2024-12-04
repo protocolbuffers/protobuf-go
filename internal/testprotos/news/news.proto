@@ -19,12 +19,12 @@ message Article {
   }
 
   string author = 1;
-  google.protobuf.Timestamp date = 2;
+  .google.protobuf.Timestamp date = 2;
   string title = 3;
   string content = 4;
   Status status = 8;
   repeated string tags = 7;
-  repeated google.protobuf.Any attachments = 6;
+  repeated .google.protobuf.Any attachments = 6;
 }
 
 message BinaryAttachment {

@@ -101,8 +101,188 @@ func main() {
 	// editions_default.binpb was not yet updated.
 	generateEditionsDefaults()
 
+	// Generate versions of each testproto .proto file which use the Hybrid and
+	// Opaque API. This step needs to come first so that the next step will
+	// generate the .pb.go files for these extra .proto files.
+	generateOpaqueTestprotos()
+
 	generateLocalProtos()
 	generateRemoteProtos()
+}
+
+// gsed works roughly like sed(1), in that it processes a file with a list of
+// replacement functions that are applied in order to each line.
+func gsed(outFn, inFn string, repls ...func(line string) string) error {
+	if err := os.MkdirAll(filepath.Dir(outFn), 0755); err != nil {
+		return err
+	}
+	out, err := os.Create(outFn)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	b, err := os.ReadFile(inFn)
+	if err != nil {
+		return err
+	}
+	lines := strings.Split(strings.TrimSpace(string(b)), "\n")
+	for idx, line := range lines {
+		for _, repl := range repls {
+			line = repl(line)
+		}
+		lines[idx] = line
+	}
+	if _, err := out.Write([]byte(strings.Join(lines, "\n"))); err != nil {
+		return err
+	}
+	return out.Close()
+}
+
+// variantFn turns a relative path like
+// internal/testprotos/annotation/annotation.proto into its corresponding
+// Hybrid/Opaque API variant file name,
+// e.g. internal/testprotos/annotation/annotation_hybrid/annotation.hybrid.proto
+func variantFn(relPath, variant string) string {
+	base := strings.TrimSuffix(filepath.Base(relPath), ".proto")
+	dir := filepath.Dir(relPath)
+	return filepath.Join(dir, filepath.Base(dir)+"_"+variant, base) + "." + variant + ".proto"
+}
+
+var (
+	testProtoRe = regexp.MustCompile(`(internal/testprotos/.*[.]proto)`)
+	goPackageRe = regexp.MustCompile(`option go_package = "([^"]+)";`)
+	extRe       = regexp.MustCompile(`_ext = ([0-9]+);`)
+)
+
+func generateOpaqueDotProto(repoRoot, tmpDir, relPath string) {
+	// relPath is e.g. internal/testprotos/annotation/annotation.proto
+	ignored := func(p string) bool {
+		return strings.HasPrefix(p, "internal/testprotos/irregular")
+	}
+	inFn := filepath.Join(repoRoot, relPath)
+
+	// create .hybrid.proto variant
+	hybridFn := variantFn(relPath, "hybrid")
+	outFn := filepath.Join(tmpDir, hybridFn)
+	check(gsed(outFn, inFn, []func(line string) string{
+		func(line string) string {
+			if strings.HasPrefix(line, "package ") {
+				return strings.ReplaceAll(line, "package ", "package hybrid.")
+			}
+			return line
+		},
+		func(line string) string {
+			if testProtoPath := testProtoRe.FindString(line); testProtoPath != "" && !ignored(testProtoPath) {
+				hybridFn := variantFn(testProtoPath, "hybrid")
+				return strings.ReplaceAll(line, testProtoPath, hybridFn)
+			}
+			return line
+		},
+		func(line string) string {
+			if matches := goPackageRe.FindStringSubmatch(line); matches != nil {
+				goPkg := matches[1]
+				hybridGoPkg := strings.TrimSuffix(goPkg, "/") + "/" + filepath.Base(goPkg) + "_hybrid"
+				return `option go_package = "` + hybridGoPkg + `";` + "\n" +
+					`import "google/protobuf/go_features.proto";` + "\n" +
+					`option features.(pb.go).api_level = API_HYBRID;`
+			}
+			return line
+		},
+	}...))
+
+	// create .opaque.proto variant
+	opaqueFn := variantFn(relPath, "opaque")
+	outFn = filepath.Join(tmpDir, opaqueFn)
+	check(gsed(outFn, inFn, []func(line string) string{
+		func(line string) string {
+			if strings.HasPrefix(line, "package ") {
+				return strings.ReplaceAll(line, "package ", "package opaque.")
+			}
+			return line
+		},
+		func(line string) string {
+			if testProtoPath := testProtoRe.FindString(line); testProtoPath != "" && !ignored(testProtoPath) {
+				hybridFn := variantFn(testProtoPath, "opaque")
+				return strings.ReplaceAll(line, testProtoPath, hybridFn)
+			}
+			return line
+		},
+		func(line string) string {
+			if matches := goPackageRe.FindStringSubmatch(line); matches != nil {
+				goPkg := matches[1]
+				opaqueGoPkg := strings.TrimSuffix(goPkg, "/") + "/" + filepath.Base(goPkg) + "_opaque"
+				return `option go_package = "` + opaqueGoPkg + `";` + "\n" +
+					`import "google/protobuf/go_features.proto";` + "\n" +
+					`option features.(pb.go).api_level = API_OPAQUE;`
+			}
+			return line
+		},
+		func(line string) string {
+			return strings.ReplaceAll(line, `full_name: ".goproto`, `full_name: ".opaque.goproto`)
+		},
+		func(line string) string {
+			return strings.ReplaceAll(line, `type: ".goproto`, `type: ".opaque.goproto`)
+		},
+		func(line string) string {
+			if matches := extRe.FindStringSubmatch(line); matches != nil {
+				trimmed := strings.TrimSuffix(matches[0], ";")
+				return strings.ReplaceAll(line, trimmed, trimmed+"0")
+			}
+			return line
+		},
+	}...))
+}
+
+func generateOpaqueTestprotos() {
+	tmpDir, err := os.MkdirTemp(repoRoot, "tmp")
+	check(err)
+	defer os.RemoveAll(tmpDir)
+
+	// Generate variants using the Hybrid and Opaque API for all local proto
+	// files (except version-locked files).
+	dirs := []struct {
+		path     string
+		pkgPaths map[string]string // mapping of .proto path to Go package path
+		annotate map[string]bool   // .proto files to annotate
+		exclude  map[string]bool   // .proto files to exclude from generation
+	}{
+		{path: "internal/testprotos/required"},
+		{path: "internal/testprotos/testeditions"},
+		{path: "internal/testprotos/enums"},
+		{path: "internal/testprotos/textpbeditions"},
+		{path: "internal/testprotos/messageset"},
+		{
+			path: "internal/testprotos/lazy",
+			exclude: map[string]bool{
+				"internal/testprotos/lazy/lazy_extension_normalized_wire_test.proto": true,
+				"internal/testprotos/lazy/lazy_normalized_wire_test.proto":           true,
+				"internal/testprotos/lazy/lazy_extension_test.proto":                 true,
+			},
+		},
+	}
+	excludeRx := regexp.MustCompile(`legacy/.*/`)
+	for _, d := range dirs {
+		srcDir := filepath.Join(repoRoot, filepath.FromSlash(d.path))
+		filepath.Walk(srcDir, func(srcPath string, _ os.FileInfo, _ error) error {
+			if !strings.HasSuffix(srcPath, ".proto") || excludeRx.MatchString(srcPath) {
+				return nil
+			}
+			if strings.HasSuffix(srcPath, ".opaque.proto") || strings.HasSuffix(srcPath, ".hybrid.proto") {
+				return nil
+			}
+			relPath, err := filepath.Rel(repoRoot, srcPath)
+			check(err)
+
+			if d.exclude[filepath.ToSlash(relPath)] {
+				return nil
+			}
+
+			generateOpaqueDotProto(repoRoot, tmpDir, relPath)
+			return nil
+		})
+	}
+
+	syncOutput(repoRoot, tmpDir)
 }
 
 func generateEditionsDefaults() {
@@ -472,7 +652,9 @@ func generateSourceContextStringer(gen *protogen.Plugin, file *protogen.File) {
 
 func syncOutput(dstDir, srcDir string) {
 	filepath.Walk(srcDir, func(srcPath string, _ os.FileInfo, _ error) error {
-		if !strings.HasSuffix(srcPath, ".go") && !strings.HasSuffix(srcPath, ".meta") {
+		if !strings.HasSuffix(srcPath, ".go") &&
+			!strings.HasSuffix(srcPath, ".meta") &&
+			!strings.HasSuffix(srcPath, ".proto") {
 			return nil
 		}
 		relPath, err := filepath.Rel(srcDir, srcPath)

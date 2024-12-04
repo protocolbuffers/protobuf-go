@@ -140,6 +140,7 @@ func TestIntegration(t *testing.T) {
 		}
 
 		runGo("Normal", command{}, "go", "test", "-race", "./...")
+		runGo("LazyDecoding", command{}, "go", "test", "./proto", "-test_lazy_unmarshal")
 		runGo("Reflect", command{}, "go", "test", "-race", "-tags", "protoreflect", "./...")
 		if goVersion == golangLatest {
 			runGo("ProtoLegacyRace", command{}, "go", "test", "-race", "-tags", "protolegacy", "./...")

@@ -196,7 +196,7 @@ message NestedWithRequired {
 }
 
 message IndirectRequired {
-  NestedWithRequired opt_nested = 1 [features.field_presence = LEGACY_REQUIRED];
+  NestedWithRequired opt_nested = 1;
   repeated NestedWithRequired rpt_nested = 2;
   map<string, NestedWithRequired> str_to_nested = 3;
 

@@ -12,7 +12,9 @@ import (
 	"google.golang.org/protobuf/testing/protopack"
 
 	"google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb"
+	_ "google.golang.org/protobuf/internal/testprotos/messageset/messagesetpb/messagesetpb_opaque"
 	_ "google.golang.org/protobuf/internal/testprotos/messageset/msetextpb"
+	_ "google.golang.org/protobuf/internal/testprotos/messageset/msetextpb/msetextpb_opaque"
 )
 
 func init() {

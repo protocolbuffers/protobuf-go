@@ -41,6 +41,13 @@ func makeMessages(in protobuild.Message, messages ...proto.Message) []proto.Mess
 			&testeditionspb.TestAllTypes{},
 		}
 	}
+
+	for _, m := range messages {
+		for _, mt := range relatedMessages[m.ProtoReflect().Type()] {
+			messages = append(messages, mt.New().Interface())
+		}
+	}
+
 	for _, m := range messages {
 		in.Build(m.ProtoReflect())
 	}
@@ -56,6 +63,13 @@ func templateMessages(messages ...proto.Message) []protoreflect.MessageType {
 			(*testeditionspb.TestAllTypes)(nil),
 		}
 	}
+
+	for _, m := range messages {
+		for _, mt := range relatedMessages[m.ProtoReflect().Type()] {
+			messages = append(messages, mt.New().Interface())
+		}
+	}
+
 	var out []protoreflect.MessageType
 	for _, m := range messages {
 		out = append(out, m.ProtoReflect().Type())

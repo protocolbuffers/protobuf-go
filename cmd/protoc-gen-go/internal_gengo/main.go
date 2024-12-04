@@ -367,6 +367,9 @@ func genMessage(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	if m.Desc.IsMapEntry() {
 		return
 	}
+	if opaqueGenMessageHook(g, f, m) {
+		return
+	}
 
 	// Message type declaration.
 	g.AnnotateSymbol(m.GoIdent.GoName, protogen.Annotation{Location: m.Location})
@@ -657,7 +660,7 @@ func genMessageSetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 			continue
 		}
 
-		genNoInterfacePragma(g, m.isTracked)
+		genNoInterfacePragma(g, m.noInterface)
 
 		g.AnnotateSymbol(m.GoIdent.GoName+".Set"+field.GoName, protogen.Annotation{
 			Location: field.Location,

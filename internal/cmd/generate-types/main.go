@@ -44,6 +44,8 @@ func main() {
 	writeSource("internal/impl/codec_gen.go", generateImplCodec())
 	writeSource("internal/impl/message_reflect_gen.go", generateImplMessage())
 	writeSource("internal/impl/merge_gen.go", generateImplMerge())
+	writeSource("internal/impl/message_reflect_field_gen.go", generateImplField())
+	writeSource("internal/impl/message_opaque_gen.go", generateImplMessageOpaque())
 	writeSource("proto/decode_gen.go", generateProtoDecode())
 	writeSource("proto/encode_gen.go", generateProtoEncode())
 	writeSource("proto/size_gen.go", generateProtoSize())

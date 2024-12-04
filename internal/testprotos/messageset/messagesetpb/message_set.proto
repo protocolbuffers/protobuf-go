@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-syntax = "proto2";
+edition = "2023";
 
 package goproto.proto.messageset;
 
@@ -11,15 +11,9 @@ option go_package = "google.golang.org/protobuf/internal/testprotos/messageset/m
 message MessageSet {
   option message_set_wire_format = true;
 
-  extensions 4 to 529999999;
-  extensions 530000000 to max
-  [declaration = {
-    number: 536870912
-    full_name: ".goproto.proto.messageset.ExtLargeNumber.message_set_extlarge"
-    type: ".goproto.proto.messageset.ExtLargeNumber"
-  }];
+  extensions 4 to max;
 }
 
 message MessageSetContainer {
-  optional MessageSet message_set = 1;
+  MessageSet message_set = 1;
 }

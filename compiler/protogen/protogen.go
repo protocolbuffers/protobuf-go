@@ -35,9 +35,9 @@ import (
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/dynamicpb"
 
 	"google.golang.org/protobuf/types/descriptorpb"
-	"google.golang.org/protobuf/types/dynamicpb"
 	"google.golang.org/protobuf/types/gofeaturespb"
 	"google.golang.org/protobuf/types/pluginpb"
 )
@@ -166,6 +166,10 @@ type Options struct {
 	// This struct field is for internal use by Go Protobuf only. Do not use it,
 	// we might remove it at any time.
 	InternalStripForEditionsDiff *bool
+
+	// DefaultAPILevel overrides which API to generate by default (despite what
+	// the editions feature default specifies). One of OPEN, HYBRID or OPAQUE.
+	DefaultAPILevel gofeaturespb.GoFeatures_APILevel
 }
 
 // New returns a new Plugin.
@@ -250,9 +254,9 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 	// Alternatively, build systems which want to exert full control over
 	// import paths may specify M<filename>=<import_path> flags.
 	for _, fdesc := range gen.Request.ProtoFile {
+		filename := fdesc.GetName()
 		// The "M" command-line flags take precedence over
 		// the "go_package" option in the .proto source file.
-		filename := fdesc.GetName()
 		impPath, pkgName := splitImportPathAndPackageName(fdesc.GetOptions().GetGoPackage())
 		if importPaths[filename] == "" && impPath != "" {
 			importPaths[filename] = impPath
@@ -460,6 +464,9 @@ type File struct {
 	GeneratedFilenamePrefix string
 
 	location Location
+
+	// APILevel specifies which API to generate. One of OPEN, HYBRID or OPAQUE.
+	APILevel gofeaturespb.GoFeatures_APILevel
 }
 
 func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPackageName, importPath GoImportPath) (*File, error) {
@@ -476,6 +483,8 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 		GoPackageName: packageName,
 		GoImportPath:  importPath,
 		location:      Location{SourceFile: desc.Path()},
+
+		APILevel: fileAPILevel(desc, gen.defaultAPILevel()),
 	}
 
 	// Determine the prefix for generated Go files.
@@ -655,6 +664,9 @@ type Message struct {
 
 	Location Location   // location of this message
 	Comments CommentSet // comments associated with this message
+
+	// APILevel specifies which API to generate. One of OPEN, HYBRID or OPAQUE.
+	APILevel gofeaturespb.GoFeatures_APILevel
 }
 
 func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.MessageDescriptor) *Message {
@@ -664,11 +676,20 @@ func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.Message
 	} else {
 		loc = f.location.appendPath(genid.FileDescriptorProto_MessageType_field_number, desc.Index())
 	}
+
+	def := f.APILevel
+	if parent != nil {
+		// editions feature semantics: applies to nested messages.
+		def = parent.APILevel
+	}
+
 	message := &Message{
 		Desc:     desc,
 		GoIdent:  newGoIdent(f, desc),
 		Location: loc,
 		Comments: makeCommentSet(gen, f.Desc.SourceLocations().ByDescriptor(desc)),
+
+		APILevel: messageAPILevel(desc, def),
 	}
 	gen.messagesByName[desc.FullName()] = message
 	for i, eds := 0, desc.Enums(); i < eds.Len(); i++ {
@@ -766,6 +787,8 @@ func newMessage(gen *Plugin, f *File, parent *Message, desc protoreflect.Message
 		}
 	}
 
+	opaqueNewMessageHook(message)
+
 	return message
 }
 
@@ -812,6 +835,18 @@ type Field struct {
 
 	Location Location   // location of this field
 	Comments CommentSet // comments associated with this field
+
+	// camelCase is the same as GoName, but without the name
+	// mangling.  This is used in builders, where only the single
+	// name "Build" needs to be mangled.
+	camelCase string
+
+	// hasConflictHybrid tells us if we are to insert an '_' into
+	// the method names, (e.g. SetFoo becomes Set_Foo).  This will
+	// be set even if we generate opaque protos, as we will want
+	// to potentially generate these method names anyway
+	// (opaque-v0).
+	hasConflictHybrid bool
 }
 
 func newField(gen *Plugin, f *File, message *Message, desc protoreflect.FieldDescriptor) *Field {
@@ -840,6 +875,9 @@ func newField(gen *Plugin, f *File, message *Message, desc protoreflect.FieldDes
 		Location: loc,
 		Comments: makeCommentSet(gen, f.Desc.SourceLocations().ByDescriptor(desc)),
 	}
+
+	opaqueNewFieldHook(desc, field)
+
 	return field
 }
 
@@ -890,13 +928,24 @@ type Oneof struct {
 
 	Location Location   // location of this oneof
 	Comments CommentSet // comments associated with this oneof
+
+	// camelCase is the same as GoName, but without the name mangling.
+	// This is used in builders, which never have their names mangled
+	camelCase string
+
+	// hasConflictHybrid tells us if we are to insert an '_' into
+	// the method names, (e.g. SetFoo becomes Set_Foo).  This will
+	// be set even if we generate opaque protos, as we will want
+	// to potentially generate these method names anyway
+	// (opaque-v0).
+	hasConflictHybrid bool
 }
 
 func newOneof(gen *Plugin, f *File, message *Message, desc protoreflect.OneofDescriptor) *Oneof {
 	loc := message.Location.appendPath(genid.DescriptorProto_OneofDecl_field_number, desc.Index())
 	camelCased := strs.GoCamelCase(string(desc.Name()))
 	parentPrefix := message.GoIdent.GoName + "_"
-	return &Oneof{
+	oneof := &Oneof{
 		Desc:   desc,
 		Parent: message,
 		GoName: camelCased,
@@ -907,6 +956,10 @@ func newOneof(gen *Plugin, f *File, message *Message, desc protoreflect.OneofDes
 		Location: loc,
 		Comments: makeCommentSet(gen, f.Desc.SourceLocations().ByDescriptor(desc)),
 	}
+
+	opaqueNewOneofHook(desc, oneof)
+
+	return oneof
 }
 
 // Extension is an alias of [Field] for documentation.

@@ -33,6 +33,10 @@ type Message struct {
 		FindExtensionByNumber(message protoreflect.FullName, field protoreflect.FieldNumber) (protoreflect.ExtensionType, error)
 		RangeExtensionsByMessage(message protoreflect.FullName, f func(protoreflect.ExtensionType) bool)
 	}
+
+	// UnmarshalOptions are respected for every Unmarshal call this package
+	// does. The Resolver and AllowPartial fields are overridden.
+	UnmarshalOptions proto.UnmarshalOptions
 }
 
 // Test performs tests on a [protoreflect.MessageType] implementation.
@@ -74,10 +78,10 @@ func (test Message) Test(t testing.TB, mt protoreflect.MessageType) {
 		t.Errorf("Marshal() = %v, want nil\n%v", err, prototext.Format(m2))
 	}
 	m3 := mt.New().Interface()
-	if err := (proto.UnmarshalOptions{
-		AllowPartial: true,
-		Resolver:     test.Resolver,
-	}.Unmarshal(b, m3)); err != nil {
+	unmarshalOpts := test.UnmarshalOptions
+	unmarshalOpts.AllowPartial = true
+	unmarshalOpts.Resolver = test.Resolver
+	if err := unmarshalOpts.Unmarshal(b, m3); err != nil {
 		t.Errorf("Unmarshal() = %v, want nil\n%v", err, prototext.Format(m2))
 	}
 	if !proto.Equal(m2, m3) {

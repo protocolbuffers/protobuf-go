@@ -894,3 +894,127 @@ func merge{{.PointerMethod}}Slice(dst, src pointer, _ *coderFieldInfo, _ mergeOp
 {{end}}
 {{end}}
 `))
+
+func generateImplField() string {
+	return mustExecute(implFieldTemplate, GoTypes)
+}
+
+var implFieldTemplate = template.Must(template.New("").Parse(`
+func getterForNullableScalar(fd protoreflect.FieldDescriptor, fs reflect.StructField, conv Converter, fieldOffset offset) func(p pointer) protoreflect.Value {
+	ft := fs.Type
+	if ft.Kind() == reflect.Ptr {
+		ft = ft.Elem()
+	}
+	if fd.Kind() == protoreflect.EnumKind {
+		elemType := fs.Type.Elem()
+		// Enums for nullable types.
+		return func(p pointer) protoreflect.Value {
+			if p.IsNil() {
+				return conv.Zero()
+			}
+			rv := p.Apply(fieldOffset).Elem().AsValueOf(elemType)
+			if rv.IsNil() {
+				return conv.Zero()
+			}
+			return conv.PBValueOf(rv.Elem())
+		}
+	}
+	switch ft.Kind() {
+{{range . }}
+{{- if eq . "string"}}	case reflect.String:
+{{- /* Handle string GoType -> bytes proto type specially */}}
+		if fd.Kind() == protoreflect.BytesKind {
+			return func(p pointer) protoreflect.Value {
+				if p.IsNil() {
+					return conv.Zero()
+				}
+				x := p.Apply(fieldOffset).StringPtr()
+				if *x == nil {
+					return conv.Zero()
+				}
+				if len(**x) == 0 {
+					return protoreflect.ValueOfBytes(nil)
+				}
+				return protoreflect.ValueOfBytes([]byte(**x))
+			}
+		}
+{{else if eq . "[]byte" }}	case reflect.Slice:
+{{- /* Handle []byte GoType -> string proto type specially */}}
+		if fd.Kind() == protoreflect.StringKind {
+			return func(p pointer) protoreflect.Value {
+				if p.IsNil() {
+					return conv.Zero()
+				}
+				x := p.Apply(fieldOffset).Bytes()
+				if len(*x) == 0 {
+					return conv.Zero()
+				}
+				return protoreflect.ValueOfString(string(*x))
+			}
+		}
+{{else}}	case {{.Kind }}:
+{{end}}		return func(p pointer) protoreflect.Value {
+			if p.IsNil() {
+				return conv.Zero()
+			}
+			x := p.Apply(fieldOffset).{{.NullablePointerMethod}}()
+			if *x == nil {
+				return conv.Zero()
+			}
+			return protoreflect.ValueOf{{.PointerMethod}}({{.NullableStar}}*x)
+		}
+{{end}}	}
+	panic("unexpected protobuf kind: "+ft.Kind().String())
+}
+
+func getterForDirectScalar(fd protoreflect.FieldDescriptor, fs reflect.StructField, conv Converter, fieldOffset offset) func(p pointer) protoreflect.Value {
+	ft := fs.Type
+	if fd.Kind() == protoreflect.EnumKind {
+		// Enums for non nullable types.
+		return func(p pointer) protoreflect.Value {
+			if p.IsNil() {
+				return conv.Zero()
+			}
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			return conv.PBValueOf(rv)
+		}
+	}
+	switch ft.Kind() {
+{{range . }}
+{{- if eq . "string"}}	case reflect.String:
+{{- /* Handle string GoType -> bytes proto type specially */}}
+		if fd.Kind() == protoreflect.BytesKind {
+			return func(p pointer) protoreflect.Value {
+				if p.IsNil() {
+					return conv.Zero()
+				}
+				x := p.Apply(fieldOffset).String()
+				if len(*x) == 0 {
+					return protoreflect.ValueOfBytes(nil)
+				}
+				return protoreflect.ValueOfBytes([]byte(*x))
+			}
+		}
+{{else if eq . "[]byte" }}	case reflect.Slice:
+{{- /* Handle []byte GoType -> string proto type specially */}}
+		if fd.Kind() == protoreflect.StringKind {
+			return func(p pointer) protoreflect.Value {
+				if p.IsNil() {
+					return conv.Zero()
+				}
+				x := p.Apply(fieldOffset).Bytes()
+				return protoreflect.ValueOfString(string(*x))
+			}
+		}
+{{else}}	case {{.Kind}}:
+{{end}}		return func(p pointer) protoreflect.Value {
+			if p.IsNil() {
+				return conv.Zero()
+			}
+			x := p.Apply(fieldOffset).{{.PointerMethod}}()
+			return protoreflect.ValueOf{{.PointerMethod}}(*x)
+		}
+{{end}}	}
+	panic("unexpected protobuf kind: "+ft.Kind().String())
+}
+`))

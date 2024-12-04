@@ -88,6 +88,43 @@ func (g GoType) PointerMethod() Expr {
 	return Expr(strings.ToUpper(string(g[:1])) + string(g[1:]))
 }
 
+// NullablePointerMethod is the "internal/impl".pointer method used to access a nullable pointer to this type.
+func (g GoType) NullablePointerMethod() Expr {
+	if g == GoBytes {
+		return "Bytes" // Bytes are already nullable
+	}
+	return Expr(strings.ToUpper(string(g[:1])) + string(g[1:]) + "Ptr")
+}
+
+// NullableStar is the prefix for dereferencing a nullable value of this type "*" or "".
+func (g GoType) NullableStar() Expr {
+	if g == GoBytes {
+		return "" // bytes are stored as a slice even when nullable
+	}
+	return "*"
+}
+
+// OpaqueNullablePointerMethod is the "internal/impl".pointer method used to access a opaque nullable pointer to this type.
+func (g GoType) OpaqueNullablePointerMethod() Expr {
+	switch g {
+	case GoString:
+		return "StringPtr" // Strings have indirection even in opaque
+	case GoBytes:
+		return "Bytes"
+	default:
+		return Expr(strings.ToUpper(string(g[:1])) + string(g[1:]))
+	}
+
+}
+
+// OpaqueNullableStar is the prefix for dereferencing a opaque nullable value of this type.
+func (g GoType) OpaqueNullableStar() Expr {
+	if g == GoString {
+		return "*" // Strings have indirection even in opaque
+	}
+	return ""
+}
+
 type ProtoKind struct {
 	Name     string
 	WireType WireType

@@ -10,6 +10,13 @@ import (
 )
 
 func makeMessages(in protobuild.Message, messages ...proto.Message) []proto.Message {
+
+	for _, m := range messages {
+		for _, mt := range relatedMessages[m.ProtoReflect().Type()] {
+			messages = append(messages, mt.New().Interface())
+		}
+	}
+
 	for _, m := range messages {
 		in.Build(m.ProtoReflect())
 	}

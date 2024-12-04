@@ -54,7 +54,9 @@ func TestInit(t *testing.T) {
 		descPkg.Append("FileDescriptorProto.source_code_info"): true,
 		descPkg.Append("FileDescriptorProto.syntax"):           true,
 		// Nothing is using edition yet.
-		descPkg.Append("FileDescriptorProto.edition"): true,
+		descPkg.Append("FileDescriptorProto.edition"):            true,
+		descPkg.Append("FileDescriptorProto.edition_enum"):       true,
+		descPkg.Append("FileDescriptorProto.edition_deprecated"): true,
 
 		// Impossible to test proto3 optional in a proto2 file.
 		descPkg.Append("FieldDescriptorProto.proto3_optional"): true,
