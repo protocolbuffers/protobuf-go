@@ -8,3 +8,11 @@ Recommended.Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairB
 Recommended.Proto3.TextFormatInput.StringLiteralShortUnicodeEscapeSurrogatePairString                              # Should have failed to parse, but didn't.
 Recommended.Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortBytes                           # Should have failed to parse, but didn't.
 Recommended.Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongShortString                          # Should have failed to parse, but didn't.
+
+# Recently added test cases. Since these are marked "required", they should be fixed ASAP.
+Required.Editions_Proto2.TextFormatInput.ClosedEnumFieldWithUnknownNumber                                          # Should have failed to parse, but didn't.
+Required.Editions_Proto3.TextFormatInput.FloatFieldNoNegativeOctal                                                 # Should have failed to parse, but didn't.
+Required.Editions_Proto3.TextFormatInput.FloatFieldNoOctal                                                         # Should have failed to parse, but didn't.
+Required.Proto2.TextFormatInput.ClosedEnumFieldWithUnknownNumber                                                   # Should have failed to parse, but didn't.
+Required.Proto3.TextFormatInput.FloatFieldNoNegativeOctal                                                          # Should have failed to parse, but didn't.
+Required.Proto3.TextFormatInput.FloatFieldNoOctal                                                                  # Should have failed to parse, but didn't.
