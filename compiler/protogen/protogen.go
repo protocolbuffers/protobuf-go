@@ -183,8 +183,9 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 		opts:           opts,
 	}
 
-	packageNames := make(map[string]GoPackageName) // filename -> package name
-	importPaths := make(map[string]GoImportPath)   // filename -> import path
+	packageNames := make(map[string]GoPackageName)                // filename -> package name
+	importPaths := make(map[string]GoImportPath)                  // filename -> import path
+	apiLevel := make(map[string]gofeaturespb.GoFeatures_APILevel) // filename -> api level
 	for _, param := range strings.Split(req.GetParameter(), ",") {
 		var value string
 		if i := strings.Index(param, "="); i >= 0 {
@@ -213,6 +214,18 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 			default:
 				return nil, fmt.Errorf(`bad value for parameter %q: want "true" or "false"`, param)
 			}
+		case "default_api_level":
+			switch value {
+			case "API_OPEN":
+				opts.DefaultAPILevel = gofeaturespb.GoFeatures_API_OPEN
+			case "API_HYBRID":
+				opts.DefaultAPILevel = gofeaturespb.GoFeatures_API_HYBRID
+			case "API_OPAQUE":
+				opts.DefaultAPILevel = gofeaturespb.GoFeatures_API_OPAQUE
+			default:
+				return nil, fmt.Errorf(`unknown API level %q for parameter %q: want "API_OPEN", "API_HYBRID" or "API_OPAQUE"`, value, param)
+			}
+			gen.opts = opts
 		default:
 			if param[0] == 'M' {
 				impPath, pkgName := splitImportPathAndPackageName(value)
@@ -222,6 +235,21 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 				if impPath != "" {
 					importPaths[param[1:]] = impPath
 				}
+				continue
+			}
+			if strings.HasPrefix(param, "apilevelM") {
+				var level gofeaturespb.GoFeatures_APILevel
+				switch value {
+				case "API_OPEN":
+					level = gofeaturespb.GoFeatures_API_OPEN
+				case "API_HYBRID":
+					level = gofeaturespb.GoFeatures_API_HYBRID
+				case "API_OPAQUE":
+					level = gofeaturespb.GoFeatures_API_OPAQUE
+				default:
+					return nil, fmt.Errorf(`unknown API level %q for parameter %q: want "API_OPEN", "API_HYBRID" or "API_OPAQUE"`, value, param)
+				}
+				apiLevel[strings.TrimPrefix(param, "apilevelM")] = level
 				continue
 			}
 			if opts.ParamFunc != nil {
@@ -328,7 +356,7 @@ func (opts Options) New(req *pluginpb.CodeGeneratorRequest) (*Plugin, error) {
 		if gen.FilesByPath[filename] != nil {
 			return nil, fmt.Errorf("duplicate file name: %q", filename)
 		}
-		f, err := newFile(gen, fdesc, packageNames[filename], importPaths[filename])
+		f, err := newFile(gen, fdesc, packageNames[filename], importPaths[filename], apiLevel[filename])
 		if err != nil {
 			return nil, err
 		}
@@ -469,13 +497,17 @@ type File struct {
 	APILevel gofeaturespb.GoFeatures_APILevel
 }
 
-func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPackageName, importPath GoImportPath) (*File, error) {
+func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPackageName, importPath GoImportPath, apiLevel gofeaturespb.GoFeatures_APILevel) (*File, error) {
 	desc, err := protodesc.NewFile(p, gen.fileReg)
 	if err != nil {
 		return nil, fmt.Errorf("invalid FileDescriptorProto %q: %v", p.GetName(), err)
 	}
 	if err := gen.fileReg.RegisterFile(desc); err != nil {
 		return nil, fmt.Errorf("cannot register descriptor %q: %v", p.GetName(), err)
+	}
+	defaultAPILevel := gen.defaultAPILevel()
+	if apiLevel != gofeaturespb.GoFeatures_API_LEVEL_UNSPECIFIED {
+		defaultAPILevel = apiLevel
 	}
 	f := &File{
 		Desc:          desc,
@@ -484,7 +516,7 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 		GoImportPath:  importPath,
 		location:      Location{SourceFile: desc.Path()},
 
-		APILevel: fileAPILevel(desc, gen.defaultAPILevel()),
+		APILevel: fileAPILevel(desc, defaultAPILevel),
 	}
 
 	// Determine the prefix for generated Go files.
