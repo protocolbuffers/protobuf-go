@@ -46,7 +46,7 @@ const (
 //		_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - genVersion)
 //	)
 //
-// The genVersion is the current minor version used to generated the code.
+// The genVersion is the current minor version used to generate the code.
 // This compile-time check relies on negative integer overflow of a uint
 // being a compilation failure (guaranteed by the Go specification).
 type EnforceVersion uint

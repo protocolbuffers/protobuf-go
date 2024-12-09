@@ -194,8 +194,8 @@ func (o Options) rangeAnyMessage(p *protopath.Values, m protoreflect.Message, pu
 		Resolver:     o.Resolver,
 	}.Unmarshal(val, m2.Interface())
 	if errUnmarshal != nil {
-		// If the the underlying message cannot be unmarshaled,
-		// then just treat this as an normal message type.
+		// If the underlying message cannot be unmarshaled,
+		// then just treat this as a normal message type.
 		return false, nil
 	}
 
