@@ -476,6 +476,11 @@ func (d decoder) unmarshalListValue(m protoreflect.Message) error {
 // Value message needs to be a oneof field set, else it is an error.
 
 func (e encoder) marshalKnownValue(m protoreflect.Message) error {
+	if !m.IsValid() {
+		e.WriteNull()
+		return nil
+	}
+
 	od := m.Descriptor().Oneofs().ByName(genid.Value_Kind_oneof_name)
 	fd := m.WhichOneof(od)
 	if fd == nil {
