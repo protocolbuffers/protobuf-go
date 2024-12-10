@@ -1213,12 +1213,13 @@ func TestMarshal(t *testing.T) {
 			Kind: &structpb.Value_StructValue{
 				&structpb.Struct{
 					Fields: map[string]*structpb.Value{
-						"null":   {Kind: &structpb.Value_NullValue{}},
-						"number": {Kind: &structpb.Value_NumberValue{}},
-						"string": {Kind: &structpb.Value_StringValue{}},
-						"struct": {Kind: &structpb.Value_StructValue{}},
-						"list":   {Kind: &structpb.Value_ListValue{}},
-						"bool":   {Kind: &structpb.Value_BoolValue{}},
+						"null":          {Kind: &structpb.Value_NullValue{}},
+						"number":        {Kind: &structpb.Value_NumberValue{}},
+						"string":        {Kind: &structpb.Value_StringValue{}},
+						"struct":        {Kind: &structpb.Value_StructValue{}},
+						"list":          {Kind: &structpb.Value_ListValue{}},
+						"bool":          {Kind: &structpb.Value_BoolValue{}},
+						"missing_value": nil,
 					},
 				},
 			},
@@ -1226,6 +1227,7 @@ func TestMarshal(t *testing.T) {
 		want: `{
   "bool": false,
   "list": [],
+  "missing_value": null,
   "null": null,
   "number": 0,
   "string": "",
