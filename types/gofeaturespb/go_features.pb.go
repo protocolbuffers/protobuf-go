@@ -148,6 +148,7 @@ func (GoFeatures_StripEnumPrefix) EnumDescriptor() ([]byte, []int) {
 type GoFeatures struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Whether or not to generate the deprecated UnmarshalJSON method for enums.
+	// Can only be true for proto using the Open Struct api.
 	LegacyUnmarshalJsonEnum *bool `protobuf:"varint,1,opt,name=legacy_unmarshal_json_enum,json=legacyUnmarshalJsonEnum" json:"legacy_unmarshal_json_enum,omitempty"`
 	// One of OPEN, HYBRID or OPAQUE.
 	ApiLevel        *GoFeatures_APILevel        `protobuf:"varint,2,opt,name=api_level,json=apiLevel,enum=pb.GoFeatures_APILevel" json:"api_level,omitempty"`
