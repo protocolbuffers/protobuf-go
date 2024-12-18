@@ -50,16 +50,16 @@ func TestErrors(t *testing.T) {
 		if got, want := test.err.Error(), prefix+test.wantText; got != want {
 			t.Errorf("%v.Error() = %q, want %q", test.what, got, want)
 		}
-		if got, want := Is(test.err, Error), true; got != want {
+		if got, want := errors.Is(test.err, Error), true; got != want {
 			t.Errorf("errors.Is(%v, errors.Error) = %v, want %v", test.what, got, want)
 		}
 		for _, err := range test.is {
-			if got, want := Is(test.err, err), true; got != want {
+			if got, want := errors.Is(test.err, err), true; got != want {
 				t.Errorf("errors.Is(%v, %v) = %v, want %v", test.what, err, got, want)
 			}
 		}
 		for _, err := range test.isNot {
-			if got, want := Is(test.err, err), false; got != want {
+			if got, want := errors.Is(test.err, err), false; got != want {
 				t.Errorf("errors.Is(%v, %v) = %v, want %v", test.what, err, got, want)
 			}
 		}

@@ -6,6 +6,7 @@ package proto_test
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"math"
 	"reflect"
@@ -19,7 +20,6 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/durationpb"
 
-	"google.golang.org/protobuf/internal/errors"
 	orderpb "google.golang.org/protobuf/internal/testprotos/order"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
