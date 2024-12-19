@@ -258,7 +258,7 @@ func (b *BufferReader) SkipGroup(tag uint32) (err error) {
 	return nil
 }
 
-// skipVarint effiently skips a varint
+// skipVarint efficiently skips a varint
 func (b *BufferReader) SkipVarint() (err error) {
 	i := b.Pos
 

@@ -71,7 +71,7 @@ type Options struct {
 //     Each field is preceded by a push of a [protopath.FieldAccess] step,
 //     followed by recursive application of the rules on the field value,
 //     and succeeded by a pop of that step.
-//     If the message has unknown fields, then push an [protopath.UnknownAccess] step
+//     If the message has unknown fields, then push a [protopath.UnknownAccess] step
 //     followed immediately by pop of that step.
 //
 //   - As an exception to the above rule, if the current message is a
@@ -194,8 +194,8 @@ func (o Options) rangeAnyMessage(p *protopath.Values, m protoreflect.Message, pu
 		Resolver:     o.Resolver,
 	}.Unmarshal(val, m2.Interface())
 	if errUnmarshal != nil {
-		// If the the underlying message cannot be unmarshaled,
-		// then just treat this as an normal message type.
+		// If the underlying message cannot be unmarshaled,
+		// then just treat this as a normal message type.
 		return false, nil
 	}
 

@@ -104,7 +104,7 @@ func (g GoType) NullableStar() Expr {
 	return "*"
 }
 
-// OpaqueNullablePointerMethod is the "internal/impl".pointer method used to access a opaque nullable pointer to this type.
+// OpaqueNullablePointerMethod is the "internal/impl".pointer method used to access an opaque nullable pointer to this type.
 func (g GoType) OpaqueNullablePointerMethod() Expr {
 	switch g {
 	case GoString:
@@ -117,7 +117,7 @@ func (g GoType) OpaqueNullablePointerMethod() Expr {
 
 }
 
-// OpaqueNullableStar is the prefix for dereferencing a opaque nullable value of this type.
+// OpaqueNullableStar is the prefix for dereferencing an opaque nullable value of this type.
 func (g GoType) OpaqueNullableStar() Expr {
 	if g == GoString {
 		return "*" // Strings have indirection even in opaque

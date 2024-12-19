@@ -64,12 +64,12 @@ func roundTripAndCompareProto(t *testing.T, wireBytes []byte, messages ...proto.
 
 		textFormat, err := prototext.Marshal(src)
 		if err != nil {
-			t.Errorf("failed to marshal messsage to text format: %v\nmessage: %v", err, src)
+			t.Errorf("failed to marshal message to text format: %v\nmessage: %v", err, src)
 		}
 		dst := msg.ProtoReflect().Type().New().Interface()
 
 		if err := (prototext.Unmarshal(textFormat, dst)); err != nil {
-			t.Errorf("failed to unmarshal messsage from text format: %v\ntext format: %s", err, textFormat)
+			t.Errorf("failed to unmarshal message from text format: %v\ntext format: %s", err, textFormat)
 		}
 
 		// The cmp package does not deal with NaN on its own and will report

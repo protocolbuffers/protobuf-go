@@ -14,14 +14,14 @@ option features.(pb.go).api_level = API_HYBRID;
 option features.repeated_field_encoding = PACKED;
 
 extend TestFeatureResolution {
-  repeated int32 other_file_global_expanded_extension_overriden = 6
+  repeated int32 other_file_global_expanded_extension_overridden = 6
       [features.repeated_field_encoding = EXPANDED];
   repeated int32 other_file_global_packed_extension = 7;
 }
 
 message OtherRepeatedFieldEncoding {
   extend TestFeatureResolution {
-    repeated int32 other_file_message_expanded_extension_overriden = 8
+    repeated int32 other_file_message_expanded_extension_overridden = 8
         [features.repeated_field_encoding = EXPANDED];
     repeated int32 other_file_message_packed_extension = 9;
   }

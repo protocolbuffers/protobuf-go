@@ -116,14 +116,14 @@ message TestFeatureResolution {
 
 extend TestFeatureResolution {
   repeated int32 global_expanded_extension = 2;
-  repeated int32 global_packed_extension_overriden = 3
+  repeated int32 global_packed_extension_overridden = 3
       [features.repeated_field_encoding = PACKED];
 }
 
 message RepeatedFieldEncoding {
   extend TestFeatureResolution {
     repeated int32 message_expanded_extension = 4;
-    repeated int32 message_packed_extension_overriden = 5
+    repeated int32 message_packed_extension_overridden = 5
         [features.repeated_field_encoding = PACKED];
   }
 }

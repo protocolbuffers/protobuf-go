@@ -16,7 +16,7 @@ enum Enum {
   DEFAULT = 1337;
   ZERO = 0;
   ONE = 1;
-  ELEVENT = 11;
+  ELEVEN = 11;
   SEVENTEEN = 17;
   THIRTYSEVEN = 37;
   SIXTYSEVEN = 67;

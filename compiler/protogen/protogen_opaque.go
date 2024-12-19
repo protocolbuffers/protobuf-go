@@ -21,7 +21,7 @@ func opaqueNewMessageHook(message *Message) {
 	// New name mangling scheme: Add a '_' between method base
 	// name (Get, Set, Clear etc) and original field name if
 	// needed.  As a special case, there is one globally reserved
-	// name, e.g. "Build" thet still results in actual renaming of
+	// name, e.g. "Build" that still results in actual renaming of
 	// the builder field like in the old scheme.  We begin by
 	// taking care of this special case.
 	for _, field := range message.Fields {
@@ -45,7 +45,7 @@ func opaqueNewMessageHook(message *Message) {
 		camelCases[field.camelCase] = true
 
 	}
-	// For each field, check if any of it's methods would clash with an original field name
+	// For each field, check if any of its methods would clash with an original field name
 	for _, field := range message.Fields {
 		// Every field (except the union fields, that are taken care of separately) has
 		// a Get and a Set method.

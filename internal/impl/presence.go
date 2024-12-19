@@ -57,7 +57,7 @@ func (p presence) ClearPresent(num uint32) {
 // LoadPresenceCache (together with PresentInCache) allows for a
 // cached version of checking for presence without re-reading the word
 // for every field. It is optimized for efficiency and assumes no
-// simltaneous mutation of the presence set (or at least does not have
+// simultaneous mutation of the presence set (or at least does not have
 // a problem with simultaneous mutation giving inconsistent results).
 func (p presence) LoadPresenceCache() (current uint32) {
 	if p.P == nil {
@@ -123,7 +123,7 @@ func atomicStoreShadowPresence(p **[]byte, v *[]byte) {
 
 // findPointerToRaceDetectData finds the preceding RaceDetectHookData
 // in a message by using pointer arithmetic. For the methods called
-// directy from generated code, we don't have a pointer to the
+// directly from generated code, we don't have a pointer to the
 // beginning of the presence set, but a pointer inside the array. As
 // we know the index of the bit we're manipulating (num), we can
 // calculate which element of the array ptr is pointing to. With that

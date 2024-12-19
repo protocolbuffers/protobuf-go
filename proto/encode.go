@@ -50,7 +50,7 @@ type MarshalOptions struct {
 	// serializer rather than relying on this API.
 	//
 	// If deterministic serialization is requested, map entries will be
-	// sorted by keys in lexographical order. This is an implementation
+	// sorted by keys in lexicographical order. This is an implementation
 	// detail and subject to change.
 	Deterministic bool
 
@@ -137,7 +137,7 @@ func (o MarshalOptions) Marshal(m Message) ([]byte, error) {
 //	m1.OptionalBytes, _ = proto.Marshal(m2)
 //
 // where they expect the proto2 "optional_bytes" field to be populated
-// if any only if m2 is a valid message.
+// if and only if m2 is a valid message.
 func emptyBytesForMessage(m Message) []byte {
 	if m == nil || !m.ProtoReflect().IsValid() {
 		return nil

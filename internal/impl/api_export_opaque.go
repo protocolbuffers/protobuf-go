@@ -23,7 +23,7 @@ func (Export) UnmarshalField(msg any, fieldNum int32) {
 // &m.XXX_presence[1], num = 70)
 func (Export) Present(part *uint32, num uint32) bool {
 	// This hook will read an unprotected shadow presence set if
-	// we're unning under the race detector
+	// we're running under the race detector
 	raceDetectHookPresent(part, num)
 	return atomic.LoadUint32(part)&(1<<(num%32)) > 0
 }
