@@ -725,8 +725,8 @@ var file_internal_testprotos_testeditions_test_extension_proto_extTypes = []prot
 		ExtendedType:  (*TestFeatureResolution)(nil),
 		ExtensionType: ([]int32)(nil),
 		Field:         3,
-		Name:          "goproto.proto.testeditions.global_packed_extension_overriden",
-		Tag:           "varint,3,rep,packed,name=global_packed_extension_overriden",
+		Name:          "goproto.proto.testeditions.global_packed_extension_overridden",
+		Tag:           "varint,3,rep,packed,name=global_packed_extension_overridden",
 		Filename:      "internal/testprotos/testeditions/test_extension.proto",
 	},
 	{
@@ -741,8 +741,8 @@ var file_internal_testprotos_testeditions_test_extension_proto_extTypes = []prot
 		ExtendedType:  (*TestFeatureResolution)(nil),
 		ExtensionType: ([]int32)(nil),
 		Field:         5,
-		Name:          "goproto.proto.testeditions.RepeatedFieldEncoding.message_packed_extension_overriden",
-		Tag:           "varint,5,rep,packed,name=message_packed_extension_overriden",
+		Name:          "goproto.proto.testeditions.RepeatedFieldEncoding.message_packed_extension_overridden",
+		Tag:           "varint,5,rep,packed,name=message_packed_extension_overridden",
 		Filename:      "internal/testprotos/testeditions/test_extension.proto",
 	},
 }
@@ -861,12 +861,12 @@ var (
 var (
 	// repeated int32 global_expanded_extension = 2;
 	E_GlobalExpandedExtension = &file_internal_testprotos_testeditions_test_extension_proto_extTypes[53]
-	// repeated int32 global_packed_extension_overriden = 3;
-	E_GlobalPackedExtensionOverriden = &file_internal_testprotos_testeditions_test_extension_proto_extTypes[54]
+	// repeated int32 global_packed_extension_overridden = 3;
+	E_GlobalPackedExtensionOverridden = &file_internal_testprotos_testeditions_test_extension_proto_extTypes[54]
 	// repeated int32 message_expanded_extension = 4;
 	E_RepeatedFieldEncoding_MessageExpandedExtension = &file_internal_testprotos_testeditions_test_extension_proto_extTypes[55]
-	// repeated int32 message_packed_extension_overriden = 5;
-	E_RepeatedFieldEncoding_MessagePackedExtensionOverriden = &file_internal_testprotos_testeditions_test_extension_proto_extTypes[56]
+	// repeated int32 message_packed_extension_overridden = 5;
+	E_RepeatedFieldEncoding_MessagePackedExtensionOverridden = &file_internal_testprotos_testeditions_test_extension_proto_extTypes[56]
 )
 
 var File_internal_testprotos_testeditions_test_extension_proto protoreflect.FileDescriptor
@@ -1355,9 +1355,9 @@ var file_internal_testprotos_testeditions_test_extension_proto_depIdxs = []int32
 	0,  // 54: goproto.proto.testeditions.single:extendee -> goproto.proto.testeditions.TestAllExtensions
 	0,  // 55: goproto.proto.testeditions.multi:extendee -> goproto.proto.testeditions.TestAllExtensions
 	3,  // 56: goproto.proto.testeditions.global_expanded_extension:extendee -> goproto.proto.testeditions.TestFeatureResolution
-	3,  // 57: goproto.proto.testeditions.global_packed_extension_overriden:extendee -> goproto.proto.testeditions.TestFeatureResolution
+	3,  // 57: goproto.proto.testeditions.global_packed_extension_overridden:extendee -> goproto.proto.testeditions.TestFeatureResolution
 	3,  // 58: goproto.proto.testeditions.RepeatedFieldEncoding.message_expanded_extension:extendee -> goproto.proto.testeditions.TestFeatureResolution
-	3,  // 59: goproto.proto.testeditions.RepeatedFieldEncoding.message_packed_extension_overriden:extendee -> goproto.proto.testeditions.TestFeatureResolution
+	3,  // 59: goproto.proto.testeditions.RepeatedFieldEncoding.message_packed_extension_overridden:extendee -> goproto.proto.testeditions.TestFeatureResolution
 	1,  // 60: goproto.proto.testeditions.optionalgroup:type_name -> goproto.proto.testeditions.OptionalGroup
 	5,  // 61: goproto.proto.testeditions.optional_nested_message:type_name -> goproto.proto.testeditions.TestAllExtensions.NestedMessage
 	6,  // 62: goproto.proto.testeditions.optional_nested_enum:type_name -> goproto.proto.testeditions.TestAllTypes.NestedEnum

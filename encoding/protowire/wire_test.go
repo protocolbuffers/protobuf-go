@@ -52,7 +52,7 @@ type (
 	}
 	appendRaw []byte
 
-	// consumeOp represents an Consume operation.
+	// consumeOp represents a Consume operation.
 	consumeOp    = any
 	consumeField struct {
 		wantNum  Number

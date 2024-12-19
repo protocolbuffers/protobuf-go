@@ -55,8 +55,8 @@ var file_internal_testprotos_testeditions_test_extension2_proto_extTypes = []pro
 		ExtendedType:  (*TestFeatureResolution)(nil),
 		ExtensionType: ([]int32)(nil),
 		Field:         6,
-		Name:          "goproto.proto.testeditions.other_file_global_expanded_extension_overriden",
-		Tag:           "varint,6,rep,name=other_file_global_expanded_extension_overriden",
+		Name:          "goproto.proto.testeditions.other_file_global_expanded_extension_overridden",
+		Tag:           "varint,6,rep,name=other_file_global_expanded_extension_overridden",
 		Filename:      "internal/testprotos/testeditions/test_extension2.proto",
 	},
 	{
@@ -71,8 +71,8 @@ var file_internal_testprotos_testeditions_test_extension2_proto_extTypes = []pro
 		ExtendedType:  (*TestFeatureResolution)(nil),
 		ExtensionType: ([]int32)(nil),
 		Field:         8,
-		Name:          "goproto.proto.testeditions.OtherRepeatedFieldEncoding.other_file_message_expanded_extension_overriden",
-		Tag:           "varint,8,rep,name=other_file_message_expanded_extension_overriden",
+		Name:          "goproto.proto.testeditions.OtherRepeatedFieldEncoding.other_file_message_expanded_extension_overridden",
+		Tag:           "varint,8,rep,name=other_file_message_expanded_extension_overridden",
 		Filename:      "internal/testprotos/testeditions/test_extension2.proto",
 	},
 	{
@@ -87,12 +87,12 @@ var file_internal_testprotos_testeditions_test_extension2_proto_extTypes = []pro
 
 // Extension fields to TestFeatureResolution.
 var (
-	// repeated int32 other_file_global_expanded_extension_overriden = 6;
-	E_OtherFileGlobalExpandedExtensionOverriden = &file_internal_testprotos_testeditions_test_extension2_proto_extTypes[0]
+	// repeated int32 other_file_global_expanded_extension_overridden = 6;
+	E_OtherFileGlobalExpandedExtensionOverridden = &file_internal_testprotos_testeditions_test_extension2_proto_extTypes[0]
 	// repeated int32 other_file_global_packed_extension = 7;
 	E_OtherFileGlobalPackedExtension = &file_internal_testprotos_testeditions_test_extension2_proto_extTypes[1]
-	// repeated int32 other_file_message_expanded_extension_overriden = 8;
-	E_OtherRepeatedFieldEncoding_OtherFileMessageExpandedExtensionOverriden = &file_internal_testprotos_testeditions_test_extension2_proto_extTypes[2]
+	// repeated int32 other_file_message_expanded_extension_overridden = 8;
+	E_OtherRepeatedFieldEncoding_OtherFileMessageExpandedExtensionOverridden = &file_internal_testprotos_testeditions_test_extension2_proto_extTypes[2]
 	// repeated int32 other_file_message_packed_extension = 9;
 	E_OtherRepeatedFieldEncoding_OtherFileMessagePackedExtension = &file_internal_testprotos_testeditions_test_extension2_proto_extTypes[3]
 )
@@ -172,9 +172,9 @@ var file_internal_testprotos_testeditions_test_extension2_proto_goTypes = []any{
 	(*TestFeatureResolution)(nil),      // 1: goproto.proto.testeditions.TestFeatureResolution
 }
 var file_internal_testprotos_testeditions_test_extension2_proto_depIdxs = []int32{
-	1, // 0: goproto.proto.testeditions.other_file_global_expanded_extension_overriden:extendee -> goproto.proto.testeditions.TestFeatureResolution
+	1, // 0: goproto.proto.testeditions.other_file_global_expanded_extension_overridden:extendee -> goproto.proto.testeditions.TestFeatureResolution
 	1, // 1: goproto.proto.testeditions.other_file_global_packed_extension:extendee -> goproto.proto.testeditions.TestFeatureResolution
-	1, // 2: goproto.proto.testeditions.OtherRepeatedFieldEncoding.other_file_message_expanded_extension_overriden:extendee -> goproto.proto.testeditions.TestFeatureResolution
+	1, // 2: goproto.proto.testeditions.OtherRepeatedFieldEncoding.other_file_message_expanded_extension_overridden:extendee -> goproto.proto.testeditions.TestFeatureResolution
 	1, // 3: goproto.proto.testeditions.OtherRepeatedFieldEncoding.other_file_message_packed_extension:extendee -> goproto.proto.testeditions.TestFeatureResolution
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type

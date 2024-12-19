@@ -335,7 +335,7 @@ func (d *Decoder) parseNext(lastKind Kind) (Token, error) {
 
 		case ListOpen:
 			if lastKind == semicolon {
-				// It is not be possible to have this case as logic here
+				// It is not possible to have this case as logic here
 				// should not have produced a semicolon Token when inside a
 				// list. Let it panic below.
 				break
