@@ -583,13 +583,8 @@ func testOneof(t testing.TB, m protoreflect.Message, od protoreflect.OneofDescri
 				// Set fields explicitly.
 				m.Set(fda, newValue(m, fda, 1, nil))
 			}
-			if !od.IsSynthetic() {
-				// Synthetic oneofs are used to represent optional fields in
-				// proto3. While they show up in protoreflect, WhichOneof does
-				// not work on these (only on non-synthetic, explicit oneofs).
-				if got, want := m.WhichOneof(od), fda; got != want {
-					t.Errorf("after setting oneof field %q:\nWhichOneof(%q) = %v, want %v", fda.FullName(), fda.Name(), got, want)
-				}
+			if got, want := m.WhichOneof(od), fda; got != want {
+				t.Errorf("after setting oneof field %q:\nWhichOneof(%q) = %v, want %v", fda.FullName(), fda.Name(), got, want)
 			}
 			for j := 0; j < od.Fields().Len(); j++ {
 				fdb := od.Fields().Get(j)
