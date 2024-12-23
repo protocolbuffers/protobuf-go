@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	test3openpb "google.golang.org/protobuf/internal/testprotos/test3"
+	test3hybridpb "google.golang.org/protobuf/internal/testprotos/test3/test3_hybrid"
+	test3opaquepb "google.golang.org/protobuf/internal/testprotos/test3/test3_opaque"
 	testhybridpb "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_hybrid"
 	testopaquepb "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_opaque"
 	"google.golang.org/protobuf/proto"
@@ -189,7 +191,7 @@ func TestOpaqueWhich(t *testing.T) {
 	}
 }
 
-func TestSyntheticOneof(t *testing.T) {
+func TestSyntheticOneofOpen(t *testing.T) {
 	msg := test3openpb.TestAllTypes{}
 	md := msg.ProtoReflect().Descriptor()
 	ood := md.Oneofs().ByName("_optional_int32")
@@ -208,4 +210,40 @@ func TestSyntheticOneof(t *testing.T) {
 	}
 }
 
-// TODO(stapelberg): add test variants for the Hybrid API and Opaque API.
+func TestSyntheticOneofHybrid(t *testing.T) {
+	msg := test3hybridpb.TestAllTypes{}
+	md := msg.ProtoReflect().Descriptor()
+	ood := md.Oneofs().ByName("_optional_int32")
+	if ood == nil {
+		t.Fatal("failed to find oneof _optional_int32")
+	}
+	if !ood.IsSynthetic() {
+		t.Fatal("oneof _optional_int32 should be synthetic")
+	}
+	if msg.ProtoReflect().WhichOneof(ood) != nil {
+		t.Error("oneof _optional_int32 should not have a field set yet")
+	}
+	msg.OptionalInt32 = proto.Int32(123)
+	if msg.ProtoReflect().WhichOneof(ood) == nil {
+		t.Error("oneof _optional_int32 should have a field set")
+	}
+}
+
+func TestSyntheticOneofOpaque(t *testing.T) {
+	msg := test3opaquepb.TestAllTypes{}
+	md := msg.ProtoReflect().Descriptor()
+	ood := md.Oneofs().ByName("_optional_int32")
+	if ood == nil {
+		t.Fatal("failed to find oneof _optional_int32")
+	}
+	if !ood.IsSynthetic() {
+		t.Fatal("oneof _optional_int32 should be synthetic")
+	}
+	if msg.ProtoReflect().WhichOneof(ood) != nil {
+		t.Error("oneof _optional_int32 should not have a field set yet")
+	}
+	msg.SetOptionalInt32(123)
+	if msg.ProtoReflect().WhichOneof(ood) == nil {
+		t.Error("oneof _optional_int32 should have a field set")
+	}
+}

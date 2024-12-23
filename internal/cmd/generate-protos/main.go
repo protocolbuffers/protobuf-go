@@ -182,7 +182,13 @@ func generateOpaqueDotProto(repoRoot, tmpDir, relPath string) {
 			if matches := goPackageRe.FindStringSubmatch(line); matches != nil {
 				goPkg := matches[1]
 				hybridGoPkg := strings.TrimSuffix(goPkg, "/") + "/" + filepath.Base(goPkg) + "_hybrid"
-				return `option go_package = "` + hybridGoPkg + `";` + "\n" +
+				goPackage := `option go_package = "` + hybridGoPkg + `";` + "\n"
+				if strings.HasPrefix(relPath, "internal/testprotos/test3/") {
+					// The test3 testproto must remain on syntax = "proto3";
+					// and therefore cannot use the editions-only api_level.
+					return goPackage
+				}
+				return goPackage +
 					`import "google/protobuf/go_features.proto";` + "\n" +
 					`option features.(pb.go).api_level = API_HYBRID;`
 			}
@@ -211,7 +217,13 @@ func generateOpaqueDotProto(repoRoot, tmpDir, relPath string) {
 			if matches := goPackageRe.FindStringSubmatch(line); matches != nil {
 				goPkg := matches[1]
 				opaqueGoPkg := strings.TrimSuffix(goPkg, "/") + "/" + filepath.Base(goPkg) + "_opaque"
-				return `option go_package = "` + opaqueGoPkg + `";` + "\n" +
+				goPackage := `option go_package = "` + opaqueGoPkg + `";` + "\n"
+				if strings.HasPrefix(relPath, "internal/testprotos/test3/") {
+					// The test3 testproto must remain on syntax = "proto3";
+					// and therefore cannot use the editions-only api_level.
+					return goPackage
+				}
+				return goPackage +
 					`import "google/protobuf/go_features.proto";` + "\n" +
 					`option features.(pb.go).api_level = API_OPAQUE;`
 			}
@@ -248,6 +260,12 @@ func generateOpaqueTestprotos() {
 	}{
 		{path: "internal/testprotos/required"},
 		{path: "internal/testprotos/testeditions"},
+		{
+			path: "internal/testprotos/test3",
+			exclude: map[string]bool{
+				"internal/testprotos/test3/test_extension.proto": true,
+			},
+		},
 		{path: "internal/testprotos/enums"},
 		{path: "internal/testprotos/textpbeditions"},
 		{path: "internal/testprotos/messageset"},
@@ -358,6 +376,18 @@ func generateLocalProtos() {
 			}
 			if d.annotate[filepath.ToSlash(relPath)] {
 				opts += ",annotate_code"
+			}
+			if strings.HasPrefix(relPath, "internal/testprotos/test3/") {
+				variant := strings.TrimPrefix(relPath, "internal/testprotos/test3/")
+				if idx := strings.IndexByte(variant, '/'); idx > -1 {
+					variant = variant[:idx]
+				}
+				switch variant {
+				case "test3_hybrid":
+					opts += fmt.Sprintf(",apilevelM%v=%v", relPath, "API_HYBRID")
+				case "test3_opaque":
+					opts += fmt.Sprintf(",apilevelM%v=%v", relPath, "API_OPAQUE")
+				}
 			}
 			protoc("-I"+filepath.Join(repoRoot, "src"), "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+tmpDir, filepath.Join(repoRoot, relPath))
 			return nil
