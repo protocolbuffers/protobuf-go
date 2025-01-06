@@ -836,11 +836,7 @@ func (e encoder) marshalFieldMask(m protoreflect.Message) error {
 		if !protoreflect.FullName(s).IsValid() {
 			return errors.New("%s contains invalid path: %q", genid.FieldMask_Paths_field_fullname, s)
 		}
-		// Return error if conversion to camelCase is not reversible.
 		cc := strs.JSONCamelCase(s)
-		if s != strs.JSONSnakeCase(cc) {
-			return errors.New("%s contains irreversible value %q", genid.FieldMask_Paths_field_fullname, s)
-		}
 		paths = append(paths, cc)
 	}
 
