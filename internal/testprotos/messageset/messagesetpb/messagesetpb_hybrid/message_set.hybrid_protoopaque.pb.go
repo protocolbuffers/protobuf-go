@@ -62,7 +62,7 @@ func (b0 MessageSet_builder) Build() *MessageSet {
 
 type MessageSetContainer struct {
 	state                 protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_MessageSet *MessageSet            `protobuf:"bytes,1,opt,name=message_set,json=messageSet" json:"message_set,omitempty"`
+	xxx_hidden_MessageSet *MessageSet            `protobuf:"bytes,1,opt,name=message_set,json=messageSet"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }

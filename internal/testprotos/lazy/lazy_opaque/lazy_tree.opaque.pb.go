@@ -16,22 +16,22 @@ import (
 
 type Node struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Nested   *Node                  `protobuf:"bytes,99,opt,name=nested" json:"nested,omitempty"`
-	xxx_hidden_Int32    int32                  `protobuf:"varint,1,opt,name=int32" json:"int32,omitempty"`
-	xxx_hidden_Int64    int64                  `protobuf:"varint,2,opt,name=int64" json:"int64,omitempty"`
-	xxx_hidden_Uint32   uint32                 `protobuf:"varint,3,opt,name=uint32" json:"uint32,omitempty"`
-	xxx_hidden_Uint64   uint64                 `protobuf:"varint,4,opt,name=uint64" json:"uint64,omitempty"`
-	xxx_hidden_Sint32   int32                  `protobuf:"zigzag32,5,opt,name=sint32" json:"sint32,omitempty"`
-	xxx_hidden_Sint64   int64                  `protobuf:"zigzag64,6,opt,name=sint64" json:"sint64,omitempty"`
-	xxx_hidden_Fixed32  uint32                 `protobuf:"fixed32,7,opt,name=fixed32" json:"fixed32,omitempty"`
-	xxx_hidden_Fixed64  uint64                 `protobuf:"fixed64,8,opt,name=fixed64" json:"fixed64,omitempty"`
-	xxx_hidden_Sfixed32 int32                  `protobuf:"fixed32,9,opt,name=sfixed32" json:"sfixed32,omitempty"`
-	xxx_hidden_Sfixed64 int64                  `protobuf:"fixed64,10,opt,name=sfixed64" json:"sfixed64,omitempty"`
-	xxx_hidden_Float    float32                `protobuf:"fixed32,11,opt,name=float" json:"float,omitempty"`
-	xxx_hidden_Double   float64                `protobuf:"fixed64,12,opt,name=double" json:"double,omitempty"`
-	xxx_hidden_Bool     bool                   `protobuf:"varint,13,opt,name=bool" json:"bool,omitempty"`
-	xxx_hidden_String_  *string                `protobuf:"bytes,14,opt,name=string" json:"string,omitempty"`
-	xxx_hidden_Bytes    []byte                 `protobuf:"bytes,15,opt,name=bytes" json:"bytes,omitempty"`
+	xxx_hidden_Nested   *Node                  `protobuf:"bytes,99,opt,name=nested"`
+	xxx_hidden_Int32    int32                  `protobuf:"varint,1,opt,name=int32"`
+	xxx_hidden_Int64    int64                  `protobuf:"varint,2,opt,name=int64"`
+	xxx_hidden_Uint32   uint32                 `protobuf:"varint,3,opt,name=uint32"`
+	xxx_hidden_Uint64   uint64                 `protobuf:"varint,4,opt,name=uint64"`
+	xxx_hidden_Sint32   int32                  `protobuf:"zigzag32,5,opt,name=sint32"`
+	xxx_hidden_Sint64   int64                  `protobuf:"zigzag64,6,opt,name=sint64"`
+	xxx_hidden_Fixed32  uint32                 `protobuf:"fixed32,7,opt,name=fixed32"`
+	xxx_hidden_Fixed64  uint64                 `protobuf:"fixed64,8,opt,name=fixed64"`
+	xxx_hidden_Sfixed32 int32                  `protobuf:"fixed32,9,opt,name=sfixed32"`
+	xxx_hidden_Sfixed64 int64                  `protobuf:"fixed64,10,opt,name=sfixed64"`
+	xxx_hidden_Float    float32                `protobuf:"fixed32,11,opt,name=float"`
+	xxx_hidden_Double   float64                `protobuf:"fixed64,12,opt,name=double"`
+	xxx_hidden_Bool     bool                   `protobuf:"varint,13,opt,name=bool"`
+	xxx_hidden_String_  *string                `protobuf:"bytes,14,opt,name=string"`
+	xxx_hidden_Bytes    []byte                 `protobuf:"bytes,15,opt,name=bytes"`
 	// Deprecated: Do not use. This will be deleted in the near future.
 	XXX_lazyUnmarshalInfo  protoimpl.LazyUnmarshalInfo
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData

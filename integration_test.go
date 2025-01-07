@@ -116,6 +116,17 @@ func TestIntegration(t *testing.T) {
 			t.Fatalf("unformatted source files:\n%v", diff)
 		}
 	})
+	t.Run("GeneratedVet", func(t *testing.T) {
+		files := strings.Split(strings.TrimSpace(mustRunCommand(t, "go", "list", "./internal/testprotos/...")), "\n")
+		filtered := make([]string, 0, len(files))
+		for _, f := range files {
+			if strings.Contains(f, "/legacy/") {
+				continue
+			}
+			filtered = append(filtered, f)
+		}
+		mustRunCommand(t, append([]string{"go", "vet"}, filtered...)...)
+	})
 	t.Run("CopyrightHeaders", func(t *testing.T) {
 		files := strings.Split(strings.TrimSpace(mustRunCommand(t, "git", "ls-files", "*.go", "*.proto")), "\n")
 		mustHaveCopyrightHeader(t, files)

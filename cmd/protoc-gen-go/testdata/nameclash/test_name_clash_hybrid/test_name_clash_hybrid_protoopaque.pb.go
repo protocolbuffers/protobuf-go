@@ -37,9 +37,9 @@ import (
 
 type M1 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
-	xxx_hidden_GetFoo_     int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	xxx_hidden_GetGetFoo   int32                  `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo" json:"get_get_foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
+	xxx_hidden_GetFoo_     int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo"`
+	xxx_hidden_GetGetFoo   int32                  `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -182,9 +182,9 @@ func (b0 M1_builder) Build() *M1 {
 
 type M2 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_GetGetFoo   int32                  `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo" json:"get_get_foo,omitempty"`
-	xxx_hidden_GetFoo_     int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_GetGetFoo   int32                  `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo"`
+	xxx_hidden_GetFoo_     int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -327,9 +327,9 @@ func (b0 M2_builder) Build() *M2 {
 
 type M3 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_GetFoo      int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	xxx_hidden_GetGetFoo_  int32                  `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo" json:"get_get_foo,omitempty"`
-	xxx_hidden_Foo_        int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_GetFoo      int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo"`
+	xxx_hidden_GetGetFoo_  int32                  `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo"`
+	xxx_hidden_Foo_        int32                  `protobuf:"varint,1,opt,name=foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -472,9 +472,9 @@ func (b0 M3_builder) Build() *M3 {
 
 type M4 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_GetFoo      int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
+	xxx_hidden_GetFoo      int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo"`
 	xxx_hidden_GetGetFoo_  isM4_GetGetFoo_        `protobuf_oneof:"get_get_foo"`
-	xxx_hidden_Foo_        int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo_        int32                  `protobuf:"varint,1,opt,name=foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -671,9 +671,9 @@ func (*m4_GetGetGetFoo) isM4_GetGetFoo_() {}
 
 type M5 struct {
 	state                   protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_GetFoo       int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
+	xxx_hidden_GetFoo       int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo"`
 	xxx_hidden_GetGetGetFoo isM5_GetGetGetFoo      `protobuf_oneof:"get_get_get_foo"`
-	xxx_hidden_Foo_         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo_         int32                  `protobuf:"varint,1,opt,name=foo"`
 	XXX_raceDetectHookData  protoimpl.RaceDetectHookData
 	XXX_presence            [1]uint32
 	unknownFields           protoimpl.UnknownFields
@@ -872,8 +872,8 @@ func (*m5_GetGetFoo_) isM5_GetGetGetFoo() {}
 type M6 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_GetGetFoo   isM6_GetGetFoo         `protobuf_oneof:"get_get_foo"`
-	xxx_hidden_GetFoo_     int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_GetFoo_     int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -1070,7 +1070,7 @@ func (*m6_GetGetGetFoo) isM6_GetGetFoo() {}
 type M7 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_GetGetFoo   isM7_GetGetFoo         `protobuf_oneof:"get_get_foo"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -1278,8 +1278,8 @@ func (*m7_GetFoo_) isM7_GetGetFoo() {}
 type M8 struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_GetGetGetFoo_ isM8_GetGetGetFoo_     `protobuf_oneof:"get_get_get_foo"`
-	xxx_hidden_GetFoo_       int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	xxx_hidden_Foo           int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_GetFoo_       int32                  `protobuf:"varint,2,opt,name=get_foo,json=getFoo"`
+	xxx_hidden_Foo           int32                  `protobuf:"varint,1,opt,name=foo"`
 	XXX_raceDetectHookData   protoimpl.RaceDetectHookData
 	XXX_presence             [1]uint32
 	unknownFields            protoimpl.UnknownFields
@@ -1476,7 +1476,7 @@ func (*m8_GetGetFoo) isM8_GetGetGetFoo_() {}
 type M9 struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_GetGetGetFoo_ isM9_GetGetGetFoo_     `protobuf_oneof:"get_get_get_foo"`
-	xxx_hidden_Foo           int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo           int32                  `protobuf:"varint,1,opt,name=foo"`
 	XXX_raceDetectHookData   protoimpl.RaceDetectHookData
 	XXX_presence             [1]uint32
 	unknownFields            protoimpl.UnknownFields
@@ -1683,8 +1683,8 @@ func (*m9_GetFoo_) isM9_GetGetGetFoo_() {}
 
 type M10 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
-	xxx_hidden_SetFoo      int32                  `protobuf:"varint,2,opt,name=set_foo,json=setFoo" json:"set_foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
+	xxx_hidden_SetFoo      int32                  `protobuf:"varint,2,opt,name=set_foo,json=setFoo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -1793,7 +1793,7 @@ func (b0 M10_builder) Build() *M10 {
 
 type M11 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	xxx_hidden_SetFoo      isM11_SetFoo           `protobuf_oneof:"set_foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
@@ -1953,7 +1953,7 @@ func (*m11_SetSetFoo) isM11_SetFoo() {}
 
 type M12 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	xxx_hidden_SetSetFoo   isM12_SetSetFoo        `protobuf_oneof:"set_set_foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
@@ -2113,8 +2113,8 @@ func (*m12_SetFoo) isM12_SetSetFoo() {}
 
 type M13 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
-	xxx_hidden_HasFoo      int32                  `protobuf:"varint,2,opt,name=has_foo,json=hasFoo" json:"has_foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
+	xxx_hidden_HasFoo      int32                  `protobuf:"varint,2,opt,name=has_foo,json=hasFoo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -2223,7 +2223,7 @@ func (b0 M13_builder) Build() *M13 {
 
 type M14 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	xxx_hidden_HasFoo      isM14_HasFoo           `protobuf_oneof:"has_foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
@@ -2384,7 +2384,7 @@ func (*m14_HasHasFoo) isM14_HasFoo() {}
 
 type M15 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	xxx_hidden_HasHasFoo   isM15_HasHasFoo        `protobuf_oneof:"has_has_foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
@@ -2545,8 +2545,8 @@ func (*m15_HasFoo) isM15_HasHasFoo() {}
 
 type M16 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
-	xxx_hidden_ClearFoo    int32                  `protobuf:"varint,2,opt,name=clear_foo,json=clearFoo" json:"clear_foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
+	xxx_hidden_ClearFoo    int32                  `protobuf:"varint,2,opt,name=clear_foo,json=clearFoo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -2655,7 +2655,7 @@ func (b0 M16_builder) Build() *M16 {
 
 type M17 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	xxx_hidden_ClearFoo    isM17_ClearFoo         `protobuf_oneof:"clear_foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
@@ -2816,7 +2816,7 @@ func (*m17_ClearClearFoo) isM17_ClearFoo() {}
 
 type M18 struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo           int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo           int32                  `protobuf:"varint,1,opt,name=foo"`
 	xxx_hidden_ClearClearFoo isM18_ClearClearFoo    `protobuf_oneof:"clear_clear_foo"`
 	XXX_raceDetectHookData   protoimpl.RaceDetectHookData
 	XXX_presence             [1]uint32
@@ -2977,7 +2977,7 @@ func (*m18_ClearFoo) isM18_ClearClearFoo() {}
 
 type M19 struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo           int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo           int32                  `protobuf:"varint,1,opt,name=foo"`
 	xxx_hidden_WhichWhichFoo isM19_WhichWhichFoo    `protobuf_oneof:"which_which_foo"`
 	XXX_raceDetectHookData   protoimpl.RaceDetectHookData
 	XXX_presence             [1]uint32
@@ -3138,7 +3138,7 @@ func (*m19_WhichFoo) isM19_WhichWhichFoo() {}
 
 type M20 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo" json:"foo,omitempty"`
+	xxx_hidden_Foo         int32                  `protobuf:"varint,1,opt,name=foo"`
 	xxx_hidden_WhichFoo    isM20_WhichFoo         `protobuf_oneof:"which_foo"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32

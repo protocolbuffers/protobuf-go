@@ -19,8 +19,8 @@ import (
 
 type Ext1 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Ext1Field1  int32                  `protobuf:"varint,1,opt,name=ext1_field1,json=ext1Field1" json:"ext1_field1,omitempty"`
-	xxx_hidden_Ext1Field2  int32                  `protobuf:"varint,2,opt,name=ext1_field2,json=ext1Field2" json:"ext1_field2,omitempty"`
+	xxx_hidden_Ext1Field1  int32                  `protobuf:"varint,1,opt,name=ext1_field1,json=ext1Field1"`
+	xxx_hidden_Ext1Field2  int32                  `protobuf:"varint,2,opt,name=ext1_field2,json=ext1Field2"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -124,7 +124,7 @@ func (b0 Ext1_builder) Build() *Ext1 {
 
 type Ext2 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Ext2Field1  int32                  `protobuf:"varint,1,opt,name=ext2_field1,json=ext2Field1" json:"ext2_field1,omitempty"`
+	xxx_hidden_Ext2Field1  int32                  `protobuf:"varint,1,opt,name=ext2_field1,json=ext2Field1"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -199,7 +199,7 @@ func (b0 Ext2_builder) Build() *Ext2 {
 
 type ExtRequired struct {
 	state                     protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_RequiredField1 int32                  `protobuf:"varint,1,req,name=required_field1,json=requiredField1" json:"required_field1,omitempty"`
+	xxx_hidden_RequiredField1 int32                  `protobuf:"varint,1,req,name=required_field1,json=requiredField1"`
 	XXX_raceDetectHookData    protoimpl.RaceDetectHookData
 	XXX_presence              [1]uint32
 	unknownFields             protoimpl.UnknownFields

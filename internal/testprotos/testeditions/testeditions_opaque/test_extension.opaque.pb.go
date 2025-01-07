@@ -60,9 +60,9 @@ func (b0 TestAllExtensions_builder) Build() *TestAllExtensions {
 
 type OptionalGroup struct {
 	state                            protoimpl.MessageState           `protogen:"opaque.v1"`
-	xxx_hidden_A                     int32                            `protobuf:"varint,17,opt,name=a" json:"a,omitempty"`
-	xxx_hidden_SameFieldNumber       int32                            `protobuf:"varint,16,opt,name=same_field_number,json=sameFieldNumber" json:"same_field_number,omitempty"`
-	xxx_hidden_OptionalNestedMessage *TestAllExtensions_NestedMessage `protobuf:"bytes,1000,opt,name=optional_nested_message,json=optionalNestedMessage" json:"optional_nested_message,omitempty"`
+	xxx_hidden_A                     int32                            `protobuf:"varint,17,opt,name=a"`
+	xxx_hidden_SameFieldNumber       int32                            `protobuf:"varint,16,opt,name=same_field_number,json=sameFieldNumber"`
+	xxx_hidden_OptionalNestedMessage *TestAllExtensions_NestedMessage `protobuf:"bytes,1000,opt,name=optional_nested_message,json=optionalNestedMessage"`
 	XXX_raceDetectHookData           protoimpl.RaceDetectHookData
 	XXX_presence                     [1]uint32
 	unknownFields                    protoimpl.UnknownFields
@@ -190,8 +190,8 @@ func (b0 OptionalGroup_builder) Build() *OptionalGroup {
 
 type RepeatedGroup struct {
 	state                            protoimpl.MessageState           `protogen:"opaque.v1"`
-	xxx_hidden_A                     int32                            `protobuf:"varint,47,opt,name=a" json:"a,omitempty"`
-	xxx_hidden_OptionalNestedMessage *TestAllExtensions_NestedMessage `protobuf:"bytes,1001,opt,name=optional_nested_message,json=optionalNestedMessage" json:"optional_nested_message,omitempty"`
+	xxx_hidden_A                     int32                            `protobuf:"varint,47,opt,name=a"`
+	xxx_hidden_OptionalNestedMessage *TestAllExtensions_NestedMessage `protobuf:"bytes,1001,opt,name=optional_nested_message,json=optionalNestedMessage"`
 	XXX_raceDetectHookData           protoimpl.RaceDetectHookData
 	XXX_presence                     [1]uint32
 	unknownFields                    protoimpl.UnknownFields
@@ -377,8 +377,8 @@ func (b0 RepeatedFieldEncoding_builder) Build() *RepeatedFieldEncoding {
 
 type TestAllExtensions_NestedMessage struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_A           int32                  `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
-	xxx_hidden_Corecursive *TestAllExtensions     `protobuf:"bytes,2,opt,name=corecursive" json:"corecursive,omitempty"`
+	xxx_hidden_A           int32                  `protobuf:"varint,1,opt,name=a"`
+	xxx_hidden_Corecursive *TestAllExtensions     `protobuf:"bytes,2,opt,name=corecursive"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields

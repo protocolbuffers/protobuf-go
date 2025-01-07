@@ -111,86 +111,86 @@ func (x TestAllTypes_NestedEnum) Number() protoreflect.EnumNumber {
 
 type TestAllTypes struct {
 	state                             protoimpl.MessageState                 `protogen:"opaque.v1"`
-	xxx_hidden_SingularInt32          int32                                  `protobuf:"varint,81,opt,name=singular_int32,json=singularInt32,proto3" json:"singular_int32,omitempty"`
-	xxx_hidden_SingularInt64          int64                                  `protobuf:"varint,82,opt,name=singular_int64,json=singularInt64,proto3" json:"singular_int64,omitempty"`
-	xxx_hidden_SingularUint32         uint32                                 `protobuf:"varint,83,opt,name=singular_uint32,json=singularUint32,proto3" json:"singular_uint32,omitempty"`
-	xxx_hidden_SingularUint64         uint64                                 `protobuf:"varint,84,opt,name=singular_uint64,json=singularUint64,proto3" json:"singular_uint64,omitempty"`
-	xxx_hidden_SingularSint32         int32                                  `protobuf:"zigzag32,85,opt,name=singular_sint32,json=singularSint32,proto3" json:"singular_sint32,omitempty"`
-	xxx_hidden_SingularSint64         int64                                  `protobuf:"zigzag64,86,opt,name=singular_sint64,json=singularSint64,proto3" json:"singular_sint64,omitempty"`
-	xxx_hidden_SingularFixed32        uint32                                 `protobuf:"fixed32,87,opt,name=singular_fixed32,json=singularFixed32,proto3" json:"singular_fixed32,omitempty"`
-	xxx_hidden_SingularFixed64        uint64                                 `protobuf:"fixed64,88,opt,name=singular_fixed64,json=singularFixed64,proto3" json:"singular_fixed64,omitempty"`
-	xxx_hidden_SingularSfixed32       int32                                  `protobuf:"fixed32,89,opt,name=singular_sfixed32,json=singularSfixed32,proto3" json:"singular_sfixed32,omitempty"`
-	xxx_hidden_SingularSfixed64       int64                                  `protobuf:"fixed64,90,opt,name=singular_sfixed64,json=singularSfixed64,proto3" json:"singular_sfixed64,omitempty"`
-	xxx_hidden_SingularFloat          float32                                `protobuf:"fixed32,91,opt,name=singular_float,json=singularFloat,proto3" json:"singular_float,omitempty"`
-	xxx_hidden_SingularDouble         float64                                `protobuf:"fixed64,92,opt,name=singular_double,json=singularDouble,proto3" json:"singular_double,omitempty"`
-	xxx_hidden_SingularBool           bool                                   `protobuf:"varint,93,opt,name=singular_bool,json=singularBool,proto3" json:"singular_bool,omitempty"`
-	xxx_hidden_SingularString         string                                 `protobuf:"bytes,94,opt,name=singular_string,json=singularString,proto3" json:"singular_string,omitempty"`
-	xxx_hidden_SingularBytes          []byte                                 `protobuf:"bytes,95,opt,name=singular_bytes,json=singularBytes,proto3" json:"singular_bytes,omitempty"`
-	xxx_hidden_SingularNestedMessage  *TestAllTypes_NestedMessage            `protobuf:"bytes,98,opt,name=singular_nested_message,json=singularNestedMessage,proto3" json:"singular_nested_message,omitempty"`
-	xxx_hidden_SingularForeignMessage *ForeignMessage                        `protobuf:"bytes,99,opt,name=singular_foreign_message,json=singularForeignMessage,proto3" json:"singular_foreign_message,omitempty"`
-	xxx_hidden_SingularImportMessage  *ImportMessage                         `protobuf:"bytes,100,opt,name=singular_import_message,json=singularImportMessage,proto3" json:"singular_import_message,omitempty"`
-	xxx_hidden_SingularNestedEnum     TestAllTypes_NestedEnum                `protobuf:"varint,101,opt,name=singular_nested_enum,json=singularNestedEnum,proto3,enum=hybrid.goproto.proto.test3.TestAllTypes_NestedEnum" json:"singular_nested_enum,omitempty"`
-	xxx_hidden_SingularForeignEnum    ForeignEnum                            `protobuf:"varint,102,opt,name=singular_foreign_enum,json=singularForeignEnum,proto3,enum=hybrid.goproto.proto.test3.ForeignEnum" json:"singular_foreign_enum,omitempty"`
-	xxx_hidden_SingularImportEnum     ImportEnum                             `protobuf:"varint,103,opt,name=singular_import_enum,json=singularImportEnum,proto3,enum=hybrid.goproto.proto.test3.ImportEnum" json:"singular_import_enum,omitempty"`
-	xxx_hidden_OptionalInt32          int32                                  `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32,proto3,oneof" json:"optional_int32,omitempty"`
-	xxx_hidden_OptionalInt64          int64                                  `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64,proto3,oneof" json:"optional_int64,omitempty"`
-	xxx_hidden_OptionalUint32         uint32                                 `protobuf:"varint,3,opt,name=optional_uint32,json=optionalUint32,proto3,oneof" json:"optional_uint32,omitempty"`
-	xxx_hidden_OptionalUint64         uint64                                 `protobuf:"varint,4,opt,name=optional_uint64,json=optionalUint64,proto3,oneof" json:"optional_uint64,omitempty"`
-	xxx_hidden_OptionalSint32         int32                                  `protobuf:"zigzag32,5,opt,name=optional_sint32,json=optionalSint32,proto3,oneof" json:"optional_sint32,omitempty"`
-	xxx_hidden_OptionalSint64         int64                                  `protobuf:"zigzag64,6,opt,name=optional_sint64,json=optionalSint64,proto3,oneof" json:"optional_sint64,omitempty"`
-	xxx_hidden_OptionalFixed32        uint32                                 `protobuf:"fixed32,7,opt,name=optional_fixed32,json=optionalFixed32,proto3,oneof" json:"optional_fixed32,omitempty"`
-	xxx_hidden_OptionalFixed64        uint64                                 `protobuf:"fixed64,8,opt,name=optional_fixed64,json=optionalFixed64,proto3,oneof" json:"optional_fixed64,omitempty"`
-	xxx_hidden_OptionalSfixed32       int32                                  `protobuf:"fixed32,9,opt,name=optional_sfixed32,json=optionalSfixed32,proto3,oneof" json:"optional_sfixed32,omitempty"`
-	xxx_hidden_OptionalSfixed64       int64                                  `protobuf:"fixed64,10,opt,name=optional_sfixed64,json=optionalSfixed64,proto3,oneof" json:"optional_sfixed64,omitempty"`
-	xxx_hidden_OptionalFloat          float32                                `protobuf:"fixed32,11,opt,name=optional_float,json=optionalFloat,proto3,oneof" json:"optional_float,omitempty"`
-	xxx_hidden_OptionalDouble         float64                                `protobuf:"fixed64,12,opt,name=optional_double,json=optionalDouble,proto3,oneof" json:"optional_double,omitempty"`
-	xxx_hidden_OptionalBool           bool                                   `protobuf:"varint,13,opt,name=optional_bool,json=optionalBool,proto3,oneof" json:"optional_bool,omitempty"`
-	xxx_hidden_OptionalString         *string                                `protobuf:"bytes,14,opt,name=optional_string,json=optionalString,proto3,oneof" json:"optional_string,omitempty"`
-	xxx_hidden_OptionalBytes          []byte                                 `protobuf:"bytes,15,opt,name=optional_bytes,json=optionalBytes,proto3,oneof" json:"optional_bytes,omitempty"`
-	xxx_hidden_OptionalNestedMessage  *TestAllTypes_NestedMessage            `protobuf:"bytes,18,opt,name=optional_nested_message,json=optionalNestedMessage,proto3,oneof" json:"optional_nested_message,omitempty"`
-	xxx_hidden_OptionalForeignMessage *ForeignMessage                        `protobuf:"bytes,19,opt,name=optional_foreign_message,json=optionalForeignMessage,proto3,oneof" json:"optional_foreign_message,omitempty"`
-	xxx_hidden_OptionalImportMessage  *ImportMessage                         `protobuf:"bytes,20,opt,name=optional_import_message,json=optionalImportMessage,proto3,oneof" json:"optional_import_message,omitempty"`
-	xxx_hidden_OptionalNestedEnum     TestAllTypes_NestedEnum                `protobuf:"varint,21,opt,name=optional_nested_enum,json=optionalNestedEnum,proto3,enum=hybrid.goproto.proto.test3.TestAllTypes_NestedEnum,oneof" json:"optional_nested_enum,omitempty"`
-	xxx_hidden_OptionalForeignEnum    ForeignEnum                            `protobuf:"varint,22,opt,name=optional_foreign_enum,json=optionalForeignEnum,proto3,enum=hybrid.goproto.proto.test3.ForeignEnum,oneof" json:"optional_foreign_enum,omitempty"`
-	xxx_hidden_OptionalImportEnum     ImportEnum                             `protobuf:"varint,23,opt,name=optional_import_enum,json=optionalImportEnum,proto3,enum=hybrid.goproto.proto.test3.ImportEnum,oneof" json:"optional_import_enum,omitempty"`
-	xxx_hidden_RepeatedInt32          []int32                                `protobuf:"varint,31,rep,packed,name=repeated_int32,json=repeatedInt32,proto3" json:"repeated_int32,omitempty"`
-	xxx_hidden_RepeatedInt64          []int64                                `protobuf:"varint,32,rep,packed,name=repeated_int64,json=repeatedInt64,proto3" json:"repeated_int64,omitempty"`
-	xxx_hidden_RepeatedUint32         []uint32                               `protobuf:"varint,33,rep,packed,name=repeated_uint32,json=repeatedUint32,proto3" json:"repeated_uint32,omitempty"`
-	xxx_hidden_RepeatedUint64         []uint64                               `protobuf:"varint,34,rep,packed,name=repeated_uint64,json=repeatedUint64,proto3" json:"repeated_uint64,omitempty"`
-	xxx_hidden_RepeatedSint32         []int32                                `protobuf:"zigzag32,35,rep,packed,name=repeated_sint32,json=repeatedSint32,proto3" json:"repeated_sint32,omitempty"`
-	xxx_hidden_RepeatedSint64         []int64                                `protobuf:"zigzag64,36,rep,packed,name=repeated_sint64,json=repeatedSint64,proto3" json:"repeated_sint64,omitempty"`
-	xxx_hidden_RepeatedFixed32        []uint32                               `protobuf:"fixed32,37,rep,packed,name=repeated_fixed32,json=repeatedFixed32,proto3" json:"repeated_fixed32,omitempty"`
-	xxx_hidden_RepeatedFixed64        []uint64                               `protobuf:"fixed64,38,rep,packed,name=repeated_fixed64,json=repeatedFixed64,proto3" json:"repeated_fixed64,omitempty"`
-	xxx_hidden_RepeatedSfixed32       []int32                                `protobuf:"fixed32,39,rep,packed,name=repeated_sfixed32,json=repeatedSfixed32,proto3" json:"repeated_sfixed32,omitempty"`
-	xxx_hidden_RepeatedSfixed64       []int64                                `protobuf:"fixed64,40,rep,packed,name=repeated_sfixed64,json=repeatedSfixed64,proto3" json:"repeated_sfixed64,omitempty"`
-	xxx_hidden_RepeatedFloat          []float32                              `protobuf:"fixed32,41,rep,packed,name=repeated_float,json=repeatedFloat,proto3" json:"repeated_float,omitempty"`
-	xxx_hidden_RepeatedDouble         []float64                              `protobuf:"fixed64,42,rep,packed,name=repeated_double,json=repeatedDouble,proto3" json:"repeated_double,omitempty"`
-	xxx_hidden_RepeatedBool           []bool                                 `protobuf:"varint,43,rep,packed,name=repeated_bool,json=repeatedBool,proto3" json:"repeated_bool,omitempty"`
-	xxx_hidden_RepeatedString         []string                               `protobuf:"bytes,44,rep,name=repeated_string,json=repeatedString,proto3" json:"repeated_string,omitempty"`
-	xxx_hidden_RepeatedBytes          [][]byte                               `protobuf:"bytes,45,rep,name=repeated_bytes,json=repeatedBytes,proto3" json:"repeated_bytes,omitempty"`
-	xxx_hidden_RepeatedNestedMessage  *[]*TestAllTypes_NestedMessage         `protobuf:"bytes,48,rep,name=repeated_nested_message,json=repeatedNestedMessage,proto3" json:"repeated_nested_message,omitempty"`
-	xxx_hidden_RepeatedForeignMessage *[]*ForeignMessage                     `protobuf:"bytes,49,rep,name=repeated_foreign_message,json=repeatedForeignMessage,proto3" json:"repeated_foreign_message,omitempty"`
-	xxx_hidden_RepeatedImportmessage  *[]*ImportMessage                      `protobuf:"bytes,50,rep,name=repeated_importmessage,json=repeatedImportmessage,proto3" json:"repeated_importmessage,omitempty"`
-	xxx_hidden_RepeatedNestedEnum     []TestAllTypes_NestedEnum              `protobuf:"varint,51,rep,packed,name=repeated_nested_enum,json=repeatedNestedEnum,proto3,enum=hybrid.goproto.proto.test3.TestAllTypes_NestedEnum" json:"repeated_nested_enum,omitempty"`
-	xxx_hidden_RepeatedForeignEnum    []ForeignEnum                          `protobuf:"varint,52,rep,packed,name=repeated_foreign_enum,json=repeatedForeignEnum,proto3,enum=hybrid.goproto.proto.test3.ForeignEnum" json:"repeated_foreign_enum,omitempty"`
-	xxx_hidden_RepeatedImportenum     []ImportEnum                           `protobuf:"varint,53,rep,packed,name=repeated_importenum,json=repeatedImportenum,proto3,enum=hybrid.goproto.proto.test3.ImportEnum" json:"repeated_importenum,omitempty"`
-	xxx_hidden_MapInt32Int32          map[int32]int32                        `protobuf:"bytes,56,rep,name=map_int32_int32,json=mapInt32Int32,proto3" json:"map_int32_int32,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	xxx_hidden_MapInt64Int64          map[int64]int64                        `protobuf:"bytes,57,rep,name=map_int64_int64,json=mapInt64Int64,proto3" json:"map_int64_int64,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	xxx_hidden_MapUint32Uint32        map[uint32]uint32                      `protobuf:"bytes,58,rep,name=map_uint32_uint32,json=mapUint32Uint32,proto3" json:"map_uint32_uint32,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	xxx_hidden_MapUint64Uint64        map[uint64]uint64                      `protobuf:"bytes,59,rep,name=map_uint64_uint64,json=mapUint64Uint64,proto3" json:"map_uint64_uint64,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	xxx_hidden_MapSint32Sint32        map[int32]int32                        `protobuf:"bytes,60,rep,name=map_sint32_sint32,json=mapSint32Sint32,proto3" json:"map_sint32_sint32,omitempty" protobuf_key:"zigzag32,1,opt,name=key" protobuf_val:"zigzag32,2,opt,name=value"`
-	xxx_hidden_MapSint64Sint64        map[int64]int64                        `protobuf:"bytes,61,rep,name=map_sint64_sint64,json=mapSint64Sint64,proto3" json:"map_sint64_sint64,omitempty" protobuf_key:"zigzag64,1,opt,name=key" protobuf_val:"zigzag64,2,opt,name=value"`
-	xxx_hidden_MapFixed32Fixed32      map[uint32]uint32                      `protobuf:"bytes,62,rep,name=map_fixed32_fixed32,json=mapFixed32Fixed32,proto3" json:"map_fixed32_fixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
-	xxx_hidden_MapFixed64Fixed64      map[uint64]uint64                      `protobuf:"bytes,63,rep,name=map_fixed64_fixed64,json=mapFixed64Fixed64,proto3" json:"map_fixed64_fixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
-	xxx_hidden_MapSfixed32Sfixed32    map[int32]int32                        `protobuf:"bytes,64,rep,name=map_sfixed32_sfixed32,json=mapSfixed32Sfixed32,proto3" json:"map_sfixed32_sfixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
-	xxx_hidden_MapSfixed64Sfixed64    map[int64]int64                        `protobuf:"bytes,65,rep,name=map_sfixed64_sfixed64,json=mapSfixed64Sfixed64,proto3" json:"map_sfixed64_sfixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
-	xxx_hidden_MapInt32Float          map[int32]float32                      `protobuf:"bytes,66,rep,name=map_int32_float,json=mapInt32Float,proto3" json:"map_int32_float,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
-	xxx_hidden_MapInt32Double         map[int32]float64                      `protobuf:"bytes,67,rep,name=map_int32_double,json=mapInt32Double,proto3" json:"map_int32_double,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
-	xxx_hidden_MapBoolBool            map[bool]bool                          `protobuf:"bytes,68,rep,name=map_bool_bool,json=mapBoolBool,proto3" json:"map_bool_bool,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	xxx_hidden_MapStringString        map[string]string                      `protobuf:"bytes,69,rep,name=map_string_string,json=mapStringString,proto3" json:"map_string_string,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	xxx_hidden_MapStringBytes         map[string][]byte                      `protobuf:"bytes,70,rep,name=map_string_bytes,json=mapStringBytes,proto3" json:"map_string_bytes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	xxx_hidden_MapStringNestedMessage map[string]*TestAllTypes_NestedMessage `protobuf:"bytes,71,rep,name=map_string_nested_message,json=mapStringNestedMessage,proto3" json:"map_string_nested_message,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	xxx_hidden_MapStringNestedEnum    map[string]TestAllTypes_NestedEnum     `protobuf:"bytes,73,rep,name=map_string_nested_enum,json=mapStringNestedEnum,proto3" json:"map_string_nested_enum,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=hybrid.goproto.proto.test3.TestAllTypes_NestedEnum"`
+	xxx_hidden_SingularInt32          int32                                  `protobuf:"varint,81,opt,name=singular_int32,json=singularInt32,proto3"`
+	xxx_hidden_SingularInt64          int64                                  `protobuf:"varint,82,opt,name=singular_int64,json=singularInt64,proto3"`
+	xxx_hidden_SingularUint32         uint32                                 `protobuf:"varint,83,opt,name=singular_uint32,json=singularUint32,proto3"`
+	xxx_hidden_SingularUint64         uint64                                 `protobuf:"varint,84,opt,name=singular_uint64,json=singularUint64,proto3"`
+	xxx_hidden_SingularSint32         int32                                  `protobuf:"zigzag32,85,opt,name=singular_sint32,json=singularSint32,proto3"`
+	xxx_hidden_SingularSint64         int64                                  `protobuf:"zigzag64,86,opt,name=singular_sint64,json=singularSint64,proto3"`
+	xxx_hidden_SingularFixed32        uint32                                 `protobuf:"fixed32,87,opt,name=singular_fixed32,json=singularFixed32,proto3"`
+	xxx_hidden_SingularFixed64        uint64                                 `protobuf:"fixed64,88,opt,name=singular_fixed64,json=singularFixed64,proto3"`
+	xxx_hidden_SingularSfixed32       int32                                  `protobuf:"fixed32,89,opt,name=singular_sfixed32,json=singularSfixed32,proto3"`
+	xxx_hidden_SingularSfixed64       int64                                  `protobuf:"fixed64,90,opt,name=singular_sfixed64,json=singularSfixed64,proto3"`
+	xxx_hidden_SingularFloat          float32                                `protobuf:"fixed32,91,opt,name=singular_float,json=singularFloat,proto3"`
+	xxx_hidden_SingularDouble         float64                                `protobuf:"fixed64,92,opt,name=singular_double,json=singularDouble,proto3"`
+	xxx_hidden_SingularBool           bool                                   `protobuf:"varint,93,opt,name=singular_bool,json=singularBool,proto3"`
+	xxx_hidden_SingularString         string                                 `protobuf:"bytes,94,opt,name=singular_string,json=singularString,proto3"`
+	xxx_hidden_SingularBytes          []byte                                 `protobuf:"bytes,95,opt,name=singular_bytes,json=singularBytes,proto3"`
+	xxx_hidden_SingularNestedMessage  *TestAllTypes_NestedMessage            `protobuf:"bytes,98,opt,name=singular_nested_message,json=singularNestedMessage,proto3"`
+	xxx_hidden_SingularForeignMessage *ForeignMessage                        `protobuf:"bytes,99,opt,name=singular_foreign_message,json=singularForeignMessage,proto3"`
+	xxx_hidden_SingularImportMessage  *ImportMessage                         `protobuf:"bytes,100,opt,name=singular_import_message,json=singularImportMessage,proto3"`
+	xxx_hidden_SingularNestedEnum     TestAllTypes_NestedEnum                `protobuf:"varint,101,opt,name=singular_nested_enum,json=singularNestedEnum,proto3,enum=hybrid.goproto.proto.test3.TestAllTypes_NestedEnum"`
+	xxx_hidden_SingularForeignEnum    ForeignEnum                            `protobuf:"varint,102,opt,name=singular_foreign_enum,json=singularForeignEnum,proto3,enum=hybrid.goproto.proto.test3.ForeignEnum"`
+	xxx_hidden_SingularImportEnum     ImportEnum                             `protobuf:"varint,103,opt,name=singular_import_enum,json=singularImportEnum,proto3,enum=hybrid.goproto.proto.test3.ImportEnum"`
+	xxx_hidden_OptionalInt32          int32                                  `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32,proto3,oneof"`
+	xxx_hidden_OptionalInt64          int64                                  `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64,proto3,oneof"`
+	xxx_hidden_OptionalUint32         uint32                                 `protobuf:"varint,3,opt,name=optional_uint32,json=optionalUint32,proto3,oneof"`
+	xxx_hidden_OptionalUint64         uint64                                 `protobuf:"varint,4,opt,name=optional_uint64,json=optionalUint64,proto3,oneof"`
+	xxx_hidden_OptionalSint32         int32                                  `protobuf:"zigzag32,5,opt,name=optional_sint32,json=optionalSint32,proto3,oneof"`
+	xxx_hidden_OptionalSint64         int64                                  `protobuf:"zigzag64,6,opt,name=optional_sint64,json=optionalSint64,proto3,oneof"`
+	xxx_hidden_OptionalFixed32        uint32                                 `protobuf:"fixed32,7,opt,name=optional_fixed32,json=optionalFixed32,proto3,oneof"`
+	xxx_hidden_OptionalFixed64        uint64                                 `protobuf:"fixed64,8,opt,name=optional_fixed64,json=optionalFixed64,proto3,oneof"`
+	xxx_hidden_OptionalSfixed32       int32                                  `protobuf:"fixed32,9,opt,name=optional_sfixed32,json=optionalSfixed32,proto3,oneof"`
+	xxx_hidden_OptionalSfixed64       int64                                  `protobuf:"fixed64,10,opt,name=optional_sfixed64,json=optionalSfixed64,proto3,oneof"`
+	xxx_hidden_OptionalFloat          float32                                `protobuf:"fixed32,11,opt,name=optional_float,json=optionalFloat,proto3,oneof"`
+	xxx_hidden_OptionalDouble         float64                                `protobuf:"fixed64,12,opt,name=optional_double,json=optionalDouble,proto3,oneof"`
+	xxx_hidden_OptionalBool           bool                                   `protobuf:"varint,13,opt,name=optional_bool,json=optionalBool,proto3,oneof"`
+	xxx_hidden_OptionalString         *string                                `protobuf:"bytes,14,opt,name=optional_string,json=optionalString,proto3,oneof"`
+	xxx_hidden_OptionalBytes          []byte                                 `protobuf:"bytes,15,opt,name=optional_bytes,json=optionalBytes,proto3,oneof"`
+	xxx_hidden_OptionalNestedMessage  *TestAllTypes_NestedMessage            `protobuf:"bytes,18,opt,name=optional_nested_message,json=optionalNestedMessage,proto3,oneof"`
+	xxx_hidden_OptionalForeignMessage *ForeignMessage                        `protobuf:"bytes,19,opt,name=optional_foreign_message,json=optionalForeignMessage,proto3,oneof"`
+	xxx_hidden_OptionalImportMessage  *ImportMessage                         `protobuf:"bytes,20,opt,name=optional_import_message,json=optionalImportMessage,proto3,oneof"`
+	xxx_hidden_OptionalNestedEnum     TestAllTypes_NestedEnum                `protobuf:"varint,21,opt,name=optional_nested_enum,json=optionalNestedEnum,proto3,enum=hybrid.goproto.proto.test3.TestAllTypes_NestedEnum,oneof"`
+	xxx_hidden_OptionalForeignEnum    ForeignEnum                            `protobuf:"varint,22,opt,name=optional_foreign_enum,json=optionalForeignEnum,proto3,enum=hybrid.goproto.proto.test3.ForeignEnum,oneof"`
+	xxx_hidden_OptionalImportEnum     ImportEnum                             `protobuf:"varint,23,opt,name=optional_import_enum,json=optionalImportEnum,proto3,enum=hybrid.goproto.proto.test3.ImportEnum,oneof"`
+	xxx_hidden_RepeatedInt32          []int32                                `protobuf:"varint,31,rep,packed,name=repeated_int32,json=repeatedInt32,proto3"`
+	xxx_hidden_RepeatedInt64          []int64                                `protobuf:"varint,32,rep,packed,name=repeated_int64,json=repeatedInt64,proto3"`
+	xxx_hidden_RepeatedUint32         []uint32                               `protobuf:"varint,33,rep,packed,name=repeated_uint32,json=repeatedUint32,proto3"`
+	xxx_hidden_RepeatedUint64         []uint64                               `protobuf:"varint,34,rep,packed,name=repeated_uint64,json=repeatedUint64,proto3"`
+	xxx_hidden_RepeatedSint32         []int32                                `protobuf:"zigzag32,35,rep,packed,name=repeated_sint32,json=repeatedSint32,proto3"`
+	xxx_hidden_RepeatedSint64         []int64                                `protobuf:"zigzag64,36,rep,packed,name=repeated_sint64,json=repeatedSint64,proto3"`
+	xxx_hidden_RepeatedFixed32        []uint32                               `protobuf:"fixed32,37,rep,packed,name=repeated_fixed32,json=repeatedFixed32,proto3"`
+	xxx_hidden_RepeatedFixed64        []uint64                               `protobuf:"fixed64,38,rep,packed,name=repeated_fixed64,json=repeatedFixed64,proto3"`
+	xxx_hidden_RepeatedSfixed32       []int32                                `protobuf:"fixed32,39,rep,packed,name=repeated_sfixed32,json=repeatedSfixed32,proto3"`
+	xxx_hidden_RepeatedSfixed64       []int64                                `protobuf:"fixed64,40,rep,packed,name=repeated_sfixed64,json=repeatedSfixed64,proto3"`
+	xxx_hidden_RepeatedFloat          []float32                              `protobuf:"fixed32,41,rep,packed,name=repeated_float,json=repeatedFloat,proto3"`
+	xxx_hidden_RepeatedDouble         []float64                              `protobuf:"fixed64,42,rep,packed,name=repeated_double,json=repeatedDouble,proto3"`
+	xxx_hidden_RepeatedBool           []bool                                 `protobuf:"varint,43,rep,packed,name=repeated_bool,json=repeatedBool,proto3"`
+	xxx_hidden_RepeatedString         []string                               `protobuf:"bytes,44,rep,name=repeated_string,json=repeatedString,proto3"`
+	xxx_hidden_RepeatedBytes          [][]byte                               `protobuf:"bytes,45,rep,name=repeated_bytes,json=repeatedBytes,proto3"`
+	xxx_hidden_RepeatedNestedMessage  *[]*TestAllTypes_NestedMessage         `protobuf:"bytes,48,rep,name=repeated_nested_message,json=repeatedNestedMessage,proto3"`
+	xxx_hidden_RepeatedForeignMessage *[]*ForeignMessage                     `protobuf:"bytes,49,rep,name=repeated_foreign_message,json=repeatedForeignMessage,proto3"`
+	xxx_hidden_RepeatedImportmessage  *[]*ImportMessage                      `protobuf:"bytes,50,rep,name=repeated_importmessage,json=repeatedImportmessage,proto3"`
+	xxx_hidden_RepeatedNestedEnum     []TestAllTypes_NestedEnum              `protobuf:"varint,51,rep,packed,name=repeated_nested_enum,json=repeatedNestedEnum,proto3,enum=hybrid.goproto.proto.test3.TestAllTypes_NestedEnum"`
+	xxx_hidden_RepeatedForeignEnum    []ForeignEnum                          `protobuf:"varint,52,rep,packed,name=repeated_foreign_enum,json=repeatedForeignEnum,proto3,enum=hybrid.goproto.proto.test3.ForeignEnum"`
+	xxx_hidden_RepeatedImportenum     []ImportEnum                           `protobuf:"varint,53,rep,packed,name=repeated_importenum,json=repeatedImportenum,proto3,enum=hybrid.goproto.proto.test3.ImportEnum"`
+	xxx_hidden_MapInt32Int32          map[int32]int32                        `protobuf:"bytes,56,rep,name=map_int32_int32,json=mapInt32Int32,proto3" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	xxx_hidden_MapInt64Int64          map[int64]int64                        `protobuf:"bytes,57,rep,name=map_int64_int64,json=mapInt64Int64,proto3" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	xxx_hidden_MapUint32Uint32        map[uint32]uint32                      `protobuf:"bytes,58,rep,name=map_uint32_uint32,json=mapUint32Uint32,proto3" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	xxx_hidden_MapUint64Uint64        map[uint64]uint64                      `protobuf:"bytes,59,rep,name=map_uint64_uint64,json=mapUint64Uint64,proto3" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	xxx_hidden_MapSint32Sint32        map[int32]int32                        `protobuf:"bytes,60,rep,name=map_sint32_sint32,json=mapSint32Sint32,proto3" protobuf_key:"zigzag32,1,opt,name=key" protobuf_val:"zigzag32,2,opt,name=value"`
+	xxx_hidden_MapSint64Sint64        map[int64]int64                        `protobuf:"bytes,61,rep,name=map_sint64_sint64,json=mapSint64Sint64,proto3" protobuf_key:"zigzag64,1,opt,name=key" protobuf_val:"zigzag64,2,opt,name=value"`
+	xxx_hidden_MapFixed32Fixed32      map[uint32]uint32                      `protobuf:"bytes,62,rep,name=map_fixed32_fixed32,json=mapFixed32Fixed32,proto3" protobuf_key:"fixed32,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
+	xxx_hidden_MapFixed64Fixed64      map[uint64]uint64                      `protobuf:"bytes,63,rep,name=map_fixed64_fixed64,json=mapFixed64Fixed64,proto3" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
+	xxx_hidden_MapSfixed32Sfixed32    map[int32]int32                        `protobuf:"bytes,64,rep,name=map_sfixed32_sfixed32,json=mapSfixed32Sfixed32,proto3" protobuf_key:"fixed32,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
+	xxx_hidden_MapSfixed64Sfixed64    map[int64]int64                        `protobuf:"bytes,65,rep,name=map_sfixed64_sfixed64,json=mapSfixed64Sfixed64,proto3" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
+	xxx_hidden_MapInt32Float          map[int32]float32                      `protobuf:"bytes,66,rep,name=map_int32_float,json=mapInt32Float,proto3" protobuf_key:"varint,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
+	xxx_hidden_MapInt32Double         map[int32]float64                      `protobuf:"bytes,67,rep,name=map_int32_double,json=mapInt32Double,proto3" protobuf_key:"varint,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
+	xxx_hidden_MapBoolBool            map[bool]bool                          `protobuf:"bytes,68,rep,name=map_bool_bool,json=mapBoolBool,proto3" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	xxx_hidden_MapStringString        map[string]string                      `protobuf:"bytes,69,rep,name=map_string_string,json=mapStringString,proto3" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	xxx_hidden_MapStringBytes         map[string][]byte                      `protobuf:"bytes,70,rep,name=map_string_bytes,json=mapStringBytes,proto3" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	xxx_hidden_MapStringNestedMessage map[string]*TestAllTypes_NestedMessage `protobuf:"bytes,71,rep,name=map_string_nested_message,json=mapStringNestedMessage,proto3" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	xxx_hidden_MapStringNestedEnum    map[string]TestAllTypes_NestedEnum     `protobuf:"bytes,73,rep,name=map_string_nested_enum,json=mapStringNestedEnum,proto3" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=hybrid.goproto.proto.test3.TestAllTypes_NestedEnum"`
 	xxx_hidden_OneofField             isTestAllTypes_OneofField              `protobuf_oneof:"oneof_field"`
 	XXX_raceDetectHookData            protoimpl.RaceDetectHookData
 	XXX_presence                      [3]uint32
@@ -2058,8 +2058,8 @@ func (*testAllTypes_OneofEnum) isTestAllTypes_OneofField() {}
 
 type ForeignMessage struct {
 	state         protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_C  int32                  `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
-	xxx_hidden_D  int32                  `protobuf:"varint,2,opt,name=d,proto3" json:"d,omitempty"`
+	xxx_hidden_C  int32                  `protobuf:"varint,1,opt,name=c,proto3"`
+	xxx_hidden_D  int32                  `protobuf:"varint,2,opt,name=d,proto3"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2129,8 +2129,8 @@ func (b0 ForeignMessage_builder) Build() *ForeignMessage {
 
 type TestAllTypes_NestedMessage struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_A           int32                  `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
-	xxx_hidden_Corecursive *TestAllTypes          `protobuf:"bytes,2,opt,name=corecursive,proto3" json:"corecursive,omitempty"`
+	xxx_hidden_A           int32                  `protobuf:"varint,1,opt,name=a,proto3"`
+	xxx_hidden_Corecursive *TestAllTypes          `protobuf:"bytes,2,opt,name=corecursive,proto3"`
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
 }

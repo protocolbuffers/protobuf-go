@@ -235,10 +235,10 @@ func (b0 Hybrid_builder) Build() *Hybrid {
 
 type Opaque struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Open          *Open                  `protobuf:"bytes,1,opt,name=open" json:"open,omitempty"`
-	xxx_hidden_Hybrid        *Hybrid                `protobuf:"bytes,2,opt,name=hybrid" json:"hybrid,omitempty"`
-	xxx_hidden_Opaque        *Opaque                `protobuf:"bytes,3,opt,name=opaque" json:"opaque,omitempty"`
-	xxx_hidden_OptionalInt32 int32                  `protobuf:"varint,4,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty"`
+	xxx_hidden_Open          *Open                  `protobuf:"bytes,1,opt,name=open"`
+	xxx_hidden_Hybrid        *Hybrid                `protobuf:"bytes,2,opt,name=hybrid"`
+	xxx_hidden_Opaque        *Opaque                `protobuf:"bytes,3,opt,name=opaque"`
+	xxx_hidden_OptionalInt32 int32                  `protobuf:"varint,4,opt,name=optional_int32,json=optionalInt32"`
 	XXX_raceDetectHookData   protoimpl.RaceDetectHookData
 	XXX_presence             [1]uint32
 	unknownFields            protoimpl.UnknownFields
@@ -600,10 +600,10 @@ func (b0 HybridLazy_builder) Build() *HybridLazy {
 
 type OpaqueLazy struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Open          *OpenLazy              `protobuf:"bytes,1,opt,name=open" json:"open,omitempty"`
-	xxx_hidden_Hybrid        *HybridLazy            `protobuf:"bytes,2,opt,name=hybrid" json:"hybrid,omitempty"`
-	xxx_hidden_Opaque        *OpaqueLazy            `protobuf:"bytes,3,opt,name=opaque" json:"opaque,omitempty"`
-	xxx_hidden_OptionalInt32 int32                  `protobuf:"varint,4,opt,name=optional_int32,json=optionalInt32" json:"optional_int32,omitempty"`
+	xxx_hidden_Open          *OpenLazy              `protobuf:"bytes,1,opt,name=open"`
+	xxx_hidden_Hybrid        *HybridLazy            `protobuf:"bytes,2,opt,name=hybrid"`
+	xxx_hidden_Opaque        *OpaqueLazy            `protobuf:"bytes,3,opt,name=opaque"`
+	xxx_hidden_OptionalInt32 int32                  `protobuf:"varint,4,opt,name=optional_int32,json=optionalInt32"`
 	// Deprecated: Do not use. This will be deleted in the near future.
 	XXX_lazyUnmarshalInfo  protoimpl.LazyUnmarshalInfo
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData

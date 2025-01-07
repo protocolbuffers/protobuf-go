@@ -208,21 +208,21 @@ func (x Enums_NestedOpenEnum) Number() protoreflect.EnumNumber {
 // Scalars contains scalar fields.
 type Scalars struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_OptBool     bool                   `protobuf:"varint,1,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
-	xxx_hidden_OptInt32    int32                  `protobuf:"varint,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
-	xxx_hidden_OptInt64    int64                  `protobuf:"varint,3,opt,name=opt_int64,json=optInt64" json:"opt_int64,omitempty"`
-	xxx_hidden_OptUint32   uint32                 `protobuf:"varint,4,opt,name=opt_uint32,json=optUint32" json:"opt_uint32,omitempty"`
-	xxx_hidden_OptUint64   uint64                 `protobuf:"varint,5,opt,name=opt_uint64,json=optUint64" json:"opt_uint64,omitempty"`
-	xxx_hidden_OptSint32   int32                  `protobuf:"zigzag32,6,opt,name=opt_sint32,json=optSint32" json:"opt_sint32,omitempty"`
-	xxx_hidden_OptSint64   int64                  `protobuf:"zigzag64,7,opt,name=opt_sint64,json=optSint64" json:"opt_sint64,omitempty"`
-	xxx_hidden_OptFixed32  uint32                 `protobuf:"fixed32,8,opt,name=opt_fixed32,json=optFixed32" json:"opt_fixed32,omitempty"`
-	xxx_hidden_OptFixed64  uint64                 `protobuf:"fixed64,9,opt,name=opt_fixed64,json=optFixed64" json:"opt_fixed64,omitempty"`
-	xxx_hidden_OptSfixed32 int32                  `protobuf:"fixed32,10,opt,name=opt_sfixed32,json=optSfixed32" json:"opt_sfixed32,omitempty"`
-	xxx_hidden_OptSfixed64 int64                  `protobuf:"fixed64,11,opt,name=opt_sfixed64,json=optSfixed64" json:"opt_sfixed64,omitempty"`
-	xxx_hidden_OptFloat    float32                `protobuf:"fixed32,20,opt,name=opt_float,json=optFloat" json:"opt_float,omitempty"`
-	xxx_hidden_OptDouble   float64                `protobuf:"fixed64,21,opt,name=opt_double,json=optDouble" json:"opt_double,omitempty"`
-	xxx_hidden_OptBytes    []byte                 `protobuf:"bytes,14,opt,name=opt_bytes,json=optBytes" json:"opt_bytes,omitempty"`
-	xxx_hidden_OptString   *string                `protobuf:"bytes,13,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
+	xxx_hidden_OptBool     bool                   `protobuf:"varint,1,opt,name=opt_bool,json=optBool"`
+	xxx_hidden_OptInt32    int32                  `protobuf:"varint,2,opt,name=opt_int32,json=optInt32"`
+	xxx_hidden_OptInt64    int64                  `protobuf:"varint,3,opt,name=opt_int64,json=optInt64"`
+	xxx_hidden_OptUint32   uint32                 `protobuf:"varint,4,opt,name=opt_uint32,json=optUint32"`
+	xxx_hidden_OptUint64   uint64                 `protobuf:"varint,5,opt,name=opt_uint64,json=optUint64"`
+	xxx_hidden_OptSint32   int32                  `protobuf:"zigzag32,6,opt,name=opt_sint32,json=optSint32"`
+	xxx_hidden_OptSint64   int64                  `protobuf:"zigzag64,7,opt,name=opt_sint64,json=optSint64"`
+	xxx_hidden_OptFixed32  uint32                 `protobuf:"fixed32,8,opt,name=opt_fixed32,json=optFixed32"`
+	xxx_hidden_OptFixed64  uint64                 `protobuf:"fixed64,9,opt,name=opt_fixed64,json=optFixed64"`
+	xxx_hidden_OptSfixed32 int32                  `protobuf:"fixed32,10,opt,name=opt_sfixed32,json=optSfixed32"`
+	xxx_hidden_OptSfixed64 int64                  `protobuf:"fixed64,11,opt,name=opt_sfixed64,json=optSfixed64"`
+	xxx_hidden_OptFloat    float32                `protobuf:"fixed32,20,opt,name=opt_float,json=optFloat"`
+	xxx_hidden_OptDouble   float64                `protobuf:"fixed64,21,opt,name=opt_double,json=optDouble"`
+	xxx_hidden_OptBytes    []byte                 `protobuf:"bytes,14,opt,name=opt_bytes,json=optBytes"`
+	xxx_hidden_OptString   *string                `protobuf:"bytes,13,opt,name=opt_string,json=optString"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -710,21 +710,21 @@ func (b0 Scalars_builder) Build() *Scalars {
 // ImplicitScalars contains scalar field types with implicit field_presence
 type ImplicitScalars struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_SBool     bool                   `protobuf:"varint,1,opt,name=s_bool,json=sBool" json:"s_bool,omitempty"`
-	xxx_hidden_SInt32    int32                  `protobuf:"varint,2,opt,name=s_int32,json=sInt32" json:"s_int32,omitempty"`
-	xxx_hidden_SInt64    int64                  `protobuf:"varint,3,opt,name=s_int64,json=sInt64" json:"s_int64,omitempty"`
-	xxx_hidden_SUint32   uint32                 `protobuf:"varint,4,opt,name=s_uint32,json=sUint32" json:"s_uint32,omitempty"`
-	xxx_hidden_SUint64   uint64                 `protobuf:"varint,5,opt,name=s_uint64,json=sUint64" json:"s_uint64,omitempty"`
-	xxx_hidden_SSint32   int32                  `protobuf:"zigzag32,6,opt,name=s_sint32,json=sSint32" json:"s_sint32,omitempty"`
-	xxx_hidden_SSint64   int64                  `protobuf:"zigzag64,7,opt,name=s_sint64,json=sSint64" json:"s_sint64,omitempty"`
-	xxx_hidden_SFixed32  uint32                 `protobuf:"fixed32,8,opt,name=s_fixed32,json=sFixed32" json:"s_fixed32,omitempty"`
-	xxx_hidden_SFixed64  uint64                 `protobuf:"fixed64,9,opt,name=s_fixed64,json=sFixed64" json:"s_fixed64,omitempty"`
-	xxx_hidden_SSfixed32 int32                  `protobuf:"fixed32,10,opt,name=s_sfixed32,json=sSfixed32" json:"s_sfixed32,omitempty"`
-	xxx_hidden_SSfixed64 int64                  `protobuf:"fixed64,11,opt,name=s_sfixed64,json=sSfixed64" json:"s_sfixed64,omitempty"`
-	xxx_hidden_SFloat    float32                `protobuf:"fixed32,20,opt,name=s_float,json=sFloat" json:"s_float,omitempty"`
-	xxx_hidden_SDouble   float64                `protobuf:"fixed64,21,opt,name=s_double,json=sDouble" json:"s_double,omitempty"`
-	xxx_hidden_SBytes    []byte                 `protobuf:"bytes,14,opt,name=s_bytes,json=sBytes" json:"s_bytes,omitempty"`
-	xxx_hidden_SString   string                 `protobuf:"bytes,13,opt,name=s_string,json=sString" json:"s_string,omitempty"`
+	xxx_hidden_SBool     bool                   `protobuf:"varint,1,opt,name=s_bool,json=sBool"`
+	xxx_hidden_SInt32    int32                  `protobuf:"varint,2,opt,name=s_int32,json=sInt32"`
+	xxx_hidden_SInt64    int64                  `protobuf:"varint,3,opt,name=s_int64,json=sInt64"`
+	xxx_hidden_SUint32   uint32                 `protobuf:"varint,4,opt,name=s_uint32,json=sUint32"`
+	xxx_hidden_SUint64   uint64                 `protobuf:"varint,5,opt,name=s_uint64,json=sUint64"`
+	xxx_hidden_SSint32   int32                  `protobuf:"zigzag32,6,opt,name=s_sint32,json=sSint32"`
+	xxx_hidden_SSint64   int64                  `protobuf:"zigzag64,7,opt,name=s_sint64,json=sSint64"`
+	xxx_hidden_SFixed32  uint32                 `protobuf:"fixed32,8,opt,name=s_fixed32,json=sFixed32"`
+	xxx_hidden_SFixed64  uint64                 `protobuf:"fixed64,9,opt,name=s_fixed64,json=sFixed64"`
+	xxx_hidden_SSfixed32 int32                  `protobuf:"fixed32,10,opt,name=s_sfixed32,json=sSfixed32"`
+	xxx_hidden_SSfixed64 int64                  `protobuf:"fixed64,11,opt,name=s_sfixed64,json=sSfixed64"`
+	xxx_hidden_SFloat    float32                `protobuf:"fixed32,20,opt,name=s_float,json=sFloat"`
+	xxx_hidden_SDouble   float64                `protobuf:"fixed64,21,opt,name=s_double,json=sDouble"`
+	xxx_hidden_SBytes    []byte                 `protobuf:"bytes,14,opt,name=s_bytes,json=sBytes"`
+	xxx_hidden_SString   string                 `protobuf:"bytes,13,opt,name=s_string,json=sString"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -966,7 +966,7 @@ func (b0 ImplicitScalars_builder) Build() *ImplicitScalars {
 
 type UTF8Validated struct {
 	state                      protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_ValidatedString string                 `protobuf:"bytes,1,opt,name=validated_string,json=validatedString" json:"validated_string,omitempty"`
+	xxx_hidden_ValidatedString string                 `protobuf:"bytes,1,opt,name=validated_string,json=validatedString"`
 	unknownFields              protoimpl.UnknownFields
 	sizeCache                  protoimpl.SizeCache
 }
@@ -1023,7 +1023,7 @@ func (b0 UTF8Validated_builder) Build() *UTF8Validated {
 
 type NestsUTF8Validated struct {
 	state                       protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_ValidatedMessage *UTF8Validated         `protobuf:"bytes,1,opt,name=validated_message,json=validatedMessage" json:"validated_message,omitempty"`
+	xxx_hidden_ValidatedMessage *UTF8Validated         `protobuf:"bytes,1,opt,name=validated_message,json=validatedMessage"`
 	unknownFields               protoimpl.UnknownFields
 	sizeCache                   protoimpl.SizeCache
 }
@@ -1092,12 +1092,12 @@ func (b0 NestsUTF8Validated_builder) Build() *NestsUTF8Validated {
 // Message contains enum fields.
 type Enums struct {
 	state                         protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_OptEnum            Enum                   `protobuf:"varint,1,opt,name=opt_enum,json=optEnum,enum=opaque.pbeditions.Enum" json:"opt_enum,omitempty"`
-	xxx_hidden_RptEnum            []Enum                 `protobuf:"varint,2,rep,packed,name=rpt_enum,json=rptEnum,enum=opaque.pbeditions.Enum" json:"rpt_enum,omitempty"`
-	xxx_hidden_ImplicitEnum       OpenEnum               `protobuf:"varint,5,opt,name=implicit_enum,json=implicitEnum,enum=opaque.pbeditions.OpenEnum" json:"implicit_enum,omitempty"`
-	xxx_hidden_OptNestedEnum      Enums_NestedEnum       `protobuf:"varint,3,opt,name=opt_nested_enum,json=optNestedEnum,enum=opaque.pbeditions.Enums_NestedEnum" json:"opt_nested_enum,omitempty"`
-	xxx_hidden_RptNestedEnum      []Enums_NestedEnum     `protobuf:"varint,4,rep,packed,name=rpt_nested_enum,json=rptNestedEnum,enum=opaque.pbeditions.Enums_NestedEnum" json:"rpt_nested_enum,omitempty"`
-	xxx_hidden_ImplicitNestedEnum Enums_NestedOpenEnum   `protobuf:"varint,6,opt,name=implicit_nested_enum,json=implicitNestedEnum,enum=opaque.pbeditions.Enums_NestedOpenEnum" json:"implicit_nested_enum,omitempty"`
+	xxx_hidden_OptEnum            Enum                   `protobuf:"varint,1,opt,name=opt_enum,json=optEnum,enum=opaque.pbeditions.Enum"`
+	xxx_hidden_RptEnum            []Enum                 `protobuf:"varint,2,rep,packed,name=rpt_enum,json=rptEnum,enum=opaque.pbeditions.Enum"`
+	xxx_hidden_ImplicitEnum       OpenEnum               `protobuf:"varint,5,opt,name=implicit_enum,json=implicitEnum,enum=opaque.pbeditions.OpenEnum"`
+	xxx_hidden_OptNestedEnum      Enums_NestedEnum       `protobuf:"varint,3,opt,name=opt_nested_enum,json=optNestedEnum,enum=opaque.pbeditions.Enums_NestedEnum"`
+	xxx_hidden_RptNestedEnum      []Enums_NestedEnum     `protobuf:"varint,4,rep,packed,name=rpt_nested_enum,json=rptNestedEnum,enum=opaque.pbeditions.Enums_NestedEnum"`
+	xxx_hidden_ImplicitNestedEnum Enums_NestedOpenEnum   `protobuf:"varint,6,opt,name=implicit_nested_enum,json=implicitNestedEnum,enum=opaque.pbeditions.Enums_NestedOpenEnum"`
 	XXX_raceDetectHookData        protoimpl.RaceDetectHookData
 	XXX_presence                  [1]uint32
 	unknownFields                 protoimpl.UnknownFields
@@ -1258,15 +1258,15 @@ func (b0 Enums_builder) Build() *Enums {
 // Message contains repeated fields.
 type Repeats struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_RptBool   []bool                 `protobuf:"varint,1,rep,packed,name=rpt_bool,json=rptBool" json:"rpt_bool,omitempty"`
-	xxx_hidden_RptInt32  []int32                `protobuf:"varint,2,rep,packed,name=rpt_int32,json=rptInt32" json:"rpt_int32,omitempty"`
-	xxx_hidden_RptInt64  []int64                `protobuf:"varint,3,rep,packed,name=rpt_int64,json=rptInt64" json:"rpt_int64,omitempty"`
-	xxx_hidden_RptUint32 []uint32               `protobuf:"varint,4,rep,packed,name=rpt_uint32,json=rptUint32" json:"rpt_uint32,omitempty"`
-	xxx_hidden_RptUint64 []uint64               `protobuf:"varint,5,rep,packed,name=rpt_uint64,json=rptUint64" json:"rpt_uint64,omitempty"`
-	xxx_hidden_RptFloat  []float32              `protobuf:"fixed32,6,rep,packed,name=rpt_float,json=rptFloat" json:"rpt_float,omitempty"`
-	xxx_hidden_RptDouble []float64              `protobuf:"fixed64,7,rep,packed,name=rpt_double,json=rptDouble" json:"rpt_double,omitempty"`
-	xxx_hidden_RptString []string               `protobuf:"bytes,8,rep,name=rpt_string,json=rptString" json:"rpt_string,omitempty"`
-	xxx_hidden_RptBytes  [][]byte               `protobuf:"bytes,9,rep,name=rpt_bytes,json=rptBytes" json:"rpt_bytes,omitempty"`
+	xxx_hidden_RptBool   []bool                 `protobuf:"varint,1,rep,packed,name=rpt_bool,json=rptBool"`
+	xxx_hidden_RptInt32  []int32                `protobuf:"varint,2,rep,packed,name=rpt_int32,json=rptInt32"`
+	xxx_hidden_RptInt64  []int64                `protobuf:"varint,3,rep,packed,name=rpt_int64,json=rptInt64"`
+	xxx_hidden_RptUint32 []uint32               `protobuf:"varint,4,rep,packed,name=rpt_uint32,json=rptUint32"`
+	xxx_hidden_RptUint64 []uint64               `protobuf:"varint,5,rep,packed,name=rpt_uint64,json=rptUint64"`
+	xxx_hidden_RptFloat  []float32              `protobuf:"fixed32,6,rep,packed,name=rpt_float,json=rptFloat"`
+	xxx_hidden_RptDouble []float64              `protobuf:"fixed64,7,rep,packed,name=rpt_double,json=rptDouble"`
+	xxx_hidden_RptString []string               `protobuf:"bytes,8,rep,name=rpt_string,json=rptString"`
+	xxx_hidden_RptBytes  [][]byte               `protobuf:"bytes,9,rep,name=rpt_bytes,json=rptBytes"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -1428,8 +1428,8 @@ func (b0 Repeats_builder) Build() *Repeats {
 // Message contains map fields.
 type Maps struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Int32ToStr  map[int32]string       `protobuf:"bytes,1,rep,name=int32_to_str,json=int32ToStr" json:"int32_to_str,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	xxx_hidden_StrToNested map[string]*Nested     `protobuf:"bytes,4,rep,name=str_to_nested,json=strToNested" json:"str_to_nested,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	xxx_hidden_Int32ToStr  map[int32]string       `protobuf:"bytes,1,rep,name=int32_to_str,json=int32ToStr" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	xxx_hidden_StrToNested map[string]*Nested     `protobuf:"bytes,4,rep,name=str_to_nested,json=strToNested" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
 }
@@ -1500,8 +1500,8 @@ func (b0 Maps_builder) Build() *Maps {
 // Message type used as submessage.
 type Nested struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_OptString   *string                `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
-	xxx_hidden_OptNested   *Nested                `protobuf:"bytes,2,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
+	xxx_hidden_OptString   *string                `protobuf:"bytes,1,opt,name=opt_string,json=optString"`
+	xxx_hidden_OptNested   *Nested                `protobuf:"bytes,2,opt,name=opt_nested,json=optNested"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -1604,11 +1604,11 @@ func (b0 Nested_builder) Build() *Nested {
 // Message contains message and group fields.
 type Nests struct {
 	state                     protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_OptNested      *Nested                `protobuf:"bytes,1,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
-	xxx_hidden_Optgroup       *Nests_OptGroup        `protobuf:"group,2,opt,name=OptGroup,json=optgroup" json:"optgroup,omitempty"`
-	xxx_hidden_DelimitedField *Nests_OptGroup        `protobuf:"group,3,opt,name=OptGroup,json=delimitedField" json:"delimited_field,omitempty"`
-	xxx_hidden_RptNested      *[]*Nested             `protobuf:"bytes,4,rep,name=rpt_nested,json=rptNested" json:"rpt_nested,omitempty"`
-	xxx_hidden_Rptgroup       *[]*Nests_RptGroup     `protobuf:"group,5,rep,name=RptGroup,json=rptgroup" json:"rptgroup,omitempty"`
+	xxx_hidden_OptNested      *Nested                `protobuf:"bytes,1,opt,name=opt_nested,json=optNested"`
+	xxx_hidden_Optgroup       *Nests_OptGroup        `protobuf:"group,2,opt,name=OptGroup,json=optgroup"`
+	xxx_hidden_DelimitedField *Nests_OptGroup        `protobuf:"group,3,opt,name=OptGroup,json=delimitedField"`
+	xxx_hidden_RptNested      *[]*Nested             `protobuf:"bytes,4,rep,name=rpt_nested,json=rptNested"`
+	xxx_hidden_Rptgroup       *[]*Nests_RptGroup     `protobuf:"group,5,rep,name=RptGroup,json=rptgroup"`
 	unknownFields             protoimpl.UnknownFields
 	sizeCache                 protoimpl.SizeCache
 }
@@ -1755,12 +1755,12 @@ func (b0 Nests_builder) Build() *Nests {
 // Message contains required fields.
 type Requireds struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_ReqBool     bool                   `protobuf:"varint,1,req,name=req_bool,json=reqBool" json:"req_bool,omitempty"`
-	xxx_hidden_ReqSfixed64 int64                  `protobuf:"fixed64,2,req,name=req_sfixed64,json=reqSfixed64" json:"req_sfixed64,omitempty"`
-	xxx_hidden_ReqDouble   float64                `protobuf:"fixed64,3,req,name=req_double,json=reqDouble" json:"req_double,omitempty"`
-	xxx_hidden_ReqString   *string                `protobuf:"bytes,4,req,name=req_string,json=reqString" json:"req_string,omitempty"`
-	xxx_hidden_ReqEnum     Enum                   `protobuf:"varint,5,req,name=req_enum,json=reqEnum,enum=opaque.pbeditions.Enum" json:"req_enum,omitempty"`
-	xxx_hidden_ReqNested   *Nested                `protobuf:"bytes,6,req,name=req_nested,json=reqNested" json:"req_nested,omitempty"`
+	xxx_hidden_ReqBool     bool                   `protobuf:"varint,1,req,name=req_bool,json=reqBool"`
+	xxx_hidden_ReqSfixed64 int64                  `protobuf:"fixed64,2,req,name=req_sfixed64,json=reqSfixed64"`
+	xxx_hidden_ReqDouble   float64                `protobuf:"fixed64,3,req,name=req_double,json=reqDouble"`
+	xxx_hidden_ReqString   *string                `protobuf:"bytes,4,req,name=req_string,json=reqString"`
+	xxx_hidden_ReqEnum     Enum                   `protobuf:"varint,5,req,name=req_enum,json=reqEnum,enum=opaque.pbeditions.Enum"`
+	xxx_hidden_ReqNested   *Nested                `protobuf:"bytes,6,req,name=req_nested,json=reqNested"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -1981,8 +1981,8 @@ func (b0 Requireds_builder) Build() *Requireds {
 // Message contains both required and optional fields.
 type PartialRequired struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_ReqString   *string                `protobuf:"bytes,1,req,name=req_string,json=reqString" json:"req_string,omitempty"`
-	xxx_hidden_OptString   *string                `protobuf:"bytes,2,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
+	xxx_hidden_ReqString   *string                `protobuf:"bytes,1,req,name=req_string,json=reqString"`
+	xxx_hidden_OptString   *string                `protobuf:"bytes,2,opt,name=opt_string,json=optString"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -2092,7 +2092,7 @@ func (b0 PartialRequired_builder) Build() *PartialRequired {
 
 type NestedWithRequired struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_ReqString   *string                `protobuf:"bytes,1,req,name=req_string,json=reqString" json:"req_string,omitempty"`
+	xxx_hidden_ReqString   *string                `protobuf:"bytes,1,req,name=req_string,json=reqString"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -2170,9 +2170,9 @@ func (b0 NestedWithRequired_builder) Build() *NestedWithRequired {
 
 type IndirectRequired struct {
 	state                  protoimpl.MessageState         `protogen:"opaque.v1"`
-	xxx_hidden_OptNested   *NestedWithRequired            `protobuf:"bytes,1,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
-	xxx_hidden_RptNested   *[]*NestedWithRequired         `protobuf:"bytes,2,rep,name=rpt_nested,json=rptNested" json:"rpt_nested,omitempty"`
-	xxx_hidden_StrToNested map[string]*NestedWithRequired `protobuf:"bytes,3,rep,name=str_to_nested,json=strToNested" json:"str_to_nested,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	xxx_hidden_OptNested   *NestedWithRequired            `protobuf:"bytes,1,opt,name=opt_nested,json=optNested"`
+	xxx_hidden_RptNested   *[]*NestedWithRequired         `protobuf:"bytes,2,rep,name=rpt_nested,json=rptNested"`
+	xxx_hidden_StrToNested map[string]*NestedWithRequired `protobuf:"bytes,3,rep,name=str_to_nested,json=strToNested" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	xxx_hidden_Union       isIndirectRequired_Union       `protobuf_oneof:"union"`
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
@@ -2352,9 +2352,9 @@ func (*indirectRequired_OneofNested) isIndirectRequired_Union() {}
 
 type Extensions struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_OptString   *string                `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
-	xxx_hidden_OptBool     bool                   `protobuf:"varint,101,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
-	xxx_hidden_OptInt32    int32                  `protobuf:"varint,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
+	xxx_hidden_OptString   *string                `protobuf:"bytes,1,opt,name=opt_string,json=optString"`
+	xxx_hidden_OptBool     bool                   `protobuf:"varint,101,opt,name=opt_bool,json=optBool"`
+	xxx_hidden_OptInt32    int32                  `protobuf:"varint,2,opt,name=opt_int32,json=optInt32"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	extensionFields        protoimpl.ExtensionFields
@@ -2578,7 +2578,7 @@ func (b0 MessageSet_builder) Build() *MessageSet {
 
 type MessageSetExtension struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_OptString   *string                `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
+	xxx_hidden_OptString   *string                `protobuf:"bytes,1,opt,name=opt_string,json=optString"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -2700,7 +2700,7 @@ func (b0 FakeMessageSet_builder) Build() *FakeMessageSet {
 
 type FakeMessageSetExtension struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_OptString   *string                `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
+	xxx_hidden_OptString   *string                `protobuf:"bytes,1,opt,name=opt_string,json=optString"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -2779,24 +2779,24 @@ func (b0 FakeMessageSetExtension_builder) Build() *FakeMessageSetExtension {
 // Message contains well-known type fields.
 type KnownTypes struct {
 	state                   protoimpl.MessageState  `protogen:"opaque.v1"`
-	xxx_hidden_OptBool      *wrapperspb.BoolValue   `protobuf:"bytes,1,opt,name=opt_bool,json=optBool" json:"opt_bool,omitempty"`
-	xxx_hidden_OptInt32     *wrapperspb.Int32Value  `protobuf:"bytes,2,opt,name=opt_int32,json=optInt32" json:"opt_int32,omitempty"`
-	xxx_hidden_OptInt64     *wrapperspb.Int64Value  `protobuf:"bytes,3,opt,name=opt_int64,json=optInt64" json:"opt_int64,omitempty"`
-	xxx_hidden_OptUint32    *wrapperspb.UInt32Value `protobuf:"bytes,4,opt,name=opt_uint32,json=optUint32" json:"opt_uint32,omitempty"`
-	xxx_hidden_OptUint64    *wrapperspb.UInt64Value `protobuf:"bytes,5,opt,name=opt_uint64,json=optUint64" json:"opt_uint64,omitempty"`
-	xxx_hidden_OptFloat     *wrapperspb.FloatValue  `protobuf:"bytes,6,opt,name=opt_float,json=optFloat" json:"opt_float,omitempty"`
-	xxx_hidden_OptDouble    *wrapperspb.DoubleValue `protobuf:"bytes,7,opt,name=opt_double,json=optDouble" json:"opt_double,omitempty"`
-	xxx_hidden_OptString    *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
-	xxx_hidden_OptBytes     *wrapperspb.BytesValue  `protobuf:"bytes,9,opt,name=opt_bytes,json=optBytes" json:"opt_bytes,omitempty"`
-	xxx_hidden_OptDuration  *durationpb.Duration    `protobuf:"bytes,20,opt,name=opt_duration,json=optDuration" json:"opt_duration,omitempty"`
-	xxx_hidden_OptTimestamp *timestamppb.Timestamp  `protobuf:"bytes,21,opt,name=opt_timestamp,json=optTimestamp" json:"opt_timestamp,omitempty"`
-	xxx_hidden_OptStruct    *structpb.Struct        `protobuf:"bytes,25,opt,name=opt_struct,json=optStruct" json:"opt_struct,omitempty"`
-	xxx_hidden_OptList      *structpb.ListValue     `protobuf:"bytes,26,opt,name=opt_list,json=optList" json:"opt_list,omitempty"`
-	xxx_hidden_OptValue     *structpb.Value         `protobuf:"bytes,27,opt,name=opt_value,json=optValue" json:"opt_value,omitempty"`
-	xxx_hidden_OptNull      structpb.NullValue      `protobuf:"varint,28,opt,name=opt_null,json=optNull,enum=google.protobuf.NullValue" json:"opt_null,omitempty"`
-	xxx_hidden_OptEmpty     *emptypb.Empty          `protobuf:"bytes,30,opt,name=opt_empty,json=optEmpty" json:"opt_empty,omitempty"`
-	xxx_hidden_OptAny       *anypb.Any              `protobuf:"bytes,32,opt,name=opt_any,json=optAny" json:"opt_any,omitempty"`
-	xxx_hidden_OptFieldmask *fieldmaskpb.FieldMask  `protobuf:"bytes,40,opt,name=opt_fieldmask,json=optFieldmask" json:"opt_fieldmask,omitempty"`
+	xxx_hidden_OptBool      *wrapperspb.BoolValue   `protobuf:"bytes,1,opt,name=opt_bool,json=optBool"`
+	xxx_hidden_OptInt32     *wrapperspb.Int32Value  `protobuf:"bytes,2,opt,name=opt_int32,json=optInt32"`
+	xxx_hidden_OptInt64     *wrapperspb.Int64Value  `protobuf:"bytes,3,opt,name=opt_int64,json=optInt64"`
+	xxx_hidden_OptUint32    *wrapperspb.UInt32Value `protobuf:"bytes,4,opt,name=opt_uint32,json=optUint32"`
+	xxx_hidden_OptUint64    *wrapperspb.UInt64Value `protobuf:"bytes,5,opt,name=opt_uint64,json=optUint64"`
+	xxx_hidden_OptFloat     *wrapperspb.FloatValue  `protobuf:"bytes,6,opt,name=opt_float,json=optFloat"`
+	xxx_hidden_OptDouble    *wrapperspb.DoubleValue `protobuf:"bytes,7,opt,name=opt_double,json=optDouble"`
+	xxx_hidden_OptString    *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=opt_string,json=optString"`
+	xxx_hidden_OptBytes     *wrapperspb.BytesValue  `protobuf:"bytes,9,opt,name=opt_bytes,json=optBytes"`
+	xxx_hidden_OptDuration  *durationpb.Duration    `protobuf:"bytes,20,opt,name=opt_duration,json=optDuration"`
+	xxx_hidden_OptTimestamp *timestamppb.Timestamp  `protobuf:"bytes,21,opt,name=opt_timestamp,json=optTimestamp"`
+	xxx_hidden_OptStruct    *structpb.Struct        `protobuf:"bytes,25,opt,name=opt_struct,json=optStruct"`
+	xxx_hidden_OptList      *structpb.ListValue     `protobuf:"bytes,26,opt,name=opt_list,json=optList"`
+	xxx_hidden_OptValue     *structpb.Value         `protobuf:"bytes,27,opt,name=opt_value,json=optValue"`
+	xxx_hidden_OptNull      structpb.NullValue      `protobuf:"varint,28,opt,name=opt_null,json=optNull,enum=google.protobuf.NullValue"`
+	xxx_hidden_OptEmpty     *emptypb.Empty          `protobuf:"bytes,30,opt,name=opt_empty,json=optEmpty"`
+	xxx_hidden_OptAny       *anypb.Any              `protobuf:"bytes,32,opt,name=opt_any,json=optAny"`
+	xxx_hidden_OptFieldmask *fieldmaskpb.FieldMask  `protobuf:"bytes,40,opt,name=opt_fieldmask,json=optFieldmask"`
 	XXX_raceDetectHookData  protoimpl.RaceDetectHookData
 	XXX_presence            [1]uint32
 	unknownFields           protoimpl.UnknownFields
@@ -3281,10 +3281,10 @@ func (b0 KnownTypes_builder) Build() *KnownTypes {
 
 type Nests_OptGroup struct {
 	state                           protoimpl.MessageState         `protogen:"opaque.v1"`
-	xxx_hidden_OptString            *string                        `protobuf:"bytes,1,opt,name=opt_string,json=optString" json:"opt_string,omitempty"`
-	xxx_hidden_OptNested            *Nested                        `protobuf:"bytes,2,opt,name=opt_nested,json=optNested" json:"opt_nested,omitempty"`
-	xxx_hidden_Optnestedgroup       *Nests_OptGroup_OptNestedGroup `protobuf:"group,3,opt,name=OptNestedGroup,json=optnestedgroup" json:"optnestedgroup,omitempty"`
-	xxx_hidden_NestedDelimitedField *Nests_OptGroup_OptNestedGroup `protobuf:"group,4,opt,name=OptNestedGroup,json=nestedDelimitedField" json:"nested_delimited_field,omitempty"`
+	xxx_hidden_OptString            *string                        `protobuf:"bytes,1,opt,name=opt_string,json=optString"`
+	xxx_hidden_OptNested            *Nested                        `protobuf:"bytes,2,opt,name=opt_nested,json=optNested"`
+	xxx_hidden_Optnestedgroup       *Nests_OptGroup_OptNestedGroup `protobuf:"group,3,opt,name=OptNestedGroup,json=optnestedgroup"`
+	xxx_hidden_NestedDelimitedField *Nests_OptGroup_OptNestedGroup `protobuf:"group,4,opt,name=OptNestedGroup,json=nestedDelimitedField"`
 	XXX_raceDetectHookData          protoimpl.RaceDetectHookData
 	XXX_presence                    [1]uint32
 	unknownFields                   protoimpl.UnknownFields
@@ -3434,7 +3434,7 @@ func (b0 Nests_OptGroup_builder) Build() *Nests_OptGroup {
 
 type Nests_RptGroup struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_RptString []string               `protobuf:"bytes,1,rep,name=rpt_string,json=rptString" json:"rpt_string,omitempty"`
+	xxx_hidden_RptString []string               `protobuf:"bytes,1,rep,name=rpt_string,json=rptString"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -3491,7 +3491,7 @@ func (b0 Nests_RptGroup_builder) Build() *Nests_RptGroup {
 
 type Nests_OptGroup_OptNestedGroup struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_OptFixed32  uint32                 `protobuf:"fixed32,1,opt,name=opt_fixed32,json=optFixed32" json:"opt_fixed32,omitempty"`
+	xxx_hidden_OptFixed32  uint32                 `protobuf:"fixed32,1,opt,name=opt_fixed32,json=optFixed32"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
