@@ -81,7 +81,7 @@ func (p Values) Index(i int) (out struct {
 	Value protoreflect.Value
 }) {
 	// NOTE: This returns a single struct instead of two return values so that
-	// callers can make use of the the value in an expression:
+	// callers can make use of the value in an expression:
 	//	vs.Index(i).Value.Interface()
 	n := p.Len()
 	if i < 0 {

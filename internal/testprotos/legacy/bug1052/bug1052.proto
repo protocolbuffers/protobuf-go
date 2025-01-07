@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// This file exercises a deadlock in registation of legacy extensions:
+// This file exercises a deadlock in registration of legacy extensions:
 // https://github.com/golang/protobuf/issues/1052
 //
 // The corresponding .pb.go file was generated with protoc 3.11.3 and

@@ -179,7 +179,7 @@ func Marshal(fd protoreflect.FieldDescriptor, enumName string) string {
 	}
 	tag = append(tag, "name="+name)
 	if jsonName := fd.JSONName(); jsonName != "" && jsonName != name && !fd.IsExtension() {
-		// NOTE: The jsonName != name condition is suspect, but it preserve
+		// NOTE: The jsonName != name condition is suspect, but it preserves
 		// the exact same semantics from the previous generator.
 		tag = append(tag, "json="+jsonName)
 	}

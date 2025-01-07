@@ -64,12 +64,12 @@ func roundTripAndCompareProto(t *testing.T, wireBytes []byte, messages ...proto.
 
 		jsonBytes, err := protojson.Marshal(src)
 		if err != nil {
-			t.Errorf("failed to marshal messsage to json: %v\nmessage: %v", err, src)
+			t.Errorf("failed to marshal message to json: %v\nmessage: %v", err, src)
 		}
 		dst := msg.ProtoReflect().Type().New().Interface()
 
 		if err := protojson.Unmarshal(jsonBytes, dst); err != nil {
-			t.Errorf("failed to unmarshal messsage from json: %v\njson: %s", err, jsonBytes)
+			t.Errorf("failed to unmarshal message from json: %v\njson: %s", err, jsonBytes)
 		}
 
 		// The cmp package does not deal with NaN on its own and will report

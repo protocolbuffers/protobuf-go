@@ -184,7 +184,7 @@ func spawnCase(t *testing.T) {
 		t.Fatalf("Failed to find my own executable: %v", err)
 	}
 	c := exec.Command(ep, "--test.run="+t.Name())
-	// Set the environment variable so that we know we're in a subproceess when re-executed
+	// Set the environment variable so that we know we're in a subprocess when re-executed
 	c.Env = append(c.Env, envVar+"=true")
 	out, err := c.CombinedOutput()
 	// If we do not get an error, we fail in the parent process, otherwise we're good
@@ -310,9 +310,9 @@ func expandedLazy(m *testopaquepb.TestRequiredLazy) bool {
 	return rf.Pointer() != 0
 }
 
-// This test verifies all assumptions of TestParallellMarshalWithRequired
+// This test verifies all assumptions of TestParallelMarshalWithRequired
 // are (still) valid, to prevent the test from becoming a no-op (again).
-func TestParallellMarshalWithRequiredAssumptions(t *testing.T) {
+func TestParallelMarshalWithRequiredAssumptions(t *testing.T) {
 	b, err := proto.Marshal(fillRequiredLazy())
 	if err != nil {
 		t.Fatal(err)
@@ -347,12 +347,12 @@ func TestParallellMarshalWithRequiredAssumptions(t *testing.T) {
 	}
 }
 
-// TestParallellMarshalWithRequired runs two goroutines that marshal the same
+// TestParallelMarshalWithRequired runs two goroutines that marshal the same
 // message. Marshaling a message can result in lazily decoding said message,
 // provided the message contains any required fields. This test ensures that
 // said lazy decoding can happen without causing races in the other goroutine
 // that marshals the same message.
-func TestParallellMarshalWithRequired(t *testing.T) {
+func TestParallelMarshalWithRequired(t *testing.T) {
 	m := fillRequiredLazy()
 	b, err := proto.MarshalOptions{}.Marshal(m)
 	if err != nil {
@@ -432,7 +432,7 @@ func fillMixedOpaqueLazy() *mixedpb.OpaqueLazy {
 	}.Build()
 }
 
-func TestParallellMarshalMixed(t *testing.T) {
+func TestParallelMarshalMixed(t *testing.T) {
 	m := fillMixedOpaqueLazy()
 	b, err := proto.Marshal(m)
 	if err != nil {

@@ -154,7 +154,7 @@ func TestExtensionLazy(t *testing.T) {
 
 	fox := proto.GetExtension(nt, lazytestpb.E_Bat).(*lazytestpb.FlyingFox)
 	if got, want := fox.GetSpecies(), spGH; want != got {
-		t.Errorf("Extension's Speices field not retained, want: %v, got: %v", want, got)
+		t.Errorf("Extension's Species field not retained, want: %v, got: %v", want, got)
 	}
 	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_Bat.Field), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
@@ -164,7 +164,7 @@ func TestExtensionLazy(t *testing.T) {
 	}
 	foxPup := proto.GetExtension(nt, lazytestpb.E_BatPup).(*lazytestpb.FlyingFox)
 	if got, want := foxPup.GetSpecies(), spP; want != got {
-		t.Errorf("Extension's Speices field not retained, want: %v, got: %v", want, got)
+		t.Errorf("Extension's Species field not retained, want: %v, got: %v", want, got)
 	}
 	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_Bat.Field), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
@@ -226,7 +226,7 @@ func TestExtensionNestedScopeLazy(t *testing.T) {
 
 	fox := proto.GetExtension(nt, lazytestpb.E_BatNest_Bat).(*lazytestpb.FlyingFox)
 	if got, want := fox.GetSpecies(), spGH; want != got {
-		t.Errorf("Extension's Speices field not retained, want: %v, got: %v", want, got)
+		t.Errorf("Extension's Species field not retained, want: %v, got: %v", want, got)
 	}
 	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat.Field), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
@@ -277,7 +277,7 @@ func TestExtensionRepeatedMessageLazy(t *testing.T) {
 	mrr = roundtrip(t, mr).(*lazytestpb.Tree)
 	foxPosse := proto.GetExtension(mrr, lazytestpb.E_BatPosse).([]*lazytestpb.FlyingFox)
 	if got, want := foxPosse[0].GetSpecies(), spLE; got != want {
-		t.Errorf("Extension's Speices field, want: %v, got: %v", want, got)
+		t.Errorf("Extension's Species field, want: %v, got: %v", want, got)
 	}
 	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse.Field), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
@@ -424,7 +424,7 @@ func TestExtensionGroupLazy(t *testing.T) {
 	}
 	pipistrelle := proto.GetExtension(mrr, lazytestpb.E_Pipistrelle).(*lazytestpb.Pipistrelle)
 	if got, want := pipistrelle.GetSpecies(), spF; got != want {
-		t.Errorf("Extension's Speices field, want: %v, got: %v", want, got)
+		t.Errorf("Extension's Species field, want: %v, got: %v", want, got)
 	}
 	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelle.Field), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
@@ -458,7 +458,7 @@ func TestExtensionGroupLazy(t *testing.T) {
 	mrr = roundtrip(t, mr).(*lazytestpb.Tree)
 	pipistrelles := proto.GetExtension(mrr, lazytestpb.E_Pipistrelles).([]*lazytestpb.Pipistrelles)
 	if got, want := pipistrelles[1].GetSpecies(), spR; got != want {
-		t.Errorf("Extension's Speices field, want: %v, got: %v", want, got)
+		t.Errorf("Extension's Species field, want: %v, got: %v", want, got)
 	}
 	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles.Field), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")

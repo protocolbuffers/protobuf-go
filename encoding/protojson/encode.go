@@ -212,7 +212,7 @@ func (m unpopulatedFieldRanger) Range(f func(protoreflect.FieldDescriptor, proto
 	for i := 0; i < fds.Len(); i++ {
 		fd := fds.Get(i)
 		if m.Has(fd) || fd.ContainingOneof() != nil {
-			continue // ignore populated fields and fields within a oneofs
+			continue // ignore populated fields and fields within a oneof
 		}
 
 		v := m.Get(fd)

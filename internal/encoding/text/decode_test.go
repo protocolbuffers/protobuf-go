@@ -526,7 +526,7 @@ func TestDecoder(t *testing.T) {
 			},
 		},
 		{
-			// Whitespaces/comments are only allowed betweeb
+			// Whitespaces/comments are only allowed between
 			in: "[" + space + "domain" + space + "." + space + "com # comment\n" +
 				"/" + "pkg" + space + "." + space + "type" + space + "]",
 			want: []R{

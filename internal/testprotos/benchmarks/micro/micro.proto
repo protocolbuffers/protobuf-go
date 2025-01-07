@@ -4,7 +4,7 @@
 
 syntax = "proto2";
 
-package goproto.proto.benchmarks.microt;
+package goproto.proto.benchmarks.micro;
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/benchmarks/micro";
 

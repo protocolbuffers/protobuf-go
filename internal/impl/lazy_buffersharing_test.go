@@ -140,7 +140,7 @@ func testNoExcessiveCopy(t *testing.T, unmarshalOpts proto.UnmarshalOptions) {
 	}
 	b = (*m3.XXX_lazyUnmarshalInfo).Protobuf
 	if m2len != 0 && len(b) == 0 {
-		t.Errorf("The lazy backing store for submessage is empty when it is not for the surronding message: %v.", m2len)
+		t.Errorf("The lazy backing store for submessage is empty when it is not for the surrounding message: %v.", m2len)
 	}
 	for i, x := range b {
 		if x != byte(0xFF) {
