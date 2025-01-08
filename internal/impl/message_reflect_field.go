@@ -76,7 +76,7 @@ func fieldInfoForOneof(fd protoreflect.FieldDescriptor, fs reflect.StructField, 
 	isMessage := fd.Message() != nil
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs, x)
+	fieldOffset := offsetOf(fs)
 	return fieldInfo{
 		// NOTE: The logic below intentionally assumes that oneof fields are
 		// well-formatted. That is, the oneof interface never contains a
@@ -152,7 +152,7 @@ func fieldInfoForMap(fd protoreflect.FieldDescriptor, fs reflect.StructField, x 
 	conv := NewConverter(ft, fd)
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs, x)
+	fieldOffset := offsetOf(fs)
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
@@ -205,7 +205,7 @@ func fieldInfoForList(fd protoreflect.FieldDescriptor, fs reflect.StructField, x
 	conv := NewConverter(reflect.PtrTo(ft), fd)
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs, x)
+	fieldOffset := offsetOf(fs)
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
@@ -269,7 +269,7 @@ func fieldInfoForScalar(fd protoreflect.FieldDescriptor, fs reflect.StructField,
 		}
 	}
 	conv := NewConverter(ft, fd)
-	fieldOffset := offsetOf(fs, x)
+	fieldOffset := offsetOf(fs)
 
 	// Generate specialized getter functions to avoid going through reflect.Value
 	if nullable {
@@ -410,7 +410,7 @@ func fieldInfoForMessage(fd protoreflect.FieldDescriptor, fs reflect.StructField
 	conv := NewConverter(ft, fd)
 
 	// TODO: Implement unsafe fast path?
-	fieldOffset := offsetOf(fs, x)
+	fieldOffset := offsetOf(fs)
 	return fieldInfo{
 		fieldDesc: fd,
 		has: func(p pointer) bool {
@@ -466,7 +466,7 @@ func makeOneofInfo(od protoreflect.OneofDescriptor, si structInfo, x exporter) *
 	oi := &oneofInfo{oneofDesc: od}
 	if od.IsSynthetic() {
 		fs := si.fieldsByNumber[od.Fields().Get(0).Number()]
-		fieldOffset := offsetOf(fs, x)
+		fieldOffset := offsetOf(fs)
 		oi.which = func(p pointer) protoreflect.FieldNumber {
 			if p.IsNil() {
 				return 0
@@ -479,7 +479,7 @@ func makeOneofInfo(od protoreflect.OneofDescriptor, si structInfo, x exporter) *
 		}
 	} else {
 		fs := si.oneofsByName[od.Name()]
-		fieldOffset := offsetOf(fs, x)
+		fieldOffset := offsetOf(fs)
 		oi.which = func(p pointer) protoreflect.FieldNumber {
 			if p.IsNil() {
 				return 0
