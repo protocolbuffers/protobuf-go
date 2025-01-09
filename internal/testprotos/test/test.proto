@@ -8,9 +8,6 @@ package goproto.proto.test;
 
 import public "internal/testprotos/test/test_public.proto";
 
-import weak "internal/testprotos/test/weak1/test_weak.proto";
-import weak "internal/testprotos/test/weak2/test_weak.proto";
-
 import "internal/testprotos/enums/enums.proto";
 import "internal/testprotos/required/required.proto";
 import "internal/testprotos/test/test_import.proto";
@@ -400,13 +397,6 @@ message TestRequiredGroupFields {
 
 message TestRequiredLazy {
   optional TestRequired optional_lazy_message = 1 [lazy = true];
-}
-
-message TestWeak {
-  optional goproto.proto.test.weak.WeakImportMessage1 weak_message1 = 1
-      [weak = true];
-  optional goproto.proto.test.weak.WeakImportMessage2 weak_message2 = 2
-      [weak = true];
 }
 
 message TestPackedTypes {

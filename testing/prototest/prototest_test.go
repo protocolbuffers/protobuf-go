@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"testing"
 
-	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/runtime/protoimpl"
 	"google.golang.org/protobuf/testing/prototest"
@@ -17,8 +16,6 @@ import (
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
-	_ "google.golang.org/protobuf/internal/testprotos/test/weak1"
-	_ "google.golang.org/protobuf/internal/testprotos/test/weak2"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
 	testeditionspb "google.golang.org/protobuf/internal/testprotos/testeditions"
 )
@@ -35,9 +32,6 @@ func Test(t *testing.T) {
 		(*testeditionspb.TestAllExtensions)(nil),
 		(*legacypb.Legacy)(nil),
 		protoimpl.X.MessageOf((*legacy1pb.Message)(nil)).Interface(),
-	}
-	if flags.ProtoLegacyWeak {
-		ms = append(ms, (*testpb.TestWeak)(nil))
 	}
 
 	for _, m := range ms {

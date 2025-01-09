@@ -174,24 +174,6 @@ func TestNewFile(t *testing.T) {
 		inOpts:  FileOptions{AllowUnresolvable: true},
 		wantErr: `already imported "dep.proto"`,
 	}, {
-		label: "invalid weak import",
-		inDesc: mustParseFile(`
-			name:            "test.proto"
-			dependency:      "dep.proto"
-			weak_dependency: [-23]
-		`),
-		inOpts:  FileOptions{AllowUnresolvable: true},
-		wantErr: `invalid or duplicate weak import index: -23`,
-	}, {
-		label: "normal weak and public import",
-		inDesc: mustParseFile(`
-			name:              "test.proto"
-			dependency:        "dep.proto"
-			weak_dependency:   [0]
-			public_dependency: [0]
-		`),
-		inOpts: FileOptions{AllowUnresolvable: true},
-	}, {
 		label: "import public indirect dependency duplicate",
 		inDeps: []*descriptorpb.FileDescriptorProto{
 			mustParseFile(`name:"leaf.proto"`),

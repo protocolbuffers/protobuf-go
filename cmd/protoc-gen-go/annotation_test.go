@@ -57,25 +57,9 @@ func TestAnnotations(t *testing.T) {
 			Path: []int32{int32(genid.FileDescriptorProto_MessageType_field_number), 0, int32(genid.DescriptorProto_Field_field_number), 0},
 		},
 	}, {
-		"\t", "XXX_weak_M", " ",
-		&descriptorpb.GeneratedCodeInfo_Annotation{
-			Path: []int32{int32(genid.FileDescriptorProto_MessageType_field_number), 0, int32(genid.DescriptorProto_Field_field_number), 1},
-		},
-	}, {
 		"func (x *AnnotationsTestMessage) ", "GetAnnotationsTestField", "() string {",
 		&descriptorpb.GeneratedCodeInfo_Annotation{
 			Path: []int32{int32(genid.FileDescriptorProto_MessageType_field_number), 0, int32(genid.DescriptorProto_Field_field_number), 0},
-		},
-	}, {
-		"func (x *AnnotationsTestMessage) ", "GetM", "() proto.Message {",
-		&descriptorpb.GeneratedCodeInfo_Annotation{
-			Path: []int32{int32(genid.FileDescriptorProto_MessageType_field_number), 0, int32(genid.DescriptorProto_Field_field_number), 1},
-		},
-	}, {
-		"func (x *AnnotationsTestMessage) ", "SetM", "(v proto.Message) {",
-		&descriptorpb.GeneratedCodeInfo_Annotation{
-			Path:     []int32{int32(genid.FileDescriptorProto_MessageType_field_number), 0, int32(genid.DescriptorProto_Field_field_number), 1},
-			Semantic: descriptorpb.GeneratedCodeInfo_Annotation_SET.Enum(),
 		},
 	}} {
 		s := want.prefix + want.text + want.suffix

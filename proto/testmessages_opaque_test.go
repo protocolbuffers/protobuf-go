@@ -22,7 +22,6 @@ import (
 	_ "google.golang.org/protobuf/internal/testprotos/required"
 	_ "google.golang.org/protobuf/internal/testprotos/required/required_opaque"
 	_ "google.golang.org/protobuf/internal/testprotos/test"
-	_ "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	_ "google.golang.org/protobuf/internal/testprotos/test3"
 	_ "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_hybrid"
 	_ "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_opaque"

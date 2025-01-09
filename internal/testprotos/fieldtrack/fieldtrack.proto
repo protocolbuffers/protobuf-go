@@ -6,9 +6,6 @@ syntax = "proto2";
 
 package goproto.proto.test;
 
-import weak "internal/testprotos/test/weak1/test_weak.proto";
-import weak "internal/testprotos/test/weak2/test_weak.proto";
-
 import "internal/testprotos/annotation/annotation.proto";
 import "internal/testprotos/test/test.proto";
 
@@ -71,9 +68,4 @@ message TestFieldTrack {
   map<string, goproto.proto.test.TestAllTypes.NestedEnum> map_string_enum = 56;
   map<string, goproto.proto.test.TestAllTypes.NestedMessage>
       map_string_message = 57;
-
-  optional goproto.proto.test.weak.WeakImportMessage1 weak_message1 = 100
-      [weak = true];
-  optional goproto.proto.test.weak.WeakImportMessage2 weak_message2 = 101
-      [weak = true];
 }

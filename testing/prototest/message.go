@@ -878,9 +878,6 @@ func populateMessage(m protoreflect.Message, n seed, stack []protoreflect.Messag
 	stack = append(stack, md)
 	for i := 0; i < md.Fields().Len(); i++ {
 		fd := md.Fields().Get(i)
-		if fd.IsWeak() {
-			continue
-		}
 		m.Set(fd, newValue(m, fd, newSeed(n, i), stack))
 	}
 	return protoreflect.ValueOfMessage(m)

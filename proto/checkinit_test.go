@@ -10,11 +10,9 @@ import (
 	"testing"
 
 	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
-	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	testeditionspb "google.golang.org/protobuf/internal/testprotos/testeditions"
 )
 
@@ -70,28 +68,6 @@ func TestCheckInitializedErrors(t *testing.T) {
 			},
 		},
 		want: `goproto.proto.testeditions.TestRequired.required_field`,
-	}, {
-		m:    &testpb.TestWeak{},
-		want: `<nil>`,
-		skip: !flags.ProtoLegacyWeak,
-	}, {
-		m: func() proto.Message {
-			m := &testpb.TestWeak{}
-			m.SetWeakMessage1(&weakpb.WeakImportMessage1{})
-			return m
-		}(),
-		want: `goproto.proto.test.weak.WeakImportMessage1.a`,
-		skip: !flags.ProtoLegacyWeak,
-	}, {
-		m: func() proto.Message {
-			m := &testpb.TestWeak{}
-			m.SetWeakMessage1(&weakpb.WeakImportMessage1{
-				A: proto.Int32(1),
-			})
-			return m
-		}(),
-		want: `<nil>`,
-		skip: !flags.ProtoLegacyWeak,
 	}}
 
 	for _, tt := range tests {

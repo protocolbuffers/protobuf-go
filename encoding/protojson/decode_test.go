@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/reflect/protoregistry"
 
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
-	weakpb "google.golang.org/protobuf/internal/testprotos/test/weak1"
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
 	pb3 "google.golang.org/protobuf/internal/testprotos/textpb3"
 	pbeditions "google.golang.org/protobuf/internal/testprotos/textpbeditions"
@@ -2675,22 +2674,6 @@ func TestUnmarshal(t *testing.T) {
 				10: 101,
 			},
 		},
-	}, {
-		desc:         "weak fields",
-		inputMessage: &testpb.TestWeak{},
-		inputText:    `{"weak_message1":{"a":1}}`,
-		wantMessage: func() *testpb.TestWeak {
-			m := new(testpb.TestWeak)
-			m.SetWeakMessage1(&weakpb.WeakImportMessage1{A: proto.Int32(1)})
-			return m
-		}(),
-		skip: !flags.ProtoLegacyWeak,
-	}, {
-		desc:         "weak fields; unknown field",
-		inputMessage: &testpb.TestWeak{},
-		inputText:    `{"weak_message1":{"a":1}, "weak_message2":{"a":1}}`,
-		wantErr:      `unknown field "weak_message2"`, // weak_message2 is unknown since the package containing it is not imported
-		skip:         !flags.ProtoLegacyWeak,
 	}, {
 		desc:         "just at recursion limit: nested messages",
 		inputMessage: &testpb.TestAllTypes{},
