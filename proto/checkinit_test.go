@@ -73,7 +73,7 @@ func TestCheckInitializedErrors(t *testing.T) {
 	}, {
 		m:    &testpb.TestWeak{},
 		want: `<nil>`,
-		skip: !flags.ProtoLegacy,
+		skip: !flags.ProtoLegacyWeak,
 	}, {
 		m: func() proto.Message {
 			m := &testpb.TestWeak{}
@@ -81,7 +81,7 @@ func TestCheckInitializedErrors(t *testing.T) {
 			return m
 		}(),
 		want: `goproto.proto.test.weak.WeakImportMessage1.a`,
-		skip: !flags.ProtoLegacy,
+		skip: !flags.ProtoLegacyWeak,
 	}, {
 		m: func() proto.Message {
 			m := &testpb.TestWeak{}
@@ -91,7 +91,7 @@ func TestCheckInitializedErrors(t *testing.T) {
 			return m
 		}(),
 		want: `<nil>`,
-		skip: !flags.ProtoLegacy,
+		skip: !flags.ProtoLegacyWeak,
 	}}
 
 	for _, tt := range tests {

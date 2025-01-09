@@ -17,7 +17,7 @@ import (
 )
 
 func init() {
-	if flags.ProtoLegacy {
+	if flags.ProtoLegacyWeak {
 		testValidMessages = append(testValidMessages, testWeakValidMessages...)
 		testInvalidMessages = append(testInvalidMessages, testWeakInvalidMessages...)
 		testMerges = append(testMerges, testWeakMerges...)
@@ -29,7 +29,7 @@ var testWeakValidMessages = []testProto{
 		desc: "weak message",
 		decodeTo: []proto.Message{
 			func() proto.Message {
-				if !flags.ProtoLegacy {
+				if !flags.ProtoLegacyWeak {
 					return nil
 				}
 				m := &testpb.TestWeak{}
@@ -98,7 +98,7 @@ var testWeakMerges = []testMerge{
 }
 
 func TestWeakNil(t *testing.T) {
-	if !flags.ProtoLegacy {
+	if !flags.ProtoLegacyWeak {
 		t.SkipNow()
 	}
 
@@ -109,7 +109,7 @@ func TestWeakNil(t *testing.T) {
 }
 
 func TestWeakMarshalNil(t *testing.T) {
-	if !flags.ProtoLegacy {
+	if !flags.ProtoLegacyWeak {
 		t.SkipNow()
 	}
 

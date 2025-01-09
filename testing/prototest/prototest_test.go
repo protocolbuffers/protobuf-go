@@ -36,7 +36,7 @@ func Test(t *testing.T) {
 		(*legacypb.Legacy)(nil),
 		protoimpl.X.MessageOf((*legacy1pb.Message)(nil)).Interface(),
 	}
-	if flags.ProtoLegacy {
+	if flags.ProtoLegacyWeak {
 		ms = append(ms, (*testpb.TestWeak)(nil))
 	}
 

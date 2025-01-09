@@ -2684,13 +2684,13 @@ func TestUnmarshal(t *testing.T) {
 			m.SetWeakMessage1(&weakpb.WeakImportMessage1{A: proto.Int32(1)})
 			return m
 		}(),
-		skip: !flags.ProtoLegacy,
+		skip: !flags.ProtoLegacyWeak,
 	}, {
 		desc:         "weak fields; unknown field",
 		inputMessage: &testpb.TestWeak{},
 		inputText:    `{"weak_message1":{"a":1}, "weak_message2":{"a":1}}`,
 		wantErr:      `unknown field "weak_message2"`, // weak_message2 is unknown since the package containing it is not imported
-		skip:         !flags.ProtoLegacy,
+		skip:         !flags.ProtoLegacyWeak,
 	}, {
 		desc:         "just at recursion limit: nested messages",
 		inputMessage: &testpb.TestAllTypes{},

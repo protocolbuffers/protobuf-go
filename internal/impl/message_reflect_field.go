@@ -333,7 +333,7 @@ func fieldInfoForScalar(fd protoreflect.FieldDescriptor, fs reflect.StructField,
 }
 
 func fieldInfoForWeakMessage(fd protoreflect.FieldDescriptor, weakOffset offset) fieldInfo {
-	if !flags.ProtoLegacy {
+	if !flags.ProtoLegacyWeak {
 		panic("no support for proto1 weak fields")
 	}
 
