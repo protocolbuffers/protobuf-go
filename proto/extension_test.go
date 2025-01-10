@@ -18,6 +18,7 @@ import (
 	"google.golang.org/protobuf/runtime/protoimpl"
 	"google.golang.org/protobuf/testing/protocmp"
 
+	extpb "google.golang.org/protobuf/internal/testprotos/examples/ext"
 	legacy1pb "google.golang.org/protobuf/internal/testprotos/legacy/proto2_20160225_2fc053c5"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
@@ -406,4 +407,39 @@ func TestFeatureResolution(t *testing.T) {
 			t.Errorf("%v.IsPacked() = %v, want %v", tc.input.TypeDescriptor().FullName(), got, want)
 		}
 	}
+}
+
+func concertDetails() *extpb.Concert {
+	concert := &extpb.Concert{}
+	concert.SetHeadlinerName("Go Protobuf Acapella Band")
+	proto.SetExtension(concert, extpb.E_PromoId, int32(2342))
+	return concert
+}
+
+func ExampleGetExtension() {
+	concert := concertDetails( /* req.ConcertID */ )
+	fmt.Printf("finding backend server for live stream %q\n", concert.GetHeadlinerName())
+
+	if proto.HasExtension(concert, extpb.E_PromoId) {
+		promoId := proto.GetExtension(concert, extpb.E_PromoId).(int32)
+		fmt.Printf("routing stream to high-priority backend (concert is part of promo %v)\n", promoId)
+	} else {
+		fmt.Printf("routing stream to default backend\n")
+	}
+
+	// Output:
+	// finding backend server for live stream "Go Protobuf Acapella Band"
+	// routing stream to high-priority backend (concert is part of promo 2342)
+}
+
+func ExampleSetExtension() {
+	concert := extpb.Concert_builder{
+		HeadlinerName: proto.String("Go Protobuf Acapella Band"),
+	}.Build()
+	fmt.Printf("Has PromoId? %v\n", proto.HasExtension(concert, extpb.E_PromoId))
+	proto.SetExtension(concert, extpb.E_PromoId, int32(2342))
+	fmt.Printf("Has PromoId? %v\n", proto.HasExtension(concert, extpb.E_PromoId))
+	// Output:
+	// Has PromoId? false
+	// Has PromoId? true
 }
