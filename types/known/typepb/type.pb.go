@@ -40,6 +40,7 @@ import (
 	sourcecontextpb "google.golang.org/protobuf/types/known/sourcecontextpb"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 // The syntax in which a protocol buffer element is defined.
@@ -775,7 +776,7 @@ func file_google_protobuf_type_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_google_protobuf_type_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_google_protobuf_type_proto_rawDesc), len(file_google_protobuf_type_proto_rawDesc)),
 			NumEnums:      3,
 			NumMessages:   5,
 			NumExtensions: 0,

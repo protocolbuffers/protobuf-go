@@ -23,6 +23,7 @@ import (
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 	reflect "reflect"
+	unsafe "unsafe"
 )
 
 type Enum int32
@@ -3719,7 +3720,7 @@ func file_internal_testprotos_textpbeditions_textpbeditions_hybrid_test2_hybrid_
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_internal_testprotos_textpbeditions_textpbeditions_hybrid_test2_hybrid_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_textpbeditions_textpbeditions_hybrid_test2_hybrid_proto_rawDesc), len(file_internal_testprotos_textpbeditions_textpbeditions_hybrid_test2_hybrid_proto_rawDesc)),
 			NumEnums:      4,
 			NumMessages:   26,
 			NumExtensions: 21,

@@ -12,6 +12,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type WeakImportMessage1 struct {
@@ -95,7 +96,7 @@ func file_internal_testprotos_test_weak1_test_weak_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_internal_testprotos_test_weak1_test_weak_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_test_weak1_test_weak_proto_rawDesc), len(file_internal_testprotos_test_weak1_test_weak_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,

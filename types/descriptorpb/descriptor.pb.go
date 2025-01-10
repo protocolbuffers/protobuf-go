@@ -46,6 +46,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 // The full set of known editions.
@@ -4522,7 +4523,7 @@ func file_google_protobuf_descriptor_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_google_protobuf_descriptor_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_google_protobuf_descriptor_proto_rawDesc), len(file_google_protobuf_descriptor_proto_rawDesc)),
 			NumEnums:      17,
 			NumMessages:   33,
 			NumExtensions: 0,

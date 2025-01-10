@@ -17,6 +17,7 @@ import (
 	_ "google.golang.org/protobuf/types/gofeaturespb"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type Open struct {
@@ -859,7 +860,7 @@ func file_internal_testprotos_mixed_mixed_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_internal_testprotos_mixed_mixed_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_mixed_mixed_proto_rawDesc), len(file_internal_testprotos_mixed_mixed_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,

@@ -40,6 +40,7 @@ import (
 	typepb "google.golang.org/protobuf/types/known/typepb"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 // Api is a light-weight descriptor for an API Interface.
@@ -452,7 +453,7 @@ func file_google_protobuf_api_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_google_protobuf_api_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_google_protobuf_api_proto_rawDesc), len(file_google_protobuf_api_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,

@@ -14,6 +14,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/gofeaturespb"
 	reflect "reflect"
+	unsafe "unsafe"
 )
 
 type OtherRepeatedFieldEncoding struct {
@@ -139,7 +140,7 @@ func file_internal_testprotos_testeditions_testeditions_hybrid_test_extension2_h
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_internal_testprotos_testeditions_testeditions_hybrid_test_extension2_hybrid_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_testeditions_testeditions_hybrid_test_extension2_hybrid_proto_rawDesc), len(file_internal_testprotos_testeditions_testeditions_hybrid_test_extension2_hybrid_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 4,

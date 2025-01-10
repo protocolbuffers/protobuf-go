@@ -12,6 +12,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type Sub struct {
@@ -223,7 +224,7 @@ func file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_ini
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_rawDesc), len(file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 1,

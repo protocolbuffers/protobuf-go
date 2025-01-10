@@ -12,6 +12,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type MessageWithMaps struct {
@@ -189,7 +190,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_maps_and_delimited_proto_init
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_cmd_protoc_gen_go_testdata_protoeditions_maps_and_delimited_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_protoeditions_maps_and_delimited_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_protoeditions_maps_and_delimited_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   5,
 			NumExtensions: 0,

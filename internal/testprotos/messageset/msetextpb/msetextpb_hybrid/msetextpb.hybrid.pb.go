@@ -15,6 +15,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/gofeaturespb"
 	reflect "reflect"
+	unsafe "unsafe"
 )
 
 type Ext1 struct {
@@ -375,7 +376,7 @@ func file_internal_testprotos_messageset_msetextpb_msetextpb_hybrid_msetextpb_hy
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_internal_testprotos_messageset_msetextpb_msetextpb_hybrid_msetextpb_hybrid_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_messageset_msetextpb_msetextpb_hybrid_msetextpb_hybrid_proto_rawDesc), len(file_internal_testprotos_messageset_msetextpb_msetextpb_hybrid_msetextpb_hybrid_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 4,

@@ -80,6 +80,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	time "time"
+	unsafe "unsafe"
 )
 
 // A Duration represents a signed, fixed-length span of time represented
@@ -323,7 +324,7 @@ func file_google_protobuf_duration_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_google_protobuf_duration_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_google_protobuf_duration_proto_rawDesc), len(file_google_protobuf_duration_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,

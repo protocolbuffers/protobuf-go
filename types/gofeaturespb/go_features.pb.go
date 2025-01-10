@@ -16,6 +16,7 @@ import (
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type GoFeatures_APILevel int32
@@ -270,7 +271,7 @@ func file_google_protobuf_go_features_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_google_protobuf_go_features_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_google_protobuf_go_features_proto_rawDesc), len(file_google_protobuf_go_features_proto_rawDesc)),
 			NumEnums:      2,
 			NumMessages:   1,
 			NumExtensions: 1,

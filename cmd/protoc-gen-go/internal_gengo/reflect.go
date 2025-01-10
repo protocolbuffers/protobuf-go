@@ -187,7 +187,12 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	g.P("out := ", protoimplPackage.Ident("TypeBuilder"), "{")
 	g.P("File: ", protoimplPackage.Ident("DescBuilder"), "{")
 	g.P("GoPackagePath: ", reflectPackage.Ident("TypeOf"), "(x{}).PkgPath(),")
-	g.P("RawDescriptor: []byte(", rawDescVarName(f), "),")
+	// Avoid a copy of the descriptor by using an inlined version of
+	// [strs.UnsafeBytes] (gencode cannot depend on internal/strs).
+	// This means modification of the RawDescriptor byte slice
+	// will crash the program. But generated RawDescriptors
+	// are never supposed to be modified anyway.
+	g.P("RawDescriptor: ", unsafePackage.Ident("Slice"), "(", unsafePackage.Ident("StringData"), "(", rawDescVarName(f), "), len(", rawDescVarName(f), ")),")
 	g.P("NumEnums: ", len(f.allEnums), ",")
 	g.P("NumMessages: ", len(f.allMessages), ",")
 	g.P("NumExtensions: ", len(f.allExtensions), ",")

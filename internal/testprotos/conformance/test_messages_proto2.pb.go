@@ -22,6 +22,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type ForeignEnumProto2 int32
@@ -3020,7 +3021,7 @@ func file_google_protobuf_test_messages_proto2_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_google_protobuf_test_messages_proto2_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_google_protobuf_test_messages_proto2_proto_rawDesc), len(file_google_protobuf_test_messages_proto2_proto_rawDesc)),
 			NumEnums:      4,
 			NumMessages:   40,
 			NumExtensions: 6,

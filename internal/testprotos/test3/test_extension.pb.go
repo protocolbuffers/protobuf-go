@@ -12,6 +12,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
 	reflect "reflect"
+	unsafe "unsafe"
 )
 
 var file_internal_testprotos_test3_test_extension_proto_extTypes = []protoimpl.ExtensionInfo{
@@ -615,7 +616,7 @@ func file_internal_testprotos_test3_test_extension_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_internal_testprotos_test3_test_extension_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_test3_test_extension_proto_rawDesc), len(file_internal_testprotos_test3_test_extension_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 51,

@@ -27,6 +27,7 @@ import (
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type ForeignEnum int32
@@ -1920,7 +1921,7 @@ func file_editions_golden_test_messages_proto3_editions_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_editions_golden_test_messages_proto3_editions_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_editions_golden_test_messages_proto3_editions_proto_rawDesc), len(file_editions_golden_test_messages_proto3_editions_proto_rawDesc)),
 			NumEnums:      4,
 			NumMessages:   24,
 			NumExtensions: 0,

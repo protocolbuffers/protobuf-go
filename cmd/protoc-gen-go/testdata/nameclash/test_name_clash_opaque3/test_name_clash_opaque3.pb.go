@@ -31,6 +31,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/gofeaturespb"
 	reflect "reflect"
+	unsafe "unsafe"
 )
 
 type M0 struct {
@@ -3269,7 +3270,7 @@ func file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_ini
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   21,
 			NumExtensions: 0,

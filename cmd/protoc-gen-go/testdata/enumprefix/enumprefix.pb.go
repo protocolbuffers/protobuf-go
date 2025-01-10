@@ -12,6 +12,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/gofeaturespb"
 	reflect "reflect"
+	unsafe "unsafe"
 )
 
 type Strip int32
@@ -217,7 +218,7 @@ func file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_enumprefix_enumprefix_proto_rawDesc)),
 			NumEnums:      4,
 			NumMessages:   0,
 			NumExtensions: 0,

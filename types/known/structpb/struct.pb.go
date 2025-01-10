@@ -128,6 +128,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	utf8 "unicode/utf8"
+	unsafe "unsafe"
 )
 
 // `NullValue` is a singleton enumeration to represent the null value for the
@@ -725,7 +726,7 @@ func file_google_protobuf_struct_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_google_protobuf_struct_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_google_protobuf_struct_proto_rawDesc), len(file_google_protobuf_struct_proto_rawDesc)),
 			NumEnums:      1,
 			NumMessages:   4,
 			NumExtensions: 0,

@@ -83,6 +83,7 @@ import (
 	sort "sort"
 	strings "strings"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 // `FieldMask` represents a set of symbolic field paths, for example:
@@ -538,7 +539,7 @@ func file_google_protobuf_field_mask_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_google_protobuf_field_mask_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_google_protobuf_field_mask_proto_rawDesc), len(file_google_protobuf_field_mask_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,

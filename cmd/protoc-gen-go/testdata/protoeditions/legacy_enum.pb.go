@@ -13,6 +13,7 @@ import (
 	_ "google.golang.org/protobuf/types/gofeaturespb"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 // EnumTypeWithLegacyUnmarshalJSON comment.
@@ -255,7 +256,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_legacy_enum_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_cmd_protoc_gen_go_testdata_protoeditions_legacy_enum_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_protoeditions_legacy_enum_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_protoeditions_legacy_enum_proto_rawDesc)),
 			NumEnums:      3,
 			NumMessages:   1,
 			NumExtensions: 0,

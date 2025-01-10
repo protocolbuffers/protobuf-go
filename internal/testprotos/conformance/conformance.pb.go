@@ -15,6 +15,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type WireFormat int32
@@ -759,7 +760,7 @@ func file_conformance_conformance_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_conformance_conformance_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conformance_conformance_proto_rawDesc), len(file_conformance_conformance_proto_rawDesc)),
 			NumEnums:      2,
 			NumMessages:   5,
 			NumExtensions: 0,

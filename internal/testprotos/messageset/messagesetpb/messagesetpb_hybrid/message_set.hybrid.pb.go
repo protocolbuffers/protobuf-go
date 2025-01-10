@@ -14,6 +14,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/gofeaturespb"
 	reflect "reflect"
+	unsafe "unsafe"
 )
 
 type MessageSet struct {
@@ -157,7 +158,7 @@ func file_internal_testprotos_messageset_messagesetpb_messagesetpb_hybrid_messag
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_internal_testprotos_messageset_messagesetpb_messagesetpb_hybrid_message_set_hybrid_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_messageset_messagesetpb_messagesetpb_hybrid_message_set_hybrid_proto_rawDesc), len(file_internal_testprotos_messageset_messagesetpb_messagesetpb_hybrid_message_set_hybrid_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,

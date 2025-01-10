@@ -13,6 +13,7 @@ import (
 	math "math"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type FieldTestMessage_Enum int32
@@ -1441,7 +1442,7 @@ func file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_protoeditions_fields_proto_rawDesc)),
 			NumEnums:      1,
 			NumMessages:   9,
 			NumExtensions: 0,

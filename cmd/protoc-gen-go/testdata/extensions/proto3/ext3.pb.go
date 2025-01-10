@@ -13,6 +13,7 @@ import (
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
 	reflect "reflect"
 	sync "sync"
+	unsafe "unsafe"
 )
 
 type Enum int32
@@ -519,7 +520,7 @@ func file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: []byte(file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_rawDesc),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_extensions_proto3_ext3_proto_rawDesc)),
 			NumEnums:      1,
 			NumMessages:   1,
 			NumExtensions: 34,
