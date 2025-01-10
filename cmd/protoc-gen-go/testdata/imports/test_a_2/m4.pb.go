@@ -52,18 +52,7 @@ func (*M4) Descriptor() ([]byte, []int) {
 
 var File_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto protoreflect.FileDescriptor
 
-var file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDesc = []byte{
-	0x0a, 0x34, 0x63, 0x6d, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67, 0x65, 0x6e,
-	0x2d, 0x67, 0x6f, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x2f, 0x69, 0x6d, 0x70,
-	0x6f, 0x72, 0x74, 0x73, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x61, 0x5f, 0x32, 0x2f, 0x6d, 0x34,
-	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x06, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x61, 0x22, 0x04,
-	0x0a, 0x02, 0x4d, 0x34, 0x42, 0x48, 0x5a, 0x46, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x67,
-	0x6f, 0x6c, 0x61, 0x6e, 0x67, 0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
-	0x75, 0x66, 0x2f, 0x63, 0x6d, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67, 0x65,
-	0x6e, 0x2d, 0x67, 0x6f, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x2f, 0x69, 0x6d,
-	0x70, 0x6f, 0x72, 0x74, 0x73, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x61, 0x5f, 0x32, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
-}
+const file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDesc = "\n4cmd/protoc-gen-go/testdata/imports/test_a_2/m4.prototest.a\"\nM4BHZFgoogle.golang.org/protobuf/cmd/protoc-gen-go/testdata/imports/test_a_2bproto3"
 
 var (
 	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescOnce sync.Once
@@ -72,9 +61,9 @@ var (
 
 func file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescGZIP() []byte {
 	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescOnce.Do(func() {
-		file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescData = protoimpl.X.CompressGZIP(file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescData)
+		file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescData = string(protoimpl.X.CompressGZIP([]byte(file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescData)))
 	})
-	return file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescData
+	return []byte(file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDescData)
 }
 
 var file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
@@ -98,7 +87,7 @@ func file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDesc,
+			RawDescriptor: []byte(file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDesc),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
@@ -109,7 +98,6 @@ func file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_init() {
 		MessageInfos:      file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_msgTypes,
 	}.Build()
 	File_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto = out.File
-	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_rawDesc = nil
 	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_goTypes = nil
 	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m4_proto_depIdxs = nil
 }

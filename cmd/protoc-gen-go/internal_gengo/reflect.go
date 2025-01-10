@@ -187,7 +187,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	g.P("out := ", protoimplPackage.Ident("TypeBuilder"), "{")
 	g.P("File: ", protoimplPackage.Ident("DescBuilder"), "{")
 	g.P("GoPackagePath: ", reflectPackage.Ident("TypeOf"), "(x{}).PkgPath(),")
-	g.P("RawDescriptor: ", rawDescVarName(f), ",")
+	g.P("RawDescriptor: []byte(", rawDescVarName(f), "),")
 	g.P("NumEnums: ", len(f.allEnums), ",")
 	g.P("NumMessages: ", len(f.allMessages), ",")
 	g.P("NumExtensions: ", len(f.allExtensions), ",")
@@ -208,7 +208,6 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	g.P(f.GoDescriptorIdent, " = out.File")
 
 	// Set inputs to nil to allow GC to reclaim resources.
-	g.P(rawDescVarName(f), " = nil")
 	g.P(goTypesVarName(f), " = nil")
 	g.P(depIdxsVarName(f), " = nil")
 	g.P("}")
@@ -233,6 +232,57 @@ func stripSourceRetentionFieldsFromMessage(m protoreflect.Message) {
 	})
 }
 
+// escapeForLiteral formats data as characters that are valid to use in a Go
+// string literal. This implementation was used (before go:embed existed) for
+// many years in https://github.com/dsymonds/goembed
+func escapeForLiteral(data []byte) []byte {
+	escaped := make([]byte, 0, len(data) /* right order of magnitude */)
+
+	for len(data) > 0 {
+		// https://golang.org/ref/spec#String_literals: "Within the quotes, any
+		// character may appear except newline and unescaped double quote. The
+		// text between the quotes forms the value of the literal, with backslash
+		// escapes interpreted as they are in rune literals […]."
+		switch b := data[0]; b {
+		case '\\':
+			escaped = append(escaped, []byte(`\\`)...)
+		case '"':
+			escaped = append(escaped, []byte(`\"`)...)
+		case '\n':
+			escaped = append(escaped, []byte(`\n`)...)
+
+			// While \r does not need to be escaped for Go string literals, some
+			// tools (like Gerrit) detect files as binary if they contain a \r
+			// which is not followed by \n.
+		case '\r':
+			escaped = append(escaped, []byte(`\r`)...)
+
+		case '\x00':
+			// https://golang.org/ref/spec#Source_code_representation: "Implementation
+			// restriction: For compatibility with other tools, a compiler may
+			// disallow the NUL character (U+0000) in the source text."
+			escaped = append(escaped, []byte(`\x00`)...)
+
+		default:
+			// https://golang.org/ref/spec#Source_code_representation: "Implementation
+			// restriction: […] A byte order mark may be disallowed anywhere else in
+			// the source."
+			const byteOrderMark = '\uFEFF'
+
+			if r, size := utf8.DecodeRune(data); r != utf8.RuneError && r != byteOrderMark {
+				escaped = append(escaped, data[:size]...)
+				data = data[size:]
+				continue
+			}
+
+			escaped = append(escaped, []byte(fmt.Sprintf(`\x%02x`, b))...)
+		}
+		data = data[1:]
+	}
+
+	return escaped
+}
+
 func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo) {
 	descProto := proto.Clone(f.Proto).(*descriptorpb.FileDescriptorProto)
 	descProto.SourceCodeInfo = nil // drop source code information
@@ -243,23 +293,7 @@ func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 		return
 	}
 
-	g.P("var ", rawDescVarName(f), " = []byte{")
-	for len(b) > 0 {
-		n := 16
-		if n > len(b) {
-			n = len(b)
-		}
-
-		s := ""
-		for _, c := range b[:n] {
-			s += fmt.Sprintf("0x%02x,", c)
-		}
-		g.P(s)
-
-		b = b[n:]
-	}
-	g.P("}")
-	g.P()
+	g.P("const ", rawDescVarName(f), ` = "`, string(escapeForLiteral(b)), `"`)
 
 	if f.needRawDesc {
 		onceVar := rawDescVarName(f) + "Once"
@@ -272,9 +306,9 @@ func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 
 		g.P("func ", rawDescVarName(f), "GZIP() []byte {")
 		g.P(onceVar, ".Do(func() {")
-		g.P(dataVar, " = ", protoimplPackage.Ident("X"), ".CompressGZIP(", dataVar, ")")
+		g.P(dataVar, " = string(", protoimplPackage.Ident("X"), ".CompressGZIP([]byte(", dataVar, ")))")
 		g.P("})")
-		g.P("return ", dataVar)
+		g.P("return []byte(", dataVar, ")")
 		g.P("}")
 		g.P()
 	}
