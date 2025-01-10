@@ -19,7 +19,8 @@ import (
 // Disable disables lazy unmarshaling of opaque messages.
 //
 // Messages which are still on the OPEN or HYBRID API level (see
-// http://go/go-opaque-proto) are never lazily unmarshalled.
+// https://protobuf.dev/reference/go/opaque-migration/) are never lazily
+// unmarshalled.
 //
 // Fields must be annotated with [lazy = true] in their .proto file to become
 // eligible for lazy unmarshaling.
