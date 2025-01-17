@@ -187,12 +187,10 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	g.P("out := ", protoimplPackage.Ident("TypeBuilder"), "{")
 	g.P("File: ", protoimplPackage.Ident("DescBuilder"), "{")
 	g.P("GoPackagePath: ", reflectPackage.Ident("TypeOf"), "(x{}).PkgPath(),")
-	// Avoid a copy of the descriptor by using an inlined version of
-	// [strs.UnsafeBytes] (gencode cannot depend on internal/strs).
-	// This means modification of the RawDescriptor byte slice
-	// will crash the program. But generated RawDescriptors
-	// are never supposed to be modified anyway.
-	g.P("RawDescriptor: ", unsafePackage.Ident("Slice"), "(", unsafePackage.Ident("StringData"), "(", rawDescVarName(f), "), len(", rawDescVarName(f), ")),")
+	// Avoid a copy of the descriptor. This means modification of the
+	// RawDescriptor byte slice will crash the program. But generated
+	// RawDescriptors are never supposed to be modified anyway.
+	g.P("RawDescriptor: ", unsafeBytesRawDesc(g, f), ",")
 	g.P("NumEnums: ", len(f.allEnums), ",")
 	g.P("NumMessages: ", len(f.allMessages), ",")
 	g.P("NumExtensions: ", len(f.allExtensions), ",")
@@ -270,18 +268,28 @@ func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 		dataVar := rawDescVarName(f) + "Data"
 		g.P("var (")
 		g.P(onceVar, " ", syncPackage.Ident("Once"))
-		g.P(dataVar, " = ", rawDescVarName(f))
+		g.P(dataVar, " []byte")
 		g.P(")")
 		g.P()
 
 		g.P("func ", rawDescVarName(f), "GZIP() []byte {")
 		g.P(onceVar, ".Do(func() {")
-		g.P(dataVar, " = string(", protoimplPackage.Ident("X"), ".CompressGZIP([]byte(", dataVar, ")))")
+		g.P(dataVar, " = ", protoimplPackage.Ident("X"), ".CompressGZIP(", unsafeBytesRawDesc(g, f), ")")
 		g.P("})")
-		g.P("return []byte(", dataVar, ")")
+		g.P("return ", dataVar)
 		g.P("}")
 		g.P()
 	}
+}
+
+// unsafeBytesRawDesc returns an inlined version of [strs.UnsafeBytes]
+// (gencode cannot depend on internal/strs). Modification of this byte
+// slice will crash the program.
+func unsafeBytesRawDesc(g *protogen.GeneratedFile, f *fileInfo) string {
+	return fmt.Sprintf("%s(%s(%[3]s), len(%[3]s))",
+		g.QualifiedGoIdent(unsafePackage.Ident("Slice")),
+		g.QualifiedGoIdent(unsafePackage.Ident("StringData")),
+		rawDescVarName(f))
 }
 
 func genEnumReflectMethods(g *protogen.GeneratedFile, f *fileInfo, e *enumInfo) {

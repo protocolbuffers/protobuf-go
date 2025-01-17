@@ -68,14 +68,14 @@ var file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDesc = string([
 
 var (
 	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescOnce sync.Once
-	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescData = file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDesc
+	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescData []byte
 )
 
 func file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescGZIP() []byte {
 	file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescOnce.Do(func() {
-		file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescData = string(protoimpl.X.CompressGZIP([]byte(file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescData)))
+		file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDesc)))
 	})
-	return []byte(file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescData)
+	return file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_rawDescData
 }
 
 var file_cmd_protoc_gen_go_testdata_imports_test_a_2_m3_proto_msgTypes = make([]protoimpl.MessageInfo, 1)

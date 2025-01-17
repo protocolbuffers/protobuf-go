@@ -214,14 +214,14 @@ var file_internal_testprotos_benchmarks_micro_micro_proto_rawDesc = string([]byt
 
 var (
 	file_internal_testprotos_benchmarks_micro_micro_proto_rawDescOnce sync.Once
-	file_internal_testprotos_benchmarks_micro_micro_proto_rawDescData = file_internal_testprotos_benchmarks_micro_micro_proto_rawDesc
+	file_internal_testprotos_benchmarks_micro_micro_proto_rawDescData []byte
 )
 
 func file_internal_testprotos_benchmarks_micro_micro_proto_rawDescGZIP() []byte {
 	file_internal_testprotos_benchmarks_micro_micro_proto_rawDescOnce.Do(func() {
-		file_internal_testprotos_benchmarks_micro_micro_proto_rawDescData = string(protoimpl.X.CompressGZIP([]byte(file_internal_testprotos_benchmarks_micro_micro_proto_rawDescData)))
+		file_internal_testprotos_benchmarks_micro_micro_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_internal_testprotos_benchmarks_micro_micro_proto_rawDesc), len(file_internal_testprotos_benchmarks_micro_micro_proto_rawDesc)))
 	})
-	return []byte(file_internal_testprotos_benchmarks_micro_micro_proto_rawDescData)
+	return file_internal_testprotos_benchmarks_micro_micro_proto_rawDescData
 }
 
 var file_internal_testprotos_benchmarks_micro_micro_proto_msgTypes = make([]protoimpl.MessageInfo, 1)

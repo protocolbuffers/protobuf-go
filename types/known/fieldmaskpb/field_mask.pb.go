@@ -524,14 +524,14 @@ var file_google_protobuf_field_mask_proto_rawDesc = string([]byte{
 
 var (
 	file_google_protobuf_field_mask_proto_rawDescOnce sync.Once
-	file_google_protobuf_field_mask_proto_rawDescData = file_google_protobuf_field_mask_proto_rawDesc
+	file_google_protobuf_field_mask_proto_rawDescData []byte
 )
 
 func file_google_protobuf_field_mask_proto_rawDescGZIP() []byte {
 	file_google_protobuf_field_mask_proto_rawDescOnce.Do(func() {
-		file_google_protobuf_field_mask_proto_rawDescData = string(protoimpl.X.CompressGZIP([]byte(file_google_protobuf_field_mask_proto_rawDescData)))
+		file_google_protobuf_field_mask_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_google_protobuf_field_mask_proto_rawDesc), len(file_google_protobuf_field_mask_proto_rawDesc)))
 	})
-	return []byte(file_google_protobuf_field_mask_proto_rawDescData)
+	return file_google_protobuf_field_mask_proto_rawDescData
 }
 
 var file_google_protobuf_field_mask_proto_msgTypes = make([]protoimpl.MessageInfo, 1)

@@ -3837,14 +3837,14 @@ var file_editions_golden_test_messages_proto2_editions_proto_rawDesc = string([]
 
 var (
 	file_editions_golden_test_messages_proto2_editions_proto_rawDescOnce sync.Once
-	file_editions_golden_test_messages_proto2_editions_proto_rawDescData = file_editions_golden_test_messages_proto2_editions_proto_rawDesc
+	file_editions_golden_test_messages_proto2_editions_proto_rawDescData []byte
 )
 
 func file_editions_golden_test_messages_proto2_editions_proto_rawDescGZIP() []byte {
 	file_editions_golden_test_messages_proto2_editions_proto_rawDescOnce.Do(func() {
-		file_editions_golden_test_messages_proto2_editions_proto_rawDescData = string(protoimpl.X.CompressGZIP([]byte(file_editions_golden_test_messages_proto2_editions_proto_rawDescData)))
+		file_editions_golden_test_messages_proto2_editions_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_editions_golden_test_messages_proto2_editions_proto_rawDesc), len(file_editions_golden_test_messages_proto2_editions_proto_rawDesc)))
 	})
-	return []byte(file_editions_golden_test_messages_proto2_editions_proto_rawDescData)
+	return file_editions_golden_test_messages_proto2_editions_proto_rawDescData
 }
 
 var file_editions_golden_test_messages_proto2_editions_proto_enumTypes = make([]protoimpl.EnumInfo, 4)

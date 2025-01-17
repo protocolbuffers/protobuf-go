@@ -584,14 +584,14 @@ var file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDesc = string([]byte{
 
 var (
 	file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescOnce sync.Once
-	file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescData = file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDesc
+	file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescData []byte
 )
 
 func file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescGZIP() []byte {
 	file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescOnce.Do(func() {
-		file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescData = string(protoimpl.X.CompressGZIP([]byte(file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescData)))
+		file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDesc)))
 	})
-	return []byte(file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescData)
+	return file_cmd_protoc_gen_go_testdata_proto3_fields_proto_rawDescData
 }
 
 var file_cmd_protoc_gen_go_testdata_proto3_fields_proto_enumTypes = make([]protoimpl.EnumInfo, 1)

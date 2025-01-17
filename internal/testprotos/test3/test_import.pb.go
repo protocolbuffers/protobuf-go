@@ -113,14 +113,14 @@ var file_internal_testprotos_test3_test_import_proto_rawDesc = string([]byte{
 
 var (
 	file_internal_testprotos_test3_test_import_proto_rawDescOnce sync.Once
-	file_internal_testprotos_test3_test_import_proto_rawDescData = file_internal_testprotos_test3_test_import_proto_rawDesc
+	file_internal_testprotos_test3_test_import_proto_rawDescData []byte
 )
 
 func file_internal_testprotos_test3_test_import_proto_rawDescGZIP() []byte {
 	file_internal_testprotos_test3_test_import_proto_rawDescOnce.Do(func() {
-		file_internal_testprotos_test3_test_import_proto_rawDescData = string(protoimpl.X.CompressGZIP([]byte(file_internal_testprotos_test3_test_import_proto_rawDescData)))
+		file_internal_testprotos_test3_test_import_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_internal_testprotos_test3_test_import_proto_rawDesc), len(file_internal_testprotos_test3_test_import_proto_rawDesc)))
 	})
-	return []byte(file_internal_testprotos_test3_test_import_proto_rawDescData)
+	return file_internal_testprotos_test3_test_import_proto_rawDescData
 }
 
 var file_internal_testprotos_test3_test_import_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
