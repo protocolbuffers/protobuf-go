@@ -390,6 +390,7 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 		if m.isTracked {
 			tags = append(tags, gotrackTags...)
 		}
+		tags = append(tags, [2]string{"json", string(oneof.Desc.Name()) + ",omitempty"})
 
 		g.Annotate(m.GoIdent.GoName+"."+oneof.GoName, oneof.Location)
 		leadingComments := oneof.Comments.Leading
@@ -886,6 +887,7 @@ func genMessageOneofWrapperTypes(g *protogen.GeneratedFile, f *fileInfo, m *mess
 			goType, _ := fieldGoType(g, f, field)
 			tags := structTags{
 				{"protobuf", fieldProtobufTagValue(field)},
+				{"json", fieldJSONTagValue(field)},
 			}
 			if m.isTracked {
 				tags = append(tags, gotrackTags...)
