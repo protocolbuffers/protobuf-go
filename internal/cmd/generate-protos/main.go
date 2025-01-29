@@ -389,6 +389,16 @@ func generateLocalProtos() {
 					opts += fmt.Sprintf(",apilevelM%v=%v", relPath, "API_OPAQUE")
 				}
 			}
+			if strings.HasPrefix(relPath, "cmd/protoc-gen-go/testdata/nameclash/") {
+				switch path.Base(relPath) {
+				case "test_name_clash_hybrid3.proto":
+					opts += fmt.Sprintf(",apilevelM%v=%v", relPath, "API_HYBRID")
+				case "test_name_clash_opaque3.proto":
+					opts += fmt.Sprintf(",apilevelM%v=%v", relPath, "API_OPAQUE")
+				case "test_name_clash_open3.proto":
+					opts += fmt.Sprintf(",apilevelM%v=%v", relPath, "API_OPEN")
+				}
+			}
 			protoc("-I"+filepath.Join(repoRoot, "src"), "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+tmpDir, filepath.Join(repoRoot, relPath))
 			return nil
 		})

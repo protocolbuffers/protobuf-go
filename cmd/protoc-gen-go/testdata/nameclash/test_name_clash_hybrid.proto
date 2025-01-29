@@ -331,3 +331,9 @@ message M20 {
     int32 which_which_foo = 2;
   }
 }
+
+message M21 {
+  string _foo = 1;
+  string X_foo = 2;
+  string get_x_foo = 3;
+}

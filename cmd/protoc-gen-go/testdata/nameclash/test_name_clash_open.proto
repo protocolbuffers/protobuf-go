@@ -149,3 +149,10 @@ message M9 {
   }
   int32 foo = 1;
 }
+
+
+message M21 {
+  string _foo = 1;
+  string X_foo = 2;
+  string get_x_foo = 3;
+}

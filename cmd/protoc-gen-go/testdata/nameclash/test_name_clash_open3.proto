@@ -21,16 +21,13 @@
 // 1 - My field name clashes with their getter name
 // 2 - My getter name clashes with their field name
 
-edition = "2023";
+syntax = "proto3";
 
 package net.proto2.go.testdata.nameclashopen3;
 
 import "google/protobuf/go_features.proto";
 
 option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/nameclash/test_name_clash_open3";
-
-option features.field_presence = IMPLICIT;
-option features.(pb.go).api_level = API_OPEN;
 
 message M0 {
   int32 i1 = 1;
@@ -161,4 +158,11 @@ message M9 {
   }
 
   M0 foo = 1;
+}
+
+
+message M21 {
+  string _foo = 1;
+  string X_foo = 2;
+  string get_x_foo = 3;
 }

@@ -37,7 +37,7 @@ import (
 
 type M0 struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	I1            int32                  `protobuf:"varint,1,opt,name=i1" json:"i1,omitempty"`
+	I1            int32                  `protobuf:"varint,1,opt,name=i1,proto3" json:"i1,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -85,9 +85,9 @@ type M1 struct {
 	// Foo                    | -                  | -    | Foo
 	// GetFoo                 | foo                | 1    | GetFoo_
 	// GetGetFoo              | -                  | -    | GetGetFoo
-	Foo           *M0 `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
-	GetFoo_       *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	GetGetFoo     *M0 `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo" json:"get_get_foo,omitempty"`
+	Foo           *M0 `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
+	GetFoo_       *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
+	GetGetFoo     *M0 `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo,proto3" json:"get_get_foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -149,9 +149,9 @@ type M2 struct {
 	// GetGetFoo              | -                  | -    | GetGetFoo
 	// GetFoo                 | get_get_foo        | 2    | GetFoo_
 	// Foo                    | -                  | -    | Foo
-	GetGetFoo     *M0 `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo" json:"get_get_foo,omitempty"`
-	GetFoo_       *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	Foo           *M0 `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	GetGetFoo     *M0 `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo,proto3" json:"get_get_foo,omitempty"`
+	GetFoo_       *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
+	Foo           *M0 `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -213,9 +213,9 @@ type M3 struct {
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetFoo              | get_foo            | 1    | GetGetFoo_
 	// Foo                    | get_foo            | 2    | Foo_
-	GetFoo        *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	GetGetFoo_    *M0 `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo" json:"get_get_foo,omitempty"`
-	Foo_          *M0 `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	GetFoo        *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
+	GetGetFoo_    *M0 `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo,proto3" json:"get_get_foo,omitempty"`
+	Foo_          *M0 `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -281,12 +281,12 @@ type M4 struct {
 	//	                      |                    |      |
 	//
 	// Foo                    | get_foo            | 2    | Foo_
-	GetFoo *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
+	GetFoo *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
 	// Types that are valid to be assigned to GetGetFoo_:
 	//
 	//	*M4_GetGetGetFoo
 	GetGetFoo_    isM4_GetGetFoo_ `protobuf_oneof:"get_get_foo"`
-	Foo_          *M0             `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	Foo_          *M0             `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -356,7 +356,7 @@ type isM4_GetGetFoo_ interface {
 }
 
 type M4_GetGetGetFoo struct {
-	GetGetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_get_foo,json=getGetGetFoo,oneof"`
+	GetGetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_get_foo,json=getGetGetFoo,proto3,oneof"`
 }
 
 func (*M4_GetGetGetFoo) isM4_GetGetFoo_() {}
@@ -372,12 +372,12 @@ type M5 struct {
 	//	                      |                    |      |
 	//
 	// Foo                    | get_foo            | 2    | Foo_
-	GetFoo *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
+	GetFoo *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
 	// Types that are valid to be assigned to GetGetGetFoo:
 	//
 	//	*M5_GetGetFoo_
 	GetGetGetFoo  isM5_GetGetGetFoo `protobuf_oneof:"get_get_get_foo"`
-	Foo_          *M0               `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	Foo_          *M0               `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -447,7 +447,7 @@ type isM5_GetGetGetFoo interface {
 }
 
 type M5_GetGetFoo_ struct {
-	GetGetFoo_ int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,oneof"`
+	GetGetFoo_ int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,proto3,oneof"`
 }
 
 func (*M5_GetGetFoo_) isM5_GetGetGetFoo() {}
@@ -468,8 +468,8 @@ type M6 struct {
 	//
 	//	*M6_GetGetGetFoo
 	GetGetFoo     isM6_GetGetFoo `protobuf_oneof:"get_get_foo"`
-	GetFoo_       *M0            `protobuf:"bytes,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	Foo           *M0            `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	GetFoo_       *M0            `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
+	Foo           *M0            `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -539,7 +539,7 @@ type isM6_GetGetFoo interface {
 }
 
 type M6_GetGetGetFoo struct {
-	GetGetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_get_foo,json=getGetGetFoo,oneof"`
+	GetGetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_get_foo,json=getGetGetFoo,proto3,oneof"`
 }
 
 func (*M6_GetGetGetFoo) isM6_GetGetFoo() {}
@@ -561,7 +561,7 @@ type M7 struct {
 	//	*M7_Bar
 	//	*M7_GetFoo_
 	GetGetFoo     isM7_GetGetFoo `protobuf_oneof:"get_get_foo"`
-	Foo           *M0            `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	Foo           *M0            `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -633,11 +633,11 @@ type isM7_GetGetFoo interface {
 }
 
 type M7_Bar struct {
-	Bar bool `protobuf:"varint,4,opt,name=bar,oneof"`
+	Bar bool `protobuf:"varint,4,opt,name=bar,proto3,oneof"`
 }
 
 type M7_GetFoo_ struct {
-	GetFoo_ int32 `protobuf:"varint,3,opt,name=get_foo,json=getFoo,oneof"`
+	GetFoo_ int32 `protobuf:"varint,3,opt,name=get_foo,json=getFoo,proto3,oneof"`
 }
 
 func (*M7_Bar) isM7_GetGetFoo() {}
@@ -660,8 +660,8 @@ type M8 struct {
 	//
 	//	*M8_GetGetFoo
 	GetGetGetFoo_ isM8_GetGetGetFoo_ `protobuf_oneof:"get_get_get_foo"`
-	GetFoo_       *M0                `protobuf:"bytes,2,opt,name=get_foo,json=getFoo" json:"get_foo,omitempty"`
-	Foo           *M0                `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	GetFoo_       *M0                `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
+	Foo           *M0                `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -731,7 +731,7 @@ type isM8_GetGetGetFoo_ interface {
 }
 
 type M8_GetGetFoo struct {
-	GetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,oneof"`
+	GetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,proto3,oneof"`
 }
 
 func (*M8_GetGetFoo) isM8_GetGetGetFoo_() {}
@@ -753,7 +753,7 @@ type M9 struct {
 	//	*M9_GetGetFoo
 	//	*M9_GetFoo_
 	GetGetGetFoo_ isM9_GetGetGetFoo_ `protobuf_oneof:"get_get_get_foo"`
-	Foo           *M0                `protobuf:"bytes,1,opt,name=foo" json:"foo,omitempty"`
+	Foo           *M0                `protobuf:"bytes,1,opt,name=foo,proto3" json:"foo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -825,16 +825,76 @@ type isM9_GetGetGetFoo_ interface {
 }
 
 type M9_GetGetFoo struct {
-	GetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,oneof"`
+	GetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,proto3,oneof"`
 }
 
 type M9_GetFoo_ struct {
-	GetFoo_ int32 `protobuf:"varint,2,opt,name=get_foo,json=getFoo,oneof"`
+	GetFoo_ int32 `protobuf:"varint,2,opt,name=get_foo,json=getFoo,proto3,oneof"`
 }
 
 func (*M9_GetGetFoo) isM9_GetGetGetFoo_() {}
 
 func (*M9_GetFoo_) isM9_GetGetGetFoo_() {}
+
+type M21 struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	XFoo          string                 `protobuf:"bytes,1,opt,name=_foo,json=Foo,proto3" json:"_foo,omitempty"`
+	XFoo_         string                 `protobuf:"bytes,2,opt,name=X_foo,json=XFoo,proto3" json:"X_foo,omitempty"`
+	GetXFoo__     string                 `protobuf:"bytes,3,opt,name=get_x_foo,json=getXFoo,proto3" json:"get_x_foo,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *M21) Reset() {
+	*x = M21{}
+	mi := &file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *M21) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*M21) ProtoMessage() {}
+
+func (x *M21) ProtoReflect() protoreflect.Message {
+	mi := &file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use M21.ProtoReflect.Descriptor instead.
+func (*M21) Descriptor() ([]byte, []int) {
+	return file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *M21) GetXFoo() string {
+	if x != nil {
+		return x.XFoo
+	}
+	return ""
+}
+
+func (x *M21) GetXFoo_() string {
+	if x != nil {
+		return x.XFoo_
+	}
+	return ""
+}
+
+func (x *M21) GetGetXFoo__() string {
+	if x != nil {
+		return x.GetXFoo__
+	}
+	return ""
+}
 
 var File_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto protoreflect.FileDescriptor
 
@@ -953,14 +1013,18 @@ var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_rawDes
 	0x6f, 0x74, 0x6f, 0x32, 0x2e, 0x67, 0x6f, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61,
 	0x2e, 0x6e, 0x61, 0x6d, 0x65, 0x63, 0x6c, 0x61, 0x73, 0x68, 0x6f, 0x70, 0x65, 0x6e, 0x33, 0x2e,
 	0x4d, 0x30, 0x52, 0x03, 0x66, 0x6f, 0x6f, 0x42, 0x11, 0x0a, 0x0f, 0x67, 0x65, 0x74, 0x5f, 0x67,
-	0x65, 0x74, 0x5f, 0x67, 0x65, 0x74, 0x5f, 0x66, 0x6f, 0x6f, 0x42, 0x61, 0x5a, 0x55, 0x67, 0x6f,
-	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x67, 0x6f, 0x6c, 0x61, 0x6e, 0x67, 0x2e, 0x6f, 0x72, 0x67, 0x2f,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x63, 0x6d, 0x64, 0x2f, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x63, 0x2d, 0x67, 0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x64,
-	0x61, 0x74, 0x61, 0x2f, 0x6e, 0x61, 0x6d, 0x65, 0x63, 0x6c, 0x61, 0x73, 0x68, 0x2f, 0x74, 0x65,
-	0x73, 0x74, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x5f, 0x63, 0x6c, 0x61, 0x73, 0x68, 0x5f, 0x6f, 0x70,
-	0x65, 0x6e, 0x33, 0x92, 0x03, 0x07, 0xd2, 0x3e, 0x02, 0x10, 0x01, 0x08, 0x02, 0x62, 0x08, 0x65,
-	0x64, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x70, 0xe8, 0x07,
+	0x65, 0x74, 0x5f, 0x67, 0x65, 0x74, 0x5f, 0x66, 0x6f, 0x6f, 0x22, 0x49, 0x0a, 0x03, 0x4d, 0x32,
+	0x31, 0x12, 0x11, 0x0a, 0x04, 0x5f, 0x66, 0x6f, 0x6f, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x03, 0x46, 0x6f, 0x6f, 0x12, 0x13, 0x0a, 0x05, 0x58, 0x5f, 0x66, 0x6f, 0x6f, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x58, 0x46, 0x6f, 0x6f, 0x12, 0x1a, 0x0a, 0x09, 0x67, 0x65, 0x74,
+	0x5f, 0x78, 0x5f, 0x66, 0x6f, 0x6f, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x67, 0x65,
+	0x74, 0x58, 0x46, 0x6f, 0x6f, 0x42, 0x57, 0x5a, 0x55, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
+	0x67, 0x6f, 0x6c, 0x61, 0x6e, 0x67, 0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x62, 0x75, 0x66, 0x2f, 0x63, 0x6d, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67,
+	0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x2f, 0x6e,
+	0x61, 0x6d, 0x65, 0x63, 0x6c, 0x61, 0x73, 0x68, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x6e, 0x61,
+	0x6d, 0x65, 0x5f, 0x63, 0x6c, 0x61, 0x73, 0x68, 0x5f, 0x6f, 0x70, 0x65, 0x6e, 0x33, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 })
 
 var (
@@ -975,18 +1039,19 @@ func file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_rawDe
 	return file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_rawDescData
 }
 
-var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_goTypes = []any{
-	(*M0)(nil), // 0: net.proto2.go.testdata.nameclashopen3.M0
-	(*M1)(nil), // 1: net.proto2.go.testdata.nameclashopen3.M1
-	(*M2)(nil), // 2: net.proto2.go.testdata.nameclashopen3.M2
-	(*M3)(nil), // 3: net.proto2.go.testdata.nameclashopen3.M3
-	(*M4)(nil), // 4: net.proto2.go.testdata.nameclashopen3.M4
-	(*M5)(nil), // 5: net.proto2.go.testdata.nameclashopen3.M5
-	(*M6)(nil), // 6: net.proto2.go.testdata.nameclashopen3.M6
-	(*M7)(nil), // 7: net.proto2.go.testdata.nameclashopen3.M7
-	(*M8)(nil), // 8: net.proto2.go.testdata.nameclashopen3.M8
-	(*M9)(nil), // 9: net.proto2.go.testdata.nameclashopen3.M9
+	(*M0)(nil),  // 0: net.proto2.go.testdata.nameclashopen3.M0
+	(*M1)(nil),  // 1: net.proto2.go.testdata.nameclashopen3.M1
+	(*M2)(nil),  // 2: net.proto2.go.testdata.nameclashopen3.M2
+	(*M3)(nil),  // 3: net.proto2.go.testdata.nameclashopen3.M3
+	(*M4)(nil),  // 4: net.proto2.go.testdata.nameclashopen3.M4
+	(*M5)(nil),  // 5: net.proto2.go.testdata.nameclashopen3.M5
+	(*M6)(nil),  // 6: net.proto2.go.testdata.nameclashopen3.M6
+	(*M7)(nil),  // 7: net.proto2.go.testdata.nameclashopen3.M7
+	(*M8)(nil),  // 8: net.proto2.go.testdata.nameclashopen3.M8
+	(*M9)(nil),  // 9: net.proto2.go.testdata.nameclashopen3.M9
+	(*M21)(nil), // 10: net.proto2.go.testdata.nameclashopen3.M21
 }
 var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_depIdxs = []int32{
 	0,  // 0: net.proto2.go.testdata.nameclashopen3.M1.foo:type_name -> net.proto2.go.testdata.nameclashopen3.M0
@@ -1046,7 +1111,7 @@ func file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_init(
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_open3_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

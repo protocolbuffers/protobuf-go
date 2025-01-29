@@ -36,7 +36,7 @@ import (
 
 type M0 struct {
 	state         protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_I1 int32                  `protobuf:"varint,1,opt,name=i1"`
+	xxx_hidden_I1 int32                  `protobuf:"varint,1,opt,name=i1,proto3"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -93,9 +93,9 @@ func (b0 M0_builder) Build() *M0 {
 
 type M1 struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo"`
-	xxx_hidden_GetFoo_   *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo"`
-	xxx_hidden_GetGetFoo *M0                    `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo"`
+	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
+	xxx_hidden_GetFoo_   *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3"`
+	xxx_hidden_GetGetFoo *M0                    `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo,proto3"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -221,9 +221,9 @@ func (b0 M1_builder) Build() *M1 {
 
 type M2 struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_GetGetFoo *M0                    `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo"`
-	xxx_hidden_GetFoo_   *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo"`
-	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_GetGetFoo *M0                    `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo,proto3"`
+	xxx_hidden_GetFoo_   *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3"`
+	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -349,9 +349,9 @@ func (b0 M2_builder) Build() *M2 {
 
 type M3 struct {
 	state                 protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_GetFoo     *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo"`
-	xxx_hidden_GetGetFoo_ *M0                    `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo"`
-	xxx_hidden_Foo_       *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_GetFoo     *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3"`
+	xxx_hidden_GetGetFoo_ *M0                    `protobuf:"bytes,3,opt,name=get_get_foo,json=getGetFoo,proto3"`
+	xxx_hidden_Foo_       *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -477,9 +477,9 @@ func (b0 M3_builder) Build() *M3 {
 
 type M4 struct {
 	state                 protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_GetFoo     *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo"`
+	xxx_hidden_GetFoo     *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3"`
 	xxx_hidden_GetGetFoo_ isM4_GetGetFoo_        `protobuf_oneof:"get_get_foo"`
-	xxx_hidden_Foo_       *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo_       *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -657,16 +657,16 @@ type isM4_GetGetFoo_ interface {
 }
 
 type m4_GetGetGetFoo struct {
-	GetGetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_get_foo,json=getGetGetFoo,oneof"`
+	GetGetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_get_foo,json=getGetGetFoo,proto3,oneof"`
 }
 
 func (*m4_GetGetGetFoo) isM4_GetGetFoo_() {}
 
 type M5 struct {
 	state                   protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_GetFoo       *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo"`
+	xxx_hidden_GetFoo       *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3"`
 	xxx_hidden_GetGetGetFoo isM5_GetGetGetFoo      `protobuf_oneof:"get_get_get_foo"`
-	xxx_hidden_Foo_         *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo_         *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
 }
@@ -845,7 +845,7 @@ type isM5_GetGetGetFoo interface {
 }
 
 type m5_GetGetFoo_ struct {
-	GetGetFoo_ int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,oneof"`
+	GetGetFoo_ int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,proto3,oneof"`
 }
 
 func (*m5_GetGetFoo_) isM5_GetGetGetFoo() {}
@@ -853,8 +853,8 @@ func (*m5_GetGetFoo_) isM5_GetGetGetFoo() {}
 type M6 struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_GetGetFoo isM6_GetGetFoo         `protobuf_oneof:"get_get_foo"`
-	xxx_hidden_GetFoo_   *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo"`
-	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_GetFoo_   *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3"`
+	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -1031,7 +1031,7 @@ type isM6_GetGetFoo interface {
 }
 
 type m6_GetGetGetFoo struct {
-	GetGetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_get_foo,json=getGetGetFoo,oneof"`
+	GetGetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_get_foo,json=getGetGetFoo,proto3,oneof"`
 }
 
 func (*m6_GetGetGetFoo) isM6_GetGetFoo() {}
@@ -1039,7 +1039,7 @@ func (*m6_GetGetGetFoo) isM6_GetGetFoo() {}
 type M7 struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_GetGetFoo isM7_GetGetFoo         `protobuf_oneof:"get_get_foo"`
-	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -1226,11 +1226,11 @@ type isM7_GetGetFoo interface {
 }
 
 type m7_Bar struct {
-	Bar bool `protobuf:"varint,4,opt,name=bar,oneof"`
+	Bar bool `protobuf:"varint,4,opt,name=bar,proto3,oneof"`
 }
 
 type m7_GetFoo_ struct {
-	GetFoo_ int32 `protobuf:"varint,3,opt,name=get_foo,json=getFoo,oneof"`
+	GetFoo_ int32 `protobuf:"varint,3,opt,name=get_foo,json=getFoo,proto3,oneof"`
 }
 
 func (*m7_Bar) isM7_GetGetFoo() {}
@@ -1240,8 +1240,8 @@ func (*m7_GetFoo_) isM7_GetGetFoo() {}
 type M8 struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_GetGetGetFoo_ isM8_GetGetGetFoo_     `protobuf_oneof:"get_get_get_foo"`
-	xxx_hidden_GetFoo_       *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo"`
-	xxx_hidden_Foo           *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_GetFoo_       *M0                    `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3"`
+	xxx_hidden_Foo           *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
 }
@@ -1418,7 +1418,7 @@ type isM8_GetGetGetFoo_ interface {
 }
 
 type m8_GetGetFoo struct {
-	GetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,oneof"`
+	GetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,proto3,oneof"`
 }
 
 func (*m8_GetGetFoo) isM8_GetGetGetFoo_() {}
@@ -1426,7 +1426,7 @@ func (*m8_GetGetFoo) isM8_GetGetGetFoo_() {}
 type M9 struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_GetGetGetFoo_ isM9_GetGetGetFoo_     `protobuf_oneof:"get_get_get_foo"`
-	xxx_hidden_Foo           *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo           *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
 }
@@ -1613,11 +1613,11 @@ type isM9_GetGetGetFoo_ interface {
 }
 
 type m9_GetGetFoo struct {
-	GetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,oneof"`
+	GetGetFoo int32 `protobuf:"varint,3,opt,name=get_get_foo,json=getGetFoo,proto3,oneof"`
 }
 
 type m9_GetFoo_ struct {
-	GetFoo_ int32 `protobuf:"varint,2,opt,name=get_foo,json=getFoo,oneof"`
+	GetFoo_ int32 `protobuf:"varint,2,opt,name=get_foo,json=getFoo,proto3,oneof"`
 }
 
 func (*m9_GetGetFoo) isM9_GetGetGetFoo_() {}
@@ -1626,8 +1626,8 @@ func (*m9_GetFoo_) isM9_GetGetGetFoo_() {}
 
 type M10 struct {
 	state             protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo    *M0                    `protobuf:"bytes,1,opt,name=foo"`
-	xxx_hidden_SetFoo *M0                    `protobuf:"bytes,2,opt,name=set_foo,json=setFoo"`
+	xxx_hidden_Foo    *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
+	xxx_hidden_SetFoo *M0                    `protobuf:"bytes,2,opt,name=set_foo,json=setFoo,proto3"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -1724,7 +1724,7 @@ func (b0 M10_builder) Build() *M10 {
 
 type M11 struct {
 	state             protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo    *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo    *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	xxx_hidden_SetFoo isM11_SetFoo           `protobuf_oneof:"set_foo"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
@@ -1870,14 +1870,14 @@ type isM11_SetFoo interface {
 }
 
 type m11_SetSetFoo struct {
-	SetSetFoo int32 `protobuf:"varint,2,opt,name=set_set_foo,json=setSetFoo,oneof"`
+	SetSetFoo int32 `protobuf:"varint,2,opt,name=set_set_foo,json=setSetFoo,proto3,oneof"`
 }
 
 func (*m11_SetSetFoo) isM11_SetFoo() {}
 
 type M12 struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	xxx_hidden_SetSetFoo isM12_SetSetFoo        `protobuf_oneof:"set_set_foo"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
@@ -2023,15 +2023,15 @@ type isM12_SetSetFoo interface {
 }
 
 type m12_SetFoo struct {
-	SetFoo int32 `protobuf:"varint,2,opt,name=set_foo,json=setFoo,oneof"`
+	SetFoo int32 `protobuf:"varint,2,opt,name=set_foo,json=setFoo,proto3,oneof"`
 }
 
 func (*m12_SetFoo) isM12_SetSetFoo() {}
 
 type M13 struct {
 	state             protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo    *M0                    `protobuf:"bytes,1,opt,name=foo"`
-	xxx_hidden_HasFoo *M0                    `protobuf:"bytes,2,opt,name=has_foo,json=hasFoo"`
+	xxx_hidden_Foo    *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
+	xxx_hidden_HasFoo *M0                    `protobuf:"bytes,2,opt,name=has_foo,json=hasFoo,proto3"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -2128,7 +2128,7 @@ func (b0 M13_builder) Build() *M13 {
 
 type M14 struct {
 	state             protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo    *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo    *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	xxx_hidden_HasFoo isM14_HasFoo           `protobuf_oneof:"has_foo"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
@@ -2275,14 +2275,14 @@ type isM14_HasFoo interface {
 }
 
 type m14_HasHasFoo struct {
-	HasHasFoo int32 `protobuf:"varint,2,opt,name=has_has_foo,json=hasHasFoo,oneof"`
+	HasHasFoo int32 `protobuf:"varint,2,opt,name=has_has_foo,json=hasHasFoo,proto3,oneof"`
 }
 
 func (*m14_HasHasFoo) isM14_HasFoo() {}
 
 type M15 struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo       *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	xxx_hidden_HasHasFoo isM15_HasHasFoo        `protobuf_oneof:"has_has_foo"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
@@ -2429,15 +2429,15 @@ type isM15_HasHasFoo interface {
 }
 
 type m15_HasFoo struct {
-	HasFoo int32 `protobuf:"varint,2,opt,name=has_foo,json=hasFoo,oneof"`
+	HasFoo int32 `protobuf:"varint,2,opt,name=has_foo,json=hasFoo,proto3,oneof"`
 }
 
 func (*m15_HasFoo) isM15_HasHasFoo() {}
 
 type M16 struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo      *M0                    `protobuf:"bytes,1,opt,name=foo"`
-	xxx_hidden_ClearFoo *M0                    `protobuf:"bytes,2,opt,name=clear_foo,json=clearFoo"`
+	xxx_hidden_Foo      *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
+	xxx_hidden_ClearFoo *M0                    `protobuf:"bytes,2,opt,name=clear_foo,json=clearFoo,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -2534,7 +2534,7 @@ func (b0 M16_builder) Build() *M16 {
 
 type M17 struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo      *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo      *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	xxx_hidden_ClearFoo isM17_ClearFoo         `protobuf_oneof:"clear_foo"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
@@ -2681,14 +2681,14 @@ type isM17_ClearFoo interface {
 }
 
 type m17_ClearClearFoo struct {
-	ClearClearFoo int32 `protobuf:"varint,2,opt,name=clear_clear_foo,json=clearClearFoo,oneof"`
+	ClearClearFoo int32 `protobuf:"varint,2,opt,name=clear_clear_foo,json=clearClearFoo,proto3,oneof"`
 }
 
 func (*m17_ClearClearFoo) isM17_ClearFoo() {}
 
 type M18 struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo           *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo           *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	xxx_hidden_ClearClearFoo isM18_ClearClearFoo    `protobuf_oneof:"clear_clear_foo"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
@@ -2835,14 +2835,14 @@ type isM18_ClearClearFoo interface {
 }
 
 type m18_ClearFoo struct {
-	ClearFoo int32 `protobuf:"varint,2,opt,name=clear_foo,json=clearFoo,oneof"`
+	ClearFoo int32 `protobuf:"varint,2,opt,name=clear_foo,json=clearFoo,proto3,oneof"`
 }
 
 func (*m18_ClearFoo) isM18_ClearClearFoo() {}
 
 type M19 struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo           *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo           *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	xxx_hidden_WhichWhichFoo isM19_WhichWhichFoo    `protobuf_oneof:"which_which_foo"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
@@ -2989,14 +2989,14 @@ type isM19_WhichWhichFoo interface {
 }
 
 type m19_WhichFoo struct {
-	WhichFoo int32 `protobuf:"varint,2,opt,name=which_foo,json=whichFoo,oneof"`
+	WhichFoo int32 `protobuf:"varint,2,opt,name=which_foo,json=whichFoo,proto3,oneof"`
 }
 
 func (*m19_WhichFoo) isM19_WhichWhichFoo() {}
 
 type M20 struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Foo      *M0                    `protobuf:"bytes,1,opt,name=foo"`
+	xxx_hidden_Foo      *M0                    `protobuf:"bytes,1,opt,name=foo,proto3"`
 	xxx_hidden_WhichFoo isM20_WhichFoo         `protobuf_oneof:"which_foo"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
@@ -3143,10 +3143,95 @@ type isM20_WhichFoo interface {
 }
 
 type m20_WhichWhichFoo struct {
-	WhichWhichFoo int32 `protobuf:"varint,2,opt,name=which_which_foo,json=whichWhichFoo,oneof"`
+	WhichWhichFoo int32 `protobuf:"varint,2,opt,name=which_which_foo,json=whichWhichFoo,proto3,oneof"`
 }
 
 func (*m20_WhichWhichFoo) isM20_WhichFoo() {}
+
+type M21 struct {
+	state                protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_XFoo      string                 `protobuf:"bytes,1,opt,name=_foo,json=Foo,proto3"`
+	xxx_hidden_XFoo_     string                 `protobuf:"bytes,2,opt,name=X_foo,json=XFoo,proto3"`
+	xxx_hidden_GetXFoo__ string                 `protobuf:"bytes,3,opt,name=get_x_foo,json=getXFoo,proto3"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *M21) Reset() {
+	*x = M21{}
+	mi := &file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *M21) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*M21) ProtoMessage() {}
+
+func (x *M21) ProtoReflect() protoreflect.Message {
+	mi := &file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *M21) GetXFoo_1() string {
+	if x != nil {
+		return x.xxx_hidden_XFoo
+	}
+	return ""
+}
+
+func (x *M21) GetXFoo_2() string {
+	if x != nil {
+		return x.xxx_hidden_XFoo_
+	}
+	return ""
+}
+
+func (x *M21) GetGetXFoo() string {
+	if x != nil {
+		return x.xxx_hidden_GetXFoo__
+	}
+	return ""
+}
+
+func (x *M21) SetXFoo_1(v string) {
+	x.xxx_hidden_XFoo = v
+}
+
+func (x *M21) SetXFoo_2(v string) {
+	x.xxx_hidden_XFoo_ = v
+}
+
+func (x *M21) SetGetXFoo(v string) {
+	x.xxx_hidden_GetXFoo__ = v
+}
+
+type M21_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	XFoo_1  string
+	XFoo_2  string
+	GetXFoo string
+}
+
+func (b0 M21_builder) Build() *M21 {
+	m0 := &M21{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_XFoo = b.XFoo_1
+	x.xxx_hidden_XFoo_ = b.XFoo_2
+	x.xxx_hidden_GetXFoo__ = b.GetXFoo
+	return m0
+}
 
 var File_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto protoreflect.FileDescriptor
 
@@ -3354,17 +3439,20 @@ var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_rawD
 	0x63, 0x68, 0x5f, 0x77, 0x68, 0x69, 0x63, 0x68, 0x5f, 0x66, 0x6f, 0x6f, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x05, 0x48, 0x00, 0x52, 0x0d, 0x77, 0x68, 0x69, 0x63, 0x68, 0x57, 0x68, 0x69, 0x63, 0x68,
 	0x46, 0x6f, 0x6f, 0x42, 0x0b, 0x0a, 0x09, 0x77, 0x68, 0x69, 0x63, 0x68, 0x5f, 0x66, 0x6f, 0x6f,
-	0x42, 0x63, 0x5a, 0x57, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x67, 0x6f, 0x6c, 0x61, 0x6e,
-	0x67, 0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x63,
-	0x6d, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67, 0x65, 0x6e, 0x2d, 0x67, 0x6f,
-	0x2f, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x2f, 0x6e, 0x61, 0x6d, 0x65, 0x63, 0x6c,
-	0x61, 0x73, 0x68, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x5f, 0x63, 0x6c,
-	0x61, 0x73, 0x68, 0x5f, 0x6f, 0x70, 0x61, 0x71, 0x75, 0x65, 0x33, 0x92, 0x03, 0x07, 0xd2, 0x3e,
-	0x02, 0x10, 0x03, 0x08, 0x02, 0x62, 0x08, 0x65, 0x64, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x70,
-	0xe8, 0x07,
+	0x22, 0x49, 0x0a, 0x03, 0x4d, 0x32, 0x31, 0x12, 0x11, 0x0a, 0x04, 0x5f, 0x66, 0x6f, 0x6f, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x46, 0x6f, 0x6f, 0x12, 0x13, 0x0a, 0x05, 0x58, 0x5f,
+	0x66, 0x6f, 0x6f, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x58, 0x46, 0x6f, 0x6f, 0x12,
+	0x1a, 0x0a, 0x09, 0x67, 0x65, 0x74, 0x5f, 0x78, 0x5f, 0x66, 0x6f, 0x6f, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x07, 0x67, 0x65, 0x74, 0x58, 0x46, 0x6f, 0x6f, 0x42, 0x59, 0x5a, 0x57, 0x67,
+	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x67, 0x6f, 0x6c, 0x61, 0x6e, 0x67, 0x2e, 0x6f, 0x72, 0x67,
+	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x63, 0x6d, 0x64, 0x2f, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67, 0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2f, 0x74, 0x65, 0x73, 0x74,
+	0x64, 0x61, 0x74, 0x61, 0x2f, 0x6e, 0x61, 0x6d, 0x65, 0x63, 0x6c, 0x61, 0x73, 0x68, 0x2f, 0x74,
+	0x65, 0x73, 0x74, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x5f, 0x63, 0x6c, 0x61, 0x73, 0x68, 0x5f, 0x6f,
+	0x70, 0x61, 0x71, 0x75, 0x65, 0x33, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 })
 
-var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_goTypes = []any{
 	(*M0)(nil),  // 0: net.proto2.go.testdata.nameclashopaque3.M0
 	(*M1)(nil),  // 1: net.proto2.go.testdata.nameclashopaque3.M1
@@ -3387,6 +3475,7 @@ var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_goTy
 	(*M18)(nil), // 18: net.proto2.go.testdata.nameclashopaque3.M18
 	(*M19)(nil), // 19: net.proto2.go.testdata.nameclashopaque3.M19
 	(*M20)(nil), // 20: net.proto2.go.testdata.nameclashopaque3.M20
+	(*M21)(nil), // 21: net.proto2.go.testdata.nameclashopaque3.M21
 }
 var file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_depIdxs = []int32{
 	0,  // 0: net.proto2.go.testdata.nameclashopaque3.M1.foo:type_name -> net.proto2.go.testdata.nameclashopaque3.M0
@@ -3484,7 +3573,7 @@ func file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_ini
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_rawDesc), len(file_cmd_protoc_gen_go_testdata_nameclash_test_name_clash_opaque3_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
