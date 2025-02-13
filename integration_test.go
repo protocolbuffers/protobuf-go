@@ -40,19 +40,19 @@ var (
 		// This matches the version policy of the Google Cloud Client Libraries:
 		// https://cloud.google.com/go/getting-started/supported-go-versions
 		return []string{
-			"1.21.13",
-			"1.22.6",
-			"1.23.0",
+			"1.22.12",
+			"1.23.6",
+			"1.24.0",
 		}
 	}()
 	golangLatest = golangVersions[len(golangVersions)-1]
 
-	staticcheckVersion = "2024.1.1"
+	staticcheckVersion = "2025.1"
 	staticcheckSHA256s = map[string]string{
-		"darwin/amd64": "b67380b84b81d5765b478b7ad888dd7ce53b2c0861103bafa946ac84dc9244ce",
-		"darwin/arm64": "09cb10e4199f7c6356c2ed5dc45e877c3087ef775d84d39338b52e1a94866074",
-		"linux/386":    "0225fd8b5cf6c762f9c0aedf1380ed4df576d1d54fb68691be895889e10faf0b",
-		"linux/amd64":  "6e9398fcaff2b36e1d15e84a647a3a14733b7c2dd41187afa2c182a4c3b32180",
+		"darwin/amd64": "b9c82a0bdcf0bd7b5c46524d7e58323f17998b2e15ecacba608ac21be9fa345d",
+		"darwin/arm64": "1fc58b389de90e1e220fd23489dc685fc3e6435266f3c20c914f56a98f99844c",
+		"linux/386":    "58f7e465f7c15f70cea0b940e530826031d414b37ebdd40b073b2ca215171b42",
+		"linux/amd64":  "b0f4a46bab253bda0d9e874abcd988453c95f3ed849e617c34123c37c11a0604",
 	}
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
