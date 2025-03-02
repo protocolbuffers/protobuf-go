@@ -853,6 +853,16 @@ func TestClone(t *testing.T) {
 	}
 }
 
+func TestCloneOf(t *testing.T) {
+	want := &testpb.TestAllTypes{
+		OptionalInt32: proto.Int32(1),
+	}
+	got := proto.CloneOf(want)
+	if !proto.Equal(got, want) {
+		t.Errorf("Clone(src) != src:\n got %v\nwant %v", got, want)
+	}
+}
+
 // mutateValue changes a Value, returning a new value.
 //
 // For scalar values, it returns a value different from the input.
