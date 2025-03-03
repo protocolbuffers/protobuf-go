@@ -227,6 +227,9 @@ func (mi *MessageInfo) unmarshalPointerEager(b []byte, p pointer, groupTag proto
 			if !opts.DiscardUnknown() && mi.unknownOffset.IsValid() {
 				u := mi.mutableUnknownBytes(p)
 				*u = protowire.AppendTag(*u, num, wtyp)
+				if n > len(b) {
+					return out, errDecode
+				}
 				*u = append(*u, b[:n]...)
 			}
 		}
