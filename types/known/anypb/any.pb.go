@@ -284,8 +284,8 @@ func UnmarshalTo(src *Any, dst proto.Message, opts proto.UnmarshalOptions) error
 		return protoimpl.X.NewError("invalid nil source message")
 	}
 	if !src.MessageIs(dst) {
-		got := dst.ProtoReflect().Descriptor().FullName()
-		want := src.MessageName()
+		want := dst.ProtoReflect().Descriptor().FullName()
+		got := src.MessageName()
 		return protoimpl.X.NewError("mismatched message type: got %q, want %q", got, want)
 	}
 	return opts.Unmarshal(src.GetValue(), dst)
