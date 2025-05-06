@@ -599,29 +599,28 @@ func (mi *MessageInfo) present(p pointer, index uint32) bool {
 	return p.Apply(mi.presenceOffset).PresenceInfo().Present(index)
 }
 
-// usePresenceForField implements the somewhat intricate logic of when
-// the presence bitmap is used for a field.  The main logic is that a
-// field that is optional or that can be lazy will use the presence
-// bit, but for proto2, also maps have a presence bit. It also records
-// if the field can ever be lazy, which is true if we have a
-// lazyOffset and the field is a message or a slice of messages. A
-// field that is lazy will always need a presence bit.  Oneofs are not
-// lazy and do not use presence, unless they are a synthetic oneof,
-// which is a proto3 optional field. For proto3 optionals, we use the
-// presence and they can also be lazy when applicable (a message).
+// usePresenceForField reports whether the specified field gets an entry in the
+// presence bitmap.
 func usePresenceForField(si opaqueStructInfo, fd protoreflect.FieldDescriptor) (usePresence, canBeLazy bool) {
-	hasLazyField := fd.(interface{ IsLazy() bool }).IsLazy()
-
-	// Non-oneof scalar fields with explicit field presence use the presence array.
-	usesPresenceArray := fd.HasPresence() && fd.Message() == nil && (fd.ContainingOneof() == nil || fd.ContainingOneof().IsSynthetic())
 	switch {
 	case fd.ContainingOneof() != nil && !fd.ContainingOneof().IsSynthetic():
+		// Oneof fields never use the presence bitmap.
+		//
+		// Synthetic oneofs are an exception: Those are used to implement proto3
+		// optional fields and hence should follow non-oneof field semantics.
 		return false, false
+
 	case fd.IsMap():
+		// Map-typed fields never use the presence bitmap.
 		return false, false
+
 	case fd.Kind() == protoreflect.MessageKind || fd.Kind() == protoreflect.GroupKind:
-		return hasLazyField, hasLazyField
+		// Lazy fields always use the presence bitmap (only messages can be lazy).
+		isLazy := fd.(interface{ IsLazy() bool }).IsLazy()
+		return isLazy, isLazy
+
 	default:
-		return usesPresenceArray || (hasLazyField && fd.HasPresence()), false
+		// If the field has presence, use the presence bitmap.
+		return fd.HasPresence(), false
 	}
 }
