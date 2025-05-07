@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync/atomic"
 
+	"google.golang.org/protobuf/internal/filedesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -53,7 +54,7 @@ func opaqueInitHook(mi *MessageInfo) bool {
 		fd := fds.Get(i)
 		fs := si.fieldsByNumber[fd.Number()]
 		var fi fieldInfo
-		usePresence, _ := usePresenceForField(si, fd)
+		usePresence, _ := filedesc.UsePresenceForField(fd)
 
 		switch {
 		case fd.ContainingOneof() != nil && !fd.ContainingOneof().IsSynthetic():
@@ -597,30 +598,4 @@ func (mi *MessageInfo) clearPresent(p pointer, index uint32) {
 
 func (mi *MessageInfo) present(p pointer, index uint32) bool {
 	return p.Apply(mi.presenceOffset).PresenceInfo().Present(index)
-}
-
-// usePresenceForField reports whether the specified field gets an entry in the
-// presence bitmap.
-func usePresenceForField(si opaqueStructInfo, fd protoreflect.FieldDescriptor) (usePresence, canBeLazy bool) {
-	switch {
-	case fd.ContainingOneof() != nil && !fd.ContainingOneof().IsSynthetic():
-		// Oneof fields never use the presence bitmap.
-		//
-		// Synthetic oneofs are an exception: Those are used to implement proto3
-		// optional fields and hence should follow non-oneof field semantics.
-		return false, false
-
-	case fd.IsMap():
-		// Map-typed fields never use the presence bitmap.
-		return false, false
-
-	case fd.Kind() == protoreflect.MessageKind || fd.Kind() == protoreflect.GroupKind:
-		// Lazy fields always use the presence bitmap (only messages can be lazy).
-		isLazy := fd.(interface{ IsLazy() bool }).IsLazy()
-		return isLazy, isLazy
-
-	default:
-		// If the field has presence, use the presence bitmap.
-		return fd.HasPresence(), false
-	}
 }
