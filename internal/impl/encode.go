@@ -5,6 +5,7 @@
 package impl
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"sync/atomic"
@@ -12,6 +13,7 @@ import (
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/internal/protolazy"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
@@ -196,7 +198,7 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 
 				b, err = f.funcs.marshal(b, fptr, f, opts)
 				if err != nil {
-					return b, err
+					return b, wrapMarshalErrorForField(err, mi.Desc, f.num)
 				}
 				continue
 			} else if f.isPointer && fptr.Elem().IsNil() {
@@ -204,7 +206,7 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 			}
 			b, err = f.funcs.marshal(b, fptr, f, opts)
 			if err != nil {
-				return b, err
+				return b, wrapMarshalErrorForField(err, mi.Desc, f.num)
 			}
 			continue
 		}
@@ -214,7 +216,7 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 		}
 		b, err = f.funcs.marshal(b, fptr, f, opts)
 		if err != nil {
-			return b, err
+			return b, wrapMarshalErrorForField(err, mi.Desc, f.num)
 		}
 	}
 	if mi.unknownOffset.IsValid() && !mi.isMessageSet {
@@ -223,6 +225,16 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 		}
 	}
 	return b, nil
+}
+
+func wrapMarshalErrorForField(err error, desc protoreflect.MessageDescriptor, num protoreflect.FieldNumber) error {
+	if err == nil {
+		return nil
+	}
+	if int(num) >= desc.Fields().Len() {
+		return fmt.Errorf("failed to marshal %q: %w",  desc.FullName(), err)
+	}
+	return fmt.Errorf("failed to marshal %q: %w",  desc.Fields().Get(int(num)).FullName(), err)
 }
 
 // fullyLazyExtensions returns true if we should attempt to keep extensions lazy over size and marshal.

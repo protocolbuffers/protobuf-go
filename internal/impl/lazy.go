@@ -115,7 +115,7 @@ func (mi *MessageInfo) unmarshalField(b []byte, p pointer, f *coderFieldInfo, la
 				continue
 			}
 			if err != errUnknown {
-				return err
+				return wrapUnmarshalErrorForField(err, mi.Desc, f)
 			}
 		}
 		n := protowire.ConsumeFieldValue(num, wtyp, b)
@@ -356,7 +356,8 @@ func (mi *MessageInfo) unmarshalPointerLazy(b []byte, p pointer, groupTag protow
 		}
 		if err != nil {
 			if err != errUnknown {
-				return out, err
+				return out, wrapUnmarshalErrorForField(err, mi.Desc, f)
+
 			}
 			n = protowire.ConsumeFieldValue(num, wtyp, b)
 			if n < 0 {
