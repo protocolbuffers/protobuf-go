@@ -5,6 +5,7 @@
 package impl
 
 import (
+	"fmt"
 	"reflect"
 
 	"google.golang.org/protobuf/encoding/protowire"
@@ -14,11 +15,24 @@ import (
 	"google.golang.org/protobuf/runtime/protoiface"
 )
 
-type errInvalidUTF8 struct{}
+type errInvalidUTF8 struct{
+	message string
+	filedName string
+}
 
-func (errInvalidUTF8) Error() string     { return "string field contains invalid UTF-8" }
+func (e errInvalidUTF8) Error() string     { return fmt.Sprintf("string field %s:%s contains invalid UTF-8", e.message, e.filedName) }
 func (errInvalidUTF8) InvalidUTF8() bool { return true }
 func (errInvalidUTF8) Unwrap() error     { return errors.Error }
+
+func ErrInvalidUTF8(f *coderFieldInfo) errInvalidUTF8 {
+	if f.ft.Kind() != reflect.Struct {
+		return errInvalidUTF8{}
+	}
+	return errInvalidUTF8{
+		message: f.ft.Name(),
+		filedName: f.ft.Field(int(f.num)).Name,
+	}
+}
 
 // initOneofFieldCoders initializes the fast-path functions for the fields in a oneof.
 //

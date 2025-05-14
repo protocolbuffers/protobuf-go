@@ -133,7 +133,7 @@ func append{{.Name}}ValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts ma
 	b = protowire.AppendVarint(b, f.wiretag)
 	{{template "Append" .}}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -148,7 +148,7 @@ func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *c
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
 	out.n = n
@@ -220,7 +220,7 @@ func append{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, f *coderFieldInfo, o
 	b = protowire.AppendVarint(b, f.wiretag)
 	{{template "Append" .}}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -236,7 +236,7 @@ func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp protowire.Type
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
 	out.n = n
@@ -305,7 +305,7 @@ func append{{.Name}}PtrValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts
 	b = protowire.AppendVarint(b, f.wiretag)
 	{{template "Append" .}}
 	if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -320,7 +320,7 @@ func consume{{.Name}}PtrValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	vp := p.{{.GoType.PointerMethod}}Ptr()
 	if *vp == nil {
@@ -425,7 +425,7 @@ func append{{.Name}}SliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, op
 		b = protowire.AppendVarint(b, f.wiretag)
 		{{template "Append" .}}
 		if !utf8.Valid{{if eq .Name "String"}}String{{end}}(v) {
-			return b, errInvalidUTF8{}
+			return b, ErrInvalidUTF8(f)
 		}
 	}
 	return b, nil
@@ -441,7 +441,7 @@ func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type,
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	sp := p.{{.GoType.PointerMethod}}Slice()
 	*sp = append(*sp, {{.ToGoType}})
@@ -550,7 +550,7 @@ func append{{.Name}}ValueValidateUTF8(b []byte, v protoreflect.Value, wiretag ui
 	b = protowire.AppendVarint(b, wiretag)
 	{{template "AppendValue" .}}
 	if !utf8.ValidString({{.FromValue}}) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -565,7 +565,7 @@ func consume{{.Name}}ValueValidateUTF8(b []byte, _ protoreflect.Value, _ protowi
 		return protoreflect.Value{}, out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return protoreflect.Value{}, out, errInvalidUTF8{}
+		return protoreflect.Value{}, out, ErrInvalidUTF8(f)
 	}
 	out.n = n
 	return {{.ToValue}}, out, nil

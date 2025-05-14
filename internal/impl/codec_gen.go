@@ -5044,7 +5044,7 @@ func appendStringValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts marsh
 	b = protowire.AppendVarint(b, f.wiretag)
 	b = protowire.AppendString(b, v)
 	if !utf8.ValidString(v) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -5059,7 +5059,7 @@ func consumeStringValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *code
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	*p.String() = string(v)
 	out.n = n
@@ -5112,7 +5112,7 @@ func appendStringNoZeroValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts
 	b = protowire.AppendVarint(b, f.wiretag)
 	b = protowire.AppendString(b, v)
 	if !utf8.ValidString(v) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -5172,7 +5172,7 @@ func appendStringPtrValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts ma
 	b = protowire.AppendVarint(b, f.wiretag)
 	b = protowire.AppendString(b, v)
 	if !utf8.ValidString(v) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -5187,7 +5187,7 @@ func consumeStringPtrValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *c
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	vp := p.StringPtr()
 	if *vp == nil {
@@ -5253,7 +5253,7 @@ func appendStringSliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts 
 		b = protowire.AppendVarint(b, f.wiretag)
 		b = protowire.AppendString(b, v)
 		if !utf8.ValidString(v) {
-			return b, errInvalidUTF8{}
+			return b, ErrInvalidUTF8(f)
 		}
 	}
 	return b, nil
@@ -5269,7 +5269,7 @@ func consumeStringSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f 
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	sp := p.StringSlice()
 	*sp = append(*sp, string(v))
@@ -5433,7 +5433,7 @@ func appendBytesValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts marsha
 	b = protowire.AppendVarint(b, f.wiretag)
 	b = protowire.AppendBytes(b, v)
 	if !utf8.Valid(v) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -5448,7 +5448,7 @@ func consumeBytesValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coder
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	*p.Bytes() = append(emptyBuf[:], v...)
 	out.n = n
@@ -5516,7 +5516,7 @@ func appendBytesNoZeroValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts 
 	b = protowire.AppendVarint(b, f.wiretag)
 	b = protowire.AppendBytes(b, v)
 	if !utf8.Valid(v) {
-		return b, errInvalidUTF8{}
+		return b, ErrInvalidUTF8(f)
 	}
 	return b, nil
 }
@@ -5531,7 +5531,7 @@ func consumeBytesNoZeroValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f 
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	*p.Bytes() = append(([]byte)(nil), v...)
 	out.n = n
@@ -5593,7 +5593,7 @@ func appendBytesSliceValidateUTF8(b []byte, p pointer, f *coderFieldInfo, opts m
 		b = protowire.AppendVarint(b, f.wiretag)
 		b = protowire.AppendBytes(b, v)
 		if !utf8.Valid(v) {
-			return b, errInvalidUTF8{}
+			return b, ErrInvalidUTF8(f)
 		}
 	}
 	return b, nil
@@ -5609,7 +5609,7 @@ func consumeBytesSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *
 		return out, errDecode
 	}
 	if !utf8.Valid(v) {
-		return out, errInvalidUTF8{}
+		return out, ErrInvalidUTF8(f)
 	}
 	sp := p.BytesSlice()
 	*sp = append(*sp, append(emptyBuf[:], v...))
