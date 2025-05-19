@@ -344,17 +344,15 @@ func (mi *MessageInfo) fieldInfoForMessageListOpaqueNoPresence(si opaqueStructIn
 			if p.IsNil() {
 				return false
 			}
-			sp := p.Apply(fieldOffset).AtomicGetPointer()
-			if sp.IsNil() {
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			if rv.IsNil() {
 				return false
 			}
-			rv := sp.AsValueOf(fs.Type.Elem())
 			return rv.Elem().Len() > 0
 		},
 		clear: func(p pointer) {
-			sp := p.Apply(fieldOffset).AtomicGetPointer()
-			if !sp.IsNil() {
-				rv := sp.AsValueOf(fs.Type.Elem())
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			if !rv.IsNil() {
 				rv.Elem().Set(reflect.Zero(rv.Type().Elem()))
 			}
 		},
@@ -362,11 +360,10 @@ func (mi *MessageInfo) fieldInfoForMessageListOpaqueNoPresence(si opaqueStructIn
 			if p.IsNil() {
 				return conv.Zero()
 			}
-			sp := p.Apply(fieldOffset).AtomicGetPointer()
-			if sp.IsNil() {
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			if rv.IsNil() {
 				return conv.Zero()
 			}
-			rv := sp.AsValueOf(fs.Type.Elem())
 			if rv.Elem().Len() == 0 {
 				return conv.Zero()
 			}
