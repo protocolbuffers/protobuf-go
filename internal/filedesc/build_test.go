@@ -59,6 +59,13 @@ func TestInit(t *testing.T) {
 		// Support for weak fields has been removed.
 		descPkg.Append("FileDescriptorProto.weak_dependency"): true,
 
+		// TODO: Test option_dependency.
+		descPkg.Append("FileDescriptorProto.option_dependency"): true,
+
+		// Visibility is enforced in protoc, runtimes should not inspect this.
+		descPkg.Append("DescriptorProto.visibility"):     true,
+		descPkg.Append("EnumDescriptorProto.visibility"): true,
+
 		// Impossible to test proto3 optional in a proto2 file.
 		descPkg.Append("FieldDescriptorProto.proto3_optional"): true,
 

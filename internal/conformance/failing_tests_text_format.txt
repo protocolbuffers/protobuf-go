@@ -13,6 +13,10 @@ Recommended.Proto3.TextFormatInput.StringLiteralUnicodeEscapeSurrogatePairLongSh
 Required.Editions_Proto2.TextFormatInput.ClosedEnumFieldWithUnknownNumber                                          # Should have failed to parse, but didn't.
 Required.Editions_Proto3.TextFormatInput.FloatFieldNoNegativeOctal                                                 # Should have failed to parse, but didn't.
 Required.Editions_Proto3.TextFormatInput.FloatFieldNoOctal                                                         # Should have failed to parse, but didn't.
+Required.Editions_Proto3.TextFormatInput.Int32FieldTooLargeHex                                                     # Should have failed to parse, but didn't.
+Required.Editions_Proto3.TextFormatInput.Int64FieldTooLargeHex                                                     # Should have failed to parse, but didn't.
 Required.Proto2.TextFormatInput.ClosedEnumFieldWithUnknownNumber                                                   # Should have failed to parse, but didn't.
 Required.Proto3.TextFormatInput.FloatFieldNoNegativeOctal                                                          # Should have failed to parse, but didn't.
 Required.Proto3.TextFormatInput.FloatFieldNoOctal                                                                  # Should have failed to parse, but didn't.
+Required.Proto3.TextFormatInput.Int32FieldTooLargeHex                                                              # Should have failed to parse, but didn't.
+Required.Proto3.TextFormatInput.Int64FieldTooLargeHex                                                              # Should have failed to parse, but didn't.

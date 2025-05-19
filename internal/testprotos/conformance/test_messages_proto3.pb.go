@@ -246,6 +246,7 @@ func (EnumOnlyProto3_Bool) EnumDescriptor() ([]byte, []int) {
 type TestAllTypesProto3 struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Singular
+	// test [kotlin] comment
 	OptionalInt32          int32                             `protobuf:"varint,1,opt,name=optional_int32,json=optionalInt32,proto3" json:"optional_int32,omitempty"`
 	OptionalInt64          int64                             `protobuf:"varint,2,opt,name=optional_int64,json=optionalInt64,proto3" json:"optional_int64,omitempty"`
 	OptionalUint32         uint32                            `protobuf:"varint,3,opt,name=optional_uint32,json=optionalUint32,proto3" json:"optional_uint32,omitempty"`

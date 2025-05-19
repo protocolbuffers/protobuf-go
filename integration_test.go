@@ -33,7 +33,7 @@ var (
 	regenerate   = flag.Bool("regenerate", false, "regenerate files")
 	buildRelease = flag.Bool("buildRelease", false, "build release binaries")
 
-	protobufVersion = "30.0"
+	protobufVersion = "31.0"
 
 	golangVersions = func() []string {
 		// Version policy: oldest supported version of Go, plus the version before that.
@@ -41,8 +41,8 @@ var (
 		// https://cloud.google.com/go/getting-started/supported-go-versions
 		return []string{
 			"1.22.12",
-			"1.23.6",
-			"1.24.0",
+			"1.23.9",
+			"1.24.2",
 		}
 	}()
 	golangLatest = golangVersions[len(golangVersions)-1]
@@ -157,7 +157,7 @@ func TestIntegration(t *testing.T) {
 			runGo("ProtoLegacyRace", command{}, "go", "test", "-race", "-tags", "protolegacy", "./...")
 			runGo("ProtoLegacy", command{}, "go", "test", "-tags", "protolegacy", "./...")
 			runGo("ProtocGenGo", command{Dir: "cmd/protoc-gen-go/testdata"}, "go", "test")
-			runGo("Conformance", command{Dir: "internal/conformance"}, "go", "test", "-execute")
+			runGo("Conformance", command{Dir: "internal/conformance"}, "go", "test", "-tags", "protolegacy", "-execute")
 
 			// Only run the 32-bit compatibility tests for Linux;
 			// avoid Darwin since 10.15 dropped support i386 code execution.
@@ -520,6 +520,10 @@ File:
 		if err != nil {
 			t.Fatal(err)
 		}
+		// Files like test_messages_proto2_editions.pb.go start with a
+		// clang-format directive that has to go before the copyright header for
+		// technical reasons.
+		b = bytes.TrimPrefix(b, []byte("// clang-format off\n"))
 		for _, re := range copyrightRegex {
 			if loc := re.FindIndex(b); loc != nil && loc[0] == 0 {
 				continue File
