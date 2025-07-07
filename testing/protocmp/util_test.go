@@ -30,6 +30,14 @@ func TestEqual(t *testing.T) {
 
 	allTypesDesc := (*testpb.TestAllTypes)(nil).ProtoReflect().Descriptor()
 
+	type embedMessage struct {
+		*testpb.TestAllTypes
+		Extra int
+	}
+	type hasEmbedMessage struct {
+		Embed *embedMessage
+	}
+
 	// Test nil and empty messages of differing types.
 	tests = append(tests, []test{{
 		x:    (*testpb.TestAllTypes)(nil),
@@ -146,6 +154,49 @@ func TestEqual(t *testing.T) {
 		y:    struct{ M proto.Message }{dynamicpb.NewMessage(allTypesDesc)},
 		opts: cmp.Options{Transform()},
 		want: true,
+	}, {
+		x:    &hasEmbedMessage{},
+		y:    &hasEmbedMessage{},
+		opts: cmp.Options{Transform()},
+		want: true,
+	}, {
+		x: &hasEmbedMessage{
+			Embed: &embedMessage{
+				TestAllTypes: &testpb.TestAllTypes{
+					DefaultInt64: proto.Int64(10),
+				},
+				Extra: 10,
+			},
+		},
+		y: &hasEmbedMessage{
+			Embed: &embedMessage{
+				TestAllTypes: &testpb.TestAllTypes{
+					DefaultInt64: proto.Int64(20),
+				},
+				Extra: 10,
+			},
+		},
+		opts: cmp.Options{Transform()},
+		want: false,
+	}, {
+		x: &hasEmbedMessage{
+			Embed: &embedMessage{
+				TestAllTypes: &testpb.TestAllTypes{
+					DefaultInt64: proto.Int64(10),
+				},
+				Extra: 10,
+			},
+		},
+		y: &hasEmbedMessage{
+			Embed: &embedMessage{
+				TestAllTypes: &testpb.TestAllTypes{
+					DefaultInt64: proto.Int64(10),
+				},
+				Extra: 20,
+			},
+		},
+		opts: cmp.Options{Transform()},
+		want: false,
 	}}...)
 
 	// Test message values.
