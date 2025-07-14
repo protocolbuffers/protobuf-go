@@ -833,9 +833,6 @@ func (e encoder) marshalFieldMask(m protoreflect.Message) error {
 
 	for i := 0; i < list.Len(); i++ {
 		s := list.Get(i).String()
-		if !protoreflect.FullName(s).IsValid() {
-			return errors.New("%s contains invalid path: %q", genid.FieldMask_Paths_field_fullname, s)
-		}
 		cc := strs.JSONCamelCase(s)
 		paths = append(paths, cc)
 	}
@@ -863,9 +860,6 @@ func (d decoder) unmarshalFieldMask(m protoreflect.Message) error {
 
 	for _, s0 := range paths {
 		s := strs.JSONSnakeCase(s0)
-		if strings.Contains(s0, "_") || !protoreflect.FullName(s).IsValid() {
-			return d.newError(tok.Pos(), "%v contains invalid path: %q", genid.FieldMask_Paths_field_fullname, s0)
-		}
 		list.Append(protoreflect.ValueOfString(s))
 	}
 	return nil
