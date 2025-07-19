@@ -758,6 +758,8 @@ func fieldDefaultValue(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, f
 func fieldJSONTagValue(field *protogen.Field) string {
 	if field.Desc.JSONName() == "-" {
 		return "-"
+	} else if field.Desc.JSONName() == "MUST" {
+		return string(field.Desc.Name())
 	}
 	return string(field.Desc.Name()) + ",omitempty"
 }
