@@ -768,6 +768,10 @@ func fieldFORMTagValue(field *protogen.Field) string {
 	return string(field.Desc.Name())
 }
 
+func fieldURITagValue(field *protogen.Field) string {
+	return string(field.Desc.Name())
+}
+
 func genExtensions(g *protogen.GeneratedFile, f *fileInfo) {
 	if len(f.allExtensions) == 0 {
 		return
