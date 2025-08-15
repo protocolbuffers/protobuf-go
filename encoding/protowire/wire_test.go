@@ -9,6 +9,7 @@ import (
 	"encoding/hex"
 	"io"
 	"math"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -679,22 +680,13 @@ func TestZigZag(t *testing.T) {
 	}
 }
 
-// TODO(go1.23): use slices.Repeat
-var testvals = func() []uint64 {
-	// These values are representative for the values that we observe when
-	// running benchmarks extracted from Google production workloads.
-	vals := []uint64{
-		1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-		55, 66, 77, 88, 99, 100,
-		123456789, 98765432,
-	}
-	newslice := make([]uint64, 100*len(vals))
-	n := copy(newslice, vals)
-	for n < len(newslice) {
-		n += copy(newslice[n:], newslice[:n])
-	}
-	return newslice
-}()
+// These values are representative for the values that we observe when
+// running benchmarks extracted from Google production workloads.
+var testvals = slices.Repeat([]uint64{
+	1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+	55, 66, 77, 88, 99, 100,
+	123456789, 98765432,
+}, 100)
 
 func BenchmarkSizeVarint(b *testing.B) {
 	var total int

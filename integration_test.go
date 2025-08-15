@@ -40,9 +40,9 @@ var (
 		// This matches the version policy of the Google Cloud Client Libraries:
 		// https://cloud.google.com/go/getting-started/supported-go-versions
 		return []string{
-			"1.22.12",
-			"1.23.9",
-			"1.24.2",
+			"1.23.12",
+			"1.24.6",
+			"1.25.0",
 		}
 	}()
 	golangLatest = golangVersions[len(golangVersions)-1]

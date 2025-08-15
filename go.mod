@@ -1,6 +1,6 @@
 module google.golang.org/protobuf
 
-go 1.22
+go 1.23
 
 require (
 	github.com/golang/protobuf v1.5.0
