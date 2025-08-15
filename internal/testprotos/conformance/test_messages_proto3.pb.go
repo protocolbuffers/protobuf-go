@@ -1762,7 +1762,7 @@ var File_google_protobuf_test_messages_proto3_proto protoreflect.FileDescriptor
 
 const file_google_protobuf_test_messages_proto3_proto_rawDesc = "" +
 	"\n" +
-	"*google/protobuf/test_messages_proto3.proto\x12\x1dprotobuf_test_messages.proto3\x1a\x19google/protobuf/any.proto\x1a\x1egoogle/protobuf/duration.proto\x1a google/protobuf/field_mask.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto\"\x99[\n" +
+	"*google/protobuf/test_messages_proto3.proto\x12\x1dprotobuf_test_messages.proto3\x1a\x19google/protobuf/any.proto\x1a\x1egoogle/protobuf/duration.proto\x1a google/protobuf/field_mask.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto\"\xb3[\n" +
 	"\x12TestAllTypesProto3\x12%\n" +
 	"\x0eoptional_int32\x18\x01 \x01(\x05R\roptionalInt32\x12%\n" +
 	"\x0eoptional_int64\x18\x02 \x01(\x03R\roptionalInt64\x12'\n" +
@@ -2004,7 +2004,7 @@ const file_google_protobuf_test_messages_proto3_proto_rawDesc = "" +
 	"\x03MOO\x10\x02\x12\a\n" +
 	"\x03moo\x10\x02\x12\a\n" +
 	"\x03bAz\x10\x02\x1a\x02\x10\x01B\r\n" +
-	"\voneof_fieldJ\x06\b\xf5\x03\x10\xff\x03\"\x1e\n" +
+	"\voneof_fieldJ\x06\b\xf5\x03\x10\xff\x03J\b\b\xbf\x84=\x10\xc0\x84=R\x0ereserved_field\"\x1e\n" +
 	"\x0eForeignMessage\x12\f\n" +
 	"\x01c\x18\x01 \x01(\x05R\x01c\"\x16\n" +
 	"\x14NullHypothesisProto3\"/\n" +

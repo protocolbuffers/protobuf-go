@@ -3260,7 +3260,7 @@ var File_editions_golden_test_messages_proto2_editions_proto protoreflect.FileDe
 
 const file_editions_golden_test_messages_proto2_editions_proto_rawDesc = "" +
 	"\n" +
-	"3editions/golden/test_messages_proto2_editions.proto\x12&protobuf_test_messages.editions.proto2\"\x90]\n" +
+	"3editions/golden/test_messages_proto2_editions.proto\x12&protobuf_test_messages.editions.proto2\"\xaa]\n" +
 	"\x12TestAllTypesProto2\x12%\n" +
 	"\x0eoptional_int32\x18\x01 \x01(\x05R\roptionalInt32\x12%\n" +
 	"\x0eoptional_int64\x18\x02 \x01(\x03R\roptionalInt64\x12'\n" +
@@ -3512,7 +3512,7 @@ const file_editions_golden_test_messages_proto2_editions_proto_rawDesc = "" +
 	"\x03BAR\x10\x01\x12\a\n" +
 	"\x03BAZ\x10\x02\x12\x10\n" +
 	"\x03NEG\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01*\x05\bx\x10\xc9\x01B\r\n" +
-	"\voneof_fieldJ\x06\b\xe8\a\x10\x90N\"$\n" +
+	"\voneof_fieldJ\x06\b\xe8\a\x10\x90NJ\b\b\xbf\x84=\x10\xc0\x84=R\x0ereserved_field\"$\n" +
 	"\x14ForeignMessageProto2\x12\f\n" +
 	"\x01c\x18\x01 \x01(\x05R\x01c\"P\n" +
 	"\n" +
