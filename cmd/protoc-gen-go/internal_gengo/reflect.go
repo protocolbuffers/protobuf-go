@@ -254,11 +254,12 @@ func genFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileI
 	// That makes all these messages start with (1<<3 + 2[:LEN])=0x0a
 	// in the wire-format.
 	// See also https://protobuf.dev/programming-guides/encoding/#structure.
-	fmt.Fprint(g, "const ", rawDescVarName(f), `=""`)
+	fmt.Fprint(g, "const ", rawDescVarName(f), `=`)
 	for _, line := range bytes.SplitAfter(b, []byte{'\x0a'}) {
-		g.P("+")
 		fmt.Fprintf(g, "%q", line)
+		g.P("+")
 	}
+	g.P(`""`)
 	g.P()
 
 	if f.needRawDesc {
