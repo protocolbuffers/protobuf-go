@@ -16,6 +16,7 @@ import (
 	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/internal/protobuild"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/runtime/protoimpl"
 	"google.golang.org/protobuf/testing/protocmp"
 
 	lazytestpb "google.golang.org/protobuf/internal/testprotos/lazy"
@@ -70,43 +71,43 @@ func TestMessageSetLazy(t *testing.T) {
 
 	nh := roundtrip(t, h).(*lazytestpb.Holder)
 
-	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension.Field) {
+	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension) {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 
 	proto.Size(nh)
-	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension.Field) {
+	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension) {
 		t.Errorf("Extension unexpectedly initialized after Size")
 	}
 
 	proto.Marshal(nh)
-	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension.Field) {
+	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension) {
 		t.Errorf("Extension unexpectedly initialized after Marshal")
 	}
 
 	if !proto.HasExtension(nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension) {
 		t.Fatalf("Can't get extension")
 	}
-	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension.Field) {
+	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension) {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 
 	nh = roundtrip(t, nh).(*lazytestpb.Holder)
-	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension.Field) {
+	if extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension) {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 
 	if diff := cmp.Diff(h, nh, protocmp.Transform()); diff != "" {
 		t.Errorf("Got %+v, want %+v, diff:\n%s", nh, h, diff)
 	}
-	if got, want := extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Diff")
 	}
 	int := proto.GetExtension(nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension).(*lazytestpb.Rabbit)
 	if int.GetName() != "Judy" {
 		t.Errorf("Extension value \"Judy\" not retained, got: %v", int.GetName())
 	}
-	if got, want := extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, nh.GetData(), lazytestpb.E_Rabbit_MessageSetExtension), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 }
@@ -136,11 +137,11 @@ func TestExtensionLazy(t *testing.T) {
 
 	nt := roundtrip(t, tree).(*lazytestpb.Tree)
 
-	if extensionIsInitialized(t, nt, lazytestpb.E_Bat.Field) {
+	if extensionIsInitialized(t, nt, lazytestpb.E_Bat) {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	proto.Size(nt)
-	if extensionIsInitialized(t, nt, lazytestpb.E_Bat.Field) {
+	if extensionIsInitialized(t, nt, lazytestpb.E_Bat) {
 		t.Errorf("Extension unexpectedly initialized after Size")
 	}
 
@@ -148,7 +149,7 @@ func TestExtensionLazy(t *testing.T) {
 	if err != nil {
 		t.Fatalf("proto.Marshal(%+v) failed: %v", nt, err)
 	}
-	if extensionIsInitialized(t, nt, lazytestpb.E_Bat.Field) {
+	if extensionIsInitialized(t, nt, lazytestpb.E_Bat) {
 		t.Errorf("Extension unexpectedly initialized after Marshal")
 	}
 
@@ -156,20 +157,20 @@ func TestExtensionLazy(t *testing.T) {
 	if got, want := fox.GetSpecies(), spGH; want != got {
 		t.Errorf("Extension's Speices field not retained, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_Bat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_Bat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
-	if extensionIsInitialized(t, nt, lazytestpb.E_BatPup.Field) {
+	if extensionIsInitialized(t, nt, lazytestpb.E_BatPup) {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 	foxPup := proto.GetExtension(nt, lazytestpb.E_BatPup).(*lazytestpb.FlyingFox)
 	if got, want := foxPup.GetSpecies(), spP; want != got {
 		t.Errorf("Extension's Speices field not retained, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_Bat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_Bat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
-	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_BatPup.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_BatPup), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 
@@ -181,7 +182,7 @@ func TestExtensionLazy(t *testing.T) {
 	if diff := cmp.Diff(tree, rt, protocmp.Transform()); diff != "" {
 		t.Errorf("Got %+v, want %+v, diff:\n%s", rt, tree, diff)
 	}
-	if got, want := extensionIsInitialized(t, rt, lazytestpb.E_Bat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, rt, lazytestpb.E_Bat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Diff")
 	}
 
@@ -208,11 +209,11 @@ func TestExtensionNestedScopeLazy(t *testing.T) {
 
 	nt := roundtrip(t, tree).(*lazytestpb.Tree)
 
-	if extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat.Field) {
+	if extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat) {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	proto.Size(nt)
-	if extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat.Field) {
+	if extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat) {
 		t.Errorf("Extension unexpectedly initialized after Size")
 	}
 
@@ -220,7 +221,7 @@ func TestExtensionNestedScopeLazy(t *testing.T) {
 	if err != nil {
 		t.Fatalf("proto.Marshal(%+v) failed: %v", nt, err)
 	}
-	if extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat.Field) {
+	if extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat) {
 		t.Errorf("Extension unexpectedly initialized after Marshal")
 	}
 
@@ -228,7 +229,7 @@ func TestExtensionNestedScopeLazy(t *testing.T) {
 	if got, want := fox.GetSpecies(), spGH; want != got {
 		t.Errorf("Extension's Speices field not retained, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, nt, lazytestpb.E_BatNest_Bat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 
@@ -240,7 +241,7 @@ func TestExtensionNestedScopeLazy(t *testing.T) {
 	if diff := cmp.Diff(tree, rt, protocmp.Transform()); diff != "" {
 		t.Errorf("Got %+v, want %+v, diff:\n%s", rt, tree, diff)
 	}
-	if got, want := extensionIsInitialized(t, rt, lazytestpb.E_BatNest_Bat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, rt, lazytestpb.E_BatNest_Bat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Diff")
 	}
 }
@@ -261,7 +262,7 @@ func TestExtensionRepeatedMessageLazy(t *testing.T) {
 	}
 	mr := roundtrip(t, m).(*lazytestpb.Tree)
 
-	if extensionIsInitialized(t, mr, lazytestpb.E_BatPosse.Field) {
+	if extensionIsInitialized(t, mr, lazytestpb.E_BatPosse) {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 
@@ -270,7 +271,7 @@ func TestExtensionRepeatedMessageLazy(t *testing.T) {
 		t.Errorf("Extension is not present after setting: got %v, want %v", got, want)
 	}
 
-	if extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse.Field) {
+	if extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse) {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 
@@ -279,7 +280,7 @@ func TestExtensionRepeatedMessageLazy(t *testing.T) {
 	if got, want := foxPosse[0].GetSpecies(), spLE; got != want {
 		t.Errorf("Extension's Speices field, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 
@@ -291,14 +292,14 @@ func TestExtensionRepeatedMessageLazy(t *testing.T) {
 	}
 	mr = roundtrip(t, m).(*lazytestpb.Tree)
 
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_BatPosse.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_BatPosse), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 
 	if got, want := proto.HasExtension(mr, lazytestpb.E_BatPosse), false; got != want {
 		t.Errorf("Extension is not present after setting: got %v, want %v", got, want)
 	}
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_BatPosse.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_BatPosse), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 
@@ -306,7 +307,7 @@ func TestExtensionRepeatedMessageLazy(t *testing.T) {
 	if got, want := proto.HasExtension(mrr, lazytestpb.E_BatPosse), false; got != want {
 		t.Errorf("Extension is not present after setting: got %v, want %v", got, want)
 	}
-	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 
@@ -314,7 +315,7 @@ func TestExtensionRepeatedMessageLazy(t *testing.T) {
 	if got, want := len(foxPosse), 0; got != want {
 		t.Errorf("Extension field length, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_BatPosse), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 }
@@ -332,14 +333,14 @@ func TestExtensionIntegerLazy(t *testing.T) {
 	}
 	mr := roundtrip(t, m).(*lazytestpb.Tree)
 
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_IntegerBat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_IntegerBat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 
 	if got, want := proto.HasExtension(mr, lazytestpb.E_IntegerBat), true; got != want {
 		t.Errorf("Extension is not present after setting: got %v, want %v", got, want)
 	}
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_IntegerBat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_IntegerBat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 
@@ -347,7 +348,7 @@ func TestExtensionIntegerLazy(t *testing.T) {
 	if got, want := proto.GetExtension(mr, lazytestpb.E_IntegerBat).(uint32), iBat; got != want {
 		t.Errorf("Extension's integer field, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_IntegerBat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_IntegerBat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 }
@@ -365,7 +366,7 @@ func TestExtensionBinaryLazy(t *testing.T) {
 	}
 	mr := roundtrip(t, m).(*lazytestpb.Tree)
 	// A binary extension is never kept lazy
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_BinaryBat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_BinaryBat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	if got, want := proto.HasExtension(mr, lazytestpb.E_BinaryBat), true; got != want {
@@ -379,7 +380,7 @@ func TestExtensionBinaryLazy(t *testing.T) {
 		t.Errorf("Extension present after setting: got %v, want %v", got, want)
 	}
 	mr = roundtrip(t, m).(*lazytestpb.Tree)
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_BinaryBat.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_BinaryBat), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	if got, want := proto.HasExtension(mr, lazytestpb.E_BinaryBat), true; got != want {
@@ -405,28 +406,28 @@ func TestExtensionGroupLazy(t *testing.T) {
 	}
 	mr := roundtrip(t, m).(*lazytestpb.Tree)
 
-	if extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelle.Field) {
+	if extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelle) {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	if got, want := proto.HasExtension(mr, lazytestpb.E_Pipistrelle), true; got != want {
 		t.Errorf("Extension present after setting: got %v, want %v", got, want)
 	}
-	if extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelle.Field) {
+	if extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelle) {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 	mrr := roundtrip(t, mr).(*lazytestpb.Tree)
-	if extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelle.Field) {
+	if extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelle) {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	mrr = roundtrip(t, mr).(*lazytestpb.Tree)
-	if extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelle.Field) {
+	if extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelle) {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	pipistrelle := proto.GetExtension(mrr, lazytestpb.E_Pipistrelle).(*lazytestpb.Pipistrelle)
 	if got, want := pipistrelle.GetSpecies(), spF; got != want {
 		t.Errorf("Extension's Speices field, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelle.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelle), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 
@@ -438,13 +439,13 @@ func TestExtensionGroupLazy(t *testing.T) {
 	}
 	mr = roundtrip(t, m).(*lazytestpb.Tree)
 
-	if extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelles.Field) {
+	if extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelles) {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	if got, want := proto.HasExtension(mr, lazytestpb.E_Pipistrelles), true; got != want {
 		t.Errorf("Extension present after setting: got %v, want %v", got, want)
 	}
-	if extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelles.Field) {
+	if extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelles) {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 	mr = roundtrip(t, m).(*lazytestpb.Tree)
@@ -452,7 +453,7 @@ func TestExtensionGroupLazy(t *testing.T) {
 	if got, want := proto.HasExtension(mrr, lazytestpb.E_Pipistrelles), true; got != want {
 		t.Errorf("Extension present after setting: got %v, want %v", got, want)
 	}
-	if extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles.Field) {
+	if extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles) {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 	mrr = roundtrip(t, mr).(*lazytestpb.Tree)
@@ -460,7 +461,7 @@ func TestExtensionGroupLazy(t *testing.T) {
 	if got, want := pipistrelles[1].GetSpecies(), spR; got != want {
 		t.Errorf("Extension's Speices field, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 
@@ -472,27 +473,27 @@ func TestExtensionGroupLazy(t *testing.T) {
 	}
 	mr = roundtrip(t, m).(*lazytestpb.Tree)
 
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelles.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelles), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Unmarshal")
 	}
 	if got, want := proto.HasExtension(mr, lazytestpb.E_Pipistrelles), false; got != want {
 		t.Errorf("Extension present after setting: got %v, want %v", got, want)
 	}
-	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelles.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mr, lazytestpb.E_Pipistrelles), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 	mrr = roundtrip(t, mr).(*lazytestpb.Tree)
 	if got, want := proto.HasExtension(mrr, lazytestpb.E_Pipistrelles), false; got != want {
 		t.Errorf("Extension present after setting: got %v, want %v", got, want)
 	}
-	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Has")
 	}
 	noPipistrelles := proto.GetExtension(mrr, lazytestpb.E_Pipistrelles).([]*lazytestpb.Pipistrelles)
 	if got, want := len(noPipistrelles), 0; got != want {
 		t.Errorf("Extension's field length, want: %v, got: %v", want, got)
 	}
-	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles.Field), true; got != want {
+	if got, want := extensionIsInitialized(t, mrr, lazytestpb.E_Pipistrelles), true; got != want {
 		t.Errorf("Extension unexpectedly initialized after Get")
 	}
 }
@@ -581,7 +582,7 @@ func (p pointer) AsValueOf(t reflect.Type) reflect.Value {
 
 // Highly implementation dependent - uses unsafe pointers to figure
 // out if the lazyExtensionValue is initialized.
-func extensionIsInitialized(t *testing.T, data any, fieldNo int32) bool {
+func extensionIsInitialized(t *testing.T, data any, ei *protoimpl.ExtensionInfo) bool {
 	ext, ok := reflect.TypeOf(data).Elem().FieldByName("extensionFields")
 	if !ok {
 		t.Fatalf("Failed to retrieve offset of field \"extensionFields\".")
@@ -596,7 +597,7 @@ func extensionIsInitialized(t *testing.T, data any, fieldNo int32) bool {
 	if !ok {
 		t.Fatalf("Extension map has unexpected type.")
 	}
-	f := (*m)[fieldNo]
+	f := (*m)[int32(ei.TypeDescriptor().Number())]
 	// Here we rely on atomicOnce being the first field in the 'lazy' struct.
 	app, ok := pointerOfIface(&f).Apply(lazy.Offset).AsValueOf(reflect.TypeOf((*uint32)(nil))).Interface().(**uint32)
 	if !ok {
