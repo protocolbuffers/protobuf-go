@@ -198,6 +198,30 @@ func TestExtensionLazy(t *testing.T) {
 	}
 }
 
+func TestExtensionLazyDeterministic(t *testing.T) {
+	if !flags.LazyUnmarshalExtensions {
+		t.Skip("lazy extension unmarshaling disabled; not built with the protolegacy tag")
+	}
+
+	tree := proto.Clone(treeTemplate)
+	proto.SetExtension(tree, lazytestpb.E_Bat, &lazytestpb.FlyingFox{Species: &spGH})
+	proto.SetExtension(tree, lazytestpb.E_BatPup, &lazytestpb.FlyingFox{Species: &spP})
+
+	nt := roundtrip(t, tree).(*lazytestpb.Tree)
+
+	if extensionIsInitialized(t, nt, lazytestpb.E_Bat) {
+		t.Errorf("Extension unexpectedly initialized after Unmarshal")
+	}
+	proto.Size(nt)
+	if extensionIsInitialized(t, nt, lazytestpb.E_Bat) {
+		t.Errorf("Extension unexpectedly initialized after Size")
+	}
+	proto.MarshalOptions{Deterministic: true}.Size(nt)
+	if !extensionIsInitialized(t, nt, lazytestpb.E_Bat) {
+		t.Errorf("Extension unexpectedly not initialized after deterministic Size")
+	}
+}
+
 func TestExtensionNestedScopeLazy(t *testing.T) {
 	if !flags.LazyUnmarshalExtensions {
 		t.Skip("lazy extension unmarshaling disabled; not built with the protolegacy tag")
