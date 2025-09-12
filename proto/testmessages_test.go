@@ -1946,6 +1946,33 @@ var testInvalidMessages = []testProto{
 		}.Marshal(),
 	},
 	{
+		desc: "incorrectly terminated repeated group field",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
+		},
+		wire: protopack.Message{
+			protopack.Tag{46, protopack.StartGroupType},
+			protopack.Tag{45, protopack.EndGroupType}, // should be 46
+		}.Marshal(),
+	},
+	{
+		desc: "incorrectly double-terminated repeated group field",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
+			(*testpb.TestAllExtensions)(nil),
+			(*testeditionspb.TestAllExtensions)(nil),
+		},
+		wire: protopack.Message{
+			protopack.Tag{46, protopack.StartGroupType},
+			protopack.Tag{46, protopack.EndGroupType},
+			protopack.Tag{46, protopack.EndGroupType}, // extra
+		}.Marshal(),
+	},
+	{
 		desc: "invalid tag varint in map item",
 		decodeTo: []proto.Message{
 			(*testpb.TestAllTypes)(nil),
