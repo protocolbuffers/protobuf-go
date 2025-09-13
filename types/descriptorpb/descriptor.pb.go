@@ -2642,6 +2642,20 @@ func (x *FileOptions) GetUninterpretedOption() []*UninterpretedOption {
 	return nil
 }
 
+func (x *FileOptions) GetExtensions() map[string][]any {
+	out := make(map[string][]any)
+	for _, value := range x.extensionFields {
+		v := value.Value().List()
+		list := make([]any, v.Len())
+		for i := range v.Len() {
+			list[i] = v.Get(i).Interface()
+		}
+		t := value.Type().TypeDescriptor()
+		out[string(t.FullName().Parent().Name()) + "." + string(t.FullName().Name())] = list
+	}
+	return out
+}
+
 type MessageOptions struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Set true to use the old proto1 MessageSet wire format for extensions.
