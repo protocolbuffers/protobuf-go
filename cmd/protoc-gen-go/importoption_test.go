@@ -5,12 +5,14 @@
 package main
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	importoptionpb "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_option"
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/types/descriptorpb"
 
 	// Ensure the custom option is linked into this test binary.
@@ -53,4 +55,17 @@ func TestImportOption(t *testing.T) {
 		}
 	}
 
+	// Verify that the option imports aren't lost when converting to descriptor protos.
+	{
+		fd := md.ParentFile()
+		fdProto := protodesc.ToFileDescriptorProto(fd)
+		expectedOptionImports := []string{
+			"cmd/protoc-gen-go/testdata/import_option_custom/import_option_custom.proto",
+			"cmd/protoc-gen-go/testdata/import_option_unlinked/import_option_unlinked.proto",
+		}
+		if !reflect.DeepEqual(expectedOptionImports, fdProto.GetOptionDependency()) {
+			t.Errorf("option_dependency not correctly populated from protoreflect.FileDescriptor: want %v; got %v",
+				expectedOptionImports, fdProto.GetOptionDependency())
+		}
+	}
 }
