@@ -25,6 +25,7 @@ import (
 	"testing"
 	"unsafe"
 
+	"google.golang.org/protobuf/internal/impl"
 	"google.golang.org/protobuf/internal/test/race"
 	mixedpb "google.golang.org/protobuf/internal/testprotos/mixed"
 	testopaquepb "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_opaque"
@@ -313,6 +314,10 @@ func expandedLazy(m *testopaquepb.TestRequiredLazy) bool {
 // This test verifies all assumptions of TestParallellMarshalWithRequired
 // are (still) valid, to prevent the test from becoming a no-op (again).
 func TestParallellMarshalWithRequiredAssumptions(t *testing.T) {
+	if !impl.LazyEnabled() {
+		t.Skipf("this test requires lazy decoding to be enabled")
+	}
+
 	b, err := proto.Marshal(fillRequiredLazy())
 	if err != nil {
 		t.Fatal(err)
