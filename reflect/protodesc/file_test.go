@@ -1016,6 +1016,66 @@ func TestNewFilesImportCycle(t *testing.T) {
 	}
 }
 
+func TestNewFilesMissingImports(t *testing.T) {
+	tests := []struct {
+		label string
+		files []*descriptorpb.FileDescriptorProto
+	}{
+		{
+			label: "missing import",
+			files: []*descriptorpb.FileDescriptorProto{
+				mustParseFile(`
+					name: "import.proto"
+					message_type {
+						name: "MissingMessage"
+					}
+				`),
+				mustParseFile(`
+					name: "test.proto"
+					message_type: [{
+						name: "M"
+						field: [{name:"field" number:1 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:"MissingMessage"}]
+					}]
+				`),
+			},
+		},
+		{
+			label: "missing import via option_dependency",
+			files: []*descriptorpb.FileDescriptorProto{
+				mustParseFile(`
+					name: "import.proto"
+					message_type {
+						name: "MissingMessage"
+					}
+				`),
+				mustParseFile(`
+					name: "test.proto"
+					edition: EDITION_2024
+					option_dependency: "import.proto"
+					message_type: [{
+						name: "M"
+						field: [{name:"field" number:1 label:LABEL_OPTIONAL type:TYPE_MESSAGE type_name:"MissingMessage"}]
+					}]
+				`),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.label, func(t *testing.T) {
+			fdset := &descriptorpb.FileDescriptorSet{File: tt.files}
+
+			_, err := NewFiles(fdset)
+
+			if err == nil {
+				t.Fatal("NewFiles with missing import: success, want error")
+			}
+			if !strings.Contains(err.Error(), `cannot resolve`) {
+				t.Fatalf("NewFiles with missing import: got error \"%v\", want import error", err)
+			}
+		})
+	}
+}
+
 func TestSourceLocations(t *testing.T) {
 	fd := mustParseFile(`
 		name: "comments.proto"
