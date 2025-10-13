@@ -269,6 +269,13 @@ message TestManyMessageFieldsMessage {
   TestAllTypes f100 = 100;
 }
 
+message TestOneofWithRequired {
+  oneof oneof_field {
+    uint32 oneof_uint32 = 1;
+    TestRequired oneof_required = 2;
+  }
+}
+
 message ForeignMessage {
   int32 c = 1;
   int32 d = 2;

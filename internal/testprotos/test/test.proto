@@ -9,7 +9,6 @@ package goproto.proto.test;
 import public "internal/testprotos/test/test_public.proto";
 
 import "internal/testprotos/enums/enums.proto";
-import "internal/testprotos/required/required.proto";
 import "internal/testprotos/test/test_import.proto";
 
 option go_package = "google.golang.org/protobuf/internal/testprotos/test";
@@ -260,7 +259,7 @@ message TestDeprecatedMessage {
 message TestOneofWithRequired {
   oneof oneof_field {
     uint32 oneof_uint32 = 1;
-    goproto.proto.testrequired.Message oneof_required = 2;
+    TestRequired oneof_required = 2;
   }
 }
 

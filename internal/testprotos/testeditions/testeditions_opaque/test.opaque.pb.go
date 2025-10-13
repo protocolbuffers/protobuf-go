@@ -5320,6 +5320,173 @@ func (b0 TestManyMessageFieldsMessage_builder) Build() *TestManyMessageFieldsMes
 	return m0
 }
 
+type TestOneofWithRequired struct {
+	state                 protoimpl.MessageState             `protogen:"opaque.v1"`
+	xxx_hidden_OneofField isTestOneofWithRequired_OneofField `protobuf_oneof:"oneof_field"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *TestOneofWithRequired) Reset() {
+	*x = TestOneofWithRequired{}
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TestOneofWithRequired) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TestOneofWithRequired) ProtoMessage() {}
+
+func (x *TestOneofWithRequired) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *TestOneofWithRequired) GetOneofUint32() uint32 {
+	if x != nil {
+		if x, ok := x.xxx_hidden_OneofField.(*testOneofWithRequired_OneofUint32); ok {
+			return x.OneofUint32
+		}
+	}
+	return 0
+}
+
+func (x *TestOneofWithRequired) GetOneofRequired() *TestRequired {
+	if x != nil {
+		if x, ok := x.xxx_hidden_OneofField.(*testOneofWithRequired_OneofRequired); ok {
+			return x.OneofRequired
+		}
+	}
+	return nil
+}
+
+func (x *TestOneofWithRequired) SetOneofUint32(v uint32) {
+	x.xxx_hidden_OneofField = &testOneofWithRequired_OneofUint32{v}
+}
+
+func (x *TestOneofWithRequired) SetOneofRequired(v *TestRequired) {
+	if v == nil {
+		x.xxx_hidden_OneofField = nil
+		return
+	}
+	x.xxx_hidden_OneofField = &testOneofWithRequired_OneofRequired{v}
+}
+
+func (x *TestOneofWithRequired) HasOneofField() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_OneofField != nil
+}
+
+func (x *TestOneofWithRequired) HasOneofUint32() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.xxx_hidden_OneofField.(*testOneofWithRequired_OneofUint32)
+	return ok
+}
+
+func (x *TestOneofWithRequired) HasOneofRequired() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.xxx_hidden_OneofField.(*testOneofWithRequired_OneofRequired)
+	return ok
+}
+
+func (x *TestOneofWithRequired) ClearOneofField() {
+	x.xxx_hidden_OneofField = nil
+}
+
+func (x *TestOneofWithRequired) ClearOneofUint32() {
+	if _, ok := x.xxx_hidden_OneofField.(*testOneofWithRequired_OneofUint32); ok {
+		x.xxx_hidden_OneofField = nil
+	}
+}
+
+func (x *TestOneofWithRequired) ClearOneofRequired() {
+	if _, ok := x.xxx_hidden_OneofField.(*testOneofWithRequired_OneofRequired); ok {
+		x.xxx_hidden_OneofField = nil
+	}
+}
+
+const TestOneofWithRequired_OneofField_not_set_case case_TestOneofWithRequired_OneofField = 0
+const TestOneofWithRequired_OneofUint32_case case_TestOneofWithRequired_OneofField = 1
+const TestOneofWithRequired_OneofRequired_case case_TestOneofWithRequired_OneofField = 2
+
+func (x *TestOneofWithRequired) WhichOneofField() case_TestOneofWithRequired_OneofField {
+	if x == nil {
+		return TestOneofWithRequired_OneofField_not_set_case
+	}
+	switch x.xxx_hidden_OneofField.(type) {
+	case *testOneofWithRequired_OneofUint32:
+		return TestOneofWithRequired_OneofUint32_case
+	case *testOneofWithRequired_OneofRequired:
+		return TestOneofWithRequired_OneofRequired_case
+	default:
+		return TestOneofWithRequired_OneofField_not_set_case
+	}
+}
+
+type TestOneofWithRequired_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	// Fields of oneof xxx_hidden_OneofField:
+	OneofUint32   *uint32
+	OneofRequired *TestRequired
+	// -- end of xxx_hidden_OneofField
+}
+
+func (b0 TestOneofWithRequired_builder) Build() *TestOneofWithRequired {
+	m0 := &TestOneofWithRequired{}
+	b, x := &b0, m0
+	_, _ = b, x
+	if b.OneofUint32 != nil {
+		x.xxx_hidden_OneofField = &testOneofWithRequired_OneofUint32{*b.OneofUint32}
+	}
+	if b.OneofRequired != nil {
+		x.xxx_hidden_OneofField = &testOneofWithRequired_OneofRequired{b.OneofRequired}
+	}
+	return m0
+}
+
+type case_TestOneofWithRequired_OneofField protoreflect.FieldNumber
+
+func (x case_TestOneofWithRequired_OneofField) String() string {
+	md := file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[2].Descriptor()
+	if x == 0 {
+		return "not set"
+	}
+	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
+}
+
+type isTestOneofWithRequired_OneofField interface {
+	isTestOneofWithRequired_OneofField()
+}
+
+type testOneofWithRequired_OneofUint32 struct {
+	OneofUint32 uint32 `protobuf:"varint,1,opt,name=oneof_uint32,json=oneofUint32,oneof"`
+}
+
+type testOneofWithRequired_OneofRequired struct {
+	OneofRequired *TestRequired `protobuf:"bytes,2,opt,name=oneof_required,json=oneofRequired,oneof"`
+}
+
+func (*testOneofWithRequired_OneofUint32) isTestOneofWithRequired_OneofField() {}
+
+func (*testOneofWithRequired_OneofRequired) isTestOneofWithRequired_OneofField() {}
+
 type ForeignMessage struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_C           int32                  `protobuf:"varint,1,opt,name=c"`
@@ -5332,7 +5499,7 @@ type ForeignMessage struct {
 
 func (x *ForeignMessage) Reset() {
 	*x = ForeignMessage{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[2]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5344,7 +5511,7 @@ func (x *ForeignMessage) String() string {
 func (*ForeignMessage) ProtoMessage() {}
 
 func (x *ForeignMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[2]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5436,7 +5603,7 @@ type TestRequired struct {
 
 func (x *TestRequired) Reset() {
 	*x = TestRequired{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[3]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5448,7 +5615,7 @@ func (x *TestRequired) String() string {
 func (*TestRequired) ProtoMessage() {}
 
 func (x *TestRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[3]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5512,7 +5679,7 @@ type TestRequiredForeign struct {
 
 func (x *TestRequiredForeign) Reset() {
 	*x = TestRequiredForeign{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[4]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5524,7 +5691,7 @@ func (x *TestRequiredForeign) String() string {
 func (*TestRequiredForeign) ProtoMessage() {}
 
 func (x *TestRequiredForeign) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[4]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5665,7 +5832,7 @@ func (b0 TestRequiredForeign_builder) Build() *TestRequiredForeign {
 type case_TestRequiredForeign_OneofField protoreflect.FieldNumber
 
 func (x case_TestRequiredForeign_OneofField) String() string {
-	md := file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[4].Descriptor()
+	md := file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[5].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -5692,7 +5859,7 @@ type TestRequiredGroupFields struct {
 
 func (x *TestRequiredGroupFields) Reset() {
 	*x = TestRequiredGroupFields{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[5]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5704,7 +5871,7 @@ func (x *TestRequiredGroupFields) String() string {
 func (*TestRequiredGroupFields) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[5]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5779,7 +5946,7 @@ type TestRequiredLazy struct {
 
 func (x *TestRequiredLazy) Reset() {
 	*x = TestRequiredLazy{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[6]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5791,7 +5958,7 @@ func (x *TestRequiredLazy) String() string {
 func (*TestRequiredLazy) ProtoMessage() {}
 
 func (x *TestRequiredLazy) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[6]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5876,7 +6043,7 @@ type TestPackedTypes struct {
 
 func (x *TestPackedTypes) Reset() {
 	*x = TestPackedTypes{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[7]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5888,7 +6055,7 @@ func (x *TestPackedTypes) String() string {
 func (*TestPackedTypes) ProtoMessage() {}
 
 func (x *TestPackedTypes) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[7]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6102,7 +6269,7 @@ type TestPackedExtensions struct {
 
 func (x *TestPackedExtensions) Reset() {
 	*x = TestPackedExtensions{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[8]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6114,7 +6281,7 @@ func (x *TestPackedExtensions) String() string {
 func (*TestPackedExtensions) ProtoMessage() {}
 
 func (x *TestPackedExtensions) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[8]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6166,7 +6333,7 @@ const (
 
 func (x *RemoteDefault) Reset() {
 	*x = RemoteDefault{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[9]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6178,7 +6345,7 @@ func (x *RemoteDefault) String() string {
 func (*RemoteDefault) ProtoMessage() {}
 
 func (x *RemoteDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[9]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6454,7 +6621,7 @@ type TestAllTypes_NestedMessage struct {
 
 func (x *TestAllTypes_NestedMessage) Reset() {
 	*x = TestAllTypes_NestedMessage{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[10]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6466,7 +6633,7 @@ func (x *TestAllTypes_NestedMessage) String() string {
 func (*TestAllTypes_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[10]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6555,7 +6722,7 @@ type TestAllTypes_OptionalGroup struct {
 
 func (x *TestAllTypes_OptionalGroup) Reset() {
 	*x = TestAllTypes_OptionalGroup{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[11]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6567,7 +6734,7 @@ func (x *TestAllTypes_OptionalGroup) String() string {
 func (*TestAllTypes_OptionalGroup) ProtoMessage() {}
 
 func (x *TestAllTypes_OptionalGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[11]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6684,7 +6851,7 @@ type TestAllTypes_RepeatedGroup struct {
 
 func (x *TestAllTypes_RepeatedGroup) Reset() {
 	*x = TestAllTypes_RepeatedGroup{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[12]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6696,7 +6863,7 @@ func (x *TestAllTypes_RepeatedGroup) String() string {
 func (*TestAllTypes_RepeatedGroup) ProtoMessage() {}
 
 func (x *TestAllTypes_RepeatedGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[12]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6784,7 +6951,7 @@ type TestAllTypes_OneofGroup struct {
 
 func (x *TestAllTypes_OneofGroup) Reset() {
 	*x = TestAllTypes_OneofGroup{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[30]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6796,7 +6963,7 @@ func (x *TestAllTypes_OneofGroup) String() string {
 func (*TestAllTypes_OneofGroup) ProtoMessage() {}
 
 func (x *TestAllTypes_OneofGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[30]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6888,7 +7055,7 @@ type TestRequiredGroupFields_OptionalGroup struct {
 
 func (x *TestRequiredGroupFields_OptionalGroup) Reset() {
 	*x = TestRequiredGroupFields_OptionalGroup{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[32]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6900,7 +7067,7 @@ func (x *TestRequiredGroupFields_OptionalGroup) String() string {
 func (*TestRequiredGroupFields_OptionalGroup) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields_OptionalGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[32]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6963,7 +7130,7 @@ type TestRequiredGroupFields_RepeatedGroup struct {
 
 func (x *TestRequiredGroupFields_RepeatedGroup) Reset() {
 	*x = TestRequiredGroupFields_RepeatedGroup{}
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[33]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6975,7 +7142,7 @@ func (x *TestRequiredGroupFields_RepeatedGroup) String() string {
 func (*TestRequiredGroupFields_RepeatedGroup) ProtoMessage() {}
 
 func (x *TestRequiredGroupFields_RepeatedGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[33]
+	mi := &file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7470,7 +7637,11 @@ const file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_prot
 	"\x03f97\x18a \x01(\v2/.opaque.goproto.proto.testeditions.TestAllTypesR\x03f97\x12A\n" +
 	"\x03f98\x18b \x01(\v2/.opaque.goproto.proto.testeditions.TestAllTypesR\x03f98\x12A\n" +
 	"\x03f99\x18c \x01(\v2/.opaque.goproto.proto.testeditions.TestAllTypesR\x03f99\x12C\n" +
-	"\x04f100\x18d \x01(\v2/.opaque.goproto.proto.testeditions.TestAllTypesR\x04f100\",\n" +
+	"\x04f100\x18d \x01(\v2/.opaque.goproto.proto.testeditions.TestAllTypesR\x04f100\"\xa5\x01\n" +
+	"\x15TestOneofWithRequired\x12#\n" +
+	"\foneof_uint32\x18\x01 \x01(\rH\x00R\voneofUint32\x12X\n" +
+	"\x0eoneof_required\x18\x02 \x01(\v2/.opaque.goproto.proto.testeditions.TestRequiredH\x00R\roneofRequiredB\r\n" +
+	"\voneof_field\",\n" +
 	"\x0eForeignMessage\x12\f\n" +
 	"\x01c\x18\x01 \x01(\x05R\x01c\x12\f\n" +
 	"\x01d\x18\x02 \x01(\x05R\x01d\"<\n" +
@@ -7548,90 +7719,91 @@ const file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_prot
 	"packedEnumBYZOgoogle.golang.org/protobuf/internal/testprotos/testeditions/testeditions_opaque\x92\x03\x05\xd2>\x02\x10\x03b\beditionsp\xe8\a"
 
 var file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
+var file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
 var file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_goTypes = []any{
 	(ForeignEnum)(0),                     // 0: opaque.goproto.proto.testeditions.ForeignEnum
 	(TestAllTypes_NestedEnum)(0),         // 1: opaque.goproto.proto.testeditions.TestAllTypes.NestedEnum
 	(*TestAllTypes)(nil),                 // 2: opaque.goproto.proto.testeditions.TestAllTypes
 	(*TestManyMessageFieldsMessage)(nil), // 3: opaque.goproto.proto.testeditions.TestManyMessageFieldsMessage
-	(*ForeignMessage)(nil),               // 4: opaque.goproto.proto.testeditions.ForeignMessage
-	(*TestRequired)(nil),                 // 5: opaque.goproto.proto.testeditions.TestRequired
-	(*TestRequiredForeign)(nil),          // 6: opaque.goproto.proto.testeditions.TestRequiredForeign
-	(*TestRequiredGroupFields)(nil),      // 7: opaque.goproto.proto.testeditions.TestRequiredGroupFields
-	(*TestRequiredLazy)(nil),             // 8: opaque.goproto.proto.testeditions.TestRequiredLazy
-	(*TestPackedTypes)(nil),              // 9: opaque.goproto.proto.testeditions.TestPackedTypes
-	(*TestPackedExtensions)(nil),         // 10: opaque.goproto.proto.testeditions.TestPackedExtensions
-	(*RemoteDefault)(nil),                // 11: opaque.goproto.proto.testeditions.RemoteDefault
-	(*TestAllTypes_NestedMessage)(nil),   // 12: opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
-	(*TestAllTypes_OptionalGroup)(nil),   // 13: opaque.goproto.proto.testeditions.TestAllTypes.OptionalGroup
-	(*TestAllTypes_RepeatedGroup)(nil),   // 14: opaque.goproto.proto.testeditions.TestAllTypes.RepeatedGroup
-	nil,                                  // 15: opaque.goproto.proto.testeditions.TestAllTypes.MapInt32Int32Entry
-	nil,                                  // 16: opaque.goproto.proto.testeditions.TestAllTypes.MapInt64Int64Entry
-	nil,                                  // 17: opaque.goproto.proto.testeditions.TestAllTypes.MapUint32Uint32Entry
-	nil,                                  // 18: opaque.goproto.proto.testeditions.TestAllTypes.MapUint64Uint64Entry
-	nil,                                  // 19: opaque.goproto.proto.testeditions.TestAllTypes.MapSint32Sint32Entry
-	nil,                                  // 20: opaque.goproto.proto.testeditions.TestAllTypes.MapSint64Sint64Entry
-	nil,                                  // 21: opaque.goproto.proto.testeditions.TestAllTypes.MapFixed32Fixed32Entry
-	nil,                                  // 22: opaque.goproto.proto.testeditions.TestAllTypes.MapFixed64Fixed64Entry
-	nil,                                  // 23: opaque.goproto.proto.testeditions.TestAllTypes.MapSfixed32Sfixed32Entry
-	nil,                                  // 24: opaque.goproto.proto.testeditions.TestAllTypes.MapSfixed64Sfixed64Entry
-	nil,                                  // 25: opaque.goproto.proto.testeditions.TestAllTypes.MapInt32FloatEntry
-	nil,                                  // 26: opaque.goproto.proto.testeditions.TestAllTypes.MapInt32DoubleEntry
-	nil,                                  // 27: opaque.goproto.proto.testeditions.TestAllTypes.MapBoolBoolEntry
-	nil,                                  // 28: opaque.goproto.proto.testeditions.TestAllTypes.MapStringStringEntry
-	nil,                                  // 29: opaque.goproto.proto.testeditions.TestAllTypes.MapStringBytesEntry
-	nil,                                  // 30: opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedMessageEntry
-	nil,                                  // 31: opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedEnumEntry
-	(*TestAllTypes_OneofGroup)(nil),      // 32: opaque.goproto.proto.testeditions.TestAllTypes.OneofGroup
-	nil,                                  // 33: opaque.goproto.proto.testeditions.TestRequiredForeign.MapMessageEntry
-	(*TestRequiredGroupFields_OptionalGroup)(nil), // 34: opaque.goproto.proto.testeditions.TestRequiredGroupFields.OptionalGroup
-	(*TestRequiredGroupFields_RepeatedGroup)(nil), // 35: opaque.goproto.proto.testeditions.TestRequiredGroupFields.RepeatedGroup
-	(ImportEnum)(0),        // 36: opaque.goproto.proto.testeditions.ImportEnum
-	(*ImportMessage)(nil),  // 37: opaque.goproto.proto.testeditions.ImportMessage
-	(enums_opaque.Enum)(0), // 38: opaque.goproto.proto.enums.Enum
+	(*TestOneofWithRequired)(nil),        // 4: opaque.goproto.proto.testeditions.TestOneofWithRequired
+	(*ForeignMessage)(nil),               // 5: opaque.goproto.proto.testeditions.ForeignMessage
+	(*TestRequired)(nil),                 // 6: opaque.goproto.proto.testeditions.TestRequired
+	(*TestRequiredForeign)(nil),          // 7: opaque.goproto.proto.testeditions.TestRequiredForeign
+	(*TestRequiredGroupFields)(nil),      // 8: opaque.goproto.proto.testeditions.TestRequiredGroupFields
+	(*TestRequiredLazy)(nil),             // 9: opaque.goproto.proto.testeditions.TestRequiredLazy
+	(*TestPackedTypes)(nil),              // 10: opaque.goproto.proto.testeditions.TestPackedTypes
+	(*TestPackedExtensions)(nil),         // 11: opaque.goproto.proto.testeditions.TestPackedExtensions
+	(*RemoteDefault)(nil),                // 12: opaque.goproto.proto.testeditions.RemoteDefault
+	(*TestAllTypes_NestedMessage)(nil),   // 13: opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
+	(*TestAllTypes_OptionalGroup)(nil),   // 14: opaque.goproto.proto.testeditions.TestAllTypes.OptionalGroup
+	(*TestAllTypes_RepeatedGroup)(nil),   // 15: opaque.goproto.proto.testeditions.TestAllTypes.RepeatedGroup
+	nil,                                  // 16: opaque.goproto.proto.testeditions.TestAllTypes.MapInt32Int32Entry
+	nil,                                  // 17: opaque.goproto.proto.testeditions.TestAllTypes.MapInt64Int64Entry
+	nil,                                  // 18: opaque.goproto.proto.testeditions.TestAllTypes.MapUint32Uint32Entry
+	nil,                                  // 19: opaque.goproto.proto.testeditions.TestAllTypes.MapUint64Uint64Entry
+	nil,                                  // 20: opaque.goproto.proto.testeditions.TestAllTypes.MapSint32Sint32Entry
+	nil,                                  // 21: opaque.goproto.proto.testeditions.TestAllTypes.MapSint64Sint64Entry
+	nil,                                  // 22: opaque.goproto.proto.testeditions.TestAllTypes.MapFixed32Fixed32Entry
+	nil,                                  // 23: opaque.goproto.proto.testeditions.TestAllTypes.MapFixed64Fixed64Entry
+	nil,                                  // 24: opaque.goproto.proto.testeditions.TestAllTypes.MapSfixed32Sfixed32Entry
+	nil,                                  // 25: opaque.goproto.proto.testeditions.TestAllTypes.MapSfixed64Sfixed64Entry
+	nil,                                  // 26: opaque.goproto.proto.testeditions.TestAllTypes.MapInt32FloatEntry
+	nil,                                  // 27: opaque.goproto.proto.testeditions.TestAllTypes.MapInt32DoubleEntry
+	nil,                                  // 28: opaque.goproto.proto.testeditions.TestAllTypes.MapBoolBoolEntry
+	nil,                                  // 29: opaque.goproto.proto.testeditions.TestAllTypes.MapStringStringEntry
+	nil,                                  // 30: opaque.goproto.proto.testeditions.TestAllTypes.MapStringBytesEntry
+	nil,                                  // 31: opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedMessageEntry
+	nil,                                  // 32: opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedEnumEntry
+	(*TestAllTypes_OneofGroup)(nil),      // 33: opaque.goproto.proto.testeditions.TestAllTypes.OneofGroup
+	nil,                                  // 34: opaque.goproto.proto.testeditions.TestRequiredForeign.MapMessageEntry
+	(*TestRequiredGroupFields_OptionalGroup)(nil), // 35: opaque.goproto.proto.testeditions.TestRequiredGroupFields.OptionalGroup
+	(*TestRequiredGroupFields_RepeatedGroup)(nil), // 36: opaque.goproto.proto.testeditions.TestRequiredGroupFields.RepeatedGroup
+	(ImportEnum)(0),        // 37: opaque.goproto.proto.testeditions.ImportEnum
+	(*ImportMessage)(nil),  // 38: opaque.goproto.proto.testeditions.ImportMessage
+	(enums_opaque.Enum)(0), // 39: opaque.goproto.proto.enums.Enum
 }
 var file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_depIdxs = []int32{
 	1,   // 0: opaque.goproto.proto.testeditions.TestAllTypes.singular_nested_enum:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedEnum
 	0,   // 1: opaque.goproto.proto.testeditions.TestAllTypes.singular_foreign_enum:type_name -> opaque.goproto.proto.testeditions.ForeignEnum
-	36,  // 2: opaque.goproto.proto.testeditions.TestAllTypes.singular_import_enum:type_name -> opaque.goproto.proto.testeditions.ImportEnum
-	13,  // 3: opaque.goproto.proto.testeditions.TestAllTypes.optionalgroup:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.OptionalGroup
-	13,  // 4: opaque.goproto.proto.testeditions.TestAllTypes.not_group_like_delimited:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.OptionalGroup
-	12,  // 5: opaque.goproto.proto.testeditions.TestAllTypes.optional_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
-	4,   // 6: opaque.goproto.proto.testeditions.TestAllTypes.optional_foreign_message:type_name -> opaque.goproto.proto.testeditions.ForeignMessage
-	37,  // 7: opaque.goproto.proto.testeditions.TestAllTypes.optional_import_message:type_name -> opaque.goproto.proto.testeditions.ImportMessage
+	37,  // 2: opaque.goproto.proto.testeditions.TestAllTypes.singular_import_enum:type_name -> opaque.goproto.proto.testeditions.ImportEnum
+	14,  // 3: opaque.goproto.proto.testeditions.TestAllTypes.optionalgroup:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.OptionalGroup
+	14,  // 4: opaque.goproto.proto.testeditions.TestAllTypes.not_group_like_delimited:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.OptionalGroup
+	13,  // 5: opaque.goproto.proto.testeditions.TestAllTypes.optional_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
+	5,   // 6: opaque.goproto.proto.testeditions.TestAllTypes.optional_foreign_message:type_name -> opaque.goproto.proto.testeditions.ForeignMessage
+	38,  // 7: opaque.goproto.proto.testeditions.TestAllTypes.optional_import_message:type_name -> opaque.goproto.proto.testeditions.ImportMessage
 	1,   // 8: opaque.goproto.proto.testeditions.TestAllTypes.optional_nested_enum:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedEnum
 	0,   // 9: opaque.goproto.proto.testeditions.TestAllTypes.optional_foreign_enum:type_name -> opaque.goproto.proto.testeditions.ForeignEnum
-	36,  // 10: opaque.goproto.proto.testeditions.TestAllTypes.optional_import_enum:type_name -> opaque.goproto.proto.testeditions.ImportEnum
-	12,  // 11: opaque.goproto.proto.testeditions.TestAllTypes.optional_lazy_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
-	14,  // 12: opaque.goproto.proto.testeditions.TestAllTypes.repeatedgroup:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.RepeatedGroup
-	12,  // 13: opaque.goproto.proto.testeditions.TestAllTypes.repeated_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
-	4,   // 14: opaque.goproto.proto.testeditions.TestAllTypes.repeated_foreign_message:type_name -> opaque.goproto.proto.testeditions.ForeignMessage
-	37,  // 15: opaque.goproto.proto.testeditions.TestAllTypes.repeated_importmessage:type_name -> opaque.goproto.proto.testeditions.ImportMessage
+	37,  // 10: opaque.goproto.proto.testeditions.TestAllTypes.optional_import_enum:type_name -> opaque.goproto.proto.testeditions.ImportEnum
+	13,  // 11: opaque.goproto.proto.testeditions.TestAllTypes.optional_lazy_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
+	15,  // 12: opaque.goproto.proto.testeditions.TestAllTypes.repeatedgroup:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.RepeatedGroup
+	13,  // 13: opaque.goproto.proto.testeditions.TestAllTypes.repeated_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
+	5,   // 14: opaque.goproto.proto.testeditions.TestAllTypes.repeated_foreign_message:type_name -> opaque.goproto.proto.testeditions.ForeignMessage
+	38,  // 15: opaque.goproto.proto.testeditions.TestAllTypes.repeated_importmessage:type_name -> opaque.goproto.proto.testeditions.ImportMessage
 	1,   // 16: opaque.goproto.proto.testeditions.TestAllTypes.repeated_nested_enum:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedEnum
 	0,   // 17: opaque.goproto.proto.testeditions.TestAllTypes.repeated_foreign_enum:type_name -> opaque.goproto.proto.testeditions.ForeignEnum
-	36,  // 18: opaque.goproto.proto.testeditions.TestAllTypes.repeated_importenum:type_name -> opaque.goproto.proto.testeditions.ImportEnum
-	15,  // 19: opaque.goproto.proto.testeditions.TestAllTypes.map_int32_int32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapInt32Int32Entry
-	16,  // 20: opaque.goproto.proto.testeditions.TestAllTypes.map_int64_int64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapInt64Int64Entry
-	17,  // 21: opaque.goproto.proto.testeditions.TestAllTypes.map_uint32_uint32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapUint32Uint32Entry
-	18,  // 22: opaque.goproto.proto.testeditions.TestAllTypes.map_uint64_uint64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapUint64Uint64Entry
-	19,  // 23: opaque.goproto.proto.testeditions.TestAllTypes.map_sint32_sint32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapSint32Sint32Entry
-	20,  // 24: opaque.goproto.proto.testeditions.TestAllTypes.map_sint64_sint64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapSint64Sint64Entry
-	21,  // 25: opaque.goproto.proto.testeditions.TestAllTypes.map_fixed32_fixed32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapFixed32Fixed32Entry
-	22,  // 26: opaque.goproto.proto.testeditions.TestAllTypes.map_fixed64_fixed64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapFixed64Fixed64Entry
-	23,  // 27: opaque.goproto.proto.testeditions.TestAllTypes.map_sfixed32_sfixed32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapSfixed32Sfixed32Entry
-	24,  // 28: opaque.goproto.proto.testeditions.TestAllTypes.map_sfixed64_sfixed64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapSfixed64Sfixed64Entry
-	25,  // 29: opaque.goproto.proto.testeditions.TestAllTypes.map_int32_float:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapInt32FloatEntry
-	26,  // 30: opaque.goproto.proto.testeditions.TestAllTypes.map_int32_double:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapInt32DoubleEntry
-	27,  // 31: opaque.goproto.proto.testeditions.TestAllTypes.map_bool_bool:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapBoolBoolEntry
-	28,  // 32: opaque.goproto.proto.testeditions.TestAllTypes.map_string_string:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapStringStringEntry
-	29,  // 33: opaque.goproto.proto.testeditions.TestAllTypes.map_string_bytes:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapStringBytesEntry
-	30,  // 34: opaque.goproto.proto.testeditions.TestAllTypes.map_string_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedMessageEntry
-	31,  // 35: opaque.goproto.proto.testeditions.TestAllTypes.map_string_nested_enum:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedEnumEntry
+	37,  // 18: opaque.goproto.proto.testeditions.TestAllTypes.repeated_importenum:type_name -> opaque.goproto.proto.testeditions.ImportEnum
+	16,  // 19: opaque.goproto.proto.testeditions.TestAllTypes.map_int32_int32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapInt32Int32Entry
+	17,  // 20: opaque.goproto.proto.testeditions.TestAllTypes.map_int64_int64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapInt64Int64Entry
+	18,  // 21: opaque.goproto.proto.testeditions.TestAllTypes.map_uint32_uint32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapUint32Uint32Entry
+	19,  // 22: opaque.goproto.proto.testeditions.TestAllTypes.map_uint64_uint64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapUint64Uint64Entry
+	20,  // 23: opaque.goproto.proto.testeditions.TestAllTypes.map_sint32_sint32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapSint32Sint32Entry
+	21,  // 24: opaque.goproto.proto.testeditions.TestAllTypes.map_sint64_sint64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapSint64Sint64Entry
+	22,  // 25: opaque.goproto.proto.testeditions.TestAllTypes.map_fixed32_fixed32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapFixed32Fixed32Entry
+	23,  // 26: opaque.goproto.proto.testeditions.TestAllTypes.map_fixed64_fixed64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapFixed64Fixed64Entry
+	24,  // 27: opaque.goproto.proto.testeditions.TestAllTypes.map_sfixed32_sfixed32:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapSfixed32Sfixed32Entry
+	25,  // 28: opaque.goproto.proto.testeditions.TestAllTypes.map_sfixed64_sfixed64:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapSfixed64Sfixed64Entry
+	26,  // 29: opaque.goproto.proto.testeditions.TestAllTypes.map_int32_float:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapInt32FloatEntry
+	27,  // 30: opaque.goproto.proto.testeditions.TestAllTypes.map_int32_double:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapInt32DoubleEntry
+	28,  // 31: opaque.goproto.proto.testeditions.TestAllTypes.map_bool_bool:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapBoolBoolEntry
+	29,  // 32: opaque.goproto.proto.testeditions.TestAllTypes.map_string_string:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapStringStringEntry
+	30,  // 33: opaque.goproto.proto.testeditions.TestAllTypes.map_string_bytes:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapStringBytesEntry
+	31,  // 34: opaque.goproto.proto.testeditions.TestAllTypes.map_string_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedMessageEntry
+	32,  // 35: opaque.goproto.proto.testeditions.TestAllTypes.map_string_nested_enum:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedEnumEntry
 	1,   // 36: opaque.goproto.proto.testeditions.TestAllTypes.default_nested_enum:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedEnum
 	0,   // 37: opaque.goproto.proto.testeditions.TestAllTypes.default_foreign_enum:type_name -> opaque.goproto.proto.testeditions.ForeignEnum
-	12,  // 38: opaque.goproto.proto.testeditions.TestAllTypes.oneof_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
+	13,  // 38: opaque.goproto.proto.testeditions.TestAllTypes.oneof_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
 	1,   // 39: opaque.goproto.proto.testeditions.TestAllTypes.oneof_enum:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedEnum
-	32,  // 40: opaque.goproto.proto.testeditions.TestAllTypes.oneofgroup:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.OneofGroup
+	33,  // 40: opaque.goproto.proto.testeditions.TestAllTypes.oneofgroup:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.OneofGroup
 	2,   // 41: opaque.goproto.proto.testeditions.TestManyMessageFieldsMessage.f1:type_name -> opaque.goproto.proto.testeditions.TestAllTypes
 	2,   // 42: opaque.goproto.proto.testeditions.TestManyMessageFieldsMessage.f2:type_name -> opaque.goproto.proto.testeditions.TestAllTypes
 	2,   // 43: opaque.goproto.proto.testeditions.TestManyMessageFieldsMessage.f3:type_name -> opaque.goproto.proto.testeditions.TestAllTypes
@@ -7732,48 +7904,49 @@ var file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_
 	2,   // 138: opaque.goproto.proto.testeditions.TestManyMessageFieldsMessage.f98:type_name -> opaque.goproto.proto.testeditions.TestAllTypes
 	2,   // 139: opaque.goproto.proto.testeditions.TestManyMessageFieldsMessage.f99:type_name -> opaque.goproto.proto.testeditions.TestAllTypes
 	2,   // 140: opaque.goproto.proto.testeditions.TestManyMessageFieldsMessage.f100:type_name -> opaque.goproto.proto.testeditions.TestAllTypes
-	5,   // 141: opaque.goproto.proto.testeditions.TestRequiredForeign.optional_message:type_name -> opaque.goproto.proto.testeditions.TestRequired
-	5,   // 142: opaque.goproto.proto.testeditions.TestRequiredForeign.repeated_message:type_name -> opaque.goproto.proto.testeditions.TestRequired
-	33,  // 143: opaque.goproto.proto.testeditions.TestRequiredForeign.map_message:type_name -> opaque.goproto.proto.testeditions.TestRequiredForeign.MapMessageEntry
-	5,   // 144: opaque.goproto.proto.testeditions.TestRequiredForeign.oneof_message:type_name -> opaque.goproto.proto.testeditions.TestRequired
-	34,  // 145: opaque.goproto.proto.testeditions.TestRequiredGroupFields.optionalgroup:type_name -> opaque.goproto.proto.testeditions.TestRequiredGroupFields.OptionalGroup
-	35,  // 146: opaque.goproto.proto.testeditions.TestRequiredGroupFields.repeatedgroup:type_name -> opaque.goproto.proto.testeditions.TestRequiredGroupFields.RepeatedGroup
-	5,   // 147: opaque.goproto.proto.testeditions.TestRequiredLazy.optional_lazy_message:type_name -> opaque.goproto.proto.testeditions.TestRequired
-	0,   // 148: opaque.goproto.proto.testeditions.TestPackedTypes.packed_enum:type_name -> opaque.goproto.proto.testeditions.ForeignEnum
-	38,  // 149: opaque.goproto.proto.testeditions.RemoteDefault.default:type_name -> opaque.goproto.proto.enums.Enum
-	38,  // 150: opaque.goproto.proto.testeditions.RemoteDefault.zero:type_name -> opaque.goproto.proto.enums.Enum
-	38,  // 151: opaque.goproto.proto.testeditions.RemoteDefault.one:type_name -> opaque.goproto.proto.enums.Enum
-	38,  // 152: opaque.goproto.proto.testeditions.RemoteDefault.elevent:type_name -> opaque.goproto.proto.enums.Enum
-	38,  // 153: opaque.goproto.proto.testeditions.RemoteDefault.seventeen:type_name -> opaque.goproto.proto.enums.Enum
-	38,  // 154: opaque.goproto.proto.testeditions.RemoteDefault.thirtyseven:type_name -> opaque.goproto.proto.enums.Enum
-	38,  // 155: opaque.goproto.proto.testeditions.RemoteDefault.sixtyseven:type_name -> opaque.goproto.proto.enums.Enum
-	38,  // 156: opaque.goproto.proto.testeditions.RemoteDefault.negative:type_name -> opaque.goproto.proto.enums.Enum
-	2,   // 157: opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage.corecursive:type_name -> opaque.goproto.proto.testeditions.TestAllTypes
-	12,  // 158: opaque.goproto.proto.testeditions.TestAllTypes.OptionalGroup.optional_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
-	12,  // 159: opaque.goproto.proto.testeditions.TestAllTypes.RepeatedGroup.optional_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
-	12,  // 160: opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedMessageEntry.value:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
-	1,   // 161: opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedEnumEntry.value:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedEnum
-	5,   // 162: opaque.goproto.proto.testeditions.TestRequiredForeign.MapMessageEntry.value:type_name -> opaque.goproto.proto.testeditions.TestRequired
-	10,  // 163: opaque.goproto.proto.testeditions.packed_int32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 164: opaque.goproto.proto.testeditions.packed_int64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 165: opaque.goproto.proto.testeditions.packed_uint32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 166: opaque.goproto.proto.testeditions.packed_uint64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 167: opaque.goproto.proto.testeditions.packed_sint32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 168: opaque.goproto.proto.testeditions.packed_sint64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 169: opaque.goproto.proto.testeditions.packed_fixed32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 170: opaque.goproto.proto.testeditions.packed_fixed64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 171: opaque.goproto.proto.testeditions.packed_sfixed32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 172: opaque.goproto.proto.testeditions.packed_sfixed64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 173: opaque.goproto.proto.testeditions.packed_float:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 174: opaque.goproto.proto.testeditions.packed_double:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 175: opaque.goproto.proto.testeditions.packed_bool:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	10,  // 176: opaque.goproto.proto.testeditions.packed_enum:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
-	0,   // 177: opaque.goproto.proto.testeditions.packed_enum:type_name -> opaque.goproto.proto.testeditions.ForeignEnum
-	178, // [178:178] is the sub-list for method output_type
-	178, // [178:178] is the sub-list for method input_type
-	177, // [177:178] is the sub-list for extension type_name
-	163, // [163:177] is the sub-list for extension extendee
-	0,   // [0:163] is the sub-list for field type_name
+	6,   // 141: opaque.goproto.proto.testeditions.TestOneofWithRequired.oneof_required:type_name -> opaque.goproto.proto.testeditions.TestRequired
+	6,   // 142: opaque.goproto.proto.testeditions.TestRequiredForeign.optional_message:type_name -> opaque.goproto.proto.testeditions.TestRequired
+	6,   // 143: opaque.goproto.proto.testeditions.TestRequiredForeign.repeated_message:type_name -> opaque.goproto.proto.testeditions.TestRequired
+	34,  // 144: opaque.goproto.proto.testeditions.TestRequiredForeign.map_message:type_name -> opaque.goproto.proto.testeditions.TestRequiredForeign.MapMessageEntry
+	6,   // 145: opaque.goproto.proto.testeditions.TestRequiredForeign.oneof_message:type_name -> opaque.goproto.proto.testeditions.TestRequired
+	35,  // 146: opaque.goproto.proto.testeditions.TestRequiredGroupFields.optionalgroup:type_name -> opaque.goproto.proto.testeditions.TestRequiredGroupFields.OptionalGroup
+	36,  // 147: opaque.goproto.proto.testeditions.TestRequiredGroupFields.repeatedgroup:type_name -> opaque.goproto.proto.testeditions.TestRequiredGroupFields.RepeatedGroup
+	6,   // 148: opaque.goproto.proto.testeditions.TestRequiredLazy.optional_lazy_message:type_name -> opaque.goproto.proto.testeditions.TestRequired
+	0,   // 149: opaque.goproto.proto.testeditions.TestPackedTypes.packed_enum:type_name -> opaque.goproto.proto.testeditions.ForeignEnum
+	39,  // 150: opaque.goproto.proto.testeditions.RemoteDefault.default:type_name -> opaque.goproto.proto.enums.Enum
+	39,  // 151: opaque.goproto.proto.testeditions.RemoteDefault.zero:type_name -> opaque.goproto.proto.enums.Enum
+	39,  // 152: opaque.goproto.proto.testeditions.RemoteDefault.one:type_name -> opaque.goproto.proto.enums.Enum
+	39,  // 153: opaque.goproto.proto.testeditions.RemoteDefault.elevent:type_name -> opaque.goproto.proto.enums.Enum
+	39,  // 154: opaque.goproto.proto.testeditions.RemoteDefault.seventeen:type_name -> opaque.goproto.proto.enums.Enum
+	39,  // 155: opaque.goproto.proto.testeditions.RemoteDefault.thirtyseven:type_name -> opaque.goproto.proto.enums.Enum
+	39,  // 156: opaque.goproto.proto.testeditions.RemoteDefault.sixtyseven:type_name -> opaque.goproto.proto.enums.Enum
+	39,  // 157: opaque.goproto.proto.testeditions.RemoteDefault.negative:type_name -> opaque.goproto.proto.enums.Enum
+	2,   // 158: opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage.corecursive:type_name -> opaque.goproto.proto.testeditions.TestAllTypes
+	13,  // 159: opaque.goproto.proto.testeditions.TestAllTypes.OptionalGroup.optional_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
+	13,  // 160: opaque.goproto.proto.testeditions.TestAllTypes.RepeatedGroup.optional_nested_message:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
+	13,  // 161: opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedMessageEntry.value:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedMessage
+	1,   // 162: opaque.goproto.proto.testeditions.TestAllTypes.MapStringNestedEnumEntry.value:type_name -> opaque.goproto.proto.testeditions.TestAllTypes.NestedEnum
+	6,   // 163: opaque.goproto.proto.testeditions.TestRequiredForeign.MapMessageEntry.value:type_name -> opaque.goproto.proto.testeditions.TestRequired
+	11,  // 164: opaque.goproto.proto.testeditions.packed_int32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 165: opaque.goproto.proto.testeditions.packed_int64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 166: opaque.goproto.proto.testeditions.packed_uint32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 167: opaque.goproto.proto.testeditions.packed_uint64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 168: opaque.goproto.proto.testeditions.packed_sint32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 169: opaque.goproto.proto.testeditions.packed_sint64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 170: opaque.goproto.proto.testeditions.packed_fixed32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 171: opaque.goproto.proto.testeditions.packed_fixed64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 172: opaque.goproto.proto.testeditions.packed_sfixed32:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 173: opaque.goproto.proto.testeditions.packed_sfixed64:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 174: opaque.goproto.proto.testeditions.packed_float:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 175: opaque.goproto.proto.testeditions.packed_double:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 176: opaque.goproto.proto.testeditions.packed_bool:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	11,  // 177: opaque.goproto.proto.testeditions.packed_enum:extendee -> opaque.goproto.proto.testeditions.TestPackedExtensions
+	0,   // 178: opaque.goproto.proto.testeditions.packed_enum:type_name -> opaque.goproto.proto.testeditions.ForeignEnum
+	179, // [179:179] is the sub-list for method output_type
+	179, // [179:179] is the sub-list for method input_type
+	178, // [178:179] is the sub-list for extension type_name
+	164, // [164:178] is the sub-list for extension extendee
+	0,   // [0:164] is the sub-list for field type_name
 }
 
 func init() { file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_init() }
@@ -7795,7 +7968,11 @@ func file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto
 		(*testAllTypes_Oneofgroup)(nil),
 		(*testAllTypes_OneofOptionalUint32)(nil),
 	}
-	file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[4].OneofWrappers = []any{
+	file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[2].OneofWrappers = []any{
+		(*testOneofWithRequired_OneofUint32)(nil),
+		(*testOneofWithRequired_OneofRequired)(nil),
+	}
+	file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_msgTypes[5].OneofWrappers = []any{
 		(*testRequiredForeign_OneofMessage)(nil),
 	}
 	type x struct{}
@@ -7804,7 +7981,7 @@ func file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_rawDesc), len(file_internal_testprotos_testeditions_testeditions_opaque_test_opaque_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   34,
+			NumMessages:   35,
 			NumExtensions: 14,
 			NumServices:   0,
 		},

@@ -9,7 +9,6 @@ package test
 
 import (
 	enums "google.golang.org/protobuf/internal/testprotos/enums"
-	required "google.golang.org/protobuf/internal/testprotos/required"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -2118,7 +2117,7 @@ func (x *TestOneofWithRequired) GetOneofUint32() uint32 {
 	return 0
 }
 
-func (x *TestOneofWithRequired) GetOneofRequired() *required.Message {
+func (x *TestOneofWithRequired) GetOneofRequired() *TestRequired {
 	if x != nil {
 		if x, ok := x.OneofField.(*TestOneofWithRequired_OneofRequired); ok {
 			return x.OneofRequired
@@ -2136,7 +2135,7 @@ type TestOneofWithRequired_OneofUint32 struct {
 }
 
 type TestOneofWithRequired_OneofRequired struct {
-	OneofRequired *required.Message `protobuf:"bytes,2,opt,name=oneof_required,json=oneofRequired,oneof"`
+	OneofRequired *TestRequired `protobuf:"bytes,2,opt,name=oneof_required,json=oneofRequired,oneof"`
 }
 
 func (*TestOneofWithRequired_OneofUint32) isTestOneofWithRequired_OneofField() {}
@@ -4444,7 +4443,7 @@ var File_internal_testprotos_test_test_proto protoreflect.FileDescriptor
 
 const file_internal_testprotos_test_test_proto_rawDesc = "" +
 	"\n" +
-	"#internal/testprotos/test/test.proto\x12\x12goproto.proto.test\x1a*internal/testprotos/test/test_public.proto\x1a%internal/testprotos/enums/enums.proto\x1a+internal/testprotos/required/required.proto\x1a*internal/testprotos/test/test_import.proto\"\x9a;\n" +
+	"#internal/testprotos/test/test.proto\x12\x12goproto.proto.test\x1a*internal/testprotos/test/test_public.proto\x1a%internal/testprotos/enums/enums.proto\x1a*internal/testprotos/test/test_import.proto\"\x9a;\n" +
 	"\fTestAllTypes\x12%\n" +
 	"\x0eoptional_int32\x18\x01 \x01(\x05R\roptionalInt32\x12%\n" +
 	"\x0eoptional_int64\x18\x02 \x01(\x03R\roptionalInt64\x12'\n" +
@@ -4727,10 +4726,10 @@ const file_internal_testprotos_test_test_proto_rawDesc = "" +
 	"\x0eDeprecatedEnum\x12\x12\n" +
 	"\n" +
 	"DEPRECATED\x10\x00\x1a\x02\b\x01\x1a\x02\x18\x01:\x02\x18\x01B\x12\n" +
-	"\x10deprecated_oneof\"\x99\x01\n" +
+	"\x10deprecated_oneof\"\x96\x01\n" +
 	"\x15TestOneofWithRequired\x12#\n" +
-	"\foneof_uint32\x18\x01 \x01(\rH\x00R\voneofUint32\x12L\n" +
-	"\x0eoneof_required\x18\x02 \x01(\v2#.goproto.proto.testrequired.MessageH\x00R\roneofRequiredB\r\n" +
+	"\foneof_uint32\x18\x01 \x01(\rH\x00R\voneofUint32\x12I\n" +
+	"\x0eoneof_required\x18\x02 \x01(\v2 .goproto.proto.test.TestRequiredH\x00R\roneofRequiredB\r\n" +
 	"\voneof_field\",\n" +
 	"\x0eForeignMessage\x12\f\n" +
 	"\x01c\x18\x01 \x01(\x05R\x01c\x12\f\n" +
@@ -4991,8 +4990,7 @@ var file_internal_testprotos_test_test_proto_goTypes = []any{
 	(*TestRequiredGroupFields_RepeatedGroup)(nil), // 50: goproto.proto.test.TestRequiredGroupFields.RepeatedGroup
 	(*ImportMessage)(nil),                         // 51: goproto.proto.test.ImportMessage
 	(ImportEnum)(0),                               // 52: goproto.proto.test.ImportEnum
-	(*required.Message)(nil),                      // 53: goproto.proto.testrequired.Message
-	(enums.Enum)(0),                               // 54: goproto.proto.enums.Enum
+	(enums.Enum)(0),                               // 53: goproto.proto.enums.Enum
 }
 var file_internal_testprotos_test_test_proto_depIdxs = []int32{
 	27,  // 0: goproto.proto.test.TestAllTypes.optionalgroup:type_name -> goproto.proto.test.TestAllTypes.OptionalGroup
@@ -5132,7 +5130,7 @@ var file_internal_testprotos_test_test_proto_depIdxs = []int32{
 	4,   // 134: goproto.proto.test.TestManyMessageFieldsMessage.f98:type_name -> goproto.proto.test.TestAllTypes
 	4,   // 135: goproto.proto.test.TestManyMessageFieldsMessage.f99:type_name -> goproto.proto.test.TestAllTypes
 	4,   // 136: goproto.proto.test.TestManyMessageFieldsMessage.f100:type_name -> goproto.proto.test.TestAllTypes
-	53,  // 137: goproto.proto.test.TestOneofWithRequired.oneof_required:type_name -> goproto.proto.testrequired.Message
+	14,  // 137: goproto.proto.test.TestOneofWithRequired.oneof_required:type_name -> goproto.proto.test.TestRequired
 	47,  // 138: goproto.proto.test.OptionalGroup.optional_nested_message:type_name -> goproto.proto.test.TestAllExtensions.NestedMessage
 	47,  // 139: goproto.proto.test.RepeatedGroup.optional_nested_message:type_name -> goproto.proto.test.TestAllExtensions.NestedMessage
 	14,  // 140: goproto.proto.test.TestRequiredForeign.optional_message:type_name -> goproto.proto.test.TestRequired
@@ -5144,14 +5142,14 @@ var file_internal_testprotos_test_test_proto_depIdxs = []int32{
 	14,  // 146: goproto.proto.test.TestRequiredLazy.optional_lazy_message:type_name -> goproto.proto.test.TestRequired
 	0,   // 147: goproto.proto.test.TestPackedTypes.packed_enum:type_name -> goproto.proto.test.ForeignEnum
 	0,   // 148: goproto.proto.test.TestUnpackedTypes.unpacked_enum:type_name -> goproto.proto.test.ForeignEnum
-	54,  // 149: goproto.proto.test.RemoteDefault.default:type_name -> goproto.proto.enums.Enum
-	54,  // 150: goproto.proto.test.RemoteDefault.zero:type_name -> goproto.proto.enums.Enum
-	54,  // 151: goproto.proto.test.RemoteDefault.one:type_name -> goproto.proto.enums.Enum
-	54,  // 152: goproto.proto.test.RemoteDefault.elevent:type_name -> goproto.proto.enums.Enum
-	54,  // 153: goproto.proto.test.RemoteDefault.seventeen:type_name -> goproto.proto.enums.Enum
-	54,  // 154: goproto.proto.test.RemoteDefault.thirtyseven:type_name -> goproto.proto.enums.Enum
-	54,  // 155: goproto.proto.test.RemoteDefault.sixtyseven:type_name -> goproto.proto.enums.Enum
-	54,  // 156: goproto.proto.test.RemoteDefault.negative:type_name -> goproto.proto.enums.Enum
+	53,  // 149: goproto.proto.test.RemoteDefault.default:type_name -> goproto.proto.enums.Enum
+	53,  // 150: goproto.proto.test.RemoteDefault.zero:type_name -> goproto.proto.enums.Enum
+	53,  // 151: goproto.proto.test.RemoteDefault.one:type_name -> goproto.proto.enums.Enum
+	53,  // 152: goproto.proto.test.RemoteDefault.elevent:type_name -> goproto.proto.enums.Enum
+	53,  // 153: goproto.proto.test.RemoteDefault.seventeen:type_name -> goproto.proto.enums.Enum
+	53,  // 154: goproto.proto.test.RemoteDefault.thirtyseven:type_name -> goproto.proto.enums.Enum
+	53,  // 155: goproto.proto.test.RemoteDefault.sixtyseven:type_name -> goproto.proto.enums.Enum
+	53,  // 156: goproto.proto.test.RemoteDefault.negative:type_name -> goproto.proto.enums.Enum
 	4,   // 157: goproto.proto.test.TestAllTypes.NestedMessage.corecursive:type_name -> goproto.proto.test.TestAllTypes
 	26,  // 158: goproto.proto.test.TestAllTypes.OptionalGroup.optional_nested_message:type_name -> goproto.proto.test.TestAllTypes.NestedMessage
 	26,  // 159: goproto.proto.test.TestAllTypes.RepeatedGroup.optional_nested_message:type_name -> goproto.proto.test.TestAllTypes.NestedMessage

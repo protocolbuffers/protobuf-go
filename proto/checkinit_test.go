@@ -46,6 +46,13 @@ func TestCheckInitializedErrors(t *testing.T) {
 		},
 		want: `goproto.proto.test.TestRequired.required_field`,
 	}, {
+		m: &testpb.TestOneofWithRequired{
+			OneofField: &testpb.TestOneofWithRequired_OneofRequired{
+				OneofRequired: &testpb.TestRequired{},
+			},
+		},
+		want: `goproto.proto.test.TestRequired.required_field`,
+	}, {
 		m:    &testeditionspb.TestRequired{},
 		want: `goproto.proto.testeditions.TestRequired.required_field`,
 	}, {
@@ -65,6 +72,13 @@ func TestCheckInitializedErrors(t *testing.T) {
 		m: &testeditionspb.TestRequiredForeign{
 			MapMessage: map[int32]*testeditionspb.TestRequired{
 				1: {},
+			},
+		},
+		want: `goproto.proto.testeditions.TestRequired.required_field`,
+	}, {
+		m: &testeditionspb.TestOneofWithRequired{
+			OneofField: &testeditionspb.TestOneofWithRequired_OneofRequired{
+				OneofRequired: &testeditionspb.TestRequired{},
 			},
 		},
 		want: `goproto.proto.testeditions.TestRequired.required_field`,
