@@ -4793,11 +4793,11 @@ const file_google_protobuf_descriptor_proto_rawDesc = "" +
 	"\x18EnumValueDescriptorProto\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
 	"\x06number\x18\x02 \x01(\x05R\x06number\x12;\n" +
-	"\aoptions\x18\x03 \x01(\v2!.google.protobuf.EnumValueOptionsR\aoptions\"\xa7\x01\n" +
+	"\aoptions\x18\x03 \x01(\v2!.google.protobuf.EnumValueOptionsR\aoptions\"\xb5\x01\n" +
 	"\x16ServiceDescriptorProto\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12>\n" +
 	"\x06method\x18\x02 \x03(\v2&.google.protobuf.MethodDescriptorProtoR\x06method\x129\n" +
-	"\aoptions\x18\x03 \x01(\v2\x1f.google.protobuf.ServiceOptionsR\aoptions\"\x89\x02\n" +
+	"\aoptions\x18\x03 \x01(\v2\x1f.google.protobuf.ServiceOptionsR\aoptionsJ\x04\b\x04\x10\x05R\x06stream\"\x89\x02\n" +
 	"\x15MethodDescriptorProto\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1d\n" +
 	"\n" +
