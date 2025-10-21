@@ -8,8 +8,13 @@ import (
 	"testing"
 
 	testopenpb "google.golang.org/protobuf/internal/testprotos/test"
+	testnopackagepb "google.golang.org/protobuf/internal/testprotos/test/test_nopackage"
+	testoptionpb "google.golang.org/protobuf/internal/testprotos/test/test_option"
 	testhybridpb "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_hybrid"
 	testopaquepb "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_opaque"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/descriptorpb"
+	"google.golang.org/protobuf/types/gofeaturespb"
 )
 
 func TestFileModeEnum(t *testing.T) {
@@ -39,5 +44,19 @@ func TestFileModeMessage(t *testing.T) {
 	var hp any = &testhybridpb.TestAllTypes{}
 	if _, ok := hp.(interface{ EnumDescriptor() ([]byte, []int) }); ok {
 		t.Errorf("Hybrid proto did have deprecated method EnumDescriptor")
+	}
+}
+
+func TestImportOption(t *testing.T) {
+	m := &testoptionpb.OptionImportMessage{}
+	mdesc := m.ProtoReflect().Descriptor()
+
+	fileopts := mdesc.ParentFile().Options().(*descriptorpb.FileOptions)
+	if proto.GetExtension(fileopts.Features, gofeaturespb.E_Go).(*gofeaturespb.GoFeatures).GetApiLevel() != gofeaturespb.GoFeatures_API_OPAQUE {
+		t.Errorf("OptionImportMessage parent file options features does not have API_OPAQUE")
+	}
+
+	if proto.GetExtension(fileopts, testnopackagepb.E_NoPackageOption).(*testnopackagepb.NoPackageOption).GetName() != "no package option" {
+		t.Errorf("OptionImportMessage parent file options does not have no_package_option")
 	}
 }

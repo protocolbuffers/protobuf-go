@@ -1,0 +1,20 @@
+// Copyright 2025 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+edition = "2024";
+
+package goproto.proto.test;
+
+import "google/protobuf/descriptor.proto";
+
+// Intentionally leave out go_package options to make this hostile as a
+// transitive dependency.  It should still work well as an option dependency.
+
+message NoPackageOption {
+  string name = 1;
+}
+
+extend google.protobuf.FileOptions {
+  NoPackageOption no_package_option = 123456789;
+}

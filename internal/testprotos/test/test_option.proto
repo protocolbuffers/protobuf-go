@@ -1,0 +1,18 @@
+// Copyright 2025 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+edition = "2024";
+
+package goproto.proto.test;
+
+import option "internal/testprotos/test/test_nopackage.proto";
+import option "google/protobuf/go_features.proto";
+
+option go_package = "google.golang.org/protobuf/internal/testprotos/test/test_option";
+option features.(pb.go).api_level = API_OPAQUE;
+option (no_package_option).name = "no package option";
+
+message OptionImportMessage {
+  string name = 1;
+}

@@ -345,7 +345,10 @@ func generateLocalProtos() {
 		},
 		annotate: map[string]bool{"cmd/protoc-gen-go/testdata/annotations/annotations.proto": true},
 	}, {
-		path:    "internal/testprotos",
+		path: "internal/testprotos",
+		pkgPaths: map[string]string{
+			"internal/testprotos/test/test_nopackage.proto": "google.golang.org/protobuf/internal/testprotos/test/test_nopackage",
+		},
 		exclude: map[string]bool{"internal/testprotos/irregular/irregular.proto": true},
 	}, {
 		path: "src/",
