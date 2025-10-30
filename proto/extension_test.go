@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"reflect"
 	"sync"
+	"sync/atomic"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -120,14 +121,8 @@ func TestHasExtensionNoAlloc(t *testing.T) {
 		Corecursive: &testpb.TestAllExtensions{},
 	})
 
-	b, err := proto.Marshal(mEager)
-	if err != nil {
-		t.Fatal(err)
-	}
-	mLazy := &testpb.TestAllExtensions{}
-	if err := proto.Unmarshal(b, mLazy); err != nil {
-		t.Fatal(err)
-	}
+	// Number of runs that testing.AllocsPerRun will do.
+	const runs = 100
 
 	for _, tc := range []struct {
 		name string
@@ -135,23 +130,42 @@ func TestHasExtensionNoAlloc(t *testing.T) {
 	}{
 		{name: "Nil", m: nil},
 		{name: "Eager", m: mEager},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			avg := testing.AllocsPerRun(runs, func() {
+				proto.HasExtension(tc.m, testpb.E_OptionalNestedMessage)
+			})
+			if avg != 0 {
+				t.Errorf("proto.HasExtension should not allocate, but allocated %.2fx per run", avg)
+			}
+		})
+	}
+
+	// Lazy initialization only happens once, so we need to allocate enough
+	// copies for all testing.AllocsPerRun callbacks.
+	const copies = runs + 1 // + 1 because testing.AllocsPerRun does a warmup call
+	b, err := proto.Marshal(mEager)
+	if err != nil {
+		t.Fatal(err)
+	}
+	mLazy := make([]*testpb.TestAllExtensions, copies)
+	for i := range copies {
+		mLazy[i] = new(testpb.TestAllExtensions)
+		if err := proto.Unmarshal(b, mLazy[i]); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, tc := range []struct {
+		name string
+		m    []*testpb.TestAllExtensions
+	}{
 		{name: "Lazy", m: mLazy},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			// Testing for allocations can be done with `testing.AllocsPerRun`, but it
-			// has some snags that complicate its use for us:
-			//  - It performs a warmup invocation before starting the measurement. We
-			//    want to skip this because lazy initialization only happens once.
-			//  - Despite returning a float64, the returned value is an integer, so <1
-			//    allocations per operation are returned as 0. Therefore, pass runs =
-			//    1.
-			warmup := true
-			avg := testing.AllocsPerRun(1, func() {
-				if warmup {
-					warmup = false
-					return
-				}
-				proto.HasExtension(tc.m, testpb.E_OptionalNestedMessage)
+			var idx atomic.Int64
+			avg := testing.AllocsPerRun(runs, func() {
+				i := int(idx.Add(1))
+				proto.HasExtension(tc.m[i-1], testpb.E_OptionalNestedMessage)
 			})
 			if avg != 0 {
 				t.Errorf("proto.HasExtension should not allocate, but allocated %.2fx per run", avg)
