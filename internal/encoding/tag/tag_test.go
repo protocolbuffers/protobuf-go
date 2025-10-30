@@ -23,6 +23,7 @@ func Test(t *testing.T) {
 	fd.L1.Cardinality = protoreflect.Repeated
 	fd.L1.Kind = protoreflect.BytesKind
 	fd.L1.Default = filedesc.DefaultValue(protoreflect.ValueOf([]byte("hello, \xde\xad\xbe\xef\n")), nil)
+	fd.L1.EditionFeatures = fd.L0.ParentFile.L1.EditionFeatures
 
 	// Marshal test.
 	gotTag := tag.Marshal(fd, "")
@@ -36,5 +37,8 @@ func Test(t *testing.T) {
 	wantFD := fd
 	if !proto.Equal(protodesc.ToFieldDescriptorProto(gotFD), protodesc.ToFieldDescriptorProto(wantFD)) {
 		t.Errorf("Umarshal() mismatch:\ngot  %v\nwant %v", gotFD, wantFD)
+	}
+	if gotFD.(*filedesc.Field).L1.EditionFeatures != wantFD.L1.EditionFeatures {
+		t.Errorf("Unmarshal() did not set proto3 edition features")
 	}
 }
