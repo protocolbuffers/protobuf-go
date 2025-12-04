@@ -1555,6 +1555,13 @@ value: "some bytes"
 			TypeUrl: "foo.com/pb2.Nested",
 		},
 	}, {
+		desc:         "Any expanded with URL chars in type URL prefix",
+		inputMessage: &anypb.Any{},
+		inputText:    `[foo.com/bar//=*+./pb2.Nested]: {}`,
+		wantMessage: &anypb.Any{
+			TypeUrl: "foo.com/bar//=*+./pb2.Nested",
+		},
+	}, {
 		desc:         "Any expanded with missing required",
 		inputMessage: &anypb.Any{},
 		inputText: `

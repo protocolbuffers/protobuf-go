@@ -409,12 +409,24 @@ func TestDecoder(t *testing.T) {
 			},
 		},
 		{
+			in:   "[",
+			want: []R{{E: text.ErrUnexpectedEOF.Error()}},
+		},
+		{
+			in:   "[]",
+			want: []R{{E: "invalid type URL/extension field name: []"}},
+		},
+		{
 			// V1 allows this syntax. C++ does not, however, C++ also fails if
 			// field is Any and does not contain '/'.
 			in: "[/type]",
 			want: []R{
 				{K: text.Name, T: NT{K: text.TypeName, S: "/type"}},
 			},
+		},
+		{
+			in:   "[/domain.com/type]",
+			want: []R{{E: "invalid type URL/extension field name: [/domain.com/type]"}},
 		},
 		{
 			in:   "[.type]",
@@ -452,6 +464,25 @@ func TestDecoder(t *testing.T) {
 			},
 		},
 		{
+			// V3 allows more valid URL chars
+			in: "[url.special.chars/.~!$&()*+,;=/type]",
+			want: []R{
+				{
+					K: text.Name,
+					T: NT{K: text.TypeName, S: "url.special.chars/.~!$&()*+,;=/type"},
+				},
+			},
+		},
+		{
+			// V3 allows multiple slashes and empty path segments in URL prefix.
+			in: `message_field{[val/id//type]`,
+			want: []R{
+				{K: text.Name},
+				{K: text.MessageOpen},
+				{K: text.Name, T: NT{K: text.TypeName, S: "val/id//type"}},
+			},
+		},
+		{
 			// V2 no longer allows a quoted string for the Any type URL.
 			in:   `["domain.com/pkg.type"]`,
 			want: []R{{E: `invalid type URL/extension field name: ["`}},
@@ -466,14 +497,18 @@ func TestDecoder(t *testing.T) {
 			want: []R{{E: "invalid type URL/extension field name: [pkg.Foo.extension_field:"}},
 		},
 		{
-			// V2 no longer allows whitespace within identifier "word".
-			in:   "[proto.packa ge.field]",
-			want: []R{{E: "invalid type URL/extension field name: [proto.packa g"}},
+			// V3 allows whitespace anywhere between [ and ].
+			in: "[ do\tmain.\ncom/pro\rto.packa ge.field ]",
+			want: []R{
+				{K: text.Name, T: NT{K: text.TypeName, S: "domain.com/proto.package.field"}},
+			},
 		},
 		{
-			// V2 no longer allows comments within identifier "word".
-			in:   "[proto.packa # comment\n ge.field]",
-			want: []R{{E: "invalid type URL/extension field name: [proto.packa # comment\n g"}},
+			// V3 allows comments anywhere between [ and ].
+			in: "[# comment\n domain# comment\n .com/proto.packa # comment\n ge.field# comment\n]",
+			want: []R{
+				{K: text.Name, T: NT{K: text.TypeName, S: "domain.com/proto.package.field"}},
+			},
 		},
 		{
 			in:   "[proto.package.]",
@@ -492,12 +527,48 @@ func TestDecoder(t *testing.T) {
 			},
 		},
 		{
-			in: `message_field{[invalid//type]`,
-			want: []R{
-				{K: text.Name},
-				{K: text.MessageOpen},
-				{E: `invalid type URL/extension field name: [invalid//`},
-			},
+			// V3 allows URL percent-encoded chars
+			in: "[percent.encoded/%0a%1B%2c%3D%4e%F5%A6%b7%C8%f9/type]",
+			want: []R{{
+				K: text.Name,
+				T: NT{K: text.TypeName, S: "percent.encoded/%0a%1B%2c%3D%4e%F5%A6%b7%C8%f9/type"},
+			}},
+		},
+		{
+			in:   `[percent.encode.incomplete%/type]`,
+			want: []R{{E: `invalid type URL/extension field name: [percent.encode.incomplete%`}},
+		},
+		{
+			in:   `[percent.encode.nohex%Z/type]`,
+			want: []R{{E: `invalid type URL/extension field name: [percent.encode.nohex%Z`}},
+		},
+		{
+			in:   `[percent.encode.nohex%aZ/type]`,
+			want: []R{{E: `invalid type URL/extension field name: [percent.encode.nohex%aZ`}},
+		},
+		{
+			in:   `[percent.encode.eof%`,
+			want: []R{{E: `invalid type URL/extension field name: [percent.encode.eof%`}},
+		},
+		{
+			in:   `[percent.encode.eof%a`,
+			want: []R{{E: `invalid type URL/extension field name: [percent.encode.eof%a`}},
+		},
+		{
+			in:   `[invalid.type.char/type!]`,
+			want: []R{{E: `invalid type URL/extension field name: [invalid.type.char/type!`}},
+		},
+		{
+			in:   `[invalid.type.char/type=]`,
+			want: []R{{E: `invalid type URL/extension field name: [invalid.type.char/type=`}},
+		},
+		{
+			in:   `[invalid.type.char/type+]`,
+			want: []R{{E: `invalid type URL/extension field name: [invalid.type.char/type+`}},
+		},
+		{
+			in:   `[invalid.type.char/type%2b]`,
+			want: []R{{E: `invalid type URL/extension field name: [invalid.type.char/type%`}},
 		},
 		{
 			in: `message_field{[proto.package.]`,
