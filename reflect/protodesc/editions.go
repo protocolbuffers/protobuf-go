@@ -58,7 +58,7 @@ func getFeatureSetFor(ed filedesc.Edition) *descriptorpb.FeatureSet {
 		return def
 	}
 	edpb := toEditionProto(ed)
-	if defaults.GetMinimumEdition() > edpb || defaults.GetMaximumEdition() < edpb {
+	if (defaults.GetMinimumEdition() > edpb || defaults.GetMaximumEdition() < edpb) && edpb != descriptorpb.Edition_EDITION_UNSTABLE {
 		// This should never happen protodesc.(FileOptions).New would fail when
 		// initializing the file descriptor.
 		// This most likely means the embedded defaults were not updated.
