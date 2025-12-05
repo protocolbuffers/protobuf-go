@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-syntax = "proto2";
+edition = "2023";
 
 package lazy_extension_test;
 
@@ -12,15 +12,15 @@ option go_package = "google.golang.org/protobuf/internal/testprotos/lazy";
 
 // This message contains a message set.
 message Holder {
-  optional goproto.proto.messageset.MessageSet data = 1;
+  goproto.proto.messageset.MessageSet data = 1;
 }
 
 // This message may be inserted into a message set.
 message Rabbit {
   extend goproto.proto.messageset.MessageSet {
-    optional Rabbit message_set_extension = 345570595;
+    Rabbit message_set_extension = 345570595;
   }
-  optional string name = 1;
+  string name = 1 [features.utf8_validation = NONE];
 }
 
 enum FlyingFoxSpecies {
@@ -44,37 +44,42 @@ enum PipistrelleSpecies {
 }
 
 message FlyingFox {
-  optional FlyingFoxSpecies species = 1;
+  FlyingFoxSpecies species = 1;
 }
 
 message Tree {
-  optional bool eucalyptus = 1;
+  bool eucalyptus = 1;
   extensions 10000 to max;
 }
 
 extend Tree {
-  optional FlyingFox bat = 345570595;
+  FlyingFox bat = 345570595;
 }
 
 extend Tree {
-  optional FlyingFox bat_pup = 345570596;
+  FlyingFox bat_pup = 345570596;
+}
+
+message Pipistrelle {
+  PipistrelleSpecies species = 1;
+}
+
+message Pipistrelles {
+  PipistrelleSpecies species = 1;
 }
 
 extend Tree {
   repeated FlyingFox bat_posse = 345570597;
-  optional bytes binary_bat = 345570598;
-  optional uint32 integer_bat = 345570599;
-  optional group Pipistrelle = 345570600 {
-    optional PipistrelleSpecies species = 1;
-  }
-  repeated group Pipistrelles = 345570601 {
-    optional PipistrelleSpecies species = 1;
-  }
+  bytes binary_bat = 345570598;
+  uint32 integer_bat = 345570599;
+  Pipistrelle pipistrelle = 345570600 [features.message_encoding = DELIMITED];
+  repeated Pipistrelles pipistrelles = 345570601
+      [features.message_encoding = DELIMITED];
 }
 
 // And the ugly version that is not encouraged
 message BatNest {
   extend Tree {
-    optional FlyingFox bat = 345570602;
+    FlyingFox bat = 345570602;
   }
 }

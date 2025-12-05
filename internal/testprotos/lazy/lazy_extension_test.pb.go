@@ -75,16 +75,6 @@ func (x FlyingFoxSpecies) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Do not use.
-func (x *FlyingFoxSpecies) UnmarshalJSON(b []byte) error {
-	num, err := protoimpl.X.UnmarshalJSONEnum(x.Descriptor(), b)
-	if err != nil {
-		return err
-	}
-	*x = FlyingFoxSpecies(num)
-	return nil
-}
-
 // Deprecated: Use FlyingFoxSpecies.Descriptor instead.
 func (FlyingFoxSpecies) EnumDescriptor() ([]byte, []int) {
 	return file_internal_testprotos_lazy_lazy_extension_test_proto_rawDescGZIP(), []int{0}
@@ -141,16 +131,6 @@ func (PipistrelleSpecies) Type() protoreflect.EnumType {
 
 func (x PipistrelleSpecies) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Do not use.
-func (x *PipistrelleSpecies) UnmarshalJSON(b []byte) error {
-	num, err := protoimpl.X.UnmarshalJSONEnum(x.Descriptor(), b)
-	if err != nil {
-		return err
-	}
-	*x = PipistrelleSpecies(num)
-	return nil
 }
 
 // Deprecated: Use PipistrelleSpecies.Descriptor instead.
@@ -569,9 +549,9 @@ const file_internal_testprotos_lazy_lazy_extension_test_proto_rawDesc = "" +
 	"\n" +
 	"2internal/testprotos/lazy/lazy_extension_test.proto\x12\x13lazy_extension_test\x1a=internal/testprotos/messageset/messagesetpb/message_set.proto\"B\n" +
 	"\x06Holder\x128\n" +
-	"\x04data\x18\x01 \x01(\v2$.goproto.proto.messageset.MessageSetR\x04data\"\x97\x01\n" +
-	"\x06Rabbit\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name2y\n" +
+	"\x04data\x18\x01 \x01(\v2$.goproto.proto.messageset.MessageSetR\x04data\"\x9e\x01\n" +
+	"\x06Rabbit\x12\x19\n" +
+	"\x04name\x18\x01 \x01(\tB\x05\xaa\x01\x02 \x03R\x04name2y\n" +
 	"\x15message_set_extension\x12$.goproto.proto.messageset.MessageSet\x18\xa3\xfa\xe3\xa4\x01 \x01(\v2\x1b.lazy_extension_test.RabbitR\x13messageSetExtension\"L\n" +
 	"\tFlyingFox\x12?\n" +
 	"\aspecies\x18\x01 \x01(\x0e2%.lazy_extension_test.FlyingFoxSpeciesR\aspecies\"1\n" +
@@ -610,11 +590,9 @@ const file_internal_testprotos_lazy_lazy_extension_test_proto_rawDesc = "" +
 	"\n" +
 	"binary_bat\x12\x19.lazy_extension_test.Tree\x18\xa6\xfa\xe3\xa4\x01 \x01(\fR\tbinaryBat:>\n" +
 	"\vinteger_bat\x12\x19.lazy_extension_test.Tree\x18\xa7\xfa\xe3\xa4\x01 \x01(\rR\n" +
-	"integerBat:a\n" +
-	"\vpipistrelle\x12\x19.lazy_extension_test.Tree\x18\xa8\xfa\xe3\xa4\x01 \x01(\n" +
-	"2 .lazy_extension_test.PipistrelleR\vpipistrelle:d\n" +
-	"\fpipistrelles\x12\x19.lazy_extension_test.Tree\x18\xa9\xfa\xe3\xa4\x01 \x03(\n" +
-	"2!.lazy_extension_test.PipistrellesR\fpipistrellesB5Z3google.golang.org/protobuf/internal/testprotos/lazy"
+	"integerBat:h\n" +
+	"\vpipistrelle\x12\x19.lazy_extension_test.Tree\x18\xa8\xfa\xe3\xa4\x01 \x01(\v2 .lazy_extension_test.PipistrelleB\x05\xaa\x01\x02(\x02R\vpipistrelle:k\n" +
+	"\fpipistrelles\x12\x19.lazy_extension_test.Tree\x18\xa9\xfa\xe3\xa4\x01 \x03(\v2!.lazy_extension_test.PipistrellesB\x05\xaa\x01\x02(\x02R\fpipistrellesB5Z3google.golang.org/protobuf/internal/testprotos/lazyb\beditionsp\xe8\a"
 
 var (
 	file_internal_testprotos_lazy_lazy_extension_test_proto_rawDescOnce sync.Once

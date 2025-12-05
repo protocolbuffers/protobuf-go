@@ -140,7 +140,7 @@ const file_internal_testprotos_lazy_lazy_normalized_wire_test_proto_rawDesc = ""
 	"grandchild\"K\n" +
 	"\x04FTop\x12\f\n" +
 	"\x01a\x18\x01 \x01(\rR\x01a\x125\n" +
-	"\x05child\x18\x02 \x01(\v2\x1f.lazy_normalized_wire_test.FSubR\x05childB5Z3google.golang.org/protobuf/internal/testprotos/lazy"
+	"\x05child\x18\x02 \x01(\v2\x1f.lazy_normalized_wire_test.FSubR\x05childB5Z3google.golang.org/protobuf/internal/testprotos/lazyb\beditionsp\xe8\a"
 
 var (
 	file_internal_testprotos_lazy_lazy_normalized_wire_test_proto_rawDescOnce sync.Once

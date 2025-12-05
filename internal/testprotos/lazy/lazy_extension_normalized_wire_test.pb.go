@@ -196,7 +196,7 @@ const file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_ra
 	"\x05child\x18\x02 \x01(\v2(.lazy_extension_normalized_wire_test.SubR\x05child\"\x84\x01\n" +
 	"\x03Ext\x12\x1b\n" +
 	"\tsome_flag\x18\x01 \x01(\bR\bsomeFlag2`\n" +
-	"\x01b\x12(.lazy_extension_normalized_wire_test.Sub\x18\x02 \x01(\v2(.lazy_extension_normalized_wire_test.ExtR\x01bB5Z3google.golang.org/protobuf/internal/testprotos/lazy"
+	"\x01b\x12(.lazy_extension_normalized_wire_test.Sub\x18\x02 \x01(\v2(.lazy_extension_normalized_wire_test.ExtR\x01bB5Z3google.golang.org/protobuf/internal/testprotos/lazyb\beditionsp\xe8\a"
 
 var (
 	file_internal_testprotos_lazy_lazy_extension_normalized_wire_test_proto_rawDescOnce sync.Once
