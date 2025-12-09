@@ -46,6 +46,8 @@ func toEditionProto(ed filedesc.Edition) descriptorpb.Edition {
 		return descriptorpb.Edition_EDITION_2023
 	case filedesc.Edition2024:
 		return descriptorpb.Edition_EDITION_2024
+	case filedesc.EditionUnstable:
+		return descriptorpb.Edition_EDITION_UNSTABLE
 	default:
 		panic(fmt.Sprintf("unknown value for edition: %v", ed))
 	}
