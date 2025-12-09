@@ -27,7 +27,8 @@ func TestValidateValid(t *testing.T) {
 					want = test.validationStatus
 				}
 				out, status := impl.Validate(mt, piface.UnmarshalInput{
-					Buf: test.wire,
+					Buf:   test.wire,
+					Depth: test.unmarshalOptions.RecursionLimit,
 				})
 				if status != want {
 					t.Errorf("Validate(%x) = %v, want %v", test.wire, status, want)
@@ -46,7 +47,8 @@ func TestValidateInvalid(t *testing.T) {
 			t.Run(fmt.Sprintf("%s (%T)", test.desc, m), func(t *testing.T) {
 				mt := m.ProtoReflect().Type()
 				_, got := impl.Validate(mt, piface.UnmarshalInput{
-					Buf: test.wire,
+					Buf:   test.wire,
+					Depth: test.unmarshalOptions.RecursionLimit,
 				})
 				want := impl.ValidationInvalid
 				if got != want {

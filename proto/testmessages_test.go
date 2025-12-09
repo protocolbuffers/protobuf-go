@@ -1687,6 +1687,110 @@ var testValidMessages = []testProto{
 			}),
 		}.Marshal(),
 	},
+
+	{
+		desc: "under recursion limit, but with many varint fields",
+		unmarshalOptions: proto.UnmarshalOptions{
+			// This message has no submessages.
+			RecursionLimit: 1,
+		},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_int32": []int32{
+				1, 2, 3,
+			},
+		}),
+		wire: protopack.Message{
+			protopack.Tag{31, protopack.VarintType}, protopack.Varint(1),
+			protopack.Tag{31, protopack.VarintType}, protopack.Varint(2),
+			protopack.Tag{31, protopack.VarintType}, protopack.Varint(3),
+		}.Marshal(),
+	},
+
+	{
+		desc: "just at recursion limit (no submessages)",
+		unmarshalOptions: proto.UnmarshalOptions{
+			// This message has no submessages.
+			RecursionLimit: 1,
+		},
+		decodeTo: makeMessages(protobuild.Message{
+			"repeated_int32": []int32{
+				1,
+			},
+		}),
+		wire: protopack.Message{
+			protopack.Tag{31, protopack.VarintType}, protopack.Varint(1),
+		}.Marshal(),
+	},
+
+	{
+		desc: "just at recursion limit",
+		unmarshalOptions: proto.UnmarshalOptions{
+			RecursionLimit: 3,
+		},
+		decodeTo: makeMessages(protobuild.Message{
+			"optional_nested_message": protobuild.Message{
+				"corecursive": protobuild.Message{
+					"repeated_int32": []int32{1},
+				},
+			},
+		}),
+		wire: protopack.Message{
+			protopack.Tag{18, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{31, protopack.VarintType}, protopack.Varint(1),
+				}),
+			}),
+		}.Marshal(),
+	},
+
+	{
+		desc: "just at recursion limit: maps",
+		unmarshalOptions: proto.UnmarshalOptions{
+			// Maps are syntactic sugar for repeated fields of a synthetic
+			// message type (with key as field 1, value as field 2).
+			RecursionLimit: 2,
+		},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_int32_int32": map[int32]int32{1056: 1156, 2056: 2156},
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
+		wire: protopack.Message{
+			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(1056),
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1156),
+			}),
+			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(2056),
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(2156),
+			}),
+		}.Marshal(),
+	},
+
+	{
+		desc: "just at recursion limit: maps of messages",
+		unmarshalOptions: proto.UnmarshalOptions{
+			RecursionLimit: 3,
+		},
+		decodeTo: makeMessages(protobuild.Message{
+			"map_string_nested_message": map[string]protobuild.Message{
+				"71.1.key": {"a": 1171},
+				"71.2.key": {"a": 2171},
+			},
+		}, &test3pb.TestAllTypes{}, &testeditionspb.TestAllTypes{}),
+		wire: protopack.Message{
+			protopack.Tag{71, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.BytesType}, protopack.String("71.1.key"),
+				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(1171),
+				}),
+			}),
+			protopack.Tag{71, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.BytesType}, protopack.String("71.2.key"),
+				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(2171),
+				}),
+			}),
+		}.Marshal(),
+	},
 }
 
 var testInvalidMessages = []testProto{
@@ -2224,6 +2328,83 @@ var testInvalidMessages = []testProto{
 			protopack.Raw("\xff\xff\xff\xff\xff\xff\xff\xff\xff"),
 		}.Marshal(),
 	},
+	{
+		desc: "exceed recursion limit",
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
+		},
+		unmarshalOptions: proto.UnmarshalOptions{
+			RecursionLimit: 5,
+		},
+		wire: recursivelyNestedMessage(3),
+	},
+	{
+		desc: "exceed recursion limit: maps",
+		unmarshalOptions: proto.UnmarshalOptions{
+			// Maps are syntactic sugar for repeated fields of a synthetic
+			// message type (with key as field 1, value as field 2).
+			RecursionLimit: 1,
+		},
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
+		},
+		wire: protopack.Message{
+			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(1056),
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(1156),
+			}),
+			protopack.Tag{56, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.VarintType}, protopack.Varint(2056),
+				protopack.Tag{2, protopack.VarintType}, protopack.Varint(2156),
+			}),
+		}.Marshal(),
+	},
+	{
+		desc: "exceed recursion limit: maps of messages",
+		unmarshalOptions: proto.UnmarshalOptions{
+			RecursionLimit: 2,
+		},
+		decodeTo: []proto.Message{
+			(*testpb.TestAllTypes)(nil),
+			(*testeditionspb.TestAllTypes)(nil),
+		},
+		wire: protopack.Message{
+			protopack.Tag{71, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.BytesType}, protopack.String("71.1.key"),
+				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(1171),
+				}),
+			}),
+			protopack.Tag{71, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{1, protopack.BytesType}, protopack.String("71.2.key"),
+				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Tag{1, protopack.VarintType}, protopack.Varint(2171),
+				}),
+			}),
+		}.Marshal(),
+	},
+}
+
+// recursivelyNestedMessage returns a message with 2*depth submessages
+// (2*depth because of the definition of testpb.TestAllTypes).
+func recursivelyNestedMessage(depth int) []byte {
+	var prev []byte
+	prev = protopack.Message{
+		protopack.Tag{1, protopack.VarintType}, protopack.Varint(depth),
+	}.Marshal()
+	for depth > 0 {
+		prev = protopack.Message{
+			protopack.Tag{18, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+				protopack.Tag{2, protopack.BytesType}, protopack.LengthPrefix(protopack.Message{
+					protopack.Raw(prev),
+				}),
+			}),
+		}.Marshal()
+		depth--
+	}
+	return prev
 }
 
 type filterResolver struct {
