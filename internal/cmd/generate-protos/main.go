@@ -305,8 +305,16 @@ func generateOpaqueTestprotos() {
 
 func generateEditionsDefaults() {
 	dest := filepath.Join(repoRoot, "internal", "editiondefaults", "editions_defaults.binpb")
+	features := filepath.Join(repoRoot, "src", "google", "protobuf", "go_features.proto")
+	generateFeaturesEditionsDefaults(features, dest)
+
+	dest = filepath.Join(repoRoot, "cmd", "protoc-gen-go", "feature_resolution_test", "test_features_defaults.binpb")
+	features = filepath.Join(repoRoot, "cmd", "protoc-gen-go", "testdata", "features", "test_features.proto")
+	generateFeaturesEditionsDefaults(features, dest)
+}
+
+func generateFeaturesEditionsDefaults(features string, dest string) {
 	srcDescriptorProto := filepath.Join(protoRoot, "src", "google", "protobuf", "descriptor.proto")
-	srcGoFeatures := filepath.Join(repoRoot, "src", "google", "protobuf", "go_features.proto")
 	// The enum in Go string formats to "EDITION_${EDITION}" but protoc expects
 	// the flag in the form "${EDITION}". To work around this, we trim the
 	// "EDITION_" prefix.
@@ -318,7 +326,8 @@ func generateEditionsDefaults() {
 		"--edition_defaults_minimum", minEdition,
 		"--edition_defaults_maximum", maxEdition,
 		"-I"+filepath.Join(protoRoot, "src"), "-I"+filepath.Join(repoRoot, "src"),
-		srcDescriptorProto, srcGoFeatures,
+		"-I"+repoRoot,
+		srcDescriptorProto, features,
 	)
 	out, err := cmd.CombinedOutput()
 	if err != nil {

@@ -1,0 +1,114 @@
+// Copyright 2025 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// This file contains a set of custom features for testing feature resolution of
+// arbitrary languages.
+
+edition = "2024";
+
+package goproto.protoc.features;
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/features";
+
+extend google.protobuf.FeatureSet {
+  TestFeatures test_features = 9999;
+}
+
+local message TestFeatures {
+  EnumFeature enum_feature = 1 [
+    retention = RETENTION_RUNTIME,
+    targets = TARGET_TYPE_FILE,
+    targets = TARGET_TYPE_FIELD,
+    targets = TARGET_TYPE_MESSAGE,
+    targets = TARGET_TYPE_ENUM,
+    targets = TARGET_TYPE_ENUM_ENTRY,
+    targets = TARGET_TYPE_SERVICE,
+    targets = TARGET_TYPE_METHOD,
+    targets = TARGET_TYPE_ONEOF,
+    targets = TARGET_TYPE_EXTENSION_RANGE,
+    feature_support.edition_introduced = EDITION_2023,
+    edition_defaults = { edition: EDITION_LEGACY, value: "VALUE1" },
+    edition_defaults = { edition: EDITION_2023, value: "VALUE2" },
+    edition_defaults = { edition: EDITION_2024, value: "VALUE3" }
+  ];
+
+  bool bool_feature = 2 [
+    retention = RETENTION_RUNTIME,
+    targets = TARGET_TYPE_FILE,
+    targets = TARGET_TYPE_FIELD,
+    targets = TARGET_TYPE_MESSAGE,
+    targets = TARGET_TYPE_ENUM,
+    targets = TARGET_TYPE_ENUM_ENTRY,
+    targets = TARGET_TYPE_SERVICE,
+    targets = TARGET_TYPE_METHOD,
+    targets = TARGET_TYPE_ONEOF,
+    targets = TARGET_TYPE_EXTENSION_RANGE,
+    feature_support.edition_introduced = EDITION_2023,
+    edition_defaults = { edition: EDITION_LEGACY, value: "false" },
+    edition_defaults = { edition: EDITION_2023, value: "true" }
+  ];
+
+  EnumFeature source_feature = 3 [
+    retention = RETENTION_SOURCE,
+    targets = TARGET_TYPE_FILE,
+    targets = TARGET_TYPE_FIELD,
+    targets = TARGET_TYPE_MESSAGE,
+    targets = TARGET_TYPE_ENUM,
+    targets = TARGET_TYPE_ENUM_ENTRY,
+    targets = TARGET_TYPE_SERVICE,
+    targets = TARGET_TYPE_METHOD,
+    targets = TARGET_TYPE_ONEOF,
+    targets = TARGET_TYPE_EXTENSION_RANGE,
+    feature_support.edition_introduced = EDITION_2023,
+    edition_defaults = { edition: EDITION_LEGACY, value: "VALUE1" }
+  ];
+
+  EnumFeature fixed_feature = 4 [
+    retention = RETENTION_RUNTIME,
+    targets = TARGET_TYPE_FILE,
+    targets = TARGET_TYPE_FIELD,
+    feature_support = {
+      edition_introduced: EDITION_2023
+      edition_removed: EDITION_2023
+    },
+    edition_defaults = { edition: EDITION_LEGACY, value: "VALUE1" },
+    edition_defaults = { edition: EDITION_2023, value: "VALUE2" }
+  ];
+
+  EnumFeature future_feature = 5 [
+    retention = RETENTION_RUNTIME,
+    targets = TARGET_TYPE_FILE,
+    targets = TARGET_TYPE_FIELD,
+    feature_support = { edition_introduced: EDITION_2024 },
+    edition_defaults = { edition: EDITION_LEGACY, value: "VALUE1" },
+    edition_defaults = { edition: EDITION_2024, value: "VALUE2" }
+  ];
+
+  EnumFeature unstable_feature = 7 [
+    retention = RETENTION_RUNTIME,
+    targets = TARGET_TYPE_FILE,
+    targets = TARGET_TYPE_FIELD,
+    targets = TARGET_TYPE_MESSAGE,
+    targets = TARGET_TYPE_ENUM,
+    targets = TARGET_TYPE_ENUM_ENTRY,
+    targets = TARGET_TYPE_SERVICE,
+    targets = TARGET_TYPE_METHOD,
+    targets = TARGET_TYPE_ONEOF,
+    targets = TARGET_TYPE_EXTENSION_RANGE,
+    feature_support.edition_introduced = EDITION_UNSTABLE,
+    edition_defaults = { edition: EDITION_LEGACY, value: "VALUE1" },
+    edition_defaults = { edition: EDITION_UNSTABLE, value: "VALUE2" }
+  ];
+}
+
+local enum EnumFeature {
+  TEST_ENUM_FEATURE_UNKNOWN = 0;
+  VALUE1 = 1;
+  VALUE2 = 2;
+  VALUE3 = 3;
+  VALUE4 = 4;
+  VALUE5 = 5;
+}

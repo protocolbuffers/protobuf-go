@@ -14,6 +14,8 @@ import (
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/extensions/ext"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/extensions/extra"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/extensions/proto3"
+	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/featureresolution"
+	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/features"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/fieldnames"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_option"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/import_option_custom"

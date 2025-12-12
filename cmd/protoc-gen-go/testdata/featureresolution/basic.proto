@@ -1,0 +1,51 @@
+// Copyright 2025 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// This file contains a basic file layout for testing feature resolution.  It is
+// constructed in a way where it can be easily transformed to newer editions.
+
+edition = "2023";
+
+package net.proto2.go.testdata.featureresolution;
+
+option go_package = "google.golang.org/protobuf/cmd/protoc-gen-go/testdata/featureresolution";
+
+message TopMessage {
+  int32 field = 1;
+
+  oneof o {
+    string oneof_field = 2;
+  }
+
+  message NestedMessage {
+    int32 numeric_field = 1;
+  }
+
+  enum NestedEnum {
+    UNKNOWN = 0;
+    VALUE1 = 1;
+    VALUE2 = 2;
+  }
+
+  extensions 100 to 199;
+
+  extend TopMessage {
+    int32 ext = 100;
+  }
+}
+
+enum TopEnum {
+  TOP_ENUM_UNKNOWN = 0;
+  TOP_ENUM_VALUE1 = 1;
+  TOP_ENUM_VALUE2 = 2;
+}
+
+extend TopMessage {
+  string ext = 104;
+}
+
+service TopService {
+  // Test method.
+  rpc Method(TopMessage) returns (TopMessage) {}
+}
