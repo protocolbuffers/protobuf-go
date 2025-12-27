@@ -1289,6 +1289,26 @@ str_to_nested: {
 		inputText:    "reserved_field: 'ignore this'",
 		wantMessage:  &pb2.Nests{},
 	}, {
+		desc: "reset message when merge is not set",
+		inputMessage: &pb3.Scalars{
+			SBool: true,
+		},
+		inputText: `s_string: "abc"`,
+		wantMessage: &pb3.Scalars{
+			SString: "abc",
+		},
+	}, {
+		desc: "message not reset when merge is enabled",
+		umo:  prototext.UnmarshalOptions{Merge: true},
+		inputMessage: &pb3.Scalars{
+			SBool: true,
+		},
+		inputText: `s_string: "abc"`,
+		wantMessage: &pb3.Scalars{
+			SBool:   true,
+			SString: "abc",
+		},
+	}, {
 		desc:         "extensions of non-repeated fields",
 		inputMessage: &pb2.Extensions{},
 		inputText: `opt_string: "non-extension field"
