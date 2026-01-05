@@ -399,6 +399,21 @@ func TestUnmarshal(t *testing.T) {
 		inputText:    `{"sFloat": true}`,
 		wantErr:      `invalid value for float field sFloat: true`,
 	}, {
+		desc:         "partially numeric float, space",
+		inputMessage: &pb3.Scalars{},
+		inputText:    `{"sFloat": "12 34"}`,
+		wantErr:      `invalid value for float field sFloat: "12 34"`,
+	}, {
+		desc:         "partially numeric float, comma",
+		inputMessage: &pb3.Scalars{},
+		inputText:    `{"sFloat": "12,34"}`,
+		wantErr:      `invalid value for float field sFloat: "12,34"`,
+	}, {
+		desc:         "partially numeric float, unicode",
+		inputMessage: &pb3.Scalars{},
+		inputText:    `{"sFloat": "12谷歌34"}`,
+		wantErr:      `invalid value for float field sFloat: "12谷歌34"`,
+	}, {
 		desc:         "not double",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sDouble": "not a number"}`,
@@ -495,10 +510,30 @@ func TestUnmarshal(t *testing.T) {
 		inputText:    `{"sInt32": "not a number"}`,
 		wantErr:      `invalid value for int32 field sInt32: "not a number"`,
 	}, {
+		desc:         "partially numeric integer, space",
+		inputMessage: &pb3.Scalars{},
+		inputText:    `{"sInt32": "12 34"}`,
+		wantErr:      `invalid value for int32 field sInt32: "12 34"`,
+	}, {
+		desc:         "partially numeric integer, comma",
+		inputMessage: &pb3.Scalars{},
+		inputText:    `{"sInt32": "12,34"}`,
+		wantErr:      `invalid value for int32 field sInt32: "12,34"`,
+	}, {
+		desc:         "partially numeric integer, unicode",
+		inputMessage: &pb3.Scalars{},
+		inputText:    `{"sInt32": "12谷歌34"}`,
+		wantErr:      `invalid value for int32 field sInt32: "12谷歌34"`,
+	}, {
 		desc:         "not unsigned integer",
 		inputMessage: &pb3.Scalars{},
 		inputText:    `{"sUint32": "not a number"}`,
 		wantErr:      `invalid value for uint32 field sUint32: "not a number"`,
+	}, {
+		desc:         "partially numeric integer, space",
+		inputMessage: &pb3.Scalars{},
+		inputText:    `{"sUint32": "12 34"}`,
+		wantErr:      `invalid value for uint32 field sUint32: "12 34"`,
 	}, {
 		desc:         "number is not an unsigned integer",
 		inputMessage: &pb3.Scalars{},
