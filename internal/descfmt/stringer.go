@@ -261,9 +261,13 @@ func formatDescOpt(t protoreflect.Descriptor, isRoot, allowMulti bool, record fu
 			}...)
 
 		case protoreflect.ServiceDescriptor:
-			rs.Append(rv, []methodAndName{
-				{rv.MethodByName("Methods"), "Methods"},
-			}...)
+			// MethodByName(<constant-string>) makes the linker keep all methods with
+			// the given name for all reachable types.
+			// In particular for the name "Methods" it means the linker will keep
+			// `reflect.Value.Methods()` and `reflect.Type.Methods()` with Go 1.26+,
+			// which disable method dead code elimination entirely.
+			// So we avoid using MethodByName for Methods.
+			rs.appendCallResult(rv, "Methods", reflect.ValueOf(t.Methods()))
 
 		case protoreflect.MethodDescriptor:
 			rs.Append(rv, []methodAndName{
@@ -299,66 +303,70 @@ func (rs *records) AppendRecs(fieldName string, newRecs [2]string) {
 
 func (rs *records) Append(v reflect.Value, accessors ...methodAndName) {
 	for _, a := range accessors {
-		if rs.record != nil {
-			rs.record(a.name)
-		}
 		var rv reflect.Value
 		if a.method.IsValid() {
 			rv = a.method.Call(nil)[0]
 		}
-		if v.Kind() == reflect.Struct && !rv.IsValid() {
-			rv = v.FieldByName(a.name)
-		}
-		if !rv.IsValid() {
-			panic(fmt.Sprintf("unknown accessor: %v.%s", v.Type(), a.name))
-		}
-		if _, ok := rv.Interface().(protoreflect.Value); ok {
-			rv = rv.MethodByName("Interface").Call(nil)[0]
-			if !rv.IsNil() {
-				rv = rv.Elem()
-			}
-		}
-
-		// Ignore zero values.
-		var isZero bool
-		switch rv.Kind() {
-		case reflect.Interface, reflect.Slice:
-			isZero = rv.IsNil()
-		case reflect.Bool:
-			isZero = rv.Bool() == false
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			isZero = rv.Int() == 0
-		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			isZero = rv.Uint() == 0
-		case reflect.String:
-			isZero = rv.String() == ""
-		}
-		if n, ok := rv.Interface().(list); ok {
-			isZero = n.Len() == 0
-		}
-		if isZero {
-			continue
-		}
-
-		// Format the value.
-		var s string
-		v := rv.Interface()
-		switch v := v.(type) {
-		case list:
-			s = formatListOpt(v, false, rs.allowMulti)
-		case protoreflect.FieldDescriptor, protoreflect.OneofDescriptor, protoreflect.EnumValueDescriptor, protoreflect.MethodDescriptor:
-			s = string(v.(protoreflect.Descriptor).Name())
-		case protoreflect.Descriptor:
-			s = string(v.FullName())
-		case string:
-			s = strconv.Quote(v)
-		case []byte:
-			s = fmt.Sprintf("%q", v)
-		default:
-			s = fmt.Sprint(v)
-		}
-		rs.recs = append(rs.recs, [2]string{a.name, s})
+		rs.appendCallResult(v, a.name, rv)
 	}
+}
+
+func (rs *records) appendCallResult(val reflect.Value, name string, rv reflect.Value) {
+	if rs.record != nil {
+		rs.record(name)
+	}
+	if val.Kind() == reflect.Struct && !rv.IsValid() {
+		rv = val.FieldByName(name)
+	}
+	if !rv.IsValid() {
+		panic(fmt.Sprintf("unknown accessor: %v.%s", val.Type(), name))
+	}
+	if _, ok := rv.Interface().(protoreflect.Value); ok {
+		rv = rv.MethodByName("Interface").Call(nil)[0]
+		if !rv.IsNil() {
+			rv = rv.Elem()
+		}
+	}
+
+	// Ignore zero values.
+	var isZero bool
+	switch rv.Kind() {
+	case reflect.Interface, reflect.Slice:
+		isZero = rv.IsNil()
+	case reflect.Bool:
+		isZero = rv.Bool() == false
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		isZero = rv.Int() == 0
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		isZero = rv.Uint() == 0
+	case reflect.String:
+		isZero = rv.String() == ""
+	}
+	if n, ok := rv.Interface().(list); ok {
+		isZero = n.Len() == 0
+	}
+	if isZero {
+		return
+	}
+
+	// Format the value.
+	var s string
+	v := rv.Interface()
+	switch v := v.(type) {
+	case list:
+		s = formatListOpt(v, false, rs.allowMulti)
+	case protoreflect.FieldDescriptor, protoreflect.OneofDescriptor, protoreflect.EnumValueDescriptor, protoreflect.MethodDescriptor:
+		s = string(v.(protoreflect.Descriptor).Name())
+	case protoreflect.Descriptor:
+		s = string(v.FullName())
+	case string:
+		s = strconv.Quote(v)
+	case []byte:
+		s = fmt.Sprintf("%q", v)
+	default:
+		s = fmt.Sprint(v)
+	}
+	rs.recs = append(rs.recs, [2]string{name, s})
 }
 
 func (rs *records) Join() string {
