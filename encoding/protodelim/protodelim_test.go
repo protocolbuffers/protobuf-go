@@ -10,6 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"io"
+	"math"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -154,6 +155,26 @@ func TestMaxSize(t *testing.T) {
 		t.Errorf("protodelim.UnmarshalOptions{MaxSize: 1}.UnmarshalFrom(_, _) = %v (%T), want %T", err, err, errSize)
 	}
 	got, want := errSize, &protodelim.SizeTooLargeError{Size: 3, MaxSize: 1}
+	if diff := cmp.Diff(want, got); diff != "" {
+		t.Errorf("protodelim.UnmarshalOptions{MaxSize: 1}.UnmarshalFrom(_, _): diff -want +got = %s", diff)
+	}
+}
+
+func TestMaxSizeOverflow(t *testing.T) {
+	buf := &bytes.Buffer{}
+	sb := protowire.AppendVarint(nil, math.MaxInt+1)
+	if _, err := buf.Write(sb); err != nil {
+		t.Fatalf("buf.Write(%v) = _, %v", sb, err)
+	}
+
+	out := &test3.TestAllTypes{}
+	err := protodelim.UnmarshalOptions{MaxSize: -1}.UnmarshalFrom(bufio.NewReader(buf), out)
+
+	var errSize *protodelim.SizeTooLargeError
+	if !errors.As(err, &errSize) {
+		t.Errorf("protodelim.UnmarshalOptions{MaxSize: 1}.UnmarshalFrom(_, _) = %v (%T), want %T", err, err, errSize)
+	}
+	got, want := errSize, &protodelim.SizeTooLargeError{Size: math.MaxInt + 1, MaxSize: math.MaxInt}
 	if diff := cmp.Diff(want, got); diff != "" {
 		t.Errorf("protodelim.UnmarshalOptions{MaxSize: 1}.UnmarshalFrom(_, _): diff -want +got = %s", diff)
 	}
