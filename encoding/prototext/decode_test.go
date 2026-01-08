@@ -1621,6 +1621,74 @@ unknown: ""
 type_url: "pb2.Nested"
 `,
 		wantErr: "(line 3:1): conflict with [pb2.Nested] field",
+	}, {
+		desc:         "just at recursion limit (no submessages)",
+		umo:          prototext.UnmarshalOptions{RecursionLimit: 1},
+		inputMessage: &pbeditions.Nested{},
+		inputText:    `opt_string: "hey"`,
+	}, {
+		desc:         "just at recursion limit",
+		umo:          prototext.UnmarshalOptions{RecursionLimit: 3},
+		inputMessage: &pbeditions.Nested{},
+		inputText:    `opt_nested: { opt_nested: { opt_string: "hey" } }`,
+	}, {
+		desc: "just at recursion limit: maps",
+		umo: prototext.UnmarshalOptions{
+			// Maps are syntatic sugar for repeated fields of a synthetic
+			// message type (with key as field 1, value as field 2).
+			RecursionLimit: 2,
+		},
+		inputMessage: &pbeditions.Maps{},
+		inputText:    `str_to_nested: { key: "missing" }`,
+	}, {
+		desc: "just at recursion limit: maps of messages",
+		umo: prototext.UnmarshalOptions{
+			RecursionLimit: 3,
+		},
+		inputMessage: &pbeditions.Maps{},
+		inputText: `str_to_nested: {
+  key: "missing"
+}
+str_to_nested: {
+  key: "contains"
+  value: {
+    opt_string: "here"
+  }
+}
+`,
+	}, {
+		desc:         "exceed recursion limit",
+		umo:          prototext.UnmarshalOptions{RecursionLimit: 1},
+		inputMessage: &pbeditions.Nested{},
+		inputText:    `opt_nested: { opt_string: "hey" }`,
+		wantErr:      "exceeded maximum recursion depth",
+	}, {
+		desc: "exceed recursion limit: maps",
+		umo: prototext.UnmarshalOptions{
+			// Maps are syntatic sugar for repeated fields of a synthetic
+			// message type (with key as field 1, value as field 2).
+			RecursionLimit: 1,
+		},
+		inputMessage: &pbeditions.Maps{},
+		inputText:    `str_to_nested: { key: "missing" }`,
+		wantErr:      "exceeded maximum recursion depth",
+	}, {
+		desc: "exceed recursion limit: maps of messages",
+		umo: prototext.UnmarshalOptions{
+			RecursionLimit: 2,
+		},
+		inputMessage: &pbeditions.Maps{},
+		inputText: `str_to_nested: {
+  key: "missing"
+}
+str_to_nested: {
+  key: "contains"
+  value: {
+    opt_string: "here"
+  }
+}
+`,
+		wantErr: "exceeded maximum recursion depth",
 	}}
 
 	for _, msg := range makeMessages(protobuild.Message{},
