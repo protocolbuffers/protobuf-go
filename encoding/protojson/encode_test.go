@@ -1717,8 +1717,7 @@ func TestMarshal(t *testing.T) {
 			}
 		}(),
 		want: `{
-  "@type": "type.googleapis.com/google.protobuf.Empty",
-  "value": {}
+  "@type": "type.googleapis.com/google.protobuf.Empty"
 }`,
 	}, {
 		desc: "Any with StringValue containing invalid UTF8",
@@ -1927,8 +1926,7 @@ func TestMarshal(t *testing.T) {
   "optValue": "world",
   "optEmpty": {},
   "optAny": {
-    "@type": "google.protobuf.Empty",
-    "value": {}
+    "@type": "google.protobuf.Empty"
   },
   "optFieldmask": "fooBar,barFoo"
 }`,
