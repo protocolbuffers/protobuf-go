@@ -470,6 +470,7 @@ func generateRemoteProtos() {
 		{"src", "editions/golden/test_messages_proto2_editions.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editionsmigration;editions"},
 		{"src", "editions/golden/test_messages_proto3_editions.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editionsmigration;editions"},
 		{"", "conformance/test_protos/test_messages_edition2023.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editions;editions"},
+		{"", "conformance/test_protos/test_messages_edition_unstable.proto", "google.golang.org/protobuf/internal/testprotos/conformance/editionunstable;editionunstable"},
 
 		// Benchmark protos.
 		// TODO: The protobuf repo no longer includes benchmarks.

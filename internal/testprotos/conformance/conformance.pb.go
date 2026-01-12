@@ -277,7 +277,8 @@ type ConformanceRequest struct {
 	// protobuf_test_messages.proto2.TestAllTypesProto2 or
 	// protobuf_test_messages.editions.proto2.TestAllTypesProto2 or
 	// protobuf_test_messages.editions.proto3.TestAllTypesProto3 or
-	// protobuf_test_messages.editions.TestAllTypesEdition2023.
+	// protobuf_test_messages.editions.TestAllTypesEdition2023 or
+	// protobuf_test_messages.edition_unstable.TestAllTypesEditionUnstable.
 	MessageType string `protobuf:"bytes,4,opt,name=message_type,json=messageType,proto3" json:"message_type,omitempty"`
 	// Each test is given a specific test category. Some category may need
 	// specific support in testee programs. Refer to the definition of

@@ -242,8 +242,7 @@ func TestEditionUnstable(t *testing.T) {
 	fd.Edition = descpb.Edition_EDITION_UNSTABLE.Enum()
 	file := protogenFor(t, fd)
 
-	// Note: this should be VALUE2 but 33.2 doesn't produce the correct defaults for EDITION_UNSTABLE.
-	checkTestFeature(t, file.ResolvedFeatures, "unstable_feature", testfeaturespb.EnumFeature_VALUE1.Number())
+	checkTestFeature(t, file.ResolvedFeatures, "unstable_feature", testfeaturespb.EnumFeature_VALUE2.Number())
 }
 
 func TestInheritance(t *testing.T) {

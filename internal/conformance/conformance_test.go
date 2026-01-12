@@ -22,6 +22,7 @@ import (
 	pb "google.golang.org/protobuf/internal/testprotos/conformance"
 	epb "google.golang.org/protobuf/internal/testprotos/conformance/editions"
 	empb "google.golang.org/protobuf/internal/testprotos/conformance/editionsmigration"
+	eupb "google.golang.org/protobuf/internal/testprotos/conformance/editionunstable"
 )
 
 func init() {
@@ -106,6 +107,8 @@ func handle(req *pb.ConformanceRequest) (res *pb.ConformanceResponse) {
 		msg = &pb.TestAllTypesProto2{}
 	case "protobuf_test_messages.editions.TestAllTypesEdition2023":
 		msg = &epb.TestAllTypesEdition2023{}
+	case "protobuf_test_messages.edition_unstable.TestAllTypesEditionUnstable":
+		msg = &eupb.TestAllTypesEditionUnstable{}
 	case "protobuf_test_messages.editions.proto3.TestAllTypesProto3":
 		msg = &empb.TestAllTypesProto3{}
 	case "protobuf_test_messages.editions.proto2.TestAllTypesProto2":
