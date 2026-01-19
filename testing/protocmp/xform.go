@@ -212,7 +212,8 @@ func Transform(opts ...option) cmp.Option {
 	return cmp.FilterPath(func(p cmp.Path) bool {
 		ps := p.Last()
 		if isMessageType(addrType(ps.Type())) {
-			return true
+			// Check if message is embed to support message embed struct
+			return !isMessageEmbed(ps.Type())
 		}
 
 		// Check whether the concrete values of an interface both satisfy
@@ -222,7 +223,9 @@ func Transform(opts ...option) cmp.Option {
 			if !vx.IsValid() || vx.IsNil() || !vy.IsValid() || vy.IsNil() {
 				return false
 			}
-			return isMessageType(addrType(vx.Elem().Type())) && isMessageType(addrType(vy.Elem().Type()))
+			return isMessageType(addrType(vx.Elem().Type())) && isMessageType(addrType(vy.Elem().Type())) &&
+				// Check if message is embed to support message embed struct
+				!isMessageEmbed(addrType(vx.Elem().Type())) && !isMessageEmbed(addrType(vy.Elem().Type()))
 		}
 
 		return false
@@ -245,6 +248,25 @@ func Transform(opts ...option) cmp.Option {
 			return xf.transformMessage(m)
 		}
 	}))
+}
+
+func isMessageEmbed(t reflect.Type) bool {
+	if t.Kind() == reflect.Pointer {
+		t = t.Elem()
+	}
+	if t.Kind() != reflect.Struct {
+		return false
+	}
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		if !field.Anonymous {
+			continue
+		}
+		if isMessageType(t.Field(i).Type) {
+			return true
+		}
+	}
+	return false
 }
 
 func isMessageType(t reflect.Type) bool {
