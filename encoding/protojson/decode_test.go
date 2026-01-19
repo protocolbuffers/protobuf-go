@@ -2709,6 +2709,72 @@ func TestUnmarshal(t *testing.T) {
 				10: 101,
 			},
 		},
+	}, /* test ErrorOnUnknownEnumValue undoes DiscardUnknown for enums, but not others */ {
+		desc: "DiscardUnknown: Any, ErrorOnUnknownEnumValue: true",
+		umo: protojson.UnmarshalOptions{
+			DiscardUnknown:          true,
+			ErrorOnUnknownEnumValue: true,
+		},
+		inputMessage: &anypb.Any{},
+		inputText: `{
+  "@type": "foo/pb2.Nested",
+  "unknown": "none"
+}`,
+		wantMessage: &anypb.Any{
+			TypeUrl: "foo/pb2.Nested",
+		},
+	}, {
+		desc: "DiscardUnknown: Any with Empty, ErrorOnUnknownEnumValue: true",
+		umo: protojson.UnmarshalOptions{
+			DiscardUnknown:          true,
+			ErrorOnUnknownEnumValue: true,
+		},
+		inputMessage: &anypb.Any{},
+		inputText: `{
+  "@type": "type.googleapis.com/google.protobuf.Empty",
+  "value": {"unknown": 47}
+}`,
+		wantMessage: &anypb.Any{
+			TypeUrl: "type.googleapis.com/google.protobuf.Empty",
+		},
+	}, {
+		desc:         "DiscardUnknown: true, ErrorOnUnknownEnumValue: true - unknown enum name",
+		inputMessage: &pb3.Enums{},
+		inputText: `{
+  "sEnum": "UNNAMED"
+}`,
+		umo: protojson.UnmarshalOptions{
+			DiscardUnknown:          true,
+			ErrorOnUnknownEnumValue: true,
+		},
+		wantErr: `invalid value for enum field sEnum: "UNNAMED"`, // weak_message2 is unknown since the package containing it is not imported
+	}, {
+		desc:         "DiscardUnknown: true, ErrorOnUnknownEnumValue: true - repeated enum unknown name",
+		inputMessage: &pb2.Enums{},
+		inputText: `{
+  "rptEnum"      : ["TEN", 1, 42, "UNNAMED"]
+}`,
+		umo: protojson.UnmarshalOptions{
+			DiscardUnknown:          true,
+			ErrorOnUnknownEnumValue: true,
+		},
+		wantErr: `invalid value for enum field rptEnum: "UNNAMED"`, // weak_message2 is unknown since the package containing it is not imported
+	}, {
+		desc:         "DiscardUnknown: true, ErrorOnUnknownEnumValue: true - enum map value unknown name",
+		inputMessage: &pb3.Maps{},
+		inputText: `{
+  "uint64ToEnum": {
+    "1" : "ONE",
+	"2" : 2,
+	"10": 101,
+	"3": "UNNAMED"
+  }
+}`,
+		umo: protojson.UnmarshalOptions{
+			DiscardUnknown:          true,
+			ErrorOnUnknownEnumValue: true,
+		},
+		wantErr: `invalid value for enum field value: "UNNAMED"`, // weak_message2 is unknown since the package containing it is not imported
 	}, {
 		desc:         "just at recursion limit: nested messages",
 		inputMessage: &testpb.TestAllTypes{},
