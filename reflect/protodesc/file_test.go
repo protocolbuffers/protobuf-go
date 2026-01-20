@@ -958,6 +958,46 @@ func TestNewFile(t *testing.T) {
 	}
 }
 
+func TestNewFileProto3OptionalExt(t *testing.T) {
+	fdset := &descriptorpb.FileDescriptorSet{
+		File: []*descriptorpb.FileDescriptorProto{
+			mustParseFile(`
+				name: "google/protobuf/descriptor.proto"
+				package: "google.protobuf"
+				message_type: [{
+					name: "EnumValueOptions"
+					extension_range: [{start:1 end:536870912}]
+				}]
+			`),
+			mustParseFile(`
+				syntax: "proto3"
+				name: "test.proto"
+				package: "test"
+				dependency: "google/protobuf/descriptor.proto"
+				extension: [{
+					name: "optional_field"
+					number: 100000
+					label: LABEL_OPTIONAL
+					type: TYPE_STRING
+					extendee: ".google.protobuf.EnumValueOptions"
+					proto3_optional: true
+				}]
+			`),
+		},
+	}
+	f, err := NewFiles(fdset)
+	if err != nil {
+		t.Fatalf("NewFile(test.proto): %v", err)
+	}
+	ext, err := f.FindDescriptorByName("test.optional_field")
+	if err != nil {
+		t.Fatalf(`f.FindDescriptorByName("test.optional_field") = %v`, err)
+	}
+	if !ext.(protoreflect.ExtensionDescriptor).HasOptionalKeyword() {
+		t.Errorf("HasOptionalKeyword() = false, want true for proto3 optional extension field")
+	}
+}
+
 func TestNewFiles(t *testing.T) {
 	fdset := &descriptorpb.FileDescriptorSet{
 		File: []*descriptorpb.FileDescriptorProto{
