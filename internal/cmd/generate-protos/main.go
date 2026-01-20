@@ -411,7 +411,7 @@ func generateLocalProtos() {
 					opts += fmt.Sprintf(",apilevelM%v=%v", relPath, "API_OPEN")
 				}
 			}
-			protoc("-I"+filepath.Join(repoRoot, "src"), "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_out="+opts+":"+tmpDir, filepath.Join(repoRoot, relPath))
+			protoc("-I"+filepath.Join(repoRoot, "src"), "-I"+filepath.Join(protoRoot, "src"), "-I"+repoRoot, "--go_opt="+opts, "--go_out="+tmpDir, filepath.Join(repoRoot, relPath))
 			return nil
 		})
 

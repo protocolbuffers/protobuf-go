@@ -131,10 +131,11 @@ type Options struct {
 	// generator parameter.
 	//
 	// Plugins for protoc can accept parameters from the command line,
-	// passed in the --<lang>_out protoc, separated from the output
-	// directory with a colon; e.g.,
+	// passed in the --<lang>_opt protoc flag, in addition to the
+	// (required) output directory in --<lang>_out; e.g.,
 	//
-	//   --go_out=<param1>=<value1>,<param2>=<value2>:<output_directory>
+	//   --go_opt=<param1>=<value1>,<param2>=<value2>
+	//   --go_out=<output_directory>
 	//
 	// Parameters passed in this fashion as a comma-separated list of
 	// key=value pairs will be passed to the ParamFunc.
