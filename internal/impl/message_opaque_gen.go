@@ -8,6 +8,7 @@ package impl
 
 import (
 	"reflect"
+	"unsafe"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -94,10 +95,11 @@ func getterForOpaqueNullableScalar(mi *MessageInfo, index uint32, fd protoreflec
 				if *x == nil {
 					return conv.Zero()
 				}
-				if len(**x) == 0 {
+				s := **x
+				if len(s) == 0 {
 					return protoreflect.ValueOfBytes(nil)
 				}
-				return protoreflect.ValueOfBytes([]byte(**x))
+				return protoreflect.ValueOfBytes(unsafe.Slice(unsafe.StringData(s), len(s)))
 			}
 		}
 		return func(p pointer) protoreflect.Value {

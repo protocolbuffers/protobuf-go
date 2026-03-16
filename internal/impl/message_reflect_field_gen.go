@@ -8,6 +8,7 @@ package impl
 
 import (
 	"reflect"
+	"unsafe"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -122,7 +123,8 @@ func getterForNullableScalar(fd protoreflect.FieldDescriptor, fs reflect.StructF
 				if len(**x) == 0 {
 					return protoreflect.ValueOfBytes(nil)
 				}
-				return protoreflect.ValueOfBytes([]byte(**x))
+				s := **x
+				return protoreflect.ValueOfBytes(unsafe.Slice(unsafe.StringData(s), len(s)))
 			}
 		}
 		return func(p pointer) protoreflect.Value {
