@@ -733,6 +733,9 @@ func (d decoder) unmarshalExpandedAny(typeURL string, pos int) ([]byte, error) {
 // to the next field. It relies on Read returning an error if the types are not
 // in valid sequence.
 func (d decoder) skipValue() error {
+	if d.opts.RecursionLimit--; d.opts.RecursionLimit < 0 {
+		return errRecursionDepth
+	}
 	tok, err := d.Read()
 	if err != nil {
 		return err
@@ -768,6 +771,9 @@ func (d decoder) skipValue() error {
 // skipMessageValue makes the decoder parse and skip over all fields in a
 // message. It assumes that the previous read type is MessageOpen.
 func (d decoder) skipMessageValue() error {
+	if d.opts.RecursionLimit--; d.opts.RecursionLimit < 0 {
+		return errRecursionDepth
+	}
 	for {
 		tok, err := d.Read()
 		if err != nil {
