@@ -319,6 +319,9 @@ func (c *stringConverter) PBValueOf(v reflect.Value) protoreflect.Value {
 	if v.Type() != c.goType {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
+	if c.goType.Kind() == reflect.String {
+		return protoreflect.ValueOfString(v.String())
+	}
 	return protoreflect.ValueOfString(v.Convert(stringType).String())
 }
 func (c *stringConverter) GoValueOf(v protoreflect.Value) reflect.Value {
@@ -349,10 +352,13 @@ func (c *bytesConverter) PBValueOf(v reflect.Value) protoreflect.Value {
 	if v.Type() != c.goType {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
-	if c.goType.Kind() == reflect.String && v.Len() == 0 {
-		return protoreflect.ValueOfBytes(nil) // ensure empty string is []byte(nil)
+	if c.goType.Kind() == reflect.String {
+		if v.Len() == 0 {
+			return protoreflect.ValueOfBytes(nil) // ensure empty string is []byte(nil)
+		}
+		return protoreflect.ValueOfBytes(v.Convert(bytesType).Bytes())
 	}
-	return protoreflect.ValueOfBytes(v.Convert(bytesType).Bytes())
+	return protoreflect.ValueOfBytes(v.Bytes())
 }
 func (c *bytesConverter) GoValueOf(v protoreflect.Value) reflect.Value {
 	return reflect.ValueOf(v.Bytes()).Convert(c.goType)
