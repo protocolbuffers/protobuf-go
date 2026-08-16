@@ -683,7 +683,11 @@ func newFile(gen *Plugin, p *descriptorpb.FileDescriptorProto, packageName GoPac
 // from the Go import path when separated by a ';' delimiter.
 func splitImportPathAndPackageName(s string) (GoImportPath, GoPackageName) {
 	if i := strings.Index(s, ";"); i >= 0 {
-		return GoImportPath(s[:i]), GoPackageName(s[i+1:])
+		packageName := GoPackageName(s[i+1:])
+		if packageName != "" && !isValidPackageName(packageName) {
+			packageName = cleanPackageName(string(packageName))
+		}
+		return GoImportPath(s[:i]), packageName
 	}
 	return GoImportPath(s), ""
 }
@@ -1604,6 +1608,10 @@ type GoPackageName string
 // cleanPackageName converts a string to a valid Go package name.
 func cleanPackageName(name string) GoPackageName {
 	return GoPackageName(strs.GoSanitized(name))
+}
+
+func isValidPackageName(name GoPackageName) bool {
+	return name != "_" && token.IsIdentifier(string(name))
 }
 
 type pathType int
