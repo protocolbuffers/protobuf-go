@@ -85,6 +85,7 @@ type Api struct {
 	// `google.feature.v1`. For major versions 0 and 1, the suffix can
 	// be omitted. Zero major versions must only be used for
 	// experimental, non-GA interfaces.
+	//
 	Version string `protobuf:"bytes,4,opt,name=version,proto3" json:"version,omitempty"`
 	// Source context for the protocol buffer service represented by this
 	// message.

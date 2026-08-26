@@ -615,10 +615,8 @@ type M4_builder struct {
 	// initial name in Go     | Clashes with field | type | final name
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetFoo              | get_foo            | 1    | GetGetFoo_
-	//
-	//	GetGetGetFoo          | -                  | -    | GetGetGetFoo
-	//	                      |                    |      |
-	//
+	//  GetGetGetFoo          | -                  | -    | GetGetGetFoo
+	//                        |                    |      |
 	// Foo                    | get_foo            | 2    | Foo_
 	// New Scheme:
 	// initial name in Go     | Clashes with field | type | Getter name
@@ -815,10 +813,8 @@ type M5_builder struct {
 	// initial name in Go     | Clashes with field | type | final name
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetGetFoo           | -                  | -    | GetGetGetFoo
-	//
-	//	GetGetFoo             | get_foo            | 1    | GetGetFoo_
-	//	                      |                    |      |
-	//
+	//  GetGetFoo             | get_foo            | 1    | GetGetFoo_
+	//                        |                    |      |
 	// Foo                    | get_foo            | 2    | Foo_
 	// New Scheme:
 	// initial name in Go     | Clashes with field | type | Getter name

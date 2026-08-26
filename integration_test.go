@@ -40,19 +40,18 @@ var (
 		// This matches the version policy of the Google Cloud Client Libraries:
 		// https://cloud.google.com/go/getting-started/supported-go-versions
 		return []string{
-			"1.23.12",
-			"1.24.6",
-			"1.25.0",
+			"1.26.0",
+			"1.27.0",
 		}
 	}()
 	golangLatest = golangVersions[len(golangVersions)-1]
 
-	staticcheckVersion = "2025.1"
+	staticcheckVersion = "2026.2.1"
 	staticcheckSHA256s = map[string]string{
-		"darwin/amd64": "b9c82a0bdcf0bd7b5c46524d7e58323f17998b2e15ecacba608ac21be9fa345d",
-		"darwin/arm64": "1fc58b389de90e1e220fd23489dc685fc3e6435266f3c20c914f56a98f99844c",
-		"linux/386":    "58f7e465f7c15f70cea0b940e530826031d414b37ebdd40b073b2ca215171b42",
-		"linux/amd64":  "b0f4a46bab253bda0d9e874abcd988453c95f3ed849e617c34123c37c11a0604",
+		"darwin/amd64": "a581a26261c9554a9a9450e0de2d0cfd93a7babd4de98cc9ea556444015216f4",
+		"darwin/arm64": "06db0a00e5d44d0d60bc99dab10e1bd49103531054d560af658775450a25f72c",
+		"linux/386":    "e258cc70dcee3d7f922ffd253b3b75e61cd752c2d5f654b662e9116671ad4584",
+		"linux/amd64":  "91186205a78db3f2d40efb3c102749aef66f85c2204793de7488d163b655aa7c",
 	}
 
 	// purgeTimeout determines the maximum age of unused sub-directories.
@@ -182,6 +181,7 @@ func TestIntegration(t *testing.T) {
 		var findings []string
 		for _, finding := range strings.Split(strings.TrimSpace(out), "\n") {
 			switch {
+			case finding == "":
 			case strings.HasPrefix(finding, "internal/testprotos/legacy/"):
 			default:
 				findings = append(findings, finding)

@@ -276,10 +276,8 @@ type M4 struct {
 	// initial name in Go     | Clashes with field | type | final name
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetFoo              | get_foo            | 1    | GetGetFoo_
-	//
-	//	GetGetGetFoo          | -                  | -    | GetGetGetFoo
-	//	                      |                    |      |
-	//
+	//  GetGetGetFoo          | -                  | -    | GetGetGetFoo
+	//                        |                    |      |
 	// Foo                    | get_foo            | 2    | Foo_
 	GetFoo *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
 	// Types that are valid to be assigned to GetGetFoo_:
@@ -367,10 +365,8 @@ type M5 struct {
 	// initial name in Go     | Clashes with field | type | final name
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetGetFoo           | -                  | -    | GetGetGetFoo
-	//
-	//	GetGetFoo             | get_foo            | 1    | GetGetFoo_
-	//	                      |                    |      |
-	//
+	//  GetGetFoo             | get_foo            | 1    | GetGetFoo_
+	//                        |                    |      |
 	// Foo                    | get_foo            | 2    | Foo_
 	GetFoo *M0 `protobuf:"bytes,2,opt,name=get_foo,json=getFoo,proto3" json:"get_foo,omitempty"`
 	// Types that are valid to be assigned to GetGetGetFoo:
@@ -457,10 +453,8 @@ type M6 struct {
 	// Note evaluation order - get_get_get_foo before get_get_foo
 	// initial name in Go     | Clashes with field | type | final name
 	// GetGetFoo              | -                  | -    | GetGetFoo
-	//
-	//	GetGetGetFoo          | -                  | -    | GetGetGetFoo
-	//	                      |                    |      |
-	//
+	//  GetGetGetFoo          | -                  | -    | GetGetGetFoo
+	//                        |                    |      |
 	// GetFoo                 | get_get_foo        | 2    | GetFoo_
 	// Foo                    | -                  | -    | Foo
 	//
@@ -549,11 +543,9 @@ type M7 struct {
 	// Note evaluation order - bar before get_get_foo, then get_get_get_foo
 	// initial name in Go     | Clashes with field | type | final name
 	// GetGetFoo              | -                  | -    | GetGetFoo
-	//
-	//	Bar                   | -                  | -    | Bar
-	//	GetFoo                | foo                | 1    | GetFoo_
-	//	                      |                    |      |
-	//
+	//  Bar                   | -                  | -    | Bar
+	//  GetFoo                | foo                | 1    | GetFoo_
+	//                        |                    |      |
 	// Foo                    | -                  | -    | Foo
 	//
 	// Types that are valid to be assigned to GetGetFoo:
@@ -649,10 +641,8 @@ type M8 struct {
 	// Note evaluation order - get_get_foo before get_get_get_foo
 	// initial name in Go     | Clashes with field | type | final name
 	// GetGetGetFoo           | get_get_foo        | 1    | GetGetGetFoo_
-	//
-	//	GetGetFoo             | -                  | -    | GetGetFoo
-	//	                      |                    |      |
-	//
+	//  GetGetFoo             | -                  | -    | GetGetFoo
+	//                        |                    |      |
 	// GetFoo                 | get_get_foo        | 2    | GetFoo_
 	// Foo                    | -                  | -    | Foo
 	//
@@ -741,11 +731,9 @@ type M9 struct {
 	// Note evaluation order - get_get_foo before get_get_get_foo, then get_foo
 	// initial name in Go     | Clashes with field | type | final name
 	// GetGetGetFoo           | get_get_foo        | 1    | GetGetGetFoo_
-	//
-	//	GetGetFoo             | -                  | -    | GetGetFoo
-	//	GetFoo                | get_get_foo        | 2    | GetFoo_
-	//	                      |                    |      |
-	//
+	//  GetGetFoo             | -                  | -    | GetGetFoo
+	//  GetFoo                | get_get_foo        | 2    | GetFoo_
+	//                        |                    |      |
 	// Foo                    | -                  | -    | Foo
 	//
 	// Types that are valid to be assigned to GetGetGetFoo_:

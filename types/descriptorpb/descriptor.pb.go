@@ -2702,12 +2702,10 @@ type MessageOptions struct {
 	// efficient, has fewer features, and is more complicated.
 	//
 	// The message must be defined exactly as follows:
-	//
-	//	message Foo {
-	//	  option message_set_wire_format = true;
-	//	  extensions 4 to max;
-	//	}
-	//
+	//   message Foo {
+	//     option message_set_wire_format = true;
+	//     extensions 4 to max;
+	//   }
 	// Note that the message cannot have any defined fields; MessageSets only
 	// have extensions.
 	//
@@ -2730,17 +2728,14 @@ type MessageOptions struct {
 	// maps field.
 	//
 	// For maps fields:
-	//
-	//	map<KeyType, ValueType> map_field = 1;
-	//
+	//     map<KeyType, ValueType> map_field = 1;
 	// The parsed descriptor looks like:
-	//
-	//	message MapFieldEntry {
-	//	    option map_entry = true;
-	//	    optional KeyType key = 1;
-	//	    optional ValueType value = 2;
-	//	}
-	//	repeated MapFieldEntry map_field = 1;
+	//     message MapFieldEntry {
+	//         option map_entry = true;
+	//         optional KeyType key = 1;
+	//         optional ValueType value = 2;
+	//     }
+	//     repeated MapFieldEntry map_field = 1;
 	//
 	// Implementations may choose not to generate the map_entry=true message, but
 	// use a native map in the target language to hold the keys and values.
@@ -3797,48 +3792,43 @@ type SourceCodeInfo struct {
 	// tools.
 	//
 	// For example, say we have a file like:
-	//
-	//	message Foo {
-	//	  optional string foo = 1;
-	//	}
-	//
+	//   message Foo {
+	//     optional string foo = 1;
+	//   }
 	// Let's look at just the field definition:
-	//
-	//	optional string foo = 1;
-	//	^       ^^     ^^  ^  ^^^
-	//	a       bc     de  f  ghi
-	//
+	//   optional string foo = 1;
+	//   ^       ^^     ^^  ^  ^^^
+	//   a       bc     de  f  ghi
 	// We have the following locations:
-	//
-	//	span   path               represents
-	//	[a,i)  [ 4, 0, 2, 0 ]     The whole field definition.
-	//	[a,b)  [ 4, 0, 2, 0, 4 ]  The label (optional).
-	//	[c,d)  [ 4, 0, 2, 0, 5 ]  The type (string).
-	//	[e,f)  [ 4, 0, 2, 0, 1 ]  The name (foo).
-	//	[g,h)  [ 4, 0, 2, 0, 3 ]  The number (1).
+	//   span   path               represents
+	//   [a,i)  [ 4, 0, 2, 0 ]     The whole field definition.
+	//   [a,b)  [ 4, 0, 2, 0, 4 ]  The label (optional).
+	//   [c,d)  [ 4, 0, 2, 0, 5 ]  The type (string).
+	//   [e,f)  [ 4, 0, 2, 0, 1 ]  The name (foo).
+	//   [g,h)  [ 4, 0, 2, 0, 3 ]  The number (1).
 	//
 	// Notes:
-	//   - A location may refer to a repeated field itself (i.e. not to any
-	//     particular index within it).  This is used whenever a set of elements are
-	//     logically enclosed in a single code segment.  For example, an entire
-	//     extend block (possibly containing multiple extension definitions) will
-	//     have an outer location whose path refers to the "extensions" repeated
-	//     field without an index.
-	//   - Multiple locations may have the same path.  This happens when a single
-	//     logical declaration is spread out across multiple places.  The most
-	//     obvious example is the "extend" block again -- there may be multiple
-	//     extend blocks in the same scope, each of which will have the same path.
-	//   - A location's span is not always a subset of its parent's span.  For
-	//     example, the "extendee" of an extension declaration appears at the
-	//     beginning of the "extend" block and is shared by all extensions within
-	//     the block.
-	//   - Just because a location's span is a subset of some other location's span
-	//     does not mean that it is a descendant.  For example, a "group" defines
-	//     both a type and a field in a single declaration.  Thus, the locations
-	//     corresponding to the type and field and their components will overlap.
-	//   - Code which tries to interpret locations should probably be designed to
-	//     ignore those that it doesn't understand, as more types of locations could
-	//     be recorded in the future.
+	// - A location may refer to a repeated field itself (i.e. not to any
+	//   particular index within it).  This is used whenever a set of elements are
+	//   logically enclosed in a single code segment.  For example, an entire
+	//   extend block (possibly containing multiple extension definitions) will
+	//   have an outer location whose path refers to the "extensions" repeated
+	//   field without an index.
+	// - Multiple locations may have the same path.  This happens when a single
+	//   logical declaration is spread out across multiple places.  The most
+	//   obvious example is the "extend" block again -- there may be multiple
+	//   extend blocks in the same scope, each of which will have the same path.
+	// - A location's span is not always a subset of its parent's span.  For
+	//   example, the "extendee" of an extension declaration appears at the
+	//   beginning of the "extend" block and is shared by all extensions within
+	//   the block.
+	// - Just because a location's span is a subset of some other location's span
+	//   does not mean that it is a descendant.  For example, a "group" defines
+	//   both a type and a field in a single declaration.  Thus, the locations
+	//   corresponding to the type and field and their components will overlap.
+	// - Code which tries to interpret locations should probably be designed to
+	//   ignore those that it doesn't understand, as more types of locations could
+	//   be recorded in the future.
 	Location        []*SourceCodeInfo_Location `protobuf:"bytes,1,rep,name=location" json:"location,omitempty"`
 	extensionFields protoimpl.ExtensionFields
 	unknownFields   protoimpl.UnknownFields
@@ -4535,57 +4525,39 @@ type SourceCodeInfo_Location struct {
 	// Each element is a field number or an index.  They form a path from
 	// the root FileDescriptorProto to the place where the definition appears.
 	// For example, this path:
-	//
-	//	[ 4, 3, 2, 7, 1 ]
-	//
+	//   [ 4, 3, 2, 7, 1 ]
 	// refers to:
-	//
-	//	file.message_type(3)  // 4, 3
-	//	    .field(7)         // 2, 7
-	//	    .name()           // 1
-	//
+	//   file.message_type(3)  // 4, 3
+	//       .field(7)         // 2, 7
+	//       .name()           // 1
 	// This is because FileDescriptorProto.message_type has field number 4:
-	//
-	//	repeated DescriptorProto message_type = 4;
-	//
+	//   repeated DescriptorProto message_type = 4;
 	// and DescriptorProto.field has field number 2:
-	//
-	//	repeated FieldDescriptorProto field = 2;
-	//
+	//   repeated FieldDescriptorProto field = 2;
 	// and FieldDescriptorProto.name has field number 1:
-	//
-	//	optional string name = 1;
+	//   optional string name = 1;
 	//
 	// Thus, the above path gives the location of a field name.  If we removed
 	// the last element:
-	//
-	//	[ 4, 3, 2, 7 ]
-	//
+	//   [ 4, 3, 2, 7 ]
 	// this path refers to the whole field declaration (from the beginning
 	// of the label to the terminating semicolon).
 	//
 	// For options, the path refers to the interpreted option in the descriptor.
 	// E.g., for a custom option `(my_opt) = "foo"` on a message using extension
 	// number 10101, the path is:
-	//
-	//	[ 4, 3, 7, 10101 ]
-	//
+	//   [ 4, 3, 7, 10101 ]
 	// refers to:
-	//
-	//	file.message_type(3)     // 4, 3
-	//	    .options()           // 7
-	//	    .my_opt()            // 10101
+	//   file.message_type(3)     // 4, 3
+	//       .options()           // 7
+	//       .my_opt()            // 10101
 	//
 	// Sub-locations corresponding to the interpreted option's corresponding
 	// `UninterpretedOption` are also appended to the interpreted option, which
 	// deviates from the actual FileDescriptorProto path. E.g.:
-	//
-	//	[ 4, 3, 7, 10101, 2 ]
-	//
+	//   [ 4, 3, 7, 10101, 2 ]
 	// refers to the option name `(my_opt)`, and:
-	//
-	//	[ 4, 3, 7, 10101, 7 ]
-	//
+	//   [ 4, 3, 7, 10101, 7 ]
 	// refers to the "foo" string value of the option.
 	Path []int32 `protobuf:"varint,1,rep,packed,name=path" json:"path,omitempty"`
 	// Always has exactly three or four elements: start line, start column,
@@ -4613,34 +4585,34 @@ type SourceCodeInfo_Location struct {
 	//
 	// Examples:
 	//
-	//	optional int32 foo = 1;  // Comment attached to foo.
-	//	// Comment attached to bar.
-	//	optional int32 bar = 2;
+	//   optional int32 foo = 1;  // Comment attached to foo.
+	//   // Comment attached to bar.
+	//   optional int32 bar = 2;
 	//
-	//	optional string baz = 3;
-	//	// Comment attached to baz.
-	//	// Another line attached to baz.
+	//   optional string baz = 3;
+	//   // Comment attached to baz.
+	//   // Another line attached to baz.
 	//
-	//	// Comment attached to moo.
-	//	//
-	//	// Another line attached to moo.
-	//	optional double moo = 4;
+	//   // Comment attached to moo.
+	//   //
+	//   // Another line attached to moo.
+	//   optional double moo = 4;
 	//
-	//	// Detached comment for corge. This is not leading or trailing comments
-	//	// to moo or corge because there are blank lines separating it from
-	//	// both.
+	//   // Detached comment for corge. This is not leading or trailing comments
+	//   // to moo or corge because there are blank lines separating it from
+	//   // both.
 	//
-	//	// Detached comment for corge paragraph 2.
+	//   // Detached comment for corge paragraph 2.
 	//
-	//	optional string corge = 5;
-	//	/* Block comment attached
-	//	 * to corge.  Leading asterisks
-	//	 * will be removed. */
-	//	/* Block comment attached to
-	//	 * grault. */
-	//	optional int32 grault = 6;
+	//   optional string corge = 5;
+	//   /* Block comment attached
+	//    * to corge.  Leading asterisks
+	//    * will be removed. */
+	//   /* Block comment attached to
+	//    * grault. */
+	//   optional int32 grault = 6;
 	//
-	//	// ignored detached comments.
+	//   // ignored detached comments.
 	LeadingComments         *string  `protobuf:"bytes,3,opt,name=leading_comments,json=leadingComments" json:"leading_comments,omitempty"`
 	TrailingComments        *string  `protobuf:"bytes,4,opt,name=trailing_comments,json=trailingComments" json:"trailing_comments,omitempty"`
 	LeadingDetachedComments []string `protobuf:"bytes,6,rep,name=leading_detached_comments,json=leadingDetachedComments" json:"leading_detached_comments,omitempty"`
