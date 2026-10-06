@@ -68,9 +68,3 @@ const (
 const (
 	FeatureSet_Go_ext_number protoreflect.FieldNumber = 1002
 )
-
-// Extension fullnames and names
-const (
-	FeatureSet_Go_ext_fullname protoreflect.FullName = "pb.go"
-	FeatureSet_Go_ext_name     protoreflect.Name     = "go"
-)

@@ -34,9 +34,3 @@ const (
 const (
 	EnumValueOptions_Json_ext_number protoreflect.FieldNumber = 998
 )
-
-// Extension fullnames and names
-const (
-	EnumValueOptions_Json_ext_fullname protoreflect.FullName = "pb.enumvalue.json"
-	EnumValueOptions_Json_ext_name     protoreflect.Name     = "json"
-)

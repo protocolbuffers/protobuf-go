@@ -615,15 +615,6 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 			g.P(ext.Extendee.GoIdent.GoName, "_", ext.GoName, "_ext_number ", protoreflectPackage.Ident("FieldNumber"), " = ", ext.Desc.Number())
 		}
 		g.P(")")
-		g.P()
-
-		g.P("// Extension fullnames and names")
-		g.P("const (")
-		for _, ext := range extensions {
-			g.P(ext.Extendee.GoIdent.GoName, "_", ext.GoName, "_ext_fullname ", protoreflectPackage.Ident("FullName"), " = ", strconv.Quote(string(ext.Desc.FullName())))
-			g.P(ext.Extendee.GoIdent.GoName, "_", ext.GoName, "_ext_name ", protoreflectPackage.Ident("Name"), " = ", strconv.Quote(string(ext.Desc.Name())))
-		}
-		g.P(")")
 	}
 	processEnums(file.Enums)
 	processMessages(file.Messages)
