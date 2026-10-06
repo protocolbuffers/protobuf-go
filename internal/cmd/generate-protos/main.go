@@ -357,6 +357,8 @@ func generateLocalProtos() {
 		path: "internal/testprotos",
 		pkgPaths: map[string]string{
 			"internal/testprotos/test/test_nopackage.proto": "google.golang.org/protobuf/internal/testprotos/test/test_nopackage",
+			"google/protobuf/json_options.proto":            "google.golang.org/protobuf/types/jsonoptionspb",
+			"google/protobuf/json_enumvalue_options.proto":  "google.golang.org/protobuf/types/jsonenumvalueoptionspb",
 		},
 		exclude: map[string]bool{"internal/testprotos/irregular/irregular.proto": true},
 	}, {
@@ -462,6 +464,8 @@ func generateRemoteProtos() {
 		// Compiler protos.
 		{"src", "google/protobuf/compiler/plugin.proto", ""},
 		{"src", "google/protobuf/descriptor.proto", ""},
+		{"src", "google/protobuf/json_options.proto", "google.golang.org/protobuf/types/jsonoptionspb"},
+		{"src", "google/protobuf/json_enumvalue_options.proto", "google.golang.org/protobuf/types/jsonenumvalueoptionspb"},
 
 		// Conformance protos.
 		{"", "conformance/conformance.proto", "google.golang.org/protobuf/internal/testprotos/conformance;conformance"},
@@ -512,7 +516,7 @@ func protoc(args ...string) {
 // generateIdentifiers generates an internal package for descriptor.proto
 // and well-known types.
 func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
-	if file.Desc.Package() != "google.protobuf" && file.Desc.Package() != "pb" {
+	if file.Desc.Package() != "google.protobuf" && file.Desc.Package() != "pb" && file.Desc.Package() != "pb.enumvalue" {
 		return
 	}
 
@@ -609,6 +613,15 @@ func generateIdentifiers(gen *protogen.Plugin, file *protogen.File) {
 		g.P("const (")
 		for _, ext := range extensions {
 			g.P(ext.Extendee.GoIdent.GoName, "_", ext.GoName, "_ext_number ", protoreflectPackage.Ident("FieldNumber"), " = ", ext.Desc.Number())
+		}
+		g.P(")")
+		g.P()
+
+		g.P("// Extension fullnames and names")
+		g.P("const (")
+		for _, ext := range extensions {
+			g.P(ext.Extendee.GoIdent.GoName, "_", ext.GoName, "_ext_fullname ", protoreflectPackage.Ident("FullName"), " = ", strconv.Quote(string(ext.Desc.FullName())))
+			g.P(ext.Extendee.GoIdent.GoName, "_", ext.GoName, "_ext_name ", protoreflectPackage.Ident("Name"), " = ", strconv.Quote(string(ext.Desc.Name())))
 		}
 		g.P(")")
 	}

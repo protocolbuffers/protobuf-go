@@ -14,5 +14,5 @@ const (
 	// MaximumKnown is the maximum edition that is known to Go Protobuf, but not
 	// declared as supported. In other words: end users cannot use it, but
 	// testprotos inside Go Protobuf can.
-	MaximumKnown = descriptorpb.Edition_EDITION_2024
+	MaximumKnown = descriptorpb.Edition_EDITION_2026
 )
