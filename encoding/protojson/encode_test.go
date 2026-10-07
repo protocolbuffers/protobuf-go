@@ -15,9 +15,12 @@ import (
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/testing/protopack"
+	"google.golang.org/protobuf/types/dynamicpb"
 
+	edition2026pb "google.golang.org/protobuf/internal/testprotos/edition2026"
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
 	pb3 "google.golang.org/protobuf/internal/testprotos/textpb3"
 	"google.golang.org/protobuf/types/known/anypb"
@@ -44,6 +47,72 @@ func TestMarshal(t *testing.T) {
 		desc:  "proto2 optional scalars not set",
 		input: &pb2.Scalars{},
 		want:  "{}",
+	}, {
+		desc:  "edition2026 custom JSON name great helm",
+		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
+		want: `{
+  "value": "gr8 helm"
+}`,
+	}, {
+		desc:  "edition2026 custom JSON name empty coif",
+		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_COIF)}.Build(),
+		want: `{
+  "value": ""
+}`,
+	}, {
+		desc:  "edition2026 empty option helmet goblin fallback",
+		input: edition2026pb.TestMessage_builder{Helmet: helmetEnum(edition2026pb.HelmetEnum_HELMET_ENUM_GOBLIN)}.Build(),
+		want: `{
+  "helmet": "HELMET_ENUM_GOBLIN"
+}`,
+	}, {
+		desc:  "edition2026 marshal with UseEnumNumbers",
+		mo:    protojson.MarshalOptions{UseEnumNumbers: true},
+		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
+		want: `{
+  "value": 1
+}`,
+	}, {
+		desc: "edition2026 repeated custom names",
+		input: edition2026pb.TestMessage_builder{
+			List: []edition2026pb.TestEnum{
+				edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM,
+				edition2026pb.TestEnum_TEST_ENUM_ARMOR_GAUNTLET,
+				edition2026pb.TestEnum_TEST_ENUM_ARMOR_COIF,
+			},
+		}.Build(),
+		want: `{
+  "list": [
+    "gr8 helm",
+    "a\"b",
+    ""
+  ]
+}`,
+	}, {
+		desc:  "edition2026 alias custom name",
+		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_ALIAS)}.Build(),
+		want: `{
+  "value": "alias_custom"
+}`,
+	}, {
+		desc:  "edition2026 option without custom json name",
+		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_BOOTS)}.Build(),
+		want: `{
+  "value": "TEST_ENUM_ARMOR_BOOTS"
+}`,
+	}, {
+		desc:  "edition2026 option with non-json option fallback",
+		input: edition2026pb.TestMessage_builder{Value: testEnum(10)}.Build(), // 10 = TEST_ENUM_ARMOR_SHIELD (deprecated)
+		want: `{
+  "value": "TEST_ENUM_ARMOR_SHIELD"
+}`,
+	}, {
+		desc:  "edition2026 custom JSON name great helm without extension resolver",
+		mo:    protojson.MarshalOptions{Resolver: new(protoregistry.Types)},
+		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
+		want: `{
+  "value": "TEST_ENUM_ARMOR_GREAT_HELM"
+}`,
 	}, {
 		desc:  "proto3 scalars not set",
 		input: &pb3.Scalars{},
@@ -2563,5 +2632,262 @@ func TestMarshalAppendAllocations(t *testing.T) {
 		t.Errorf("%v allocs/op when writing to a preallocated buffer", marshalAllocs)
 		t.Errorf("%v allocs/op when repeatedly appending to a slice", marshalAppendAllocs)
 		t.Errorf("expect amortized allocs/op to be identical")
+	}
+}
+
+type invalidOptionsMsg struct{}
+
+func (invalidOptionsMsg) ProtoReflect() protoreflect.Message {
+	return invalidMsgReflect{}
+}
+
+type invalidMsgReflect struct {
+	protoreflect.Message
+}
+
+func (invalidMsgReflect) IsValid() bool {
+	return false
+}
+
+func (invalidMsgReflect) Get(protoreflect.FieldDescriptor) protoreflect.Value {
+	panic("Get called on invalid message")
+}
+
+func (invalidMsgReflect) Has(protoreflect.FieldDescriptor) bool {
+	panic("Has called on invalid message")
+}
+
+type customEnumValueDesc struct {
+	protoreflect.EnumValueDescriptor
+	opts protoreflect.ProtoMessage
+}
+
+func (d customEnumValueDesc) Options() protoreflect.ProtoMessage {
+	return d.opts
+}
+
+type customEnumValueDescs struct {
+	protoreflect.EnumValueDescriptors
+	val protoreflect.EnumValueDescriptor
+}
+
+func (d customEnumValueDescs) Len() int {
+	return 1
+}
+
+func (d customEnumValueDescs) Get(i int) protoreflect.EnumValueDescriptor {
+	return d.val
+}
+
+func (d customEnumValueDescs) ByNumber(n protoreflect.EnumNumber) protoreflect.EnumValueDescriptor {
+	if n == d.val.Number() {
+		return d.val
+	}
+	return nil
+}
+
+func (d customEnumValueDescs) ByName(s protoreflect.Name) protoreflect.EnumValueDescriptor {
+	if s == d.val.Name() {
+		return d.val
+	}
+	return nil
+}
+
+type customEnumDesc struct {
+	protoreflect.EnumDescriptor
+	vals protoreflect.EnumValueDescriptors
+}
+
+func (d customEnumDesc) Values() protoreflect.EnumValueDescriptors {
+	return d.vals
+}
+
+type customFieldDesc struct {
+	protoreflect.FieldDescriptor
+	enum protoreflect.EnumDescriptor
+}
+
+func (d customFieldDesc) Enum() protoreflect.EnumDescriptor {
+	return d.enum
+}
+
+type customFieldDescs struct {
+	protoreflect.FieldDescriptors
+	fd protoreflect.FieldDescriptor
+}
+
+func (d customFieldDescs) Len() int {
+	return 1
+}
+
+func (d customFieldDescs) Get(i int) protoreflect.FieldDescriptor {
+	return d.fd
+}
+
+func (d customFieldDescs) ByNumber(n protoreflect.FieldNumber) protoreflect.FieldDescriptor {
+	if n == d.fd.Number() {
+		return d.fd
+	}
+	return nil
+}
+
+func (d customFieldDescs) ByName(s protoreflect.Name) protoreflect.FieldDescriptor {
+	if s == d.fd.Name() {
+		return d.fd
+	}
+	return nil
+}
+
+func (d customFieldDescs) ByJSONName(s string) protoreflect.FieldDescriptor {
+	if s == d.fd.JSONName() {
+		return d.fd
+	}
+	return nil
+}
+
+type customMessageDesc struct {
+	protoreflect.MessageDescriptor
+	fields protoreflect.FieldDescriptors
+}
+
+func (d customMessageDesc) Fields() protoreflect.FieldDescriptors {
+	return d.fields
+}
+
+type customMessage struct {
+	protoreflect.Message
+	md     protoreflect.MessageDescriptor
+	fd     protoreflect.FieldDescriptor
+	origFD protoreflect.FieldDescriptor
+}
+
+func (m customMessage) ProtoReflect() protoreflect.Message {
+	return m
+}
+
+func (m customMessage) Interface() protoreflect.ProtoMessage {
+	return m
+}
+
+func (m customMessage) New() protoreflect.Message {
+	return m
+}
+
+func (m customMessage) Descriptor() protoreflect.MessageDescriptor {
+	return m.md
+}
+
+func (m customMessage) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if m.Message.Has(m.origFD) {
+		f(m.fd, m.Message.Get(m.origFD))
+	}
+}
+
+func (m customMessage) Has(fd protoreflect.FieldDescriptor) bool {
+	return m.Message.Has(m.origFD)
+}
+
+func (m customMessage) Clear(fd protoreflect.FieldDescriptor) {
+	m.Message.Clear(m.origFD)
+}
+
+func (m customMessage) Get(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	return m.Message.Get(m.origFD)
+}
+
+func (m customMessage) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	return m.Message.Mutable(m.origFD)
+}
+
+func (m customMessage) Set(fd protoreflect.FieldDescriptor, v protoreflect.Value) {
+	m.Message.Set(m.origFD, v)
+}
+
+type customEnumValueSliceDescs struct {
+	protoreflect.EnumValueDescriptors
+	vals []protoreflect.EnumValueDescriptor
+}
+
+func (d *customEnumValueSliceDescs) Len() int {
+	return len(d.vals)
+}
+
+func (d *customEnumValueSliceDescs) Get(i int) protoreflect.EnumValueDescriptor {
+	return d.vals[i]
+}
+
+func (d *customEnumValueSliceDescs) ByNumber(n protoreflect.EnumNumber) protoreflect.EnumValueDescriptor {
+	for _, v := range d.vals {
+		if v.Number() == n {
+			return v
+		}
+	}
+	return nil
+}
+
+func (d *customEnumValueSliceDescs) ByName(s protoreflect.Name) protoreflect.EnumValueDescriptor {
+	for _, v := range d.vals {
+		if v.Name() == s {
+			return v
+		}
+	}
+	return nil
+}
+
+func TestMarshalInvalidEnumValueOptions(t *testing.T) {
+	msgDesc := (&edition2026pb.TestMessage{}).ProtoReflect().Descriptor()
+	origFD := msgDesc.Fields().ByName("value")
+	origVal := origFD.Enum().Values().ByNumber(1)
+
+	tests := []struct {
+		name string
+		opts protoreflect.ProtoMessage
+	}{
+		{
+			name: "invalid options message",
+			opts: invalidOptionsMsg{},
+		},
+		{
+			name: "nil options",
+			opts: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			evd := customEnumValueDesc{
+				EnumValueDescriptor: origVal,
+				opts:                tt.opts,
+			}
+			ed := customEnumDesc{
+				EnumDescriptor: origFD.Enum(),
+				vals:           customEnumValueDescs{val: evd},
+			}
+			fd := customFieldDesc{
+				FieldDescriptor: origFD,
+				enum:            ed,
+			}
+			md := customMessageDesc{
+				MessageDescriptor: msgDesc,
+				fields:            customFieldDescs{fd: fd},
+			}
+			dynMsg := dynamicpb.NewMessage(msgDesc)
+			dynMsg.Set(origFD, protoreflect.ValueOfEnum(1))
+			cm := customMessage{
+				Message: dynMsg,
+				md:      md,
+				fd:      fd,
+				origFD:  origFD,
+			}
+
+			got, err := protojson.Marshal(cm)
+			if err != nil {
+				t.Fatalf("Marshal failed: %v", err)
+			}
+			want := `{"value":"TEST_ENUM_ARMOR_GREAT_HELM"}`
+			if string(got) != want {
+				t.Errorf("Marshal got %s, want %s", got, want)
+			}
+		})
 	}
 }

@@ -76,7 +76,7 @@ func (o UnmarshalOptions) unmarshal(b []byte, m proto.Message) error {
 		o.RecursionLimit = protowire.DefaultRecursionLimit
 	}
 
-	dec := decoder{json.NewDecoder(b), o}
+	dec := decoder{json.NewDecoder(b), o, &decodeCache{}}
 	if err := dec.unmarshalMessage(m.ProtoReflect(), false); err != nil {
 		return err
 	}
@@ -96,9 +96,29 @@ func (o UnmarshalOptions) unmarshal(b []byte, m proto.Message) error {
 	return proto.CheckInitialized(m)
 }
 
+type decodeCache struct {
+	enumJSONNamesCache map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber
+	jsonExtDesc        protoreflect.ExtensionDescriptor
+	jsonExtDescInit    bool
+}
+
+func (c *decodeCache) findJSONExtDesc(r protoregistry.ExtensionTypeResolver) protoreflect.ExtensionDescriptor {
+	if !c.jsonExtDescInit {
+		c.jsonExtDescInit = true
+		if r != nil {
+			// TODO(b/545684087): Avoid reflection and switch to using pb.E_json.
+			if xt, err := r.FindExtensionByName("pb.enumvalue.json"); err == nil {
+				c.jsonExtDesc = xt.TypeDescriptor()
+			}
+		}
+	}
+	return c.jsonExtDesc
+}
+
 type decoder struct {
 	*json.Decoder
-	opts UnmarshalOptions
+	opts  UnmarshalOptions
+	cache *decodeCache
 }
 
 // newError returns an error object with position info.
@@ -338,7 +358,7 @@ func (d decoder) unmarshalScalar(fd protoreflect.FieldDescriptor) (protoreflect.
 		}
 
 	case protoreflect.EnumKind:
-		if v, ok := unmarshalEnum(tok, fd, d.opts.DiscardUnknown); ok {
+		if v, ok := d.unmarshalEnum(tok, fd); ok {
 			return v, nil
 		}
 
@@ -495,7 +515,7 @@ func unmarshalBytes(tok json.Token) (protoreflect.Value, bool) {
 	return protoreflect.ValueOfBytes(b), true
 }
 
-func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnknown bool) (protoreflect.Value, bool) {
+func (d decoder) unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor) (protoreflect.Value, bool) {
 	switch tok.Kind() {
 	case json.String:
 		// Lookup EnumNumber based on name.
@@ -503,7 +523,23 @@ func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnkno
 		if enumVal := fd.Enum().Values().ByName(protoreflect.Name(s)); enumVal != nil {
 			return protoreflect.ValueOfEnum(enumVal.Number()), true
 		}
-		if discardUnknown {
+
+		// Check the custom names map.
+		if d.cache != nil {
+			if d.cache.enumJSONNamesCache == nil {
+				d.cache.enumJSONNamesCache = make(map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber)
+			}
+			enumJSONNamesCache, ok := d.cache.enumJSONNamesCache[fd.Enum()]
+			if !ok {
+				enumJSONNamesCache = d.enumJSONNames(fd.Enum())
+				d.cache.enumJSONNamesCache[fd.Enum()] = enumJSONNamesCache
+			}
+			if num, ok := enumJSONNamesCache[s]; ok {
+				return protoreflect.ValueOfEnum(num), true
+			}
+		}
+
+		if d.opts.DiscardUnknown {
 			return protoreflect.Value{}, true
 		}
 
@@ -520,6 +556,39 @@ func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnkno
 	}
 
 	return protoreflect.Value{}, false
+}
+
+func (d decoder) enumJSONNames(ed protoreflect.EnumDescriptor) map[string]protoreflect.EnumNumber {
+	extDesc := d.cache.findJSONExtDesc(d.opts.Resolver)
+	if extDesc == nil {
+		return nil
+	}
+
+	names := make(map[string]protoreflect.EnumNumber)
+	vals := ed.Values()
+	for i := 0; i < vals.Len(); i++ {
+		ev := vals.Get(i)
+		opts := ev.Options()
+		if opts == nil {
+			continue
+		}
+		optsReflect := opts.ProtoReflect()
+		if !optsReflect.IsValid() {
+			continue
+		}
+		extVal := optsReflect.Get(extDesc)
+		if !extVal.IsValid() {
+			continue
+		}
+		extMsg := extVal.Message()
+		// TODO(b/545684087): Avoid reflection and switch to using pb.E_json.
+		strFD := extMsg.Descriptor().Fields().ByName("string")
+		if strFD == nil || !extMsg.Has(strFD) {
+			continue
+		}
+		names[extMsg.Get(strFD).String()] = ev.Number()
+	}
+	return names
 }
 
 func (d decoder) unmarshalList(list protoreflect.List, fd protoreflect.FieldDescriptor) error {
@@ -571,8 +640,6 @@ func (d decoder) unmarshalList(list protoreflect.List, fd protoreflect.FieldDesc
 			}
 		}
 	}
-
-	return nil
 }
 
 func (d decoder) unmarshalMap(mmap protoreflect.Map, fd protoreflect.FieldDescriptor) error {

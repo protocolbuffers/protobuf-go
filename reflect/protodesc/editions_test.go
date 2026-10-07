@@ -110,3 +110,33 @@ func TestGoFeatures_NotExpectedType(t *testing.T) {
 		})
 	}
 }
+
+func TestEdition2026(t *testing.T) {
+	fd := &descriptorpb.FileDescriptorProto{
+		Name: proto.String("test2026.proto"),
+		Dependency: []string{
+			"google/protobuf/go_features.proto",
+		},
+		Edition: descriptorpb.Edition_EDITION_2026.Enum(),
+		Syntax:  proto.String("editions"),
+	}
+	fds := &descriptorpb.FileDescriptorSet{
+		File: []*descriptorpb.FileDescriptorProto{
+			ToFileDescriptorProto(descriptorpb.File_google_protobuf_descriptor_proto),
+			ToFileDescriptorProto(gofeaturespb.File_google_protobuf_go_features_proto),
+			fd,
+		},
+	}
+	files, err := NewFiles(fds)
+	if err != nil {
+		t.Fatalf("NewFiles failed for Edition 2026: %v", err)
+	}
+	file, err := files.FindFileByPath("test2026.proto")
+	if err != nil {
+		t.Fatalf("FindFileByPath failed: %v", err)
+	}
+	gotProto := ToFileDescriptorProto(file)
+	if gotProto.GetEdition() != descriptorpb.Edition_EDITION_2026 {
+		t.Errorf("got edition %v, want %v", gotProto.GetEdition(), descriptorpb.Edition_EDITION_2026)
+	}
+}

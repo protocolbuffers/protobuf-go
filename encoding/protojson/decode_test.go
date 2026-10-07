@@ -13,8 +13,11 @@ import (
 	"google.golang.org/protobuf/internal/errors"
 	"google.golang.org/protobuf/internal/flags"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/dynamicpb"
 
+	edition2026pb "google.golang.org/protobuf/internal/testprotos/edition2026"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
 	pb3 "google.golang.org/protobuf/internal/testprotos/textpb3"
@@ -27,6 +30,9 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
+
+func testEnum(v edition2026pb.TestEnum) *edition2026pb.TestEnum       { return &v }
+func helmetEnum(v edition2026pb.HelmetEnum) *edition2026pb.HelmetEnum { return &v }
 
 func TestUnmarshal(t *testing.T) {
 	tests := []struct {
@@ -42,6 +48,74 @@ func TestUnmarshal(t *testing.T) {
 		inputMessage: &pb2.Scalars{},
 		inputText:    "{}",
 		wantMessage:  &pb2.Scalars{},
+	}, {
+		desc:         "edition2026 custom name great helm",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": "gr8 helm"}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
+	}, {
+		desc:         "edition2026 fallback original name great helm",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": "TEST_ENUM_ARMOR_GREAT_HELM"}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
+	}, {
+		desc:         "edition2026 enum number great helm",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": 1}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
+	}, {
+		desc:         "edition2026 custom name empty coif",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": ""}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_COIF)}.Build(),
+	}, {
+		desc:         "edition2026 empty option helmet goblin fallback",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"helmet": "HELMET_ENUM_GOBLIN"}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Helmet: helmetEnum(edition2026pb.HelmetEnum_HELMET_ENUM_GOBLIN)}.Build(),
+	}, {
+		desc:         "edition2026 empty option helmet goblin other empty string error",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"helmet": ""}`,
+		wantErr:      `invalid value for enum`,
+	}, {
+		desc:         "edition2026 repeated custom names",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"list": ["gr8 helm", "a\"b", ""]}`,
+		wantMessage: edition2026pb.TestMessage_builder{
+			List: []edition2026pb.TestEnum{
+				edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM,
+				edition2026pb.TestEnum_TEST_ENUM_ARMOR_GAUNTLET,
+				edition2026pb.TestEnum_TEST_ENUM_ARMOR_COIF,
+			},
+		}.Build(),
+	}, {
+		desc:         "edition2026 alias custom name",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": "alias_custom"}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_ALIAS)}.Build(),
+	}, {
+		desc:         "edition2026 option without custom json name",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": "TEST_ENUM_ARMOR_BOOTS"}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_BOOTS)}.Build(),
+	}, {
+		desc:         "edition2026 option with non-json option fallback",
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": "TEST_ENUM_ARMOR_SHIELD"}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(10)}.Build(), // 10 = TEST_ENUM_ARMOR_SHIELD (deprecated)
+	}, {
+		desc:         "edition2026 custom name great helm without extension resolver",
+		umo:          protojson.UnmarshalOptions{Resolver: new(protoregistry.Types)},
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": "gr8 helm"}`,
+		wantErr:      `invalid value for enum`,
+	}, {
+		desc:         "edition2026 fallback original name great helm without extension resolver",
+		umo:          protojson.UnmarshalOptions{Resolver: new(protoregistry.Types)},
+		inputMessage: &edition2026pb.TestMessage{},
+		inputText:    `{"value": "TEST_ENUM_ARMOR_GREAT_HELM"}`,
+		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
 	}, {
 		desc:         "unexpected value instead of EOF",
 		inputMessage: &pb2.Scalars{},
@@ -2831,5 +2905,52 @@ func TestUnmarshal(t *testing.T) {
 				t.Errorf("Unmarshal()\n<got>\n%v\n<want>\n%v\n", tt.inputMessage, tt.wantMessage)
 			}
 		})
+	}
+}
+
+func TestUnmarshalInvalidEnumValueOptions(t *testing.T) {
+	msgDesc := (&edition2026pb.TestMessage{}).ProtoReflect().Descriptor()
+	origFD := msgDesc.Fields().ByName("value")
+	origVal := origFD.Enum().Values().ByNumber(1)
+
+	evdInvalid := customEnumValueDesc{
+		EnumValueDescriptor: origVal,
+		opts:                invalidOptionsMsg{},
+	}
+	evdNil := customEnumValueDesc{
+		EnumValueDescriptor: origVal,
+		opts:                nil,
+	}
+	ed := customEnumDesc{
+		EnumDescriptor: origFD.Enum(),
+		vals:           &customEnumValueSliceDescs{vals: []protoreflect.EnumValueDescriptor{evdInvalid, evdNil, origVal}},
+	}
+	fd := customFieldDesc{
+		FieldDescriptor: origFD,
+		enum:            ed,
+	}
+	md := customMessageDesc{
+		MessageDescriptor: msgDesc,
+		fields:            customFieldDescs{fd: fd},
+	}
+	dynMsg := dynamicpb.NewMessage(msgDesc)
+	cm := customMessage{
+		Message: dynMsg,
+		md:      md,
+		fd:      fd,
+		origFD:  origFD,
+	}
+
+	err := protojson.Unmarshal([]byte(`{"value":"gr8 helm"}`), cm)
+	if err != nil {
+		t.Fatalf("Unmarshal failed: %v", err)
+	}
+	if got := dynMsg.Get(origFD).Enum(); got != 1 {
+		t.Errorf("Unmarshal got %v, want 1", got)
+	}
+
+	err = protojson.Unmarshal([]byte(`{"value":"unknown_custom_name"}`), cm)
+	if err == nil {
+		t.Errorf("Unmarshal got nil error, want error for unknown enum name")
 	}
 }
