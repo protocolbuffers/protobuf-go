@@ -14,11 +14,15 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/internal/detrand"
 	"google.golang.org/protobuf/internal/flags"
+	"google.golang.org/protobuf/internal/genid"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/testing/protopack"
+	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
+	"google.golang.org/protobuf/types/jsonenumvalueoptionspb"
 
 	edition2026pb "google.golang.org/protobuf/internal/testprotos/edition2026"
 	pb2 "google.golang.org/protobuf/internal/testprotos/textpb2"
@@ -105,13 +109,6 @@ func TestMarshal(t *testing.T) {
 		input: edition2026pb.TestMessage_builder{Value: testEnum(10)}.Build(), // 10 = TEST_ENUM_ARMOR_SHIELD (deprecated)
 		want: `{
   "value": "TEST_ENUM_ARMOR_SHIELD"
-}`,
-	}, {
-		desc:  "edition2026 custom JSON name great helm without extension resolver",
-		mo:    protojson.MarshalOptions{Resolver: new(protoregistry.Types)},
-		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
-		want: `{
-  "value": "TEST_ENUM_ARMOR_GREAT_HELM"
 }`,
 	}, {
 		desc:  "proto3 scalars not set",
@@ -2834,22 +2831,69 @@ func (d *customEnumValueSliceDescs) ByName(s protoreflect.Name) protoreflect.Enu
 	return nil
 }
 
+func dynamicEnumValueOptions(t *testing.T) (optsDynamicMsg, optsNonMsg protoreflect.ProtoMessage) {
+	t.Helper()
+
+	jsonOptsMD := (*jsonenumvalueoptionspb.JsonEnumValueOptions)(nil).ProtoReflect().Descriptor()
+	dynJsonOpts := dynamicpb.NewMessage(jsonOptsMD)
+	dynJsonOpts.Set(jsonOptsMD.Fields().ByNumber(genid.JsonEnumValueOptions_String__field_number), protoreflect.ValueOfString("dynamic helm"))
+	dynExt := dynamicpb.NewExtensionType(jsonenumvalueoptionspb.E_Json.TypeDescriptor().Descriptor())
+	optsDyn := &descriptorpb.EnumValueOptions{}
+	proto.SetExtension(optsDyn, dynExt, dynJsonOpts)
+
+	extFile, err := protodesc.NewFile(&descriptorpb.FileDescriptorProto{
+		Name:       proto.String("test_ext.proto"),
+		Dependency: []string{"google/protobuf/descriptor.proto"},
+		Extension: []*descriptorpb.FieldDescriptorProto{
+			{
+				Name:     proto.String("ext998"),
+				Number:   proto.Int32(int32(jsonenumvalueoptionspb.E_Json.TypeDescriptor().Number())),
+				Type:     descriptorpb.FieldDescriptorProto_TYPE_STRING.Enum(),
+				Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
+				Extendee: proto.String(".google.protobuf.EnumValueOptions"),
+			},
+		},
+	}, protoregistry.GlobalFiles)
+	if err != nil {
+		t.Fatal(err)
+	}
+	nonMsgExt := dynamicpb.NewExtensionType(extFile.Extensions().Get(0))
+	optsNon := &descriptorpb.EnumValueOptions{}
+	proto.SetExtension(optsNon, nonMsgExt, "not_a_message")
+
+	return optsDyn, optsNon
+}
+
 func TestMarshalInvalidEnumValueOptions(t *testing.T) {
 	msgDesc := (&edition2026pb.TestMessage{}).ProtoReflect().Descriptor()
 	origFD := msgDesc.Fields().ByName("value")
 	origVal := origFD.Enum().Values().ByNumber(1)
+	optsDynamicMsg, optsNonMsg := dynamicEnumValueOptions(t)
 
 	tests := []struct {
 		name string
 		opts protoreflect.ProtoMessage
+		want string
 	}{
 		{
 			name: "invalid options message",
 			opts: invalidOptionsMsg{},
+			want: `{"value":"TEST_ENUM_ARMOR_GREAT_HELM"}`,
 		},
 		{
 			name: "nil options",
 			opts: nil,
+			want: `{"value":"TEST_ENUM_ARMOR_GREAT_HELM"}`,
+		},
+		{
+			name: "dynamic message options",
+			opts: optsDynamicMsg,
+			want: `{"value":"dynamic helm"}`,
+		},
+		{
+			name: "non-message extension options",
+			opts: optsNonMsg,
+			want: `{"value":"TEST_ENUM_ARMOR_GREAT_HELM"}`,
 		},
 	}
 
@@ -2884,9 +2928,8 @@ func TestMarshalInvalidEnumValueOptions(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Marshal failed: %v", err)
 			}
-			want := `{"value":"TEST_ENUM_ARMOR_GREAT_HELM"}`
-			if string(got) != want {
-				t.Errorf("Marshal got %s, want %s", got, want)
+			if string(got) != tt.want {
+				t.Errorf("Marshal got %s, want %s", got, tt.want)
 			}
 		})
 	}

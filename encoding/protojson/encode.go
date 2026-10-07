@@ -160,7 +160,7 @@ func (o MarshalOptions) marshal(b []byte, m proto.Message) ([]byte, error) {
 		return append(b, '{', '}'), nil
 	}
 
-	enc := encoder{internalEnc, o, &encodeCache{}}
+	enc := encoder{internalEnc, o}
 	if err := enc.marshalMessage(m.ProtoReflect(), ""); err != nil {
 		return nil, err
 	}
@@ -170,28 +170,9 @@ func (o MarshalOptions) marshal(b []byte, m proto.Message) ([]byte, error) {
 	return enc.Bytes(), proto.CheckInitialized(m)
 }
 
-type encodeCache struct {
-	jsonExtDesc     protoreflect.ExtensionDescriptor
-	jsonExtDescInit bool
-}
-
-func (c *encodeCache) findJSONExtDesc(r protoregistry.ExtensionTypeResolver) protoreflect.ExtensionDescriptor {
-	if !c.jsonExtDescInit {
-		c.jsonExtDescInit = true
-		if r != nil {
-			// TODO(b/545684087): Avoid reflection and switch to using pb.E_json.
-			if xt, err := r.FindExtensionByName("pb.enumvalue.json"); err == nil {
-				c.jsonExtDesc = xt.TypeDescriptor()
-			}
-		}
-	}
-	return c.jsonExtDesc
-}
-
 type encoder struct {
 	*json.Encoder
-	opts  MarshalOptions
-	cache *encodeCache
+	opts MarshalOptions
 }
 
 // typeFieldDesc is a synthetic field descriptor used for the "@type" field.
@@ -399,30 +380,8 @@ func (e encoder) marshalMap(mmap protoreflect.Map, fd protoreflect.FieldDescript
 }
 
 func (e encoder) enumJSONName(desc protoreflect.EnumValueDescriptor) string {
-	if e.cache == nil {
-		return string(desc.Name())
+	if name, ok := enumValueJSONNameOption(desc); ok {
+		return name
 	}
-	extDesc := e.cache.findJSONExtDesc(e.opts.Resolver)
-	if extDesc == nil {
-		return string(desc.Name())
-	}
-	opts := desc.Options()
-	if opts == nil {
-		return string(desc.Name())
-	}
-	optsReflect := opts.ProtoReflect()
-	if !optsReflect.IsValid() {
-		return string(desc.Name())
-	}
-	extVal := optsReflect.Get(extDesc)
-	if !extVal.IsValid() {
-		return string(desc.Name())
-	}
-	extMsg := extVal.Message()
-	// TODO(b/545684087): Avoid reflection and switch to using pb.E_json.
-	strFD := extMsg.Descriptor().Fields().ByName("string")
-	if strFD == nil || !extMsg.Has(strFD) {
-		return string(desc.Name())
-	}
-	return extMsg.Get(strFD).String()
+	return string(desc.Name())
 }

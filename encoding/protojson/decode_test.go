@@ -105,18 +105,6 @@ func TestUnmarshal(t *testing.T) {
 		inputText:    `{"value": "TEST_ENUM_ARMOR_SHIELD"}`,
 		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(10)}.Build(), // 10 = TEST_ENUM_ARMOR_SHIELD (deprecated)
 	}, {
-		desc:         "edition2026 custom name great helm without extension resolver",
-		umo:          protojson.UnmarshalOptions{Resolver: new(protoregistry.Types)},
-		inputMessage: &edition2026pb.TestMessage{},
-		inputText:    `{"value": "gr8 helm"}`,
-		wantErr:      `invalid value for enum`,
-	}, {
-		desc:         "edition2026 fallback original name great helm without extension resolver",
-		umo:          protojson.UnmarshalOptions{Resolver: new(protoregistry.Types)},
-		inputMessage: &edition2026pb.TestMessage{},
-		inputText:    `{"value": "TEST_ENUM_ARMOR_GREAT_HELM"}`,
-		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
-	}, {
 		desc:         "unexpected value instead of EOF",
 		inputMessage: &pb2.Scalars{},
 		inputText:    "{} {}",
@@ -2912,6 +2900,8 @@ func TestUnmarshalInvalidEnumValueOptions(t *testing.T) {
 	msgDesc := (&edition2026pb.TestMessage{}).ProtoReflect().Descriptor()
 	origFD := msgDesc.Fields().ByName("value")
 	origVal := origFD.Enum().Values().ByNumber(1)
+	origVal3 := origFD.Enum().Values().ByNumber(3)
+	optsDynamicMsg, optsNonMsg := dynamicEnumValueOptions(t)
 
 	evdInvalid := customEnumValueDesc{
 		EnumValueDescriptor: origVal,
@@ -2921,9 +2911,17 @@ func TestUnmarshalInvalidEnumValueOptions(t *testing.T) {
 		EnumValueDescriptor: origVal,
 		opts:                nil,
 	}
+	evdNonMsg := customEnumValueDesc{
+		EnumValueDescriptor: origVal,
+		opts:                optsNonMsg,
+	}
+	evdDynamic := customEnumValueDesc{
+		EnumValueDescriptor: origVal3,
+		opts:                optsDynamicMsg,
+	}
 	ed := customEnumDesc{
 		EnumDescriptor: origFD.Enum(),
-		vals:           &customEnumValueSliceDescs{vals: []protoreflect.EnumValueDescriptor{evdInvalid, evdNil, origVal}},
+		vals:           &customEnumValueSliceDescs{vals: []protoreflect.EnumValueDescriptor{evdInvalid, evdNil, evdNonMsg, evdDynamic, origVal}},
 	}
 	fd := customFieldDesc{
 		FieldDescriptor: origFD,
@@ -2947,6 +2945,14 @@ func TestUnmarshalInvalidEnumValueOptions(t *testing.T) {
 	}
 	if got := dynMsg.Get(origFD).Enum(); got != 1 {
 		t.Errorf("Unmarshal got %v, want 1", got)
+	}
+
+	err = protojson.Unmarshal([]byte(`{"value":"dynamic helm"}`), cm)
+	if err != nil {
+		t.Fatalf("Unmarshal dynamic helm failed: %v", err)
+	}
+	if got := dynMsg.Get(origFD).Enum(); got != 3 {
+		t.Errorf("Unmarshal got %v, want 3", got)
 	}
 
 	err = protojson.Unmarshal([]byte(`{"value":"unknown_custom_name"}`), cm)

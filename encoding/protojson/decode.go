@@ -98,21 +98,6 @@ func (o UnmarshalOptions) unmarshal(b []byte, m proto.Message) error {
 
 type decodeCache struct {
 	enumJSONNamesCache map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber
-	jsonExtDesc        protoreflect.ExtensionDescriptor
-	jsonExtDescInit    bool
-}
-
-func (c *decodeCache) findJSONExtDesc(r protoregistry.ExtensionTypeResolver) protoreflect.ExtensionDescriptor {
-	if !c.jsonExtDescInit {
-		c.jsonExtDescInit = true
-		if r != nil {
-			// TODO(b/545684087): Avoid reflection and switch to using pb.E_json.
-			if xt, err := r.FindExtensionByName("pb.enumvalue.json"); err == nil {
-				c.jsonExtDesc = xt.TypeDescriptor()
-			}
-		}
-	}
-	return c.jsonExtDesc
 }
 
 type decoder struct {
@@ -559,34 +544,13 @@ func (d decoder) unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor) 
 }
 
 func (d decoder) enumJSONNames(ed protoreflect.EnumDescriptor) map[string]protoreflect.EnumNumber {
-	extDesc := d.cache.findJSONExtDesc(d.opts.Resolver)
-	if extDesc == nil {
-		return nil
-	}
-
 	names := make(map[string]protoreflect.EnumNumber)
 	vals := ed.Values()
 	for i := 0; i < vals.Len(); i++ {
 		ev := vals.Get(i)
-		opts := ev.Options()
-		if opts == nil {
-			continue
+		if name, ok := enumValueJSONNameOption(ev); ok {
+			names[name] = ev.Number()
 		}
-		optsReflect := opts.ProtoReflect()
-		if !optsReflect.IsValid() {
-			continue
-		}
-		extVal := optsReflect.Get(extDesc)
-		if !extVal.IsValid() {
-			continue
-		}
-		extMsg := extVal.Message()
-		// TODO(b/545684087): Avoid reflection and switch to using pb.E_json.
-		strFD := extMsg.Descriptor().Fields().ByName("string")
-		if strFD == nil || !extMsg.Has(strFD) {
-			continue
-		}
-		names[extMsg.Get(strFD).String()] = ev.Number()
 	}
 	return names
 }
