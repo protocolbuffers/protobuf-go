@@ -31,9 +31,6 @@ import (
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
-func testEnum(v edition2026pb.TestEnum) *edition2026pb.TestEnum       { return &v }
-func helmetEnum(v edition2026pb.HelmetEnum) *edition2026pb.HelmetEnum { return &v }
-
 func TestUnmarshal(t *testing.T) {
 	tests := []struct {
 		desc         string
@@ -44,11 +41,6 @@ func TestUnmarshal(t *testing.T) {
 		wantErr      string // Expected error substring.
 		skip         bool
 	}{{
-		desc:         "proto2 empty message",
-		inputMessage: &pb2.Scalars{},
-		inputText:    "{}",
-		wantMessage:  &pb2.Scalars{},
-	}, {
 		desc:         "edition2026 custom name great helm",
 		inputMessage: &edition2026pb.TestMessage{},
 		inputText:    `{"value": "gr8 helm"}`,
@@ -104,6 +96,11 @@ func TestUnmarshal(t *testing.T) {
 		inputMessage: &edition2026pb.TestMessage{},
 		inputText:    `{"value": "TEST_ENUM_ARMOR_SHIELD"}`,
 		wantMessage:  edition2026pb.TestMessage_builder{Value: testEnum(10)}.Build(), // 10 = TEST_ENUM_ARMOR_SHIELD (deprecated)
+	}, {
+		desc:         "proto2 empty message",
+		inputMessage: &pb2.Scalars{},
+		inputText:    "{}",
+		wantMessage:  &pb2.Scalars{},
 	}, {
 		desc:         "unexpected value instead of EOF",
 		inputMessage: &pb2.Scalars{},

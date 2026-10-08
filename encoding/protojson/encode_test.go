@@ -36,6 +36,9 @@ import (
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
+func testEnum(v edition2026pb.TestEnum) *edition2026pb.TestEnum       { return &v }
+func helmetEnum(v edition2026pb.HelmetEnum) *edition2026pb.HelmetEnum { return &v }
+
 // Disable detrand to enable direct comparisons on outputs.
 func init() { detrand.Disable() }
 
@@ -48,23 +51,19 @@ func TestMarshal(t *testing.T) {
 		wantErr bool // TODO: Verify error message substring.
 		skip    bool
 	}{{
-		desc:  "proto2 optional scalars not set",
-		input: &pb2.Scalars{},
-		want:  "{}",
-	}, {
-		desc:  "edition2026 custom JSON name great helm",
+		desc:  "edition2026 custom name great helm",
 		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_GREAT_HELM)}.Build(),
 		want: `{
   "value": "gr8 helm"
 }`,
 	}, {
-		desc:  "edition2026 custom JSON name empty coif",
+		desc:  "edition2026 custom name empty coif",
 		input: edition2026pb.TestMessage_builder{Value: testEnum(edition2026pb.TestEnum_TEST_ENUM_ARMOR_COIF)}.Build(),
 		want: `{
   "value": ""
 }`,
 	}, {
-		desc:  "edition2026 empty option helmet goblin fallback",
+		desc:  "edition2026 empty option helmet goblin",
 		input: edition2026pb.TestMessage_builder{Helmet: helmetEnum(edition2026pb.HelmetEnum_HELMET_ENUM_GOBLIN)}.Build(),
 		want: `{
   "helmet": "HELMET_ENUM_GOBLIN"
@@ -110,6 +109,10 @@ func TestMarshal(t *testing.T) {
 		want: `{
   "value": "TEST_ENUM_ARMOR_SHIELD"
 }`,
+	}, {
+		desc:  "proto2 optional scalars not set",
+		input: &pb2.Scalars{},
+		want:  "{}",
 	}, {
 		desc:  "proto3 scalars not set",
 		input: &pb3.Scalars{},

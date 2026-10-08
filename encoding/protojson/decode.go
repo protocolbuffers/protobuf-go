@@ -97,7 +97,7 @@ func (o UnmarshalOptions) unmarshal(b []byte, m proto.Message) error {
 }
 
 type decodeCache struct {
-	enumJSONNamesCache map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber
+	enumJSONNamesOptionCache map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber
 }
 
 type decoder struct {
@@ -510,18 +510,9 @@ func (d decoder) unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor) 
 		}
 
 		// Check the custom names map.
-		if d.cache != nil {
-			if d.cache.enumJSONNamesCache == nil {
-				d.cache.enumJSONNamesCache = make(map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber)
-			}
-			enumJSONNamesCache, ok := d.cache.enumJSONNamesCache[fd.Enum()]
-			if !ok {
-				enumJSONNamesCache = d.enumJSONNames(fd.Enum())
-				d.cache.enumJSONNamesCache[fd.Enum()] = enumJSONNamesCache
-			}
-			if num, ok := enumJSONNamesCache[s]; ok {
-				return protoreflect.ValueOfEnum(num), true
-			}
+		customJSONNames := d.cache.enumNumbersByCustomJSONName(fd.Enum())
+		if num, ok := customJSONNames[s]; ok {
+			return protoreflect.ValueOfEnum(num), true
 		}
 
 		if d.opts.DiscardUnknown {
@@ -543,16 +534,29 @@ func (d decoder) unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor) 
 	return protoreflect.Value{}, false
 }
 
-func (d decoder) enumJSONNames(ed protoreflect.EnumDescriptor) map[string]protoreflect.EnumNumber {
-	names := make(map[string]protoreflect.EnumNumber)
+func (c *decodeCache) enumNumbersByCustomJSONName(ed protoreflect.EnumDescriptor) map[string]protoreflect.EnumNumber {
+	if c == nil {
+		return nil
+	}
+	if c.enumJSONNamesOptionCache == nil {
+		c.enumJSONNamesOptionCache = make(map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber)
+	}
+	nameToNumber, ok := c.enumJSONNamesOptionCache[ed]
+	if ok {
+		return nameToNumber
+	}
 	vals := ed.Values()
 	for i := 0; i < vals.Len(); i++ {
 		ev := vals.Get(i)
 		if name, ok := enumValueJSONNameOption(ev); ok {
-			names[name] = ev.Number()
+			if nameToNumber == nil {
+				nameToNumber = make(map[string]protoreflect.EnumNumber)
+			}
+			nameToNumber[name] = ev.Number()
 		}
 	}
-	return names
+	c.enumJSONNamesOptionCache[ed] = nameToNumber
+	return nameToNumber
 }
 
 func (d decoder) unmarshalList(list protoreflect.List, fd protoreflect.FieldDescriptor) error {
