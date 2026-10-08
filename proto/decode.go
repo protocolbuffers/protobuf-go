@@ -187,7 +187,7 @@ func (o UnmarshalOptions) unmarshalMessageSlow(b []byte, m protoreflect.Message)
 			if err != errUnknown {
 				return err
 			}
-			valLen = protowire.ConsumeFieldValue(num, wtyp, b[tagLen:])
+			valLen = protowire.ConsumeFieldValueDepth(num, wtyp, b[tagLen:], o.RecursionLimit)
 			if valLen < 0 {
 				return errDecode
 			}
@@ -277,7 +277,7 @@ func (o UnmarshalOptions) unmarshalMap(b []byte, wtyp protowire.Type, mapv proto
 			haveVal = true
 		}
 		if err == errUnknown {
-			n = protowire.ConsumeFieldValue(num, wtyp, b)
+			n = protowire.ConsumeFieldValueDepth(num, wtyp, b, o.RecursionLimit)
 			if n < 0 {
 				return 0, errDecode
 			}

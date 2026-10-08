@@ -113,6 +113,12 @@ func ConsumeFieldValue(num Number, typ Type, b []byte) (n int) {
 	return consumeFieldValueD(num, typ, b, DefaultRecursionLimit)
 }
 
+// ConsumeFieldValueDepth is like [ConsumeFieldValue] but bounds group nesting
+// by depth instead of always using [DefaultRecursionLimit].
+func ConsumeFieldValueDepth(num Number, typ Type, b []byte, depth int) (n int) {
+	return consumeFieldValueD(num, typ, b, depth)
+}
+
 func consumeFieldValueD(num Number, typ Type, b []byte, depth int) (n int) {
 	switch typ {
 	case VarintType:

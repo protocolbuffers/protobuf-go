@@ -358,7 +358,7 @@ func (mi *MessageInfo) unmarshalPointerLazy(b []byte, p pointer, groupTag protow
 			if err != errUnknown {
 				return out, err
 			}
-			n = protowire.ConsumeFieldValue(num, wtyp, b)
+			n = protowire.ConsumeFieldValueDepth(num, wtyp, b, opts.depth)
 			if n < 0 {
 				return out, errDecode
 			}
