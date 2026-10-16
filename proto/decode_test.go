@@ -135,6 +135,28 @@ func TestDecodeEmptyBytes(t *testing.T) {
 		t.Errorf("unmarshaling repeated bytes field containing zero-length value: Got nil bytes, want non-nil")
 	}
 }
+func TestDecodeOneofIncompatibleWireType(t *testing.T) {
+	// Tag 111 is OneofUint32 (VarintType).
+	// Pass it as BytesType (LengthDelimited).
+	wire := protopack.Message{
+		protopack.Tag{111, protopack.BytesType}, protopack.Bytes([]byte("bad")),
+	}.Marshal()
+
+	m := &testpb.TestAllTypes{}
+	if err := proto.Unmarshal(wire, m); err != nil {
+		t.Fatal(err)
+	}
+
+	// The oneof field should be unset (nil).
+	if m.OneofField != nil {
+		t.Errorf("OneofField is non-nil, want nil. Got type: %T", m.OneofField)
+	}
+
+	// The data should be in unknown fields.
+	if len(m.ProtoReflect().GetUnknown()) == 0 {
+		t.Error("Expected unknown fields, got none")
+	}
+}
 
 func build(m proto.Message, opts ...buildOpt) proto.Message {
 	for _, opt := range opts {

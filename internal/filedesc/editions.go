@@ -74,9 +74,11 @@ func unmarshalFeatureSet(b []byte, parent EditionFeatures) EditionFeatures {
 			case genid.FeatureSet_EnforceNamingStyle_field_number:
 				// EnforceNamingStyle is enforced in protoc, languages other than C++
 				// are not supposed to do anything with this feature.
-			case genid.FeatureSet_DefaultSymbolVisibility_field_number:
-				// DefaultSymbolVisibility is enforced in protoc, runtimes should not
-				// inspect this value.
+			case genid.FeatureSet_DefaultSymbolVisibility_field_number,
+				genid.FeatureSet_EnforceProtoLimits_field_number:
+
+				// DefaultSymbolVisibility and EnforceProtoLimits are enforced in protoc,
+				// runtimes should not inspect these values.
 			default:
 				panic(fmt.Sprintf("unknown field number %d while unmarshalling FeatureSet", num))
 			}

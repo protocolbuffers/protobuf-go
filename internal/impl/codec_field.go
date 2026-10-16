@@ -70,7 +70,6 @@ func (mi *MessageInfo) initOneofFieldCoders(od protoreflect.OneofDescriptor, si 
 				ptr = pointer{p: hdr.Data}
 			} else {
 				ptr = pointerOfValue(reflect.New(ot))
-				*hdr = ifaceHeader{Type: itab, Data: ptr.p}
 			}
 
 			out, err := cf.funcs.unmarshal(b, ptr, wtyp, &cf, opts)
@@ -79,6 +78,10 @@ func (mi *MessageInfo) initOneofFieldCoders(od protoreflect.OneofDescriptor, si 
 			}
 			if cf.funcs.isInit == nil {
 				out.initialized = true
+			}
+
+			if hdr.Type != itab || hdr.Data == nil {
+				*hdr = ifaceHeader{Type: itab, Data: ptr.p}
 			}
 			return out, nil
 		}

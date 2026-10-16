@@ -4,3 +4,6 @@ Required.Editions_Proto2.ProtobufInput.BadTag_OverlongVarint # Should have faile
 Required.Editions_Proto3.ProtobufInput.BadTag_OverlongVarint # Should have failed to parse, but didn't.
 Required.Proto2.ProtobufInput.BadTag_OverlongVarint # Should have failed to parse, but didn't.
 Required.Proto3.ProtobufInput.BadTag_OverlongVarint # Should have failed to parse, but didn't.
+Recommended.*.JsonInput.ListValueDeepNesting200                                                                    # Should have failed to parse, but didn't.
+Recommended.*.JsonInput.StructDeepNesting200                                                                       # Should have failed to parse, but didn't.
+Recommended.*.JsonInput.ValueDeepNesting200                                                                        # Should have failed to parse, but didn't.

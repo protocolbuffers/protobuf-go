@@ -332,7 +332,7 @@ func (e encoder) marshalSingular(val protoreflect.Value, fd protoreflect.FieldDe
 			if e.opts.UseEnumNumbers || desc == nil {
 				e.WriteInt(int64(val.Enum()))
 			} else {
-				e.WriteString(string(desc.Name()))
+				e.WriteString(e.enumJSONName(desc))
 			}
 		}
 
@@ -377,4 +377,11 @@ func (e encoder) marshalMap(mmap protoreflect.Map, fd protoreflect.FieldDescript
 		return true
 	})
 	return err
+}
+
+func (e encoder) enumJSONName(desc protoreflect.EnumValueDescriptor) string {
+	if name, ok := enumValueJSONNameOption(desc); ok {
+		return name
+	}
+	return string(desc.Name())
 }

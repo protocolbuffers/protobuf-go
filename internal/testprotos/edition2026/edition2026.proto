@@ -1,0 +1,35 @@
+// Copyright 2026 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+edition = "2026";
+
+package goproto.test.edition2026;
+
+import "google/protobuf/json_options.proto";
+
+option go_package = "google.golang.org/protobuf/internal/testprotos/edition2026";
+
+enum TestEnum {
+  option allow_alias = true;
+
+  TEST_ENUM_UNSPECIFIED = 0;
+  TEST_ENUM_ARMOR_GREAT_HELM = 1 [(.pb.enumvalue.json).string = "gr8 helm"];
+  TEST_ENUM_ARMOR_GAUNTLET = 3 [(.pb.enumvalue.json).string = "a\"b"];
+  TEST_ENUM_ARMOR_COIF = 5 [(.pb.enumvalue.json).string = ""];
+  TEST_ENUM_ARMOR_ALIAS = 7 [(.pb.enumvalue.json).string = "alias_custom"];
+  TEST_ENUM_ARMOR_CANONICAL = 7 [(.pb.enumvalue.json).string = "alias_custom"];
+  TEST_ENUM_ARMOR_BOOTS = 9;
+  TEST_ENUM_ARMOR_SHIELD = 10 [deprecated = true];
+}
+
+enum HelmetEnum {
+  HELMET_ENUM_UNSPECIFIED = 0;
+  HELMET_ENUM_GOBLIN = 1 [(.pb.enumvalue.json) = {}];
+}
+
+message TestMessage {
+  TestEnum value = 1;
+  repeated TestEnum list = 2;
+  HelmetEnum helmet = 3;
+}

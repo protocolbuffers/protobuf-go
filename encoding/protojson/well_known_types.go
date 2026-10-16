@@ -179,7 +179,7 @@ func (d decoder) unmarshalAny(m protoreflect.Message) error {
 	// Use another decoder to parse the unread bytes for @type field. This
 	// avoids advancing a read from current decoder because the current JSON
 	// object may contain the fields of the embedded type.
-	dec := decoder{d.Clone(), UnmarshalOptions{RecursionLimit: d.opts.RecursionLimit}}
+	dec := decoder{d.Clone(), UnmarshalOptions{RecursionLimit: d.opts.RecursionLimit}, d.cache}
 	tok, err := findTypeURL(dec)
 	switch err {
 	case errEmptyObject:

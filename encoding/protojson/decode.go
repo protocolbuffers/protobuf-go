@@ -76,7 +76,7 @@ func (o UnmarshalOptions) unmarshal(b []byte, m proto.Message) error {
 		o.RecursionLimit = protowire.DefaultRecursionLimit
 	}
 
-	dec := decoder{json.NewDecoder(b), o}
+	dec := decoder{json.NewDecoder(b), o, &decodeCache{}}
 	if err := dec.unmarshalMessage(m.ProtoReflect(), false); err != nil {
 		return err
 	}
@@ -96,9 +96,14 @@ func (o UnmarshalOptions) unmarshal(b []byte, m proto.Message) error {
 	return proto.CheckInitialized(m)
 }
 
+type decodeCache struct {
+	enumJSONNamesOptionCache map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber
+}
+
 type decoder struct {
 	*json.Decoder
-	opts UnmarshalOptions
+	opts  UnmarshalOptions
+	cache *decodeCache
 }
 
 // newError returns an error object with position info.
@@ -338,7 +343,7 @@ func (d decoder) unmarshalScalar(fd protoreflect.FieldDescriptor) (protoreflect.
 		}
 
 	case protoreflect.EnumKind:
-		if v, ok := unmarshalEnum(tok, fd, d.opts.DiscardUnknown); ok {
+		if v, ok := d.unmarshalEnum(tok, fd); ok {
 			return v, nil
 		}
 
@@ -495,7 +500,7 @@ func unmarshalBytes(tok json.Token) (protoreflect.Value, bool) {
 	return protoreflect.ValueOfBytes(b), true
 }
 
-func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnknown bool) (protoreflect.Value, bool) {
+func (d decoder) unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor) (protoreflect.Value, bool) {
 	switch tok.Kind() {
 	case json.String:
 		// Lookup EnumNumber based on name.
@@ -503,7 +508,14 @@ func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnkno
 		if enumVal := fd.Enum().Values().ByName(protoreflect.Name(s)); enumVal != nil {
 			return protoreflect.ValueOfEnum(enumVal.Number()), true
 		}
-		if discardUnknown {
+
+		// Check the custom names map.
+		customJSONNames := d.cache.enumNumbersByCustomJSONName(fd.Enum())
+		if num, ok := customJSONNames[s]; ok {
+			return protoreflect.ValueOfEnum(num), true
+		}
+
+		if d.opts.DiscardUnknown {
 			return protoreflect.Value{}, true
 		}
 
@@ -520,6 +532,31 @@ func unmarshalEnum(tok json.Token, fd protoreflect.FieldDescriptor, discardUnkno
 	}
 
 	return protoreflect.Value{}, false
+}
+
+func (c *decodeCache) enumNumbersByCustomJSONName(ed protoreflect.EnumDescriptor) map[string]protoreflect.EnumNumber {
+	if c == nil {
+		return nil
+	}
+	if c.enumJSONNamesOptionCache == nil {
+		c.enumJSONNamesOptionCache = make(map[protoreflect.EnumDescriptor]map[string]protoreflect.EnumNumber)
+	}
+	nameToNumber, ok := c.enumJSONNamesOptionCache[ed]
+	if ok {
+		return nameToNumber
+	}
+	vals := ed.Values()
+	for i := 0; i < vals.Len(); i++ {
+		ev := vals.Get(i)
+		if name, ok := enumValueJSONNameOption(ev); ok {
+			if nameToNumber == nil {
+				nameToNumber = make(map[string]protoreflect.EnumNumber)
+			}
+			nameToNumber[name] = ev.Number()
+		}
+	}
+	c.enumJSONNamesOptionCache[ed] = nameToNumber
+	return nameToNumber
 }
 
 func (d decoder) unmarshalList(list protoreflect.List, fd protoreflect.FieldDescriptor) error {
@@ -571,8 +608,6 @@ func (d decoder) unmarshalList(list protoreflect.List, fd protoreflect.FieldDesc
 			}
 		}
 	}
-
-	return nil
 }
 
 func (d decoder) unmarshalMap(mmap protoreflect.Map, fd protoreflect.FieldDescriptor) error {
