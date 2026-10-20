@@ -569,9 +569,9 @@ var File_conformance_test_protos_test_messages_edition_unstable_proto protorefle
 
 const file_conformance_test_protos_test_messages_edition_unstable_proto_rawDesc = "" +
 	"\n" +
-	"<conformance/test_protos/test_messages_edition_unstable.proto\x12'protobuf_test_messages.edition_unstable\"\x1e\n" +
+	"<conformance/test_protos/test_messages_edition_unstable.proto\x12'protobuf_test_messages.edition_unstable\" \n" +
 	"\x0eComplexMessage\x12\f\n" +
-	"\x01d\x18\x01 \x01(\x0fR\x01d\"\xaf\x11\n" +
+	"\x01d\x18\x01 \x01(\x0fR\x01dX\x02\"\xb1\x11\n" +
 	"\x1bTestAllTypesEditionUnstable\x12%\n" +
 	"\x0eoptional_int32\x18\x01 \x01(\x0fR\roptionalInt32\x12\x87\x01\n" +
 	"\x18optional_foreign_message\x18\x02 \x01(\v2F.protobuf_test_messages.edition_unstable.ForeignMessageEditionUnstableB\x05\xaa\x01\x02(\x01R\x16optionalForeignMessage\x12w\n" +
@@ -606,13 +606,13 @@ const file_conformance_test_protos_test_messages_edition_unstable_proto_rawDesc 
 	"\x05value\x18\x02 \x01(\x0e2C.protobuf_test_messages.edition_unstable.ForeignEnumEditionUnstableR\x05value:\x028\x01\x1aA\n" +
 	"\x13MapStringBytesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\fR\x05value:\x028\x01*\x05\bx\x10\xc9\x01\"-\n" +
+	"\x05value\x18\x02 \x01(\fR\x05value:\x028\x01*\x05\bx\x10\xc9\x01X\x02\"/\n" +
 	"\x1dForeignMessageEditionUnstable\x12\f\n" +
-	"\x01c\x18\x01 \x01(\x0fR\x01c*O\n" +
+	"\x01c\x18\x01 \x01(\x0fR\x01cX\x02*Q\n" +
 	"\x1aForeignEnumEditionUnstable\x12\x0f\n" +
 	"\vFOREIGN_FOO\x10\x00\x12\x0f\n" +
 	"\vFOREIGN_BAR\x10\x01\x12\x0f\n" +
-	"\vFOREIGN_BAZ\x10\x02:m\n" +
+	"\vFOREIGN_BAZ\x10\x020\x02:m\n" +
 	"\x0fextension_int32\x12D.protobuf_test_messages.edition_unstable.TestAllTypesEditionUnstable\x18x \x01(\x0fR\x0eextensionInt32BK\n" +
 	"2com.google.protobuf_test_messages.edition_unstable\xa2\x02\x0fEditionUnstable\x92\x03\x02(\x02b\beditionsp\x8fN"
 

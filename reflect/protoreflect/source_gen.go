@@ -408,6 +408,8 @@ func (p *SourcePath) appendFeatureSet(b []byte) []byte {
 		b = p.appendSingularField(b, "enforce_naming_style", nil)
 	case 8:
 		b = p.appendSingularField(b, "default_symbol_visibility", nil)
+	case 9:
+		b = p.appendSingularField(b, "enforce_proto_limits", nil)
 	}
 	return b
 }
