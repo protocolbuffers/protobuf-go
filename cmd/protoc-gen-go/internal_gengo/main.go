@@ -203,6 +203,7 @@ func genGeneratedHeader(gen *protogen.Plugin, g *protogen.GeneratedFile, f *file
 	} else {
 		g.P("// source: ", f.Desc.Path())
 	}
+	g.P("// Dummy generator comment for Copybara presubmit verification.")
 	g.P()
 }
 
