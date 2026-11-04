@@ -548,8 +548,10 @@ type M4 struct {
 	// initial name in Go     | Clashes with field | type | final name
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetFoo              | get_foo            | 1    | GetGetFoo_
-	//  GetGetGetFoo          | -                  | -    | GetGetGetFoo
-	//                        |                    |      |
+	//
+	//	GetGetGetFoo          | -                  | -    | GetGetGetFoo
+	//	                      |                    |      |
+	//
 	// Foo                    | get_foo            | 2    | Foo_
 	// New Scheme:
 	// initial name in Go     | Clashes with field | type | Getter name
@@ -712,8 +714,10 @@ type M4_builder struct {
 	// initial name in Go     | Clashes with field | type | final name
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetFoo              | get_foo            | 1    | GetGetFoo_
-	//  GetGetGetFoo          | -                  | -    | GetGetGetFoo
-	//                        |                    |      |
+	//
+	//	GetGetGetFoo          | -                  | -    | GetGetGetFoo
+	//	                      |                    |      |
+	//
 	// Foo                    | get_foo            | 2    | Foo_
 	// New Scheme:
 	// initial name in Go     | Clashes with field | type | Getter name
@@ -766,8 +770,10 @@ type M5 struct {
 	// initial name in Go     | Clashes with field | type | final name
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetGetFoo           | -                  | -    | GetGetGetFoo
-	//  GetGetFoo             | get_foo            | 1    | GetGetFoo_
-	//                        |                    |      |
+	//
+	//	GetGetFoo             | get_foo            | 1    | GetGetFoo_
+	//	                      |                    |      |
+	//
 	// Foo                    | get_foo            | 2    | Foo_
 	// New Scheme:
 	// initial name in Go     | Clashes with field | type | Getter name
@@ -936,8 +942,10 @@ type M5_builder struct {
 	// initial name in Go     | Clashes with field | type | final name
 	// GetFoo                 | -                  | -    | GetFoo
 	// GetGetGetFoo           | -                  | -    | GetGetGetFoo
-	//  GetGetFoo             | get_foo            | 1    | GetGetFoo_
-	//                        |                    |      |
+	//
+	//	GetGetFoo             | get_foo            | 1    | GetGetFoo_
+	//	                      |                    |      |
+	//
 	// Foo                    | get_foo            | 2    | Foo_
 	// New Scheme:
 	// initial name in Go     | Clashes with field | type | Getter name
@@ -988,8 +996,10 @@ type M6 struct {
 	// Note evaluation order - get_get_get_foo before get_get_foo
 	// initial name in Go     | Clashes with field | type | final name
 	// GetGetFoo              | -                  | -    | GetGetFoo
-	//  GetGetGetFoo          | -                  | -    | GetGetGetFoo
-	//                        |                    |      |
+	//
+	//	GetGetGetFoo          | -                  | -    | GetGetGetFoo
+	//	                      |                    |      |
+	//
 	// GetFoo                 | get_get_foo        | 2    | GetFoo_
 	// Foo                    | -                  | -    | Foo
 	// New Scheme:
@@ -1207,9 +1217,11 @@ type M7 struct {
 	// Note evaluation order - bar before get_get_foo, then get_get_get_foo
 	// initial name in Go     | Clashes with field | type | final name
 	// GetGetFoo              | -                  | -    | GetGetFoo
-	//  Bar                   | -                  | -    | Bar
-	//  GetFoo                | foo                | 1    | GetFoo_
-	//                        |                    |      |
+	//
+	//	Bar                   | -                  | -    | Bar
+	//	GetFoo                | foo                | 1    | GetFoo_
+	//	                      |                    |      |
+	//
 	// Foo                    | -                  | -    | Foo
 	// New Scheme:
 	// initial name in Go     | Clashes with field | type | Getter name
@@ -1442,8 +1454,10 @@ type M8 struct {
 	// Note evaluation order - get_get_foo before get_get_get_foo
 	// initial name in Go     | Clashes with field | type | final name
 	// GetGetGetFoo           | get_get_foo        | 1    | GetGetGetFoo_
-	//  GetGetFoo             | -                  | -    | GetGetFoo
-	//                        |                    |      |
+	//
+	//	GetGetFoo             | -                  | -    | GetGetFoo
+	//	                      |                    |      |
+	//
 	// GetFoo                 | get_get_foo        | 2    | GetFoo_
 	// Foo                    | -                  | -    | Foo
 	// New Scheme:
@@ -1666,9 +1680,11 @@ type M9 struct {
 	// Note evaluation order - get_get_foo before get_get_get_foo, then get_foo
 	// initial name in Go     | Clashes with field | type | final name
 	// GetGetGetFoo           | get_get_foo        | 1    | GetGetGetFoo_
-	//  GetGetFoo             | -                  | -    | GetGetFoo
-	//  GetFoo                | get_get_foo        | 2    | GetFoo_
-	//                        |                    |      |
+	//
+	//	GetGetFoo             | -                  | -    | GetGetFoo
+	//	GetFoo                | get_get_foo        | 2    | GetFoo_
+	//	                      |                    |      |
+	//
 	// Foo                    | -                  | -    | Foo
 	// New Scheme:
 	// initial name in Go     | Clashes with field | type | Getter name

@@ -86,10 +86,11 @@ type JsonEnumValueOptions_builder struct {
 	// value to JSON.
 	//
 	// Sample usage:
-	// enum Foo {
-	//   ...
-	//   FOO_BAR = 42 [(pb.enumvalue.json).string = "my_custom_name"];
-	// }
+	//
+	//	enum Foo {
+	//	  ...
+	//	  FOO_BAR = 42 [(pb.enumvalue.json).string = "my_custom_name"];
+	//	}
 	String *string
 }
 
