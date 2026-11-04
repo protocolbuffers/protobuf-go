@@ -130,7 +130,8 @@ func (o UnmarshalOptions) UnmarshalFrom(r Reader, m proto.Message) error {
 
 	var b []byte
 	var err error
-	if br, ok := r.(*bufio.Reader); ok {
+	// bufio reuses a peeked buffer, so it must not be aliased.
+	if br, ok := r.(*bufio.Reader); ok && !o.UnsafeAliasInput {
 		// Use the []byte from the bufio.Reader instead of having to allocate one.
 		// This reduces CPU usage and allocated bytes.
 		b, err = br.Peek(int(size))

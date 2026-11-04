@@ -52,6 +52,17 @@ type UnmarshalOptions struct {
 	// default. Lazy decoding only affects submessages (annotated with [lazy =
 	// true] in the .proto file) within messages that use the Opaque API.
 	NoLazyDecoding bool
+
+	// UnsafeAliasInput lets string and bytes fields, and lazily decoded
+	// submessages, refer to the input buffer instead of copying from it.
+	//
+	// The caller must not modify or reuse the input buffer while the message,
+	// or any value read from it, is in use: doing so silently corrupts those
+	// values, strings included. Each such value also keeps the whole input
+	// buffer alive; clone it to release the buffer.
+	//
+	// Some fields are still copied.
+	UnsafeAliasInput bool
 }
 
 // Unmarshal parses the wire-format message in b and places the result in m.
@@ -117,6 +128,10 @@ func (o UnmarshalOptions) unmarshal(b []byte, m protoreflect.Message) (out proto
 		}
 		if o.NoLazyDecoding {
 			in.Flags |= protoiface.UnmarshalNoLazyDecoding
+		}
+		if o.UnsafeAliasInput {
+			// AliasBuffer makes lazily decoded submessages alias the input too.
+			in.Flags |= protoiface.UnmarshalUnsafeAliasInput | protoiface.UnmarshalAliasBuffer
 		}
 
 		out, err = methods.Unmarshal(in)

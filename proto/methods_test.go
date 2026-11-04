@@ -19,6 +19,10 @@ import (
 	"google.golang.org/protobuf/runtime/protoiface"
 
 	legacypb "google.golang.org/protobuf/internal/testprotos/legacy"
+	legacy2pb "google.golang.org/protobuf/internal/testprotos/legacy/proto3_20160225_2fc053c5"
+	testpb "google.golang.org/protobuf/internal/testprotos/test"
+	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	testopaquepb "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_opaque"
 )
 
 type selfMarshaler struct {
@@ -181,5 +185,63 @@ func TestLegacyMergeMethod(t *testing.T) {
 	}
 	if got := src.src; got != nil {
 		t.Errorf("Merge(dst, src): want src.src = nil, got %v", got)
+	}
+}
+
+// TestUnsafeAliasInput checks that string and bytes fields alias the input
+// buffer if and only if UnsafeAliasInput is set. Only the fast path aliases.
+func TestUnsafeAliasInput(t *testing.T) {
+	const s = "hello world"
+	for _, tt := range []struct {
+		desc string
+		m    proto.Message
+	}{
+		{"optional string", &testpb.TestAllTypes{OptionalString: proto.String(s)}},
+		{"optional bytes", &testpb.TestAllTypes{OptionalBytes: []byte(s)}},
+		{"repeated string", &testpb.TestAllTypes{RepeatedString: []string{s}}},
+		{"repeated bytes", &testpb.TestAllTypes{RepeatedBytes: [][]byte{[]byte(s)}}},
+		{"oneof string", &testpb.TestAllTypes{OneofField: &testpb.TestAllTypes_OneofString{OneofString: s}}},
+		{"nested string", &testpb.TestAllTypes{OptionalNestedMessage: &testpb.TestAllTypes_NestedMessage{
+			Corecursive: &testpb.TestAllTypes{OptionalString: proto.String(s)},
+		}}},
+		{"proto3 string", &test3pb.TestAllTypes{SingularString: s}},
+		{"proto3 bytes", &test3pb.TestAllTypes{SingularBytes: []byte(s)}},
+		{"proto3 repeated string", &test3pb.TestAllTypes{RepeatedString: []string{s}}},
+		// TestNoEnforceUTF8 has string fields of Go type []byte.
+		{"string as bytes", &TestNoEnforceUTF8{OptionalBytes: []byte(s)}},
+		{"repeated string as bytes", &TestNoEnforceUTF8{RepeatedBytes: [][]byte{[]byte(s)}}},
+		{"oneof string as bytes", &TestNoEnforceUTF8{OneofField: &TestNoEnforceUTF8_OneofBytes{OneofBytes: []byte(s)}}},
+		{"opaque string", testopaquepb.TestAllTypes_builder{OptionalString: proto.String(s)}.Build()},
+		{"opaque bytes", testopaquepb.TestAllTypes_builder{OptionalBytes: []byte(s)}.Build()},
+		{"opaque lazy nested string", testopaquepb.TestAllTypes_builder{
+			OptionalLazyNestedMessage: testopaquepb.TestAllTypes_NestedMessage_builder{
+				Corecursive: testopaquepb.TestAllTypes_builder{OptionalString: proto.String(s)}.Build(),
+			}.Build(),
+		}.Build()},
+		// A nested legacy message is decoded by a separate Unmarshal call.
+		{"legacy nested string", &legacypb.Legacy{F2: &legacy2pb.Message{OptionalString: s}}},
+	} {
+		for _, alias := range []bool{false, true} {
+			t.Run(fmt.Sprintf("%s/alias=%t", tt.desc, alias), func(t *testing.T) {
+				b, err := proto.Marshal(tt.m)
+				if err != nil {
+					t.Fatal(err)
+				}
+				got := tt.m.ProtoReflect().New().Interface()
+				if err := (proto.UnmarshalOptions{UnsafeAliasInput: alias}).Unmarshal(b, got); err != nil {
+					t.Fatal(err)
+				}
+				if !proto.Equal(got, tt.m) {
+					t.Fatalf("Unmarshal returned %v, want %v", got, tt.m)
+				}
+				// Overwrite the input: the message changes only if it aliases it.
+				for i := range b {
+					b[i] = 'X'
+				}
+				if aliased := !proto.Equal(got, tt.m); aliased != alias {
+					t.Errorf("message aliases the input: %t, want %t", aliased, alias)
+				}
+			})
+		}
 	}
 }

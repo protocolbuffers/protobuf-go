@@ -195,3 +195,54 @@ func ExampleUnmarshal() {
 
 	// Output: Protobuf wire format decoded to duration 125ns
 }
+
+// TestUnsafeAliasInputAppend checks that appending to an aliased bytes value
+// does not overwrite the input after it.
+func TestUnsafeAliasInputAppend(t *testing.T) {
+	b, err := proto.Marshal(&testpb.TestAllTypes{RepeatedBytes: [][]byte{[]byte("abc"), []byte("def")}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := &testpb.TestAllTypes{}
+	if err := (proto.UnmarshalOptions{UnsafeAliasInput: true}).Unmarshal(b, m); err != nil {
+		t.Fatal(err)
+	}
+	_ = append(m.RepeatedBytes[0], "XXXXXX"...)
+	if got, want := string(m.RepeatedBytes[1]), "def"; got != want {
+		t.Errorf("after appending to the first value, the second is %q, want %q", got, want)
+	}
+}
+
+// TestUnsafeAliasInputEmpty checks that an empty proto3 bytes field stays nil.
+func TestUnsafeAliasInputEmpty(t *testing.T) {
+	// Field 95 is singular_bytes.
+	b := protopack.Message{protopack.Tag{95, protopack.BytesType}, protopack.Bytes(nil)}.Marshal()
+	m := &test3pb.TestAllTypes{}
+	if err := (proto.UnmarshalOptions{UnsafeAliasInput: true}).Unmarshal(b, m); err != nil {
+		t.Fatal(err)
+	}
+	if unknown := m.ProtoReflect().GetUnknown(); m.SingularBytes != nil || len(unknown) > 0 {
+		t.Errorf("singular_bytes is %#v with unknown fields %x, want nil with none", m.SingularBytes, unknown)
+	}
+}
+
+// TestDecodeUnsafeAliasInput decodes the valid test messages with
+// UnsafeAliasInput set.
+func TestDecodeUnsafeAliasInput(t *testing.T) {
+	for _, test := range testValidMessages {
+		for _, want := range test.decodeTo {
+			t.Run(fmt.Sprintf("%s (%T)", test.desc, want), func(t *testing.T) {
+				opts := test.unmarshalOptions
+				opts.AllowPartial = test.partial
+				opts.UnsafeAliasInput = true
+				got := reflect.New(reflect.TypeOf(want).Elem()).Interface().(proto.Message)
+				if err := opts.Unmarshal(test.wire, got); err != nil {
+					t.Fatalf("Unmarshal error: %v\nMessage:\n%v", err, prototext.Format(want))
+				}
+				if !proto.Equal(got, want) && got.ProtoReflect().IsValid() && want.ProtoReflect().IsValid() {
+					t.Errorf("Unmarshal returned unexpected result; got:\n%v\nwant:\n%v", prototext.Format(got), prototext.Format(want))
+				}
+			})
+		}
+	}
+}

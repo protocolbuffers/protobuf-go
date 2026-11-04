@@ -138,6 +138,10 @@ const (
 	// UnmarshalNoLazyDecoding is set if this unmarshal operation should not use
 	// lazy decoding, even when otherwise available.
 	UnmarshalNoLazyDecoding
+
+	// UnmarshalUnsafeAliasInput permits string and bytes fields to alias the
+	// input buffer. It is set together with UnmarshalAliasBuffer.
+	UnmarshalUnsafeAliasInput
 )
 
 // UnmarshalOutputFlags are output from the Unmarshal method.
