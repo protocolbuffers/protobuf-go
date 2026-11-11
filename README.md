@@ -3,6 +3,17 @@
 [![Go Reference](https://pkg.go.dev/badge/google.golang.org/protobuf.svg)](https://pkg.go.dev/google.golang.org/protobuf)
 [![Build Status](https://travis-ci.org/protocolbuffers/protobuf-go.svg?branch=master)](https://travis-ci.org/protocolbuffers/protobuf-go)
 
+> [!IMPORTANT]
+> Development of this project is officially being moved to GitHub, from its
+> previous source of truth at
+> [go.googlesource.com/protobuf](https://go.googlesource.com/protobuf). Moving
+> forward, we will only accept changes as pull requests at
+> [github.com/protocolbuffers/protobuf-go](https://github.com/protocolbuffers/protobuf-go),
+> rather than through [Gerrit](https://go-review.googlesource.com). During this
+> transition, pull requests may take longer than usual to review and merge, and
+> we may hold off on merging noncritical changes until after this transition. We
+> expect this to be complete by the end of November 2026.
+
 This project hosts the Go implementation for
 [protocol buffers](https://protobuf.dev), which is a
 language-neutral, platform-neutral, extensible mechanism for serializing
