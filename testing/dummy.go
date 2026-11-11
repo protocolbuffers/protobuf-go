@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package testing is a placeholder for testing the export to the staging
+// Package testing is a placeholder for testing the export to the master
 // branch.
 
 // This line is added in OSS and for testing google import.
