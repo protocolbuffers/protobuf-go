@@ -158,6 +158,36 @@ func TestDecodeOneofIncompatibleWireType(t *testing.T) {
 	}
 }
 
+func TestDecodeSplitPackedRepeated(t *testing.T) {
+	const n = 1000
+	var wire protopack.Message
+	for i := range n {
+		wire = append(wire,
+			protopack.Tag{31, protopack.BytesType}, protopack.LengthPrefix{protopack.Varint(i)},
+			protopack.Tag{32, protopack.BytesType}, protopack.LengthPrefix{protopack.Varint(i)},
+			protopack.Tag{43, protopack.BytesType}, protopack.LengthPrefix{protopack.Bool(i%2 == 0)},
+		)
+	}
+	b := wire.Marshal()
+
+	var m testpb.TestAllTypes
+	allocs := testing.AllocsPerRun(10, func() {
+		m = testpb.TestAllTypes{}
+		if err := proto.Unmarshal(b, &m); err != nil {
+			t.Fatal(err)
+		}
+	})
+	if len(m.RepeatedInt32) != n || len(m.RepeatedInt64) != n || len(m.RepeatedBool) != n {
+		t.Fatalf("got lengths (%d, %d, %d), want (%d, %d, %d)", len(m.RepeatedInt32), len(m.RepeatedInt64), len(m.RepeatedBool), n, n, n)
+	}
+	if m.RepeatedInt32[n-1] != n-1 || m.RepeatedInt64[n-1] != n-1 || m.RepeatedBool[n-1] != false {
+		t.Fatalf("unexpected tail elements: (%d, %d, %v)", m.RepeatedInt32[n-1], m.RepeatedInt64[n-1], m.RepeatedBool[n-1])
+	}
+	if allocs > 100 {
+		t.Errorf("got %v allocs for %d split packed records, want <= 100", allocs, n)
+	}
+}
+
 func build(m proto.Message, opts ...buildOpt) proto.Message {
 	for _, opt := range opts {
 		opt(m)
