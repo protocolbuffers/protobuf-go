@@ -5,5 +5,5 @@
 // Package testing is a placeholder for testing the export to the staging
 // branch.
 
-// This line is added in OSS and for testing google import.
+// This line is changed in OSS to test importing a GitHub pull request.
 package testing
