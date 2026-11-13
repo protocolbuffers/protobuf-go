@@ -113,7 +113,7 @@ func (mi *MessageInfo) unmarshalPointer(b []byte, p pointer, groupTag protowire.
 	if opts.NoLazyDecoding() {
 		lazyDecoding = false // explicitly disabled
 	}
-	if mi.lazyOffset.IsValid() && lazyDecoding {
+	if groupTag == 0 && mi.lazyOffset.IsValid() && lazyDecoding {
 		return mi.unmarshalPointerLazy(b, p, groupTag, opts)
 	}
 	return mi.unmarshalPointerEager(b, p, groupTag, opts)
