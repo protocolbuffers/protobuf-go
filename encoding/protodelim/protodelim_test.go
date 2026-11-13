@@ -17,6 +17,7 @@ import (
 	"google.golang.org/protobuf/encoding/protodelim"
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/internal/testprotos/test3"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/testing/protocmp"
 )
 
@@ -70,6 +71,31 @@ func TestRoundTrip(t *testing.T) {
 				t.Errorf("Unmarshaler collected messages: diff -want +got = %s", diff)
 			}
 		})
+	}
+}
+
+// TestUnmarshalFromUnsafeAliasInput checks that a message read with
+// UnsafeAliasInput does not alias the buffer of a bufio.Reader, which later
+// reads overwrite.
+func TestUnmarshalFromUnsafeAliasInput(t *testing.T) {
+	buf := &bytes.Buffer{}
+	for _, s := range []string{"first", "second"} {
+		if _, err := protodelim.MarshalTo(buf, &test3.TestAllTypes{SingularString: s}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// The smallest reader cannot hold both messages, so it reuses its buffer
+	// for the second one.
+	r := bufio.NewReaderSize(buf, 16)
+	opts := protodelim.UnmarshalOptions{UnmarshalOptions: proto.UnmarshalOptions{UnsafeAliasInput: true}}
+	first, second := &test3.TestAllTypes{}, &test3.TestAllTypes{}
+	for _, m := range []*test3.TestAllTypes{first, second} {
+		if err := opts.UnmarshalFrom(r, m); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if got, want := first.GetSingularString(), "first"; got != want {
+		t.Errorf("after reading the second message, the first has string %q, want %q", got, want)
 	}
 }
 

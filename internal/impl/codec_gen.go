@@ -11,6 +11,7 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/encoding/protowire"
+	"google.golang.org/protobuf/internal/strs"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -5026,7 +5027,11 @@ func consumeString(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, 
 	if n < 0 {
 		return out, errDecode
 	}
-	*p.String() = string(v)
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*p.String() = strs.UnsafeString(v)
+	} else {
+		*p.String() = string(v)
+	}
 	out.n = n
 	return out, nil
 }
@@ -5061,7 +5066,11 @@ func consumeStringValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *code
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
-	*p.String() = string(v)
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*p.String() = strs.UnsafeString(v)
+	} else {
+		*p.String() = string(v)
+	}
 	out.n = n
 	return out, nil
 }
@@ -5153,7 +5162,11 @@ func consumeStringPtr(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInf
 	if *vp == nil {
 		*vp = new(string)
 	}
-	**vp = string(v)
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		**vp = strs.UnsafeString(v)
+	} else {
+		**vp = string(v)
+	}
 	out.n = n
 	return out, nil
 }
@@ -5193,7 +5206,11 @@ func consumeStringPtrValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *c
 	if *vp == nil {
 		*vp = new(string)
 	}
-	**vp = string(v)
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		**vp = strs.UnsafeString(v)
+	} else {
+		**vp = string(v)
+	}
 	out.n = n
 	return out, nil
 }
@@ -5234,7 +5251,11 @@ func consumeStringSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldI
 	if n < 0 {
 		return out, errDecode
 	}
-	*sp = append(*sp, string(v))
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*sp = append(*sp, strs.UnsafeString(v))
+	} else {
+		*sp = append(*sp, string(v))
+	}
 	out.n = n
 	return out, nil
 }
@@ -5272,7 +5293,11 @@ func consumeStringSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f 
 		return out, errInvalidUTF8{}
 	}
 	sp := p.StringSlice()
-	*sp = append(*sp, string(v))
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*sp = append(*sp, strs.UnsafeString(v))
+	} else {
+		*sp = append(*sp, string(v))
+	}
 	out.n = n
 	return out, nil
 }
@@ -5415,7 +5440,11 @@ func consumeBytes(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInfo, o
 	if n < 0 {
 		return out, errDecode
 	}
-	*p.Bytes() = append(emptyBuf[:], v...)
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*p.Bytes() = v[:len(v):len(v)]
+	} else {
+		*p.Bytes() = append(emptyBuf[:], v...)
+	}
 	out.n = n
 	return out, nil
 }
@@ -5450,7 +5479,11 @@ func consumeBytesValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *coder
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
-	*p.Bytes() = append(emptyBuf[:], v...)
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*p.Bytes() = v[:len(v):len(v)]
+	} else {
+		*p.Bytes() = append(emptyBuf[:], v...)
+	}
 	out.n = n
 	return out, nil
 }
@@ -5494,7 +5527,11 @@ func consumeBytesNoZero(b []byte, p pointer, wtyp protowire.Type, f *coderFieldI
 	if n < 0 {
 		return out, errDecode
 	}
-	*p.Bytes() = append(([]byte)(nil), v...)
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*p.Bytes() = v[:len(v):len(v)]
+	} else {
+		*p.Bytes() = append(([]byte)(nil), v...)
+	}
 	out.n = n
 	return out, nil
 }
@@ -5533,7 +5570,11 @@ func consumeBytesNoZeroValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f 
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
-	*p.Bytes() = append(([]byte)(nil), v...)
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*p.Bytes() = v[:len(v):len(v)]
+	} else {
+		*p.Bytes() = append(([]byte)(nil), v...)
+	}
 	out.n = n
 	return out, nil
 }
@@ -5574,7 +5615,11 @@ func consumeBytesSlice(b []byte, p pointer, wtyp protowire.Type, f *coderFieldIn
 	if n < 0 {
 		return out, errDecode
 	}
-	*sp = append(*sp, append(emptyBuf[:], v...))
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*sp = append(*sp, v[:len(v):len(v)])
+	} else {
+		*sp = append(*sp, append(emptyBuf[:], v...))
+	}
 	out.n = n
 	return out, nil
 }
@@ -5612,7 +5657,11 @@ func consumeBytesSliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *
 		return out, errInvalidUTF8{}
 	}
 	sp := p.BytesSlice()
-	*sp = append(*sp, append(emptyBuf[:], v...))
+	if opts.UnsafeAliasInput() && len(v) > 0 {
+		*sp = append(*sp, v[:len(v):len(v)])
+	} else {
+		*sp = append(*sp, append(emptyBuf[:], v...))
+	}
 	out.n = n
 	return out, nil
 }
