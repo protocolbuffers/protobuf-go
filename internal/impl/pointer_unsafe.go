@@ -6,6 +6,7 @@ package impl
 
 import (
 	"reflect"
+	"slices"
 	"sync/atomic"
 	"unsafe"
 
@@ -154,18 +155,12 @@ func (p pointer) SetPointer(v pointer) {
 
 func (p pointer) growBoolSlice(addCap int) {
 	sp := p.BoolSlice()
-	s := make([]bool, 0, addCap+len(*sp))
-	s = s[:len(*sp)]
-	copy(s, *sp)
-	*sp = s
+	*sp = slices.Grow(*sp, addCap)
 }
 
 func (p pointer) growInt32Slice(addCap int) {
 	sp := p.Int32Slice()
-	s := make([]int32, 0, addCap+len(*sp))
-	s = s[:len(*sp)]
-	copy(s, *sp)
-	*sp = s
+	*sp = slices.Grow(*sp, addCap)
 }
 
 func (p pointer) growUint32Slice(addCap int) {
@@ -178,10 +173,7 @@ func (p pointer) growFloat32Slice(addCap int) {
 
 func (p pointer) growInt64Slice(addCap int) {
 	sp := p.Int64Slice()
-	s := make([]int64, 0, addCap+len(*sp))
-	s = s[:len(*sp)]
-	copy(s, *sp)
-	*sp = s
+	*sp = slices.Grow(*sp, addCap)
 }
 
 func (p pointer) growUint64Slice(addCap int) {
