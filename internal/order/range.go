@@ -6,7 +6,7 @@
 package order
 
 import (
-	"sort"
+	"slices"
 	"sync"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -38,21 +38,21 @@ func RangeFields(fs FieldRanger, less FieldOrder, fn VisitField) {
 
 	// Obtain a pre-allocated scratch buffer.
 	p := messageFieldPool.Get().(*[]messageField)
-	fields := (*p)[:0]
+	*p = (*p)[:0]
 	defer func() {
-		if cap(fields) < 1024 {
-			*p = fields
+		if cap(*p) < 1024 {
 			messageFieldPool.Put(p)
 		}
 	}()
 
 	// Collect all fields in the message and sort them.
 	fs.Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
-		fields = append(fields, messageField{fd, v})
+		*p = append(*p, messageField{fd, v})
 		return true
 	})
-	sort.Slice(fields, func(i, j int) bool {
-		return less(fields[i].fd, fields[j].fd)
+	fields := *p
+	slices.SortFunc(fields, func(x, y messageField) int {
+		return compare(x.fd, y.fd, less)
 	})
 
 	// Visit the fields in the specified ordering.
@@ -89,21 +89,21 @@ func RangeEntries(es EntryRanger, less KeyOrder, fn VisitEntry) {
 
 	// Obtain a pre-allocated scratch buffer.
 	p := mapEntryPool.Get().(*[]mapEntry)
-	entries := (*p)[:0]
+	*p = (*p)[:0]
 	defer func() {
-		if cap(entries) < 1024 {
-			*p = entries
+		if cap(*p) < 1024 {
 			mapEntryPool.Put(p)
 		}
 	}()
 
 	// Collect all entries in the map and sort them.
 	es.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
-		entries = append(entries, mapEntry{k, v})
+		*p = append(*p, mapEntry{k, v})
 		return true
 	})
-	sort.Slice(entries, func(i, j int) bool {
-		return less(entries[i].k, entries[j].k)
+	entries := *p
+	slices.SortFunc(entries, func(x, y mapEntry) int {
+		return compare(x.k, y.k, less)
 	})
 
 	// Visit the entries in the specified ordering.
@@ -111,5 +111,17 @@ func RangeEntries(es EntryRanger, less KeyOrder, fn VisitEntry) {
 		if !fn(e.k, e.v) {
 			return
 		}
+	}
+}
+
+// compare converts a less function into a [slices.SortFunc] comparison.
+func compare[T any](x, y T, less func(T, T) bool) int {
+	switch {
+	case less(x, y):
+		return -1
+	case less(y, x):
+		return 1
+	default:
+		return 0
 	}
 }
