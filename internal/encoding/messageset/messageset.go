@@ -112,6 +112,7 @@ func Unmarshal(b []byte, wantLen bool, fn func(typeID protowire.Number, value []
 // If wantLen is true, the returned message value includes the length prefix.
 func ConsumeFieldValue(b []byte, wantLen bool) (typeid protowire.Number, message []byte, n int, err error) {
 	ilen := len(b)
+	var merged []byte // non-nil when merging multiple message fields with wantLen
 	for {
 		num, wtyp, n := protowire.ConsumeTag(b)
 		if n < 0 {
@@ -120,7 +121,9 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid protowire.Number, message
 		b = b[n:]
 		switch {
 		case num == FieldItem && wtyp == protowire.EndGroupType:
-			if wantLen && len(message) == 0 {
+			if merged != nil {
+				message = protowire.AppendBytes(nil, merged)
+			} else if wantLen && len(message) == 0 {
 				// The message field was missing, which should never happen.
 				// Be prepared for this case anyway.
 				message = protowire.AppendVarint(message, 0)
@@ -147,24 +150,18 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid protowire.Number, message
 				} else {
 					message = m[:len(m):len(m)]
 				}
-			} else {
+			} else if wantLen {
 				// This case should never happen in practice, but handle it for
 				// correctness: The MessageSet item contains multiple message
 				// fields, which need to be merged.
-				//
-				// In the case where we're returning the length, this becomes
-				// quite inefficient since we need to strip the length off
-				// the existing data and reconstruct it with the combined length.
-				if wantLen {
+				if merged == nil {
 					_, nn := protowire.ConsumeVarint(message)
-					m0 := message[nn:]
-					message = nil
-					message = protowire.AppendVarint(message, uint64(len(m0)+len(m)))
-					message = append(message, m0...)
-					message = append(message, m...)
-				} else {
-					message = append(message, m...)
+					merged = make([]byte, 0, len(message)-nn+len(m))
+					merged = append(merged, message[nn:]...)
 				}
+				merged = append(merged, m...)
+			} else {
+				message = append(message, m...)
 			}
 			b = b[n:]
 		default:
