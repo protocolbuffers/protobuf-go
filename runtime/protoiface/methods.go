@@ -138,6 +138,12 @@ const (
 	// UnmarshalNoLazyDecoding is set if this unmarshal operation should not use
 	// lazy decoding, even when otherwise available.
 	UnmarshalNoLazyDecoding
+
+	// UnmarshalAliasStringsAndBytes lets decoded string and bytes fields refer
+	// to the input buffer instead of copying it. UnmarshalAliasBuffer, by
+	// contrast, only affects lazily decoded submessages. It is unsafe because
+	// those fields silently change if the caller modifies or reuses the buffer.
+	UnmarshalAliasStringsAndBytes
 )
 
 // UnmarshalOutputFlags are output from the Unmarshal method.

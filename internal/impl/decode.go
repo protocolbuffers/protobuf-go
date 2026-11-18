@@ -48,13 +48,16 @@ func (o unmarshalOptions) Validated() bool   { return o.flags&protoiface.Unmarsh
 func (o unmarshalOptions) NoLazyDecoding() bool {
 	return o.flags&protoiface.UnmarshalNoLazyDecoding != 0
 }
+func (o unmarshalOptions) AliasStringsAndBytes() bool {
+	return o.flags&protoiface.UnmarshalAliasStringsAndBytes != 0
+}
 
 func (o unmarshalOptions) CanBeLazy() bool {
 	if o.resolver != protoregistry.GlobalTypes {
 		return false
 	}
 	// We ignore the UnmarshalInvalidateSizeCache even though it's not in the default set
-	return (o.flags & ^(protoiface.UnmarshalAliasBuffer | protoiface.UnmarshalValidated | protoiface.UnmarshalCheckRequired)) == 0
+	return (o.flags & ^(protoiface.UnmarshalAliasBuffer | protoiface.UnmarshalAliasStringsAndBytes | protoiface.UnmarshalValidated | protoiface.UnmarshalCheckRequired)) == 0
 }
 
 var lazyUnmarshalOptions = unmarshalOptions{

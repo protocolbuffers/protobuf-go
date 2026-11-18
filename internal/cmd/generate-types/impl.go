@@ -86,6 +86,20 @@ v, n := protowire.Consume{{.WireType}}(b)
 {{- end -}}
 {{- end -}}
 
+{{- /*
+  Alias is an expression converting 'v' to a string or []byte that refers to
+  the input instead of copying it, when UnmarshalAliasStringsAndBytes is set.
+  An empty 'v' gives "" or a non-nil empty slice, the same as a copy. Aliased
+  bytes have cap == len, so that appending to them cannot overwrite the input.
+*/ -}}
+{{- define "Alias" -}}
+{{- if eq .Name "String" -}}
+strs.UnsafeString(v)
+{{- else -}}
+v[:len(v):len(v)]
+{{- end -}}
+{{- end -}}
+
 {{- range .}}
 
 {{- if .FromGoType }}
@@ -114,7 +128,15 @@ func consume{{.Name}}(b []byte, p pointer, wtyp protowire.Type, f *coderFieldInf
 	if n < 0 {
 		return out, errDecode
 	}
+{{- if or (eq .Name "Bytes") (eq .Name "String")}}
+	if opts.AliasStringsAndBytes() {
+		*p.{{.GoType.PointerMethod}}() = {{template "Alias" .}}
+	} else {
+		*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
+	}
+{{- else}}
 	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
+{{- end}}
 	out.n = n
 	return out, nil
 }
@@ -150,7 +172,11 @@ func consume{{.Name}}ValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *c
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
-	*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
+	if opts.AliasStringsAndBytes() {
+		*p.{{.GoType.PointerMethod}}() = {{template "Alias" .}}
+	} else {
+		*p.{{.GoType.PointerMethod}}() = {{.ToGoType}}
+	}
 	out.n = n
 	return out, nil
 }
@@ -196,7 +222,12 @@ func consume{{.Name}}NoZero(b []byte, p pointer, wtyp protowire.Type, f *coderFi
 	if n < 0 {
 		return out, errDecode
 	}
-	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
+	// An empty proto3 bytes field decodes as nil, so it is copied, not aliased.
+	if opts.AliasStringsAndBytes() && len(v) > 0 {
+		*p.{{.GoType.PointerMethod}}() = {{template "Alias" .}}
+	} else {
+		*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
+	}
 	out.n = n
 	return out, nil
 }
@@ -238,7 +269,12 @@ func consume{{.Name}}NoZeroValidateUTF8(b []byte, p pointer, wtyp protowire.Type
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
-	*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
+	// An empty proto3 bytes field decodes as nil, so it is copied, not aliased.
+	if opts.AliasStringsAndBytes() && len(v) > 0 {
+		*p.{{.GoType.PointerMethod}}() = {{template "Alias" .}}
+	} else {
+		*p.{{.GoType.PointerMethod}}() = {{.ToGoTypeNoZero}}
+	}
 	out.n = n
 	return out, nil
 }
@@ -284,7 +320,15 @@ func consume{{.Name}}Ptr(b []byte, p pointer, wtyp protowire.Type, f *coderField
 	if *vp == nil {
 		*vp = new({{.GoType}})
 	}
+{{- if or (eq .Name "Bytes") (eq .Name "String")}}
+	if opts.AliasStringsAndBytes() {
+		**vp = {{template "Alias" .}}
+	} else {
+		**vp = {{.ToGoType}}
+	}
+{{- else}}
 	**vp = {{.ToGoType}}
+{{- end}}
 	out.n = n
 	return out, nil
 }
@@ -326,7 +370,11 @@ func consume{{.Name}}PtrValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f
 	if *vp == nil {
 		*vp = new({{.GoType}})
 	}
-	**vp = {{.ToGoType}}
+	if opts.AliasStringsAndBytes() {
+		**vp = {{template "Alias" .}}
+	} else {
+		**vp = {{.ToGoType}}
+	}
 	out.n = n
 	return out, nil
 }
@@ -405,7 +453,15 @@ func consume{{.Name}}Slice(b []byte, p pointer, wtyp protowire.Type, f *coderFie
 	if n < 0 {
 		return out, errDecode
 	}
+{{- if or (eq .Name "Bytes") (eq .Name "String")}}
+	if opts.AliasStringsAndBytes() {
+		*sp = append(*sp, {{template "Alias" .}})
+	} else {
+		*sp = append(*sp, {{.ToGoType}})
+	}
+{{- else}}
 	*sp = append(*sp, {{.ToGoType}})
+{{- end}}
 	out.n = n
 	return out, nil
 }
@@ -444,7 +500,11 @@ func consume{{.Name}}SliceValidateUTF8(b []byte, p pointer, wtyp protowire.Type,
 		return out, errInvalidUTF8{}
 	}
 	sp := p.{{.GoType.PointerMethod}}Slice()
-	*sp = append(*sp, {{.ToGoType}})
+	if opts.AliasStringsAndBytes() {
+		*sp = append(*sp, {{template "Alias" .}})
+	} else {
+		*sp = append(*sp, {{.ToGoType}})
+	}
 	out.n = n
 	return out, nil
 }
