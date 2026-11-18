@@ -59,3 +59,32 @@ func BenchmarkDecode(b *testing.B) {
 		}
 	}
 }
+
+// BenchmarkSize benchmarks sizing open and opaque messages across field densities.
+func BenchmarkSize(b *testing.B) {
+	densities := []struct {
+		name   string
+		stride int
+	}{
+		{name: "empty", stride: 0},
+		{name: "sparse", stride: 32},
+		{name: "medium", stride: 8},
+		{name: "dense", stride: 1},
+	}
+	for _, apiName := range []string{"open", "opaque"} {
+		b.Run(apiName, func(b *testing.B) {
+			for _, d := range densities {
+				open, opaque := sparseMessages(d.stride)
+				m := open
+				if apiName == "opaque" {
+					m = opaque
+				}
+				b.Run(d.name, func(b *testing.B) {
+					for i := 0; i < b.N; i++ {
+						_ = proto.Size(m)
+					}
+				})
+			}
+		})
+	}
+}

@@ -123,6 +123,20 @@ func TestRaceDetectionOnWrite(t *testing.T) {
 				}
 			},
 		},
+		{
+			name: "TestSetSize",
+			l1:   func() { x.SetOptionalLazyNestedMessage(y) },
+			l2: func() {
+				z += int32(proto.Size(x))
+			},
+		},
+		{
+			name: "TestClearSize",
+			l1:   func() { x.ClearOptionalLazyNestedMessage() },
+			l2: func() {
+				z += int32(proto.Size(x))
+			},
+		},
 	}
 	e := os.Getenv(envVar)
 	if e != "" {

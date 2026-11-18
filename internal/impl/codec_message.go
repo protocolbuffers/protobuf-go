@@ -33,9 +33,11 @@ type coderMessageInfo struct {
 	isMessageSet       bool
 	numRequiredFields  uint8
 
-	lazyOffset     offset
-	presenceOffset offset
-	presenceSize   presenceSize
+	lazyOffset           offset
+	presenceOffset       offset
+	presenceSize         presenceSize
+	presenceSizeFields   []*coderFieldInfo
+	noPresenceSizeFields []*coderFieldInfo
 }
 
 type coderFieldInfo struct {
