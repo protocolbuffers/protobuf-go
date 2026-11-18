@@ -59,3 +59,68 @@ func BenchmarkDecode(b *testing.B) {
 		}
 	}
 }
+
+// BenchmarkSize benchmarks sizing open and opaque messages across field densities.
+func BenchmarkSize(b *testing.B) {
+	densities := []struct {
+		name   string
+		stride int
+	}{
+		{name: "empty", stride: 0},
+		{name: "sparse", stride: 32},
+		{name: "medium", stride: 8},
+		{name: "dense", stride: 1},
+	}
+	for _, apiName := range []string{"open", "opaque"} {
+		b.Run(apiName, func(b *testing.B) {
+			for _, d := range densities {
+				open, opaque := sparseMessages(d.stride)
+				m := open
+				if apiName == "opaque" {
+					m = opaque
+				}
+				b.Run(d.name, func(b *testing.B) {
+					for i := 0; i < b.N; i++ {
+						_ = proto.Size(m)
+					}
+				})
+			}
+		})
+	}
+}
+
+// BenchmarkMarshal benchmarks marshaling open and opaque messages across field
+// densities into a preallocated buffer with cached sizes primed.
+func BenchmarkMarshal(b *testing.B) {
+	densities := []struct {
+		name   string
+		stride int
+	}{
+		{name: "empty", stride: 0},
+		{name: "sparse", stride: 32},
+		{name: "medium", stride: 8},
+		{name: "dense", stride: 1},
+	}
+	for _, apiName := range []string{"open", "opaque"} {
+		b.Run(apiName, func(b *testing.B) {
+			for _, d := range densities {
+				open, opaque := sparseMessages(d.stride)
+				m := open
+				if apiName == "opaque" {
+					m = opaque
+				}
+				size := proto.Size(m)
+				buf := make([]byte, 0, size)
+				b.Run(d.name, func(b *testing.B) {
+					opts := proto.MarshalOptions{UseCachedSize: true}
+					for i := 0; i < b.N; i++ {
+						_, err := opts.MarshalAppend(buf[:0], m)
+						if err != nil {
+							b.Fatal(err)
+						}
+					}
+				})
+			}
+		})
+	}
+}

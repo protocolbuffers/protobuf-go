@@ -32,6 +32,19 @@ func (p presence) raceDetectHookPresent(num uint32) {
 	}
 }
 
+func (p presence) raceDetectHookPresentAll() {
+	data := p.toRaceDetectData()
+	if data == nil {
+		return
+	}
+	sp := atomicLoadShadowPresence(&data.shadowPresence)
+	if sp != nil {
+		for i := range *sp {
+			_ = (*sp)[i]
+		}
+	}
+}
+
 func (p presence) raceDetectHookSetPresent(num uint32, size presenceSize) {
 	data := p.toRaceDetectData()
 	if data == nil {

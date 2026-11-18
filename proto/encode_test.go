@@ -23,6 +23,7 @@ import (
 	orderpb "google.golang.org/protobuf/internal/testprotos/order"
 	testpb "google.golang.org/protobuf/internal/testprotos/test"
 	test3pb "google.golang.org/protobuf/internal/testprotos/test3"
+	testopaquepb "google.golang.org/protobuf/internal/testprotos/testeditions/testeditions_opaque"
 )
 
 func TestEncode(t *testing.T) {
@@ -278,6 +279,143 @@ func TestEncodeEmpty(t *testing.T) {
 			}
 			if isNil := b == nil; isNil == isValid {
 				t.Errorf("proto.MarshalOptions{}.Marshal() = %v, want %v", isNil, !isValid)
+			}
+		})
+	}
+}
+
+func TestEncodeSparse(t *testing.T) {
+	tests := []struct {
+		name      string
+		stride    int
+		customize func(m protoreflect.Message)
+		wantEmpty bool
+	}{
+		{
+			name:      "empty",
+			stride:    0,
+			wantEmpty: true,
+		},
+		{
+			name:   "sparse",
+			stride: 32,
+		},
+		{
+			name:   "medium",
+			stride: 8,
+		},
+		{
+			name:   "dense",
+			stride: 1,
+		},
+		{
+			name:      "composite_oneof_repeated_map_nested_with_sparse_presence",
+			stride:    32,
+			customize: populateCompositeAndLazyFields,
+		},
+		{
+			name:      "set_then_cleared_returns_to_zero_word",
+			stride:    32,
+			wantEmpty: true,
+			customize: func(m protoreflect.Message) {
+				fields := m.Descriptor().Fields()
+				m.Clear(fields.ByName("default_string"))
+			},
+		},
+		{
+			name:   "mixed_nonzero_and_zero_words_across_boundaries",
+			stride: 0,
+			customize: func(m protoreflect.Message) {
+				fields := m.Descriptor().Fields()
+				// Word 0 non-zero (bits 18 and 31).
+				m.Set(fields.ByName("optional_int32"), protoreflect.ValueOfInt32(101))
+				m.Set(fields.ByName("optional_string"), protoreflect.ValueOfString("word0_end"))
+				// Word 1 presence bits all zero, with an interleaved noPresence message field set.
+				nested := m.Mutable(fields.ByName("optional_nested_message")).Message()
+				nested.Set(nested.Descriptor().Fields().ByName("a"), protoreflect.ValueOfInt32(303))
+				// Word 2 presence bits all zero (bits 81..95 skipped).
+				// Word 3 non-zero (bits 96 and 97).
+				m.Set(fields.ByName("default_nested_enum"), protoreflect.ValueOfEnum(2))
+				m.Set(fields.ByName("default_foreign_enum"), protoreflect.ValueOfEnum(4))
+			},
+		},
+		{
+			name:   "word_boundary_straddle_with_trailing_implicit_scalar",
+			stride: 0,
+			customize: func(m protoreflect.Message) {
+				fields := m.Descriptor().Fields()
+				// Straddle word 0 (bit 31) and word 1 (bit 32), leave words 2 and 3 zero,
+				// and populate a trailing implicit-presence scalar (noPresence) after word 3.
+				m.Set(fields.ByName("optional_string"), protoreflect.ValueOfString("bit31"))
+				m.Set(fields.ByName("optional_bytes"), protoreflect.ValueOfBytes([]byte("bit32")))
+				m.Set(fields.ByName("singular_int32"), protoreflect.ValueOfInt32(505))
+			},
+		},
+	}
+
+	detOpts := proto.MarshalOptions{Deterministic: true}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			open, opaque := sparseMessages(tc.stride)
+			if tc.customize != nil {
+				tc.customize(open.ProtoReflect())
+				tc.customize(opaque.ProtoReflect())
+			}
+
+			wireOpen, err := detOpts.Marshal(open)
+			if err != nil {
+				t.Fatalf("MarshalOptions{Deterministic: true}.Marshal(open) unexpected error: %v", err)
+			}
+			wireOpaque, err := detOpts.Marshal(opaque)
+			if err != nil {
+				t.Fatalf("MarshalOptions{Deterministic: true}.Marshal(opaque) unexpected error: %v", err)
+			}
+			if !bytes.Equal(wireOpaque, wireOpen) {
+				t.Fatalf("MarshalOptions{Deterministic: true}.Marshal(opaque) mismatch (-want +got):\n%s", cmp.Diff(wireOpen, wireOpaque))
+			}
+			if tc.wantEmpty && len(wireOpaque) != 0 {
+				t.Fatalf("len(wireOpaque) = %d, want 0", len(wireOpaque))
+			}
+			if !tc.wantEmpty && len(wireOpaque) == 0 {
+				t.Fatalf("len(wireOpaque) = 0, want > 0")
+			}
+
+			if gotSize := proto.Size(opaque); gotSize != len(wireOpaque) {
+				t.Errorf("proto.Size(opaque) = %d, want %d", gotSize, len(wireOpaque))
+			}
+
+			wantLazy, err := proto.Marshal(opaque)
+			if err != nil {
+				t.Fatalf("proto.Marshal(opaque) unexpected error: %v", err)
+			}
+			if len(wantLazy) != len(wireOpaque) {
+				t.Errorf("len(proto.Marshal(opaque)) = %d, want %d", len(wantLazy), len(wireOpaque))
+			}
+
+			// Re-marshal after unmarshaling without expanding lazy fields (under --test_lazy_unmarshal).
+			roundtripLazy := &testopaquepb.TestAllTypes{}
+			if err := proto.Unmarshal(wireOpaque, roundtripLazy); err != nil {
+				t.Fatalf("proto.Unmarshal(roundtripLazy) unexpected error: %v", err)
+			}
+			gotLazy, err := proto.Marshal(roundtripLazy)
+			if err != nil {
+				t.Fatalf("proto.Marshal(roundtripLazy) unexpected error: %v", err)
+			}
+			if !bytes.Equal(gotLazy, wantLazy) {
+				t.Errorf("proto.Marshal(roundtripLazy) mismatch (-want +got):\n%s", cmp.Diff(wantLazy, gotLazy))
+			}
+
+			// Re-marshal deterministically after unmarshaling (forces lazy field expansion).
+			roundtripDet := &testopaquepb.TestAllTypes{}
+			if err := proto.Unmarshal(wireOpaque, roundtripDet); err != nil {
+				t.Fatalf("proto.Unmarshal(roundtripDet) unexpected error: %v", err)
+			}
+			gotDet, err := detOpts.Marshal(roundtripDet)
+			if err != nil {
+				t.Fatalf("MarshalOptions{Deterministic: true}.Marshal(roundtripDet) unexpected error: %v", err)
+			}
+			if !bytes.Equal(gotDet, wireOpaque) {
+				t.Errorf("MarshalOptions{Deterministic: true}.Marshal(roundtripDet) mismatch (-want +got):\n%s", cmp.Diff(wireOpaque, gotDet))
 			}
 		})
 	}

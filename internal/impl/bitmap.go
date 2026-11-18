@@ -11,6 +11,7 @@ type RaceDetectHookData struct{}
 
 // Empty stubs for when not using the race detector. Calls to these from index.go should be optimized away.
 func (presence) raceDetectHookPresent(num uint32)                       {}
+func (presence) raceDetectHookPresentAll()                              {}
 func (presence) raceDetectHookSetPresent(num uint32, size presenceSize) {}
 func (presence) raceDetectHookClearPresent(num uint32)                  {}
 func (presence) raceDetectHookAllocAndCopy(src presence)                {}

@@ -131,6 +131,32 @@ func (mi *MessageInfo) makeOpaqueCoderMethods(t reflect.Type, si opaqueStructInf
 			return order.LegacyFieldOrder(fi, fj)
 		})
 	}
+	if mi.presenceSize > 0 {
+		mi.presenceSizeFields = make([]*coderFieldInfo, (mi.presenceSize+31)&^31)
+		for _, cf := range mi.orderedCoderFields {
+			if cf.funcs.size == nil {
+				continue
+			}
+			if cf.presenceIndex != noPresence {
+				mi.presenceSizeFields[cf.presenceIndex] = cf
+			} else {
+				mi.noPresenceSizeFields = append(mi.noPresenceSizeFields, cf)
+			}
+		}
+		for i := len(mi.orderedCoderFields) - 1; i >= 0; i-- {
+			cf := mi.orderedCoderFields[i]
+			if cf.presenceIndex == noPresence {
+				continue
+			}
+			cf.nextWordFieldIdx = i + 1
+			if i+1 < len(mi.orderedCoderFields) {
+				next := mi.orderedCoderFields[i+1]
+				if next.presenceIndex != noPresence && next.presenceIndex/32 == cf.presenceIndex/32 {
+					cf.nextWordFieldIdx = next.nextWordFieldIdx
+				}
+			}
+		}
+	}
 
 	mi.needsInitCheck = needsInitCheck(mi.Desc)
 	if mi.methods.Marshal == nil && mi.methods.Size == nil {
