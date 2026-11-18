@@ -848,6 +848,14 @@ func TestDecoder(t *testing.T) {
 				{V: EOF},
 			},
 		},
+		{
+			// Exponent at math.MaxInt32 (32-bit int overflow in intpSize+exp).
+			in: `1e2147483647`,
+			want: []R{
+				{V: NotI64},
+				{V: EOF},
+			},
+		},
 
 		// JSON numbers as unsigned integers.
 		{
@@ -882,6 +890,21 @@ func TestDecoder(t *testing.T) {
 		{
 			// Exceeds math.MaxUint64.
 			in: `18446744073709551616`,
+			want: []R{
+				{V: NotUi64},
+				{V: EOF},
+			},
+		},
+		{
+			// Exceeds maxDigits (20).
+			in: `1e20`,
+			want: []R{
+				{V: NotUi64},
+				{V: EOF},
+			},
+		},
+		{
+			in: `0.000000000000000000001e21`,
 			want: []R{
 				{V: NotUi64},
 				{V: EOF},

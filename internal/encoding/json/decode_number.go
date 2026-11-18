@@ -211,7 +211,7 @@ func normalizeToIntString(n numberParts) (string, bool) {
 		// unnecessarily constructing a large byte slice that may simply fail
 		// later on.
 		const maxDigits = 20 // Max uint64 value has 20 decimal digits.
-		if intpSize+exp > maxDigits {
+		if exp > maxDigits || intpSize > maxDigits-exp {
 			return "", false
 		}
 
