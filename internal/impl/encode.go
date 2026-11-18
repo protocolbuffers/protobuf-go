@@ -6,6 +6,7 @@ package impl
 
 import (
 	"math"
+	"math/bits"
 	"sort"
 	"sync/atomic"
 
@@ -82,29 +83,35 @@ func (mi *MessageInfo) sizePointerSlow(p pointer, opts marshalOptions) (size int
 		}
 	}
 
-	for _, f := range mi.orderedCoderFields {
+	fields := mi.orderedCoderFields
+	if mi.presenceSizeFields != nil {
+		presence.raceDetectHookPresentAll()
+		fields = mi.noPresenceSizeFields
+		for base := uint32(0); base < uint32(len(mi.presenceSizeFields)); base += 32 {
+			for word := atomic.LoadUint32(presence.toElem(base)); word != 0; word &= word - 1 {
+				idx := base + uint32(bits.TrailingZeros32(word))
+				f := mi.presenceSizeFields[idx]
+				if f == nil {
+					continue
+				}
+				fptr := p.Apply(f.offset)
+				if f.isLazy && fptr.AtomicGetPointer().IsNil() {
+					if lazyFields(opts) {
+						size += (*lazy).SizeField(uint32(f.num))
+						continue
+					} else {
+						mi.lazyUnmarshal(p, f.num)
+					}
+				}
+				size += f.funcs.size(fptr, f, opts)
+			}
+		}
+	}
+	for _, f := range fields {
 		if f.funcs.size == nil {
 			continue
 		}
 		fptr := p.Apply(f.offset)
-
-		if f.presenceIndex != noPresence {
-			if !presence.Present(f.presenceIndex) {
-				continue
-			}
-
-			if f.isLazy && fptr.AtomicGetPointer().IsNil() {
-				if lazyFields(opts) {
-					size += (*lazy).SizeField(uint32(f.num))
-					continue
-				} else {
-					mi.lazyUnmarshal(p, f.num)
-				}
-			}
-			size += f.funcs.size(fptr, f, opts)
-			continue
-		}
-
 		if f.isPointer && fptr.Elem().IsNil() {
 			continue
 		}
@@ -173,16 +180,25 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 		}
 	}
 
-	for _, f := range mi.orderedCoderFields {
+	if mi.presenceSize > 0 {
+		presence.raceDetectHookPresentAll()
+	}
+	wordIdx, word := uint32(noPresence), uint32(0)
+	for i := 0; i < len(mi.orderedCoderFields); {
+		f := mi.orderedCoderFields[i]
+		i++
 		if f.funcs.marshal == nil {
 			continue
 		}
-		fptr := p.Apply(f.offset)
 
 		if f.presenceIndex != noPresence {
-			if !presence.Present(f.presenceIndex) {
+			if !presence.PresentInCache(f.presenceIndex, &wordIdx, &word) {
+				if word == 0 {
+					i = f.nextWordFieldIdx
+				}
 				continue
 			}
+			fptr := p.Apply(f.offset)
 			if f.isLazy {
 				// Be careful, this field needs to be read atomically, like for a get
 				if f.isPointer && fptr.AtomicGetPointer().IsNil() {
@@ -209,6 +225,7 @@ func (mi *MessageInfo) marshalAppendPointer(b []byte, p pointer, opts marshalOpt
 			continue
 		}
 
+		fptr := p.Apply(f.offset)
 		if f.isPointer && fptr.Elem().IsNil() {
 			continue
 		}
