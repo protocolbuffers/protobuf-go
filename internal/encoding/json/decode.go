@@ -48,6 +48,10 @@ type Decoder struct {
 	orig []byte
 	// in contains the unconsumed input.
 	in []byte
+	// off is the index of in[0] within orig. It is tracked separately so a
+	// decoder can read a subslice of orig (see Range) and still report
+	// positions in the original buffer.
+	off int
 }
 
 // NewDecoder returns a Decoder to read the given []byte.
@@ -234,7 +238,21 @@ func (d *Decoder) Position(idx int) (line int, column int) {
 
 // currPos returns the current index position of d.in from d.orig.
 func (d *Decoder) currPos() int {
-	return len(d.orig) - len(d.in)
+	return d.off
+}
+
+// Offset returns the current byte offset into the original input.
+func (d *Decoder) Offset() int {
+	return d.currPos()
+}
+
+// Range returns a decoder that reads orig[start:end] and reports positions
+// against the original input of d. start and end are indexes into that input.
+func (d *Decoder) Range(start, end int) *Decoder {
+	if start < 0 || end > len(d.orig) || start > end {
+		panic(fmt.Sprintf("json.Decoder.Range: invalid range [%d:%d] for input of length %d", start, end, len(d.orig)))
+	}
+	return &Decoder{orig: d.orig, in: d.orig[start:end], off: start}
 }
 
 // matchWithDelim matches s with the input b and verifies that the match
@@ -263,10 +281,12 @@ func isNotDelim(c byte) bool {
 
 // consume consumes n bytes of input and any subsequent whitespace.
 func (d *Decoder) consume(n int) {
+	d.off += n
 	d.in = d.in[n:]
 	for len(d.in) > 0 {
 		switch d.in[0] {
 		case ' ', '\n', '\r', '\t':
+			d.off++
 			d.in = d.in[1:]
 		default:
 			return
@@ -299,7 +319,7 @@ func (d *Decoder) consumeToken(kind Kind, size int) Token {
 	tok := Token{
 		kind: kind,
 		raw:  d.in[:size],
-		pos:  len(d.orig) - len(d.in),
+		pos:  d.currPos(),
 	}
 	d.consume(size)
 	return tok
@@ -311,7 +331,7 @@ func (d *Decoder) consumeBoolToken(b bool, size int) Token {
 	tok := Token{
 		kind: Bool,
 		raw:  d.in[:size],
-		pos:  len(d.orig) - len(d.in),
+		pos:  d.currPos(),
 		boo:  b,
 	}
 	d.consume(size)
@@ -324,7 +344,7 @@ func (d *Decoder) consumeStringToken(s string, size int) Token {
 	tok := Token{
 		kind: String,
 		raw:  d.in[:size],
-		pos:  len(d.orig) - len(d.in),
+		pos:  d.currPos(),
 		str:  s,
 	}
 	d.consume(size)
