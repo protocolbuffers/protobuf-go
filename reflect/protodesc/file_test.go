@@ -1362,3 +1362,30 @@ func TestToFileDescriptorProtoPlaceHolder(t *testing.T) {
 		t.Errorf("placeholder file descriptor proto is not valid: %s", err)
 	}
 }
+
+func TestPackageNameLimits(t *testing.T) {
+	makeFile := func(name, pkg string) *descriptorpb.FileDescriptorProto {
+		return &descriptorpb.FileDescriptorProto{
+			Syntax:  proto.String("proto3"),
+			Name:    proto.String(name),
+			Package: proto.String(pkg),
+		}
+	}
+	dottedPkg := func(dots int) string {
+		return "a" + strings.Repeat(".a", dots)
+	}
+
+	if _, err := NewFile(makeFile("ok_len.proto", strings.Repeat("a", 511)), nil); err != nil {
+		t.Fatalf("NewFile(511 chars) unexpected error: %v", err)
+	}
+	if _, err := NewFile(makeFile("ok_dots.proto", dottedPkg(64)), nil); err != nil {
+		t.Fatalf("NewFile(64 periods) unexpected error: %v", err)
+	}
+
+	if _, err := NewFile(makeFile("long.proto", strings.Repeat("a", 512)), nil); err == nil || !strings.Contains(err.Error(), "511") {
+		t.Fatalf("NewFile(512 chars) got err=%v, want error mentioning 511", err)
+	}
+	if _, err := NewFile(makeFile("deep.proto", dottedPkg(65)), nil); err == nil || !strings.Contains(err.Error(), "64") {
+		t.Fatalf("NewFile(65 periods) got err=%v, want error mentioning 64", err)
+	}
+}

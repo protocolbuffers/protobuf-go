@@ -121,6 +121,12 @@ func (o FileOptions) New(fd *descriptorpb.FileDescriptorProto, r Resolver) (prot
 	if !f.L1.Package.IsValid() && f.L1.Package != "" {
 		return nil, errors.New("invalid package: %q", f.L1.Package)
 	}
+	if len(f.L1.Package) > 511 {
+		return nil, errors.New("package name is too long (exceeds limit of 511 characters)")
+	}
+	if strings.Count(string(f.L1.Package), ".") > 64 {
+		return nil, errors.New("package name has too many components (exceeds limit of 64 periods)")
+	}
 	if opts := fd.GetOptions(); opts != nil {
 		opts = proto.Clone(opts).(*descriptorpb.FileOptions)
 		f.L2.Options = func() protoreflect.ProtoMessage { return opts }
