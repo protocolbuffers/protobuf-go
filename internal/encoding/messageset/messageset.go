@@ -135,7 +135,9 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid protowire.Number, message
 			if v < 1 || v > math.MaxInt32 {
 				return 0, nil, 0, errors.New("invalid type_id in message set")
 			}
-			typeid = protowire.Number(v)
+			if typeid == 0 {
+				typeid = protowire.Number(v)
+			}
 		case num == FieldMessage && wtyp == protowire.BytesType:
 			m, n := protowire.ConsumeBytes(b)
 			if n < 0 {
@@ -146,24 +148,6 @@ func ConsumeFieldValue(b []byte, wantLen bool) (typeid protowire.Number, message
 					message = b[:n:n]
 				} else {
 					message = m[:len(m):len(m)]
-				}
-			} else {
-				// This case should never happen in practice, but handle it for
-				// correctness: The MessageSet item contains multiple message
-				// fields, which need to be merged.
-				//
-				// In the case where we're returning the length, this becomes
-				// quite inefficient since we need to strip the length off
-				// the existing data and reconstruct it with the combined length.
-				if wantLen {
-					_, nn := protowire.ConsumeVarint(message)
-					m0 := message[nn:]
-					message = nil
-					message = protowire.AppendVarint(message, uint64(len(m0)+len(m)))
-					message = append(message, m0...)
-					message = append(message, m...)
-				} else {
-					message = append(message, m...)
 				}
 			}
 			b = b[n:]

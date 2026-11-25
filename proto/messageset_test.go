@@ -114,12 +114,11 @@ var messageSetTestProtos = []testProto{
 		}.Marshal(),
 	},
 	{
-		desc: "MessageSet merges repeated message fields in item",
+		desc: "MessageSet ignores repeated message fields in item",
 		decodeTo: makeMessages(
 			protobuild.Message{
 				"message_set_ext1": protobuild.Message{
 					"ext1_field1": 10,
-					"ext1_field2": 20,
 				},
 			},
 			&messagesetpb.MessageSet{},
