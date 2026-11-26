@@ -63,3 +63,15 @@ $ ./test.bash
 The tests also run on GitHub Actions. For a pull request from a fork,
 a maintainer has to start them by adding the `:a: safe for tests` label,
 and has to do so again after each push.
+
+## Existing Gerrit CLs
+
+Open CLs on [Gerrit](https://go-review.googlesource.com) can no longer be
+submitted and are not automatically migrated to GitHub. If you have a pending
+CL on Gerrit that you would still like reviewed, please recreate it as a GitHub
+pull request (and feel free to link to the original Gerrit CL for context).
+
+Maintainers may still follow up on and consider manually importing select
+active CLs from Gerrit. However, because Gerrit is no longer monitored for new
+reviews, remaining open CLs will generally not be carried over and will
+eventually be closed.
