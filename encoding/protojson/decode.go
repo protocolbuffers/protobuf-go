@@ -142,7 +142,14 @@ func (d decoder) unmarshalMessage(m protoreflect.Message, skipTypeURL bool) erro
 	if tok.Kind() != json.ObjectOpen {
 		return d.unexpectedTokenError(tok)
 	}
+	return d.unmarshalOpenObject(m, skipTypeURL, false)
+}
 
+// unmarshalOpenObject unmarshals the fields of a JSON object that has already
+// been opened. typeSeen reports whether an Any "@type" field was consumed by
+// the caller; when skipTypeURL is set, the first "@type" is skipped and a
+// second one is an error.
+func (d decoder) unmarshalOpenObject(m protoreflect.Message, skipTypeURL, typeSeen bool) error {
 	messageDesc := m.Descriptor()
 	if !flags.ProtoLegacy && messageset.IsMessageSet(messageDesc) {
 		return errors.New("no support for proto1 MessageSets")
@@ -171,7 +178,13 @@ func (d decoder) unmarshalMessage(m protoreflect.Message, skipTypeURL bool) erro
 		// JSON field "@type" which should be skipped because it is not a field
 		// of the embedded message, but simply an artifact of the Any format.
 		if skipTypeURL && name == "@type" {
-			d.Read()
+			if typeSeen {
+				return d.newError(tok.Pos(), `duplicate "@type" field`)
+			}
+			typeSeen = true
+			if _, err := d.Read(); err != nil {
+				return err
+			}
 			continue
 		}
 
